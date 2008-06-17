@@ -1,0 +1,9 @@
+* Occasionally coredumps on spellchecking some russian words. This is aspell bug.
+Please build without aspell to avoid. Or try apply patches to 0.60.3 version, see: 
+     http://sourceforge.net/tracker/index.php?func=detail&aid=1276512&group_id=245&atid=100245
+     http://sourceforge.net/tracker/index.php?func=detail&aid=1274670&group_id=245&atid=100245
+
+* PHP module is deep deep pre-alpha, doesn't works totaly.
+
+See also: http://www.dataparksearch.org/cgi-bin/bt.pl
+

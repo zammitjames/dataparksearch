@@ -1,0 +1,806 @@
+<HTML
+><HEAD
+><TITLE
+>Структура таблиц базы данных</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="DataparkSearch Engine 4.50"
+HREF="index.ru.html"><LINK
+REL="UP"
+TITLE="Разное"
+HREF="dpsearch-misc.ru.html"><LINK
+REL="PREVIOUS"
+TITLE="Использование библиотеки libdpsearch
+
+"
+HREF="dpsearch-lib.ru.html"><LINK
+REL="NEXT"
+TITLE="&#1055;&#1088;&#1077;&#1076;&#1084;&#1077;&#1090;&#1085;&#1099;&#1081; &#1091;&#1082;&#1072;&#1079;&#1072;&#1090;&#1077;&#1083;&#1100;"
+HREF="dpsearch-index-ru.ru.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и Интранета с открытым исходным кодом. Распространяется по лицензии GNU."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"><SCRIPT
+SRC="http://www.google-analytics.com/urchin.js"
+TYPE="text/javascript"></SCRIPT><SCRIPT
+SRC="http://www.dataparksearch.org/ga.js"
+TYPE="text/javascript"></SCRIPT></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>DataparkSearch Engine 4.50: Поисковая машина; Справочное руководство</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dpsearch-lib.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>&#1043;&#1083;&#1072;&#1074;&#1072; 9. Разное</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dpsearch-index-ru.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="dbschema"
+>9.3. Структура таблиц базы данных</A
+></H1
+><A
+NAME="AEN5715"
+></A
+><P
+>Полная структура таблиц базы данных, используемых <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>,
+описана в sql-скрптах создания структуры базы данных, находящихся в соответстувующих директориях
+поддиректории <TT
+CLASS="filename"
+>create</TT
+>.
+
+<DIV
+CLASS="table"
+><A
+NAME="db-server"
+></A
+><P
+><B
+>&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-1. Структура таблицы <TT
+CLASS="varname"
+>server</TT
+></B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>rec_id</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Уникальный идентификатор записи.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>enabled</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Флаг включения записи для загрузки при старте <B
+CLASS="command"
+>indexer</B
+>.
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>url</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>URL или его фрагмент или шаблон, указываемый в соответствующей команде.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>tag</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Значение тэга для этого ресурса.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>category</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Ссылка на запись в наблице <TT
+CLASS="literal"
+>categories</TT
+>,
+соответсвующей категории для данного ресурса.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>command</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;<P
+>=S - тип записи <TT
+CLASS="varname"
+>сервер</TT
+></P
+>
+<P
+>=F - типа записи <TT
+CLASS="varname"
+>фильтр</TT
+></P
+>
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>ordre</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Ключ сортировки, задающий порядок загрузки записей таблицы <TT
+CLASS="varname"
+>server</TT
+>
+при запуске <B
+CLASS="command"
+>indexer</B
+>.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>parent</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Если значение не ноль, запись содержит в поле <TT
+CLASS="varname"
+>url</TT
+> имя
+сервера, добавленного автоматически при индексировании. Значение этого поля равно url_id записи этой таблицы, на основании которой
+дабавлена эта запись.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>weight</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Вес данной записи при подсчёте рейтинга популярности документов.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>pop_weight</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Вес одной ссылки со страниц данного русурса. Рассчитывается автоматически.
+Изменнеие значения вручную никакого влияния не оказывает.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+>
+</P
+><P
+>Остальные параметры серверов хранятся в таблице <TT
+CLASS="varname"
+>srvinfo</TT
+>, аналогичной по структуре таблице
+<TT
+CLASS="varname"
+>urlinfo</TT
+>. Значения некоторых параметров приведены в таблице ниже.
+
+<DIV
+CLASS="table"
+><A
+NAME="db-srvinfo"
+></A
+><P
+><B
+>&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-2. Значения некоторых параметров серверов в таблице <TT
+CLASS="varname"
+>srvinfo</TT
+></B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><THEAD
+><TR
+><TH
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Значение <TT
+CLASS="varname"
+>sname</TT
+></TH
+><TH
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Возможные значения <TT
+CLASS="varname"
+>sval</TT
+>.</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Alias</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Алиас для указанного в поле <TT
+CLASS="varname"
+>server.url</TT
+>.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Period</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Интервал между повторными индексированиями этого ресурса, задаваемый в секундах.
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>DeleteOlder</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Задаёт сколько времени хранить проиндексированные документы в базе.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>RemoteCharset</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Значение кодировки документа по умолчанию для данного ресурса.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>DefaultLang</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Значение языка документа по умолчанию для данного русурса.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Request.Authorization</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Учётные данные, используемые для доступа с использованием авторизации.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Request.Proxy</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Имя прокси-сервера, используемое при доступе через прокси-сервер.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Request.Proxy-Authorization</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Авторизация на прокси-сервере.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>MaxHops</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Максимальная глубина перехода по ссылкам от корневого индеска.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Index</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Флаг, указывающий индексировать или нет документы данного ресурса.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Follow</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><P
+>=0, "page"</P
+>
+<P
+>=1, "path"</P
+>
+<P
+>=2, "site"</P
+>
+<P
+>=3, "world"</P
+>
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Robots</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Флаг указывающий использование <TT
+CLASS="filename"
+>robots.txt</TT
+> для
+данного ресурса.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>DetectClones</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Флаг включения механизма определения "клонов".</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>MaxNetErrors</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Максимальное число ошибок сети для этой записи.
+Аналог команды <B
+CLASS="command"
+>MaxNetError</B
+> в <TT
+CLASS="filename"
+>indexer.conf</TT
+>.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>NetDelayTime</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Время задержки индексирования сети при обнаружении ошибки сети при его
+пролучении.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>ReadTimeout</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Таймаут ожидания получения документа с этого ресурса.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>match_type</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;<P
+>=0, DPS_MATCH_FULL - полное совпадение.</P
+>
+<P
+>=1, DPS_MATCH_BEGIN - совпадает начало.</P
+>
+<P
+>=2, DPS_MATCH_SUBSTR - шаблон является подстрокой проверяемой ссылки.</P
+>
+<P
+>=3, DPS_MATCH_END - совпадает конец.</P
+>
+<P
+>=4, DPS_MATCH_REGEX - шаблон является регулярным выражением, на соответствие которому проверяются ссылки.</P
+>
+<P
+>=5, DPS_MATCH_WILD - используется шаблон файловой системы.</P
+>
+<P
+>=6, DPS_MATCH_SUBNET - &#60; пока нереализовано &#62;.</P
+>
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>case_sense</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;<P
+>=1, - сравнивать без учёта регистра.</P
+>
+<P
+>=0, - сравнивать с учётом регистра.</P
+>
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>nomatch</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;<P
+>=1, - соответствующими данной записи считаются URL, не совпадающие с указаным шаблоном.</P
+>
+<P
+>=0, - соответствующими данной записи считаются ссылки, совпадающие с шаблоном.</P
+>
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Method</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;<P
+>Задаёт действие, которое будет произведено с документами.</P
+>
+<P
+>=Allow, - документы будут индексироваться, а также сканироваться на наличие новых ссылок.</P
+>
+<P
+>=Disallow, - документы индекироваться и добавляться в базу не будут, если они уже находятся в базе, то они будут удалены.</P
+>
+<P
+>=HrefOnly, - документы не будут индексироваться, а будут только просканированы на наличие новых ссылок.</P
+>
+<P
+>=CheckOnly, - документы будут запрашиваться методом HTTP HEAD, а не HTTP GET, т.е. будет запрошено
+не содержимое документа, а только краткая информация о нем: размер, дата модификации, <TT
+CLASS="literal"
+>Content-Type</TT
+>.</P
+>
+<P
+>=Skip, - документы будут пропущены при очередной индексации.</P
+>
+<P
+>=CheckMP3, - документы будут проверяться на наличие тэгов MP3 несмотря на наличие <TT
+CLASS="literal"
+>Content-Type</TT
+>,
+отличного от <TT
+CLASS="literal"
+>audio/mpeg</TT
+>.</P
+>
+<P
+>=CheckMP3Only, - аналогично <TT
+CLASS="literal"
+>CheckMP3</TT
+>, однако при
+отсутствии тэгов MP3 <TT
+CLASS="literal"
+>indexer</TT
+> не будет запускать внутренний или внешний 
+парсер, предусмотренный для полученного <TT
+CLASS="literal"
+>Content-Type</TT
+>.</P
+>
+<P
+>=TagIf, - документы будут помечены заданым тэгом.</P
+>
+<P
+>=CategoryIf, - документы будут помечены заданой категорией.</P
+>
+<P
+>=IndexIf, - документы будут проиндексированы, если указаная секция подпадает под заданый шаблон.</P
+>
+<P
+>=NoIndexIf, - документы индексироваться и добавляться в базу не будут, если указаная секция подпадает под заданый шаблон.</P
+>
+</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="varname"
+>Section</TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;<P
+>Имя секции, используемой для сравнения с шаблоном для методов IndexIf и NoIndexIf.</P
+>
+</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+>
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dpsearch-lib.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.ru.html"
+ACCESSKEY="H"
+>&#1053;&#1072;&#1095;&#1072;&#1083;&#1086;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-index-ru.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Использование библиотеки <TT
+CLASS="literal"
+>libdpsearch</TT
+>
+<A
+NAME="AEN5673"
+></A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="dpsearch-misc.ru.html"
+ACCESSKEY="U"
+>&#1059;&#1088;&#1086;&#1074;&#1077;&#1085;&#1100; &#1074;&#1099;&#1096;&#1077;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&#1055;&#1088;&#1077;&#1076;&#1084;&#1077;&#1090;&#1085;&#1099;&#1081; &#1091;&#1082;&#1072;&#1079;&#1072;&#1090;&#1077;&#1083;&#1100;</TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>

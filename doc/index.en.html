@@ -1,0 +1,1838 @@
+<HTML
+><HEAD
+><TITLE
+>DataparkSearch Engine 4.50</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="NEXT"
+TITLE="Introduction"
+HREF="dpsearch-intro.en.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Software over the Internet and Intranet Web Sites Based on SQL Database. It is a Free search software covered by GNU license."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"><SCRIPT
+SRC="http://www.google-analytics.com/urchin.js"
+TYPE="text/javascript"></SCRIPT><SCRIPT
+SRC="http://www.dataparksearch.org/ga.js"
+TYPE="text/javascript"></SCRIPT></HEAD
+><BODY
+CLASS="book"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="BOOK"
+><A
+NAME="AEN1"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="title"
+><A
+NAME="AEN2"
+>DataparkSearch Engine 4.50</A
+></H1
+><H2
+CLASS="subtitle"
+>The Web searching software</H2
+><H2
+CLASS="subtitle"
+>Reference manual</H2
+><P
+CLASS="copyright"
+>Copyright &copy; 2003-2008 by OOO DataPark</P
+><P
+CLASS="copyright"
+>Copyright &copy; 2001-2003 by Lavtech.com corp.</P
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>1. <A
+HREF="dpsearch-intro.en.html"
+>Introduction</A
+></DT
+><DD
+><DL
+><DT
+>1.1. <A
+HREF="dpsearch-intro.en.html#features"
+>DataparkSearch Features</A
+></DT
+><DT
+>1.2. <A
+HREF="dpsearch-get.en.html"
+>Where to get <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.</A
+></DT
+><DT
+>1.3. <A
+HREF="dpsearch-disclaimer.en.html"
+>Disclaimer</A
+></DT
+><DT
+>1.4. <A
+HREF="dpsearch-authors.en.html"
+>Authors</A
+></DT
+><DD
+><DL
+><DT
+>1.4.1. <A
+HREF="dpsearch-authors.en.html#contriblist"
+>Contributors</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>2. <A
+HREF="dpsearch-install.en.html"
+>Installation</A
+></DT
+><DD
+><DL
+><DT
+>2.1. <A
+HREF="dpsearch-install.en.html#sqlreq"
+>SQL database requirements</A
+></DT
+><DT
+>2.2. <A
+HREF="dpsearch-opsys.en.html"
+>Supported operating systems</A
+></DT
+><DT
+>2.3. <A
+HREF="dpsearch-toolsreq.en.html"
+>Tools required for installation</A
+></DT
+><DT
+>2.4. <A
+HREF="dpsearch-installing.en.html"
+>Installing <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+></A
+></DT
+><DT
+>2.5. <A
+HREF="dpsearch-installproblem.en.html"
+>Possible installation problems</A
+></DT
+><DT
+>2.6. <A
+HREF="dpsearch-register.en.html"
+>Installation registration</A
+></DT
+></DL
+></DD
+><DT
+>3. <A
+HREF="dpsearch-indexing.en.html"
+>Indexing</A
+></DT
+><DD
+><DL
+><DT
+>3.1. <A
+HREF="dpsearch-indexing.en.html#general"
+>Indexing in general</A
+></DT
+><DD
+><DL
+><DT
+>3.1.1. <A
+HREF="dpsearch-indexing.en.html#general-conf"
+>Configuration</A
+></DT
+><DT
+>3.1.2. <A
+HREF="dpsearch-indexing.en.html#general-run"
+>Running <B
+CLASS="command"
+>indexer</B
+></A
+></DT
+><DT
+>3.1.3. <A
+HREF="dpsearch-indexing.en.html#general-create-tables"
+>How to create SQL table structure</A
+></DT
+><DT
+>3.1.4. <A
+HREF="dpsearch-indexing.en.html#general-drop-tables"
+>How to drop SQL table structure</A
+></DT
+><DT
+>3.1.5. <A
+HREF="dpsearch-indexing.en.html#general-subsect"
+>Subsection control</A
+></DT
+><DT
+>3.1.6. <A
+HREF="dpsearch-indexing.en.html#general-cleardb"
+>How to clear database</A
+></DT
+><DT
+>3.1.7. <A
+HREF="dpsearch-indexing.en.html#general-dbstat"
+>Database Statistics</A
+></DT
+><DT
+>3.1.8. <A
+HREF="dpsearch-indexing.en.html#general-linkval"
+>Link validation</A
+></DT
+><DT
+>3.1.9. <A
+HREF="dpsearch-indexing.en.html#general-parallel"
+>Parallel indexing</A
+></DT
+></DL
+></DD
+><DT
+>3.2. <A
+HREF="dpsearch-http-codes.en.html"
+>Supported HTTP response codes</A
+></DT
+><DT
+>3.3. <A
+HREF="dpsearch-content-enc.en.html"
+>Content-Encoding support</A
+></DT
+><DT
+>3.4. <A
+HREF="dpsearch-stopwords.en.html"
+>Stopwords</A
+></DT
+><DD
+><DL
+><DT
+>3.4.1. <A
+HREF="dpsearch-stopwords.en.html#stopwordfile_cmd"
+><B
+CLASS="command"
+>StopwordFile</B
+> command</A
+></DT
+></DL
+></DD
+><DT
+>3.5. <A
+HREF="dpsearch-clones.en.html"
+>Clones</A
+></DT
+><DD
+><DL
+><DT
+>3.5.1. <A
+HREF="dpsearch-clones.en.html#detectclones_cmd"
+><B
+CLASS="command"
+>DetectClones</B
+> command</A
+></DT
+></DL
+></DD
+><DT
+>3.6. <A
+HREF="dpsearch-follow.en.html"
+>Specifying WEB space to be indexed</A
+></DT
+><DD
+><DL
+><DT
+>3.6.1. <A
+HREF="dpsearch-follow.en.html#follow-server"
+><B
+CLASS="command"
+>Server</B
+> command</A
+></DT
+><DT
+>3.6.2. <A
+HREF="dpsearch-follow.en.html#follow-realm"
+><B
+CLASS="command"
+>Realm</B
+> command</A
+></DT
+><DT
+>3.6.3. <A
+HREF="dpsearch-follow.en.html#follow-subnet"
+><B
+CLASS="command"
+>Subnet</B
+> command</A
+></DT
+><DT
+>3.6.4. <A
+HREF="dpsearch-follow.en.html#follow-difparam"
+>Using different parameter for server and it's subsections</A
+></DT
+><DT
+>3.6.5. <A
+HREF="dpsearch-follow.en.html#follow-default"
+>Default <B
+CLASS="command"
+>indexer</B
+> behavior</A
+></DT
+><DT
+>3.6.6. <A
+HREF="dpsearch-follow.en.html#follow-f"
+>Using <TT
+CLASS="userinput"
+><B
+>indexer -f &#60;filename&#62;</B
+></TT
+></A
+></DT
+><DT
+>3.6.7. <A
+HREF="dpsearch-follow.en.html#DB_cmd"
+><B
+CLASS="command"
+>ServerDB, RealmDB, SubnetDB and URLDB</B
+> commands</A
+></DT
+><DT
+>3.6.8. <A
+HREF="dpsearch-follow.en.html#URL_cmd"
+><B
+CLASS="command"
+>URL</B
+> command</A
+></DT
+></DL
+></DD
+><DT
+>3.7. <A
+HREF="dpsearch-aliases.en.html"
+>Aliases</A
+></DT
+><DD
+><DL
+><DT
+>3.7.1. <A
+HREF="dpsearch-aliases.en.html#alias-conf"
+><B
+CLASS="command"
+>Alias</B
+> <TT
+CLASS="filename"
+>indexer.conf</TT
+> command</A
+></DT
+><DT
+>3.7.2. <A
+HREF="dpsearch-aliases.en.html#aliases-diff"
+>Different aliases for server parts</A
+></DT
+><DT
+>3.7.3. <A
+HREF="dpsearch-aliases.en.html#alias-server"
+>Using aliases in <B
+CLASS="command"
+>Server</B
+> commands</A
+></DT
+><DT
+>3.7.4. <A
+HREF="dpsearch-aliases.en.html#alias-realm"
+>Using aliases in <B
+CLASS="command"
+>Realm</B
+> commands</A
+></DT
+><DT
+>3.7.5. <A
+HREF="dpsearch-aliases.en.html#alias-prog"
+><B
+CLASS="command"
+>AliasProg</B
+> command</A
+></DT
+><DT
+>3.7.6. <A
+HREF="dpsearch-aliases.en.html#alias-reverse"
+><B
+CLASS="command"
+>ReverseAlias</B
+> command</A
+></DT
+><DT
+>3.7.7. <A
+HREF="dpsearch-aliases.en.html#alias-search"
+><B
+CLASS="command"
+>Alias</B
+> command in <TT
+CLASS="filename"
+>search.htm</TT
+> search template</A
+></DT
+></DL
+></DD
+><DT
+>3.8. <A
+HREF="dpsearch-srvtable.en.html"
+>Servers Table</A
+></DT
+><DD
+><DL
+><DT
+>3.8.1. <A
+HREF="dpsearch-srvtable.en.html#srvtable-load"
+>Loading servers table</A
+></DT
+><DT
+>3.8.2. <A
+HREF="dpsearch-srvtable.en.html#srvtable-structure"
+>Servers table structure</A
+></DT
+><DT
+>3.8.3. <A
+HREF="dpsearch-srvtable.en.html#flushsrvtable"
+>Flushing Servers Table</A
+></DT
+></DL
+></DD
+><DT
+>3.9. <A
+HREF="dpsearch-pars.en.html"
+>External parsers</A
+></DT
+><DD
+><DL
+><DT
+>3.9.1. <A
+HREF="dpsearch-pars.en.html#pars-sup"
+>Supported parser types</A
+></DT
+><DT
+>3.9.2. <A
+HREF="dpsearch-pars.en.html#pars-setup"
+>Setting up parsers</A
+></DT
+><DT
+>3.9.3. <A
+HREF="dpsearch-pars.en.html#ParserTimeOut"
+>Avoid indexer hang on parser execution</A
+></DT
+><DT
+>3.9.4. <A
+HREF="dpsearch-pars.en.html#pars-pipes"
+>Pipes in parser's command line</A
+></DT
+><DT
+>3.9.5. <A
+HREF="dpsearch-pars.en.html#pars-char"
+>Charsets and parsers</A
+></DT
+><DT
+>3.9.6. <A
+HREF="dpsearch-pars.en.html#pars-udmurl"
+>DPS_URL environment variable</A
+></DT
+><DT
+>3.9.7. <A
+HREF="dpsearch-pars.en.html#pars-links"
+>Some third-party parsers</A
+></DT
+></DL
+></DD
+><DT
+>3.10. <A
+HREF="dpsearch-indexcmd.en.html"
+>Other commands uses in <TT
+CLASS="filename"
+>indexer.conf</TT
+></A
+></DT
+><DD
+><DL
+><DT
+>3.10.1. <A
+HREF="dpsearch-indexcmd.en.html#include_cmd"
+><B
+CLASS="command"
+>Include</B
+> command</A
+></DT
+><DT
+>3.10.2. <A
+HREF="dpsearch-indexcmd.en.html#dbaddr_cmd"
+><B
+CLASS="command"
+>DBAddr</B
+> command</A
+></DT
+><DT
+>3.10.3. <A
+HREF="dpsearch-indexcmd.en.html#vardir_cmd"
+><B
+CLASS="command"
+>VarDir</B
+> command</A
+></DT
+><DT
+>3.10.4. <A
+HREF="dpsearch-indexcmd.en.html#newsextensions_cmd"
+><B
+CLASS="command"
+>NewsExtensions</B
+> command</A
+></DT
+><DT
+>3.10.5. <A
+HREF="dpsearch-indexcmd.en.html#syslogfacility_cmd"
+><B
+CLASS="command"
+>SyslogFacility</B
+> command</A
+></DT
+><DT
+>3.10.6. <A
+HREF="dpsearch-indexcmd.en.html#wordlengths_cmd"
+>Word length commands</A
+></DT
+><DT
+>3.10.7. <A
+HREF="dpsearch-indexcmd.en.html#maxdocsize_cmd"
+><B
+CLASS="command"
+>MaxDocSize</B
+> command</A
+></DT
+><DT
+>3.10.8. <A
+HREF="dpsearch-indexcmd.en.html#mindocsize_cmd"
+><B
+CLASS="command"
+>MinDocSize</B
+> command</A
+></DT
+><DT
+>3.10.9. <A
+HREF="dpsearch-indexcmd.en.html#indexdocsizelimit_cmd"
+><B
+CLASS="command"
+>IndexDocSizeLimit</B
+> command</A
+></DT
+><DT
+>3.10.10. <A
+HREF="dpsearch-indexcmd.en.html#urlselectcachesize_cmd"
+><B
+CLASS="command"
+>URLSelectCacheSize</B
+> command</A
+></DT
+><DT
+>3.10.11. <A
+HREF="dpsearch-indexcmd.en.html#urldumpcachesize_cmd"
+><B
+CLASS="command"
+>URLDumpCacheSize</B
+> command</A
+></DT
+><DT
+>3.10.12. <A
+HREF="dpsearch-indexcmd.en.html#usecrc32urlid_cmd"
+><B
+CLASS="command"
+>UseCRC32URLId</B
+> command</A
+></DT
+><DT
+>3.10.13. <A
+HREF="dpsearch-indexcmd.en.html#httpheader_cmd"
+><B
+CLASS="command"
+>HTTPHeader</B
+> command</A
+></DT
+><DT
+>3.10.14. <A
+HREF="dpsearch-indexcmd.en.html#allow_cmd"
+><B
+CLASS="command"
+>Allow</B
+> command</A
+></DT
+><DT
+>3.10.15. <A
+HREF="dpsearch-indexcmd.en.html#disallow_cmd"
+><B
+CLASS="command"
+>Disallow</B
+> command</A
+></DT
+><DT
+>3.10.16. <A
+HREF="dpsearch-indexcmd.en.html#checkonly_cmd"
+><B
+CLASS="command"
+>CheckOnly</B
+> command</A
+></DT
+><DT
+>3.10.17. <A
+HREF="dpsearch-indexcmd.en.html#hrefonly_cmd"
+><B
+CLASS="command"
+>HrefOnly</B
+> command</A
+></DT
+><DT
+>3.10.18. <A
+HREF="dpsearch-indexcmd.en.html#checkmp3_cmd"
+><B
+CLASS="command"
+>CheckMp3</B
+> command</A
+></DT
+><DT
+>3.10.19. <A
+HREF="dpsearch-indexcmd.en.html#checkmp3only_cmd"
+><B
+CLASS="command"
+>CheckMp3Only</B
+> command</A
+></DT
+><DT
+>3.10.20. <A
+HREF="dpsearch-indexcmd.en.html#indexif_cmd"
+><B
+CLASS="command"
+>IndexIf</B
+> command</A
+></DT
+><DT
+>3.10.21. <A
+HREF="dpsearch-indexcmd.en.html#noindexif_cmd"
+><B
+CLASS="command"
+>NoIndexIf</B
+> command</A
+></DT
+><DT
+>3.10.22. <A
+HREF="dpsearch-indexcmd.en.html#holdbadhrefs_cmd"
+><B
+CLASS="command"
+>HoldBadHrefs</B
+> command</A
+></DT
+><DT
+>3.10.23. <A
+HREF="dpsearch-indexcmd.en.html#deleteolder_cmd"
+><B
+CLASS="command"
+>DeleteOlder</B
+> command</A
+></DT
+><DT
+>3.10.24. <A
+HREF="dpsearch-indexcmd.en.html#useremotecontenttype_cmd"
+><B
+CLASS="command"
+>UseRemoteContentType</B
+> command</A
+></DT
+><DT
+>3.10.25. <A
+HREF="dpsearch-indexcmd.en.html#addtype_cmd"
+><B
+CLASS="command"
+>AddType</B
+> command</A
+></DT
+><DT
+>3.10.26. <A
+HREF="dpsearch-indexcmd.en.html#period_cmd"
+><B
+CLASS="command"
+>Period</B
+> command</A
+></DT
+><DT
+>3.10.27. <A
+HREF="dpsearch-indexcmd.en.html#periodbyhops_cmd"
+><B
+CLASS="command"
+>PeriodByHops</B
+> command</A
+></DT
+><DT
+>3.10.28. <A
+HREF="dpsearch-indexcmd.en.html#expireat_cmd"
+><B
+CLASS="command"
+>ExpireAt</B
+> command</A
+></DT
+><DT
+>3.10.29. <A
+HREF="dpsearch-indexcmd.en.html#usedateheader_cmd"
+><B
+CLASS="command"
+>UseDateHeader</B
+> command</A
+></DT
+><DT
+>3.10.30. <A
+HREF="dpsearch-indexcmd.en.html#maxhops_cmd"
+><B
+CLASS="command"
+>MaxHops</B
+> command</A
+></DT
+><DT
+>3.10.31. <A
+HREF="dpsearch-indexcmd.en.html#tarckhops_cmd"
+><B
+CLASS="command"
+>TrackHops</B
+> command</A
+></DT
+><DT
+>3.10.32. <A
+HREF="dpsearch-indexcmd.en.html#maxdepth_cmd"
+><B
+CLASS="command"
+>MaxDepth</B
+> command</A
+></DT
+><DT
+>3.10.33. <A
+HREF="dpsearch-indexcmd.en.html#maxdocsperserver_cmd"
+><B
+CLASS="command"
+>MaxDocsPerServer</B
+> command</A
+></DT
+><DT
+>3.10.34. <A
+HREF="dpsearch-indexcmd.en.html#maxneterrors_cmd"
+><B
+CLASS="command"
+>MaxNetErrors</B
+> command</A
+></DT
+><DT
+>3.10.35. <A
+HREF="dpsearch-indexcmd.en.html#readtimeout_cmd"
+><B
+CLASS="command"
+>ReadTimeOut</B
+> command</A
+></DT
+><DT
+>3.10.36. <A
+HREF="dpsearch-indexcmd.en.html#doctimeout_cmd"
+><B
+CLASS="command"
+>DocTimeOut</B
+> command</A
+></DT
+><DT
+>3.10.37. <A
+HREF="dpsearch-indexcmd.en.html#neterrordelaytime_cmd"
+><B
+CLASS="command"
+>NetErrorDelayTime</B
+> command</A
+></DT
+><DT
+>3.10.38. <A
+HREF="dpsearch-indexcmd.en.html#cookies_cmd"
+><B
+CLASS="command"
+>Cookies</B
+> command</A
+></DT
+><DT
+>3.10.39. <A
+HREF="dpsearch-indexcmd.en.html#robots_cmd"
+><B
+CLASS="command"
+>Robots</B
+> command</A
+></DT
+><DT
+>3.10.40. <A
+HREF="dpsearch-indexcmd.en.html#robotsperiod_cmd"
+><B
+CLASS="command"
+>RobotsPeriod</B
+> command</A
+></DT
+><DT
+>3.10.41. <A
+HREF="dpsearch-indexcmd.en.html#crawldelay_cmd"
+><B
+CLASS="command"
+>CrawlDelay</B
+> command</A
+></DT
+><DT
+>3.10.42. <A
+HREF="dpsearch-indexcmd.en.html#section_cmd"
+><B
+CLASS="command"
+>Section</B
+> command</A
+></DT
+><DT
+>3.10.43. <A
+HREF="dpsearch-indexcmd.en.html#hrefsection_cmd"
+><B
+CLASS="command"
+>HrefSection</B
+> command</A
+></DT
+><DT
+>3.10.44. <A
+HREF="dpsearch-indexcmd.en.html#index_cmd"
+><B
+CLASS="command"
+>Index</B
+> command</A
+></DT
+><DT
+>3.10.45. <A
+HREF="dpsearch-indexcmd.en.html#proxyauthbasic_cmd"
+><B
+CLASS="command"
+>ProxyAuthBasic</B
+> command</A
+></DT
+><DT
+>3.10.46. <A
+HREF="dpsearch-indexcmd.en.html#proxy_cmd"
+><B
+CLASS="command"
+>Proxy</B
+> command</A
+></DT
+><DT
+>3.10.47. <A
+HREF="dpsearch-indexcmd.en.html#authbasic_cmd"
+><B
+CLASS="command"
+>AuthBasic</B
+> command</A
+></DT
+><DT
+>3.10.48. <A
+HREF="dpsearch-indexcmd.en.html#serverweight_cmd"
+><B
+CLASS="command"
+>ServerWeight</B
+> command</A
+></DT
+><DT
+>3.10.49. <A
+HREF="dpsearch-indexcmd.en.html#optimizeatupdate_cmd"
+><B
+CLASS="command"
+>OptimizeAtUpdate</B
+> command</A
+></DT
+><DT
+>3.10.50. <A
+HREF="dpsearch-indexcmd.en.html#skipunreferred_cmd"
+><B
+CLASS="command"
+>SkipUnreferred</B
+> command</A
+></DT
+><DT
+>3.10.51. <A
+HREF="dpsearch-indexcmd.en.html#bind_cmd"
+><B
+CLASS="command"
+>Bind</B
+> command</A
+></DT
+><DT
+>3.10.52. <A
+HREF="dpsearch-indexcmd.en.html#provideref_cmd"
+><B
+CLASS="command"
+>ProvideReferer</B
+> command</A
+></DT
+><DT
+>3.10.53. <A
+HREF="dpsearch-indexcmd.en.html#longesttextitems_cmd"
+><B
+CLASS="command"
+>LongestTextItems</B
+> command</A
+></DT
+></DL
+></DD
+><DT
+>3.11. <A
+HREF="dpsearch-extended-indexing.en.html"
+>Extended indexing features</A
+></DT
+><DD
+><DL
+><DT
+>3.11.1. <A
+HREF="dpsearch-extended-indexing.en.html#htdb"
+>Indexing SQL database tables (htdb: virtual URL scheme)</A
+></DT
+><DT
+>3.11.2. <A
+HREF="dpsearch-extended-indexing.en.html#exec"
+>Indexing binaries output (exec: and cgi: virtual URL schemes)</A
+></DT
+><DT
+>3.11.3. <A
+HREF="dpsearch-extended-indexing.en.html#mirror"
+>Mirroring</A
+></DT
+></DL
+></DD
+><DT
+>3.12. <A
+HREF="dpsearch-syslog.en.html"
+>Using syslog</A
+></DT
+><DT
+>3.13. <A
+HREF="dpsearch-stored.en.html"
+>Storing compressed document copies</A
+></DT
+><DD
+><DL
+><DT
+>3.13.1. <A
+HREF="dpsearch-stored.en.html#stored-start"
+>Configure stored</A
+></DT
+><DT
+>3.13.2. <A
+HREF="dpsearch-stored.en.html#stored-how"
+>How stored works</A
+></DT
+><DT
+>3.13.3. <A
+HREF="dpsearch-stored.en.html#stored-search"
+>Using stored during search</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>4. <A
+HREF="dpsearch-htmlparser.en.html"
+><SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> HTML parser</A
+></DT
+><DD
+><DL
+><DT
+>4.1. <A
+HREF="dpsearch-htmlparser.en.html#htmlparser-tag"
+>Tag parser</A
+></DT
+><DT
+>4.2. <A
+HREF="dpsearch-htmlparser-spec.en.html"
+>Special characters</A
+></DT
+><DT
+>4.3. <A
+HREF="dpsearch-htmlparser-meta.en.html"
+>META tags</A
+></DT
+><DT
+>4.4. <A
+HREF="dpsearch-htmlparser-links.en.html"
+>Links</A
+></DT
+><DT
+>4.5. <A
+HREF="dpsearch-htmlparser-comments.en.html"
+>Comments</A
+></DT
+><DT
+>4.6. <A
+HREF="dpsearch-htmlparser-bodypatterns.en.html"
+>Body patterns</A
+></DT
+></DL
+></DD
+><DT
+>5. <A
+HREF="dpsearch-howstore.en.html"
+>Storing data</A
+></DT
+><DD
+><DL
+><DT
+>5.1. <A
+HREF="dpsearch-howstore.en.html#sql-stor"
+>SQL storage types</A
+></DT
+><DD
+><DL
+><DT
+>5.1.1. <A
+HREF="dpsearch-howstore.en.html#sql-stor-general"
+>General storage information</A
+></DT
+><DT
+>5.1.2. <A
+HREF="dpsearch-howstore.en.html#sql-stor-modes"
+>Various modes of words storage</A
+></DT
+><DT
+>5.1.3. <A
+HREF="dpsearch-howstore.en.html#sql-stor-single"
+>Storage mode - single</A
+></DT
+><DT
+>5.1.4. <A
+HREF="dpsearch-howstore.en.html#sql-stor-multi"
+>Storage mode - multi</A
+></DT
+><DT
+>5.1.5. <A
+HREF="dpsearch-howstore.en.html#sql-stor-crc"
+>Storage mode - crc</A
+></DT
+><DT
+>5.1.6. <A
+HREF="dpsearch-howstore.en.html#sql-stor-crcmulti"
+>Storage mode - crc-multi</A
+></DT
+><DT
+>5.1.7. <A
+HREF="dpsearch-howstore.en.html#sql-stor-structure"
+>SQL structure notes</A
+></DT
+><DT
+>5.1.8. <A
+HREF="dpsearch-howstore.en.html#sql-stor-noncrc"
+>Additional features of non-CRC storage modes</A
+></DT
+></DL
+></DD
+><DT
+>5.2. <A
+HREF="dpsearch-cachemode.en.html"
+>Cache mode storage</A
+></DT
+><DD
+><DL
+><DT
+>5.2.1. <A
+HREF="dpsearch-cachemode.en.html#cachemode-intro"
+>Introduction</A
+></DT
+><DT
+>5.2.2. <A
+HREF="dpsearch-cachemode.en.html#cachemode-str"
+>Cache mode word indexes structure</A
+></DT
+><DT
+>5.2.3. <A
+HREF="dpsearch-cachemode.en.html#cachemode-tools"
+>Cache mode tools</A
+></DT
+><DT
+>5.2.4. <A
+HREF="dpsearch-cachemode.en.html#cachemode-start"
+>Starting cache mode</A
+></DT
+><DT
+>5.2.5. <A
+HREF="dpsearch-cachemode.en.html#cachelog-sevspl"
+>Optional usage of several splitters</A
+></DT
+><DT
+>5.2.6. <A
+HREF="dpsearch-cachemode.en.html#cachelog-runspl"
+>Using run-splitter script</A
+></DT
+><DT
+>5.2.7. <A
+HREF="dpsearch-cachemode.en.html#cachelog-search"
+>Doing search</A
+></DT
+><DT
+>5.2.8. <A
+HREF="dpsearch-cachemode.en.html#limits"
+>Using search limits</A
+></DT
+></DL
+></DD
+><DT
+>5.3. <A
+HREF="dpsearch-perf.en.html"
+><SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> performance issues</A
+></DT
+><DD
+><DL
+><DT
+>5.3.1. <A
+HREF="dpsearch-perf.en.html#searchd-rec"
+><B
+CLASS="command"
+>searchd</B
+> usage recommendation</A
+></DT
+><DT
+>5.3.2. <A
+HREF="dpsearch-perf.en.html#mfs-rec"
+>Memory based filesystem (mfs) usage recommendation</A
+></DT
+><DT
+>5.3.3. <A
+HREF="dpsearch-perf.en.html#urlinfo-cmd"
+><B
+CLASS="command"
+>URLInfoSQL</B
+> command</A
+></DT
+><DT
+>5.3.4. <A
+HREF="dpsearch-perf.en.html#markforindex-cmd"
+><B
+CLASS="command"
+>MarkForIndex</B
+> command</A
+></DT
+><DT
+>5.3.5. <A
+HREF="dpsearch-perf.en.html#checkinsertsql-cmd"
+><B
+CLASS="command"
+>CheckInsertSQL</B
+> command</A
+></DT
+><DT
+>5.3.6. <A
+HREF="dpsearch-perf.en.html#perf-mysql"
+>MySQL performance</A
+></DT
+><DT
+>5.3.7. <A
+HREF="dpsearch-perf.en.html#perf-optimization"
+>Post-indexing optimization</A
+></DT
+><DT
+>5.3.8. <A
+HREF="dpsearch-perf.en.html#ares"
+>Asynchronous resolver library</A
+></DT
+></DL
+></DD
+><DT
+>5.4. <A
+HREF="dpsearch-searchd.en.html"
+>SearchD support</A
+></DT
+><DD
+><DL
+><DT
+>5.4.1. <A
+HREF="dpsearch-searchd.en.html#searchd-why"
+>Why using searchd</A
+></DT
+><DT
+>5.4.2. <A
+HREF="dpsearch-searchd.en.html#searchd-start"
+>Starting searchd</A
+></DT
+></DL
+></DD
+><DT
+>5.5. <A
+HREF="dpsearch-oracle.en.html"
+>Oracle notes</A
+></DT
+><DD
+><DL
+><DT
+>5.5.1. <A
+HREF="dpsearch-oracle.en.html#oracle-intro"
+></A
+></DT
+><DT
+>5.5.2. <A
+HREF="dpsearch-oracle.en.html#oracle-install"
+>Compilation, Installation and Configuration</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>6. <A
+HREF="dpsearch-subsections.en.html"
+>Subsections</A
+></DT
+><DD
+><DL
+><DT
+>6.1. <A
+HREF="dpsearch-subsections.en.html#tags"
+>Tags</A
+></DT
+><DD
+><DL
+><DT
+>6.1.1. <A
+HREF="dpsearch-subsections.en.html#tag_cmd"
+><B
+CLASS="command"
+>Tag</B
+> command</A
+></DT
+><DT
+>6.1.2. <A
+HREF="dpsearch-subsections.en.html#tagif_cmd"
+><B
+CLASS="command"
+>TagIf</B
+> command</A
+></DT
+><DT
+>6.1.3. <A
+HREF="dpsearch-subsections.en.html#tags-sql"
+>Tags in SQL version</A
+></DT
+></DL
+></DD
+><DT
+>6.2. <A
+HREF="dpsearch-categories.en.html"
+>Categories</A
+></DT
+><DD
+><DL
+><DT
+>6.2.1. <A
+HREF="dpsearch-categories.en.html#category_cmd"
+><B
+CLASS="command"
+>Category</B
+> command</A
+></DT
+><DT
+>6.2.2. <A
+HREF="dpsearch-categories.en.html#categoryif_cmd"
+><B
+CLASS="command"
+>CategoryIf</B
+> command</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>7. <A
+HREF="dpsearch-international.en.html"
+>Languages support</A
+></DT
+><DD
+><DL
+><DT
+>7.1. <A
+HREF="dpsearch-international.en.html#charset"
+>Character sets</A
+></DT
+><DD
+><DL
+><DT
+>7.1.1. <A
+HREF="dpsearch-international.en.html#supcharsets"
+>Supported character sets</A
+></DT
+><DT
+>7.1.2. <A
+HREF="dpsearch-international.en.html#charsetsalias"
+>Character sets aliases</A
+></DT
+><DT
+>7.1.3. <A
+HREF="dpsearch-international.en.html#recoding"
+>Recoding</A
+></DT
+><DT
+>7.1.4. <A
+HREF="dpsearch-international.en.html#charset-searchdec"
+>Recoding at search time</A
+></DT
+><DT
+>7.1.5. <A
+HREF="dpsearch-international.en.html#charsetdetect"
+>Document charset detection</A
+></DT
+><DT
+>7.1.6. <A
+HREF="dpsearch-international.en.html#charset-guesser"
+>Automatic charset guesser</A
+></DT
+><DT
+>7.1.7. <A
+HREF="dpsearch-international.en.html#defcharset"
+>Default charset</A
+></DT
+><DT
+>7.1.8. <A
+HREF="dpsearch-international.en.html#deflang"
+>Default Language</A
+></DT
+><DT
+>7.1.9. <A
+HREF="dpsearch-international.en.html#localcharset_cmd"
+><B
+CLASS="command"
+>LocalCharset</B
+> command</A
+></DT
+><DT
+>7.1.10. <A
+HREF="dpsearch-international.en.html#forceiischarset1251_cmd"
+><B
+CLASS="command"
+>ForceIISCharset1251</B
+> command</A
+></DT
+><DT
+>7.1.11. <A
+HREF="dpsearch-international.en.html#remotecharset_cmd"
+><B
+CLASS="command"
+>RemoteCharset</B
+> command</A
+></DT
+><DT
+>7.1.12. <A
+HREF="dpsearch-international.en.html#urlcharset_cmd"
+><B
+CLASS="command"
+>URLCharset</B
+> command</A
+></DT
+><DT
+>7.1.13. <A
+HREF="dpsearch-international.en.html#charstoescape"
+><B
+CLASS="command"
+>CharsToEscape</B
+> command</A
+></DT
+></DL
+></DD
+><DT
+>7.2. <A
+HREF="dpsearch-multilang.en.html"
+>Making multi-language search pages</A
+></DT
+><DD
+><DL
+><DT
+>7.2.1. <A
+HREF="dpsearch-multilang.en.html#multilang-how"
+>How does it work?</A
+></DT
+><DT
+>7.2.2. <A
+HREF="dpsearch-multilang.en.html#multilang-problem"
+>Possible troubles</A
+></DT
+></DL
+></DD
+><DT
+>7.3. <A
+HREF="dpsearch-cjk.en.html"
+>Segmenters for Chinese, Japanese, Korean and Thai languages</A
+></DT
+><DD
+><DL
+><DT
+>7.3.1. <A
+HREF="dpsearch-cjk.en.html#ja-segment"
+>Japanese language phrase segmenter</A
+></DT
+><DT
+>7.3.2. <A
+HREF="dpsearch-cjk.en.html#zh-segment"
+>Chinese language phrase segmenter</A
+></DT
+><DT
+>7.3.3. <A
+HREF="dpsearch-cjk.en.html#th-segment"
+>Thai language phrase segmenter</A
+></DT
+><DT
+>7.3.4. <A
+HREF="dpsearch-cjk.en.html#ko-segment"
+>Korean language phrase segmenter</A
+></DT
+></DL
+></DD
+><DT
+>7.4. <A
+HREF="dpsearch-vary.en.html"
+>Multilingual servers support</A
+></DT
+></DL
+></DD
+><DT
+>8. <A
+HREF="dpsearch-doingsearch.en.html"
+>Searching documents</A
+></DT
+><DD
+><DL
+><DT
+>8.1. <A
+HREF="dpsearch-doingsearch.en.html#search"
+>Using search front-ends</A
+></DT
+><DD
+><DL
+><DT
+>8.1.1. <A
+HREF="dpsearch-doingsearch.en.html#search-perform"
+>Performing search</A
+></DT
+><DT
+>8.1.2. <A
+HREF="dpsearch-doingsearch.en.html#search_params"
+>Search parameters</A
+></DT
+><DT
+>8.1.3. <A
+HREF="dpsearch-doingsearch.en.html#search-changeweight"
+>Changing different document parts weights at search time</A
+></DT
+><DT
+>8.1.4. <A
+HREF="dpsearch-doingsearch.en.html#search-scriptname"
+>Using front-end with an shtml page</A
+></DT
+><DT
+>8.1.5. <A
+HREF="dpsearch-doingsearch.en.html#search-templates"
+>Using several templates</A
+></DT
+><DT
+>8.1.6. <A
+HREF="dpsearch-doingsearch.en.html#search-bool"
+>Advanced boolean search</A
+></DT
+><DT
+>8.1.7. <A
+HREF="dpsearch-doingsearch.en.html#vql"
+>The Verity Query Language, VQL</A
+></DT
+><DT
+>8.1.8. <A
+HREF="dpsearch-doingsearch.en.html#search-exp"
+>How search handles expired documents</A
+></DT
+></DL
+></DD
+><DT
+>8.2. <A
+HREF="dpsearch-mod_dpsearch.en.html"
+><TT
+CLASS="literal"
+>mod_dpsearch</TT
+> module for Apache httpd</A
+></DT
+><DD
+><DL
+><DT
+>8.2.1. <A
+HREF="dpsearch-mod_dpsearch.en.html#mod_dpsearch-why"
+>Why using <TT
+CLASS="literal"
+>mod_dpsearch</TT
+></A
+></DT
+><DT
+>8.2.2. <A
+HREF="dpsearch-mod_dpsearch.en.html#mod_dpsearch-cfg"
+>Configuring <TT
+CLASS="literal"
+>mod_dpsearch</TT
+></A
+></DT
+></DL
+></DD
+><DT
+>8.3. <A
+HREF="dpsearch-templates.en.html"
+>How to write search result templates</A
+></DT
+><DD
+><DL
+><DT
+>8.3.1. <A
+HREF="dpsearch-templates.en.html#templates-sect"
+>Template sections</A
+></DT
+><DT
+>8.3.2. <A
+HREF="dpsearch-templates.en.html#templates-var"
+>Variables section</A
+></DT
+><DT
+>8.3.3. <A
+HREF="dpsearch-templates.en.html#templates-incl"
+>Includes in templates</A
+></DT
+><DT
+>8.3.4. <A
+HREF="dpsearch-templates.en.html#templates-if"
+>Conditional template operators</A
+></DT
+><DT
+>8.3.5. <A
+HREF="dpsearch-templates.en.html#templates-sec"
+>Security issues</A
+></DT
+></DL
+></DD
+><DT
+>8.4. <A
+HREF="dpsearch-html.en.html"
+>Designing search.html</A
+></DT
+><DD
+><DL
+><DT
+>8.4.1. <A
+HREF="dpsearch-html.en.html#html-respage"
+>How the results page is created</A
+></DT
+><DT
+>8.4.2. <A
+HREF="dpsearch-html.en.html#html-yourhtml"
+>Your HTML</A
+></DT
+><DT
+>8.4.3. <A
+HREF="dpsearch-html.en.html#html-forms"
+>Forms considerations</A
+></DT
+><DT
+>8.4.4. <A
+HREF="dpsearch-html.en.html#html-rellinks"
+>Relative links in search.htm</A
+></DT
+><DT
+>8.4.5. <A
+HREF="dpsearch-html.en.html#html-searchform"
+>Adding Search form to other pages</A
+></DT
+></DL
+></DD
+><DT
+>8.5. <A
+HREF="dpsearch-rel.en.html"
+>Relevance</A
+></DT
+><DD
+><DL
+><DT
+>8.5.1. <A
+HREF="dpsearch-rel.en.html#rel-order"
+>Ordering documents</A
+></DT
+><DT
+>8.5.2. <A
+HREF="dpsearch-rel.en.html#relevancy"
+>Relevance calculation</A
+></DT
+><DT
+>8.5.3. <A
+HREF="dpsearch-rel.en.html#poprank"
+>Popularity rank</A
+></DT
+><DT
+>8.5.4. <A
+HREF="dpsearch-rel.en.html#rel-bool"
+>Boolean search</A
+></DT
+><DT
+>8.5.5. <A
+HREF="dpsearch-rel.en.html#rel-cwords"
+>Crosswords</A
+></DT
+><DT
+>8.5.6. <A
+HREF="dpsearch-rel.en.html#sea"
+>The Summary Extraction Algorithm (SEA)</A
+></DT
+></DL
+></DD
+><DT
+>8.6. <A
+HREF="dpsearch-track.en.html"
+>Search queries tracking</A
+></DT
+><DT
+>8.7. <A
+HREF="dpsearch-srcache.en.html"
+>Search results cache</A
+></DT
+><DT
+>8.8. <A
+HREF="dpsearch-fuzzy.en.html"
+>Fuzzy search</A
+></DT
+><DD
+><DL
+><DT
+>8.8.1. <A
+HREF="dpsearch-fuzzy.en.html#ispell"
+>Ispell</A
+></DT
+><DT
+>8.8.2. <A
+HREF="dpsearch-fuzzy.en.html#aspell"
+>Aspell</A
+></DT
+><DT
+>8.8.3. <A
+HREF="dpsearch-fuzzy.en.html#synonyms"
+>Synonyms</A
+></DT
+><DT
+>8.8.4. <A
+HREF="dpsearch-fuzzy.en.html#accent"
+>Accent insensitive search</A
+></DT
+><DT
+>8.8.5. <A
+HREF="dpsearch-fuzzy.en.html#acronym"
+>Acronyms and abbreviations</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>9. <A
+HREF="dpsearch-misc.en.html"
+>Miscellaneous</A
+></DT
+><DD
+><DL
+><DT
+>9.1. <A
+HREF="dpsearch-misc.en.html#bugs"
+>Reporting bugs</A
+></DT
+><DD
+><DL
+><DT
+>9.1.1. <A
+HREF="dpsearch-misc.en.html#bugs-core"
+>Core dump reports</A
+></DT
+></DL
+></DD
+><DT
+>9.2. <A
+HREF="dpsearch-lib.en.html"
+>Using <TT
+CLASS="literal"
+>libdpsearch</TT
+> library</A
+></DT
+><DD
+><DL
+><DT
+>9.2.1. <A
+HREF="dpsearch-lib.en.html#lib-dpsconf"
+><TT
+CLASS="filename"
+>dps-config</TT
+> script</A
+></DT
+><DT
+>9.2.2. <A
+HREF="dpsearch-lib.en.html#api"
+><SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> API</A
+></DT
+></DL
+></DD
+><DT
+>9.3. <A
+HREF="dpsearch-dbschema.en.html"
+>Database schema</A
+></DT
+><DT
+>A. <A
+HREF="dpsearch-donations.en.html"
+>Donations</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="dpsearch-index.en.html"
+>Index</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="LOT"
+><DL
+CLASS="LOT"
+><DT
+><B
+>List of Tables</B
+></DT
+><DT
+>3-1. <A
+HREF="dpsearch-syslog.en.html#AEN2212"
+>Verbose levels</A
+></DT
+><DT
+>5-1. <A
+HREF="dpsearch-cachemode.en.html#AEN2815"
+>Cache limit types</A
+></DT
+><DT
+>7-1. <A
+HREF="dpsearch-international.en.html#AEN3213"
+>Language groups</A
+></DT
+><DT
+>7-2. <A
+HREF="dpsearch-international.en.html#AEN3299"
+>Charsets aliases</A
+></DT
+><DT
+>8-1. <A
+HREF="dpsearch-doingsearch.en.html#search-params"
+>Available search parameters</A
+></DT
+><DT
+>8-2. <A
+HREF="dpsearch-doingsearch.en.html#vql-operators"
+>VQL operators supported by DataparkSearch</A
+></DT
+><DT
+>8-3. <A
+HREF="dpsearch-rel.en.html#AEN4904"
+>Configure-time parameters to tune relevance calculation (switches for <B
+CLASS="command"
+>configure</B
+>)</A
+></DT
+><DT
+>9-1. <A
+HREF="dpsearch-dbschema.en.html#db-server"
+><TT
+CLASS="varname"
+>server</TT
+> table schema</A
+></DT
+><DT
+>9-2. <A
+HREF="dpsearch-dbschema.en.html#db-srvinfo"
+>Several server's parameters values in <TT
+CLASS="varname"
+>srvinfo</TT
+> table</A
+></DT
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-intro.en.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Introduction</TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>
