@@ -1,0 +1,936 @@
+<HTML
+><HEAD
+><TITLE
+>Способ хранения Cache
+
+        </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="DataparkSearch Engine 4.50"
+HREF="index.ru.html"><LINK
+REL="UP"
+TITLE="Хранение данных"
+HREF="dpsearch-howstore.ru.html"><LINK
+REL="PREVIOUS"
+TITLE="Хранение данных"
+HREF="dpsearch-howstore.ru.html"><LINK
+REL="NEXT"
+TITLE="К вопросу производительности DataparkSearch
+
+"
+HREF="dpsearch-perf.ru.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и Интранета с открытым исходным кодом. Распространяется по лицензии GNU."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"><SCRIPT
+SRC="http://www.google-analytics.com/urchin.js"
+TYPE="text/javascript"></SCRIPT><SCRIPT
+SRC="http://www.dataparksearch.org/ga.js"
+TYPE="text/javascript"></SCRIPT></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>DataparkSearch Engine 4.50: Поисковая машина; Справочное руководство</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dpsearch-howstore.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>&#1043;&#1083;&#1072;&#1074;&#1072; 5. Хранение данных</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dpsearch-perf.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="cachemode"
+>5.2. Способ хранения Cache
+<A
+NAME="AEN2871"
+></A
+></A
+></H1
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="cachemode-intro"
+>5.2.1. Введение</A
+></H2
+><P
+>В <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> реализован способ хранения <TT
+CLASS="literal"
+>cache</TT
+>,
+позволяющий быстро индексировать и искать среди миллионов документов.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="cachemode-str"
+>5.2.2. Структура индексов слов при способе хранения <TT
+CLASS="literal"
+>Cache</TT
+></A
+></H2
+><P
+>Основная идея способа хранения слов cache заключается в хранении индекса слов и вспомогательной
+информации о документах непосредственно на диске,
+а не в <SPAN
+CLASS="application"
+>SQL</SPAN
+> базе данных. Вся информация об URL (таблицы <TT
+CLASS="literal"
+>url</TT
+> и <TT
+CLASS="literal"
+>urlinfo</TT
+>)
+тем не менее продолжает храниться в <SPAN
+CLASS="application"
+>SQL</SPAN
+> базе данных.
+Индекс слов разделён на несколько файлов, число которых может быть задано при помощи команды
+<A
+NAME="AEN2887"
+></A
+>
+<B
+CLASS="command"
+>WrdFiles</B
+> (по умолчанию - 0x300).
+<A
+NAME="AEN2891"
+></A
+>
+Число файлов хранения дополнительной информации о документах задаётся командой <B
+CLASS="command"
+>URLDataFiles</B
+>
+(по умолчанию - 0x300).
+<DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+>Внимание: вы должны иметь одаковые значения для <B
+CLASS="command"
+>WrdFiles</B
+>и <B
+CLASS="command"
+>URLDataFiles</B
+>во всех файлах
+конфигурации.
+</BLOCKQUOTE
+></DIV
+>
+</P
+><P
+>&#13;Индекс слов находится в файлах, расположенных в поддиректории <TT
+CLASS="filename"
+>/var/tree</TT
+> относительно корневой 
+директории установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+Вспомогательная информация о документах храниится в файлах, расположенных в поддиректории 
+<TT
+CLASS="filename"
+>/var/url</TT
+> относительно корневой  директории установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>. </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="cachemode-tools"
+>5.2.3. Утилиты для способа хранения <TT
+CLASS="literal"
+>Cache</TT
+></A
+></H2
+><P
+>При выборе способа хранения <TT
+CLASS="literal"
+>cache</TT
+> используютсся две дополнительные программы:
+<B
+CLASS="command"
+>cached</B
+> и <B
+CLASS="command"
+>splitter</B
+>.</P
+><P
+> <B
+CLASS="command"
+>cached</B
+> - демон, получающий по сети информацию о хранимых словах от
+<B
+CLASS="command"
+>indexer</B
+> и записывает её на ваш жёсткий диск. Этот демон может работать в двух режимах,
+как старый демон <B
+CLASS="command"
+>cachelogd</B
+>, входивший в предыдущие версии и только записывающий получаемую информацию на диск,
+и в новом режиме, в котором объединены функции <B
+CLASS="command"
+>cachelogd</B
+> и <B
+CLASS="command"
+>splitter</B
+>.</P
+><P
+> <B
+CLASS="command"
+>splitter</B
+> - программа создания индексов слов для быстрого поиска на основе записей,
+сделаных <B
+CLASS="command"
+>cached</B
+> при работе в старом режиме. Эти индексы слов и используются в дальнейшем 
+при обработке запросов на поиск.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="cachemode-start"
+>5.2.4. Запуск способа хранения <TT
+CLASS="literal"
+>cache</TT
+></A
+></H2
+><P
+>Для запуска режима хранения <TT
+CLASS="literal"
+>cache</TT
+> проделайте следующее:</P
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Запустите демон <B
+CLASS="command"
+>cached</B
+>:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>cd /usr/local/dpsearch/sbin </B
+></TT
+></P
+><P
+><TT
+CLASS="userinput"
+><B
+>./cached  2&#62;cached.out &#38;</B
+></TT
+>
+				</P
+><P
+>Он будет писать некоторую отладочную информацию в файл
+<TT
+CLASS="filename"
+>cached.out</TT
+>. <TT
+CLASS="filename"
+>cached</TT
+> также создаст файл <TT
+CLASS="filename"
+>cached.pid</TT
+> в
+поддиректории <TT
+CLASS="filename"
+>/var</TT
+> относительно корневой директории установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.</P
+><P
+><TT
+CLASS="filename"
+>cached</TT
+> может принимать соединения по TCP от нескольких различных машин.
+Теоритический предел одновременных соединений равен 128. В старом режиме <TT
+CLASS="filename"
+>cached</TT
+>
+записывает полученную от <B
+CLASS="command"
+>indexer</B
+> информацию поддиректорию <TT
+CLASS="filename"
+>/var/splitter/</TT
+> относительно
+корневой директории установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+В новом режиме он записывает информацию в поддиректорию <TT
+CLASS="filename"
+>/var/tree/</TT
+>.</P
+><P
+>По умолчанию, <TT
+CLASS="filename"
+>cached</TT
+> запускается в новом режиме. Для запуска в старом режиме,
+т.е. только для получения и сохранения на диске информации, получаемой от <B
+CLASS="command"
+>indexer</B
+>,
+запустите его с ключом <TT
+CLASS="option"
+>-l</TT
+>.</P
+><P
+><TT
+CLASS="userinput"
+><B
+>cached -l</B
+></TT
+></P
+><P
+>Или укажите команду <A
+NAME="AEN2952"
+></A
+>
+<B
+CLASS="command"
+>LogsOnly yes</B
+> в вашем <TT
+CLASS="filename"
+>cached.conf</TT
+>.</P
+><P
+>Вы можете указать другой порт для <TT
+CLASS="filename"
+>cached</TT
+> без перекомпиляции.
+Для этого хапустите
+</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>&#13;./cached -p8000 
+</B
+></TT
+>
+				</P
+><P
+>где <TT
+CLASS="literal"
+>8000</TT
+> - номер порта по вашему выбору.</P
+><P
+>Вы также можете указать другую директорию для записи информации 
+(по умолчанию это поддиректория <TT
+CLASS="literal"
+>/var</TT
+>) выдав такую команду:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>&#13;./cached -w /path/to/var/dir
+</B
+></TT
+>
+				</P
+></LI
+><LI
+><P
+>Сконфигурируйте <TT
+CLASS="filename"
+>indexer.conf</TT
+> как обычно, указав <TT
+CLASS="literal"
+>cache</TT
+> в
+качестве параметра dbmode команды <B
+CLASS="command"
+>DBAddr</B
+> и <TT
+CLASS="literal"
+>localhost:7000</TT
+> в качестве параметра cached
+(см. <A
+HREF="dpsearch-indexcmd.ru.html#dbaddr_cmd"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.2</A
+>).
+				</P
+></LI
+><LI
+><P
+>Запустите один или несколько <B
+CLASS="command"
+>indexer</B
+>.
+Несколько <B
+CLASS="command"
+>indexer</B
+> могут быть запущены одновременно. Вы можете запускать <B
+CLASS="command"
+>indexer</B
+>
+с различных машин, но работающих с одним сервером <TT
+CLASS="filename"
+>cached</TT
+>. Это позволяет
+проводить ускоренное распределенное индексирование.
+</P
+></LI
+><LI
+><P
+>Сброс буферов <SPAN
+CLASS="application"
+>cached</SPAN
+> и данных об url, а также создание лимитов 
+по завершении процесса индексирования.
+Пошлите сигнал -HUP для <TT
+CLASS="filename"
+>cached</TT
+>.
+Вы можете использовать файл <TT
+CLASS="filename"
+>cached.pid</TT
+> для этого:</P
+><P
+>&#13;<TT
+CLASS="userinput"
+><B
+>&#13;kill -HUP `cat /usr/local/dpsearch/var/cached.pid`
+</B
+></TT
+>
+</P
+><P
+>Дождитесь окончания сброса буферов, прежде чем переходить к следующему шагу.
+</P
+></LI
+><LI
+><P
+>Создание индекса слов. Этот шаг не требуется, если <TT
+CLASS="filename"
+>cached</TT
+>
+запущен в новом, объединённом, режиме.
+Когда соберётся достаточное количество информации в поддиреткории <TT
+CLASS="filename"
+>/var/splitter/</TT
+>,
+можно создать индексы для быстрого поиска слов.Программа <TT
+CLASS="filename"
+>splitter</TT
+> предназначена для этого.
+Она устанавливается в поддиректорию <TT
+CLASS="filename"
+>/sbin</TT
+>. Индексы для поиска слов могут создаваться в любое время без
+остановки процесса индексирования.</P
+><P
+>Создание индекса слов.
+Запустите <TT
+CLASS="filename"
+>splitter</TT
+> без каких либо ключей:
+<TT
+CLASS="userinput"
+><B
+>&#13;/usr/local/dpsearch/sbin/splitter
+</B
+></TT
+>
+						</P
+><P
+>Он последовательно обработает все файлы из поддиректории
+<TT
+CLASS="filename"
+>/var/splitter/</TT
+> строя на их основе индекс слов для быстрого поиска. После этой обработки файлы
+в поддиректории <TT
+CLASS="filename"
+>/var/splitter/</TT
+> усекаются.</P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="cachelog-sevspl"
+>5.2.5. Использование нескольких <B
+CLASS="command"
+>splitter</B
+> одновременно</A
+></H2
+><P
+><B
+CLASS="command"
+>splitter</B
+> имеет два ключа:
+<TT
+CLASS="option"
+>-f [first file] -t [second file]</TT
+>, задающих границы обрабатываемых файлов.
+Если эти параметры не указаны, <B
+CLASS="command"
+>splitter</B
+> последовательно обрабатывает все 
+приготовленные файлы. Вы можете ограничить обрабатываемое количество задав ключами
+-f и -t параметры в  HEX нотации. Например, 
+<B
+CLASS="command"
+>splitter -f 000 -t A00</B
+> создаст индекс слов только из фалёлов с диапазона с 000 по A00.
+Используя эти ключи можно запускать одновременно несколько <B
+CLASS="command"
+>splitter</B
+>. Что обычно позволяет ускорить
+создание общего индекса. Например, этот шеловский скрипт запускает в фоне четыре <B
+CLASS="command"
+>splitter</B
+>:
+</P
+><PRE
+CLASS="programlisting"
+>&#13;#!/bin/sh
+splitter -f 000 -t 3f0 &#38;
+splitter -f 400 -t 7f0 &#38;
+splitter -f 800 -t bf0 &#38;
+splitter -f c00 -t ff0 &#38;
+</PRE
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="cachelog-runspl"
+>5.2.6. Использование скрипта <B
+CLASS="command"
+>run-splitter</B
+></A
+></H2
+><P
+>В поддиректории <TT
+CLASS="filename"
+>/sbin</TT
+> находится скрипт <TT
+CLASS="filename"
+>run-splitter</TT
+>.
+Он помогает последовательно выполнить все шаги по построению индекса слов для быстрого поиска.
+</P
+><P
+><B
+CLASS="command"
+>run-splitter</B
+> имеет два параметра командной строки:</P
+><P
+>&#13;			<TT
+CLASS="userinput"
+><B
+>&#13;run-splitter --hup --split
+</B
+></TT
+>
+		</P
+><P
+>или в короткой форме:</P
+><P
+>&#13;			<TT
+CLASS="userinput"
+><B
+>&#13;run-splitter -k -s
+</B
+></TT
+>
+		</P
+><P
+>Каждый параметр запускает соответсвующий шаг создания индекса слов. <TT
+CLASS="filename"
+>run-splitter</TT
+>
+выполняет все шаги созданяи индекса в правильной последовательности:</P
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Посылка сигнала -HUP к cached. 
+Этому соответствует парамет <TT
+CLASS="literal"
+>--hup</TT
+> (или <TT
+CLASS="literal"
+>-k</TT
+>).</P
+></LI
+><LI
+><P
+>Запуск <B
+CLASS="command"
+>splitter</B
+>. 
+Этому соответсвует параметр <TT
+CLASS="literal"
+>--split</TT
+>  (или <TT
+CLASS="literal"
+>-s</TT
+>).</P
+></LI
+></OL
+><P
+>В большинстве случаев достаточно просто запустить скрипт <B
+CLASS="command"
+>run-splitter</B
+> со
+всеми параметрами <TT
+CLASS="literal"
+>-k -s</TT
+>. Раздельное использование этих параметров редко необходимо. </P
+><P
+><B
+CLASS="command"
+>run-splitter</B
+> имеет необязательные параметры <TT
+CLASS="literal"
+>-p=n</TT
+> и <TT
+CLASS="literal"
+>-v=m</TT
+>
+для задания соответсвенно паузы в секунда после обработки каждого буффера и указания выдачи сообщений.
+<TT
+CLASS="literal"
+>n</TT
+> - число секунд (по умолчанию 0), <TT
+CLASS="literal"
+>m</TT
+> - уровень выдачи (по умолчанию 4).
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="cachelog-search"
+>5.2.7. Поиск</A
+></H2
+><P
+>Для использования <B
+CLASS="command"
+>search.cgi</B
+> со способом хранения "cache",
+сконфигурируйте ваш шаблон <TT
+CLASS="filename"
+>search.htm</TT
+> как обычно, добавив "cache" в качестве значения
+параметра <TT
+CLASS="literal"
+>dbmode</TT
+> команды <B
+CLASS="command"
+>DBAddr</B
+>
+		</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="limits"
+>5.2.8. Использование лимитов при поиске</A
+></H2
+><P
+>Для применения лимитов при поиске с использование способа хранения cache,
+необходимо добавить соответсвующие команды <B
+CLASS="command"
+>Limit</B
+> в ваши <TT
+CLASS="filename"
+>indexer.conf</TT
+> 
+(или <TT
+CLASS="filename"
+>cached.conf</TT
+>, если используется <B
+CLASS="command"
+>cached</B
+>) и
+<TT
+CLASS="filename"
+>search.htm</TT
+> или <TT
+CLASS="filename"
+>searchd.conf</TT
+> (если используется <B
+CLASS="command"
+>searchd</B
+>).
+</P
+><P
+><A
+NAME="AEN3063"
+></A
+>
+Для использования, например, лимитов по тэгу, категории и сайту, добавьте следующие строки в ваши файлы конфигурации:
+</P
+><PRE
+CLASS="programlisting"
+>&#13;Limit t:tag
+Limit c:catategory
+Limit site:siteid
+</PRE
+><P
+>&#13;где <TT
+CLASS="literal"
+>t</TT
+> - имя CGI параметра (&#38;t=) этого ограничения, <TT
+CLASS="literal"
+>tag</TT
+> - тип ограничения.
+</P
+><P
+>Вместо tag/category/siteid в примере выше вы можете использовать значения из следующей таблицы:
+<DIV
+CLASS="table"
+><A
+NAME="AEN3071"
+></A
+><P
+><B
+>&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 5-1. Типы лимитов способа хранения Cache</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>category</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по категории.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>tag</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по тэгу.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>time</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по времени (с точностью до часа).</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>language</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по языку.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>content</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по MIME-типу.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>siteid</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по url.site_id (по имени сервера).</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>link</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по документам, ссылающимся на указаный url.rec_id.</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>hostname (устаревшее)</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Лимит по имени сервера. Это утсравшая команда, вытесненная лимитом по site_id</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+>
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dpsearch-howstore.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.ru.html"
+ACCESSKEY="H"
+>&#1053;&#1072;&#1095;&#1072;&#1083;&#1086;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-perf.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Хранение данных</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="dpsearch-howstore.ru.html"
+ACCESSKEY="U"
+>&#1059;&#1088;&#1086;&#1074;&#1077;&#1085;&#1100; &#1074;&#1099;&#1096;&#1077;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>К вопросу производительности <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>
+<A
+NAME="AEN3102"
+></A
+></TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>

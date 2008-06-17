@@ -1,0 +1,750 @@
+<HTML
+><HEAD
+><TITLE
+>Инсталяция DataparkSearch
+
+</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="DataparkSearch Engine 4.50"
+HREF="index.ru.html"><LINK
+REL="UP"
+TITLE="Установка
+
+        "
+HREF="dpsearch-install.ru.html"><LINK
+REL="PREVIOUS"
+TITLE="Инструментарий, необходимый для установки"
+HREF="dpsearch-toolsreq.ru.html"><LINK
+REL="NEXT"
+TITLE="Возможные проблемы установки
+
+"
+HREF="dpsearch-installproblem.ru.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и Интранета с открытым исходным кодом. Распространяется по лицензии GNU."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"><SCRIPT
+SRC="http://www.google-analytics.com/urchin.js"
+TYPE="text/javascript"></SCRIPT><SCRIPT
+SRC="http://www.dataparksearch.org/ga.js"
+TYPE="text/javascript"></SCRIPT></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>DataparkSearch Engine 4.50: Поисковая машина; Справочное руководство</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dpsearch-toolsreq.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>&#1043;&#1083;&#1072;&#1074;&#1072; 2. Установка
+<A
+NAME="AEN168"
+></A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dpsearch-installproblem.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="installing"
+>2.4. Инсталяция <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>
+<A
+NAME="AEN295"
+></A
+></A
+></H1
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Разархивируйте дистрибутив и перейдите а корневую директорию распакованного дерева исходников.</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>tar -zxf dpsearch-x.x.tar.gz</B
+></TT
+>
+				</P
+></LI
+><LI
+><P
+>Для упрощения процесса конфигурирования мы добавили скрипт конфигурации
+<TT
+CLASS="filename"
+>install.pl</TT
+>. Запустите <TT
+CLASS="filename"
+>install.pl</TT
+>
+и отвечая на вопросы, выберите нужную конфигурацию <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>
+После того, как вы выберите все опции, этот скрипт запустит <TT
+CLASS="literal"
+>./configure</TT
+> с выбранными вами ключами.
+Он также создаст файл <TT
+CLASS="filename"
+>create install.options</TT
+>
+содержащий ваши настройки, и которые будут использованы при следующих запусках этого скрипта.
+После того, как процес конфигурирования будет завершен, создайте и проинсталируйте <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>
+как описано в разделе 3.
+</P
+><P
+>В случае, если вы желаете сконфигурировать <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>
+вручную без использования скрипта конфигурирования, проделайте следующие шаги:</P
+><P
+>Если нужна поддержка SQL базы данных:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ ./configure --with-mysql</B
+></TT
+>
+				</P
+><P
+>или</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ ./configure --with-pgsql</B
+></TT
+>
+				</P
+><P
+>или другим ключом, соответствующим выбраной базе данных,</P
+><P
+>или с несколькими базами:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ ./configure --with-mysql --with-pgsql --with-msql --with-freetds</B
+></TT
+>
+				</P
+><P
+>По умолчанию, <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> устанавливается в директорию
+<TT
+CLASS="literal"
+>/usr/local/dpsearch</TT
+> и поддериктории:</P
+><DIV
+CLASS="informaltable"
+><A
+NAME="AEN326"
+></A
+><P
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Поддиректория</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Содержимое</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>bin</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;									<TT
+CLASS="filename"
+>search.cgi</TT
+>, <TT
+CLASS="filename"
+>storedoc.cgi</TT
+>, <TT
+CLASS="filename"
+>dps-config</TT
+>
+								</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>lib</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;									<TT
+CLASS="filename"
+>libdpsearch.a(so)</TT
+>,
+									<TT
+CLASS="filename"
+>libdpcharset.a(so)</TT
+>
+								</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>sbin</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;									<TT
+CLASS="filename"
+>indexer</TT
+>, <TT
+CLASS="filename"
+>cached</TT
+>,
+<TT
+CLASS="filename"
+>run-splitter</TT
+>,
+<TT
+CLASS="filename"
+>searchd</TT
+>, <TT
+CLASS="filename"
+>splitter</TT
+>, <TT
+CLASS="filename"
+>stored</TT
+>
+								</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>etc</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;									<TT
+CLASS="filename"
+>indexer.conf-dist, search.htm-dist</TT
+>,
+<TT
+CLASS="filename"
+>langmap.conf-dist</TT
+>,
+<TT
+CLASS="filename"
+>searchd.conf-dist</TT
+>,
+<TT
+CLASS="filename"
+>stopwords.conf-dist</TT
+>,
+<TT
+CLASS="filename"
+>stored.conf-dist</TT
+>, <TT
+CLASS="filename"
+>storedoc.htm-dist</TT
+>
+								</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>share</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Документация и sql-скрипты</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+></DIV
+><P
+>Если у вас нет прав для создания этой директории, или вы хотите установить 
+<SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> в другую директорию, используйте для <B
+CLASS="command"
+>configure</B
+> ключ 
+<TT
+CLASS="option"
+>--prefix</TT
+>,
+например,</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>./configure --prefix=/user/home/data --with-mysql</B
+></TT
+>
+				</P
+><P
+>Для установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> с поддержкой HTTPS, 
+используйте следующий ключ для <B
+CLASS="command"
+>configure</B
+>:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>./configure --with-openssl</B
+></TT
+>
+				</P
+><P
+>или, в случае, когда, библиотека OpenSSL установлена не в стандартной пути:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>./configure --with-openssl=/path/to/library</B
+></TT
+>
+				</P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+>&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
+>Пожалйста, имейте в виду, что установка библиотеки OpenSSL на вашем компьютере
+необходима для поддержки HTTPS.</P
+></BLOCKQUOTE
+></DIV
+><P
+>Вы можете видеть все ключи, запустив <TT
+CLASS="literal"
+>./configure --help</TT
+>
+				</P
+><P
+>Если вы хотите передать для компилятора C некоторые специфицеские ключи
+(например, <TT
+CLASS="literal"
+>'-O7 -mpentium'</TT
+> создания оптимизированного кода под процессор
+<SPAN
+CLASS="trademark"
+>Pentium</SPAN
+>&#8482;, если используется компилятор egcs/pgcc), это можно сделать при помощи следующей команды</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$  CFLAGS="-O7 -mpentium"</B
+></TT
+>
+				</P
+><P
+>&#13;					<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>до</I
+></SPAN
+> запуска <B
+CLASS="command"
+>configure</B
+>.</P
+><P
+>Для компиляции <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> под <SPAN
+CLASS="application"
+>FreeBSD</SPAN
+>
+с поддержкой <TT
+CLASS="literal"
+>Solid</TT
+> в старом aout формате, используйте</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ CFLAGS="-aout"</B
+></TT
+>
+				</P
+><P
+>&#13;					<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>до</I
+></SPAN
+> запуска <B
+CLASS="command"
+>configure</B
+>.</P
+><P
+>Для компиляции <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> под <SPAN
+CLASS="application"
+>FreeBSD</SPAN
+>
+с aout InterBase используйте</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ CFLAGS="-aout -static"</B
+></TT
+>
+				</P
+><P
+>&#13;					<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>до</I
+></SPAN
+> запуска <B
+CLASS="command"
+>configure</B
+>.</P
+><P
+>Вы можете также указать <TT
+CLASS="option"
+>--enable-pthreads</TT
+>
+				для компиляции многопоточной версии <B
+CLASS="command"
+>indexer</B
+>.</P
+><P
+>&#13;<A
+NAME="AEN411"
+></A
+>
+Для включения пооддержки <A
+HREF="http://sourceforge.net/projects/dmalloc/"
+TARGET="_top"
+>отладчика памяти DMALLOC</A
+>
+используйте ключ <TT
+CLASS="option"
+>--enable-dmalloc</TT
+>. </P
+><P
+>Кодировки euc-kr, big5, gb2312, tscii, gujarati и shift-jis не поддерживаются по умолчанию.
+Для включения поддержки используйте ключ <TT
+CLASS="option"
+>--with-extra-charsets</TT
+>.</P
+><P
+>Для включения поддержки всех кодовых страниц, используйте:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>./configure --with-extra-charsets=all</B
+></TT
+>
+				</P
+><P
+>Для включения поддержки только какой-то одной кодовой страницы:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>./configure --with-extra-charsets=tscii</B
+></TT
+>
+				</P
+><P
+>Для включения поддержки симейства кодировок китайского или японского языков:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>./configure --with-extra-charsets=chinese</B
+></TT
+>
+или
+					<TT
+CLASS="userinput"
+><B
+>./configure --with-extra-charsets=japanese</B
+></TT
+>
+				</P
+><P
+>Чтобы включить поддержку нескольких нужных кодовых страниц, указывайте их через запятую:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>./configure --with-extra-charset=chinese,gujarati</B
+></TT
+>
+				</P
+><P
+>Если у вас возникли трудности с конфигурированием, пожалуйста, смотрите <A
+HREF="dpsearch-installproblem.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 2.5</A
+>.</P
+></LI
+><LI
+><P
+>Скомпилируйте и установите <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ make</B
+></TT
+>
+				</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ make install</B
+></TT
+>
+				</P
+><P
+>Если у вас возникли трудности с компиляцией, пожалуйста, смотрите <A
+HREF="dpsearch-installproblem.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 2.5</A
+>.</P
+></LI
+><LI
+><P
+>Создайте базу данных <TT
+CLASS="literal"
+>search</TT
+> (только для SQL баз данных).</P
+><P
+>Вы можете использовать существующую базу данных, в этом случае пропустите этот пункт.</P
+><P
+>MySQL:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ mysqladmin create search</B
+></TT
+>
+				</P
+><P
+>PostgreSQL:</P
+><P
+>&#13;					<TT
+CLASS="userinput"
+><B
+>sh$ createdb search</B
+></TT
+>
+				</P
+><P
+>Для других баз данных см. документацию на соответсвующую базу данных.</P
+></LI
+><LI
+><P
+>Создайте sql-таблицы</P
+><P
+>Отредактируйте файл <TT
+CLASS="filename"
+>indexer.conf</TT
+> указав в команде <B
+CLASS="command"
+>DBAddr</B
+> используемый SQL-сервер и
+желаемый dbmode. После этого запустите:
+</P
+><P
+>&#13;<TT
+CLASS="userinput"
+><B
+>sh$ indexer -Ecreate</B
+></TT
+>
+</P
+><P
+>&#13;<B
+CLASS="command"
+>indexer</B
+> автоматически создаст все нужные таблицы по этим параметрам.
+</P
+></LI
+><LI
+><P
+>Установка программы поиска</P
+><P
+>Скопируйте <TT
+CLASS="filename"
+>search.cgi</TT
+> в <TT
+CLASS="literal"
+>cgi-bin</TT
+> 
+директорию вашего веб-сервера или создайте алиас в Apache на поддиректорию <TT
+CLASS="filename"
+>bin/</TT
+>
+<SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>. </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dpsearch-toolsreq.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.ru.html"
+ACCESSKEY="H"
+>&#1053;&#1072;&#1095;&#1072;&#1083;&#1086;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-installproblem.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Инструментарий, необходимый для установки</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="dpsearch-install.ru.html"
+ACCESSKEY="U"
+>&#1059;&#1088;&#1086;&#1074;&#1077;&#1085;&#1100; &#1074;&#1099;&#1096;&#1077;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Возможные проблемы установки
+<A
+NAME="AEN470"
+></A
+></TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>
