@@ -79,5 +79,6 @@ extern dpsunicode_t *DpsUniNormalizeNFC(dpsunicode_t *buf, dpsunicode_t *str);
 extern dpsunicode_t *DpsUniNormalizeNFD(dpsunicode_t *buf, dpsunicode_t *str);
 
 extern int dps_isPatternSyntax(dpsunicode_t ch);
+extern int dps_isApostropheBreak(dpsunicode_t ch, dpsunicode_t next);
 
 #endif

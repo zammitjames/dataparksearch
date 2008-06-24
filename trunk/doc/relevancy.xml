@@ -57,6 +57,11 @@ By default, this value is 256. But note, <command>NumSections</command> do not a
 <entry><para>This option disables accounting of word counts for relevance calculation. Value by default: enabled.
 </para></entry></row>
 
+<row><entry><option>--with-avgdist=<option>NUM</option></option></entry>
+<entry><para>This option specify the <option>NUM</option> as the best average distance between words in document found.
+Value by default: 464.
+</para></entry></row>
+
 <row><entry><option>--with-bestpos=<option>NUM</option></option></entry>
 <entry><para>This option specify the <option>NUM</option> as the best value of first word position in document found.
 Value by default: 4.
@@ -68,6 +73,10 @@ Value by default: 11.
 </para></entry></row>
 
 <row><entry><option>--with-distfactor=<option>NUM</option></option></entry>
+<entry><para>This option specify the <option>NUM</option> as a factor for average word distance for relevance calculation. 
+Value by default: 0.2.
+</para></entry></row>
+<row><entry><option>--with-lessdistfactor=<option>NUM</option></option></entry>
 <entry><para>This option specify the <option>NUM</option> as a factor for average word distance for relevance calculation. 
 Value by default: 0.2.
 </para></entry></row>

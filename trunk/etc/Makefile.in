@@ -548,13 +548,16 @@ stopwords/uk.sl
 
 synonym_FILES = \
 synonym/english.syn \
+synonym/english.big.syn \
 synonym/francais.syn \
-synonym/russian.syn 
+synonym/russian.syn \
+synonym/russian.big.syn 
 
 acronym_FILES = \
 acronym/en.cs.acr \
 acronym/en.fido.acr \
 acronym/en.acr \
+acronym/fr.acr \
 acronym/ru.acr
 
 EXTRA_DIST = ${sysconf_DATA} ${langmap_FILES} ${stopwords_FILES} ${synonym_FILES} ${acronym_FILES}

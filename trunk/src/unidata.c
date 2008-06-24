@@ -117,21 +117,26 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 		}else{
 			ctype=dps_uni_plane[plane].ctype;
 		}
-		if (ctype == DPS_UNI_PUNCT_O) {
-		  if (*s == 0x27) {
-		    plane_1 = ((*(s+1)) >> 8) & 0xFF;
-		    if(dps_uni_plane[plane_1].table){
-		      ctype_1 = dps_uni_plane[plane_1].table[(*(s+1)) & 0xFF].ctype;
-		    }else{
-		      ctype_1 = dps_uni_plane[plane_1].ctype;
-		    }
-		    if (ctype_1 > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*(s+1)))) {
-		      *last = s;
-		      return beg;
-		    }
-		    s++; continue;
+		
+		if (*s == 0x27 || *s == 0x2019) {
+		  if (dps_isApostropheBreak(*(s+1), (*(s+1)==0) ? 0 : *(s+2) )) {
+		    s++;
+		    *last = s;
+		    return beg;
 		  }
+		  plane_1 = ((*(s+1)) >> 8) & 0xFF;
+		  if(dps_uni_plane[plane_1].table){
+		    ctype_1 = dps_uni_plane[plane_1].table[(*(s+1)) & 0xFF].ctype;
+		  }else{
+		    ctype_1 = dps_uni_plane[plane_1].ctype;
+		  }
+		  if (ctype_1 > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*(s+1)))) {
+		    *last = s;
+		    return beg;
+		  }
+		  s++; continue;
 		}
+		
 		if (ctype > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*s))) {
 		  *last = s;
 		  return beg;
@@ -181,7 +186,8 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 			ctype_forte = (dps_uni_plane[plane].ctype <= DPS_UNI_BUKVA_FORTE);
 		}
 
-		if (*s == 0x27 && *ctype0 <= DPS_UNI_BUKVA) {
+		if ((*s == 0x27 || *s == 0x2019) && (*ctype0 <= DPS_UNI_BUKVA)) {
+		  if (dps_isApostropheBreak(*(s+1), (*(s+1)==0) ? 0 : *(s+2) )) { s++; break; }
 		  plane_1 = ((*(s+1)) >> 8) & 0xFF;
 		  if(dps_uni_plane[plane_1].table){
 		    ctype_1 = DPS_UNI_CTYPECLASS(dps_uni_plane[plane_1].table[(*(s+1)) & 0xFF].ctype);
@@ -308,6 +314,30 @@ static dpsunicode_t *DpsUniGetDecomposition(dpsunicode_t *buf, dpsunicode_t c) {
   return 0;
 }
 
+int dps_isApostropheBreak(dpsunicode_t c, dpsunicode_t n) {
+  int plane = (c >> 8) & 0xFF;
+  if (uni_decomp_plane[plane] != NULL) {
+    int character = c & 0xFF;
+    dpsunicode_t dec = (uni_decomp_plane[plane])[character].decomp[0];
+    if (dec == 0) dec = (dpsunicode_t) character;
+    if (dec == 'h' && (n != 0)) {
+      plane = (n >> 8) & 0xFF; character = n & 0xFF;
+      dec = (uni_decomp_plane[plane])[character].decomp[0];
+      if (dec == 0) dec = (dpsunicode_t) character;
+    }
+    switch(dec) {
+    case 'a':
+    case 'e':
+    case 'i':
+    case 'o':
+    case 'u':
+    case 'w':
+    case 'y': return 1;
+    default: return 0;
+    }
+  }
+  return 0;
+}
 
 static void DpsUniDecomposeRecursive(DPS_DSTR *buf, dpsunicode_t c) {
   int pos = 0;
