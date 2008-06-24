@@ -52,7 +52,7 @@
 <book>
 	<bookinfo>
 		<title>DataparkSearch Engine 4.50</title>
-		<subtitle>The Web searching software</subtitle>
+		<!--subtitle>The Web searching software</subtitle-->
                 <subtitle>Reference manual</subtitle>
 		<copyright>
 			<year>2003-2008</year>
@@ -63,6 +63,9 @@
 			<holder>Lavtech.com corp.</holder>
 		</copyright>
 	</bookinfo>
+<dedication><title></title>
+<para>This project is dedicated to No&eacute;mie.</para>
+</dedication>
 &intro;
 &install;
 <chapter id="indexing">

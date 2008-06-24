@@ -589,7 +589,7 @@ rel_less_distance_factor="(2.0 * DPS_DISTANCE_FACTOR)"
 AC_MSG_CHECKING(for word less distance factor in relevance)
 AC_ARG_WITH(lessdistfactor,
 [  --with-lessdistfactor=NUM   Define NUM as factor of word distance in relevance calculation. 
-                          Default value is with-distancefactor multiply by 2.],
+                          Default value is --with-distancefactor multiply by 2.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_less_distance_factor="$withval"

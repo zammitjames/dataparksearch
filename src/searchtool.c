@@ -103,6 +103,14 @@ static int DpsCmpPattern(DPS_URLCRDLIST *L, size_t i, size_t j, const char *patt
   
   for(; *pattern != '\0'; pattern++) {
     switch(*pattern) {
+    case 'U':
+      if (L->Coords[i].url_id > L->Coords[j].url_id) return -1;
+      if (L->Coords[i].url_id < L->Coords[j].url_id) return 1;
+      break;
+    case 'u':
+      if (L->Coords[i].url_id < L->Coords[j].url_id) return -1;
+      if (L->Coords[i].url_id > L->Coords[j].url_id) return 1;
+      break;
     case 'R':
       if (L->Coords[i].coord > L->Coords[j].coord) return -1;
       if (L->Coords[i].coord < L->Coords[j].coord) return 1;

@@ -3,6 +3,8 @@ History
 -------
 
 Latset snapshot:
+	* A word break has been added for French-style contractions.
+	* Big lists of Russian and English synonyms have been added.
 	* MaxSiteLevel command accept now a negative argument to group URLs on subdirectory basis.
 	* The SkipUnreferred command has been extended to delete unreferred documents if necessary.
 	* Del log processing has been fixed in splitter for case when cache log is empty.

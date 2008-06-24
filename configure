@@ -1111,7 +1111,7 @@ Optional Packages:
   --with-distfactor=NUM   Define NUM as factor of word distance in relevance calculation.
                           Default value is 0.2.
   --with-lessdistfactor=NUM   Define NUM as factor of word distance in relevance calculation.
-                          Default value is with-distancefactor multiply by 2.
+                          Default value is --with-distancefactor multiply by 2.
   --with-posfactor=NUM    Define NUM as factor of first word position in relevance calculation.
                           Default value is 0.5.
   --with-lessposfactor=NUM    Define NUM as factor of first word position in relevance calculation.

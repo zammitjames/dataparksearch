@@ -294,13 +294,16 @@ stopwords/uk.sl
 
 synonym_FILES = \
 synonym/english.syn \
+synonym/english.big.syn \
 synonym/francais.syn \
-synonym/russian.syn 
+synonym/russian.syn \
+synonym/russian.big.syn 
 
 acronym_FILES = \
 acronym/en.cs.acr \
 acronym/en.fido.acr \
 acronym/en.acr \
+acronym/fr.acr \
 acronym/ru.acr
 
 

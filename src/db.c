@@ -89,6 +89,7 @@
 
 #define DEBUG
 
+/*#define NEWMERGE*/
 
 
 void *DpsDBInit(void *vdb){
@@ -953,6 +954,10 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	int             res = DPS_OK;
 	size_t	        nwrd = 0;
 	size_t	        nwrdX[256];
+#ifdef NEWMERGE
+	size_t          iwrdX[256], nskipped;
+	urlid_t cur_url_id;
+#endif
 	size_t          *PerSite[256], *persite, *curpersite;
 	size_t          ResultsLimit = DpsVarListFindUnsigned(&A->Vars, "ResultsLimit", 0);
 	size_t          total_found = 0, cnt_db = 0;
@@ -1033,7 +1038,15 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	    trkX[i] = Res->CoordList.Track;
 #endif
 	    nwrdX[i] = (Res->offset || !Res->num_rows) ? Res->total_found : Res->num_rows;
-	    nwrd += (Res->offset || !Res->num_rows) ? Res->total_found : Res->num_rows;
+#ifdef NEWMERGE
+	    iwrdX[i] = 0;
+	    if (label != NULL && db->label == NULL) nwrdX[i] = 0;
+	    else if (label == NULL && db->label != NULL) nwrdX[i] = 0;
+	    else if (label != NULL && db->label != NULL && strcasecmp(db->label, label)) nwrdX[i] = 0;
+	    
+#endif
+/*	    nwrd += (Res->offset || !Res->num_rows) ? Res->total_found : Res->num_rows;*/
+	    nwrd += nwrdX[i];
 
 	    total_found += Res->total_found;
 	    if ((PerSite[i] = Res->PerSite) == NULL) {
@@ -1079,6 +1092,57 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	    }
 
 	    if (A->flags & DPS_FLAG_UNOCON) { A->Conf->dbl.cnt_db = 0; } else { A->dbl.cnt_db = 0; }
+#ifdef NEWMERGE
+	    for (i = dbfrom; i < dbto; i++) {
+	      int zz;
+	      for (zz = 0 ; zz < nwrdX[i]; zz++) {
+		fprintf(stderr, "%d -- db:%d wrd:%d url_id:%d\n", __LINE__, i, zz, wrdX[i][zz].url_id);
+	      }
+	    }
+	    while (1) {
+	      nskipped = 0;
+	      for (i = dbfrom; i < dbto; i++) {
+		if (iwrdX[i] < nwrdX[i]) {
+		  cur_url_id = wrdX[i][iwrdX[i]].url_id; i++; break;
+		}
+		nskipped++;
+	      }
+	      fprintf(stderr, "%d -- nskipped: %d\n", __LINE__, nskipped);
+	      if (nskipped >= (dbto - dbfrom)) break;
+	      for (; i < dbto; i++) {
+		if (iwrdX[i] < nwrdX[i] && cur_url_id > wrdX[i][iwrdX[i]].url_id) {
+		  cur_url_id = wrdX[i][iwrdX[i]].url_id;
+		}
+	      }
+	      fprintf(stderr, "%d -- cur_url_id: %d\n", __LINE__, cur_url_id);
+	      for (i = dbfrom; i < dbto; i++) {
+		while ((iwrdX[i] < nwrdX[i]) && (wrdX[i][iwrdX[i]].url_id == cur_url_id)) {
+		  *curwrd = wrdX[i][iwrdX[i]];
+		  *curpersite = PerSite[i][iwrdX[i]];
+		  if (udtX[i] != NULL) {
+		    *curudt = udtX[i][iwrdX[i]];
+		  } else bzero(curudt, sizeof(*curudt));
+#ifdef WITH_REL_TRACK
+		  if (trkX[i] != NULL) {
+		    *curtrk = trkX[i][iwrdX[i]];
+		  } else bzero(curtrk, sizeof(*curtrk));
+#endif
+		  iwrdX[i]++;
+		}
+	      }
+	      curwrd++; curpersite++; curudt++;
+	    }
+	    nwrd = curwrd = wrd;
+	    for (i = dbfrom; i < dbto; i++) {
+	      DPS_FREE(wrdX[i]);
+	      DPS_FREE(PerSite[i]);
+	      DPS_FREE(udtX[i]);
+#ifdef WITH_REL_TRACK
+	      DPS_FREE(trkX[i]);
+#endif
+	    }
+
+#else
 	    for (i = dbfrom; i < dbto; i++) {
 	      if (label != NULL && db->label == NULL) continue;
 	      if (label == NULL && db->label != NULL) continue;
@@ -1115,6 +1179,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 #endif
 		}
 	    }
+#endif /* NEWMERGE */
 /*	    if (Res->offset) DpsSortSearchWordsByWeight(wrd,nwrd);*/
 	  } else for (i = dbfrom; i < dbto; i++) {
 			DPS_FREE(wrdX[i]);
@@ -1137,6 +1202,23 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	  if (cnt_db > 1 /*dbto - dbfrom > 1*/) {
 	    int		use_site_id = ((!strcasecmp(DpsVarListFindStr(&A->Vars, "GroupBySite", "no"), "yes"))
 				       && (DpsVarListFindInt(&A->Vars, "site", 0) == 0));
+	    size_t n, p;
+	    
+	    /* Removing duplictes */
+	    DpsSortSearchWordsByPattern(Res, &Res->CoordList, Res->CoordList.ncoords, "U");
+	    for(n = 1, p = 0; n < Res->CoordList.ncoords; n++) {
+	      if (Res->CoordList.Coords[p].url_id == Res->CoordList.Coords[n].url_id) continue;
+	      p++;
+	      if (p != n) {
+		Res->CoordList.Coords[p] = Res->CoordList.Coords[n];
+		Res->CoordList.Data[p] = Res->CoordList.Data[n];
+#ifdef WITH_REL_TRACK
+		Res->CoordList.Track[p] = Res->CoordList.Track[n];
+#endif
+	      }
+	    }
+	    Res->CoordList.ncoords = Res->total_found = p + 1;
+	    
 	    if (use_site_id) {
 	      DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
 	      DpsGroupBySite(A, Res);

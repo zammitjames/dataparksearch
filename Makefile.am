@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in 
-AUTOMAKE_OPTIONS = foreign no-installinfo
+AUTOMAKE_OPTIONS = foreign no-installinfo dist-bzip2
 SUBDIRS = include src doc etc create misc scripts test #php @BINDINGS@
 #DIST_SUBDIRS = php java perl
 
@@ -35,8 +35,8 @@ uninstall-local:
 bin-dist:
 	$(MAKE) install DESTDIR=$(CDIR)/$(PACKAGE)-$(VERSION)
 	cd $(CDIR)/$(PACKAGE)-$(VERSION)$(prefix) \
-		&& tar -zcPf $(PACKAGE)-$(VERSION)-$(DBTYPE)-$(host_triplet)-$(LINKING).tar.gz ./
-	mv $(CDIR)/$(PACKAGE)-$(VERSION)$(prefix)/*.tar.gz $(CDIR)
+		&& tar -ycPf $(PACKAGE)-$(VERSION)-$(DBTYPE)-$(host_triplet)-$(LINKING).tar.bz2 ./
+	mv $(CDIR)/$(PACKAGE)-$(VERSION)$(prefix)/*.tar.bz2 $(CDIR)
 	rm -r $(CDIR)/$(PACKAGE)-$(VERSION)
 
 EXTRA_DIST = net.m4 threads.m4 install.pl bootstrap acinclude.m4 docbook.m4 README.XML BUGS \

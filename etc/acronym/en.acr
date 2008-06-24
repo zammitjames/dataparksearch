@@ -1,20 +1,33 @@
 #
 # English acronyms
-# Compiled by Maxim Zakharov <maxime@sochi.net.ru>
+# Compiled by Maxim Zakharov <maxime@maxime.net.ru>
 #
 Language: en
 Charset: latin1
 #
++	plus
+$	dollar
+#
 1	one
+1st	first
 2	two
+2nd	second
 3	three
+3rd	third
 4	four
+4th	fourth
 5	five
+5th	fifth
 6	six
+6th	sixth
 7	seven
+7th	seventh
 8	eight
+8th	eighth
 9	nine
+9th	nineth
 10	ten
+10th	tenth
 100	hundred
 1000	thousand
 #
@@ -274,6 +287,7 @@ EE	Early English
 EE	Envoy Extraordinary
 EET	East European Time
 EFTA	European Free Trade Asscociation
+eighth	8th
 EL	east longitude
 elec	electric
 elect	electric
@@ -303,6 +317,8 @@ fem	feminin
 ff	following
 FIDE	Fédération Internationale des Échecs
 FIFA	Fédération Internationale de football Associations
+fifth	5th
+first	1st
 Fla	Florida
 fm	fathom
 FM	frequency modulation
@@ -311,6 +327,7 @@ FO	Foreign Office
 fol	following
 foll	following
 for	foreign
+forth	4th
 FPC 	Federal Poer Commission
 Fr	father
 fr	franc
@@ -465,6 +482,8 @@ KIA	kiled in action
 KKK	Ku Klux Klan
 kl	kilolitre
 km	kilometre
+knife	knives
+knives	knife
 KO	knock out
 kph	kilometres per hour
 KV	kilovolt
@@ -639,6 +658,7 @@ NGS	National Geographic Society
 NH	New Hampshire
 NHL	National Hockey League
 NI	Northern Ireland
+nineth	9th
 NJ	New Jersey
 NL	night letter
 NL 	north latitude
@@ -889,6 +909,7 @@ Rum	Rumania
 Rwy	railway
 Ry	railway
 #
+s1	someone
 SA	South Africa
 SA	South America
 SA	South Australia
@@ -899,6 +920,7 @@ SAus	South Australia
 SAustr	Aouth Australia
 SB	Bachelor of Science
 SB	southbound
+sb	somebody
 SBA	small business administration
 sc	scale
 Sc	Scots
@@ -919,6 +941,7 @@ SE	south east
 SE	Stock Exchange
 sec	second
 sec	secretary
+second	2nd
 secy	secretary
 sel	selection
 Sen	Sebate
@@ -929,6 +952,7 @@ Sept	September
 seq	sequentes
 ser	serial
 serv	service
+seventh	7th
 SF	Science Fiction
 SFC	Space Flight Center
 SG	senior grade
@@ -937,6 +961,7 @@ sh	shilling
 Shak	Shakespeare
 shf	superhigh frequency
 shpt	shipment
+sixth	6th
 SJD	Doctor of Juridical Science
 Skt	Sanskrit
 SL	sea level
@@ -968,6 +993,7 @@ ST	Standard Time
 st	state
 St	street
 Sta	station
+sth	something
 stk	stok
 str	steamer
 Str	strait
@@ -1011,12 +1037,14 @@ tel	telephone
 temp	temperature
 temp	temporary
 Tenn	Tennessee
+tenth	10th
 Ter	terrace
 Ter	territory
 Terr	terrace
 Terr	territory
 Tex	Texas
 ThD	Doctor of Theology
+third	3rd
 ths	thousand
 Thu	Thursday
 Thur	Thursday
@@ -1120,6 +1148,10 @@ whs	warehouse
 whse	warehouse
 whsle	wholesale
 WI	Wisconsin
+wifi	wi fi
+wifi	wi-fi
+wi-fi	wifi
+wi-fi	wi fi
 Wis	Wisconsin
 Wisc	Wisconsin
 wk	week
@@ -1163,3 +1195,5 @@ YS	young soldier
 YT	Yukon Territory
 #
 ZST	Zone Standard Time
+#
+
