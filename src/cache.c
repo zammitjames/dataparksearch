@@ -392,7 +392,7 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 
 
 static int PresentInDelLog(DPS_LOGDEL *buf, size_t buf_count, size_t *start, const urlid_t url_id) {
-	register ssize_t m, l, r;
+	register size_t m, l, r;
 	
 	if (buf == NULL || buf_count == 0) return 0;
 	if (start) l = *start;
@@ -1519,9 +1519,9 @@ err1:
 
 
 static int PresentInLimit(urlid_t *buf, size_t buf_count, size_t *start, const urlid_t url_id) {
-	register ssize_t m;
-	register ssize_t l;
-	register ssize_t r;
+	register size_t m;
+	register size_t l;
+	register size_t r;
 
 	if (start) l = *start;
 	else l = 0;
