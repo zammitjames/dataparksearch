@@ -11,3 +11,7 @@ DEB_CONFIGURE_INCLUDEDIR = "\$${prefix}/include/dpsearch"
 DEB_CONFIGURE_SYSCONFDIR = "\$${prefix}/etc/dpsearch"
 DEB_CONFIGURE_LOCALSTATEDIR = "\$${prefix}/var/lib/dpsearch"
 DEB_CONFIGURE_DATADIR = "\$${prefix}/share/dpsearch"
+
+install/dpsearch::
+	cp debian/dpsearch.500mod_dpsearch.info \
+		debian/dpsearch/`apxs -q LIBEXECDIR`/500mod_dpsearch.info
