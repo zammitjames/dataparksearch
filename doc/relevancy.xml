@@ -11,7 +11,7 @@ and second by <literal>popularity rank</literal>.</para>
 
 <sect2 id="relevancy"><title>Relevance calculation</title>
 
-<para>In indexing, <application>DataparkSearch</application> divide every document onto sections. A section is any part of document, 
+<para>In indexing, <application>DataparkSearch</application> divides every document onto sections. A section is any part of the document, 
 for example, for HTML documents this may be TITLE or META Description tag.</para>
 
 <para>In addition to sections, some document factors are also take in account for relevance calculation: the average distance between
@@ -257,8 +257,8 @@ to. <!--It works in SQL database mode and is not supported in cache mode.--> To 
 <indexterm><primary>SEA</primary><secondary>The Summary Extraction Algorithm</secondary></indexterm>
 <indexterm><primary>Template variable</primary><secondary>$(sea)</secondary></indexterm>
 <indexterm><primary>Document</primary><secondary>summary</secondary></indexterm>
-<para><literal>The Summary Exctraction Algorith (SEA)</literal> allow to build the summary in three most relevant sentences of each
-document indexed, if this document consist of six or more sentences. To enable this feature, add this command to your
+<para><literal>The Summary Exctraction Algorith (SEA)</literal> builds the summary of three or more the most relevant sentences of the each
+document indexed, if this document consists of six or more sentences. To enable this feature, add this command to your
 <filename>seaction.conf</filename> file:
 <programlisting>
 Section sea x y

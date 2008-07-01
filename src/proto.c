@@ -97,7 +97,7 @@
 
 /************** connect with timeout **********/
 
-static int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigned int to){
+int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigned int to){
 	int flags, res, s_err;
 	socklen_t s_err_size = sizeof(int);
 	fd_set sfds;

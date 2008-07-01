@@ -93,4 +93,6 @@ extern int DpsGetURL(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc, const char *origurl
 extern __C_LINK int __DPSCALL DpsMirrorPUT(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_URL *url);
 extern __C_LINK int __DPSCALL DpsMirrorGET(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_URL *url);
 
+int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigned int to);
+
 #endif
