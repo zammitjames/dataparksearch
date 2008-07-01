@@ -84,20 +84,29 @@ int socket_open( DPS_CONN *connp ) {
 
 int socket_connect( DPS_CONN *connp){
         socklen_t len;
+	size_t i;
 
-	if (connect(connp->conn_fd, (struct sockaddr *)&connp->sin,
-	    				    sizeof(connp->sin)) == -1) {
-		connp->err = DPS_NET_CANT_CONNECT;
-		return -1;
-	}
-	
-	len = sizeof(struct sockaddr_in);
-	if (getsockname(connp->conn_fd, (struct sockaddr *)&connp->sin, &len) == -1){
+	for (i = 0; i < connp->n_sinaddr; i++) {
+	  dps_memmove(&connp->sin.sin_addr, &connp->sinaddr[i].sin_addr, sizeof(connp->sin.sin_addr));
+	  connp->sin.sin_port = htons(connp->port);
+	  connp->sin.sin_family = AF_INET;
+	  connp->sin.sin_len = sizeof(struct sockaddr_in);
+	  if (connect(connp->conn_fd, (struct sockaddr *)&connp->sin, sizeof(connp->sin)) == 0) {
+	    len = sizeof(struct sockaddr_in);
+	    if (getsockname(connp->conn_fd, (struct sockaddr *)&connp->sin, &len) == -1){
 		connp->err = DPS_NET_ERROR;
                 return -1;
+	    }
+	    connp->connected = DPS_NET_CONNECTED;
+	    return 0;
+	    
+	  }
+	  fprintf(stderr, "connecting for %s:%d ", inet_ntoa(connp->sin.sin_addr), connp->port);
+	  fprintf(stderr, "errno:%d -- %s\n", errno, strerror(errno));
 	}
-	connp->connected = DPS_NET_CONNECTED;
-	return 0;
+
+	connp->err = DPS_NET_CANT_CONNECT;
+	return -1;
 }
 
 
