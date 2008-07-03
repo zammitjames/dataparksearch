@@ -90,7 +90,7 @@ int socket_connect( DPS_CONN *connp){
 	  dps_memmove(&connp->sin.sin_addr, &connp->sinaddr[i].sin_addr, sizeof(connp->sin.sin_addr));
 	  connp->sin.sin_port = htons(connp->port);
 	  connp->sin.sin_family = AF_INET;
-	  connp->sin.sin_len = sizeof(struct sockaddr_in);
+/*	  connp->sin.sin_len = sizeof(struct sockaddr_in);*/
 	  if (connect(connp->conn_fd, (struct sockaddr *)&connp->sin, sizeof(connp->sin)) == 0) {
 	    len = sizeof(struct sockaddr_in);
 	    if (getsockname(connp->conn_fd, (struct sockaddr *)&connp->sin, &len) == -1){
