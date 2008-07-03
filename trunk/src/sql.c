@@ -937,16 +937,29 @@ command, parent, ordre, weight, url, pop_weight \
 	    fprintf(stderr, "    Tag: %s - %s|\n", DpsVarListFindStr(&Server->Vars, "Tag", ""), DpsSQLValue(&SQLRes, 0, 2));
 	    fprintf(stderr, "    Cat: %s - %s|\n", DpsVarListFindStr(&Server->Vars, "Category", ""), DpsSQLValue(&SQLRes, 0, 3));
 */
-	    dps_snprintf(buf, len, "\
+	    if (Server->weight != 1.0) 
+	      dps_snprintf(buf, len, "\
 UPDATE server SET enabled=1, tag='%s', category=%s, \
-command='%c', parent=%s%i%s, ordre=%d, weight=%f \
+command='%c', parent=%s%i%s, ordre=%d%, weight=%f \
+WHERE rec_id=%s%d%s",
+			   DpsVarListFindStr(&Server->Vars, "Tag", ""),
+			   DpsVarListFindStr(&Server->Vars, "Category", "0"),
+			   Server->command,
+			   qu, Server->parent, qu,
+			   Server->ordre,
+			   Server->weight,
+			   qu, rec_id, qu
+			   );
+	    else 
+	      dps_snprintf(buf, len, "\
+UPDATE server SET enabled=1, tag='%s', category=%s, \
+command='%c', parent=%s%i%s, ordre=%d% \
 WHERE rec_id=%s%d%s",
 			 DpsVarListFindStr(&Server->Vars, "Tag", ""),
 			 DpsVarListFindStr(&Server->Vars, "Category", "0"),
 			 Server->command,
 			 qu, Server->parent, qu,
 			 Server->ordre,
-			 Server->weight,
 			 qu, rec_id, qu
 			 );
 /*	    fprintf(stderr, "qbuf: %s\n", buf);*/
