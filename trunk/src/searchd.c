@@ -226,7 +226,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 	int done=0;
 	int		page_number;
 	int		page_size;
-	int server;
+	int pre_server, server;
 	const char *bcharset;
 	unsigned char *p;
 	size_t ExcerptSize, ExcerptPadding;
@@ -253,27 +253,27 @@ static int do_client(DPS_AGENT *Agent, int client){
 	server_addr.sin_port	= 0; /* any free port */
 	p = (unsigned char*) &server_addr.sin_port;
 
-	if ((server = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+	if ((pre_server = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "socket() ERR: %d %s", errno, strerror(errno));
 	  close(client);
 	  return DPS_ERROR;
 	}
-	if (bind(server, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
+	if (bind(pre_server, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "bind() ERR: %d %s", errno, strerror(errno));
-	  close(server);
+	  close(pre_server);
 	  close(client);
 	  return DPS_ERROR;
 	}
-	if (listen(server, 1) < 0) {
+	if (listen(pre_server, 1) < 0) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "listen() ERR: %d %s\n", errno, strerror(errno));
-	  close(server);
+	  close(pre_server);
 	  close(client);
 	  return DPS_ERROR;
 	}
 	addrlen = sizeof(server_addr);
-	if (getsockname(server, (struct sockaddr *)&server_addr, &addrlen) == -1) {
+	if (getsockname(pre_server, (struct sockaddr *)&server_addr, &addrlen) == -1) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "getsockname ERR [%d] %s  %s:%d\n", errno, strerror(errno), __FILE__, __LINE__);
-	  close(server);
+	  close(pre_server);
 	  close(client);
 	  return DPS_ERROR;
 	}
@@ -283,19 +283,20 @@ static int do_client(DPS_AGENT *Agent, int client){
 
 	if (nsent != sizeof(port_str)) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "ERR port sent %d of %d bytes\n", nsent, sizeof(port_str));
-	  close(server);
+	  close(pre_server);
 	  close(client);
 	  return DPS_ERROR;
 	}
 		  
 	bzero((void*)&his_addr, addrlen = sizeof(his_addr));
-	if ((server = accept(server, (struct sockaddr *)&his_addr, &addrlen)) <= 0) {
+	if ((server = accept(pre_server, (struct sockaddr *)&his_addr, &addrlen)) <= 0) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "revert accept ERR on port %d error %d %s\n", ntohs(server_addr.sin_port), errno, strerror(errno));
-	  close(server);
+	  close(pre_server);
 	  close(client);
 	  return DPS_ERROR;
 	}
 	DpsLog(Agent, DPS_LOG_INFO, "[%s] Connected. PORT: %s", inet_ntoa(his_addr.sin_addr), port_str);
+	close(pre_server);
 
 	while(!done){
 	  size_t dlen = 0, ndocs, i, last_cmd;
