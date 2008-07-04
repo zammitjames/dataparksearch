@@ -42,6 +42,7 @@ typedef struct {
   DPS_AGENT *Indexer;
   DPS_DOCUMENT *Doc;
   int body_sec;
+  int body_strict;
   char *sec;
   char *secpath;
   size_t pathlen, curlen;
@@ -150,27 +151,34 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
   if ((D->sec != NULL) && (!strcasecmp(D->sec, "icbm:latitude") || !strcasecmp(D->sec, "geo:lat"))
       && (Sec = DpsVarListFind(&Doc->Sections, "geo.lat"))) {
     Item.section = Sec->section;
+    Item.strict = Sec->strict;
     Item.section_name = Sec->name;
     DpsVarListReplaceStr(&Doc->Sections, "geo.lat", Item.str);
   } else if ((D->sec != NULL) && (!strcasecmp(D->sec, "icbm:longitude") || !strcasecmp(D->sec, "geo:lon"))
       && (Sec = DpsVarListFind(&Doc->Sections, "geo.lon"))) {
     Item.section = Sec->section;
+    Item.strict = Sec->strict;
     Item.section_name = Sec->name;
     DpsVarListReplaceStr(&Doc->Sections, "geo.lon", Item.str);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Indexer->Conf->HrefSections, D->secpath))) {
     Item.section = Sec->section;
+    Item.strict = Sec->strict;
     Item.section_name = D->sec;
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Doc->Sections, D->secpath))) {
     Item.section = Sec->section;
+    Item.strict = Sec->strict;
     Item.section_name = D->sec;
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Indexer->Conf->HrefSections, D->sec))) {
     Item.section = Sec->section;
+    Item.strict = Sec->strict;
     Item.section_name = D->sec;
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Doc->Sections, D->sec))) {
     Item.section = Sec->section;
+    Item.strict = Sec->strict;
     Item.section_name = D->sec;
   } else {
     Item.section = D->body_sec;
+    Item.strict = D->body_strict;
     Item.section_name = "body";
   }
   DpsTextListAdd(&Doc->TextList, &Item);
@@ -451,6 +459,7 @@ static int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t l
 	Data.Indexer = ud->Indexer;
 	Data.Doc = ud->Doc;
 	Data.body_sec = ud->body_sec;
+	Data.body_strict = ud->body_strict;
 	Data.sec = DpsStrdup(ud->sec);
 	Data.secpath = DpsStrdup(ud->secpath);
 
@@ -726,6 +735,7 @@ int DpsXMLParse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_VAR *BSec = DpsVarListFind(&Doc->Sections, "body");
   const char *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
   int body_sec  = BSec ? BSec->section : 0;
+  int body_strict = BSec ? BSec->strict : 0;
   int res = DPS_OK;
 
   DpsXMLParserCreate(&parser);
@@ -733,6 +743,7 @@ int DpsXMLParse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   Data.Indexer = Indexer;
   Data.Doc = Doc;
   Data.body_sec = body_sec;
+  Data.body_strict = body_strict;
 
   DpsXMLSetUserData(&parser, &Data);
   DpsXMLSetEnterHandler(&parser, startElement);

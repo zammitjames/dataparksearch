@@ -3,6 +3,7 @@ History
 -------
 
 Latset snapshot:
+	* The "strict" option has been added for Section command.
 	* A word break has been added for French-style contractions.
 	* Big lists of Russian and English synonyms have been added.
 	* MaxSiteLevel command accept now a negative argument to group URLs on subdirectory basis.

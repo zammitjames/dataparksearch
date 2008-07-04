@@ -114,7 +114,10 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 /*  ustr = (dps_need2segment(nfc)) ? DpsUniSegment(Indexer, nfc, content_lang) : nfc;*/
 
   if (ustr != NULL)
-    for(tok = DpsUniGetToken(ustr,&lt, &have_bukva_forte, 0); tok ; tok = DpsUniGetToken(NULL, &lt, &have_bukva_forte, 0) ) {
+    for(tok = DpsUniGetToken(ustr,&lt, &have_bukva_forte, Item->strict); 
+	tok ; 
+	tok = DpsUniGetToken(NULL, &lt, &have_bukva_forte, Item->strict) ) {
+
       size_t	tlen;				/* Word length          */ 
       int	ures;
       DPS_WORD Word;
@@ -523,24 +526,27 @@ int DpsParseURLText(DPS_AGENT *A,DPS_DOCUMENT *Doc){
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.proto"))) {
 		char sc[]="url.proto\0";
 		Item.str = DPS_NULL2EMPTY(Doc->CurURL.schema);
-		Item.section=Sec->section;
-		Item.section_name=sc;
+		Item.section = Sec->section;
+		Item.strict = Sec->strict;
+		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.host"))) {
 		char sc[]="url.host\0";
 		Item.str = DPS_NULL2EMPTY(Doc->CurURL.hostname);
-		Item.section=Sec->section;
-		Item.section_name=sc;
+		Item.section = Sec->section;
+		Item.strict = Sec->strict;
+		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.path"))) {
 		char sc[]="url.path\0";
 		Item.str = DPS_NULL2EMPTY(Doc->CurURL.path);
-		Item.section=Sec->section;
-		Item.section_name=sc;
+		Item.section = Sec->section;
+		Item.strict = Sec->strict;
+		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
 	}
@@ -552,6 +558,7 @@ int DpsParseURLText(DPS_AGENT *A,DPS_DOCUMENT *Doc){
 		  DpsUnescapeCGIQuery(str, DPS_NULL2EMPTY(Doc->CurURL.filename));
 		  Item.str = str;
 		  Item.section = Sec->section;
+		  Item.strict = Sec->strict;
 		  Item.section_name = sc;
 		  Item.len = len;
 		  DpsTextListAdd(&Doc->TextList, &Item);
@@ -573,7 +580,8 @@ int DpsParseHeaders(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 		secname[sizeof(secname)-1]='\0';
 		if((Sec=DpsVarListFind(&Doc->Sections,secname))){
 			Item.str=Doc->Sections.Var[i].val;
-			Item.section=Sec->section;
+			Item.section = Sec->section;
+			Item.strict = Sec->strict;
 			Item.section_name=secname;
 			DpsTextListAdd(&Doc->TextList,&Item);
 		}
@@ -592,6 +600,7 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 	if(BSec && buf_content && Doc->Spider.index){
 		char *lt;
 		Item.section = BSec->section;
+		Item.strict = BSec->strict;
 		Item.str = dps_strtok_r(buf_content, "\r\n", &lt);
 		Item.section_name = BSec->name; /*"body";*/
 		while(Item.str){
@@ -985,6 +994,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 			  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
 			  Item.str = y;
 			  Item.section = Sec->section;
+			  Item.strict = Sec->strict;
 			  Item.section_name = Sec->name;
 			  Item.href = NULL;
 			  Item.len = tag->toks[i].vlen;
@@ -1019,7 +1029,8 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		if((!tag->comment) && (Sec=DpsVarListFind(&Doc->Sections,secname)) && Doc->Spider.index && visible) {
 /*			DpsSGMLUnescape(metacont);   we do this later */
 			Item.str=metacont;
-			Item.section=Sec->section;
+			Item.section = Sec->section;
+			Item.strict = Sec->strict;
 			Item.section_name=secname;
 			Item.href = NULL;
 			Item.len = metacont_len;
@@ -1204,6 +1215,8 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	DPS_VAR		*TSec = DpsVarListFind(&Doc->Sections, "title");
 	int		body_sec  = BSec ? BSec->section : 0;
 	int		title_sec = TSec ? TSec->section : 0;
+	int		body_strict  = BSec ? BSec->strict : 0;
+	int		title_strict = TSec ? TSec->strict : 0;
 
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
@@ -1242,6 +1255,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      Item.href=tag.lasthref;
 	      Item.str=tmp;
 	      Item.section = body_sec;
+	      Item.strict = body_strict;
 	      Item.section_name = (section_name) ? section_name : "body";
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      DpsTextListAdd(&Doc->TextList,&Item);
@@ -1249,7 +1263,8 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	    if (TSec && !tag.comment && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
 	      Item.href=NULL;
 	      Item.str=tmp;
-	      Item.section=title_sec;
+	      Item.section = title_sec;
+	      Item.strict = title_strict;
 	      Item.section_name = "title";
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      DpsTextListAdd(&Doc->TextList,&Item);
