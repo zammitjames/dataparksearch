@@ -1901,7 +1901,7 @@ NAME="AEN1880"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [ &#60;pattern&#62; &#60;replacement&#62; ]
+>&#13;Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [strict] [ &#60;pattern&#62; &#60;replacement&#62; ]
 </PRE
 ><P
 >&#13;where <TT
@@ -1931,13 +1931,22 @@ CLASS="option"
 CLASS="option"
 >&#60;replacement&#62;</TT
 > are a regex-like
-pattern and replacement to extract section value from document content.
+pattern and replacement to extract section value from document content.</P
+><P
+>You can specify <TT
+CLASS="option"
+>strict</TT
+> option to set strict string tokenization for a section, which mean word break 
+for any non charactec symbol despite the context. For example, it's useful for indexing of URL.
 <PRE
 CLASS="programlisting"
 >&#13;# Standard HTML sections: body, title
 Section	body			1	256
 Section title			2	128
-Section GoodName                3       128 "&#60;h1&#62;([^&#60;]*)&#60;/h1&#62;" "&#60;b&#62;GoodName:&#60;/b&#62; $1"
+# strict tokenization for URL
+Section url                     3       strict
+# regex-pattern for a section
+Section GoodName                4       128 "&#60;h1&#62;([^&#60;]*)&#60;/h1&#62;" "&#60;b&#62;GoodName:&#60;/b&#62; $1"
 </PRE
 >
 </P
@@ -1954,7 +1963,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1895"
+NAME="AEN1897"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -1995,7 +2004,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1907"
+NAME="AEN1909"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2032,7 +2041,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1918"
+NAME="AEN1920"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2072,7 +2081,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1930"
+NAME="AEN1932"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2120,7 +2129,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1942"
+NAME="AEN1944"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2163,7 +2172,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1953"
+NAME="AEN1955"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2193,7 +2202,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1963"
+NAME="AEN1965"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2223,7 +2232,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1973"
+NAME="AEN1975"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2250,7 +2259,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1982"
+NAME="AEN1984"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2272,7 +2281,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1990"
+NAME="AEN1992"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2297,7 +2306,7 @@ CLASS="command"
 > command</A
 ></H2
 ><A
-NAME="AEN1999"
+NAME="AEN2001"
 ></A
 ><PRE
 CLASS="programlisting"

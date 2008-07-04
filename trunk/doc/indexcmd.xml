@@ -845,7 +845,7 @@ interval between consecutive fetches.
 <title><command>Section</command> command</title>
 <indexterm><primary>Command</primary><secondary>Section</secondary></indexterm>
 <programlisting>
-Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [ &lt;pattern&gt; &lt;replacement&gt; ]
+Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [strict] [ &lt;pattern&gt; &lt;replacement&gt; ]
 </programlisting>
 <para>
 where <option>&lt;string&gt;</option> is a section name and <option>&lt;number&gt;</option> is section ID
@@ -857,12 +857,17 @@ or even disallow some sections at a search time.
 <option>&lt;maxlen&gt;</option> argument contains a maximum length of section
 which will be stored in database. Use 0 for <option>&lt;maxlen&gt;</option>, if you don't want to store this section.
 <option>&lt;pattern&gt;</option> and <option>&lt;replacement&gt;</option> are a regex-like
-pattern and replacement to extract section value from document content.
+pattern and replacement to extract section value from document content.</para>
+<para>You can specify <option>strict</option> option to set strict string tokenization for a section, which mean word break 
+for any non charactec symbol despite the context. For example, it's useful for indexing of URL.
 <programlisting>
 # Standard HTML sections: body, title
 Section	body			1	256
 Section title			2	128
-Section GoodName                3       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"
+# strict tokenization for URL
+Section url                     3       strict
+# regex-pattern for a section
+Section GoodName                4       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"
 </programlisting>
 </para>
 </sect2>

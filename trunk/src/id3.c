@@ -36,7 +36,8 @@ static int add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, char
         if((Sec=DpsVarListFind(&Doc->Sections,name))){
                 DPS_TEXTITEM    Item;
                 bzero((void*)&Item, sizeof(Item));
-                Item.section=Sec->section;
+                Item.section = Sec->section;
+		Item.strict = Sec->strict;
                 Item.str=val;
                 Item.section_name=name;
 		Item.len = 0;
@@ -84,6 +85,7 @@ static int id3_add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, 
 		value[to_utf.obytes] = value[to_utf.obytes + 1] = 0;
 #endif
 		Item.section = Sec->section;
+		Item.strict = Sec->strict;
 		Item.str = val; /*value;*/
 		Item.section_name = name;
 		Item.len = len; /*to_utf.obytes;*/

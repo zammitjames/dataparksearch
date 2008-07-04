@@ -56,6 +56,7 @@ static int DpsVarCopy(DPS_VAR *D, DPS_VAR *S) {
 #endif
 	if (S->section) D->section = S->section;
 	if (S->maxlen) D->maxlen = S->maxlen;
+	D->strict = S->strict;
 	D->curlen = S->curlen;
 	D->name = (char*)DpsStrdup(S->name);
 	if (S->maxlen == 0) {
@@ -103,6 +104,7 @@ static int DpsVarCopyNamed(DPS_VAR *D, DPS_VAR *S, const char *name) {
 	if (S->section) D->section = S->section;
 	if (S->maxlen) D->maxlen = S->maxlen;
 	D->curlen = S->curlen;
+	D->strict = S->strict;
 	if(name){
 		size_t len = dps_strlen(name) + dps_strlen(S->name) + 3;
 		D->name = (char*)DpsMalloc(len);
@@ -325,6 +327,7 @@ int DpsVarListAddStr(DPS_VARLIST * vars, const char * name, const char * val) {
 	}
 	vars->Root[r].Var[vars->Root[r].nvars].section=0;
 	vars->Root[r].Var[vars->Root[r].nvars].maxlen=0;
+	vars->Root[r].Var[vars->Root[r].nvars].strict=0;
 	vars->Root[r].Var[vars->Root[r].nvars].curlen = (val != NULL) ? dps_strlen(val) : 0;	
 	vars->Root[r].Var[vars->Root[r].nvars].name = name ? (char*)DpsStrdup(name) : NULL;
 	vars->Root[r].Var[vars->Root[r].nvars].val = val ? (char*)DpsStrdup(val) : NULL;

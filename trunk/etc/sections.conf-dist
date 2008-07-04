@@ -34,12 +34,13 @@ Section	meta.description	4	128
 
 
 # Document's URL or URL parts
+# 'strict' option for a section mean strict rules for tokenization, so '/' is always a word break.
 
-Section url			6	0
-#Section url.file		6	0
-#Section url.path		7	0
-#Section url.host		8	0
-#Section url.proto		9	0
+Section url			6	0 	strict
+#Section url.file		6	0	strict
+#Section url.path		7	0	strict
+#Section url.host		8	0	strict
+#Section url.proto		9	0	strict
 
 # CrossWords
 

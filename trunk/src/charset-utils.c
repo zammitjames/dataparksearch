@@ -287,16 +287,14 @@ void DpsDSTRFree(DPS_DSTR *dstr) {
 size_t DpsDSTRAppend(DPS_DSTR *dstr, const void *data, size_t append_size) {
         size_t bytes_left = (dstr->allocated_size - dstr->data_size);
         size_t asize;
-        void *tmp;
 	char *dstr_data;
 
         if (data == NULL || append_size == 0) return 0;
 
         if (bytes_left <= append_size + 2 * sizeof(dpsunicode_t)) {
 	  asize = dstr->allocated_size + ((append_size - bytes_left) / dstr->page_size + 1) * dstr->page_size + 3 * sizeof(dpsunicode_t);
-	  tmp = DpsRealloc(dstr->data, asize);
-	  if (tmp == NULL) return 0;
-	  dstr->data = tmp;
+	  dstr->data = DpsRealloc(dstr->data, asize);
+	  if (dstr->data == NULL) { dstr->allocated_size = dstr->data_size = 0; return 0; }
 	  dstr->allocated_size = asize;
         }
 	dstr_data = dstr->data;

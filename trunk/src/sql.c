@@ -5024,6 +5024,7 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		      }
 		      for (j = 0; j < DpsSQLNumRows(&SQLres); j++){
 			Item.section = Sec->section;
+			Item.strict = Sec->strict;
 			Item.str = DpsSQLValue(&SQLres, j, 0);
 			Item.section_name = Sec->name;
 			Item.len = 0;

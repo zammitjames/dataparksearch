@@ -640,8 +640,8 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	DPS_MATCH M;
 	char err[128] = "";
 
-	if (ac == 5) {
-	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "four arguments isn't supported for Section command");
+	if (ac == 5 && strcasecmp(av[4], "strict")) {
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments should be only the \"strict\" for Section command");
 	  return DPS_ERROR;
 	}
 
@@ -649,25 +649,37 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	S.name = av[1];
 	S.section = atoi(av[2]);
 	S.maxlen = ((ac > 2) && av[3]) ? atoi(av[3]) : 0;
+	if (ac > 4 && !strcasecmp(av[4], "strict")) S.strict = 1;
 
-	if (ac == 6) {
+	if (ac == 6 || ac == 7) {
+	  int shift = 0;
 
 	  if(!(C->flags & DPS_FLAG_ADD_SERV))
 	    return DPS_OK;
-	
+
 	  DpsMatchInit(&M);
+
+	  if (ac == 7) {
+	    if (strcasecmp(av[4], "strict")) {
+	      shift = 1;
+	    } else {
+	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments should be only the \"strict\" for Section command");
+	      return DPS_ERROR;
+	    }
+	  }
+
 	  M.match_type = DPS_MATCH_REGEX;
 	  M.case_sense = 1;
 	  M.section = av[1];
-	  M.pattern = av[4];
-	  M.arg = av[5];
+	  M.pattern = av[shift + 4];
+	  M.arg = av[shift + 5];
 	  if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->SectionMatch, &M, err, sizeof(err), ++C->ordre)) {
 	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "SectionMatch Add: %s", err);
 	    return DPS_ERROR;
 	  }
 	}
 
-	DpsVarListReplace(&Conf->Sections,&S);
+	DpsVarListReplace(&Conf->Sections, &S);
 	return DPS_OK;
 }
 

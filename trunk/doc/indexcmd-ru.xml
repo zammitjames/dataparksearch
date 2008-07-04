@@ -904,7 +904,7 @@ bcgjkmpetncz значение, указаное в <command>CrawlDelay</command>.
 <title>Команда <command>Section</command></title>
 <indexterm><primary>Команда</primary><secondary>Section</secondary></indexterm>
 <programlisting>
-Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [ &lt;pattern&gt; &lt;replacement&gt; ]
+Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [strict] [ &lt;pattern&gt; &lt;replacement&gt; ]
 </programlisting>
 <para>
 где <option>&lt;string&gt;</option> - имя секции и <option>&lt;number&gt;</option> - ID секции,
@@ -914,7 +914,9 @@ Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [ &lt;pattern&gt; &lt;repla
 Параметр <option>&lt;maxlen&gt;</option>  задаёт максимальный размер секции, который будет сохранён в базе 
 (хотя сама секция будет проиндексирована целиком). Используйте 0, если вы не хотите сохранять в базе значение секции.
 <option>&lt;pattern&gt;</option> и <option>&lt;replacement&gt;</option> - шаблон и замена, аналогичная используемым в regex,
-для извления значения секции из тела документа.
+для извления значения секции из тела документа.</para>
+<para>Вы можете указать параметр <option>strict</option> для задания строгой токенизации секции, что означает разбиение на слова
+на любом знаке, не являющемся буквой, независимо от контекста. Например, полезно для индексирования URL.
 <programlisting>
 # Standard HTML sections: body, title
 Section	body			1	256

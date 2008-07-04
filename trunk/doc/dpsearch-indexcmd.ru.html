@@ -2120,7 +2120,7 @@ NAME="AEN2059"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [ &#60;pattern&#62; &#60;replacement&#62; ]
+>&#13;Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [strict] [ &#60;pattern&#62; &#60;replacement&#62; ]
 </PRE
 ><P
 >&#13;где <TT
@@ -2145,7 +2145,13 @@ CLASS="option"
 CLASS="option"
 >&#60;replacement&#62;</TT
 > - шаблон и замена, аналогичная используемым в regex,
-для извления значения секции из тела документа.
+для извления значения секции из тела документа.</P
+><P
+>Вы можете указать параметр <TT
+CLASS="option"
+>strict</TT
+> для задания строгой токенизации секции, что означает разбиение на слова
+на любом знаке, не являющемся буквой, независимо от контекста. Например, полезно для индексирования URL.
 <PRE
 CLASS="programlisting"
 >&#13;# Standard HTML sections: body, title
@@ -2168,7 +2174,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2073"
+NAME="AEN2075"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2209,7 +2215,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2085"
+NAME="AEN2087"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2243,7 +2249,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2095"
+NAME="AEN2097"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2279,7 +2285,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2106"
+NAME="AEN2108"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2322,7 +2328,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2117"
+NAME="AEN2119"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2361,7 +2367,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2127"
+NAME="AEN2129"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2392,7 +2398,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2137"
+NAME="AEN2139"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2423,7 +2429,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2147"
+NAME="AEN2149"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2449,7 +2455,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2156"
+NAME="AEN2158"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2471,7 +2477,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2164"
+NAME="AEN2166"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -2496,7 +2502,7 @@ CLASS="command"
 ></A
 ></H2
 ><A
-NAME="AEN2173"
+NAME="AEN2175"
 ></A
 ><PRE
 CLASS="programlisting"

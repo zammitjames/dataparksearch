@@ -150,12 +150,12 @@ typedef struct stat_list_struct{
 
 typedef struct dps_var_st {
 	int			section;	/**< Number 0..255   */
+        int                     strict;         /**< strict word splitting */
 	size_t			maxlen;		/**< Max length      */
 	size_t			curlen;		/**< Cur length      */
 	char			*val;		/**< Field Value     */
         char                    *txt_val;       /**< Field Value in plain text */
 	char			*name;		/**< Field Name      */
-	struct dps_varlist_st	*subvar;	/**< for Nested vars */
 } DPS_VAR;
 
 typedef struct dps_varlist_st {
@@ -173,6 +173,7 @@ typedef struct {
 	char		*href;
 	char		*section_name;
 	int		section;
+        int             strict;
         int             marked;
         size_t          len;
 } DPS_TEXTITEM;

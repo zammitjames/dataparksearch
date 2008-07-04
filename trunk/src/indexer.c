@@ -910,6 +910,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
       bzero((void*)&S, sizeof(S));
       S.name = Sec->name;
       S.section = Sec->section;
+      S.strict = Sec->strict;
       S.maxlen = Sec->maxlen;
       S.val = buf;
       DpsVarListAdd(&Doc->Sections, &S);
@@ -917,6 +918,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
     Item.href = NULL;
     Item.section = Sec->section;
+    Item.strict = Sec->strict;
     Item.section_name = Sec->name;
     Item.str = dps_strtok_r(buf, "\r\n", &lt);
     while(Item.str) {
