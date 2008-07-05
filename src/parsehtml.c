@@ -114,7 +114,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 /*  ustr = (dps_need2segment(nfc)) ? DpsUniSegment(Indexer, nfc, content_lang) : nfc;*/
 
   if (ustr != NULL)
-    for(tok = DpsUniGetToken(ustr,&lt, &have_bukva_forte, Item->strict); 
+    for(tok = DpsUniGetToken(ustr, &lt, &have_bukva_forte, Item->strict); 
 	tok ; 
 	tok = DpsUniGetToken(NULL, &lt, &have_bukva_forte, Item->strict) ) {
 

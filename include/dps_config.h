@@ -480,7 +480,7 @@
 
 /* Version number of package */
 #ifndef VERSION
-#define VERSION "4.50-04072008"
+#define VERSION "4.50-05072008"
 #endif
 
 /* syslog facility */

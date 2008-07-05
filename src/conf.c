@@ -640,12 +640,16 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	DPS_MATCH M;
 	char err[128] = "";
 
-	if (ac == 5 && strcasecmp(av[4], "strict")) {
-	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments should be only the \"strict\" for Section command");
-	  return DPS_ERROR;
+	bzero((void*)&S, sizeof(S));
+
+	if (ac == 5) {
+	  if (strcasecmp(av[4], "strict")) {
+	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments should be only the \"strict\" for Section command");
+	    return DPS_ERROR;
+	  }
+	  S.strict = 1;
 	}
 
-	bzero((void*)&S, sizeof(S));
 	S.name = av[1];
 	S.section = atoi(av[2]);
 	S.maxlen = ((ac > 2) && av[3]) ? atoi(av[3]) : 0;
@@ -660,8 +664,9 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	  DpsMatchInit(&M);
 
 	  if (ac == 7) {
-	    if (strcasecmp(av[4], "strict")) {
+	    if (!strcasecmp(av[4], "strict")) {
 	      shift = 1;
+	      S.strict = 1;
 	    } else {
 	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments should be only the \"strict\" for Section command");
 	      return DPS_ERROR;
