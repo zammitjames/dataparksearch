@@ -67,6 +67,7 @@ __C_LINK void __DPSCALL DpsTextListAdd(DPS_TEXTLIST * tlist,const DPS_TEXTITEM *
      tlist->Items[tlist->nitems].href = (item->href != NULL) ? (char*)DpsStrdup(item->href) : NULL;
      tlist->Items[tlist->nitems].section_name = (item->section_name != NULL) ? (char*)DpsStrdup(item->section_name) : NULL;
      tlist->Items[tlist->nitems].section = item->section;
+     tlist->Items[tlist->nitems].strict = item->strict;
      tlist->Items[tlist->nitems].len = item->len;
      tlist->Items[tlist->nitems].marked = 0;
      tlist->nitems++;
