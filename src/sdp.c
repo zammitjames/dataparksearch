@@ -163,7 +163,7 @@ int DpsSearchdConnect(DPS_DB *cl) {
       return DPS_ERROR;
     }
     dps_addr.sin_port = 0;
-    sscanf(port_str, "%d,%d", ip, ip + 1);
+    sscanf(port_str, "%u,%u", ip, ip + 1);
     p[0] = (unsigned char)(ip[0] & 255);
     p[1] = (unsigned char)(ip[1] & 255);
 /*
@@ -225,6 +225,7 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	  size_t		nsec, r;
 	  DPS_DOCUMENT	*D=&Res->Doc[i];
 
+	  if (D->dbnum != cl->dbnum) continue;
 	  r = (size_t) 's';
 	  for(nsec = 0; nsec < D->Sections.Root[r].nvars; nsec++)
 	    if (strcasecmp(D->Sections.Root[r].Var[nsec].name, "Score") == 0) D->Sections.Root[r].Var[nsec].section = 1;
