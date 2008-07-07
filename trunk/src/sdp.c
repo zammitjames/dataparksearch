@@ -225,10 +225,11 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	  size_t		nsec, r;
 	  DPS_DOCUMENT	*D=&Res->Doc[i];
 
-	  if (D->dbnum != cl->dbnum) continue;
 	  r = (size_t) 's';
 	  for(nsec = 0; nsec < D->Sections.Root[r].nvars; nsec++)
 	    if (strcasecmp(D->Sections.Root[r].Var[nsec].name, "Score") == 0) D->Sections.Root[r].Var[nsec].section = 1;
+
+	  if (D->dbnum != cl->dbnum) continue;
 
 	  textbuf = DpsDocToTextBuf(D);
 	  if (textbuf == NULL) {TRACE_OUT(query); return DPS_ERROR;}
