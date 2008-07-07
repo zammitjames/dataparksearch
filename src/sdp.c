@@ -249,7 +249,6 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	}
 
 	if (dinfo == NULL) {
-	    DpsFree(textbuf);
 	    TRACE_OUT(query);
 	    return DPS_OK;
 	}
