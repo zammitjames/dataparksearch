@@ -1461,12 +1461,11 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  }
 	}
 
-	ticks_=DpsStartTimer();
-	DpsLog(A, DPS_LOG_DEBUG, "Start Clones");
-	
 	num = Res->num_rows;
 
 	if(!strcasecmp(DpsVarListFindStr(&A->Vars, "DetectClones", "yes"), "yes")) {
+	        ticks_=DpsStartTimer();
+		DpsLog(A, DPS_LOG_DEBUG, "Start Clones");
 		for(i=0;i<num;i++){
 			DPS_RESULT *Cl = DpsCloneList(A, &A->Vars, &Res->Doc[i]);
 			if(Cl){
@@ -1481,9 +1480,9 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 				DpsResultFree(Cl);
 			}
 		}
+		ticks_ = DpsStartTimer() - ticks_;
+		DpsLog(A, DPS_LOG_DEBUG, "Stop  Clones: %.2f", (float)ticks_/1000);
 	}
-	ticks_ = DpsStartTimer() - ticks_;
-	DpsLog(A, DPS_LOG_DEBUG, "Stop  Clones: %.2f", (float)ticks_/1000);
 
 	/* first and last begins from 0, make it begin from 1 */
 	Res->first++;
