@@ -246,6 +246,13 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	  sprintf(dinfo + olen, "%s\r\n", textbuf);
 	  DpsFree(textbuf);
 	}
+
+	if (dinfo == NULL) {
+	    DpsFree(textbuf);
+	    TRACE_OUT(query);
+	    return DPS_OK;
+	}
+
 	hdr.cmd=DPS_SEARCHD_CMD_DOCINFO;
 	hdr.len = dps_strlen(dinfo);
 	
