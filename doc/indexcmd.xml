@@ -859,13 +859,14 @@ which will be stored in database. Use 0 for <option>&lt;maxlen&gt;</option>, if 
 <option>&lt;pattern&gt;</option> and <option>&lt;replacement&gt;</option> are a regex-like
 pattern and replacement to extract section value from document content.</para>
 <para>You can specify <option>strict</option> option to set strict string tokenization for a section, which mean word break 
-for any non charactec symbol despite the context. For example, it's useful for indexing of URL.
+at any non-character symbol despite the context. It's useful, for example, in indexing of URL, where hyphen, the character, 
+uses as delimiter between words.
 <programlisting>
 # Standard HTML sections: body, title
 Section	body			1	256
 Section title			2	128
 # strict tokenization for URL
-Section url                     3       strict
+Section url                     3       0 strict
 # regex-pattern for a section
 Section GoodName                4       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"
 </programlisting>

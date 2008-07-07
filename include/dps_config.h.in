@@ -68,6 +68,9 @@
 /* Define if you want Google-like grouping by site */
 #undef WITH_GOOGLEGRP
 
+/* Define if you want multi DBAddr support */
+#undef WITH_MULTIDBADDR
+
 /* Define what method of relevance calculation to be used. */
 #undef FULL_RELEVANCE
 #undef FAST_RELEVANCE

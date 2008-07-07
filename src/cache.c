@@ -2134,6 +2134,9 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 		  *Crd = *(pmerg[i]->pcur);
 		  Crd->coord &= 0xFFFFFF00;
 		  Crd->coord += (pmerg[i]->wordnum /*order*/ & 0xFF);
+#ifdef WITH_MULTIDBADDR
+		  Crd->dbnum = db->dbnum;
+#endif		  
 		  pmerg[i]->pcur++;
 		  pmerg[i]->pchecked++;
 		  pmerg[i]->count++;
@@ -3806,6 +3809,7 @@ int DpsResAddDocInfoCache(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t 
     DPS_DOCUMENT *D = &Res->Doc[i];
     urlid_t	 url_id = DpsVarListFindInt(&D->Sections, "DP_ID", 0);
     
+    if (Res->Doc[i].dbnum != dbnum) continue;
     P.rec_id = url_id;
     if ((docinfo = (char*)DpsBaseARead(&P, &len)) == NULL) continue;
 

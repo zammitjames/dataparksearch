@@ -921,6 +921,9 @@ Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [strict] [ &lt;pattern&gt; 
 # Standard HTML sections: body, title
 Section	body			1	256
 Section title			2	128
+# строгая токенизация для URL
+Section url                     3       0 strict
+# шаблон регулярного выражения для секции
 Section GoodName                3       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"
 </programlisting>
 </para>

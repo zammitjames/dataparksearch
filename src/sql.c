@@ -4292,6 +4292,9 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 			*Crd = *(pmerg[i].pcur);
 			Crd->coord &= 0xFFFFFF00;
 			Crd->coord += (Res->items[wordnum].wordnum /*order*/ & 0xFF);
+#ifdef WITH_MULTIDBADDR
+			Crd->dbnum = db->dbnum;
+#endif		  
 			pmerg[i].pcur++;
 			pmerg[i].pchecked++;
 			Crd++;
@@ -4696,6 +4699,7 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 		
 		/* Compose IN string and set to zero url_id field */
 		for(i = 0; i < Res->num_rows; i++) {
+		  if (Res->Doc[i].dbnum != dbnum) continue;
 		  if (Res->Doc[i].fetched) continue;
 			if(db->DBType==DPS_DB_PGSQL)
 			  sprintf(DPS_STREND(instr), "%s'%i'", notfirst ? "," : "",
