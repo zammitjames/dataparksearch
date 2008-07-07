@@ -69,6 +69,9 @@
 /* Define if you want Google-like grouping by site */
 #define WITH_GOOGLEGRP 1
 
+/* Define if you want multi DBAddr support */
+#define WITH_MULTIDBADDR 1
+
 /* Define what method of relevance calculation to be used. */
 #define FULL_RELEVANCE 1
 /* #undef FAST_RELEVANCE */
@@ -480,7 +483,7 @@
 
 /* Version number of package */
 #ifndef VERSION
-#define VERSION "4.50-05072008"
+#define VERSION "4.50-06072008"
 #endif
 
 /* syslog facility */

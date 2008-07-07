@@ -238,6 +238,9 @@ typedef struct {
 typedef struct{
 	urlid_t		url_id;
 	dps_uint4	coord;
+#ifdef WITH_MULTIDBADDR
+        dps_uint2       dbnum;
+#endif
 } DPS_URL_CRD;
 
 typedef struct {
@@ -539,6 +542,7 @@ typedef struct {
         int     charset_id;     /**< Document's charset ID                   */
         int     subdoc;         /**< Subdocument flag                        */
     dpshash32_t id;             /**< Hash32(url) for seding and rec_id in special mode */
+        dps_uint2               dbnum;
 	
         DPS_SERVER              *Server;
 

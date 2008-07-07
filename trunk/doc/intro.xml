@@ -142,13 +142,21 @@ same database. Multi-threaded indexing support.</para>
                  <indexterm><primary>Where to get <application>DataparkSearch</application></primary></indexterm>
                 
 		<para>Check for the latest version of <application>DataparkSearch</application> at:
-<ulink url="http://www.dataparksearch.org/">http://www.dataparksearch.org/</ulink>.</para>
+<ulink url="http://www.dataparksearch.org/">http://www.dataparksearch.org/</ulink>, as well at Google Code:
+<ulink url="http://code.google.com/p/dataparksearch/">http://code.google.com/p/dataparksearch/</ulink>.</para>
+
 <!-- para>A mirror in Germany: <ulink url="http://dataparksearch.h0t.de/">http://dataparksearch.h0t.de/</ulink>.</para-->
 <para>A mirror in Moscow, Russia: <ulink url="http://dataparksearch.newsa.ru/">http://dataparksearch.newsa.ru/</ulink>.</para>
 
 <para><application>DataparkSearch</application> is also available in FreeBSD ports collection, 
 see <ulink url="http://www.freshports.org/www/dpsearch">www.freshports.org/www/dpsearch</ulink> and 
 in the <ulink url="http://www.t2-project.org/packages/dpsearch.html">T2 Linux SDE</ulink>.
+</para>
+
+<para>DataparkSearch's source is available via SVN at Google Code:
+<programlisting>
+svn checkout http://dataparksearch.googlecode.com/svn/trunk/ dataparksearch-read-only
+</programlisting>
 </para>
 
 	</sect1>
@@ -198,6 +206,11 @@ First <application>DataparkSearch</application> user. Testing on <application>Li
 <para>
 	<author><firstname>Jean-Gerard</firstname><surname>Pailloncy</surname></author>:
 Testing on <application>OpenBSD</application>.
+</para>
+<para>
+	<author><firstname>Amit</firstname><surname>Joshi</surname></author>:
+Testing on <application>CentOS</application>, packaging for <application>Debian</application>, 
+some ideas to improve the scalability for several PC and using several DBAddr.
 </para>
 
 <para>

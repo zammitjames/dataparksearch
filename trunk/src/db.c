@@ -1419,6 +1419,9 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  dps_snprintf(str, 128, "%.5f", pr);
 	  DpsVarListReplaceStr(&Res->Doc[i].Sections, "Pop_Rank", str);
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Site_id", Res->CoordList.Data[i + Res->first * Res->offset].site_id);
+#ifdef WITH_MULTIDBADDR
+	  Res->Doc[i].dbnum = Res->CoordList.Coords[i + Res->first * Res->offset].dbnum;
+#endif
 #ifdef WITH_REL_TRACK
 	  DpsVarListReplaceDouble(&Res->Doc[i].Sections, "Rel.x", Res->CoordList.Track[i + Res->first * Res->offset].x);
 	  DpsVarListReplaceDouble(&Res->Doc[i].Sections, "Rel.xy", Res->CoordList.Track[i + Res->first * Res->offset].xy);

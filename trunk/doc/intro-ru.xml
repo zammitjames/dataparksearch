@@ -132,13 +132,21 @@ ODBC-ODBC bridge, <!--Virtuoso,--> InterBase, Oracle (см. <xref linkend="oracle"
                  <indexterm><primary>Где взять <application>DataparkSearch</application></primary></indexterm>
                 </title>
 		<para>Последняя версия <application>DataparkSearch</application> доступна на 
-<ulink url="http://www.dataparksearch.org/">http://www.dataparksearch.org/</ulink>.</para>
+<ulink url="http://www.dataparksearch.org/">http://www.dataparksearch.org/</ulink>, а также на Google Code:
+<ulink url="http://code.google.com/p/dataparksearch/">http://code.google.com/p/dataparksearch/</ulink>.</para>
+
 <!-- para>Зеркало в Германии: <ulink url="http://dataparksearch.h0t.de/">http://dataparksearch.h0t.de/</ulink>.</para-->
 <para>Зеркало в Москве, Россия: <ulink url="http://dataparksearch.newsa.ru/">http://dataparksearch.newsa.ru/</ulink>.</para>
 
 <para><application>DataparkSearch</application> также доступен в коллекции портов FreeBSD, 
 см. <ulink url="http://www.freshports.org/www/dpsearch">www.freshports.org/www/dpsearch</ulink> и в репозитории 
  <ulink url="http://www.t2-project.org/packages/dpsearch.html">T2 Linux SDE</ulink>.
+</para>
+
+<para>Исходники DataparkSearch доступны через SVN на Google Code:
+<programlisting>
+svn checkout http://dataparksearch.googlecode.com/svn/trunk/ dataparksearch-read-only
+</programlisting>
 </para>
 
 	</sect1>
@@ -188,6 +196,11 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 <para>
 	<author><firstname>Jean-Gerard</firstname><surname>Pailloncy</surname></author>:
 Тестирование на <application>OpenBSD</application>.
+</para>
+<para>
+	<author><firstname>Amit</firstname><surname>Joshi</surname></author>:
+Тестирование на <application>CentOS</application>, пэкадж для <application>Debian</application>, 
+идею по улучшению работы на нескольких PC и с несколькими DBAddr.
 </para>
 
 <para>
