@@ -1356,6 +1356,7 @@ static int srv_rpl_bool_var(void *Cfg, size_t ac,char **av){
 	int res=!strcasecmp(av[1],"yes");
 	if(!strcasecmp(av[0], "Robots")) C->Srv->use_robots = res;
 	else DpsVarListReplaceInt(&C->Srv->Vars,av[0],res);
+	if (!strcasecmp(av[0], "DetectClones")) DpsVarListReplaceStr(&C->Indexer->Conf->Vars, av[0], av[1]);
 	return DPS_OK;
 }
 
