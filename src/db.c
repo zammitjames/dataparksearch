@@ -1217,7 +1217,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 #endif
 	      }
 	    }
-	    Res->CoordList.ncoords = Res->total_found = p + 1;
+	    if (p + 1 < Res->CoordList.ncoords) Res->CoordList.ncoords = Res->total_found = p + 1;
 	    
 	    if (use_site_id) {
 	      DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
