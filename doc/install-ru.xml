@@ -406,10 +406,9 @@
 <para><userinput>LoadFile /usr/lib/libpthread.so</userinput></para>
 </listitem>
 		</itemizedlist>
-		<!--para>Если информация выше не помогла вам, пожалуйста, отправьте описание вашей проблемы на список рассылки
-<email>general@mnogosearch.org</email> (пажалуйста, пишите только на английском) или <email>ru@mnogosearch.org</email> 
-(пожалуйста, питите только на русском).
-</para-->
+		<para>Если информация выше не помогла вам, пожалуйста, отправьте описание вашей проблемы на список рассылки
+<email>dataparksearch@yahoogroups.com</email> (пажалуйста, пишите только на английском).
+</para>
 	</sect1>
 
 	<!--sect1 id="binarydistrib">

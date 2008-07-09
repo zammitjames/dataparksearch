@@ -1688,9 +1688,11 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	  delete_aspell_speller(speller);
 	  if (have_suggest) {
 	    DPS_FREE(Res->Suggest);
-	    Res->Suggest = suggest.data;
-	    Res->Suggest[suggest.data_size] = '\0';
-	    Res->Suggest = DpsStrdup(suggest.data);
+	    if (suggest.data_size > 0) {
+	      Res->Suggest = suggest.data;
+	      Res->Suggest[suggest.data_size] = '\0';
+	      Res->Suggest = DpsStrdup(suggest.data);
+	    }
 	  }
 	  DpsDSTRFree(&suggest); 
 	}

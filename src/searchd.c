@@ -245,6 +245,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 	Res=DpsResultInit(NULL);
 	if (Res == NULL) return DPS_ERROR;
 
+#ifdef WITH_REVERT_CONNECTION
 	/* revert connection */
 
 	bind_address.s_addr 	= htonl(INADDR_ANY);
@@ -297,6 +298,9 @@ static int do_client(DPS_AGENT *Agent, int client){
 	}
 	DpsLog(Agent, DPS_LOG_INFO, "[%s] Connected. PORT: %s", inet_ntoa(his_addr.sin_addr), port_str);
 	close(pre_server);
+#else
+	server = client;
+#endif
 
 	while(!done){
 	  size_t dlen = 0, ndocs, i, last_cmd;
