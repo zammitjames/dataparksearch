@@ -141,6 +141,8 @@ int DpsSearchdConnect(DPS_DB *cl) {
     res = DPS_ERROR;
   }
   if (res == DPS_OK) {
+
+#ifdef WITH_REVERT_CONNECTION
     /* revert connection */
  
     if((cl->searchd[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -182,6 +184,10 @@ int DpsSearchdConnect(DPS_DB *cl) {
 	       inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));*/
       return DPS_ERROR;
     }
+#else
+    cl->searchd[0] = cl->searchd[1];
+#endif
+
   }
   return res;
 }

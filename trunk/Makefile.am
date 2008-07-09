@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in 
-AUTOMAKE_OPTIONS = foreign no-installinfo dist-bzip2
+AUTOMAKE_OPTIONS = foreign no-installinfo dist-bzip2 no-dist-gzip
 SUBDIRS = include src doc etc create misc scripts test #php @BINDINGS@
 #DIST_SUBDIRS = php java perl
 
