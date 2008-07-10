@@ -156,6 +156,9 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc) {
 		   strcasecmp(S->name, "Content-Language") &&
 		   strcasecmp(S->name, "Tag") &&
 		   strcasecmp(S->name, "Z") &&
+#ifdef WITH_MULTIDBADDR
+		   strcasecmp(S->name, "dbnum") &&
+#endif
 		   strcasecmp(S->name, "Category"))
 			continue;
 
@@ -189,6 +192,9 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc) {
 		   strcasecmp(S->name,"Content-Language") &&
 		   strcasecmp(S->name,"Tag") &&
 		   strcasecmp(S->name, "Z") &&
+#ifdef WITH_MULTIDBADDR
+		   strcasecmp(S->name, "dbnum") &&
+#endif
 		   strcasecmp(S->name,"Category"))
 			continue;
 
@@ -236,6 +242,7 @@ int __DPSCALL DpsDocFromTextBuf(DPS_DOCUMENT * Doc,const char *textbuf){
 		Sec.val = data;
 		Sec.txt_val = data;
 		DpsVarListReplace(&Doc->Sections, &Sec);
+/*		if (!strcasecmp(name, "dbnum")) D->dbnum = DPS_ATOI(data);*/
 /*		name[tag.toks[i].nlen] = '=';
 		if (*data) data[tag.toks[i].vlen] = '"';*/
 		DPS_FREE(name);

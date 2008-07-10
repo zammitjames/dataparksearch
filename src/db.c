@@ -1421,6 +1421,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Site_id", Res->CoordList.Data[i + Res->first * Res->offset].site_id);
 #ifdef WITH_MULTIDBADDR
 	  Res->Doc[i].dbnum = Res->CoordList.Coords[i + Res->first * Res->offset].dbnum;
+	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "dbnum", (int)(Res->Doc[i].dbnum));
 #endif
 #ifdef WITH_REL_TRACK
 	  DpsVarListReplaceDouble(&Res->Doc[i].Sections, "Rel.x", Res->CoordList.Track[i + Res->first * Res->offset].x);
