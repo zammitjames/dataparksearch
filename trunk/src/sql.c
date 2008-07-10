@@ -4699,7 +4699,9 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 		
 		/* Compose IN string and set to zero url_id field */
 		for(i = 0; i < Res->num_rows; i++) {
+#ifdef WITH_MULTIDBADDR
 		  if (Res->Doc[i].dbnum != dbnum) continue;
+#endif
 		  if (Res->Doc[i].fetched) continue;
 			if(db->DBType==DPS_DB_PGSQL)
 			  sprintf(DPS_STREND(instr), "%s'%i'", notfirst ? "," : "",

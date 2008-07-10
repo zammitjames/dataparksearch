@@ -3809,7 +3809,9 @@ int DpsResAddDocInfoCache(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t 
     DPS_DOCUMENT *D = &Res->Doc[i];
     urlid_t	 url_id = DpsVarListFindInt(&D->Sections, "DP_ID", 0);
     
-    if (Res->Doc[i].dbnum != dbnum) continue;
+#ifdef WITH_MULTIDBADDR
+    if (Res->Doc[i].dbnum != db->dbnum) continue;
+#endif		  
     P.rec_id = url_id;
     if ((docinfo = (char*)DpsBaseARead(&P, &len)) == NULL) continue;
 

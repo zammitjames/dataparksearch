@@ -345,6 +345,14 @@ static int do_client(DPS_AGENT *Agent, int client){
 					DpsDocInit(&Res->Doc[ndocs]);
 					DpsVarListReplaceLst(&Res->Doc[ndocs].Sections, &Agent->Conf->Sections, NULL, "*");
 					Res->Doc[ndocs].method = DPS_METHOD_GET;
+#ifdef WITH_MULTIDBADDR
+					{
+					  char *dbstr = DpsVarListFindStr(&Res->Doc[ndocs].Sections, "dbnum", NULL);
+					  if (dbstr != NULL) {
+					    Res->Doc[ndocs].dbnum = DPS_ATOI(dbstr);
+					  }
+					}
+#endif
 					DpsDocFromTextBuf(&Res->Doc[ndocs], tok);
 					
 					tok = dps_strtok_r(NULL, "\r\n", &lt);

@@ -235,7 +235,9 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	  for(nsec = 0; nsec < D->Sections.Root[r].nvars; nsec++)
 	    if (strcasecmp(D->Sections.Root[r].Var[nsec].name, "Score") == 0) D->Sections.Root[r].Var[nsec].section = 1;
 
+#ifdef WITH_MULTIDBADDR
 	  if (D->dbnum != cl->dbnum) continue;
+#endif		  
 
 	  textbuf = DpsDocToTextBuf(D);
 	  if (textbuf == NULL) {TRACE_OUT(query); return DPS_ERROR;}
