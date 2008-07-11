@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2008 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -330,7 +330,7 @@ size_t DpsDSTRAppendUni(DPS_DSTR *dstr, const dpsunicode_t data) {
       return 0;
     }
   }
-  dstr_data = (dpsunicode_t)dstr->data;
+  dstr_data = (dpsunicode_t*)dstr->data;
   dstr_data[ dstr->data_size / sizeof(dpsunicode_t) ] = data;
   dstr->data_size += sizeof(dpsunicode_t);
   
