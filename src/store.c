@@ -400,7 +400,21 @@ __C_LINK int __DPSCALL DpsStoreCheckUp(DPS_AGENT *Agent, int level) {
 
   for (i = dbfrom; i < dbto; i++) {
     if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[i].stored_sd) <= 0)) {
-      if (f && (Agent->Flags.do_store)) DpsStoredCheck(Agent, 0, 0, "");
+      if ((level == 1) && (Agent->Flags.do_store)) {
+	DPS_BASE_PARAM P;
+	DPS_DB *db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[i] : &Agent->dbl.db[i];
+	bzero(&P, sizeof(P));
+	P.subdir = "store";
+	P.basename = "doc";
+	P.indname = "doc";
+	P.mode = DPS_WRITE_LOCK;
+	P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+	P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
+	P.A = Agent;
+	DpsBaseOptimize(&P, -1);
+	DpsBaseClose(&P);
+      }
+      if (f && level > 1 && (Agent->Flags.do_store)) DpsStoredCheck(Agent, 0, 0, "");
       f = 0;
     } else {
       if (level == 1) DpsSend(s, helloO, 1, 0);
