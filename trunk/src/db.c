@@ -1254,7 +1254,7 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 	size_t	corder = (size_t)-1, ccount = 0;
 	
 	for(len = i = 0; i < Res->WWList.nwords; i++) 
-		len += Res->WWList.Word[i].len;
+		len += Res->WWList.Word[i].len + 32;
 	
 	wsize=(1+len*15)*sizeof(char);
 	wordinfo = (char*) DpsMalloc(wsize);
