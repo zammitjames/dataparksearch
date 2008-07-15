@@ -961,8 +961,8 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	size_t          *PerSite[256], *persite, *curpersite;
 	size_t          ResultsLimit = DpsVarListFindUnsigned(&A->Vars, "ResultsLimit", 0);
 	size_t          total_found = 0, cnt_db = 0;
-	DPS_URL_CRD	*wrdX[256];
-	DPS_URL_CRD	*wrd = NULL, *curwrd = NULL;
+	DPS_URL_CRD_DB	*wrdX[256];
+	DPS_URL_CRD_DB	*wrd = NULL, *curwrd = NULL;
 	DPS_URLDATA     *udtX[256];
 	DPS_URLDATA     *udt = NULL, *curudt = NULL;
 #ifdef WITH_REL_TRACK
@@ -1065,7 +1065,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	  }
 
 	  if (nwrd > 0) {
-	    curwrd=wrd=(DPS_URL_CRD*)DpsMalloc(sizeof(*wrd)*nwrd);
+	    curwrd=wrd=(DPS_URL_CRD_DB*)DpsMalloc(sizeof(*wrd)*nwrd);
 	    curudt=udt=(DPS_URLDATA*)DpsMalloc(sizeof(*udt)*nwrd);
 #ifdef WITH_REL_TRACK
 	    curtrk=trk=(DPS_URLTRACK*)DpsMalloc(sizeof(*trk)*nwrd);
@@ -1423,6 +1423,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  Res->Doc[i].dbnum = Res->CoordList.Coords[i + Res->first * Res->offset].dbnum;
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "dbnum", (int)(Res->Doc[i].dbnum));
 #endif
+/*	  fprintf(stderr, "%d.DP_ID: %x  dbnum:%d\n", i,  Res->CoordList.Coords[i + Res->first * Res->offset].url_id, Res->Doc[i].dbnum);*/
 #ifdef WITH_REL_TRACK
 	  DpsVarListReplaceDouble(&Res->Doc[i].Sections, "Rel.x", Res->CoordList.Track[i + Res->first * Res->offset].x);
 	  DpsVarListReplaceDouble(&Res->Doc[i].Sections, "Rel.xy", Res->CoordList.Track[i + Res->first * Res->offset].xy);
@@ -2271,7 +2272,7 @@ int DpsURLDataDePreload(DPS_AGENT *Agent) {
 
 int DpsURLDataLoad(DPS_AGENT *Indexer, DPS_RESULT *R, DPS_DB *db) {
   DPS_URLDATA *Dat, *D = NULL, K, *F;
-  DPS_URL_CRD *Crd;
+  DPS_URL_CRD_DB *Crd;
   size_t i, j, count, nrec = 0, first = 0;
   int NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&Indexer->Conf->Vars, "URLDataFiles", 0x300);
   int filenum, prevfilenum = - 1, rc = DPS_OK;

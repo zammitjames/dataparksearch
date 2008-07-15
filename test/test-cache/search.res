@@ -88,7 +88,7 @@
   <a href="http://site/testpage2.html" TARGET="_blank">
     TestPage2 Odd Number of BODY's until 30
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.000%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>

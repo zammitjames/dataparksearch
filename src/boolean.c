@@ -274,9 +274,9 @@ static int PUSHCMD(DPS_BOOLSTACK * s, int arg) {
 
 static int proceedOR(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x1, DPS_STACK_ITEM *x2) {
 
-  res->pbegin = res->pcur = (DPS_URL_CRD*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD));
+  res->pbegin = res->pcur = (DPS_URL_CRD_DB*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD_DB));
   if (res->pbegin == NULL) {
-    DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes for %d results", (x1->count + x2->count + 1) * sizeof(DPS_URL_CRD),
+    DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes for %d results", (x1->count + x2->count + 1) * sizeof(DPS_URL_CRD_DB),
 	   (x1->count + x2->count + 1));
     return DPS_ERROR;
   }
@@ -305,9 +305,9 @@ static int proceedOR(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x1, 
 
 static int proceedSTOP(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x, DPS_STACK_ITEM *stop) {
 
-  res->pbegin = res->pcur = (DPS_URL_CRD*)DpsMalloc((x->count + stop->count + 1) * sizeof(DPS_URL_CRD));
+  res->pbegin = res->pcur = (DPS_URL_CRD_DB*)DpsMalloc((x->count + stop->count + 1) * sizeof(DPS_URL_CRD_DB));
   if (res->pbegin == NULL) {
-    DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes for %d results", (x->count + stop->count + 1) * sizeof(DPS_URL_CRD),
+    DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes for %d results", (x->count + stop->count + 1) * sizeof(DPS_URL_CRD_DB),
 	   (x->count + stop->count + 1));
     return DPS_ERROR;
   }
@@ -361,7 +361,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 		  } else {
 		    res = *x1; /* FIXME: add checking ? */
 		    if (res.order_from != res.order_to) {
-		      DPS_URL_CRD *w;
+		      DPS_URL_CRD_DB *w;
 		      dps_uint4 *pos_real, *order_ideal, *order_real, *gap_ahead/*, *gap_back*/;
 		      urlid_t curlid;
 		      size_t nwords = res.order_to - res.order_from + 1, nonstop_words;
@@ -575,7 +575,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			    DpsLog(query, DPS_LOG_DEBUG, "x1.NOT: %d  x2.NOT: %d", x1->cmd & DPS_STACK_WORD_NOT, x2->cmd & DPS_STACK_WORD_NOT);
 /*			    printBoolRes(query, x2);*/
 #endif
-			    res.pbegin = res.pcur = (DPS_URL_CRD*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD));
+			    res.pbegin = res.pcur = (DPS_URL_CRD_DB*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD_DB));
 			    if (res.pbegin == NULL) return DPS_ERROR;
 			    x1->pcur = x1->pbegin; x1->plast = x1->pbegin + x1->count;
 			    x2->pcur = x2->pbegin; x2->plast = x2->pbegin + x2->count;
@@ -669,7 +669,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  } else if (x1->origin & DPS_WORD_ORIGIN_STOP ) {
 			    if (DPS_OK != proceedSTOP(query, &res, x2, x1)) return DPS_ERROR;
 			  } else if (!((x1->cmd & DPS_STACK_WORD_NOT) && (x2->cmd & DPS_STACK_WORD_NOT))) {
-			    res.pbegin = res.pcur = (DPS_URL_CRD*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD));
+			    res.pbegin = res.pcur = (DPS_URL_CRD_DB*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD_DB));
 			    if (res.pbegin == NULL) return DPS_ERROR;
 			    x1->pcur = x1->pbegin; x1->plast = x1->pbegin + x1->count;
 			    x2->pcur = x2->pbegin; x2->plast = x2->pbegin + x2->count;
@@ -753,7 +753,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  } else if (x1->origin & DPS_WORD_ORIGIN_STOP ) {
 			    if (DPS_OK != proceedSTOP(query, &res, x2, x1)) return DPS_ERROR;
 			  } else if (!((x1->cmd & DPS_STACK_WORD_NOT) && (x2->cmd & DPS_STACK_WORD_NOT))) {
-			    res.pbegin = res.pcur = (DPS_URL_CRD*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD));
+			    res.pbegin = res.pcur = (DPS_URL_CRD_DB*)DpsMalloc((x1->count + x2->count + 1) * sizeof(DPS_URL_CRD_DB));
 			    if (res.pbegin == NULL) return DPS_ERROR;
 			    x1->pcur = x1->pbegin; x1->plast = x1->pbegin + x1->count;
 			    x2->pcur = x2->pbegin; x2->plast = x2->pbegin + x2->count;
@@ -782,7 +782,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			    } else {
 #if 0
 			      {
-				DPS_URL_CRD *w;
+				DPS_URL_CRD_DB *w;
 				for (w = x1->pcur; w < x1->plast; w++) {
 				  fprintf(stderr, "x1.url_id:%d  .coord:%d\n", w->url_id, w->coord);
 				}
@@ -827,7 +827,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 #ifdef DEBUG_BOOL
 #if 0
 			{
-			  DPS_URL_CRD *w = res.pbegin;
+			  DPS_URL_CRD_DB *w = res.pbegin;
 			  size_t q;
 			  for (q = 0; q < res.count; q++) {
 			    fprintf(stderr, "res.url_id:%d  .coord:%d\n", w[q].url_id, w[q].coord);
@@ -909,9 +909,9 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
 	if (items[j].crcword == items[i].crcword) break;
       if (j < i) {
 	items[i].count = items[j].count;
-	items[i].pbegin = (DPS_URL_CRD*)DpsMalloc((items[j].count + 1) * sizeof(DPS_URL_CRD));
+	items[i].pbegin = (DPS_URL_CRD_DB*)DpsMalloc((items[j].count + 1) * sizeof(DPS_URL_CRD_DB));
 	if (items[i].pbegin == NULL) {
-	  DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes %s:%d", (items[j].count + 1) * sizeof(DPS_URL_CRD), __FILE__, __LINE__);
+	  DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes %s:%d", (items[j].count + 1) * sizeof(DPS_URL_CRD_DB), __FILE__, __LINE__);
 	  DpsBoolStackFree(s);
 	  return DPS_STACK_ERR;
 	}

@@ -136,7 +136,7 @@ int __DPSCALL DpsSearchCacheStore(DPS_AGENT * query, DPS_RESULT *Res){
 	    write(fd, Res->WWList.Word[i].uword, sizeof(dpsunicode_t) * Res->WWList.Word[i].ulen);*/
 	  }
 			
-	  write(fd, Res->CoordList.Coords, Res->CoordList.ncoords * sizeof(DPS_URL_CRD));
+	  write(fd, Res->CoordList.Coords, Res->CoordList.ncoords * sizeof(DPS_URL_CRD_DB));
 	  write(fd, Res->CoordList.Data, Res->CoordList.ncoords * sizeof(DPS_URLDATA));
 #ifdef WITH_REL_TRACK
 	  write(fd, Res->CoordList.Track, Res->CoordList.ncoords * sizeof(DPS_URLTRACK));
@@ -162,7 +162,7 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 	char fname[PATH_MAX];
 	struct stat sb;
 	int fd;
-	DPS_URL_CRD *wrd = NULL;
+	DPS_URL_CRD_DB *wrd = NULL;
 	DPS_URLDATA *dat = NULL;
 #ifdef WITH_REL_TRACK
 	DPS_URLTRACK *trk = NULL;
@@ -285,7 +285,7 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 */
 
 	
-	wrd = (DPS_URL_CRD*)DpsMalloc((Res->total_found + 1) * sizeof(*wrd));
+	wrd = (DPS_URL_CRD_DB*)DpsMalloc((Res->total_found + 1) * sizeof(*wrd));
 	dat = (DPS_URLDATA*)DpsMalloc((Res->total_found + 1) * sizeof(*dat));
 #ifdef WITH_REL_TRACK
 	trk = (DPS_URLTRACK*)DpsMalloc((Res->total_found + 1) * sizeof(*trk));

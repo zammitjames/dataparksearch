@@ -729,7 +729,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 #endif
 
 				hdr.cmd=DPS_SEARCHD_CMD_WORDS;
-				hdr.len = /*Res->CoordList.ncoords*/ Res->num_rows * sizeof(DPS_URL_CRD);
+				hdr.len = /*Res->CoordList.ncoords*/ Res->num_rows * sizeof(DPS_URL_CRD_DB);
 				nsent=DpsSearchdSendPacket(server, &hdr, &Res->CoordList.Coords[Res->first]);
 				DpsLog(Agent,verb,"Sent words packet %d bytes cmd=%d len=%d nwords=%d",(int)nsent,hdr.cmd,hdr.len,Res->CoordList.Coords);
 

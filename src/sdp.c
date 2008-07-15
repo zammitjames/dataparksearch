@@ -369,7 +369,7 @@ static int DpsSearchdSendWordRequest(DPS_AGENT *query, DPS_DB *cl, const char * 
 
 
 int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
-	DPS_URL_CRD *wrd = NULL;
+	DPS_URL_CRD_DB *wrd = NULL;
 	DPS_URLDATA *udt = NULL;
 #ifdef WITH_REL_TRACK
 	DPS_URLTRACK *trk = NULL;
@@ -429,7 +429,7 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 				break;
 			case DPS_SEARCHD_CMD_WORDS:
 				DPS_FREE(wrd);
-				wrd=(DPS_URL_CRD*)DpsMalloc(hdr.len + 1);
+				wrd=(DPS_URL_CRD_DB*)DpsMalloc(hdr.len + 1);
 				if (wrd == NULL) {
 				  done = 1;
 				  break;
