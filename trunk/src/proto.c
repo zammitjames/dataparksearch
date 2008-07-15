@@ -410,8 +410,6 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
       return DPS_NET_ERROR;
     }
 
-    SSL_set_verify(ctx, SSL_VERIFY_NONE, NULL);
-
     /* -------------------------------------------------- */
     /* Now we have TCP connection. Start SSL negotiation. */
 
@@ -419,6 +417,8 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
       sslcleanup;
       return DPS_NET_ERROR;
     }
+
+    SSL_set_verify(ssl, SSL_VERIFY_NONE, NULL);
 
     SSL_set_fd (ssl, fd);
 

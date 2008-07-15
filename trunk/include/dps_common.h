@@ -238,10 +238,17 @@ typedef struct {
 typedef struct{
 	urlid_t		url_id;
 	dps_uint4	coord;
-#ifdef WITH_MULTIDBADDR
-        dps_uint2       dbnum;
-#endif
 } DPS_URL_CRD;
+
+#ifdef WITH_MULTIDBADDR
+typedef struct{
+	urlid_t		url_id;
+	dps_uint4	coord;
+        dps_uint2       dbnum;
+} DPS_URL_CRD_DB;
+#else
+#define DPS_URL_CRD_DB DPS_URL_CRD
+#endif
 
 typedef struct {
         urlid_t         url_id;
@@ -277,7 +284,11 @@ typedef struct {
 	size_t		ncoords;
 	size_t		order;
 	char		*word;
+#ifdef WITH_MULTIDBADDR
+        DPS_URL_CRD_DB  *Coords;
+#else
 	DPS_URL_CRD	*Coords;
+#endif
         DPS_URLDATA	*Data;
 #ifdef WITH_REL_TRACK
         DPS_URLTRACK    *Track;
@@ -770,7 +781,8 @@ typedef struct {
 	int		cmd;
         int             origin, order_origin;
 /*	unsigned long	arg;          .order now */
-  DPS_URL_CRD     *pbegin, *pcur, *plast, *pchecked;
+  DPS_URL_CRD_DB        *pbegin, *pcur, *plast, *pchecked;
+  DPS_URL_CRD           *db_pbegin, *db_pcur, *db_plast, *db_pchecked;
         size_t          order, order_inquery;
         size_t          wordnum;
         size_t          count;

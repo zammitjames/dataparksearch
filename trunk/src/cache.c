@@ -280,7 +280,7 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 	      }
 	      dps_addr = db->cached_addr;
 	      dps_addr.sin_port = 0;
-	      sscanf(port_str, "%d,%d", ip, ip + 1);
+	      sscanf(port_str, "%u,%u", ip, ip + 1);
 	      p[0] = (unsigned char)(ip[0] & 255);
 	      p[1] = (unsigned char)(ip[1] & 255);
 
@@ -736,10 +736,30 @@ static size_t RemoveOldCrds(DPS_URL_CRD *words, size_t n, DPS_LOGDEL *del, size_
   return j;
 }
 
+static size_t RemoveOldCrdDbs(DPS_URL_CRD_DB *words, size_t n, DPS_LOGDEL *del, size_t del_count) {
+  register size_t i, j = 0;
+  size_t start = 0;
+  int u;
+  urlid_t curl;
+
+  if (del_count == 0) return n;
+
+  for (i = 0; i < n; ) {
+    
+    u = (PresentInDelLog(del, del_count, /*NULL*/ &start, words[i].url_id) == 0);
+    curl = words[i].url_id;
+    for ( ; (i < n) && (words[i].url_id == curl); i++) {
+      if (u) words[j++] = words[i];
+    }
+
+  }
+  return j;
+}
+
 #else
 
-static size_t RemoveOldCrds(DPS_URL_CRD *words0, size_t n, DPS_LOGDEL *del0, size_t del_count) {
-  register DPS_URL_CRD *words = words0, *c = words0, *wordsn = words0 + n;
+static size_t RemoveOldCrds(DPS_URL_CRD_DB *words0, size_t n, DPS_LOGDEL *del0, size_t del_count) {
+  register DPS_URL_CRD_DB *words = words0, *c = words0, *wordsn = words0 + n;
   register DPS_LOGDEL *del = del0, *deln = del0 + del_count;
 
   if ((n == 0) || (del_count == 0)) return n;
@@ -1553,14 +1573,14 @@ int DpsCmpURLData(DPS_URLDATA *d1, DPS_URLDATA *d2) {
 
 int DpsURLDataLoadCache(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db) {
 	DPS_URLDATA *Dat, *D = NULL, K, *F;
-	DPS_URL_CRD *Crd;
+	DPS_URL_CRD_DB *Crd;
 #ifdef WITH_REL_TRACK
 	DPS_URLTRACK *Trk = R->CoordList.Track;
 #endif
 	struct stat sb;
         size_t i, j, count, nrec = 0, first = 0;
 	const char	*vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&A->Conf->Vars, "VarDir", DPS_VAR_DIR);
-	int NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&A->Conf->Vars, "URLDataFiles", 0x300);
+	int NFiles = (db->URLDataFiles > 0) ? db->URLDataFiles : DpsVarListFindInt(&A->Conf->Vars, "URLDataFiles", 0x300);
 	int filenum, fd = -1, prevfilenum = - 1;
 	char fname[PATH_MAX];
 
@@ -1658,7 +1678,7 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	struct stat sb;
         size_t nrec = 0, mem_used = 0;
 	const char	*vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Conf->Vars, "VarDir", DPS_VAR_DIR); /* should be fetched from Conf->Vars */
-	int NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&Agent->Conf->Vars, "URLDataFiles", 0x300);
+	int NFiles = (db->URLDataFiles > 0) ? db->URLDataFiles : DpsVarListFindInt(&Agent->Conf->Vars, "URLDataFiles", 0x300);
 	int filenum, fd = -1;
 	char fname[PATH_MAX];
 
@@ -1749,15 +1769,9 @@ static int cmp_search_limit(const DPS_SEARCH_LIMIT *l1, const DPS_SEARCH_LIMIT *
 
 int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
         size_t i, j;
-	DPS_URLCRDLIST MCoordList;
 	DPS_BASE_PARAM P;
 	DPS_STACK_ITEM **pmerg = NULL;
 	int wf[256], present;
-#if 0
-	char dname[PATH_MAX]="";
-	struct stat sb;
-	int dd;
-#endif
 	size_t z, npmerge;
 	size_t del_count = 0, nwords;
 	DPS_LOGDEL *del_buf=NULL;
@@ -1768,9 +1782,6 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	int flag_null_wf;
 	int use_empty = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "empty", "yes"), "yes");
 	
-/*	int search_mode = DpsSearchMode(DpsVarListFindStr(&Indexer->Vars, "m", "all"));*/
-/*	const char	*vardir=DpsVarListFindStr(Env_Vars, "VarDir", DPS_VAR_DIR);*/
-
 #ifdef DEBUG_SEARCH
 	unsigned long ticks, seek_ticks;
 	unsigned long total_ticks=DpsStartTimer();
@@ -1794,7 +1805,6 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 #endif
 
 	flag_null_wf = DpsWeightFactorsInit(DpsVarListFindStr(&Indexer->Vars, "wf", ""), wf);
-	bzero((void*)&MCoordList, sizeof(MCoordList));
 
 #ifdef DEBUG_SEARCH
 	ticks = DpsStartTimer();
@@ -1920,18 +1930,20 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    return DPS_ERROR;
 	  }
 	  pmerg[0] = &Res->items[0];
-	  pmerg[0]->pcur = pmerg[0]->pbegin = pmerg[0]->pchecked = p = (DPS_URL_CRD*)DpsMalloc((lims[0].size + 1) * sizeof(DPS_URL_CRD));
-	  if (pmerg[0]->pbegin != NULL) {
+	  pmerg[0]->pcur = pmerg[0]->pbegin = pmerg[0]->pchecked = (DPS_URL_CRD_DB*)DpsMalloc((lims[0].size + 1) * sizeof(DPS_URL_CRD_DB));
+	  pmerg[0]->db_pcur = pmerg[0]->db_pbegin = pmerg[0]->db_pchecked = p = (DPS_URL_CRD*)DpsMalloc((lims[0].size + 1) * sizeof(DPS_URL_CRD));
+	  if (pmerg[0]->db_pbegin != NULL) {
 	    for (i = 0; i < lims[0].size; i++) {
 	      p[i].url_id = lims[0].data[i];
 	      p[i].coord = 0;
 	    }
-	    pmerg[0]->count = num = RemoveOldCrds(pmerg[0]->pcur, lims[0].size, del_buf, del_count);
+	    pmerg[0]->count = num = RemoveOldCrds(pmerg[0]->db_pcur, lims[0].size, del_buf, del_count);
 	    if (flag_null_wf) {
-	      pmerg[0]->count = DpsRemoveNullSections(pmerg[0]->pcur, num, wf);
+	      pmerg[0]->count = DpsRemoveNullSections(pmerg[0]->db_pcur, num, wf);
 	      num = pmerg[0]->count;
 	    }
 	    pmerg[0]->plast = &pmerg[0]->pcur[num];
+	    pmerg[0]->db_plast = &pmerg[0]->db_pcur[num];
 	    npmerge = 1;
 	    Res->CoordList.ncoords += num;
 	  } else pmerg[0]->count = 0;
@@ -1960,7 +1972,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	P.subdir = DPS_TREEDIR;
 	P.basename = "wrd";
 	P.indname = "wrd";
-	P.NFiles = (db->WrdFiles) ? db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
+	P.NFiles = (db->WrdFiles > 0) ? db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
 	P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Indexer->Vars, "VarDir", DPS_VAR_DIR);
 	P.A = Indexer;
 	P.mode = DPS_READ_LOCK;
@@ -2007,8 +2019,16 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 #endif
 	    pmerg[npmerge] = &Res->items[i];
 
-	    pmerg[npmerge]->pcur = pmerg[npmerge]->pbegin = pmerg[npmerge]->pchecked = (DPS_URL_CRD*)DpsBaseARead(&P, &orig_size);
+	    pmerg[npmerge]->db_pcur = pmerg[npmerge]->db_pbegin = pmerg[npmerge]->db_pchecked = (DPS_URL_CRD*)DpsBaseARead(&P, &orig_size);
 
+	    if (pmerg[npmerge]->db_pbegin == NULL) {
+
+	      pmerg[npmerge]->count = 0;
+	      DpsLog(Indexer, DPS_LOG_EXTRA, "No data for %dth word or error occured", i, __FILE__, __LINE__);
+	      continue;
+	    }
+	    pmerg[npmerge]->count = num = RemoveOldCrds(pmerg[npmerge]->db_pcur, orig_size / sizeof(DPS_URL_CRD), del_buf, del_count);
+	    pmerg[npmerge]->pcur = pmerg[npmerge]->pchecked = pmerg[npmerge]->pbegin = (DPS_URL_CRD_DB*)DpsMalloc(num * sizeof(DPS_URL_CRD_DB));
 	    if (pmerg[npmerge]->pbegin == NULL) {
 
 	      pmerg[npmerge]->count = 0;
@@ -2021,24 +2041,12 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    DpsLog(Indexer, DPS_LOG_EXTRA, "Read %d->%d time: %.4f)", P.Item.size, P.Item.orig_size, (float)seek_ticks / 1000);
 #endif
 
-
-
-#ifdef DEBUG_SEARCH
-	    seek_ticks = DpsStartTimer();
-#endif
-	    pmerg[npmerge]->count = num = RemoveOldCrds(pmerg[npmerge]->pcur, orig_size / sizeof(DPS_URL_CRD), del_buf, del_count);
-
-#ifdef DEBUG_SEARCH
-	    seek_ticks = DpsStartTimer() - seek_ticks;
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "Remove old (%d) time: %.4f", del_count, (float)seek_ticks / 1000);
-#endif
-
 	    if (flag_null_wf) {
 
 #ifdef DEBUG_SEARCH
 	      seek_ticks = DpsStartTimer();
 #endif
-	      pmerg[npmerge]->count = DpsRemoveNullSections(pmerg[npmerge]->pcur, num, wf);
+	      pmerg[npmerge]->count = DpsRemoveNullSections(pmerg[npmerge]->db_pcur, num, wf);
 
 #ifdef DEBUG_SEARCH
 	      seek_ticks = DpsStartTimer() - seek_ticks;
@@ -2048,20 +2056,9 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	      num = pmerg[npmerge]->count;
 
 	    }
-#if 0
-	    fprintf(stderr, "==== %x ====\n", P.rec_id);
-
-	    {
-	      DPS_URL_CRD *w = pmerg[npmerge]->pcur;
-	      size_t q;
-	      for (q = 0; q < pmerg[npmerge]->count; q++) {
-		fprintf(stderr, ".url_id:%d  .coord:%d\n", w[q].url_id, w[q].coord);
-	      }
-	    }
-	    fprintf(stderr, "|||| %x ||||\n", P.rec_id);
-#endif
 
 	    pmerg[npmerge]->plast = &pmerg[npmerge]->pcur[num];
+	    pmerg[npmerge]->db_plast = &pmerg[npmerge]->db_pcur[num];
 	    npmerge++;
 	    Res->CoordList.ncoords += num;
 
@@ -2102,8 +2099,8 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	while (1) {
 	  nskipped = 0;
 	  for (i = 0; i < npmerge; i++) {
-	    if ((pmerg[i]->pcur != NULL) && (pmerg[i]->pcur < pmerg[i]->plast)) {
-	      cur_url_id = pmerg[i]->pcur->url_id;
+	    if ((pmerg[i]->db_pcur != NULL) && (pmerg[i]->db_pcur < pmerg[i]->db_plast)) {
+	      cur_url_id = pmerg[i]->db_pcur->url_id;
 	      i++;
 	      break;
 	    }
@@ -2112,8 +2109,8 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 
 	  if (nskipped >= npmerge) break;
 	  for(; i < npmerge; i++) {
-	    if ((pmerg[i]->pcur != NULL) && (pmerg[i]->pcur < pmerg[i]->plast)) {
-	      if (cur_url_id > pmerg[i]->pcur->url_id) cur_url_id = pmerg[i]->pcur->url_id;
+	    if ((pmerg[i]->db_pcur != NULL) && (pmerg[i]->db_pcur < pmerg[i]->db_plast)) {
+	      if (cur_url_id > pmerg[i]->db_pcur->url_id) cur_url_id = pmerg[i]->db_pcur->url_id;
 	    }
 	  }
 	  
@@ -2128,22 +2125,23 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	  for(i = 0; i < npmerge; i++) {
 	    if (pmerg[i]->pcur != NULL) {
 	      if (present) {
-		register DPS_URL_CRD *Crd;
-		while ((pmerg[i]->pcur < pmerg[i]->plast) && (pmerg[i]->pcur->url_id == cur_url_id) ) {
+		register DPS_URL_CRD_DB *Crd;
+		while ((pmerg[i]->db_pcur < pmerg[i]->db_plast) && (pmerg[i]->db_pcur->url_id == cur_url_id) ) {
 		  Crd = pmerg[i]->pchecked;
-		  *Crd = *(pmerg[i]->pcur);
+		  Crd->url_id = pmerg[i]->db_pcur->url_id;
+		  Crd->coord = pmerg[i]->db_pcur->coord;
 		  Crd->coord &= 0xFFFFFF00;
 		  Crd->coord += (pmerg[i]->wordnum /*order*/ & 0xFF);
 #ifdef WITH_MULTIDBADDR
 		  Crd->dbnum = db->dbnum;
 #endif		  
-		  pmerg[i]->pcur++;
+		  pmerg[i]->db_pcur++;
 		  pmerg[i]->pchecked++;
 		  pmerg[i]->count++;
 		}
 	      } else {
-		while ((pmerg[i]->pcur < pmerg[i]->plast) && (pmerg[i]->pcur->url_id == cur_url_id) ) {
-		  pmerg[i]->pcur++;
+		while ((pmerg[i]->db_pcur < pmerg[i]->db_plast) && (pmerg[i]->db_pcur->url_id == cur_url_id) ) {
+		  pmerg[i]->db_pcur++;
 		}
 	      }
 	    }
@@ -2283,7 +2281,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
     db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[z] : &Indexer->dbl.db[z];
     if (db->DBMode != DPS_DBMODE_CACHE) continue;
     P.vardir = (db->vardir) ? db->vardir : vardir;
-    P.NFiles = (db->WrdFiles) ? db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
+    P.NFiles = (db->WrdFiles > 0) ? db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
 
 /*    DPS_GETLOCK(Indexer, DPS_LOCK_CACHED);*/
     logd = &db->LOGD;
@@ -2659,11 +2657,11 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	while(u) {
 	  if (use_showcnt) {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank*log(u.shows+2.1)/log(1.1+%d)*log(1.1+s.weight-(%d))/log(1.1+%d),u.last_mod_time,u.since,u.status,u.crc32 FROM url u, server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+    "SELECT u.rec_id,u.site_id,u.pop_rank*log(u.shows+2.1)/log(1.1+%d)*log(1.1+s.weight-(%d))/log(1.1+%d),u.last_mod_time,u.since,u.status,u.crc32,u.pop_rank FROM url u, server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
 			 max_shows, min_weight, scale_weight, rec_id, recs);
 	  } else {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank*log(1.1+s.weight-(%d))/log(1.1+%d),u.last_mod_time,u.since,u.status,u.crc32 FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+    "SELECT u.rec_id,u.site_id,u.pop_rank*log(1.1+s.weight-(%d))/log(1.1+%d),u.last_mod_time,u.since,u.status,u.crc32,u.pop_rank FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
 			 min_weight, scale_weight, rec_id, recs);
 	  }
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
@@ -2680,7 +2678,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 
 	    Item.url_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 0));
 	    Item.site_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
-	    Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2));
+	    Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2 /*7*/));
 	    if ((Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 3))) == 0) {
 	      Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 4));
 	    }
@@ -3845,7 +3843,7 @@ int DpsResAddDocInfoCache(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t 
 }
 
 
-int __DPSCALL DpsCachedResort(DPS_AGENT *A, DPS_DB *db) {
+static int DpsCachedResort(DPS_AGENT *A, DPS_DB *db) {
   DPS_BASE_PARAM P;
   DPS_URL_CRD *data;
   urlid_t *recs;
@@ -3905,7 +3903,7 @@ int __DPSCALL DpsCachedResort(DPS_AGENT *A, DPS_DB *db) {
       DpsLog(A, DPS_LOG_DEBUG, " - resorting record: %d [%x]", recs[i], recs[i]);
       if ((data = (DPS_URL_CRD*)DpsBaseARead(&P, &len)) == NULL) continue;
       n_data = len / sizeof(DPS_URL_CRD);
-      DpsSortSearchWordsByURL(data, n_data);
+      DpsSortSearchWordsByURL0(data, n_data);
       DpsBaseWrite(&P, data, n_data * sizeof(DPS_URL_CRD));
       DPS_FREE(data);
     }

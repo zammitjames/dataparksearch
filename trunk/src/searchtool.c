@@ -89,7 +89,15 @@ static int cmpword(DPS_URL_CRD *s1,DPS_URL_CRD *s2){
 	return 0;
 }
 
-int DpsCmpUrlid(DPS_URL_CRD *s1, DPS_URL_CRD *s2) {
+int DpsCmpUrlid(DPS_URL_CRD_DB *s1, DPS_URL_CRD_DB *s2) {
+	if (s1->url_id < s2->url_id) return -1;
+	if (s1->url_id > s2->url_id) return 1;
+	if (s1->coord < s2->coord) return -1;
+	if (s1->coord > s2->coord) return 1;
+	return 0;
+}
+
+static int DpsCmpUrlid0(DPS_URL_CRD *s1, DPS_URL_CRD *s2) {
 	if (s1->url_id < s2->url_id) return -1;
 	if (s1->url_id > s2->url_id) return 1;
 	if (s1->coord < s2->coord) return -1;
@@ -187,11 +195,15 @@ void DpsSortSearchWordsByWeight(DPS_URL_CRD *wrd,size_t num){
 	return;
 }
 
-void DpsSortSearchWordsByURL(DPS_URL_CRD *wrd,size_t num){
+void DpsSortSearchWordsByURL(DPS_URL_CRD_DB *wrd, size_t num){
 	if(wrd != NULL && num > 1) DpsPreSort((void*)wrd, num, sizeof(*wrd),( qsort_cmp)DpsCmpUrlid);
 	return;
 }
 
+void DpsSortSearchWordsByURL0(DPS_URL_CRD *wrd, size_t num){
+	if(wrd != NULL && num > 1) DpsPreSort((void*)wrd, num, sizeof(*wrd),( qsort_cmp)DpsCmpUrlid0);
+	return;
+}
 
 #define med3(func, a, b, c, L, pattern)  (func(L, a, b, pattern) < 0 ?	\
 					  (func(L, b, c, pattern) < 0 ? (b) : (func(L, a, c, pattern) < 0 ? (c) : (a))) \
@@ -200,7 +212,7 @@ void DpsSortSearchWordsByURL(DPS_URL_CRD *wrd,size_t num){
 
 
 static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t r, const char *pattern, int merge) {
-  DPS_URL_CRD Crd;
+  DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK Trk;
@@ -251,7 +263,7 @@ static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, 
 
 static void DpsQsortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t r, const char *pattern, int merge) {
 
-  DPS_URL_CRD Crd;
+  DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK Trk;
@@ -311,7 +323,7 @@ void DpsSortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, co
 static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t r, const char *pattern) {
   size_t i = p, j = r, m, pl, pm, pn, d;
   size_t Cnt = 1;
-  DPS_URL_CRD Crd;
+  DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK Trk;
@@ -361,7 +373,7 @@ static void DpsQsortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, siz
 
   size_t l = p, r = q, c;
   size_t Cnt = 1;
-  DPS_URL_CRD Crd;
+  DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK Trk;
@@ -1978,7 +1990,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t	i, j = 0, D_size, R_size, phr_n;
   size_t  *count, count_size;
   size_t wordsec, wordpos, prev_wordpos, wordnum, prev_wordnum, wordorder, prev_wordorder;
-  DPS_URL_CRD *Crd;
+  DPS_URL_CRD_DB *Crd;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK *Track;
 #endif
@@ -2267,7 +2279,7 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t	i, j = 0, D_size, R_size, phr_n;
   size_t  *count, count_size;
   size_t wordsec, wordpos, prev_wordpos, wordnum, prev_wordnum, wordorder, prev_wordorder;
-  DPS_URL_CRD *Crd;
+  DPS_URL_CRD_DB *Crd;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK *Track;
 #endif
@@ -2501,7 +2513,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t	i, j = 0, D_size, R_size, phr_n;
   size_t  *count, count_size;
   size_t wordsec, wordpos, prev_wordpos, wordnum, prev_wordnum, wordorder, prev_wordorder;
-  DPS_URL_CRD *Crd;
+  DPS_URL_CRD_DB *Crd;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK *Track;
 #endif
@@ -2808,7 +2820,7 @@ void DpsGroupByURL(DPS_AGENT *query, DPS_RESULT *Res) {
 void DpsGroupBySite(DPS_AGENT *query, DPS_RESULT *Res){	
 	register size_t	i, j = 0, cnt = 1; 
 	register urlid_t Doc_site;
-	DPS_URL_CRD *Crd = Res->CoordList.Coords;
+	DPS_URL_CRD_DB *Crd = Res->CoordList.Coords;
 	DPS_URLDATA *Dat = Res->CoordList.Data;
 #ifdef WITH_REL_TRACK
 	DPS_URLTRACK *Trk = Res->CoordList.Track;
@@ -3483,7 +3495,14 @@ void DpsParseQStringUnescaped(DPS_VARLIST *vars, const char *qstring){
 size_t DpsRemoveNullSections(DPS_URL_CRD *words, size_t n, int *wf) {
   register size_t i, j = 0;
   for (i = 0; i < n; i++) {
-/*    fprintf(stderr, "%x:sec:%d  ", words[i].coord, DPS_WRDSEC(words[i].coord));*/
+    if (wf[DPS_WRDSEC(words[i].coord)] > 0) words[j++] = words[i];
+  }
+  return j;
+}
+
+size_t DpsRemoveNullSectionsDB(DPS_URL_CRD_DB *words, size_t n, int *wf) {
+  register size_t i, j = 0;
+  for (i = 0; i < n; i++) {
     if (wf[DPS_WRDSEC(words[i].coord)] > 0) words[j++] = words[i];
   }
   return j;

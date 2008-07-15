@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,8 @@
 #define _DPS_SEARCH_TOOL_H
 
 extern void DpsWrdTopSort(DPS_URL_CRD *wrd, size_t nwrd,size_t topcount);
-extern void DpsSortSearchWordsByURL(DPS_URL_CRD *wrd,size_t num);
+extern void DpsSortSearchWordsByURL(DPS_URL_CRD_DB *wrd, size_t num);
+extern void DpsSortSearchWordsByURL0(DPS_URL_CRD *wrd, size_t num);
 extern void DpsSortSearchWordsByWeight(DPS_URL_CRD *wrd,size_t num);
 extern void DpsSortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, const char *pattern);
 extern void DpsSortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, const char *pattern);
@@ -44,8 +45,9 @@ extern dpsunicode_t   *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *s, const 
 extern char * DpsBuildPageURL(DPS_VARLIST * vars, char **dst);
 extern void DpsParseQStringUnescaped(DPS_VARLIST *vars, const char *qstring);
 
-extern int DpsCmpUrlid(DPS_URL_CRD *s1, DPS_URL_CRD *s2);
+extern int DpsCmpUrlid(DPS_URL_CRD_DB *s1, DPS_URL_CRD_DB *s2);
 extern size_t DpsRemoveNullSections(DPS_URL_CRD *words, size_t n, int *wf);
+extern size_t DpsRemoveNullSectionsDB(DPS_URL_CRD_DB *words, size_t n, int *wf);
 
 
 #endif

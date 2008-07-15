@@ -2491,7 +2491,7 @@ static int DpsDeleteURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db){
 }
 
 static int DpsDeleteLinks(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
-	char	qbuf[128];
+	char	qbuf[256];
 	urlid_t	url_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	const char *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	int rc;
@@ -2499,7 +2499,7 @@ static int DpsDeleteLinks(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE ot=%s%i%s AND valid='f'", qu, url_id, qu);
 	rc = DpsSQLAsyncQuery(db, NULL, qbuf);
 	if (db->DBSQL_SUBSELECT) {
-	  dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE (k,ot) IN (SELECT k,ot FROM links l, url u1, url u2 WHERE l.k=%s%i%s AND l.ot=u1.rec_id AND u2.rec_id=%s%i%s AND u1.site_id=u2.site_id)", qu, url_id, qu, qu, url_id, qu);
+	  dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE (k,ot) IN (SELECT k,ot FROM links l, url u1, url u2 WHERE l.k=%s%i%s AND l.ot=u1.rec_id AND u2.rec_id=%s%i%s AND u1.site_id=u2.site_id AND l.k!=l.ot)", qu, url_id, qu, qu, url_id, qu);
 	  rc = DpsSQLAsyncQuery(db, NULL, qbuf);
 	}
 	return rc;
@@ -3986,7 +3986,7 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 	urlid_t         cur_url_id;
 	DPS_SQLRES	SQLres;
 	DPS_STACK_ITEM *pmerg = NULL;
-	register DPS_URL_CRD *Crd;
+	register DPS_URL_CRD_DB *Crd;
 	int		word_match;
 	int		wf[256];
 	char	        escwrd[1000];
@@ -4129,11 +4129,11 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		    /* Add new found word to the list */
 /*				pmerg[npmerge] = &Res->items[wordnum];*/
 		    pmerg[tlst].pcur = pmerg[tlst].pbegin = pmerg[tlst].pchecked = 
-		      (DPS_URL_CRD*)DpsMalloc(numrows * sizeof(DPS_URL_CRD) + 1);
+		      (DPS_URL_CRD_DB*)DpsMalloc(numrows * sizeof(DPS_URL_CRD_DB) + 1);
 
 		    if (pmerg[tlst].pbegin == NULL) {
 		      DpsSQLFree(&SQLres);
-		      for (i = tmin; i <= MAXMULTI + 1; i++) DPS_FREE(pmerg[i].pbegin);
+		      for (i = tmin; i <= MAXMULTI + 1; i++) { DPS_FREE(pmerg[i].pbegin); DPS_FREE(pmerg[i].db_pbegin); }
 		      DPS_FREE(pmerg);
 		      TRACE_OUT(query);
 		      return DPS_ERROR;
@@ -4144,7 +4144,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		    }
 		    pmerg[tlst].count = numrows;
 		    if (flag_null_wf) {
-		      pmerg[tlst].count = DpsRemoveNullSections(pmerg[tlst].pcur, numrows, wf);
+		      pmerg[tlst].count = DpsRemoveNullSectionsDB(pmerg[tlst].pcur, numrows, wf);
 		    }
 		    pmerg[tlst].plast = &pmerg[tlst].pcur[pmerg[tlst].count];
 		    Res->CoordList.ncoords += pmerg[tlst].count;
@@ -4233,11 +4233,11 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		
 		  /* Add new found word to the list */
 		  idx = MAXMULTI + 1;
-		  pmerg[idx].pcur = pmerg[idx].pbegin = pmerg[idx].pchecked = (DPS_URL_CRD*)DpsMalloc(numrows * sizeof(DPS_URL_CRD) + 1);
+		  pmerg[idx].pcur = pmerg[idx].pbegin = pmerg[idx].pchecked = (DPS_URL_CRD_DB*)DpsMalloc(numrows * sizeof(DPS_URL_CRD_DB) + 1);
 		
 		  if (pmerg[idx].pbegin == NULL) {
 		    DpsSQLFree(&SQLres);
-		    for (i = tmin; i <= MAXMULTI + 1; i++) DPS_FREE(pmerg[i].pbegin);
+		    for (i = tmin; i <= MAXMULTI + 1; i++) { DPS_FREE(pmerg[i].pbegin); DPS_FREE(pmerg[i].db_pbegin); }
 		    DPS_FREE(pmerg);
 		    TRACE_OUT(query);
 		    return DPS_ERROR;
@@ -4248,7 +4248,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		  }
 		  pmerg[idx].count = numrows;
 		  if (flag_null_wf) {
-		    pmerg[idx].count = DpsRemoveNullSections(pmerg[idx].pcur, numrows, wf);
+		    pmerg[idx].count = DpsRemoveNullSectionsDB(pmerg[idx].pcur, numrows, wf);
 		  }
 		  pmerg[idx].plast = &pmerg[idx].pcur[pmerg[idx].count];
 		  Res->CoordList.ncoords += pmerg[idx].count;
@@ -4265,7 +4265,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		Res->items[wordnum].count += pmerg[MAXMULTI + 1].count;
 
 		Res->items[wordnum].pcur = Res->items[wordnum].pbegin = Res->items[wordnum].pchecked = 
-				  (DPS_URL_CRD*)DpsMalloc(Res->items[wordnum].count * sizeof(DPS_URL_CRD) + 1);
+				  (DPS_URL_CRD_DB*)DpsMalloc(Res->items[wordnum].count * sizeof(DPS_URL_CRD_DB) + 1);
 		Crd = Res->items[wordnum].pcur;
 
 		while (1) {
@@ -4289,11 +4289,13 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		  for(i = 0; i <= MAXMULTI + 1; i++) {
 		    if (pmerg[i].pcur != NULL) {
 		      while ((pmerg[i].pcur < pmerg[i].plast) && (pmerg[i].pcur->url_id == cur_url_id) ) {
-			*Crd = *(pmerg[i].pcur);
+			Crd->url_id = pmerg[i].pcur->url_id;
+			Crd->coord = pmerg[i].pcur->coord;
 			Crd->coord &= 0xFFFFFF00;
 			Crd->coord += (Res->items[wordnum].wordnum /*order*/ & 0xFF);
 #ifdef WITH_MULTIDBADDR
 			Crd->dbnum = db->dbnum;
+/*			fprintf(stderr, "url_id: %x  dbnum:%d\n", Crd->url_id, Crd->dbnum);*/
 #endif		  
 			pmerg[i].pcur++;
 			pmerg[i].pchecked++;
@@ -4306,7 +4308,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		}
 
 		for (i = tmin; i <= MAXMULTI + 1; i++) {
-		  DPS_FREE(pmerg[i].pbegin);
+		  DPS_FREE(pmerg[i].pbegin); DPS_FREE(pmerg[i].db_pbegin);
 		  bzero(&pmerg[i], sizeof(DPS_STACK_ITEM));
 		}
 
@@ -4699,6 +4701,7 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 		
 		/* Compose IN string and set to zero url_id field */
 		for(i = 0; i < Res->num_rows; i++) {
+/*		  fprintf(stderr, "docinfoSQL: %d fetched:%d  dbnum:%d for %d\n", i, Res->Doc[i].fetched, Res->Doc[i].dbnum, db->dbnum);*/
 #ifdef WITH_MULTIDBADDR
 		  if (Res->Doc[i].dbnum != dbnum) continue;
 #endif
