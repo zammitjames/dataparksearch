@@ -187,7 +187,7 @@ static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t 
 	      }
               
             } else {
-	      Doc->Buf.buf = NULL;
+	      DPS_FREE(Doc->Buf.buf);
 	      Doc->Buf.size = 0;
               DpsLog(Agent, DPS_LOG_ERROR, "[%s] Not found rec_id: %x, StoredFiles: %d[x%x], VarDir: %s\n", 
 		     Client, rec_id, P.NFiles, P.NFiles, P.vardir);
