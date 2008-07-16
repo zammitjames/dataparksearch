@@ -70,7 +70,7 @@
 #define WITH_GOOGLEGRP 1
 
 /* Define if you want multi DBAddr support */
-#define WITH_MULTIDBADDR 1
+/* #undef WITH_MULTIDBADDR */
 
 /* Define what method of relevance calculation to be used. */
 #define FULL_RELEVANCE 1
@@ -483,7 +483,7 @@
 
 /* Version number of package */
 #ifndef VERSION
-#define VERSION "4.50-15072008"
+#define VERSION "4.50-16072008"
 #endif
 
 /* syslog facility */

@@ -85,6 +85,8 @@
 #include <unistd.h>
 #endif
 
+     #include <sys/mman.h>
+
 /* This should be last include */
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -1224,7 +1226,6 @@ int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server) {
 	return DPS_OK;
 }
 
-
 __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, const char *base, const char *lang, const char *url) {
 	DPS_DOCUMENT	*Doc;
 	DPS_URL		*newURL, *baseURL = NULL;
@@ -1310,7 +1311,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		/* Alloc buffer for document */
 		Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Indexer->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
 		Doc->Buf.allocated_size = DPS_NET_BUF_SIZE;
-		if ((Doc->Buf.buf = (char*)DpsMalloc(Doc->Buf.allocated_size + 1)) == NULL) {
+		if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
 		  DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory (%d bytes) %s:%d", Doc->Buf.allocated_size + 1, __FILE__, __LINE__);
 		  DpsDocFree(Doc);
 		  if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
@@ -1320,6 +1321,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 #endif
 		  return DPS_ERROR;
 		}
+/*		mprotect(&Doc->Buf.buf, sizeof(Doc->Buf.buf), PROT_READ );*/
 		Doc->Buf.buf[0]='\0';
 	}
 	
@@ -1680,6 +1682,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	  DpsCrossListAdd(Parent, &Doc->CrossWords.CrossWord[i]);
 	}
 	
+/*        mprotect(&Doc->Buf.buf, sizeof(Doc->Buf.buf), PROT_READ | PROT_WRITE);*/
 	DpsDocFree(Doc);
 	if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 
@@ -1756,7 +1759,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		/* Alloc buffer for document */
 		Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Indexer->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
 		Doc->Buf.allocated_size = DPS_NET_BUF_SIZE;
-		if ((Doc->Buf.buf = (char*)DpsMalloc(Doc->Buf.allocated_size + 1)) == NULL) {
+		if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
 		  DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory (%d bytes) %s:%d", Doc->Buf.allocated_size + 1, __FILE__, __LINE__);
 		  DpsDocFree(Doc);
 		  TRACE_OUT(Indexer);

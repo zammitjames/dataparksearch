@@ -74,7 +74,7 @@ DPS_DOCUMENT * __DPSCALL DpsDocInit(DPS_DOCUMENT * Doc){
 }
 
 
-void __DPSCALL DpsDocFree(DPS_DOCUMENT *Result){
+void __DPSCALL DpsDocFree(DPS_DOCUMENT *Result) {
 	if(!Result)return;
 	DPS_FREE(Result->Buf.buf);
 	DPS_FREE(Result->Buf.pattern);
