@@ -537,7 +537,9 @@ typedef struct dps_url {
 /***************************************************/
 
 typedef struct {
+  char  gap0[16384];
 	char	*buf;		/**< Buffer to download document to          */
+  char  gap[16384];
 	char	*content;	/**< Pointer to content, after headers       */
         char    *pattern;       /**< content with a pattern applied          */
 	size_t	size;		/**< Number of bytes loaded                  */

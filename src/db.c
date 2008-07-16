@@ -335,6 +335,7 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	  }
 	  next_index_time = mktime(&nowtime);
 	} else {
+	  if (Doc->Spider.Server->crawl_delay > 0) Indexer->now += Doc->Spider.Server->crawl_delay;
 	  next_index_time = Indexer->now + Doc->Spider.Server->period[hops];
 	}
 
@@ -1423,7 +1424,6 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  Res->Doc[i].dbnum = Res->CoordList.Coords[i + Res->first * Res->offset].dbnum;
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "dbnum", (int)(Res->Doc[i].dbnum));
 #endif
-/*	  fprintf(stderr, "%d.DP_ID: %x  dbnum:%d\n", i,  Res->CoordList.Coords[i + Res->first * Res->offset].url_id, Res->Doc[i].dbnum);*/
 #ifdef WITH_REL_TRACK
 	  DpsVarListReplaceDouble(&Res->Doc[i].Sections, "Rel.x", Res->CoordList.Track[i + Res->first * Res->offset].x);
 	  DpsVarListReplaceDouble(&Res->Doc[i].Sections, "Rel.xy", Res->CoordList.Track[i + Res->first * Res->offset].xy);

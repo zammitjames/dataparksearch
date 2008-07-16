@@ -80,7 +80,7 @@
 */
 
 /********** QSORT functions *******************************/
-
+/*
 static int cmpword(DPS_URL_CRD *s1,DPS_URL_CRD *s2){
         if (s1->coord > s2->coord) return -1;
 	if (s1->coord < s2->coord) return 1;
@@ -88,7 +88,7 @@ static int cmpword(DPS_URL_CRD *s1,DPS_URL_CRD *s2){
 	if (s1->url_id < s2->url_id) return -1;
 	return 0;
 }
-
+*/
 int DpsCmpUrlid(DPS_URL_CRD_DB *s1, DPS_URL_CRD_DB *s2) {
 	if (s1->url_id < s2->url_id) return -1;
 	if (s1->url_id > s2->url_id) return 1;
@@ -189,12 +189,12 @@ static int DpsCmpSiteid(DPS_URLCRDLIST *L, size_t i, size_t j, const char *patte
 
 
 /****************************************************/
-
+/*
 void DpsSortSearchWordsByWeight(DPS_URL_CRD *wrd,size_t num){
 	if (wrd != NULL && num > 1) DpsSort((void*)wrd, num, sizeof(*wrd), (qsort_cmp)cmpword);
 	return;
 }
-
+*/
 void DpsSortSearchWordsByURL(DPS_URL_CRD_DB *wrd, size_t num){
 	if(wrd != NULL && num > 1) DpsPreSort((void*)wrd, num, sizeof(*wrd),( qsort_cmp)DpsCmpUrlid);
 	return;
