@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -127,6 +127,8 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	DpsVarListReplaceInt(&Doc->Sections, "ResponseSize", (int)Doc->Buf.size);
 	DpsVarListDel(&Doc->Sections, "Content-Length");
 	DpsVarListDel(&Doc->Sections, "Last-Modified");
+
+	if (Doc->Buf.buf == NULL) return;
 
 	/* Cut HTTP response header first        */
 	for(token=Doc->Buf.buf;*token;token++){
