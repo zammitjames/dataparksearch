@@ -2159,7 +2159,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 
 	  if (rec_id != 0 && ot != 0) {
 	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "0.001");
-	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", "no"), "yes");
+	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    int is_not_same_site = (rec_id == ot);
 /*	    urlid_t k = rec_id;*/
 
@@ -2296,7 +2296,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	if (rc != 0) {
 	    urlid_t ot = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "0.001");
-	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", "no"), "yes");
+	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    int is_not_same_site = (ot == k);
 
 	    DpsVarListReplaceInt(&Doc->Sections, "DP_ID", k);
@@ -2625,7 +2625,7 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 	if ((status >= 200 && status < 400) || (status >= 2200 && status <= 2304)) {
 	  const char *method = DpsVarListFindStr(&Indexer->Vars, "PopRankMethod", "Goo");
 	  if ((Indexer->Flags.poprank_postpone == 0) && (Indexer->Flags.collect_links) && (strcasecmp(method, "Neo") == 0)) {
-	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", "no"), "yes");
+	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    size_t    url_num = (size_t)DpsVarListFindUnsigned(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	    res = DpsPopRankPasNeo(Indexer, db, DpsVarListFindStr(&Doc->Sections, "DP_ID", "0"), 
 #ifdef WITH_POPHOPS
@@ -2734,7 +2734,7 @@ WHERE rec_id=%s%s%s",
 	if ((status >= 200 && status < 400) || (status >= 2200 && status <= 2304)) {
 	  const char *method = DpsVarListFindStr(&Indexer->Vars, "PopRankMethod", "Goo");
 	  if ((Indexer->Flags.poprank_postpone == 0) && (Indexer->Flags.collect_links) && (strcasecmp(method, "Neo") == 0)) {
-	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", "no"), "yes");
+	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    size_t    url_num = (size_t)DpsVarListFindUnsigned(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	    rc = DpsPopRankPasNeo(Indexer, db, url_id, 
 #ifdef WITH_POPHOPS
@@ -5990,7 +5990,7 @@ static int DpsPopRankCalculateNeo(DPS_AGENT *A, DPS_DB *db) {
 /*	urlid_t         rec_id = 0;*/
 	dps_uint4       nit = 0;
 	int             rc = DPS_ERROR, u = 1;
-	int		skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite","no"),"yes");
+	int		skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite",DPS_POPRANKSKIPSAMESITE),"yes");
 	size_t          url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	const char	*where;
 	char		qbuf[512];
@@ -6052,7 +6052,7 @@ static int DpsPopRankCalculateGoo(DPS_AGENT *A, DPS_DB *db) {
 	int             rc = DPS_ERROR, u = 0;
 	size_t		i, nrows, offset = 0;
 	urlid_t         rec_id = 0;
-	int		skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite","no"),"yes");
+	int		skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite",DPS_POPRANKSKIPSAMESITE),"yes");
 	int		feed_back = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankFeedBack", "no"), "yes");
 	int		use_tracking = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankUseTracking", "no"), "yes");
 	int		use_showcnt = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankUseShowCnt", "no"), "yes");
@@ -6335,7 +6335,7 @@ int DpsURLActionSQL(DPS_AGENT * A, DPS_DOCUMENT * D, int cmd,DPS_DB *db){
 			break;
   	        case DPS_URL_ACTION_PASNEO: 
 		  {
-		    int	   skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite", "no"), "yes");
+		    int	   skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 		    size_t url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 #ifdef WITH_POPHOPS
 		    res = DpsPopRankPasNeo(A, db, DpsVarListFindStr(&D->Sections, "DP_ID", "0"), 

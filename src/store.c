@@ -1317,7 +1317,7 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
     size_t str_len = dps_strlen(url) + dps_strlen(DPS_NULL2EMPTY(accept_lang)) + 16;
     if ((str = (char*)DpsMalloc(str_len + 1)) == NULL) return 0;
     if (accept_lang != NULL && *accept_lang == '\0') accept_lang = NULL;
-    if (accept_lang == NULL) accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);
+/*    if (accept_lang == NULL) accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);*/
     dps_snprintf(str, str_len, "%s%s%s", (accept_lang == NULL) ? "" : accept_lang, (accept_lang == NULL) ? "" : ".", url);
     url_id = DpsStrHash32(str);
     DPS_FREE(str);
