@@ -3,6 +3,7 @@ History
 -------
 
 Latset snapshot:
+	* Default value for PopRankSkipSameSite command has been changed to "yes".
 	* Possible memory leak has been fixed for a sub-document indexed from stored database.
 	* The "strict" option has been added for Section command.
 	* A word break has been added for French-style contractions.

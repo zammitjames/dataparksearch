@@ -1321,7 +1321,6 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 #endif
 		  return DPS_ERROR;
 		}
-/*		mprotect(&Doc->Buf.buf, sizeof(Doc->Buf.buf), PROT_READ );*/
 		Doc->Buf.buf[0]='\0';
 	}
 	
@@ -1573,7 +1572,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
-			const char *lang = NULL;
+			const char *cont_lang = NULL;
 			int skip_too_small;
 			char reason[PATH_MAX+1];
 		   	
@@ -1599,7 +1598,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				return result;
 			}
 			/* Guesser was here */			
-			lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
+			cont_lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
 			
 			DpsParseURLText(Indexer, Doc);
 /*			DpsParseHeaders(Indexer, Doc);*/
@@ -1628,7 +1627,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				
 				if(wlen > Indexer->WordParam.max_word_len ||
 				   wlen < Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords, w, lang ) != NULL)
+				   DpsStopListFind(&Indexer->Conf->StopWords, w, cont_lang ) != NULL)
 				{
 					Doc->Words.Word[wordnum].coord=0;
 				}	
@@ -1639,7 +1638,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				
 				if(wlen>Indexer->WordParam.max_word_len ||
 				   wlen<Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords,w, lang) != NULL)
+				   DpsStopListFind(&Indexer->Conf->StopWords,w, cont_lang) != NULL)
 				{
 					Doc->CrossWords.CrossWord[wordnum].weight=0;
 				}	
@@ -1682,7 +1681,6 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	  DpsCrossListAdd(Parent, &Doc->CrossWords.CrossWord[i]);
 	}
 	
-/*        mprotect(&Doc->Buf.buf, sizeof(Doc->Buf.buf), PROT_READ | PROT_WRITE);*/
 	DpsDocFree(Doc);
 	if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 

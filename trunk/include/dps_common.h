@@ -124,6 +124,7 @@
 #define DPS_SERVERID_CACHE_SIZE                 64
 #define	DPS_NET_BUF_SIZE		        65536
 #define DPS_MAX_HOST_ADDR                       16
+#define DPS_POPRANKSKIPSAMESITE                 "yes"
 
 /***********************************/
 
@@ -537,9 +538,7 @@ typedef struct dps_url {
 /***************************************************/
 
 typedef struct {
-  char  gap0[16384];
 	char	*buf;		/**< Buffer to download document to          */
-  char  gap[16384];
 	char	*content;	/**< Pointer to content, after headers       */
         char    *pattern;       /**< content with a pattern applied          */
 	size_t	size;		/**< Number of bytes loaded                  */
