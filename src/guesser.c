@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1184,12 +1184,15 @@ int DpsLMstatcmp(const void * i1, const void * i2) {
   register const DPS_MAPSTAT *s1 = (const DPS_MAPSTAT *)i1;
   register const DPS_MAPSTAT *s2 = (const DPS_MAPSTAT *)i2;
 
+  if (DPS_LM_TOPCNT * s1->miss + s1->hits < DPS_LM_TOPCNT * s2->miss + s2->hits) return -1;
+  if (DPS_LM_TOPCNT * s1->miss + s1->hits > DPS_LM_TOPCNT * s2->miss + s2->hits) return 1;
   if (s1->miss < s2->miss) return -1;
   if (s1->miss > s2->miss) return 1;
   if (s1->hits < s2->hits) return -1;
   if (s1->hits > s2->hits) return 1;
 
   return 0;
+
 }
 
 int DpsLMcmpCount(const void * i1, const void * i2) {
@@ -1253,7 +1256,7 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
 	 register int p = (HIT - map0->memb6);
 	 Stat->hits += (i >= p) ? (i - p) : (p - i);
        }
-       if (Stat->miss > InfMiss) break;
+/*       if (Stat->miss > InfMiss) break;*/
      }
 }
 
@@ -1329,7 +1332,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
      const char *meta_charset =  DPS_NULL2EMPTY(DpsCharsetCanonicalName(DpsVarListFindStr(&Doc->Sections, "Meta-Charset", "")));
      const char *charset =  DPS_NULL2EMPTY(DpsCharsetCanonicalName(DpsVarListFindStr(&Doc->Sections, "RemoteCharset", "")));
      const char *lang0 = NULL, *charset0 = NULL;
-     size_t InfMiss = 2 * DPS_LM_TOPCNT + 4;
+     size_t InfMiss = 20 * DPS_LM_TOPCNT + 4;
      size_t i;
      int have_server_lang = (*server_lang != '\0');
      int forte_lang = 0, forte_charset = 0;
@@ -1414,7 +1417,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
             DpsCheckLangMap(&List->Map[i], LangMap, &mapstat[i], InfMiss);
           } else {
             mapstat[i].hits = 0;
-	    mapstat[i].miss = 2 * DPS_LM_TOPCNT + 4;
+	    mapstat[i].miss = 20 * DPS_LM_TOPCNT + 4;
           }
           if (mapstat[i].miss < InfMiss) InfMiss = mapstat[i].miss;
        }

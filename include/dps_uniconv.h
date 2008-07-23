@@ -192,7 +192,7 @@ typedef struct dps_conv_st {
 #define DPS_LM_MAXGRAM1		2
 #define DPS_LM_MAXGRAM2		(3 * sizeof(dpsunicode_t))
 #define DPS_LM_HASHMASK		0x07FF
-#define DPS_LM_TOPCNT           128
+#define DPS_LM_TOPCNT           200
 
 typedef struct {
 	size_t		count, index;
