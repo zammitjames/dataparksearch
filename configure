@@ -22310,13 +22310,7 @@ if test $ac_cv_lib_bind_getaddrinfo = yes; then
   cat >>confdefs.h <<\_ACEOF
 #define HAVE_LIBBIND 1
 _ACEOF
-
-		if test "$pthreads" != no; then
-			LIBS="$LIBS -lbind_r"
-		else
-			LIBS="$LIBS -lbind"
-		fi
-
+ LIBS="$LIBS -lbind"
 else
   echo "$as_me:$LINENO: checking for getaddrinfo in -ldns" >&5
 echo $ECHO_N "checking for getaddrinfo in -ldns... $ECHO_C" >&6

@@ -151,13 +151,7 @@ MODLIB=""
 LIBLIB=""
 AC_CHECK_LIB(cares, ares_init, AC_DEFINE(HAVE_LIBCARES) LIBS="$LIBS -lcares",
  AC_CHECK_LIB(ares, ares_init, AC_DEFINE(HAVE_LIBARES) LIBS="$LIBS -lares",
-	AC_CHECK_LIB(bind, getaddrinfo, AC_DEFINE(HAVE_LIBBIND) [
-		if test "$pthreads" != no; then
-			LIBS="$LIBS -lbind_r"
-		else
-			LIBS="$LIBS -lbind"
-		fi
-	],
+	AC_CHECK_LIB(bind, getaddrinfo, AC_DEFINE(HAVE_LIBBIND) LIBS="$LIBS -lbind",
 		AC_CHECK_LIB(dns, getaddrinfo, AC_DEFINE(HAVE_LIBDNS) LIBS="$LIBS -ldns")
 	)
 
