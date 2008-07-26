@@ -2,7 +2,7 @@
 History
 -------
 
-Latset snapshot:
+26 Jul 2008: 4.50
 	* Default value for PopRankSkipSameSite command has been changed to "yes".
 	* Possible memory leak has been fixed for a sub-document indexed from stored database.
 	* The "strict" option has been added for Section command.

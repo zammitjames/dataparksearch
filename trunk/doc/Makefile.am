@@ -212,3 +212,23 @@ book.tex: $(@doc_FILES_EN@)
 book.pdf: book.tex
 	pdftex "&pdfjadetex" book
 	pdftex "&pdfjadetex" book
+
+single.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
+	perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
+	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -V %root-filename%=single -t sgml \
+		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 book.xml
+	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
+	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -V %root-filename%=single -t sgml \
+		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 book.xml
+
+single.ru.html: $(@doc_FILES_RU@)
+	perl $(COLLATEINDEX) -N -i index-ru -o index-ru.xml HTML-ru.index
+	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -V %root-filename%=single -t sgml \
+		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 book-ru.xml
+	perl $(COLLATEINDEX) -i index-ru -o index-ru.xml HTML-ru.index
+	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -V %root-filename%=single -t sgml \
+		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 book-ru.xml

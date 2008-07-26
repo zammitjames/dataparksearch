@@ -144,10 +144,11 @@ of <literal>Goo</literal> method.
 But this slow down a bit indexing speed. By default, links collection is not enabled. 
 </para>
 
-<para id="poprankskipsamesite-cmd">If you place
-<command><indexterm><primary>Command</primary><secondary>PopRankSkipSameSite</secondary></indexterm>PopRankSkipSameSite yes</command>
-command in <filename>indexer.conf</filename> file, <command>indexer</command> will take only inter site links (i.e. links from a page on 
-one site to a page on another site) for popularity rank calculation.
+<para id="poprankskipsamesite-cmd">By default, only intersite links (i.e. links from a page on 
+one site to a page on an another site) are taken in account for the popularity rank calculation.
+If you place
+<command><indexterm><primary>Command</primary><secondary>PopRankSkipSameSite</secondary></indexterm>PopRankSkipSameSite no</command>
+command in <filename>indexer.conf</filename> file, <command>indexer</command> take all links for this purpose.
 </para>
 
 <para>You may assign initial value for page popularity rank using DP.PopRank META tag (see <xref linkend="htmlparser-meta"/>).
