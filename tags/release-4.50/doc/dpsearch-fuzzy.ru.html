@@ -1,0 +1,797 @@
+<HTML
+><HEAD
+><TITLE
+>Нечёткий поиск</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="DataparkSearch Engine 4.50"
+HREF="index.ru.html"><LINK
+REL="UP"
+TITLE="Поиск документов"
+HREF="dpsearch-doingsearch.ru.html"><LINK
+REL="PREVIOUS"
+TITLE="Кэш результатов поиска
+
+ "
+HREF="dpsearch-srcache.ru.html"><LINK
+REL="NEXT"
+TITLE="Разное"
+HREF="dpsearch-misc.ru.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и Интранета с открытым исходным кодом. Распространяется по лицензии GNU."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"><SCRIPT
+SRC="http://www.google-analytics.com/urchin.js"
+TYPE="text/javascript"></SCRIPT><SCRIPT
+SRC="http://www.dataparksearch.org/ga.js"
+TYPE="text/javascript"></SCRIPT></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>DataparkSearch Engine 4.50: Справочное руководство</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dpsearch-srcache.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>&#1043;&#1083;&#1072;&#1074;&#1072; 8. Поиск документов</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dpsearch-misc.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="fuzzy"
+>8.8. Нечёткий поиск</A
+></H1
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="ispell"
+>8.8.1. Ispell
+<A
+NAME="AEN5475"
+></A
+></A
+></H2
+><P
+>Когда <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> используется с поддержкой <TT
+CLASS="literal"
+>ispell</TT
+>,
+для расширения поискового запроса нахождятся все грамматические формы введенных слов.
+При индексировании все найденные слова сохраняются в базе, а при поиске
+для каждого введенного слова находятся все его грамматические формы и уже с учетом всех этих форм
+производится поиск документов. Т.е., поисковик будет искать слово "test", если в качестве запроса введены слова
+"testing" или "tests". </P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="typesispellfiles"
+>8.8.1.1. Два типа файлов ispell</A
+></H3
+><P
+><SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> понимает два типа файлов ispell:
+файлы аффиксов и файлы словарей. Файл аффиксов <TT
+CLASS="literal"
+>Ispell</TT
+> состоит из правил для слов и имеет примерно такой
+формат:
+<PRE
+CLASS="programlisting"
+>&#13;Flag V:
+       E   &#62; -E, IVE      # As in create&#62; creative
+      [^E] &#62; IVE          # As in prevent &#62; preventive
+Flag *N:
+       E   &#62; -E, ION      # As in create &#62; creation
+       Y   &#62; -Y, ICATION  # As in multiply &#62; multiplication
+     [^EY] &#62; EN           # As in fall &#62; fallen
+</PRE
+>
+</P
+><P
+>Файл словаря <TT
+CLASS="literal"
+>Ispell</TT
+> содержит сами слова и имеет следующий формат:
+<PRE
+CLASS="programlisting"
+>&#13;wop/S
+word/DGJMS
+wordage/S
+wordbook
+wordily
+wordless/P
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="using-ispell"
+>8.8.1.2. Использование Ispell</A
+></H3
+><A
+NAME="AEN5491"
+></A
+><A
+NAME="AEN5494"
+></A
+><P
+>Для использования <TT
+CLASS="literal"
+>ispell</TT
+> в <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>
+необходимо задать команды <B
+CLASS="command"
+>Affix</B
+> и <B
+CLASS="command"
+>Spell</B
+> в <TT
+CLASS="filename"
+>search.htm</TT
+>.
+Формат этих команд:
+		<PRE
+CLASS="programlisting"
+>&#13;Affix [язык] [кодировка] [имя файла аффиксов ispell]
+Spell [язык] [кодировка] [имя файла словаря ispell]
+</PRE
+>
+</P
+><P
+>Первый параметр обоих команд - стандартный двуюуквенный код языка.
+Воторой - имя кодировки, при помощи которой закодированы файлы <TT
+CLASS="literal"
+>ispell</TT
+>.
+Третий параметр указывает имя файла, абсолютное, или отностительно поддиректории
+<TT
+CLASS="filename"
+>etc/</TT
+> корневой директории <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+></P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+>&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
+>Поддерживает загрузка данных для нескольких языков, например:
+			<PRE
+CLASS="programlisting"
+>&#13;Affix en iso-8859-1 en.aff
+Spell en iso-8859-1 en.dict
+Affix de iso-8859-1 de.aff
+Spell de iso-8859-1 de.dict
+</PRE
+>
+</P
+><P
+>Будет загружена поддержка для английского и немецкого языков.</P
+></BLOCKQUOTE
+></DIV
+><P
+>Если используется <B
+CLASS="command"
+>searchd</B
+>, эти команды следует указывать в
+<TT
+CLASS="filename"
+>searchd.conf</TT
+>.</P
+><P
+>Если <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> используется с поддержкой <TT
+CLASS="literal"
+>ispell</TT
+>,
+рекомендуется исопльзовать <B
+CLASS="command"
+>searchd</B
+>, особенно для поддержки нескольких языков. Иначе время запуска
+<TT
+CLASS="filename"
+>search.cgi</TT
+> увеличивается.</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="addwords-dict"
+>8.8.1.3. Настройка словарей</A
+></H3
+><P
+>Возможно, на ваших страницах встретяться несколько редких слов, не включённых в словари
+<TT
+CLASS="literal"
+>ispell</TT
+>. В этом случае для построения всех
+	    форма слова выбирается запись с максимально совпадающим суффиксом.
+</P
+><P
+>Вы также можете создать список таких слов по одному на каждую строку:
+		<PRE
+CLASS="programlisting"
+>&#13;rare.dict:
+----------
+webmaster
+intranet
+.......
+www
+http
+---------
+			</PRE
+>
+</P
+><P
+>Вы также можете указать флаги <TT
+CLASS="literal"
+>ispel</TT
+> для этих слов
+(описание флагов <TT
+CLASS="literal"
+>ispel</TT
+> смотрите в документации <TT
+CLASS="literal"
+>ISpell</TT
+>)
+для поиска всех словоформ, например, "webmaster" и "webmasters". 
+Попробуйте найти в словарях <TT
+CLASS="literal"
+>ispel</TT
+> слово с таким же способом образования
+различных форм и скопировать его флаги для нового слова. Например, словарь английского языка
+содержит такую строчку:</P
+><P
+>&#13;			<TT
+CLASS="literal"
+>postmaster/MS</TT
+>
+		</P
+><P
+>Таким образом, webmaster с флагом MS, возможно будет правильным:</P
+><P
+>&#13;			<TT
+CLASS="literal"
+>webmaster/MS</TT
+>
+		</P
+><P
+>Скопируйте составленный вами словарь в поддиректорию <TT
+CLASS="filename"
+>/etc</TT
+>
+корневой директории установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> и добавьте соответсвующие
+команды в файл конфигурации.</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="where-to-get-ispell"
+>8.8.1.4. Где взять файлы Ispell</A
+></H3
+><P
+>Вы можете найти файлы Ispell для многих языков
+<A
+HREF="http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html"
+TARGET="_top"
+>на этой странице</A
+>.
+</P
+><P
+>Для японского языка созданы квази-Ispell файлы, предназначенные для использования только с <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+Вы можете скачать эти файлы <A
+HREF="http://www.dataparksearch.org/"
+TARGET="_top"
+>с нашего веб-сервера</A
+> или с одного из наших зеркал.
+См. <A
+HREF="dpsearch-get.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 1.2</A
+>.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="aspell"
+>8.8.2. Aspell
+<A
+NAME="AEN5549"
+></A
+></A
+></H2
+><P
+>Когда <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> используется с поддержкой <SPAN
+CLASS="application"
+>aspell</SPAN
+>,
+возможно автоматическое расширение поискового запроса вариантами слов с исправленым правописанием. Чтобы включить эту возможность,
+необходимо установить <A
+HREF="http://aspell.net/"
+TARGET="_top"
+>Aspell</A
+> на вашу систему до сборки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+Чтобы включить эту возможность, необходимо добавить команду
+<TT
+CLASS="userinput"
+><B
+>&#13;AspellExtensions yes
+</B
+></TT
+>
+в файлы конфигурации <TT
+CLASS="filename"
+>indexer.conf</TT
+> и <TT
+CLASS="filename"
+>search.htm</TT
+> (или <TT
+CLASS="filename"
+>searchd.conf</TT
+>,
+если используется <B
+CLASS="command"
+>searchd</B
+>).
+</P
+><P
+>Автоматиская корректировка правописания при поиске происходит только при установке параметра поиска <TT
+CLASS="option"
+>sp</TT
+>, см.
+<A
+HREF="dpsearch-doingsearch.ru.html#search_params"
+>&#1056;&#1072;&#1079;&#1076;. 8.1.2</A
+>.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="synonyms"
+>8.8.3. Синонимы
+<A
+NAME="AEN5566"
+></A
+></A
+></H2
+><P
+>Файлы синонимов устанавливаются в поддиректорию
+<TT
+CLASS="filename"
+>etc/synonym</TT
+> относительно корневой директории установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+Большие файлы синонимов для некоторых языков вы должны скачать отдельно с нашего сайта или с одного из наших зеркал,
+см. <A
+HREF="dpsearch-get.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 1.2</A
+>.</P
+><P
+><A
+NAME="AEN5573"
+></A
+>
+Для включения поддержки синонимов, добавьте в шаблон поиска
+<TT
+CLASS="filename"
+>search.htm</TT
+> команды вида
+<TT
+CLASS="literal"
+>Synonym &#60;filename&#62;</TT
+>, например:
+	<PRE
+CLASS="programlisting"
+>&#13;Synonym synonym/english.syn
+Synonym synonym/russian.syn
+</PRE
+>
+</P
+><P
+>Имена файлов могут быть абсолютными (если имена начинаются с /),
+либо относительными поддиректории <TT
+CLASS="filename"
+>etc</TT
+> установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.</P
+><P
+>Если используется <TT
+CLASS="literal"
+>searchd</TT
+>, добавьте эти команды вместо шаблона поиска в 
+<TT
+CLASS="filename"
+>searchd.conf</TT
+>.</P
+><P
+>Вы можете создавать свои собственные списки синонимов.
+
+В качестве примера вы можете взять файл синонимов английского языка.
+В начале файла укажите следующие две команды:
+	<PRE
+CLASS="programlisting"
+>&#13;Language: en
+Charset:  us-ascii
+</PRE
+>
+</P
+><P
+></P
+><UL
+><LI
+><P
+>&#13;				<TT
+CLASS="varname"
+>Language</TT
+> - стандартный 
+(ISO 639) двубуквенный код языка.</P
+></LI
+><LI
+><P
+>&#13;				<TT
+CLASS="varname"
+>Charset</TT
+> - любая
+кодировка, поддерживаемая <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> (see <A
+HREF="dpsearch-international.ru.html#charset"
+>&#1056;&#1072;&#1079;&#1076;. 7.1</A
+>).
+Список синонимов должен быть закодирован с использованием этой кодировки.
+</P
+></LI
+></UL
+><P
+>Дополнительно вы можете указать в списке синонимов команду:
+	<PRE
+CLASS="programlisting"
+>&#13;Thesaurus: yes
+</PRE
+>
+</P
+><P
+>Эта команда включает режим тезауруса для списка синонимов. В этом режиме только слова, расположенные на одной строке
+считаются синонимами.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="accent"
+>8.8.4. Поиск без учёта акцентов над буквами
+<A
+NAME="AEN5601"
+></A
+>
+<A
+NAME="AEN5604"
+></A
+></A
+></H2
+><P
+>Начиная с версии 4.17 <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> также поддерживает нечувствительный к
+акцентам над буквами поиск.</P
+><P
+>Чтобы включить поддержку этой возможности, используйте команду <B
+CLASS="command"
+>AccentExtensions</B
+> в вашем шаблоне 
+<TT
+CLASS="filename"
+>search.htm</TT
+> (или в файле конфигурации <TT
+CLASS="filename"
+>searchd.conf</TT
+>, если используется <B
+CLASS="command"
+>searchd</B
+>)
+ для автоматического построений копий слов из запроса без учёта акцентов над буквами, и в вашем файле конфигурации
+<TT
+CLASS="filename"
+>indexer.conf</TT
+> для автоматического добавления таких копий в базу.
+<PRE
+CLASS="programlisting"
+>&#13;AccentExtensions yes
+</PRE
+>
+</P
+><P
+>Если команда <B
+CLASS="command"
+>AccentExtensions</B
+> в файле конфигурации указана перед командами <B
+CLASS="command"
+>Spell</B
+> и
+ <B
+CLASS="command"
+>Affix</B
+>, то копия этих данных без учёта акцентов над буквами будет загружаться автоматически.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="synonyms"
+>8.8.5. Акронимы и аббревиатуры
+<A
+NAME="AEN5622"
+></A
+></A
+></H2
+><P
+>Начиная с версии 4.30 поддерживается нечёткий поиск на основе акронимов и аббревиатур.</P
+><P
+>Файлы акронимов и аббревиатур устанавливаются в поддиректорию
+<TT
+CLASS="filename"
+>etc/acronym</TT
+> относительно корневой директории установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+</P
+><P
+><A
+NAME="AEN5629"
+></A
+>
+Для включения поддержки акронимов и аббревиатур, добавьте в шаблон поиска
+<TT
+CLASS="filename"
+>search.htm</TT
+> команды вида
+<TT
+CLASS="literal"
+>Acronym &#60;filename&#62;</TT
+>, например:
+	<PRE
+CLASS="programlisting"
+>&#13;Acronym acronym/en.fido.acr
+Acronym acronym/en.acr
+</PRE
+>
+</P
+><P
+>Имена файлов могут быть абсолютными (если имена начинаются с /),
+либо относительными поддиректории <TT
+CLASS="filename"
+>etc</TT
+> установки <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.</P
+><P
+>Если используется <TT
+CLASS="literal"
+>searchd</TT
+>, добавьте эти команды вместо шаблона поиска в 
+<TT
+CLASS="filename"
+>searchd.conf</TT
+>.</P
+><P
+>Вы можете создавать свои собственные списки синонимов.
+В качестве примера вы можете взять файл синонимов английского языка.
+В начале файла укажите следующие две команды:
+	<PRE
+CLASS="programlisting"
+>&#13;Language: en
+Charset:  us-ascii
+</PRE
+>
+</P
+><P
+></P
+><UL
+><LI
+><P
+>&#13;				<TT
+CLASS="varname"
+>Language</TT
+> - стандартный 
+(ISO 639) двубуквенный код языка.</P
+></LI
+><LI
+><P
+>&#13;				<TT
+CLASS="varname"
+>Charset</TT
+> - любая
+кодировка, поддерживаемая <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> (see <A
+HREF="dpsearch-international.ru.html#charset"
+>&#1056;&#1072;&#1079;&#1076;. 7.1</A
+>).
+Список синонимов должен быть закодирован с использованием этой кодировки.
+</P
+></LI
+></UL
+><P
+>&#13;Пожалуйста, присылайте ваши списки синонимаов на адрес <TT
+CLASS="email"
+>&#60;<A
+HREF="mailto:maxime@maxime.net.ru"
+>maxime@maxime.net.ru</A
+>&#62;</TT
+>.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dpsearch-srcache.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.ru.html"
+ACCESSKEY="H"
+>&#1053;&#1072;&#1095;&#1072;&#1083;&#1086;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-misc.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Кэш результатов поиска
+<A
+NAME="AEN5448"
+></A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="dpsearch-doingsearch.ru.html"
+ACCESSKEY="U"
+>&#1059;&#1088;&#1086;&#1074;&#1077;&#1085;&#1100; &#1074;&#1099;&#1096;&#1077;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Разное</TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>

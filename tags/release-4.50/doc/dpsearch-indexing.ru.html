@@ -1,0 +1,802 @@
+<HTML
+><HEAD
+><TITLE
+>Индексирование</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="DataparkSearch Engine 4.50"
+HREF="index.ru.html"><LINK
+REL="PREVIOUS"
+TITLE="Регистрация установки"
+HREF="dpsearch-register.ru.html"><LINK
+REL="NEXT"
+TITLE="Реакция на коды HTTP-ответа"
+HREF="dpsearch-http-codes.ru.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и Интранета с открытым исходным кодом. Распространяется по лицензии GNU."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"><SCRIPT
+SRC="http://www.google-analytics.com/urchin.js"
+TYPE="text/javascript"></SCRIPT><SCRIPT
+SRC="http://www.dataparksearch.org/ga.js"
+TYPE="text/javascript"></SCRIPT></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>DataparkSearch Engine 4.50: Справочное руководство</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dpsearch-register.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dpsearch-http-codes.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="indexing"
+>&#1043;&#1083;&#1072;&#1074;&#1072; 3. Индексирование</A
+></H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>&#1057;&#1086;&#1076;&#1077;&#1088;&#1078;&#1072;&#1085;&#1080;&#1077;</B
+></DT
+><DT
+>3.1. <A
+HREF="dpsearch-indexing.ru.html#general"
+>Общая информация об индексировании</A
+></DT
+><DT
+>3.2. <A
+HREF="dpsearch-http-codes.ru.html"
+>Реакция на коды HTTP-ответа</A
+></DT
+><DT
+>3.3. <A
+HREF="dpsearch-content-enc.ru.html"
+>Поддержка Content-Encoding
+<A
+NAME="AEN761"
+></A
+></A
+></DT
+><DT
+>3.4. <A
+HREF="dpsearch-stopwords.ru.html"
+>Стопслова</A
+></DT
+><DT
+>3.5. <A
+HREF="dpsearch-clones.ru.html"
+>Клоны документов</A
+></DT
+><DT
+>3.6. <A
+HREF="dpsearch-follow.ru.html"
+>Указание веб-пространства для индексирования</A
+></DT
+><DT
+>3.7. <A
+HREF="dpsearch-aliases.ru.html"
+>Алиасы</A
+></DT
+><DT
+>3.8. <A
+HREF="dpsearch-srvtable.ru.html"
+>ServerTable
+<A
+NAME="AEN1241"
+></A
+></A
+></DT
+><DT
+>3.9. <A
+HREF="dpsearch-pars.ru.html"
+>Внешние парсеры
+<A
+NAME="AEN1286"
+></A
+></A
+></DT
+><DT
+>3.10. <A
+HREF="dpsearch-indexcmd.ru.html"
+>Остальные команды, используемые в <TT
+CLASS="filename"
+>indexer.conf</TT
+></A
+></DT
+><DT
+>3.11. <A
+HREF="dpsearch-extended-indexing.ru.html"
+>Расширенные возможности индексирования</A
+></DT
+><DT
+>3.12. <A
+HREF="dpsearch-syslog.ru.html"
+>Использование syslog</A
+></DT
+><DT
+>3.13. <A
+HREF="dpsearch-stored.ru.html"
+>Хранение сжатых копий документов
+<A
+NAME="AEN2515"
+></A
+></A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="general"
+>3.1. Общая информация об индексировании</A
+></H1
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-conf"
+>3.1.1. Конфигурирование</A
+></H2
+><P
+>Сначала необходимо сконфигурировать <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+Конфигурирование <B
+CLASS="command"
+>indexer</B
+> полностью описано в файле
+<TT
+CLASS="filename"
+>indexer.conf-dist</TT
+>.
+Вы найдете его в директории <TT
+CLASS="literal"
+>etc</TT
+> исходников <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>.
+Вы также можете посмотреть примеры в директории <TT
+CLASS="literal"
+>doc/samples</TT
+>. </P
+><P
+>Для установки файла <TT
+CLASS="filename"
+>indexer.conf</TT
+>
+перейдите в директорию <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> <TT
+CLASS="literal"
+>/etc</TT
+>, скопируйте
+<TT
+CLASS="filename"
+>indexer.conf-dist</TT
+> в <TT
+CLASS="filename"
+>indexer.conf</TT
+> и отредактируйте последний.</P
+><P
+>Для конфигурирования CGI-программы поиска (<TT
+CLASS="filename"
+>search.cgi</TT
+> и/или <TT
+CLASS="filename"
+>search.php3</TT
+>,
+или другой), Вы должны в директории <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> <TT
+CLASS="literal"
+>/etc</TT
+> скопировать
+файл <TT
+CLASS="filename"
+>search.htm-dist</TT
+> в <TT
+CLASS="filename"
+>search.htm</TT
+> и отредактировать последний.
+См. <A
+HREF="dpsearch-templates.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 8.3</A
+> для подробного описания.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-run"
+>3.1.2. Запуск <B
+CLASS="command"
+>indexer</B
+></A
+></H2
+><P
+>Просто запускайте <B
+CLASS="command"
+>indexer</B
+> раз в неделю (в день, в час, ...)
+для обновления информации о Ваших серверах и страницах. Вы можете также вставить запуск <B
+CLASS="command"
+>indexer</B
+>
+в Ваш файл заданий <TT
+CLASS="literal"
+>crontab</TT
+>.</P
+><A
+NAME="AEN554"
+></A
+><P
+>По умолчанию, <B
+CLASS="command"
+>indexer</B
+>, вызванный без всяких параметров командной строки, 
+переиндекирует, только устаревшие документы. Вы можете задать период "старения" при помощи команды <B
+CLASS="command"
+>Period</B
+>
+в <TT
+CLASS="filename"
+>indexer.conf</TT
+>. Если Вам необходимо переиндекировать все документы, независимо от того, устарели
+они или нет, используйте ключ <TT
+CLASS="option"
+>-a</TT
+>. <B
+CLASS="command"
+>indexer</B
+> при запуске пометит все документы как
+устаревшие. </P
+><P
+>Запрашивая документы, <B
+CLASS="command"
+>indexer</B
+> посылает HTTP заголовок
+<TT
+CLASS="literal"
+>If-Modified-Since</TT
+> для документов уже находящихся в базе.
+Когда <B
+CLASS="command"
+>indexer</B
+> получает очередной документ, он вычисляет контрольную сумму документа,
+если она совпадает со старой контрольной суммой, хранящейся в базе данных, докумен заново не разбирается (считается неизменённым)
+Ключ  <B
+CLASS="command"
+>indexer</B
+>а <TT
+CLASS="option"
+>-m</TT
+> заставляет разбирать заново каждый документ, независимо от того, измён он или нет.
+Это может быть полезным, например, когда меняются правила <B
+CLASS="command"
+>Allow/Disallow</B
+> в
+<TT
+CLASS="filename"
+>indexer.conf </TT
+> и необходимо добавить новые страницы, которые раньше были запрещены
+к обработке.</P
+><P
+>Если на запрос документа <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> получает HTTP-статусы переадресации
+301,302,303, он попытается проиндексировать URL, указанный в заголовке
+<TT
+CLASS="literal"
+>Location:</TT
+> ответа сервера.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-create-tables"
+>3.1.3. Создание SQL-таблиц
+<A
+NAME="AEN576"
+></A
+></A
+></H2
+><P
+>Для создание SQL-таблиц, необходимых
+для работы <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>, 
+используйте <TT
+CLASS="literal"
+>indexer -Ecreate</TT
+>. При запуске с таким
+аргументом, indexer ищет файл, содержащий SQL-выражения, необходимые
+для создания всех таблиц, учитывая тип базы данных и режим
+хранения, указанные в команде <B
+CLASS="command"
+>DBAddr</B
+> в <TT
+CLASS="filename"
+>indexer.conf</TT
+>. 
+Поиск файлов производится в каталоге <TT
+CLASS="filename"
+>/share</TT
+> инсталляции
+<SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>, т.е. обычно в
+<TT
+CLASS="filename"
+>/usr/local/dpsearch/share/</TT
+>. </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-drop-tables"
+>3.1.4. Удаление SQL-таблиц
+<A
+NAME="AEN588"
+></A
+></A
+></H2
+><P
+>Для удаления SQL-таблиц, созданных
+<SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>,  используйте 
+<TT
+CLASS="literal"
+>indexer -Edrop</TT
+>.  Поиск файл с запросами для удаления
+таблиц производится в каталоге <TT
+CLASS="filename"
+>/share</TT
+> инсталляции 
+<SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>. </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-subsect"
+>3.1.5. Управление подсекциями</A
+></H2
+><P
+><B
+CLASS="command"
+>indexer</B
+> имеет ключи <TT
+CLASS="option"
+>-t, -g, -u, -s, -y</TT
+>
+для ограничения работы только с чатью базы ссылок.
+<TT
+CLASS="option"
+>-t</TT
+> соответсвует ограничению по тэгу,
+<TT
+CLASS="option"
+>-g</TT
+> соответсвует ограничению по категории,
+<TT
+CLASS="option"
+>-u</TT
+> - ограничение по части URL (поддерживаются шаблоны SQL LIKE с символами % и _),
+<TT
+CLASS="option"
+>-s</TT
+> - ограничение по HTTP статусу документа,
+<TT
+CLASS="option"
+>-y</TT
+> - ограничения по Content-Type. 
+Все ограничения для одного и того же ключа объединяются опрератором ИЛИ, а группы разных ключей - оператором И.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-cleardb"
+>3.1.6. Как очистить базу данных
+<A
+NAME="AEN607"
+></A
+></A
+></H2
+><P
+>Чтобы очистить всю базу данных, используйте команду <B
+CLASS="command"
+>indexer
+-C</B
+>. Вы можете также удалить тольеко часть базы, используя ключи указания подсекций
+<TT
+CLASS="option"
+> -t,-g,-u,-s,-y</TT
+>.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-dbstat"
+>3.1.7. Статистика базы данных
+<A
+NAME="AEN614"
+></A
+></A
+></H2
+><P
+>Если Вы запустите <B
+CLASS="command"
+>indexer -S</B
+>, Вы получите статистику базы данных
+включающую общее число документов, и число устаревших документов для каждого статуса.
+Ключи указания подсекций также действуют для этой команды.</P
+><P
+>Значения кода статуса:</P
+><P
+></P
+><UL
+><LI
+><P
+>0 - новый (еще ни разу не индексированный) документ</P
+></LI
+></UL
+><P
+>Если статус не 0, он равен коду HTTP ответа, некоторые коды ответов HTTP:</P
+><P
+></P
+><UL
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>200</TT
+> - "OK" (url успешно проиндексирован)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>301</TT
+> - "Moved Permanently" (переадресован на другой URL)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>302</TT
+> - "Moved Temporarily" (переадресован на другой URL)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>303</TT
+> - "See Other" (переадресован на другой URL)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>304</TT
+> - "Not modified" (url не модифицирован со времени предыдущего индексирования)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>401</TT
+> - "Authorization required" (нужен login/password для этого документа)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>403</TT
+> - "Forbidden" (нет доступа к этому документу)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>404</TT
+> - "Not found" (указаный документ не существует)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>500</TT
+> - "Internal Server Error" (ошибка в cgi, и т.д.)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>503</TT
+> - "Service Unavailable" (Хост недоступен, таймайт соединения)</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>504</TT
+> - "Gateway Timeout" (таймаут при получении документа)</P
+></LI
+></UL
+><P
+>&#13;<A
+NAME="AEN658"
+></A
+>
+			Код ответа <TT
+CLASS="literal"
+>HTTP 401</TT
+> обозначает, что документ защищён паролем.
+Вы можете использовать команду <B
+CLASS="command"
+>AuthBasic</B
+>
+в <TT
+CLASS="filename"
+>indexer.conf</TT
+> для указания <TT
+CLASS="literal"
+>login:password</TT
+> для URL.</P
+><P
+>&#13;			Код ответа <TT
+CLASS="literal"
+>HTTP 404</TT
+> означает, что на одной из Ваших страниц
+есть ссылка на несуществующий документ, или есть ошибка в указании URL..</P
+><P
+>Смотрите <A
+HREF="http://www.w3.org/Protocols/"
+TARGET="_top"
+>документацию по HTTP</A
+> для
+подробного объяснения различных кодов ответа HTTP.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-linkval"
+>3.1.8. Проверка ссылок
+<A
+NAME="AEN671"
+></A
+></A
+></H2
+><P
+>Будучи запущенным с ключом <TT
+CLASS="option"
+>-I</TT
+>,
+<B
+CLASS="command"
+>indexer</B
+> показывает пары URL и страница, ссылающаяся на него.
+Это полезно для поиска битых ссылок на Ваших страницах.
+Вы также можете использовать ключи ограничений подсекций для этого режима. 
+Например, <TT
+CLASS="literal"
+>indexer -I -s 404</TT
+> покажет адреса всех ненайденных ('Not found') документов 
+вместе с адресами страницами, содержащими ссылки на эти документы.
+Таким образом Вы можете использовать <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> для проверки ссылок на Вашем сайте.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="general-parallel"
+>3.1.9. Параллельное индекирование
+<A
+NAME="AEN680"
+></A
+></A
+></H2
+><P
+>Пользователи <SPAN
+CLASS="application"
+>MySQL</SPAN
+> и <SPAN
+CLASS="application"
+>PostgreSQL</SPAN
+>
+могут запускать несколько <B
+CLASS="command"
+>indexer</B
+> одновременно с одним и тем же файлом конфигурации
+<TT
+CLASS="filename"
+>indexer.conf</TT
+>. Мы успешно опробовали 30 одновременно работающих <B
+CLASS="command"
+>indexer</B
+>
+использующих базу данных <SPAN
+CLASS="application"
+>MySQL</SPAN
+>. <B
+CLASS="command"
+>Indexer</B
+> использует механизм
+блокировки <SPAN
+CLASS="application"
+>MySQL</SPAN
+> и <SPAN
+CLASS="application"
+>PostgreSQL</SPAN
+> для избежания двойного
+индексирования одних и тех же документов разными одновременно работающими <B
+CLASS="command"
+>indexer</B
+>.
+Параллельное индексирование может работать некорректно с остальными поддерживаемыми SQL серверами.
+Вы можете использовать многопоточную версию <B
+CLASS="command"
+>indexer</B
+> c любым SQL сервером, поддерживающим
+параллельные соединения с базой. Многопоточная версия использует свой собственный механизм блокировки.</P
+><P
+>Не рекомендуется использовать одну и ту же базу с различными файлами конфигурации <TT
+CLASS="filename"
+>indexer.conf</TT
+>!
+Один процесс может добавлять некоторые документы в базу, в то время как другой - удалять эти же документы,
+и оба могут работать без остановки.</P
+><P
+>С другой стороны, Вы можете запускать несколько <B
+CLASS="command"
+>indexer</B
+>
+c различными файлами конфигурации и различными базами для любого поддерживаемого SQL сервера.</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dpsearch-register.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.ru.html"
+ACCESSKEY="H"
+>&#1053;&#1072;&#1095;&#1072;&#1083;&#1086;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-http-codes.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Регистрация установки</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Реакция на коды HTTP-ответа</TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>

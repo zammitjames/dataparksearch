@@ -1,0 +1,319 @@
+#!/usr/bin/perl -w 
+
+# Copyright (C) 2000,2001 Gecko. http://www.gecko.fr/
+# Copyright (C) 1999,2000,2001 mnoGoSearch developers team <devel@search.udm.net>
+# Copyright (C) 2004 Maxim Zakharov, Datapark corp. http://www.dataparksearch.org/
+
+# You may distribute under the terms of either the GNU General Public
+# License or the Artistic License, as specified in the Perl README file.
+
+use strict;
+use vars qw( %templates %config %mt );
+
+# with modperl, load template only once.
+
+use POSIX qw( strftime );
+use Dataparksearch;
+
+$| = 1;
+
+print "Content-type: text/html\n\n";
+
+my $tformat = '%a, %d %b %Y %H:%M:%S %Z';
+my %params  = ();
+my %data    = ();
+
+#
+# EDIT ME
+#
+
+  # templates basedir for template file and for "if(filename.htm)" clause 
+  my $basedir = '/usr/local/dpsearch/etc';
+  
+  # template filename
+  my $template = 'search.htm';
+
+  # remove useless spaces
+  my $autocleanup = 0;
+
+  # update title with DataparkSearch version
+  my $updatetitle = 1;
+
+  # maxrandom like MAXRANDOM from search.h
+  my $maxrandom = 128;
+
+  # default words highlight
+  my $hlbeg = '<b>';
+  my $hlend = '</b>';
+
+#
+# END OF EDIT ME
+#
+
+unless( -f "$basedir/$template" ){ print "Cant load template [$template]!\n"; exit;}
+
+#
+# local functions 
+#
+
+# return template from name & number 'o'
+my $template_read = sub($$){
+  $templates{shift()}[shift()] || 'Error'
+};
+
+# url encode
+my $encode = sub($){
+  my $str=shift || return '';
+  $str =~ s/(\W)/sprintf('%%%02x',ord($1))/ge;
+  return $str;
+};
+
+# return file contents & update $mt{filename}
+my $slurp = sub($) { 
+  my $f = $basedir.'/'.shift;
+  open(F,$f) || return "Cant load file [$f]";
+  local $/=undef;
+  my$r=<F>;
+  close F;
+  $mt{$f}=(stat($f))[9];
+  return $r;
+};
+
+#
+# loads cgi params
+#
+
+foreach my $token (split('&', $ENV{'QUERY_STRING'})){
+  my ($name,$value) = $token =~ /^(\w+)=(.*)$/;
+  next unless $name;
+  $value =~ s/\+/%20/g;
+  $value =~ s/%([0-9A-Z][0-9A-Z])/$1 ne '00' ? pack('H2',$1) : ' '/gie;
+  $params{$name} = $value || undef;
+}
+
+#
+# update %data
+#
+
+$data{'self'}  = $ENV{'SCRIPT_NAME'};
+$data{'Q'}  = $params{'q'}  || '';
+$data{'q'}  = $encode->($data{'Q'});
+$data{'pn'} = $params{'pn'} || 0;
+$data{'ps'} = $params{'ps'} || 10;
+$data{'m'}  = $params{'m'}  || 'all';
+$data{'o'}  = $params{'o'}  || 0;
+$data{'ul'} = $params{'ul'} || '';
+$data{'wf'} = $params{'wf'} || '';
+$data{'wm'} = $params{'wm'} || '';
+
+#
+# (re)load templates. 
+#
+
+if ( not defined %templates or
+     not defined %config or 
+     not defined %mt or
+     scalar(grep{exists $mt{$_} && $mt{$_}==(stat($_))[9] } keys %mt) != scalar(keys %mt) ){
+
+  # cleanup or define hashs
+  %config    = ();
+  %templates = ();
+  %mt        = ();
+
+  # load template 
+  my $html = $slurp->($template);
+
+  # update if() clause
+  $html =~ s/\$if\(([^\)]+)\)/$slurp->($1)/ge;
+
+  # read config
+  my ($config) = $html =~ /<!--variables(.+?)-->/s;
+  while ( $config =~ /^(\w+)\s+(.+)\s*$/mg){ push @{$config{$1}},$2 }
+  
+  # read templates
+  foreach my $name ( keys %{{ map { $_ => 1 } $html =~ /<!--(\w+)-->/g }} )
+  { @{$templates{$name}} = $html =~ /<!--$name-->(.+?)<!--\/?$name-->/gs  }
+
+  # cleanup templates
+  if ( $autocleanup ){
+    foreach my $name (keys %templates)
+    { for(0..$#{$templates{$name}}) { $templates{$name}[0] =~ s/\s+/ /g } }
+  }
+}
+
+#
+# the head.
+#
+
+my $head = $template_read->('top',0);
+
+# create randoms
+foreach my $random ( keys %{{ map { $_ => 1 } $head=~ /\$r(\d+)/g }})
+{$data{"r$random"} = int(rand($config{"R$random"}[0] || $maxrandom))}
+
+# update selects
+foreach my $param ( qw( ps o m ul wm wf ) )
+{ $head =~ s/<OPTION\s+VALUE="([^"]*)"\s*SELECTED="\$$param\"\s*>/ $data{$param} ne $1 ? "<option value=\"$1\">" : "<option value=\"$1\" selected>" /gime 
+  if exists($data{$param}) }
+
+
+# update title
+if ( $updatetitle ){
+  my $perl_header = sprintf('%s Powered', Dataparksearch::DpsVersion());
+  $head =~ s/<TITLE>([^>]*)<\/TITLE>/<TITLE>$1 [$perl_header]<\/TITLE>/;
+}
+
+# update all values from data
+$head =~ s/\$(\w+)/ defined $data{$1} ? $data{$1} : ''/ige;
+
+print $head;
+
+#
+# if query ...
+#
+
+if ( $data{'Q'} ){
+
+  my %params = ('DBAddr'     => $config{'DBAddr'}[0],
+		'TrackQuery' => $config{'TrackQuery'}[0]);
+ 
+  $params{'IspellMode'}   = $config{'IspellMode'}[0]   if $config{'IspellMode'}[0];
+  $params{'LocalCharset'} = $config{'LocalCharset'}[0] if $config{'LocalCharset'}[0];
+
+  # Add Affix & Spell : Affix => { lang1 => path1, ... }, Spell => ...
+  %{$params{'Affix'}} = map {split(/\s+/,$_)} @{$config{'Affix'}} if $config{'Affix'};
+  %{$params{'Spell'}} = map {split(/\s+/,$_)} @{$config{'Spell'}} if $config{'Spell'};
+  
+  my $search = new Dataparksearch(%params);
+
+  $search->query('query' => $data{'Q'},    # words
+                 'ps'    => $data{'ps'},   # page size
+                 'mode'  => $data{'m'},    # query mode /any|bool|all/
+                 'pn'    => $data{'pn'},   # page number
+                 'ul'    => $data{'ul'},   # url limit
+		 'wf'    => $data{'wf'},   # Weight Factor
+		 'wm'    => $data{'wm'}    # Word Match
+		 );
+  
+  local $data{'q'} = $data{'Q'};
+  my $cgi = $data{'self'}.'?'.join('&',map{sprintf('%s=%s',$_, $encode->($data{$_}))}  qw(ps m q o ul wf wm ));
+
+  if ( $search->total_found ){
+
+    #
+    # if results found.
+    #
+
+    my $restop = $template_read->('restop',$data{'o'});
+       $restop =~ s/\$W/$search->word_info/ge;
+       $restop =~ s/\$first/$search->first/ge;
+       $restop =~ s/\$last/$search->last/ge;
+       $restop =~ s/\$total/$search->total_found/ge;
+       $restop =~ s/\$SearchTime/sprintf('%0.3f',$search->work_time \/ 1000)/ge;
+
+    if ( $restop =~ /\$ndocs/ ){
+      my $ndocs = $search->UdmGetDocCount();
+      $restop =~ s/\$ndocs/$ndocs/g;
+    }
+
+    print $restop;
+
+
+    if ( $config{'HLBeg'}[0] && $config{'HLEnd'}[0] ){
+      $hlbeg = $config{'HLBeg'}[0];
+      $hlend = $config{'HLEnd'}[0];
+    }
+
+    foreach my $result ( $search->records ){
+
+      my $line  = $template_read->('res',$data{'o'});
+      my $text  = $result->{'text'};
+     
+      # bolding keywords
+      foreach my $word ( $data{'Q'} =~ /(\S+)/g )
+      { $text  =~ s/(\W)$word(\W)/$1$hlbeg$word$hlend$2/gi }
+      
+      $line =~ s/\$DX/$text/g;
+      $line =~ s/\$DE/$result->{description} || $text/ge;
+      $line =~ s/\$DS/$result->{size}/g;
+      $line =~ s/\$DY/$result->{category}/g;
+      $line =~ s/\$DK/$result->{keywords}/g;
+      $line =~ s/\$DD/$result->{description}/g;
+      $line =~ s/\$DU/$result->{url}/g;
+      $line =~ s/\$DT/$result->{title}/g;
+      $line =~ s/\$DR/$result->{rating}/g;
+      $line =~ s/\$DC/$result->{content_type}/g;
+      $line =~ s/\$DM/strftime($tformat,localtime($result->{'last_mod_time'}))/eg;
+      $line =~ s/\$DN/$result->{order}/g;
+      $line =~ s/\$CL//g; # FIXME
+      
+      print $line;
+
+    }
+
+    my $resbot = $template_read->('resbot',$data{'o'});
+
+    if ( $search->num_pages() > 1 ) {
+    
+      my $navigator = $template_read->('navigator',0);
+
+      my $bar0 = $template_read->('navbar0',0);
+      my $bar1 = $template_read->('navbar1',0);
+         $bar0 =~ s/\$NP/\%d/g;
+         $bar1 =~ s/\$NP/\%d/g;
+         $bar1 =~ s/\$NH/\%s/g;
+
+      my $nl = $search->page_number == 0 ? $template_read->('navleft_nop',0) : $template_read->('navleft',0);
+      my $nr = $search->page_number == $search->num_pages - 1 ? $template_read->('navright_nop',0) : $template_read->('navright',0);
+
+         $nl =~ s/\$NH/ $cgi . '&pn=' . ( $search->page_number - 1) /e;
+         $nr =~ s/\$NH/ $cgi . '&pn=' . ( $search->page_number + 1) /e;
+     
+      my $f = $search->page_number<5?0:($search->num_pages - $search->page_number>5?$search->page_number - 5:$search->num_pages - 10);
+         $f = $f<0?0:$f;
+      my $n = $f + 9> $search->num_pages?$search->num_pages - 1:$f + 9;
+
+      my $nb = join('&nbsp;', map { $_==$search->page_number? sprintf($bar0,$_ + 1 ):sprintf($bar1,"$cgi&pn=$_",$_ + 1) } $f..$n);
+      
+      $navigator =~ s/\$NL/$nl/;
+      $navigator =~ s/\$NB/$nb/;
+      $navigator =~ s/\$NR/$nr/;
+      
+      $resbot =~ s/\$V/$navigator/;
+
+
+    } else {
+
+      $resbot =~ s/\$V//;
+    
+    }
+    
+    print $resbot;
+
+  } else {
+    
+    #
+    # no results founds
+    #
+
+    my $not_found = $template_read->('notfound',0);
+       $not_found =~ s/\$SearchTime/$search->work_time/ge;
+       $not_found =~ s/\$W/ $search->word_info /ge;
+       
+    print $not_found;
+  
+  }
+
+}
+
+#
+# print bottom and exit
+#
+
+print $template_read->('bottom',0);
+
+exit(0);
+
+#
+# The END.
+#

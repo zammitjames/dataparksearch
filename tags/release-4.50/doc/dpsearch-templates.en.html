@@ -1,0 +1,1739 @@
+<HTML
+><HEAD
+><TITLE
+>How to write search result templates</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="DataparkSearch Engine 4.50"
+HREF="index.en.html"><LINK
+REL="UP"
+TITLE="Searching documents"
+HREF="dpsearch-doingsearch.en.html"><LINK
+REL="PREVIOUS"
+TITLE="mod_dpsearch module for Apache httpd"
+HREF="dpsearch-mod_dpsearch.en.html"><LINK
+REL="NEXT"
+TITLE="Designing search.html"
+HREF="dpsearch-html.en.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Software over the Internet and Intranet Web Sites Based on SQL Database. It is a Free search software covered by GNU license."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"><SCRIPT
+SRC="http://www.google-analytics.com/urchin.js"
+TYPE="text/javascript"></SCRIPT><SCRIPT
+SRC="http://www.dataparksearch.org/ga.js"
+TYPE="text/javascript"></SCRIPT></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>DataparkSearch Engine 4.50: Reference manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dpsearch-mod_dpsearch.en.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 8. Searching documents</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dpsearch-html.en.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="templates"
+>8.3. How to write search result templates</A
+></H1
+><A
+NAME="AEN4338"
+></A
+><P
+><SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> users have an ability to customize search
+results (output of <TT
+CLASS="filename"
+>search.cgi</TT
+> ). You may do it by providing template
+file <TT
+CLASS="filename"
+>search.htm</TT
+>, which should be located in /etc/
+directory of <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> installation.</P
+><P
+>Template file is usual HTML file, which is divided into
+sections. Keep in mind that you can just open template file in your
+favorite browser and get the idea of how the search results will look
+like.</P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+>Note: </B
+>Each templates line should not exceed 1024 bytes.</P
+></BLOCKQUOTE
+></DIV
+><P
+>Each section begins with &#60;!--sectionname--&#62; and
+ends with &#60;!--/sectionname--&#62; delimiters, which should reside on
+a separate line.</P
+><P
+>Each section consists of HTML formatted text with
+special meta symbols. Every meta symbol is replaced by it's
+corresponding string. You can think of meta symbols as of variables,
+which will have their appropriate values while displaying search
+results.</P
+><P
+>Format of variables is the following:
+	<PRE
+CLASS="programlisting"
+>&#13;$(x) - plain value
+$&#38;(x) - HTML-escaped value and search words highlighted.
+$*(x) - HTML-escaped value.
+$%(x) - value escaped to be used in URLs
+$^(x) - search words highlighted.
+$(x:128) - value truncated to the first 128 bytes, if longer.
+$(x:UTF-8) - value written in UTF-8 charset. You may specify any charset supported.
+$(x:128:right) - value truncated to the last 128 bytes, if longer.
+</PRE
+>
+</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="templates-sect"
+>8.3.1. Template sections</A
+></H2
+><A
+NAME="AEN4354"
+></A
+><P
+>The following section names are defined:</P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="top-section"
+>8.3.1.1. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>TOP</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4361"
+></A
+><P
+>&#13;This section is
+included first on every page. You should begin this section with
+&#60;HTML&#62;&#60;HEAD&#62; and so on. Also, this is a definitive place
+to provide a search form. There are two special meta symbols you may
+use in this section:
+
+		<PRE
+CLASS="programlisting"
+>&#13;$(self)  - argument for FORM ACTION tag
+$(q)     - a search query
+$(cat)    - current category value
+$(tag)      - current tag value
+$(rN) - random number (here N is a number)
+</PRE
+>
+</P
+><P
+>If you want to include some random banners on
+your pages, please use $(rN). You should also place string like "RN
+xxxx" in 'variables' section (see below), which will give you a range
+0..xxxx for $(rN). You can use as many up random numbers as you
+want.</P
+><P
+>Example: <TT
+CLASS="literal"
+>$(r0), $(r1), $(r45)</TT
+> etc.</P
+><P
+>Simple <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>top</I
+></SPAN
+> section should be like this:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--top--&#62;
+&#60;HTML&#62;
+&#60;HEAD&#62;
+ &#60;TITLE&#62;Search Query: $(q)&#60;/TITLE&#62;
+&#60;/HEAD&#62;
+&#60;BODY&#62;
+
+&#60;FORM METHOD=GET ACTION="$(self)"&#62;
+ &#60;INPUT TYPE="hidden" NAME="ul" VALUE=""&#62;
+ &#60;INPUT TYPE="hidden" NAME="ps" VALUE="20"&#62;
+ Search for: &#60;INPUT TYPE="text" NAME="q" SIZE=30 
+ VALUE="$&#38;(q)"&#62;
+ &#60;INPUT TYPE="submit" VALUE="Search!"&#62;&#60;BR&#62;
+&#60;/FORM&#62;
+&#60;!--/top--&#62;
+</PRE
+>
+</P
+><P
+>There are some variables defined in FORM.</P
+><P
+>&#13;			<TT
+CLASS="literal"
+>lang</TT
+> limit results by language. Value is a two-letter language code.
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;SELECT NAME="lang"&#62;
+&#60;OPTION VALUE="en" SELECTED="$(lang)"&#62;English
+.....
+&#60;/SELECT&#62;
+    </PRE
+>
+</P
+><P
+>&#13;			<TT
+CLASS="literal"
+>ul</TT
+> is the filter for
+URL. It allows you to limit results to particular site or section
+etc. For example, you can put the following in the form</P
+><P
+>Search through:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;SELECT NAME="ul"&#62;
+&#60;OPTION VALUE=""            SELECTED="$(ul)"&#62;Entire site
+&#60;OPTION VALUE="/manual/"    SELECTED="$(ul)"&#62;Manual
+&#60;OPTION VALUE="/products/"  SELECTED="$(ul)"&#62;Products
+&#60;OPTION VALUE="/support/"   SELECTED="$(ul)"&#62;Support
+&#60;/SELECT&#62;
+</PRE
+>
+</P
+><P
+>to limit your search to particular section.</P
+><P
+>The expression
+<TT
+CLASS="literal"
+>SELECTED="$(ul)"</TT
+> in example above (and all the
+examples below) allows the selected option to be reproduced on next
+pages. If search front-end finds that expression it prints the string
+SELECTED only in the case OPTION VALUE given is equal to that
+variable.</P
+><P
+>&#13;			<TT
+CLASS="literal"
+>ps</TT
+> is default page size (e.g. how many documents to display per page).</P
+><P
+>&#13;			<TT
+CLASS="literal"
+>q</TT
+> is the query itself.</P
+><P
+>&#13;			<TT
+CLASS="literal"
+>pn</TT
+> is ps*np. This variable
+is not used by <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+>, but may be useful for example in
+&#60;!INCLUDE CONTENT="..."&#62; directive if you want to include result
+produced by another search engine.</P
+><P
+>Following variables are concerning advanced search capabilities:</P
+><P
+></P
+><UL
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>m</TT
+> can be
+used to choose default search type if your query consists of more than
+one word. In case m=any, the search will try to find at least	one
+word, in case m=all, the search is more restrictive - all words should
+be in the document. If m=bool query string is considered as a boolean
+expression.</P
+></LI
+><LI
+><P
+>&#13;					<TT
+CLASS="literal"
+>dt</TT
+> is time limiting type. There are three types supported.</P
+><P
+>If 'dt' is 'back', that means
+you want to limit result to recent pages, and you should specify this
+"recentness" in variable 'dp' in the form
+<TT
+CLASS="literal"
+>xxxA[yyyB[zzzC]]</TT
+>. Spaces are allowed between xxx
+and A and yyy and so on). xxx, yyy, zzz are numbers (can be negative!)
+A, B, C can be one of the following (the letters are the same as in
+strptime/strftime	functions):
+
+				<PRE
+CLASS="programlisting"
+>&#13; s - second
+ M - minute
+ h - hour
+ d - day
+ m - month
+ y - year
+</PRE
+>
+</P
+><P
+>Examples:
+				<PRE
+CLASS="programlisting"
+>&#13;  4h30m 	  - 2 hours and 30 minutes
+  1Y6M-15d  - 1 year and six month minus 15 days
+  1h-60m+1s - 1 hour minus 60 minutes plus 1 second
+</PRE
+>
+</P
+><P
+>If 'dt' is 'er' (which is short
+for newer/older), that means the search	will be limited to pages newer
+or older than date given. Variable dx is newer/older flag (1 means
+"newer" or "after", -1 means "older" or "before"). Date is separated
+into fields as follows:
+
+				<PRE
+CLASS="programlisting"
+>&#13;  'dm' - month (0 - January, 1 - February, .., 11 - December)
+  'dy' - year (four digits, for example 1999 or 2000)
+  'dd' - day (1...31)
+</PRE
+>
+</P
+><P
+>If 'dt' is 'range', that means
+search within given range of dates. Variables 'db' and 'de' are used
+here and stands for beginning and end date. Each date is string in the
+form dd/mm/yyyy, there dd is day, mm is month and yyyy is four-digits
+year.</P
+><P
+>This is the example of FORM part where you can choose between different time limiting options.
+					<PRE
+CLASS="programlisting"
+>&#13;&#60;!-- 'search with time limits' options --&#62;
+&#60;TR&#62;&#60;TD&#62;
+&#60;TABLE CELLPADDING=2 CELLSPACING=0 BORDER=0&#62;
+&#60;CAPTION&#62; 
+Limit results to pages published within
+a specified period of time.&#60;BR&#62;
+&#60;FONT SIZE=-1&#62;&#60;I&#62;(Please select only one option)
+&#60;/I&#62;&#60;/FONT&#62;
+&#60;/CAPTION&#62;
+&#60;TR&#62;
+&#60;TD VALIGN=center&#62;&#60;INPUT TYPE=radio NAME="dt" 
+VALUE="back" CHECKED&#62;&#60;/TD&#62;
+&#60;TD&#62;&#60;SELECT NAME="dp"&#62;
+&#60;OPTION VALUE="0" SELECTED="$(dp)"&#62;anytime
+&#60;OPTION VALUE="10M" SELECTED="$(dp)"&#62;in the last ten minutes
+&#60;OPTION VALUE="1h" SELECTED="$(dp)"&#62;in the last hour
+&#60;OPTION VALUE="7d" SELECTED="$(dp)"&#62;in the last week
+&#60;OPTION VALUE="14d" SELECTED="$(dp)"&#62;in the last 2 weeks
+&#60;OPTION VALUE="1m" SELECTED="$(dp)"&#62;in the last month
+&#60;OPTION VALUE="3m" SELECTED="$(dp)"&#62;in the last 3 months
+&#60;OPTION VALUE="6m" SELECTED="$(dp)"&#62;in the last 6 months
+&#60;OPTION VALUE="1y" SELECTED="$(dp)"&#62;in the last year
+&#60;OPTION VALUE="2y" SELECTED="$(dp)"&#62;in the last 2 years
+&#60;/SELECT&#62;
+&#60;/TD&#62;
+&#60;/TR&#62;
+&#60;TR&#62;
+&#60;TD VALIGN=center&#62;&#60;INPUT type=radio NAME="dt" VALUE="er"&#62;
+&#60;/TD&#62;
+&#60;TD&#62;&#60;SELECT NAME="dx"&#62;
+&#60;OPTION VALUE="1" SELECTED="$(dx)"&#62;After
+&#60;OPTION VALUE="-1" SELECTED="$(dx)"&#62;Before
+&#60;/SELECT&#62;
+</PRE
+>
+</P
+><P
+>or on
+					<PRE
+CLASS="programlisting"
+>&#13;&#60;SELECT NAME="dm"&#62;
+&#60;OPTION VALUE="0" SELECTED="$(dm)"&#62;January
+&#60;OPTION VALUE="1" SELECTED="$(dm)"&#62;February
+&#60;OPTION VALUE="2" SELECTED="$(dm)"&#62;March
+&#60;OPTION VALUE="3" SELECTED="$(dm)"&#62;April
+&#60;OPTION VALUE="4" SELECTED="$(dm)"&#62;May
+&#60;OPTION VALUE="5" SELECTED="$(dm)"&#62;June
+&#60;OPTION VALUE="6" SELECTED="$(dm)"&#62;July
+&#60;OPTION VALUE="7" SELECTED="$(dm)"&#62;August
+&#60;OPTION VALUE="8" SELECTED="$(dm)"&#62;September
+&#60;OPTION VALUE="9" SELECTED="$(dm)"&#62;October
+&#60;OPTION VALUE="10" SELECTED="$(dm)"&#62;November
+&#60;OPTION VALUE="11" SELECTED="$(dm)"&#62;December
+&#60;/SELECT&#62;
+&#60;INPUT TYPE=text NAME="dd" VALUE="$(dd)" SIZE=2 maxlength=2&#62;
+,
+&#60;SELECT NAME="dy" &#62;
+&#60;OPTION VALUE="1990" SELECTED="$(dy)"&#62;1990
+&#60;OPTION VALUE="1991" SELECTED="$(dy)"&#62;1991
+&#60;OPTION VALUE="1992" SELECTED="$(dy)"&#62;1992
+&#60;OPTION VALUE="1993" SELECTED="$(dy)"&#62;1993
+&#60;OPTION VALUE="1994" SELECTED="$(dy)"&#62;1994
+&#60;OPTION VALUE="1995" SELECTED="$(dy)"&#62;1995
+&#60;OPTION VALUE="1996" SELECTED="$(dy)"&#62;1996
+&#60;OPTION VALUE="1997" SELECTED="$(dy)"&#62;1997
+&#60;OPTION VALUE="1998" SELECTED="$(dy)"&#62;1998
+&#60;OPTION VALUE="1999" SELECTED="$(dy)"&#62;1999
+&#60;OPTION VALUE="2000" SELECTED="$(dy)"&#62;2000
+&#60;OPTION VALUE="2001" SELECTED="$(dy)"&#62;2001
+&#60;/SELECT&#62;
+&#60;/TD&#62;
+&#60;/TR&#62;
+&#60;/TR&#62;
+&#60;TD VALIGN=center&#62;&#60;INPUT TYPE=radio NAME="dt" VALUE="range"&#62;
+&#60;/TD&#62;
+&#60;TD&#62;
+Between
+&#60;INPUT TYPE=text NAME="db" VALUE="$(db)" SIZE=11 MAXLENGTH=11&#62;
+and
+&#60;INPUT TYPE=text NAME="de" VALUE="$(de)" SIZE=11 MAXLENGTH=11&#62;
+&#60;/TD&#62;
+&#60;/TR&#62;
+&#60;/TABLE&#62;
+&#60;/TD&#62;&#60;/TR&#62;
+&#60;!-- end of stl options --&#62;
+</PRE
+>
+</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="bottom-section"
+>8.3.1.2. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>BOTTOM</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4413"
+></A
+><P
+>&#13;This section is always included last in every page. So you should provide all closing
+tags which have their counterparts in top section. Although it is not
+obligatory to place this section at the end of template file, but
+doing so will help you to view your template as an ordinary html file
+in a browser to get the idea how it's look like.</P
+><P
+>Below is an example of bottom section:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--bottom--&#62;
+&#60;P&#62;
+&#60;HR&#62;
+&#60;DIV ALIGN=right&#62;
+&#60;A HREF="http://www.maxime.net.ru/"&#62;
+&#60;IMG SRC="dpsearch.gif" BORDER=0 
+ALT="[Powered by DataparkSearch search engine software]"&#62;
+&#60;/A&#62;
+&#60;/BODY&#62;
+&#60;/HTML&#62;
+&#60;!--/bottom--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="restop-section"
+>8.3.1.3. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>RESTOP</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4422"
+></A
+><P
+>&#13;This section is included just before the search results. It's a good idea to provide
+some common search results. You can do so by using the next meta
+symbols:</P
+><P
+></P
+><UL
+><LI
+><P
+>&#13;<A
+NAME="AEN4429"
+></A
+>
+					<TT
+CLASS="literal"
+>$(first)</TT
+> - number of First document displayed on this page</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4435"
+></A
+>
+					<TT
+CLASS="literal"
+>$(last)</TT
+>  - number of Last document displayed on this page</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4441"
+></A
+>
+					<TT
+CLASS="literal"
+>$(total)</TT
+> - total number of found documents</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4447"
+></A
+>
+					<TT
+CLASS="literal"
+>$(WE)</TT
+> - search results with full statistics of every word form search</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4453"
+></A
+>
+					<TT
+CLASS="literal"
+>$(W)</TT
+> -
+search results with information about the number of the word form
+found and the number of all word forms found delimited with "/" sign
+for every search word, e.g. if the search result is <TT
+CLASS="literal"
+>test:
+25/73</TT
+>, it means that the number of word form "test" found is
+25, and the number of all its forms ("test", "tests", "testing", etc.)
+found is 73.
+
+				</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4460"
+></A
+>
+				<TT
+CLASS="literal"
+>$(WS)</TT
+> - search results in short form with the number of all word forms found.</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4466"
+></A
+>
+<TT
+CLASS="literal"
+>$(SearchTime)</TT
+> - search query execution time.
+</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4472"
+></A
+>
+<TT
+CLASS="literal"
+>$(ndocs)</TT
+> - number of documents in database.
+</P
+></LI
+></UL
+><P
+>Below is an example of 'restop' section:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--restop--&#62;
+&#60;TABLE BORDER=0 WIDTH=100%&#62;
+&#60;TR&#62;
+&#60;TD&#62;Search&#60;BR&#62;results:&#60;/TD&#62;
+&#60;TD&#62;&#60;small&#62;$(WE)&#60;/small&#62;&#60;/TD&#62;
+&#60;TD&#62;&#60;small&#62;$(W)&#60;/small&#62;&#60;/TD&#62;
+&#60;/TR&#62;
+&#60;/TABLE&#62;
+&#60;HR&#62;
+&#60;CENTER&#62;
+Displaying documents $(first)-$(last) of total &#60;B&#62;$(total)&#60;/B&#62; found.
+&#60;/CENTER&#62;
+&#60;!--/restop--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="res-section"
+>8.3.1.4. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>RES</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4481"
+></A
+><P
+>&#13;This section is used for displaying various information about every found
+document. The following meta symbols are used:</P
+><P
+></P
+><UL
+><LI
+><P
+>&#13;<A
+NAME="AEN4488"
+></A
+>
+				$(URL)  Document URL</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4493"
+></A
+>
+				$(Title)  Document Title</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4498"
+></A
+>
+				$(Score)  Document Rating (as calculated by DataparkSearch</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4503"
+></A
+>
+				$(Body)  Document text, the document
+excerpt, if stored is used, or the first couple of lines, otherwise, to give an idea of what the document is about).</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4508"
+></A
+>
+				$(Content-Type)  Document Content-type (for example, text/html)</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4513"
+></A
+>
+				$(Last-Modified)  Document Last-Modified date</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4518"
+></A
+>
+				$(Content-Length)  Document Size in bytes</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4523"
+></A
+>
+				$(FancySize)  Document Size in bytes, kilobytes or megabytes, what best match.</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4528"
+></A
+>
+				$(Order) Overall Document Number (in order of appearance), i.e. from 1 to $(total).</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4533"
+></A
+>
+				$(Pos) Document Number on the page (in order of appearance), i.e. from 1 to $(ps).</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4538"
+></A
+>
+				$(meta.description)  Document Description (from META DESCRIPTION tag)</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4543"
+></A
+>
+				$(meta.keywords)  Document Keywords (from META KEYWORDS tag)</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4548"
+></A
+>
+				$(DY)  Document category with links, i.e. <TT
+CLASS="filename"
+>/home/computers/software/www/</TT
+>
+				</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4554"
+></A
+>
+				$(CL)  Clone List (see <A
+HREF="dpsearch-templates.en.html#clone-section"
+>Section 8.3.1.5</A
+> for details)</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4560"
+></A
+>
+$(BrowserCharset)  Charset used to display search results</P
+></LI
+><LI
+><P
+>&#13;<A
+NAME="AEN4565"
+></A
+>
+$(PerSite)  Total number of document from this site, if grouping by site is enabled, =0 otherwise.</P
+></LI
+></UL
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+>Note: </B
+>
+    It is possible to specify maximum number of characters returned by
+any of the above variables. E.g. <TT
+CLASS="varname"
+>$(URL)</TT
+> may return a
+long URL that may break page table structure. To specify maximum
+number of characters in the displayed URL's, use
+<TT
+CLASS="literal"
+>$(URL:xx)</TT
+>, where <TT
+CLASS="literal"
+>xx</TT
+> - maximum
+number of characters:</P
+><P
+>&#13;				<TT
+CLASS="userinput"
+><B
+>$(URL:40)</B
+></TT
+>
+			</P
+><P
+>will return a URL, and if it is longer
+than 40 character, only 40 characters will be displayed including the
+ending points:</P
+><P
+>&#13;				<TT
+CLASS="userinput"
+><B
+>http://very.long.url/path/veery/long/...</B
+></TT
+>
+			</P
+></BLOCKQUOTE
+></DIV
+><P
+>Here is an example of res section:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--res--&#62;
+&#60;DL&#62;&#60;DT&#62;
+&#60;b&#62;$(Order).&#60;/b&#62;&#60;a href="$(URL)" TARGET="_blank"&#62;
+&#60;b&#62;$(Title)&#60;/b&#62;&#60;/a&#62; [&#60;b&#62;$(Score)&#60;/b&#62;]&#60;DD&#62;
+$(Body)...&#60;BR&#62;
+&#60;b&#62;URL: &#60;/b&#62;
+&#60;A HREF="$(URL)" TARGET="_blank"&#62;$(URL)&#60;/A&#62;($(Content-Type))&#60;BR&#62;
+$(Last-Modified), $(Content-Length) bytes&#60;BR&#62;
+&#60;b&#62;Description: &#60;/b&#62;$(meta.description)&#60;br&#62;
+&#60;b&#62;Keywords: &#60;/b&#62;$(meta.keywords)&#60;br&#62;
+&#60;/DL&#62;
+&#60;UL&#62;
+$(CL)
+&#60;/UL&#62;
+&#60;!--/res--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="clone-section"
+>8.3.1.5. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>CLONE</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4583"
+></A
+><P
+>&#13;The contents of this section is included in result just instead of $(CL) meta symbol for
+every document clone found. This is used to provide all URLs with the
+same contents (like mirrors etc.). You can use the same $(D*) meta
+symbols here as in 'res' section. Of course, some information about
+clone, like $(DS), $(DR), $(DX) will be  the same so it is of little
+use to place it here.</P
+><P
+>Below is an example of 'clone' section.
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--clone--&#62;
+&#60;li&#62;&#60;A HREF="$(DU)" TARGET="_blank"&#62;$(DU)&#60;/A&#62; ($(DC)) $(DM)
+&#60;!--/clone--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="resbot-section"
+>8.3.1.6. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>RESBOT</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4592"
+></A
+><P
+>&#13;This is included just after last 'res' section. You usually give a navigation bar here
+to allow user go to next/previous results page.</P
+><P
+>This is an example of 'resbot' section:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--resbot--&#62;
+&#60;HR&#62;
+&#60;CENTER&#62;
+Result pages: $(NL)$(NB)$(NR)
+&#60;/CENTER&#62;
+&#60;!--/resbot--&#62;
+</PRE
+>
+</P
+></DIV
+><P
+>Navigator is a complex thing and therefore is
+constructed from the following template sections:</P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="navleft-section"
+>8.3.1.7. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>navleft, navleft_nop</I
+></SPAN
+> section</A
+></H3
+><P
+>These are used for printing the link to the
+previous page. If that page exists, &#60;!--navleft--&#62; is used, and
+on the first page there is no previous page, so
+&#60;!--navleft_nop--&#62; is used.
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--navleft--&#62;
+&#60;TD&#62;&#60;A HREF="$(NH)"&#62;&#60;IMG...&#62;&#60;/A&#62;&#60;BR&#62;
+&#60;A HREF="$(NH)"&#62;Prev&#60;/A&#62;&#60;/TD&#62;
+&#60;!--/navleft--&#62;
+
+&#60;!--navleft_nop--&#62;
+&#60;TD&#62;&#60;IMG...&#62;&#60;BR&#62;
+&#60;FONT COLOR=gray&#62;Prev&#60;/FONT&#62;&#60;/TD&#62;
+&#60;!--/navleft_nop--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="navbar0-section"
+>8.3.1.8. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>navbar0</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4607"
+></A
+><P
+>&#13;This is used for printing the current page in the page list.
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--navbar0--&#62;
+&#60;TD&#62;&#60;IMG...&#62;&#60;BR&#62;$(NP)&#60;/TD&#62;
+&#60;!--navbar0--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="navright-section"
+>8.3.1.9. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>navright, navright_nop</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4615"
+></A
+><P
+>&#13;These are used for printing the link to the next page. If that page
+exists, &#60;!--navright--&#62; is used, and on the last page
+&#60;!--navright_nop--&#62; is used instead.
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--navright--&#62;
+&#60;TD&#62;
+&#60;A HREF="$(NH)"&#62;&#60;IMG...&#62;&#60;/A&#62;
+&#60;BR&#62;
+&#60;A HREF="$(NH)"&#62;Next&#60;/A&#62;&#60;/TD&#62;
+&#60;!--/navright--&#62;
+
+&#60;!--navright_nop--&#62;
+&#60;TD&#62;
+&#60;IMG...&#62;
+&#60;BR&#62;
+&#60;FONT COLOR=gray&#62;Next&#60;/FONT&#62;&#60;/TD&#62;
+&#60;!--/navright_nop--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="navbar1-section"
+>8.3.1.10. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>navbar1</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4623"
+></A
+><P
+>&#13;This is used for printing the links to the other pages in the page list.
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--navbar1--&#62;
+&#60;TD&#62;
+&#60;A HREF="$(HR)"&#62;
+&#60;IMG...&#62;&#60;/A&#62;&#60;BR&#62;
+&#60;A HREF="$(NH)"&#62;$(NP)&#60;/A&#62;
+&#60;/TD&#62;
+&#60;!--/navbar1--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="notfound-section"
+>8.3.1.11. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>notfound</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4631"
+></A
+><P
+>&#13;As its name
+implies, this section is displayed in case when no documents are
+found. You usually give a little message saying that and maybe some
+hints how to make search less restrictive.</P
+><P
+>Below is an example of notfound section:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--notfound--&#62;
+&#60;CENTER&#62;
+Sorry, but search hasn't returned results.&#60;P&#62;
+&#60;I&#62;Try to compose less restrictive search query or check spelling.&#60;/I&#62;
+&#60;/CENTER&#62;
+&#60;HR&#62;
+&#60;!--/notfound--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="noquery-section"
+>8.3.1.12. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>noquery</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4640"
+></A
+><P
+>&#13;This section is displayed in case when user gives an empty query. Below is an example
+of noquery section:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--noquery--&#62;
+&#60;CENTER&#62;
+You haven't typed any word(s) to search for.
+&#60;/CENTER&#62;
+&#60;HR&#62;
+&#60;!--/noquery--&#62;
+</PRE
+>
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="error-section"
+>8.3.1.13. <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>error</I
+></SPAN
+> section</A
+></H3
+><A
+NAME="AEN4648"
+></A
+><P
+>&#13;This section is displayed in case some internal error occurred while searching. For
+example, database server is not running or so. You may provide the
+following meta symbol:<A
+NAME="AEN4652"
+></A
+>
+<TT
+CLASS="literal"
+>$(E)</TT
+> - error text.
+</P
+><P
+>Example of error section:
+			<PRE
+CLASS="programlisting"
+>&#13;&#60;!--error--&#62;
+&#60;CENTER&#62;
+&#60;FONT COLOR="#FF0000"&#62;An error occured!&#60;/FONT&#62;
+&#60;P&#62;
+&#60;B&#62;$(E)&#60;/B&#62;
+&#60;/CENTER&#62;
+&#60;!--/error--&#62;
+</PRE
+>
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="templates-var"
+>8.3.2. Variables section</A
+></H2
+><A
+NAME="AEN4660"
+></A
+><P
+>There is also a special variables section, in which you can set up some values for search. </P
+><P
+>Special variables section usually looks like this:</P
+><DIV
+CLASS="informalexample"
+><A
+NAME="AEN4665"
+></A
+><P
+></P
+><PRE
+CLASS="programlisting"
+>&#13;&#60;!--variables
+DBAddr		  mysql://foo:bar@localhost/search/?dbmode=single
+VarDir            /usr/local/dpsearch/var/
+LocalCharset	  iso-8859-1
+BrowserCharset    iso-8859-1
+TrackQuery	  no
+Cache		  no
+DetectClones	  yes
+HlBeg		  &#60;font color="blue"&#62;&#60;b&#62;&#60;i&#62;
+HlEnd		  &#60;/i&#62;&#60;/b&#62;
+R1		  100
+R2		  256
+Synonym		  synonym/english.syn
+ResultContentType text/xml
+Locale            fr_FR.ISO_8859-1
+--&#62;
+</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><A
+NAME="AEN4668"
+></A
+><P
+><B
+>Note: </B
+>Database option
+<B
+CLASS="command"
+>DBAddr</B
+> like in
+<TT
+CLASS="filename"
+>indexer.conf</TT
+>, host part in DBAddr argument takes
+affect for natively supported databases only and does not matter for
+ODBC databases. In case of ODBC use database name part of DBAddr to
+specify ODBC DSN.</P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;<A
+NAME="AEN4675"
+></A
+>
+			<B
+CLASS="command"
+>VarDir</B
+> command specifies a
+custom path to directory that indexer stores data to when  use with
+cache mode. By default
+<TT
+CLASS="filename"
+>/var</TT
+> directory of <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> installation is
+used.</P
+><P
+>&#13;<A
+NAME="AEN4682"
+></A
+>
+			<B
+CLASS="command"
+>LocalCharset</B
+> specifies a
+charset of database. It must be the same with
+<TT
+CLASS="filename"
+>indexer.conf</TT
+> LocalCharset. </P
+><P
+>&#13;<A
+NAME="AEN4688"
+></A
+>
+			<B
+CLASS="command"
+>BrowserCharset</B
+> specifies
+which charset will be used to display results. It may differ from
+LocalCharset. All template variables which correspond data from search
+result (such as document title, description, text) will be converted
+from LocalCharset to BrowserCharset. Contents of template itself is
+not converted, it must be in BrowserCharset.</P
+><A
+NAME="AEN4692"
+></A
+><P
+>Use "<B
+CLASS="command"
+>Cache</B
+> yes/no" to enable/disable search results cache.</P
+><A
+NAME="AEN4697"
+></A
+><P
+>Use "<B
+CLASS="command"
+>DetectClones</B
+> yes/no" to enable/disable clones detection.</P
+><P
+><A
+NAME="AEN4703"
+></A
+>
+Use "<B
+CLASS="command"
+>GroupBySite</B
+> yes/no" to enable/disable grouping results by url.site_id.</P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+>Note: </B
+>If <TT
+CLASS="filename"
+>searchd</TT
+> is used you should place <B
+CLASS="command"
+>GroupBySite</B
+> in your 
+<TT
+CLASS="filename"
+>searchd.conf</TT
+> file, or pass it as CGI parameter.
+</P
+><P
+>If cache storage mode is used, you need also create SITE limit (see <A
+HREF="dpsearch-cachemode.en.html#limits"
+>Section 5.2.8</A
+>).
+</P
+><P
+><A
+NAME="AEN4715"
+></A
+>
+Use <B
+CLASS="command"
+>PagesInGroup</B
+> command to specify the number of additional results from the same site when google-like groupping is
+enabled.</P
+><P
+><A
+NAME="AEN4720"
+></A
+>
+You may use <B
+CLASS="command"
+>MaxSiteLevel</B
+> command to specify maximal domain name level using for site_id calculation. 
+Default value: 2. One exception: three or less letter domains at level 2 count as domain names at level 1. For example:
+domain.ext - level 2, www.domain.ext - level 3, domain.com.ext - level 2. A negative value for <B
+CLASS="command"
+>MaxSiteLevel</B
+> mean 
+grouping performs on per directory basis, i.e. for level -1 www.site.ext/dir1/ and www.site.ext/dir2 group as different sites.
+</P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;<A
+NAME="AEN4726"
+></A
+>
+<A
+NAME="AEN4729"
+></A
+>
+			<B
+CLASS="command"
+>HlBeg</B
+> and
+<B
+CLASS="command"
+>HlEnd</B
+> commands are used to configure search results
+highlighting. Found words will be surrounded in those tags.</P
+><A
+NAME="AEN4734"
+></A
+><P
+>There is an <B
+CLASS="command"
+>Alias</B
+> command in <TT
+CLASS="filename"
+>search.htm</TT
+>, that is similar to the one in
+<TT
+CLASS="filename"
+>indexer.conf</TT
+>, but it affects only search results
+while having no effect on indexing. See <A
+HREF="dpsearch-aliases.en.html"
+>Section 3.7</A
+> for details.</P
+><P
+>&#13;<A
+NAME="AEN4743"
+></A
+>
+			<B
+CLASS="command"
+>R1</B
+> and <B
+CLASS="command"
+>R2</B
+> specify ranges for random variables $(R1) and $(R2).</P
+><A
+NAME="AEN4748"
+></A
+><P
+><B
+CLASS="command"
+>Synonym</B
+> command is used to load specified
+synonyms list. Synonyms file name is either absolute or relative to
+<TT
+CLASS="filename"
+>/etc</TT
+> directory of <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> installation.</P
+><P
+><A
+NAME="AEN4756"
+></A
+>
+<B
+CLASS="command"
+>DateFormat</B
+> command is used to change Last-Modified date format output.
+Use <TT
+CLASS="literal"
+>strftime</TT
+> function meta-variables for your own format string.
+</P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+>Note: </B
+>If <TT
+CLASS="filename"
+>searchd</TT
+> is used, you may specify <B
+CLASS="command"
+>DateFormat</B
+> in your <TT
+CLASS="filename"
+>searchd.conf</TT
+>
+file, but there you should enclose this string in quotas (<TT
+CLASS="literal"
+>"</TT
+>), or pass it as CGI parameter.
+</P
+></BLOCKQUOTE
+></DIV
+><P
+><A
+NAME="AEN4768"
+></A
+>
+"<B
+CLASS="command"
+>Log2stderr</B
+> yes/no" command is used to enable error logging to <TT
+CLASS="literal"
+>stderr</TT
+>.
+</P
+><P
+>&#13;<A
+NAME="AEN4774"
+></A
+>
+<B
+CLASS="command"
+>ResultsLimit</B
+> command is uses to limit maximum number of results shown. If <SPAN
+CLASS="application"
+>searchd</SPAN
+>
+is used, this command may be specified in <TT
+CLASS="filename"
+>searchd.conf</TT
+>.
+</P
+><P
+>&#13;<A
+NAME="AEN4781"
+></A
+>
+<B
+CLASS="command"
+>ResultContentType</B
+> command is uses to specify Content-Type header for results page. 
+Default value: <TT
+CLASS="literal"
+>text/html</TT
+>.
+</P
+><P
+>&#13;<A
+NAME="AEN4787"
+></A
+>
+<B
+CLASS="command"
+>Locale</B
+> command is uses to specify LC_ALL locale settings for search results output. 
+Default value: <TT
+CLASS="literal"
+>unspecified</TT
+> (uses the value specified before in system settings).
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="templates-incl"
+>8.3.3. Includes in templates</A
+></H2
+><P
+>You may use &#60;!INCLUDE Content="http://hostname/path"&#62; to include external URLs into search results.</P
+><P
+>&#13;			<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>WARNING: You can use &#60;!INCLUDE&#62; ONLY in the following template sections:</I
+></SPAN
+>
+		</P
+><P
+CLASS="literallayout"
+><br>
+&#60;!--top--&#62;<br>
+&#60;!--bottom--&#62;<br>
+&#60;!--restop--&#62;<br>
+&#60;!--resbot--&#62;<br>
+&#60;!--notfound--&#62;<br>
+&#60;!--error--&#62;<br>
+</P
+><P
+>This is an example of includes usage:</P
+><DIV
+CLASS="informalexample"
+><A
+NAME="AEN4799"
+></A
+><P
+></P
+><PRE
+CLASS="programlisting"
+>&#13;&#60;!--top--&#62;
+....
+&#60;!INCLUDE CONTENT="http://hostname/banner?query=$&#38;(q)"&#62;
+...
+&#60;!--/top--&#62;
+</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="templates-if"
+>8.3.4. Conditional template operators</A
+></H2
+><P
+><SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> is support conditional operators in search templates:
+<PRE
+CLASS="programlisting"
+>&#13;&#60;!IF   NAME="Content-Type" Content="application/pdf"&#62;
+&#60;img src="pdf.png"&#62;
+&#60;!ELIF NAME="Content-Type" Content="text/plain"&#62;
+&#60;img src="text.png"&#62;
+&#60;!ENDIF&#62;
+</PRE
+>
+</P
+><P
+>It's possible to use nested conditional operators. This give much power for search template construction.
+See samples in <TT
+CLASS="filename"
+>etc/search.htm-dist</TT
+> file.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="templates-sec"
+>8.3.5. Security issues</A
+></H2
+><P
+>&#13;			<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>WARNING</I
+></SPAN
+>: Since the
+template file contains such info as password, it is highly recommended
+to give the file proper permissions to protect it from reading by
+anyone but you and search program. Otherwise your passwords may
+leak. </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dpsearch-mod_dpsearch.en.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.en.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-html.en.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><TT
+CLASS="literal"
+>mod_dpsearch</TT
+> module for Apache httpd</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="dpsearch-doingsearch.en.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Designing search.html</TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>

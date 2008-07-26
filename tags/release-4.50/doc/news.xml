@@ -1,0 +1,159 @@
+<sect2 id="news">
+	<title>News extensions
+<indexterm><primary>News extensions</primary></indexterm>
+</title>
+	<para>By Heiko Stoermer <email>heiko.stoermer@innominate.de</email>
+	</para>
+	<para>mnoGoSearch comes with an integrated extension to
+archive news servers. (currently MySQL only! 
+see <xref  linkend="news-restr"/>)  This means that you can now
+download all messages from a news server an save them completely in a
+database. </para>
+
+	<sect3 id="news-benefits">
+		<title>Benefits</title>
+		<itemizedlist>
+			<listitem>
+				<para>you can expire the messages on the news server to keep it slim and fast </para>
+			</listitem>
+			<listitem>
+				<para>you can search the complete message base with all the features that regular mnoGoSearch offers </para>
+			</listitem>
+			<listitem>
+				<para>you can still browse discussion threads over the complete archive </para>
+			</listitem>
+		</itemizedlist>
+	</sect3>
+	<sect3 id="news-restr">
+		<title>Restrictions</title>
+		<itemizedlist>
+			<listitem>
+				<para>currently mysql only (I would
+have really liked to do this for postgresql, but some really annoying
+restrictions concerning query size and field size in postgresql
+finally made me switch to mysql.) </para>
+
+			</listitem>
+			<listitem>
+				<para>perl front-end only </para>
+			</listitem>
+			<listitem>
+				<para>single dict only (because mysql-perl front-end does not support multi-dict) </para>
+			</listitem>
+		</itemizedlist>
+	</sect3>
+	<sect3 id="news-todo">
+		<title>To be implemented</title>
+		<para>No new features are planned for this thing. It
+works the way it is (at least as far as I can see) and does everything
+I wanted it to do. What I will do is to make the code a bit more
+portable to other databases and fix the few very tiny bugs in the
+front-end. Of course newly discovered bugs will be fixed. I'm
+maintaining it as good as I can. </para>
+
+	</sect3>
+	<sect3 id="news-perf">
+		<title>Performance</title>
+		<para>Of course, important questions always are: how fast.../how big.../how long.... </para>
+		<itemizedlist>
+			<listitem>
+				<para>Our local intranet installation of mnoGoSearch says the following:
+				<programlisting>
+
+
+          mnoGoSearch statistics 
+  
+    Status    Expired      Total 
+   ----------------------------- 
+       200      76132      76132 OK 
+       404        119        119 Not found 
+       503         17         17 Service Unavailable 
+       504        802        802 Gateway Timeout 
+   ----------------------------- 
+     Total      77070      77070 
+
+</programlisting>
+
+				</para>
+				<para>which means that roughly 77.000 messages are archived in the database</para>
+			</listitem>
+			<listitem>
+				<para>Current database size is:  423 Megabytes </para>
+			</listitem>
+			<listitem>
+				<para>The dict table has 6.076.462 entries </para>
+			</listitem>
+			<listitem>
+				<para>It's run on an AMD K6 400  with 64 MBs of RAM (very tiny thing) </para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis>typical queries take between 2 and 10 seconds. </emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect3>
+	<sect3 id="news-install">
+		<title>Installation</title>
+		<orderedlist numeration="arabic">
+			<listitem>
+				<para>Compile:</para>
+				<para>Unpack the mnoGoSearch
+distribution archive. Start the configure script with the option
+<literal>--with-mysql</literal>. <literal>make</literal> and
+<literal>make install</literal> as described in the regular install
+instructions </para>
+			</listitem>
+			<listitem>
+				<para>Create Database:</para>
+				<para>The news extension uses a
+slightly different database layout. The create files can be found in
+<filename>frontends/mysql-perl-news/create/</filename> (Of course you
+have to do <literal>mysqladmin create mnoGoSearch</literal> first and
+set permissions to the account the web front-end and indexer are run
+as) </para>
+
+			</listitem>
+			<listitem>
+				<para>Install <filename>indexer.conf</filename>:</para>
+				<para>an
+<filename>indexer.conf</filename> for incremental news archiving
+(messages hardly ever change...) can be found in
+<filename>frontends/mysql-perl-news/etc/</filename> together with a
+sample cron shell script that can be run once a day or so. Please see
+<filename>indexer.conf</filename> for detailed description of the
+indexing process. </para>
+
+			</listitem>
+			<listitem>
+				<para>Install perl front-end:</para>
+				<para>copy
+<filename>frontends/mysql-perl-news/*.pl</filename> and
+<filename>frontends/mysql-perl-news/*.htm*</filename> to your cgi-bin
+directory. </para>
+
+				<para>copy
+<filename>frontends/mysql-perl-news/*.pm</filename> to your site's
+perl library directory (<filename>site_perl</filename> or so) where the
+modules can be found by the perl scripts. </para>
+
+				<para>edit
+<filename>search.htm</filename> and change the included database login
+information. The Perl front-end has additional features that allow you
+to browse message threads. You will see. </para>
+
+			</listitem>
+			<listitem>
+				<para>Now you are set and can run
+indexer for the first time according to the instructions you can find
+in <filename>indexer.conf</filename>.</para>
+
+			</listitem>
+		</orderedlist>
+		<para>I hope this is a nice feature for you. If anyone
+is interested in porting this to other databases/multidict mode/the
+PHP front-end, PLEASE DO SO! I would be pleased and will assist
+you. </para>
+
+	</sect3>
+</sect2>
