@@ -559,13 +559,15 @@ CLASS="literal"
 But this slow down a bit indexing speed. By default, links collection is not enabled. 
 </P
 ><P
->If you place
+>By default, only intersite links (i.e. links from a page on 
+one site to a page on an another site) are taken in account for the popularity rank calculation.
+If you place
 <B
 CLASS="command"
 ><A
 NAME="AEN5046"
 ></A
->PopRankSkipSameSite yes</B
+>PopRankSkipSameSite no</B
 >
 command in <TT
 CLASS="filename"
@@ -573,8 +575,7 @@ CLASS="filename"
 > file, <B
 CLASS="command"
 >indexer</B
-> will take only inter site links (i.e. links from a page on 
-one site to a page on another site) for popularity rank calculation.
+> take all links for this purpose.
 </P
 ><P
 >You may assign initial value for page popularity rank using DP.PopRank META tag (see <A

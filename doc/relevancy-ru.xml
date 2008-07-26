@@ -105,9 +105,10 @@ PopRankMethod Neo
 сбор этих ссылок выключен. 
 </para>
 
-<para>Если в <filename>indexer.conf</filename> указана опция 
-<option><indexterm><primary>Команда</primary><secondary>PopRankSkipSameSite</secondary></indexterm>PopRankSkipSameSite yes</option>,
- то при расчёте рейтинга популярности учитываются ссылки только между различными сайтами.
+<para>По умолчанию, для расчета рейтинга популярности используются только ссылки между различными сайтами.
+ Если в <filename>indexer.conf</filename> указана опция 
+<option><indexterm><primary>Команда</primary><secondary>PopRankSkipSameSite</secondary></indexterm>PopRankSkipSameSite no</option>,
+ то при расчёте рейтинга популярности учитываются все ссылки.
 </para>
 
 <para>Вы можете присвоить начальное значение рейтинга популярности страницы используя МЕТА таг DP.PopRank 
