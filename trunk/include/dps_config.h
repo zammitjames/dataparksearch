@@ -204,7 +204,7 @@
 /* #undef HAVE_ORACLE7 */
 
 /* Define VERSION_ID */
-#define DPS_VERSION_ID 450
+#define DPS_VERSION_ID 451
 
 /* Define DPS_DBTYPE */
 #define DPS_DBTYPE "pqsql"
@@ -483,7 +483,7 @@
 
 /* Version number of package */
 #ifndef VERSION
-#define VERSION "4.50"
+#define VERSION "4.51-01082008"
 #endif
 
 /* syslog facility */

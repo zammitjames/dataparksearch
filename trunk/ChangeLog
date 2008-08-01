@@ -2,6 +2,9 @@
 History
 -------
 
+Latest snapshot:
+	* storedoc.cgi takes now document from remote host if it unable to fetch it from stored database.
+	
 26 Jul 2008: 4.50
 	* Default value for PopRankSkipSameSite command has been changed to "yes".
 	* Possible memory leak has been fixed for a sub-document indexed from stored database.

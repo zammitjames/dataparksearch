@@ -235,7 +235,18 @@ int main(int argc, char **argv, char **envp) {
 	Res->num_rows = 1;
 	Res->Doc = Doc;
 
-	if(!Doc->Buf.content)goto fin;
+	if(!Doc->Buf.content) {
+	  char *origurl = DpsVarListFindStr(&Env->Vars, "DU", NULL);
+	  if (origurl != NULL) {
+	    DpsVarListReplaceStr(&Doc->Sections, "URL", origurl);
+	    Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Agent->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
+	    DpsURLParse(&Doc->CurURL, origurl);
+	    DpsDocAddDocExtraHeaders(Agent, Doc);
+	    DpsDocLookupConn(Agent, Doc);
+	    if (DpsGetURL(Agent, Doc, origurl) != DPS_OK) goto fin;
+	  }
+	  else goto fin;
+	}
 	DpsConvert(Env, &Agent->Vars, Res, lcs, bcs);
 	DpsVarListAddLst(&Env->Vars, &Doc->Sections, NULL, "*");
 
