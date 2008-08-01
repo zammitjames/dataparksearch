@@ -2761,7 +2761,7 @@ int __DPSCALL _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * query, c
 ret:
 #ifdef DEBUG_SQL
 	ticks=DpsStartTimer()-ticks;
-	fprintf(stderr,"[%d] %.2fs SQL {%s:%d}: %s\n", getpid(), (float)ticks/1000, file, line, query);
+	fprintf(stderr,"[%d,%x] %.2fs SQL {%s:%d}: %s\n", getpid(), db, (float)ticks/1000, file, line, query);
 #endif
 	
 #ifdef DEBUG_ERR_QUERY
@@ -2826,7 +2826,7 @@ int __DPSCALL _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * que
 asyncret:
 #ifdef DEBUG_SQL
 	ticks=DpsStartTimer()-ticks;
-	fprintf(stderr,"[%d] %.2fs SQL {%s:%d}: %s\n", getpid(), (float)ticks/1000, file, line, query);
+	fprintf(stderr,"[%d,%x] %.2fs SQL {%s:%d}: %s\n", getpid(), db, (float)ticks/1000, file, line, query);
 #endif
 	
 #ifdef DEBUG_ERR_QUERY

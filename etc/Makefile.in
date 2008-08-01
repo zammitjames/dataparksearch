@@ -420,8 +420,10 @@ langmap/mt.latin1.lm \
 langmap/mt.utf-8.lm \
 langmap/nap.utf-8.lm \
 langmap/nds.utf-8.lm \
+langmap/nl.windows-1252.lm \
 langmap/nl.latin1.lm \
 langmap/nl.latin1.bible.lm \
+langmap/nl.utf-8.lm \
 langmap/nn.utf-8.lm \
 langmap/no.latin1.lm \
 langmap/no.utf-8.lm \

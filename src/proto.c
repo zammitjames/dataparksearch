@@ -328,8 +328,8 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	   } else if( recv_size == 0 ){
 	     if(Doc->Spider.doc_timeout < (time(NULL) - start_time)){
 	       res = DPS_NET_TIMEOUT;
+	       break;
 	     }
-	     break;
 	   } else {
 /*	     if (recv_size == (ssize_t)buf_size) {
 	       tv.tv_sec -= (etime.tv_sec - stime.tv_sec);
@@ -354,8 +354,9 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	       break;
 	     }
 	   }
-	 } else
+	 } else {
 	   break;
+	 }
        }
     }
     dps_closesocket(fd);
