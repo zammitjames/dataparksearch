@@ -270,11 +270,11 @@ int DpsCheckAddr(struct sockaddr_in *addr, unsigned int read_timeout) {
 static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
     int fd,res=0;
     fd_set sfds;
-    time_t start_time;
+    time_t start_time, now_time, prev_time;
     int status;
     ssize_t recv_size;
-    size_t buf_size = DPS_NET_BUF_SIZE;
-    struct timeval tv/*, stime, etime*/;
+    size_t buf_size = DPS_NET_BUF_SIZE, zero_cnt;
+    struct timeval tv;
 
     /* Connect to HTTP or PROXY server */
     if( (fd=open_host(Agent,Doc)) < 0 )
@@ -284,20 +284,18 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
     if( DpsSend(fd, Doc->Buf.buf, dps_strlen(Doc->Buf.buf), 0) < 0 )
        return -1;
 
-    /* Retrieve response */
-    tv.tv_sec = (long) Doc->Spider.read_timeout;
-    tv.tv_usec = 0;
-
     Doc->Buf.size=0;
-    start_time = time(NULL);
+    start_time = now_time = time(NULL);
 
     while( 1 ) {
+      /* Retrieve response */
+      tv.tv_sec = (long) Doc->Spider.read_timeout;
+      tv.tv_usec = 0;
+
        FD_ZERO( &sfds );
        FD_SET( fd, &sfds );
 
-/*       gettimeofday(&stime, NULL);*/
        status = select(FD_SETSIZE, &sfds, NULL, NULL, &tv);
-/*       gettimeofday(&etime, NULL);*/
        if( status == -1 ) {
                res=DPS_NET_ERROR;
                break;
@@ -321,35 +319,27 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	   }
 
 /*	   recv_size = recv(fd, Doc->Buf.buf + Doc->Buf.size, buf_size, 0);*/
+	   prev_time = now_time;
 	   recv_size = read(fd, Doc->Buf.buf + Doc->Buf.size, buf_size);
+	   now_time = time(NULL);
 	   if( recv_size < 0 ){
 	     res = DPS_NET_ERROR; /* recv_size;*/
 	     break;
 	   } else if( recv_size == 0 ){
-	     if(Doc->Spider.doc_timeout < (time(NULL) - start_time)){
+	     if(Doc->Spider.doc_timeout < (now_time - start_time)){
 	       res = DPS_NET_TIMEOUT;
-	       break;
 	     }
+	     if(Doc->Spider.read_timeout < (now_time - prev_time)){
+	       res = DPS_NET_TIMEOUT;
+	     }
+	     break;
 	   } else {
-/*	     if (recv_size == (ssize_t)buf_size) {
-	       tv.tv_sec -= (etime.tv_sec - stime.tv_sec);
-	       tv.tv_usec -= (etime.tv_usec - stime.tv_usec);
-	       if (tv.tv_usec < 0) {
-		 tv.tv_usec += 1000000;
-		 tv.tv_sec--;
-	       } else if (tv.tv_usec >= 1000000) {
-		 tv.tv_usec -= 1000000;
-		 tv.tv_sec++;
-	       }
-	     }*/
-/*	       fprintf(stderr, "[%d] recv.size: %d  sec:%d  usec:%d\n", Agent->handle, recv_size, tv.tv_sec, tv.tv_usec);*/
 	     Doc->Buf.size += recv_size;
-/*		   start_time = time(NULL);*/
 	     if( Doc->Buf.size >= Doc->Buf.max_size ) {
 	       res = DPS_NET_FILE_TL;
 	       break;
 	     }
-	     if(Doc->Spider.doc_timeout < (time(NULL) - start_time)) {
+	     if(Doc->Spider.doc_timeout < (now_time - start_time)) {
 	       res = DPS_NET_TIMEOUT;
 	       break;
 	     }
