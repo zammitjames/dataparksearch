@@ -349,8 +349,15 @@ VALIGN="MIDDLE"
 >This option specify the <TT
 CLASS="option"
 >NUM</TT
-> as a factor for average word distance for relevance calculation. 
-Value by default: 0.2.
+> as factor of average word distance in relevance calculation when average
+distance is less than value specified with <TT
+CLASS="option"
+>--with-avgdist</TT
+>.
+Default value is <TT
+CLASS="option"
+>--with-distancefactor</TT
+> multiply by 2.
 </P
 ></TD
 ></TR
@@ -386,6 +393,36 @@ ALIGN="LEFT"
 VALIGN="MIDDLE"
 ><TT
 CLASS="option"
+>--with-lessposfactor=<TT
+CLASS="option"
+>NUM</TT
+></TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><P
+>This option specify <TT
+CLASS="option"
+>NUM</TT
+> as factor of first word position in relevance calculation when it less than value
+specified with <TT
+CLASS="option"
+>--with-bestpos</TT
+>.
+Default value is <TT
+CLASS="option"
+>--with-posfactor</TT
+> multyply by 4.
+</P
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="option"
 >--with-wrdcntfactor=<TT
 CLASS="option"
 >NUM</TT
@@ -404,6 +441,36 @@ CLASS="option"
 >--with-bestwrdcnt</TT
 > option. 
 Value by default: 0.4.
+</P
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><TT
+CLASS="option"
+>--with-lesswrdcntfactor=<TT
+CLASS="option"
+>NUM</TT
+></TT
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><P
+>This option specify <TT
+CLASS="option"
+>NUM</TT
+> as factor of word count in relevance calculation when this word count is less than
+value specified with <TT
+CLASS="option"
+>--with-bestwrdcnt</TT
+>.
+Default value is <TT
+CLASS="option"
+>--with-wrdcntfactor</TT
+> multiply by 10.
 </P
 ></TD
 ></TR
@@ -442,7 +509,7 @@ NAME="rel-full"
 >8.5.2.1. A full method of relevance calculation.</A
 ></H3
 ><A
-NAME="AEN5002"
+NAME="AEN5022"
 ></A
 ><P
 >Let <TT
@@ -479,7 +546,7 @@ NAME="rel-fast"
 >8.5.2.2. A fast method of relevance calculation.</A
 ></H3
 ><A
-NAME="AEN5015"
+NAME="AEN5035"
 ></A
 ><P
 >Let <TT
@@ -511,11 +578,11 @@ NAME="poprank"
 >8.5.3. Popularity rank</A
 ></H2
 ><A
-NAME="AEN5026"
+NAME="AEN5046"
 ></A
 ><P
 ><A
-NAME="AEN5029"
+NAME="AEN5049"
 ></A
 >
 <SPAN
@@ -538,7 +605,7 @@ CLASS="programlisting"
 </P
 ><P
 ><A
-NAME="AEN5037"
+NAME="AEN5057"
 ></A
 >
 You need enable links collection by <B
@@ -565,7 +632,7 @@ If you place
 <B
 CLASS="command"
 ><A
-NAME="AEN5046"
+NAME="AEN5066"
 ></A
 >PopRankSkipSameSite no</B
 >
@@ -601,7 +668,7 @@ At second stage, for every page we find the sum of weights of all links pointed 
 </P
 ><P
 ><A
-NAME="AEN5058"
+NAME="AEN5078"
 ></A
 >
 By default, the value of <TT
@@ -625,7 +692,7 @@ CLASS="literal"
 <TT
 CLASS="option"
 ><A
-NAME="AEN5067"
+NAME="AEN5087"
 ></A
 >PopRankFeedBack yes</TT
 >
@@ -647,7 +714,7 @@ great 1, the weight for site set to this sum, otherwise, site weight is set to 1
 <TT
 CLASS="option"
 ><A
-NAME="AEN5075"
+NAME="AEN5095"
 ></A
 >PopRankUseTracking yes</TT
 >
@@ -665,7 +732,7 @@ tracked queries with restriction on this site.
 <TT
 CLASS="option"
 ><A
-NAME="AEN5082"
+NAME="AEN5102"
 ></A
 >PopRankUseShowCnt yes</TT
 >
@@ -684,7 +751,7 @@ value specified by
 <TT
 CLASS="option"
 ><A
-NAME="AEN5089"
+NAME="AEN5109"
 ></A
 >PopRankShowCntRatio</TT
 >
@@ -706,7 +773,7 @@ CLASS="literal"
 <TT
 CLASS="option"
 ><A
-NAME="AEN5097"
+NAME="AEN5117"
 ></A
 >PopRankShowCntWeight</TT
 >
@@ -737,7 +804,7 @@ Popularity Rank for web pages</A
 <TT
 CLASS="option"
 ><A
-NAME="AEN5106"
+NAME="AEN5126"
 ></A
 >PopRankNeoIterations</TT
 >
@@ -745,7 +812,7 @@ command to specify the number of iterations of the Neo Popularity Rank calculati
 </P
 ><P
 ><A
-NAME="AEN5110"
+NAME="AEN5130"
 ></A
 >
 By default, the Neo Popularity Rank is caclulated along with indexing. To speed up indexing, 
@@ -775,7 +842,7 @@ NAME="rel-bool"
 >8.5.4. Boolean search</A
 ></H2
 ><A
-NAME="AEN5119"
+NAME="AEN5139"
 ></A
 ><P
 >Please note that in case of boolean searching for two or more
@@ -801,10 +868,10 @@ NAME="rel-cwords"
 >8.5.5. Crosswords</A
 ></H2
 ><A
-NAME="AEN5127"
+NAME="AEN5147"
 ></A
 ><A
-NAME="AEN5129"
+NAME="AEN5149"
 ></A
 ><P
 >This feature allows to assign words between
@@ -840,16 +907,16 @@ NAME="sea"
 >8.5.6. The Summary Extraction Algorithm (SEA)</A
 ></H2
 ><A
-NAME="AEN5140"
+NAME="AEN5160"
 ></A
 ><A
-NAME="AEN5142"
+NAME="AEN5162"
 ></A
 ><A
-NAME="AEN5145"
+NAME="AEN5165"
 ></A
 ><A
-NAME="AEN5148"
+NAME="AEN5168"
 ></A
 ><P
 ><TT
@@ -888,7 +955,7 @@ template to show the summary in result pages.
 </P
 ><P
 ><A
-NAME="AEN5161"
+NAME="AEN5181"
 ></A
 >
 The <B
@@ -899,7 +966,7 @@ using the SEA. Default value: 64.
 </P
 ><P
 ><A
-NAME="AEN5166"
+NAME="AEN5186"
 ></A
 >
 The <B

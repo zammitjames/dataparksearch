@@ -77,19 +77,30 @@ Value by default: 11.
 Value by default: 0.2.
 </para></entry></row>
 <row><entry><option>--with-lessdistfactor=<option>NUM</option></option></entry>
-<entry><para>This option specify the <option>NUM</option> as a factor for average word distance for relevance calculation. 
-Value by default: 0.2.
+<entry><para>This option specify the <option>NUM</option> as factor of average word distance in relevance calculation when average
+distance is less than value specified with <option>--with-avgdist</option>.
+Default value is <option>--with-distancefactor</option> multiply by 2.
 </para></entry></row>
 
 <row><entry><option>--with-posfactor=<option>NUM</option></option></entry>
 <entry><para>This option specify the <option>NUM</option> as factor for difference between first query word position in document found and best position specified by <option>--with-bestpos</option> option. 
 Value by default: 0.5.
 </para></entry></row>
+<row><entry><option>--with-lessposfactor=<option>NUM</option></option></entry>
+<entry><para>This option specify <option>NUM</option> as factor of first word position in relevance calculation when it less than value
+specified with <option>--with-bestpos</option>.
+Default value is <option>--with-posfactor</option> multyply by 4.
+</para></entry></row>
 
 <row><entry><option>--with-wrdcntfactor=<option>NUM</option></option></entry>
 <entry><para>This option specify the <option>NUM</option> as factor for difference between count of query words in document found
 and the best value specified by <option>--with-bestwrdcnt</option> option. 
 Value by default: 0.4.
+</para></entry></row>
+<row><entry><option>--with-lesswrdcntfactor=<option>NUM</option></option></entry>
+<entry><para>This option specify <option>NUM</option> as factor of word count in relevance calculation when this word count is less than
+value specified with <option>--with-bestwrdcnt</option>.
+Default value is <option>--with-wrdcntfactor</option> multiply by 10.
 </para></entry></row>
 
 <row><entry><option>--with-wrdunifactor=<option>NUM</option></option></entry>
