@@ -627,7 +627,7 @@ rel_less_position_factor="(4.0 * DPS_POSITION_FACTOR)"
 AC_MSG_CHECKING(for first word less position factor in relevance)
 AC_ARG_WITH(lessposfactor,
 [  --with-lessposfactor=NUM    Define NUM as factor of first word position in relevance calculation. 
-                          Default value is --with-positionfactor multyply by 4.],
+                          Default value is --with-posfactor multyply by 4.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_less_position_factor="$withval"
