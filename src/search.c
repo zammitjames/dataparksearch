@@ -798,7 +798,7 @@ int main(int argc, char **argv, char **envp) {
 		DpsFree(eu);
 		DpsFree(edm);
 
-		if (DpsVarListFindInt(&Doc->Sections, "ST", 0) && (DpsVarListFindStr(&Doc->Sections, "Z", NULL) == NULL)) {
+		if (/*DpsVarListFindInt(&Doc->Sections, "ST", 0) && */(DpsVarListFindStr(&Doc->Sections, "Z", NULL) == NULL)) {
 			DpsVarListReplaceInt(&Agent->Vars, "ST", 1);
 			DpsVarListReplaceStr(&Agent->Vars, "stored_href", storedstr);
 		} else {
