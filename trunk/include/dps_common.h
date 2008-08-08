@@ -779,7 +779,7 @@ typedef struct {
 } DPS_CATEGORY;
 
 typedef struct {
-	int		cmd;
+        int		cmd, secno;
         int             origin, order_origin;
 /*	unsigned long	arg;          .order now */
   DPS_URL_CRD_DB        *pbegin, *pcur, *plast, *pchecked;

@@ -4289,17 +4289,19 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		  for(i = 0; i <= MAXMULTI + 1; i++) {
 		    if (pmerg[i].pcur != NULL) {
 		      while ((pmerg[i].pcur < pmerg[i].plast) && (pmerg[i].pcur->url_id == cur_url_id) ) {
-			Crd->url_id = pmerg[i].pcur->url_id;
 			Crd->coord = pmerg[i].pcur->coord;
-			Crd->coord &= 0xFFFFFF00;
-			Crd->coord += (Res->items[wordnum].wordnum /*order*/ & 0xFF);
+			if (pmerg[i].secno == 0 || DPS_WRDSEC(Crd->coord) == pmerg[i].secno) {
+			  Crd->url_id = pmerg[i].pcur->url_id;
+			  Crd->coord &= 0xFFFFFF00;
+			  Crd->coord += (Res->items[wordnum].wordnum /*order*/ & 0xFF);
 #ifdef WITH_MULTIDBADDR
-			Crd->dbnum = db->dbnum;
+			  Crd->dbnum = db->dbnum;
 /*			fprintf(stderr, "url_id: %x  dbnum:%d\n", Crd->url_id, Crd->dbnum);*/
 #endif		  
+			  pmerg[i].pchecked++;
+			  Crd++;
+			}
 			pmerg[i].pcur++;
-			pmerg[i].pchecked++;
-			Crd++;
 /*			pmerg[i].count++;*/
 		      }
 		    }
