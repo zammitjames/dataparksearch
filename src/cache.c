@@ -2128,16 +2128,18 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 		register DPS_URL_CRD_DB *Crd;
 		while ((pmerg[i]->db_pcur < pmerg[i]->db_plast) && (pmerg[i]->db_pcur->url_id == cur_url_id) ) {
 		  Crd = pmerg[i]->pchecked;
-		  Crd->url_id = pmerg[i]->db_pcur->url_id;
 		  Crd->coord = pmerg[i]->db_pcur->coord;
-		  Crd->coord &= 0xFFFFFF00;
-		  Crd->coord += (pmerg[i]->wordnum /*order*/ & 0xFF);
+		  if (pmerg[i]->secno == 0 || DPS_WRDSEC(Crd->coord) == pmerg[i]->secno) {
+		    Crd->url_id = pmerg[i]->db_pcur->url_id;
+		    Crd->coord &= 0xFFFFFF00;
+		    Crd->coord += (pmerg[i]->wordnum /*order*/ & 0xFF);
 #ifdef WITH_MULTIDBADDR
-		  Crd->dbnum = db->dbnum;
+		    Crd->dbnum = db->dbnum;
 #endif		  
+		    pmerg[i]->pchecked++;
+		    pmerg[i]->count++;
+		  }
 		  pmerg[i]->db_pcur++;
-		  pmerg[i]->pchecked++;
-		  pmerg[i]->count++;
 		}
 	      } else {
 		while ((pmerg[i]->db_pcur < pmerg[i]->db_plast) && (pmerg[i]->db_pcur->url_id == cur_url_id) ) {

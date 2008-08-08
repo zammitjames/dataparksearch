@@ -855,6 +855,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	state.sy = DpsVarListFindInt(&query->Vars, "sy", 0);
 	state.nphrasecmd = 0;
 	state.qlang = DpsVarListFindStr(&query->Vars, "g", NULL);
+	state.secno = 0;
 
 	if (state.qlang == NULL || *(state.qlang) == '\0') 
 	  rlang = DpsLanguageCanonicalName(DpsVarListFindStr(&query->Vars, "g-lc", NULL));
@@ -1102,7 +1103,13 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      }
 	    }
 
-	    if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "AND") == 0)) {
+	    if (!(state.nphrasecmd & 1) && (strncasecmp(clex, "allin", 5) == 0)) {
+	      DPS_VAR *var = DpsVarListFind(&query->Conf->Sections, &clex[5]);
+	      state.secno = (var) ? var->section : 0;
+	      fprintf(stderr, "allincmd:  %s %x [%d]\n", &clex[5], var, state.secno);
+	      lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte);
+	      goto token_next;
+	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "AND") == 0)) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_AND;
 	      state.cmd = add_cmd;
@@ -1664,6 +1671,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      DPS_FREE(seg_ustr);
 	    }
 	  }
+	token_next:
 	  lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte);
 	}
 	if (state.nphrasecmd & 1) {
