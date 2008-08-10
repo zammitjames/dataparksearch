@@ -815,13 +815,27 @@ static dpsunicode_t * DpsVQLparse(dpsunicode_t *query) {
   return (dpsunicode_t*)Q.data;
 }
 
+#ifdef HAVE_ASPELL
+
+#define DPS_PREPARE_RETURN(x)   	DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); \
+			      DpsDSTRFree(&suggest); \
+			      DPS_FREE(state.secno); \
+			      TRACE_OUT(query); \
+			      return (x); 
+#else
+#define DPS_PREPARE_RETURN(x)   	DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); \
+			      DPS_FREE(state.secno); \
+			      TRACE_OUT(query); \
+			      return (x); 
+#endif
+
 
 int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
         DPS_PREPARE_STATE state;
 	DPS_CONV bc_uni;
 	DPS_CHARSET * browser_cs, *sys_int;
 	int  ctype, seg_ctype;
-	dpsunicode_t *ustr, *nfc, *lt, *lex, *seg_ustr, *seg_lt, *seg_lex;
+	dpsunicode_t *ustr, *nfc, *lt, *lex, *seg_ustr = NULL, *seg_lt, *seg_lex;
 	int search_mode = DpsSearchMode(DpsVarListFindStr(&query->Vars, "m", "all"));
 	int word_match   = DpsVarListFindInt(&query->Vars, "wm", DPS_MATCH_FULL);
 	int add_cmd = DPS_STACK_AND;
@@ -855,7 +869,9 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	state.sy = DpsVarListFindInt(&query->Vars, "sy", 0);
 	state.nphrasecmd = 0;
 	state.qlang = DpsVarListFindStr(&query->Vars, "g", NULL);
-	state.secno = 0;
+	state.secno = DpsXmalloc((state.n_secno = 256) * sizeof(state.secno[0]));
+	if (state.secno == NULL) {TRACE_OUT(query); return 0; }
+	state.secno[0] = 0;
 
 	if (state.qlang == NULL || *(state.qlang) == '\0') 
 	  rlang = DpsLanguageCanonicalName(DpsVarListFindStr(&query->Vars, "g-lc", NULL));
@@ -893,6 +909,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef HAVE_ASPELL
 	  DpsDSTRFree(&suggest); 
 #endif
+	  DPS_FREE(state.secno);
 	  TRACE_OUT(query);
 	  return 0; 
 	}
@@ -901,6 +918,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef HAVE_ASPELL
 	  DpsDSTRFree(&suggest); 
 #endif
+	  DPS_FREE(state.secno);
 	  TRACE_OUT(query);
 	  return 0; 
 	}
@@ -915,6 +933,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef HAVE_ASPELL
 		DpsDSTRFree(&suggest); 
 #endif
+		DPS_FREE(state.secno);
 		TRACE_OUT(query);
 		return 0;
 	}
@@ -934,6 +953,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef HAVE_ASPELL
 		DpsDSTRFree(&suggest); 
 #endif
+		DPS_FREE(state.secno);
 		TRACE_OUT(query);
 		return 0;
 	}
@@ -958,6 +978,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef HAVE_ASPELL
 	  DpsDSTRFree(&suggest); 
 #endif
+	  DPS_FREE(state.secno);
 	  TRACE_OUT(query);
 	  return 0;
 	}
@@ -1006,8 +1027,21 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			case '+': cur_cmd = DPS_STACK_AND;  notfirstword = 0; break;
 			case '|': cur_cmd = DPS_STACK_OR;  notfirstword = 0; break;
 			case '~': cur_cmd = DPS_STACK_NOT; notfirstword = 0; break;
-			case '(': cur_cmd = DPS_STACK_LEFT; notfirstword = 0; break;
-			case ')': cur_cmd = DPS_STACK_RIGHT; notfirstword = 0; break;
+			case '(': cur_cmd = DPS_STACK_LEFT; notfirstword = 0; 
+			  if (++state.p_secno >= state.n_secno) {
+			    state.n_secno += 64;
+			    state.secno = DpsRealloc(state.secno, state.n_secno * sizeof(state.secno[0]));
+			    if (state.secno == NULL) {
+			      DPS_PREPARE_RETURN(DPS_ERROR);
+			    }
+			  }
+			  state.secno[state.p_secno] = state.secno[state.p_secno - 1];
+			  break;
+			case ')': cur_cmd = DPS_STACK_RIGHT; notfirstword = 0; 
+			  if (state.p_secno > 0) {
+			    state.p_secno--;
+			  }
+			  break;
 			case '*': cur_cmd = DPS_STACK_ANYWORD; notfirstword = 0; break;
 			case 171:  /* &#171; - left << */
 			case 187:  /* &#187; - right >> */
@@ -1022,12 +1056,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			      state.cmd = add_cmd;
 			      state.add_cmd = add_cmd;
 			      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-				DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-				DpsDSTRFree(&suggest); 
-#endif
-				TRACE_OUT(query);
-				return 0;
+				DPS_PREPARE_RETURN(0);
 			      }
 			    }
 			    notfirstword = 0;
@@ -1041,12 +1070,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			state.cmd = cur_cmd;
 			state.add_cmd = add_cmd;
 			if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			  DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-			  DpsDSTRFree(&suggest); 
-#endif
-			  TRACE_OUT(query);
-			  return 0;
+			  DPS_PREPARE_RETURN(0);
 			}
 	      }
 #ifdef HAVE_ASPELL
@@ -1064,23 +1088,13 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		    state.cmd = add_cmd;
 		    state.add_cmd = add_cmd;
 		    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		      DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		      DpsDSTRFree(&suggest); 
-#endif
-		      TRACE_OUT(query);
-		      return 0;
+		      DPS_PREPARE_RETURN(0);
 		    }
 		  }
 		  state.cmd = DPS_STACK_PHRASE_LEFT;
 		  state.add_cmd = add_cmd;
 		  if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		    DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		    DpsDSTRFree(&suggest); 
-#endif
-		    TRACE_OUT(query);
-		    return 0;
+		    DPS_PREPARE_RETURN(0);
 		  }
 		  notfirstword = 0;
 		  Res->phrase = 1;
@@ -1093,20 +1107,14 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		state.add_cmd = add_cmd;
 		notfirstword = 1;
 		if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		  DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		  DpsDSTRFree(&suggest); 
-#endif
-		  TRACE_OUT(query);
-		  return 0;
+		  DPS_PREPARE_RETURN(0);
 		}
 	      }
 	    }
 
 	    if (!(state.nphrasecmd & 1) && (strncasecmp(clex, "allin", 5) == 0)) {
 	      DPS_VAR *var = DpsVarListFind(&query->Conf->Sections, &clex[5]);
-	      state.secno = (var) ? var->section : 0;
-	      fprintf(stderr, "allincmd:  %s %x [%d]\n", &clex[5], var, state.secno);
+	      state.secno[state.p_secno] = (var) ? var->section : 0;
 	      lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte);
 	      goto token_next;
 	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "AND") == 0)) {
@@ -1114,12 +1122,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      state.cmd = DPS_STACK_AND;
 	      state.cmd = add_cmd;
 	      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		DpsDSTRFree(&suggest); 
-#endif
-		TRACE_OUT(query);
-		return 0;
+		DPS_PREPARE_RETURN(0);
 	      }
 #ifdef HAVE_ASPELL
 	      if (use_aspellext) {
@@ -1131,12 +1134,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      state.cmd = DPS_STACK_NEAR;
 	      state.add_cmd = add_cmd;
 	      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		DpsDSTRFree(&suggest); 
-#endif
-		TRACE_OUT(query);
-		return 0;
+		DPS_PREPARE_RETURN(0);
 	      }
 #ifdef HAVE_ASPELL
 	      if (use_aspellext) {
@@ -1148,12 +1146,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      state.cmd = DPS_STACK_ANYWORD;
 	      state.add_cmd = add_cmd;
 	      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		DpsDSTRFree(&suggest); 
-#endif
-		TRACE_OUT(query);
-		return 0;
+		DPS_PREPARE_RETURN(0);
 	      }
 #ifdef HAVE_ASPELL
 	      if (use_aspellext) {
@@ -1165,12 +1158,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      state.cmd = DPS_STACK_ANYWORD;
 	      state.add_cmd = add_cmd;
 	      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		DpsDSTRFree(&suggest); 
-#endif
-		TRACE_OUT(query);
-		return 0;
+		DPS_PREPARE_RETURN(0);
 	      }
 #ifdef HAVE_ASPELL
 	      if (use_aspellext) {
@@ -1182,12 +1170,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      state.cmd = DPS_STACK_OR;
 	      state.add_cmd = add_cmd;
 	      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		DpsDSTRFree(&suggest); 
-#endif
-		TRACE_OUT(query);
-		return 0;
+		DPS_PREPARE_RETURN(0);
 	      }
 #ifdef HAVE_ASPELL
 	      if (use_aspellext) {
@@ -1199,12 +1182,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	      state.cmd = DPS_STACK_NOT;
 	      state.add_cmd = add_cmd;
 	      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		DpsDSTRFree(&suggest); 
-#endif
-		TRACE_OUT(query);
-		return 0;
+		DPS_PREPARE_RETURN(0);
 	      }
 #ifdef HAVE_ASPELL
 	      if (use_aspellext) {
@@ -1236,12 +1214,12 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		    /* Create write and read pipe */
 		    if (pipe(rd) == -1){
 		      DpsLog(query, DPS_LOG_ERROR, "DpsPrepare: Cannot make a pipe");
-		      return DPS_ERROR;
+		      DPS_PREPARE_RETURN(DPS_ERROR);
 		    }    
 		    /* Fork a clild */
 		    if ((query->aspell_pid[query->naspell] = fork()) == -1) {
 		      DpsLog(query, DPS_LOG_ERROR, "Cannot spawn a child");
-		      return DPS_ERROR;
+		      DPS_PREPARE_RETURN(DPS_ERROR);
 		    }
 		    if (query->aspell_pid[query->naspell] > 0) {
 		      /* Parent process */
@@ -1307,12 +1285,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		  state.cmd = add_cmd;
 		  state.add_cmd = add_cmd;
 		  if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		    DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		    DpsDSTRFree(&suggest); 
-#endif
-		    TRACE_OUT(query);
-		    return 0;
+		    DPS_PREPARE_RETURN(0);
 		  }
 		}
 
@@ -1322,12 +1295,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		state.cmd = DPS_STACK_LEFT;
 		state.add_cmd = add_cmd;
 		if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		  DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		  DpsDSTRFree(&suggest); 
-#endif
-		  TRACE_OUT(query);
-		  return 0;
+		  DPS_PREPARE_RETURN(0);
 		}
 
 		if(word_match==DPS_MATCH_FULL){
@@ -1357,12 +1325,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 /*		state.order = *(state.ORDER);*/
 		  state.origin = wrd_cmd;
 		  if (DpsAddStackItem(query, Res, &state, wrd, uwrd) != DPS_OK) {
-		    DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-		    DpsDSTRFree(&suggest); 
-#endif
-		    TRACE_OUT(query);
-		    return 0;
+		    DPS_FREE(uwrddup);
+		    DPS_PREPARE_RETURN(0);
 		  }
 		  OWord.len = dps_strlen(wrd);
 		  OWord.order = state.order;
@@ -1379,12 +1343,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 
 		  state.have_bukva_forte = seg_have_bukva_forte;
 		  if (DPS_OK != DpsExpandWord(query, Res, &OWord, &state)) {
-		    DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-		    DpsDSTRFree(&suggest); 
-#endif
-		    TRACE_OUT(query);
-		    return 0;
+		    DPS_FREE(uwrddup);
+		    DPS_PREPARE_RETURN(0);
 		  }
 
 #if 1
@@ -1396,23 +1356,15 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		      state.cmd = DPS_STACK_OR;
 		      state.add_cmd = add_cmd;
 		      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			DpsDSTRFree(&suggest); 
-#endif
-			TRACE_OUT(query);
-			return 0;
+			DPS_FREE(uwrddup);
+			DPS_PREPARE_RETURN(0);
 		      }
 		      if (first->unroll.nwords > 1) {
 			state.cmd = DPS_STACK_PHRASE_LEFT;
 			state.add_cmd = add_cmd;
 			if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			  DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			  DpsDSTRFree(&suggest); 
-#endif
-			  TRACE_OUT(query);
-			  return 0;
+			  DPS_FREE(uwrddup);
+			  DPS_PREPARE_RETURN(0);
 			}
 		      }
 		      { register size_t z;
@@ -1422,23 +1374,15 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			    state.cmd = DPS_STACK_AND;
 			    state.add_cmd = add_cmd;
 			    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			      DpsDSTRFree(&suggest); 
-#endif
-			      TRACE_OUT(query);
-			      return 0;
+			      DPS_FREE(uwrddup);
+			      DPS_PREPARE_RETURN(0);
 			    }
 			  }
 			  state.cmd = DPS_STACK_LEFT;
 			  state.add_cmd = add_cmd;
 			  if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			    DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			    DpsDSTRFree(&suggest); 
-#endif
-			    TRACE_OUT(query);
-			    return 0;
+			    DPS_FREE(uwrddup);
+			    DPS_PREPARE_RETURN(0);
 			  }
 
 #if 1
@@ -1446,12 +1390,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			  state.add_cmd = add_cmd;
 			  state.origin = DPS_WORD_ORIGIN_ACRONYM;
 			  if (DpsAddStackItem(query, Res, &state, first->unroll.Word[z].word, first->unroll.Word[z].uword) != DPS_OK) {
-			    DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			    DpsDSTRFree(&suggest); 
-#endif
-			    TRACE_OUT(query);
-			    return 0;
+			    DPS_FREE(uwrddup);
+			    DPS_PREPARE_RETURN(0);
 			  }
 			  OWord.uword = first->unroll.Word[z].uword;
 			  OWord.ulen = DpsUniLen(first->unroll.Word[z].uword);
@@ -1460,12 +1400,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			    state.nphrasecmd = 1/*(first->unroll.nwords > 1) ? 1 : 0*/;
 			    state.have_bukva_forte = 0;
 			    if (DPS_OK != DpsExpandWord(query, Res, &OWord, &state)) {
-			      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			      DpsDSTRFree(&suggest); 
-#endif
-			      TRACE_OUT(query);
-			      return 0;
+			      DPS_FREE(uwrddup);
+			      DPS_PREPARE_RETURN(0);
 			    }
 			    state.nphrasecmd = nphrasecmd;
 			  }
@@ -1477,24 +1413,16 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			    if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_STOP, 
 						first->unroll.Word[z].word, 
 						first->unroll.Word[z].uword, qlang) != DPS_OK) {
-			      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			      DpsDSTRFree(&suggest); 
-#endif
-			      TRACE_OUT(query);
-			      return 0;
+			      DPS_FREE(uwrddup);
+			      DPS_PREPARE_RETURN(0);
 			    }
 			    Res->items[ORDER].order_origin |= DPS_WORD_ORIGIN_STOP;
 			  } else {
 			    if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_ACRONYM, 
 						first->unroll.Word[z].word, 
 						first->unroll.Word[z].uword, qlang) != DPS_OK) {
-			      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			      DpsDSTRFree(&suggest); 
-#endif
-			      TRACE_OUT(query);
-			      return 0;
+			      DPS_FREE(uwrddup);
+			      DPS_PREPARE_RETURN(0);
 			    }
 			    OWord.uword = first->unroll.Word[z].uword;
 			    OWord.ulen = DpsUniLen(first->unroll.Word[z].uword);
@@ -1504,12 +1432,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			    local.nphrasecmd = 1 /*(first->unroll.nwords > 1) ? 1 : 0*/;
 			    local.have_bukva_forte = 0;
 			    if (DPS_OK != DpsExpandWord(query, Res, &OWord, &local)) {
-			      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			      DpsDSTRFree(&suggest); 
-#endif
-			      TRACE_OUT(query);
-			      return 0;
+			      DPS_FREE(uwrddup);
+			      DPS_PREPARE_RETURN(0);
 			    }
 			  }
 #endif
@@ -1517,12 +1441,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			  state.cmd = DPS_STACK_RIGHT;
 			  state.add_cmd = add_cmd;
 			  if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			    DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			    DpsDSTRFree(&suggest); 
-#endif
-			    TRACE_OUT(query);
-			    return 0;
+			    DPS_FREE(uwrddup);
+			    DPS_PREPARE_RETURN(0);
 			  }
 			}
 		      }
@@ -1530,12 +1450,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			state.cmd = DPS_STACK_PHRASE_RIGHT;
 			state.add_cmd = add_cmd;
 			if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			  DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			  DpsDSTRFree(&suggest); 
-#endif
-			  TRACE_OUT(query);
-			  return 0;
+			  DPS_FREE(uwrddup);
+			  DPS_PREPARE_RETURN(0);
 			}
 		      }
 		      first++;
@@ -1547,22 +1463,14 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		    state.cmd = DPS_STACK_OR;
 		    state.add_cmd = add_cmd;
 		    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-		      DpsDSTRFree(&suggest); 
-#endif
-		      TRACE_OUT(query);
-		      return 0;
+		      DPS_FREE(uwrddup);
+		      DPS_PREPARE_RETURN(0);
 		    }
 		    state.cmd = DPS_STACK_PHRASE_LEFT;
 		    state.add_cmd = add_cmd;
 		    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-		      DpsDSTRFree(&suggest); 
-#endif
-		      TRACE_OUT(query);
-		      return 0;
+		      DPS_FREE(uwrddup);
+		      DPS_PREPARE_RETURN(0);
 		    }
 /***********************************************/
 		    while(l_tok) {
@@ -1572,23 +1480,15 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			state.cmd = DPS_STACK_AND;
 			state.add_cmd = add_cmd;
 			if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			  DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			  DpsDSTRFree(&suggest); 
-#endif
-			  TRACE_OUT(query);
-			  return 0;
+			  DPS_FREE(uwrddup);
+			  DPS_PREPARE_RETURN(0);
 			}
 		      }
 		      state.cmd = DPS_STACK_LEFT;
 		      state.add_cmd = add_cmd;
 		      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			DpsDSTRFree(&suggest); 
-#endif
-			TRACE_OUT(query);
-			return 0;
+			DPS_FREE(uwrddup);
+			DPS_PREPARE_RETURN(0);
 		      }
 		      dps_memcpy(uwrd, l_tok, (dps_min(wlen, query->WordParam.max_word_len)) * sizeof(dpsunicode_t)); /* was: dps_memmove */
 		      uwrd[dps_min(wlen, query->WordParam.max_word_len)] = 0;
@@ -1598,12 +1498,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		      state.add_cmd = add_cmd;
 		      state.origin = wrd_cmd;
 		      if (DpsAddStackItem(query, Res, &state, wrd, uwrd) != DPS_OK) {
-			DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			DpsDSTRFree(&suggest); 
-#endif
-			TRACE_OUT(query);
-			return 0;
+			DPS_FREE(uwrddup);
+			DPS_PREPARE_RETURN(0);
 		      }
 		      OWord.len = dps_strlen(wrd);
 		      OWord.order = state.order;
@@ -1619,22 +1515,14 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 
 		      state.have_bukva_forte = l_forte;
 		      if (DPS_OK != DpsExpandWord(query, Res, &OWord, &state)) {
-			DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			DpsDSTRFree(&suggest); 
-#endif
-			TRACE_OUT(query);
-			return 0;
+			DPS_FREE(uwrddup);
+			DPS_PREPARE_RETURN(0);
 		      }
 		      state.cmd = DPS_STACK_RIGHT;
 		      state.add_cmd = add_cmd;
 		      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-			DpsDSTRFree(&suggest); 
-#endif
-			TRACE_OUT(query);
-			return 0;
+			DPS_FREE(uwrddup);
+			DPS_PREPARE_RETURN(0);
 		      }
 		      l_tok = DpsUniGetToken(NULL, &l_lt, &l_forte, 1);
 		    }
@@ -1642,12 +1530,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		    state.cmd = DPS_STACK_PHRASE_RIGHT;
 		    state.add_cmd = add_cmd;
 		    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		      DPS_FREE(uwrd); DPS_FREE(wrd);  DPS_FREE(seg_ustr); DPS_FREE(ustr); DPS_FREE(Res->items); DPS_FREE(uwrddup);
-#ifdef HAVE_ASPELL
-		      DpsDSTRFree(&suggest); 
-#endif
-		      TRACE_OUT(query);
-		      return 0;
+		      DPS_FREE(uwrddup);
+		      DPS_PREPARE_RETURN(0);
 		    }
 		    
 
@@ -1658,12 +1542,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		state.cmd = DPS_STACK_RIGHT;
 		state.add_cmd = add_cmd;
 		if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-		  DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-		  DpsDSTRFree(&suggest); 
-#endif
-		  TRACE_OUT(query);
-		  return 0;
+		  DPS_PREPARE_RETURN(0);
 		}
 	      seg_next:
 		seg_lex = DpsUniGetSepToken(NULL, &seg_lt, &seg_ctype, &seg_have_bukva_forte);
@@ -1689,12 +1568,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	    state.cmd = DPS_STACK_PHRASE_RIGHT;
 	    state.add_cmd = add_cmd;
 	    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-	      DPS_FREE(uwrd); DPS_FREE(wrd); DPS_FREE(ustr); DPS_FREE(Res->items);
-#ifdef HAVE_ASPELL
-	      DpsDSTRFree(&suggest); 
-#endif
-	      TRACE_OUT(query);
-	      return 0;
+	      DPS_PREPARE_RETURN(0);
 	    }
 	  }
 	}
@@ -1718,6 +1592,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	}
 #endif
 	Res->prepared = 1;
+	DPS_FREE(state.secno);
 	TRACE_OUT(query);
 	return(0);
 }
