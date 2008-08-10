@@ -1180,7 +1180,7 @@ typedef struct {
   int sp;
   int sy;
   int have_bukva_forte;
-  int secno;
+  int *secno, p_secno, n_secno;
   int nphrasecmd;
   int autophrase;
   size_t order, order_inquery;

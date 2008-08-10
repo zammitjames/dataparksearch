@@ -113,7 +113,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
       Res->items[Res->nitems].uword = NULL;
       Res->items[Res->nitems].pbegin = NULL;
       Res->items[Res->nitems].order_origin = 0;
-      Res->items[Res->nitems].secno = state->secno;
+      Res->items[Res->nitems].secno = state->secno[state->p_secno];
       Res->nitems++;
       Res->ncmds++;
 #ifdef DEBUG_BOOL
@@ -136,7 +136,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
       Res->items[Res->nitems].uword = NULL;
       Res->items[Res->nitems].pbegin = NULL;
       Res->items[Res->nitems].order_origin = 0;
-      Res->items[Res->nitems].secno = state->secno;
+      Res->items[Res->nitems].secno = state->secno[state->p_secno];
       Res->nitems++;
       Res->ncmds++;
 #ifdef DEBUG_BOOL
@@ -158,7 +158,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
   Res->items[Res->nitems].pbegin = NULL;
   Res->items[Res->nitems].order_origin = 0;
   Res->items[Res->nitems].wordnum = Res->nitems;
-  Res->items[Res->nitems].secno = state->secno;
+  Res->items[Res->nitems].secno = state->secno[state->p_secno];
   Res->nitems++;
   if (state->cmd != DPS_STACK_WORD) {
     Res->ncmds++;
