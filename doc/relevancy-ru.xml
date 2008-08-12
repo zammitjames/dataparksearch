@@ -189,7 +189,9 @@ PopRankPostpone yes
 <indexterm><primary>Булевы запросы</primary><secondary>релевантность</secondary></indexterm>
 </title>
 		<para>При булевом поиске, состоящем из двух и более слов, необходимо вводить операторы (&amp;, |, ~).
-Т.е. необходимо вводить <userinput>a &amp; book</userinput> вместо <userinput>a book</userinput>.</para>
+Т.е. необходимо вводить <userinput>a &amp; book</userinput> вместо <userinput>a book</userinput>.
+См. также <xref linkend="search-bool"/>.
+</para>
 
 	</sect2>
 

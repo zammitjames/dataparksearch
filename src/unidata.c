@@ -156,9 +156,9 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 /* Parses null terminated  UNICODE string  */
 /* Returns all tokens including separators */
 
-dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last, int *ctype0, int *have_bukva_forte){
+dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last, int *ctype0, int *have_bukva_forte, int cmd_mode) {
   int ctype, plane, ctype_1, plane_1, ctype_forte, ctype_forte_1, isPatternSyntax;
-	dpsunicode_t *beg;
+  dpsunicode_t *beg;
 
 	if(s == NULL && (s=*last) == NULL)
 		return NULL;
@@ -186,14 +186,21 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 			ctype_forte = (dps_uni_plane[plane].ctype <= DPS_UNI_BUKVA_FORTE);
 		}
 
-		if ((*s == 0x27 || *s == 0x2019) && (*ctype0 <= DPS_UNI_BUKVA)) {
-		  if (dps_isApostropheBreak(*(s+1), (*(s+1)==0) ? 0 : *(s+2) )) { s++; break; }
+		if (((*s == 0x27 || *s == 0x2019) && (*ctype0 <= DPS_UNI_BUKVA)) || cmd_mode) {
 		  plane_1 = ((*(s+1)) >> 8) & 0xFF;
 		  if(dps_uni_plane[plane_1].table){
 		    ctype_1 = DPS_UNI_CTYPECLASS(dps_uni_plane[plane_1].table[(*(s+1)) & 0xFF].ctype);
-		    ctype_forte_1 = (dps_uni_plane[plane_1].table[(*s)&0xFF].ctype <= DPS_UNI_BUKVA_FORTE);
 		  }else{
 		    ctype_1 = DPS_UNI_CTYPECLASS(dps_uni_plane[plane_1].ctype);
+		  }
+		}
+
+
+		if ((*s == 0x27 || *s == 0x2019) && (*ctype0 <= DPS_UNI_BUKVA)) {
+		  if (dps_isApostropheBreak(*(s+1), (*(s+1)==0) ? 0 : *(s+2) )) { s++; break; }
+		  if(dps_uni_plane[plane_1].table){
+		    ctype_forte_1 = (dps_uni_plane[plane_1].table[(*s)&0xFF].ctype <= DPS_UNI_BUKVA_FORTE);
+		  }else{
 		    ctype_forte_1 = (dps_uni_plane[plane_1].ctype <= DPS_UNI_BUKVA_FORTE);
 		  }
 		  if (ctype_1 <= DPS_UNI_BUKVA) {
@@ -202,13 +209,16 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 		    s++;
 		  }
 		}
-		
-/*		fprintf(stderr, "ctype0: %d  ctype: %d  *s: %x (%d)\n", *ctype0, ctype, *s, *s);*/
+
+/*		fprintf(stderr, "ctype0: %02d  ctype:%02d  *s: %02x (%03d) -- ctype_1:%02d *(s+1): %02x (%03d)\n", 
+			*ctype0, ctype, *s, *s, ctype_1, *(s+1), *(s+1));*/
 
 /*		if(*ctype0!=ctype)*/
 		if ((*ctype0 > DPS_UNI_BUKVA && ctype <= DPS_UNI_BUKVA) 
-		    || (*ctype0 <= DPS_UNI_BUKVA && ctype > DPS_UNI_BUKVA && !dps_isPatternSyntax(*s)))
+		    || (*ctype0 <= DPS_UNI_BUKVA && ctype > DPS_UNI_BUKVA && !dps_isPatternSyntax(*s))) {
+		  if (!cmd_mode || *(s+1) == 0 || ((*s != 0x2e) && (ctype_1 <= DPS_UNI_BUKVA)))
 			break;
+		}
 
 		*have_bukva_forte &= ctype_forte;
 

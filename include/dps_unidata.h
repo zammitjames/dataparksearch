@@ -73,7 +73,8 @@ extern __C_LINK void __DPSCALL DpsUniStrToLower(dpsunicode_t * unistr);
 extern int  DpsUniCType(dpsunicode_t u);
 
 extern dpsunicode_t  *DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_bukva_forte, int loose);
-extern __C_LINK dpsunicode_t  * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t ** last, int *ctype0, int *have_bukva_forte);
+extern __C_LINK dpsunicode_t  * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t ** last, int *ctype0, int *have_bukva_forte,
+							    int cmd_mode);
 
 extern dpsunicode_t *DpsUniNormalizeNFC(dpsunicode_t *buf, dpsunicode_t *str);
 extern dpsunicode_t *DpsUniNormalizeNFD(dpsunicode_t *buf, dpsunicode_t *str);

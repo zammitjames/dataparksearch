@@ -378,6 +378,31 @@ installation.</para>
 		</orderedlist>
 	</sect2>
 
+<sect2 id="search-operators">
+<title>Search operators</title>
+<para>The operator <command>allin&lt;section&gt;:</command>, 
+where &lt;section&gt; is the name of a section, defined in <filename>sections.conf</filename> file 
+(or in any dpsearch's configuration file by <command>Section</command> command) with non-zero section number 
+(see <xref linkend="section_cmd"/>), 
+that operator allows to limit the search domain for a query word by the section specified.</para>
+
+
+<para>This operator differ from limiting search domain using &amp;wf= CGI-variable in a way, 
+that such limit is imposing only on query words specified after this operator.</para>
+
+<para>For example, if you have the following commands in <filename>sections.conf</filename> file
+<programlisting>
+Section body 1 256
+Section title 2 128
+Section url 3 0 strict
+</programlisting>
+then you can use the following operators in search query: <command>allinbody:</command>, <command>allintitle:</command> and 
+<command>allinurl:</command>.</para>
+
+<para>For the query <userinput>computer allintitle: science</userinput> it will be found the documents that contain the word 
+"science" in the title and the word "computer" in any document section.</para>
+</sect2>
+
 	<sect2 id="search-bool">
 		<title>Advanced boolean search</title>
 <indexterm><primary>Boolean search</primary><secondary>advanced</secondary></indexterm>

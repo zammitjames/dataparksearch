@@ -1008,7 +1008,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	ustr = nfc;
 /*	ustr = DpsUniSegment(query, nfc, lang);*/
 
-	lex = (ustr != NULL) ? DpsUniGetSepToken(ustr, &lt , &ctype, &have_bukva_forte) : NULL;
+	lex = (ustr != NULL) ? DpsUniGetSepToken(ustr, &lt , &ctype, &have_bukva_forte, 1) : NULL;
 	while(lex) {
 	  wlen = lt - lex;
 	  dps_memcpy(uwrd, lex, (dps_min(wlen, query->WordParam.max_word_len)) * sizeof(dpsunicode_t)); /* was: dps_memmove */
@@ -1115,7 +1115,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	    if (!(state.nphrasecmd & 1) && (strncasecmp(clex, "allin", 5) == 0)) {
 	      DPS_VAR *var = DpsVarListFind(&query->Conf->Sections, &clex[5]);
 	      state.secno[state.p_secno] = (var) ? var->section : 0;
-	      lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte);
+	      lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 1);
 	      goto token_next;
 	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "AND") == 0)) {
 	      notfirstword = 0;
@@ -1193,7 +1193,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 
 	      seg_ustr = (dps_need2segment(uwrd)) ? DpsUniSegment(query, DpsUniDup(uwrd), lang) : DpsUniDup(uwrd);
 
-	      seg_lex = (seg_ustr != NULL) ? DpsUniGetSepToken(seg_ustr, &seg_lt , &seg_ctype, &seg_have_bukva_forte) : NULL;
+	      seg_lex = (seg_ustr != NULL) ? DpsUniGetSepToken(seg_ustr, &seg_lt , &seg_ctype, &seg_have_bukva_forte, 0) : NULL;
 
 	      while (seg_lex) {
 		if (DPS_UNI_CTYPECLASS(seg_ctype) != DPS_UNI_BUKVA) goto seg_next;
@@ -1545,13 +1545,13 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		  DPS_PREPARE_RETURN(0);
 		}
 	      seg_next:
-		seg_lex = DpsUniGetSepToken(NULL, &seg_lt, &seg_ctype, &seg_have_bukva_forte);
+		seg_lex = DpsUniGetSepToken(NULL, &seg_lt, &seg_ctype, &seg_have_bukva_forte, 0);
 	      }
 	      DPS_FREE(seg_ustr);
 	    }
 	  }
 	token_next:
-	  lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte);
+	  lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 1);
 	}
 	if (state.nphrasecmd & 1) {
 	  if ((Res->nitems > 0) && (Res->items[Res->nitems-1].cmd == DPS_STACK_PHRASE_LEFT)) {
@@ -2942,7 +2942,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 */
 
 	/* Parse unicode string */
-	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte);
+	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte, 0);
 	while(tok){
 		int found=0;
 		size_t slen,flen;
@@ -2980,7 +2980,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 		if (found) { *zend = '\3'; zend++; /*dps_strcat(htxt,"\3");*/ }
 		tok[flen]=euchar;
 
-		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte);
+		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 0);
 	}
 	*zend = '\0';
 	DPS_FREE(hpart);

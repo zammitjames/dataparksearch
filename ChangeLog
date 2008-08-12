@@ -3,7 +3,7 @@ History
 -------
 
 Latest snapshot:
-	* allin<section> operator has been added to the search query language.
+	* allin<section>: operator has been added to the search query language.
 	* storedoc.cgi takes now document from remote host if it unable to fetch it from stored database.
 	
 26 Jul 2008: 4.50
