@@ -245,7 +245,7 @@ CLASS="application"
 >Verity Query Language</SPAN
 > (prefix variant), see <A
 HREF="dpsearch-doingsearch.en.html#vql"
->Section 8.1.7</A
+>Section 8.1.8</A
 >. To use this parameter, you need to leave empty the q parameter.</TD
 ></TR
 ><TR
@@ -1026,11 +1026,72 @@ CLASS="sect2"
 ><H2
 CLASS="sect2"
 ><A
+NAME="search-operators"
+>8.1.6. Search operators</A
+></H2
+><P
+>The operator <B
+CLASS="command"
+>allin&#60;section&#62;:</B
+>, 
+where &#60;section&#62; is the name of a section, defined in <TT
+CLASS="filename"
+>sections.conf</TT
+> file 
+(or in any dpsearch's configuration file by <B
+CLASS="command"
+>Section</B
+> command) with non-zero section number 
+(see <A
+HREF="dpsearch-indexcmd.en.html#section_cmd"
+>Section 3.10.42</A
+>), 
+that operator allows to limit the search domain for a query word by the section specified.</P
+><P
+>This operator differ from limiting search domain using &#38;wf= CGI-variable in a way, 
+that such limit is imposing only on query words specified after this operator.</P
+><P
+>For example, if you have the following commands in <TT
+CLASS="filename"
+>sections.conf</TT
+> file
+<PRE
+CLASS="programlisting"
+>&#13;Section body 1 256
+Section title 2 128
+Section url 3 0 strict
+</PRE
+>
+then you can use the following operators in search query: <B
+CLASS="command"
+>allinbody:</B
+>, <B
+CLASS="command"
+>allintitle:</B
+> and 
+<B
+CLASS="command"
+>allinurl:</B
+>.</P
+><P
+>For the query <TT
+CLASS="userinput"
+><B
+>computer allintitle: science</B
+></TT
+> it will be found the documents that contain the word 
+"science" in the title and the word "computer" in any document section.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
 NAME="search-bool"
->8.1.6. Advanced boolean search</A
+>8.1.7. Advanced boolean search</A
 ></H2
 ><A
-NAME="AEN4204"
+NAME="AEN4220"
 ></A
 ><P
 >If you want more advanced results you may use
@@ -1186,7 +1247,7 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="vql"
->8.1.7. The Verity Query Language, VQL</A
+>8.1.8. The Verity Query Language, VQL</A
 ></H2
 ><P
 >Only the prefix variant of the <SPAN
@@ -1334,7 +1395,7 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="search-exp"
->8.1.8. How search handles expired documents</A
+>8.1.9. How search handles expired documents</A
 ></H2
 ><P
 >Expired documents are still searchable with their old content.</P

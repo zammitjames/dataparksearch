@@ -243,8 +243,10 @@ PopRankPostpone yes
 <indexterm><primary>Boolean search</primary><secondary>relevance</secondary></indexterm>
 
 		<para>Please note that in case of boolean searching for two or more
-words, you have to enter operators (&amp;, |, ~). I.e. it is necessary
-to enter <userinput>a &amp; book</userinput> instead of <userinput>a book</userinput>.</para>
+words, you have to enter operators (&amp;, |, ~, AND, OR, NOT, NEAR, ALL, etc.). I.e. it is necessary
+to enter <userinput>a &amp; book</userinput> instead of <userinput>a book</userinput>.
+See also <xref linkend="search-bool"/>.
+</para>
 
 	</sect2>
 	<sect2 id="rel-cwords">

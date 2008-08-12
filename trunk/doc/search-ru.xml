@@ -341,6 +341,32 @@ Apache <filename>httpd.conf</filename>: </para>
         </para>   
 	</sect2>
 
+<sect2 id="search-operators">
+<title>Операторы происка</title>
+
+<para>Оператор <command>allin&lt;section&gt;:</command>, где &lt;section&gt; - имя любой секции, 
+определенной в файле конфигурации <filename>sections.conf</filename> (или командами <command>Section</command> в 
+<filename>indexer.conf</filename> или в <filename>search.htm</filename>/<filename>searchd.conf</filename>) и имеющей ненулевой номер 
+секции (см. <xref linkend="section_cmd"/>), 
+позволяет ограничить область поиска указываемого слова в поисковом запросе только заданой секцией.</para>
+
+<para>От ограничения поиска по секциям при помощи CGI-параметра &amp;wf= отличается тем, 
+что ограничение действует только на слова поискового запроса, указываемые после данного оператора.</para>
+
+<para>Например, если <filename>sections.conf</filename> содержит команды
+<programlisting> 
+Section body 1 256
+Section title 2 128
+Section url 3 0 strict
+</programlisting>
+то в поисковом запросе можно использовать операторы <command>allinbody:</command>, <command>allintitle:</command> и 
+<command>allinurl:</command>.</para>
+ 
+<para>По запросу <userinput>computer allintitle: science</userinput> будут найдены документы, 
+содержащие слово "science" в заголовке и слово "computer" в любой секции документа. </para>
+
+</sect2>
+
 	<sect2 id="search-bool">
 		<title>Булев поиск
 <indexterm><primary>Булев поиск</primary></indexterm>

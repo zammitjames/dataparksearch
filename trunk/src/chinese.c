@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -493,9 +493,9 @@ dpsunicode_t *DpsSegmentByFreq(DPS_CHINALIST *List, dpsunicode_t *line) {
   }
 /*  mid[j] = 0;*/
 
-  for (sentence = DpsUniGetSepToken(/*line*/ mid, &last, &ctype, &have_bukva_forte);
+  for (sentence = DpsUniGetSepToken(/*line*/ mid, &last, &ctype, &have_bukva_forte, 0);
        sentence;
-       sentence = DpsUniGetSepToken(NULL, &last, &ctype, &have_bukva_forte)) {
+       sentence = DpsUniGetSepToken(NULL, &last, &ctype, &have_bukva_forte, 0)) {
     part = *last;
     *last = 0;
     fb_type = DpsUniCType(*sentence);

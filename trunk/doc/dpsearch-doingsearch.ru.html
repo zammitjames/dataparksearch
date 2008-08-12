@@ -108,19 +108,19 @@ CLASS="literal"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN4564"
+NAME="AEN4583"
 ></A
 >
 <A
-NAME="AEN4566"
+NAME="AEN4585"
 ></A
 >
 <A
-NAME="AEN4569"
+NAME="AEN4588"
 ></A
 >
 <A
-NAME="AEN4572"
+NAME="AEN4591"
 ></A
 ></A
 ></DT
@@ -129,7 +129,7 @@ NAME="AEN4572"
 HREF="dpsearch-templates.ru.html"
 >Как создавать шаблоны результатов поиска
 <A
-NAME="AEN4622"
+NAME="AEN4641"
 ></A
 ></A
 ></DT
@@ -143,7 +143,7 @@ HREF="dpsearch-html.ru.html"
 HREF="dpsearch-rel.ru.html"
 >Релевантность
 <A
-NAME="AEN5183"
+NAME="AEN5202"
 ></A
 ></A
 ></DT
@@ -152,7 +152,7 @@ NAME="AEN5183"
 HREF="dpsearch-track.ru.html"
 >Регистрация поисковых запросов
 <A
-NAME="AEN5417"
+NAME="AEN5437"
 ></A
 ></A
 ></DT
@@ -161,7 +161,7 @@ NAME="AEN5417"
 HREF="dpsearch-srcache.ru.html"
 >Кэш результатов поиска
 <A
-NAME="AEN5448"
+NAME="AEN5468"
 ></A
 ></A
 ></DT
@@ -281,7 +281,7 @@ CLASS="application"
 >Verity Query Language</SPAN
 > (префиксный вариант), см <A
 HREF="dpsearch-doingsearch.ru.html#vql"
->&#1056;&#1072;&#1079;&#1076;. 8.1.7</A
+>&#1056;&#1072;&#1079;&#1076;. 8.1.8</A
 >. Чтобы использовать этот параметр, необходимо омтавить пустым параметр q.</TD
 ></TR
 ><TR
@@ -1108,10 +1108,81 @@ CLASS="sect2"
 ><H2
 CLASS="sect2"
 ><A
+NAME="search-operators"
+>8.1.6. Операторы происка</A
+></H2
+><P
+>Оператор <B
+CLASS="command"
+>allin&#60;section&#62;:</B
+>, где &#60;section&#62; - имя любой секции, 
+определенной в файле конфигурации <TT
+CLASS="filename"
+>sections.conf</TT
+> (или командами <B
+CLASS="command"
+>Section</B
+> в 
+<TT
+CLASS="filename"
+>indexer.conf</TT
+> или в <TT
+CLASS="filename"
+>search.htm</TT
+>/<TT
+CLASS="filename"
+>searchd.conf</TT
+>) и имеющей ненулевой номер 
+секции (см. <A
+HREF="dpsearch-indexcmd.ru.html#section_cmd"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.46</A
+>), 
+позволяет ограничить область поиска указываемого слова в поисковом запросе только заданой секцией.</P
+><P
+>От ограничения поиска по секциям при помощи CGI-параметра &#38;wf= отличается тем, 
+что ограничение действует только на слова поискового запроса, указываемые после данного оператора.</P
+><P
+>Например, если <TT
+CLASS="filename"
+>sections.conf</TT
+> содержит команды
+<PRE
+CLASS="programlisting"
+> 
+Section body 1 256
+Section title 2 128
+Section url 3 0 strict
+</PRE
+>
+то в поисковом запросе можно использовать операторы <B
+CLASS="command"
+>allinbody:</B
+>, <B
+CLASS="command"
+>allintitle:</B
+> и 
+<B
+CLASS="command"
+>allinurl:</B
+>.</P
+><P
+>По запросу <TT
+CLASS="userinput"
+><B
+>computer allintitle: science</B
+></TT
+> будут найдены документы, 
+содержащие слово "science" в заголовке и слово "computer" в любой секции документа. </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
 NAME="search-bool"
->8.1.6. Булев поиск
+>8.1.7. Булев поиск
 <A
-NAME="AEN4479"
+NAME="AEN4498"
 ></A
 ></A
 ></H2
@@ -1273,7 +1344,7 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="vql"
->8.1.7. Язык запросов Verity Query Language, VQL</A
+>8.1.8. Язык запросов Verity Query Language, VQL</A
 ></H2
 ><P
 ><SPAN
@@ -1418,7 +1489,7 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="search-exp"
->8.1.8. Как используются при поиске устаревшие документы</A
+>8.1.9. Как используются при поиске устаревшие документы</A
 ></H2
 ><P
 >Устаревшие документы продолжают включаться в результаты поиска по их старому содержимому до тех пор,
@@ -1485,19 +1556,19 @@ CLASS="literal"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN4564"
+NAME="AEN4583"
 ></A
 >
 <A
-NAME="AEN4566"
+NAME="AEN4585"
 ></A
 >
 <A
-NAME="AEN4569"
+NAME="AEN4588"
 ></A
 >
 <A
-NAME="AEN4572"
+NAME="AEN4591"
 ></A
 ></TD
 ></TR
