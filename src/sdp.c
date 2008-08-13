@@ -320,16 +320,18 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 				tok = dps_strtok_r(dinfo, "\r\n", &lt);
 				
 				while(tok){
-				        urlid_t Doc_url_id;
+				  urlid_t Doc_url_id, Res_Doc_url_id;
 					DPS_DOCUMENT Doc;
 					
 					DpsDocInit(&Doc);
 					DpsDocFromTextBuf(&Doc,tok);
 					Doc_url_id = (urlid_t)DpsVarListFindInt(&Doc.Sections, "DP_ID", 0);
 
-					for(i=0;i<Res->num_rows;i++){
-						urlid_t	Res_Doc_url_id = (urlid_t)DpsVarListFindInt(&Res->Doc[i].Sections, "DP_ID", 0);
-						
+					for(i=0;i<Res->num_rows;i++){				
+#ifdef WITH_MULTIDBADDR
+						if (D->dbnum != cl->dbnum) continue;
+#endif
+						Res_Doc_url_id = (urlid_t)DpsVarListFindInt(&Res->Doc[i].Sections, "DP_ID", 0);
 						if (Res_Doc_url_id == Doc_url_id) {
 						  DpsDocFromTextBuf(&Res->Doc[i], tok);
 						  break;
