@@ -4732,6 +4732,9 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 			urlid_t		url_id;
 
 			if (D->fetched) continue;
+#ifdef WITH_MULTIDBADDR
+			if (D->dbnum != dbnum) continue;
+#endif
 			url_id = DpsVarListFindInt(&D->Sections, "DP_ID", 0);	
 			for(i = 0; i < n; i++) {
 				if(url_id == DPS_ATOI(DpsSQLValue(&SQLres,i,0))) {
