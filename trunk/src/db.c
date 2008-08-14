@@ -1157,7 +1157,25 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 			}*/
 
 			dps_memmove(curwrd, wrdX[i], sizeof(*curwrd)*nwrdX[i]);
+#ifdef WITH_MULTIDBADDR
+			{
+			  register size_t length = nwrdX[i];
+			  register size_t n = (nwrdX[i] + 7) / 8;
+			  switch(length % 8) {
+			  case 0: do { curwrd->dbnum = i; curwrd++;
+			  case 7:      curwrd->dbnum = i; curwrd++;
+			  case 6:      curwrd->dbnum = i; curwrd++;
+			  case 5:      curwrd->dbnum = i; curwrd++;
+			  case 4:      curwrd->dbnum = i; curwrd++;
+			  case 3:      curwrd->dbnum = i; curwrd++;
+			  case 2:      curwrd->dbnum = i; curwrd++;
+			  case 1:      curwrd->dbnum = i; curwrd++;
+			    } while (--n > 0);
+			  }
+			}
+#else
 			curwrd+=nwrdX[i];
+#endif
 			DPS_FREE(wrdX[i]);
 			dps_memmove(curpersite, PerSite[i], sizeof(size_t) * nwrdX[i]);
 			curpersite += nwrdX[i];
