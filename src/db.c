@@ -1145,6 +1145,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 
 #else
 	    for (i = dbfrom; i < dbto; i++) {
+	      db = (A->flags & DPS_FLAG_UNOCON) ? &A->Conf->dbl.db[i] : &A->dbl.db[i];
 	      if (label != NULL && db->label == NULL) continue;
 	      if (label == NULL && db->label != NULL) continue;
 	      if (label != NULL && db->label != NULL && strcasecmp(db->label, label)) continue;
