@@ -1159,7 +1159,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 
 			dps_memmove(curwrd, wrdX[i], sizeof(*curwrd)*nwrdX[i]);
 #ifdef WITH_MULTIDBADDR
-			{
+			if (db->DBDriver == DPS_DB_SEARCHD && nwrdX[i] > 0 ) {
 			  register size_t length = nwrdX[i];
 			  register size_t n = (nwrdX[i] + 7) / 8;
 			  switch(length % 8) {
@@ -1173,7 +1173,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 			  case 1:      curwrd->dbnum = i; curwrd++;
 			    } while (--n > 0);
 			  }
-			}
+			} else curwrd += nwrdX[i];
 #else
 			curwrd+=nwrdX[i];
 #endif
