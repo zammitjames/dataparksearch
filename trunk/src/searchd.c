@@ -1117,13 +1117,6 @@ int main(int argc, char **argv, char **envp) {
 	argc -= optind;argv += optind;
 	if(argc==1)config_name=argv[0];
 
-	if (demonize) {
-	  if (dps_demonize() != 0) {
-	    fprintf(stderr, "Can't demonize\n");
-	    exit(1);
-	  }
-	}
-
 	dps_snprintf(dps_pid_name, PATH_MAX, "%s%s%s", pvar_dir, DPSSLASHSTR, "searchd.pid");
 	pid_fd = DpsOpen3(dps_pid_name, O_CREAT|O_EXCL|O_WRONLY, 0644);
 	if(pid_fd < 0) {
@@ -1136,6 +1129,13 @@ int main(int argc, char **argv, char **envp) {
 	sprintf(pidbuf, "%d\n", (int)getpid());
 	write(pid_fd, &pidbuf, dps_strlen(pidbuf));
 	DpsClose(pid_fd);
+
+	if (demonize) {
+	  if (dps_demonize() != 0) {
+	    fprintf(stderr, "Can't demonize\n");
+	    exit(1);
+	  }
+	}
 
 	bzero(Children, DPS_CHILDREN_LIMIT * sizeof(DPS_CHILD));
 	bzero(&old_server_addr, sizeof(old_server_addr));
