@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* A bug in result merging has been fixed for multi-dbaddr mode.
 	* allin<section>: operator has been added to the search query language.
 	* storedoc.cgi takes now document from remote host if it unable to fetch it from stored database.
 	
