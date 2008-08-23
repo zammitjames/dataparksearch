@@ -60,8 +60,8 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
   dpshash32_t crcword = (word == NULL) ? 0 : DpsStrHash32(word);
 
 #ifdef DEBUG_BOOL
-  DpsLog(query, DPS_LOG_EXTRA, "0[%d].%x %c -- %s [%x]\n", state->order, state->origin, item_type(state->cmd), 
-	 (word == NULL) ? "<NULL>" : word, crcword);
+  DpsLog(query, DPS_LOG_EXTRA, "0[%d].%x %c -- %s [%x] .secno:%d\n", state->order, state->origin, item_type(state->cmd), 
+	 (word == NULL) ? "<NULL>" : word, crcword, state->secno[state->p_secno]);
 #endif
 
   if((uword != NULL) && ( DpsStopListFind(&query->Conf->StopWords, uword, state->qlang) ||

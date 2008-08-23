@@ -1126,16 +1126,17 @@ int main(int argc, char **argv, char **envp) {
 		}
 		return DPS_ERROR;
 	}
-	sprintf(pidbuf, "%d\n", (int)getpid());
-	write(pid_fd, &pidbuf, dps_strlen(pidbuf));
-	DpsClose(pid_fd);
 
 	if (demonize) {
 	  if (dps_demonize() != 0) {
 	    fprintf(stderr, "Can't demonize\n");
+	    DpsClose(pid_fd);
 	    exit(1);
 	  }
 	}
+	sprintf(pidbuf, "%d\n", (int)getpid());
+	write(pid_fd, &pidbuf, dps_strlen(pidbuf));
+	DpsClose(pid_fd);
 
 	bzero(Children, DPS_CHILDREN_LIMIT * sizeof(DPS_CHILD));
 	bzero(&old_server_addr, sizeof(old_server_addr));

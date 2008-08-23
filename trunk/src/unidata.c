@@ -216,7 +216,7 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 /*		if(*ctype0!=ctype)*/
 		if ((*ctype0 > DPS_UNI_BUKVA && ctype <= DPS_UNI_BUKVA) 
 		    || (*ctype0 <= DPS_UNI_BUKVA && ctype > DPS_UNI_BUKVA && !dps_isPatternSyntax(*s))) {
-		  if (!cmd_mode || *(s+1) == 0 || ((*s != 0x2e) && (ctype_1 <= DPS_UNI_BUKVA)))
+		  if (!cmd_mode || *(s+1) == 0 || ((*s != 0x2e) || (ctype_1 > DPS_UNI_BUKVA)))
 			break;
 		}
 
