@@ -2038,21 +2038,14 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef WITH_REL_WRDCOUNT
       D[DPS_N_WRDCOUNT] = phr_n;
 
-      { register size_t tt;
-	register size_t median = phr_n, sum = (Res->max_order_inquery + 1);
-	for (tt = 0; tt <= Res->max_order_inquery; tt++) 
-	  if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) { median -= count[tt]; sum--; }
-	if (sum) {
-	  median /= sum;
-	  sum = 0;
-	  for (tt = 0; tt <= Res->max_order_inquery; tt++) {
-	    if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) continue;
-	    if (count[tt])
-	      sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-	    else sum += 200 + median;
-	  }
+      { register size_t tt, sum = 0;
+	register size_t median = phr_n / (Res->max_order_inquery + 1);
+	for (tt = 0; tt <= Res->max_order_inquery; tt++) {
+	  if (count[tt])
+	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
+	  else sum += 2000;
 	}
-	D[DPS_N_COUNT] = (dps_uint4)(sum /* * cnt_pas*/);
+	D[DPS_N_COUNT] = (dps_uint4)sum;
       }
 #ifdef WITH_REL_TRACK
       Track[j].D_wrdcount = phr_n;
@@ -2116,19 +2109,12 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef WITH_REL_WRDCOUNT
   D[DPS_N_WRDCOUNT] = phr_n;
 
-  { register size_t tt;
-    register size_t median = phr_n, sum = (Res->max_order_inquery + 1);
-    for (tt = 0; tt <= Res->max_order_inquery; tt++) 
-      if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) { median -= count[tt]; sum--; }
-    if (sum) { 
-      median /= sum;
-      sum = 0;
-      for (tt = 0; tt <= Res->max_order_inquery; tt++) {
-	if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) continue;
-	if (count[tt])
-	  sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-	else sum += 200 + median;
-      }
+  { register size_t tt, sum = 0;
+    register size_t median = phr_n / (Res->max_order_inquery + 1);
+    for (tt = 0; tt <= Res->max_order_inquery; tt++) {
+      if (count[tt])
+	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
+      else sum += 2000;
     }
     D[DPS_N_COUNT] = (dps_uint4)(sum /* * cnt_pas */);
   }
@@ -2293,13 +2279,12 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef WITH_REL_WRDCOUNT
       D[DPS_N_WRDCOUNT] = phr_n;
 
-      { register size_t tt;
-	register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1), sum = 0;
+      { register size_t tt, sum = 0;
+	register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1);
 	for (tt = 0; tt <= Res->max_order_inquery; tt++) {
-	  if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) continue;
 	  if (count[tt])
 	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-	  else sum += 200 + median;
+	  else sum += 2000;
 	}
 	D[DPS_N_COUNT] = (dps_uint4)sum;
       }
@@ -2355,13 +2340,12 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef WITH_REL_WRDCOUNT
   D[DPS_N_WRDCOUNT] = phr_n;
 
-  { register size_t tt;
-    register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1), sum = 0;
+  { register size_t tt, sum = 0;
+    register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1);
     for (tt = 0; tt <= Res->max_order_inquery; tt++) {
-      if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) continue;
       if (count[tt])
 	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-      else sum += 200 + median;
+      else sum += 2000;
     }
     D[DPS_N_COUNT] = (dps_uint4)sum;
   }
@@ -2541,10 +2525,9 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
 	for (tt = 0; tt <= Res->max_order_inquery; tt++) {
 	  if (count[tt]) cc += D[DPS_N_ADD + nsections + tt] / count[tt];
 #ifdef WITH_REL_WRDCOUNT
-	  if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) continue;
 	  if (count[tt])
 	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-	  else sum += 200 + median;
+	  else sum += 2000;
 	  D[DPS_N_WRDCOUNT] += ((count[tt] > DPS_BEST_WRD_CNT) ? (count[tt] - DPS_BEST_WRD_CNT) : (DPS_BEST_WRD_CNT - count[tt]));
 #endif
 	}
@@ -2628,10 +2611,9 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
     for (tt = 0; tt <= Res->max_order_inquery; tt++) {
       if (count[tt]) cc += D[DPS_N_ADD + nsections + tt] / count[tt];
 #ifdef WITH_REL_WRDCOUNT
-      if (Res->items[tt].order_origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_ACRONYM)) continue;
       if (count[tt])
 	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-      else sum += 200 + median;
+      else sum += 2000;
 #endif
     }
 #ifdef WITH_REL_WRDCOUNT
