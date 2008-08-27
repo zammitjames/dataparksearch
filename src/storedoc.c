@@ -26,7 +26,8 @@
 
 int main(int argc, char **argv, char **envp) {
 	char		template_name[PATH_MAX+4] = "";
-	char		query_string[1024] = "";
+	char            *template_filename = NULL;
+	char		*query_string = NULL;
 	char		self[1024] = "";
 	const char	*env, *lcharset, *bcharset, *htok, *conf_dir;
 	char            *last;
@@ -38,6 +39,7 @@ int main(int argc, char **argv, char **envp) {
 	DPS_DOCUMENT	*Doc;
 	DPS_RESULT	*Res;
 	DPS_HTMLTOK	tag;
+	DPS_VARLIST	query_vars;
 	int		httpd = 0, res;
 	char		*HDoc = NULL;
 	char		*HEnd = NULL;
@@ -67,6 +69,15 @@ int main(int argc, char **argv, char **envp) {
 	  printf("Can't alloc Env\n");
 	  exit(0);
 	}
+	DpsVarListInit(&query_vars);
+	Agent = DpsAgentInit(NULL, Env, 0);
+	if (Agent == NULL) {
+	  if(httpd){
+	    printf("Content-Type: text/plain\r\n\r\n");
+	  }
+	  printf("Can't alloc Agent\n");
+	  exit(0);
+	}
 	DpsVarListAddEnviron(&Env->Vars,"ENV");
 
 	/* Detect self and template name */
@@ -76,7 +87,23 @@ int main(int argc, char **argv, char **envp) {
 		dps_strncpy(template_name, env + 1, sizeof(template_name) - 1);
 
 	if((env=getenv("QUERY_STRING"))){
-		dps_strncpy(query_string,env,sizeof(query_string)-1);
+	        
+	        query_string = (char*)DpsRealloc(query_string, dps_strlen(env) + 2);
+		if (query_string == NULL) {
+		  if(httpd){
+		    printf("Content-Type: text/plain\r\n\r\n");
+		  }
+		  printf("Can't alloc query_string\n");
+		  exit(0);
+		}
+		dps_strncpy(query_string, env, dps_strlen(env) + 1);
+
+		/* Unescape and save variables from QUERY_STRING */
+		/* Env->Vars will have unescaped values however  */
+		DpsParseQueryString(Agent,&Env->Vars,query_string);
+	
+		template_filename = (char*)DpsStrdup(DpsVarListFindStr(&Env->Vars, "tmplt", ""));
+
 		if((env=getenv("REDIRECT_STATUS"))){
 
 			/* Check Apache internal redirect  */
@@ -111,11 +138,20 @@ int main(int argc, char **argv, char **envp) {
 				s=((s=strrchr(template_name,DPSSLASH))?s:template_name);
 
 				/* Find .cgi substring */
-				if((e=strstr(s,".cgi"))){
-					/* Replace ".cgi" with ".htm" */
-					e[1]='h';e[2]='t';e[3]='m';
+				if((e = strstr(s,".cgi")) != NULL) {
+				  /* Replace ".cgi" with ".htm" */
+				  e[1]='h';e[2]='t';e[3]='m';
 				}else{
-					dps_strcpy(template_name, "storedoc.htm");
+				  dps_strcat(s, ".htm");
+/*				  dps_strcpy(template_name, "storedoc.htm");*/
+				}
+				e = strrchr(template_name, DPSSLASH);
+				if (e == NULL) e = template_name;
+				if (*template_filename == '\0') { 
+				  DPS_FREE(template_filename);
+				  template_filename = (char*)DpsStrdup(e + 1);
+				} else {
+				  dps_snprintf(e + 1, sizeof(template_name) - (e - template_name), "%s", template_filename);
 				}
 			}
 		}
@@ -123,18 +159,41 @@ int main(int argc, char **argv, char **envp) {
 		/* Executed from command line     */
 		/* or under server which does not */
 		/* pass an empty QUERY_STRING var */
-		if(argv[1]) dps_snprintf(query_string,sizeof(query_string)-1,"q=%s",argv[1]);
-		if(!template_name[0]) dps_snprintf(template_name,sizeof(template_name), "%s/%s", conf_dir, "storedoc.htm");
+	  if(argv[1]) {
+	    query_string = (char*)DpsRealloc(query_string, dps_strlen(argv[1]) + 10);
+	    if (query_string == NULL) {
+	      if(httpd){
+		printf("Content-Type: text/plain\r\n\r\n");
+	      }
+	      printf("Can't realloc query_string\n");
+	      exit(0);
+	    }
+	    dps_snprintf(query_string,sizeof(query_string)-1,"q=%s",argv[1]);
+	  } else {
+	    query_string = (char*)DpsRealloc(query_string, 1024);
+	    if (query_string == NULL) {
+	      if(httpd){
+		printf("Content-Type: text/plain\r\n\r\n");
+	      }
+	      printf("Can't realloc query_string\n");
+	      exit(0);
+	    }
+	    sprintf(query_string, "q=");
+	  }
+
+	  /* Unescape and save variables from QUERY_STRING */
+	  /* Env->Vars will have unescaped values however  */
+	  DpsParseQueryString(Agent,&Env->Vars,query_string);
+
+	  DPS_FREE(template_filename);
+	  template_filename = (char*)DpsStrdup(DpsVarListFindStr(&Env->Vars, "tmplt", ""));
+	  if (*template_filename == '\0') { DPS_FREE(template_filename); template_filename = (char*)DpsStrdup("search.htm"); }
+
+	  if(!template_name[0]) dps_snprintf(template_name,sizeof(template_name), "%s/%s", conf_dir, "storedoc.htm");
 	}
 
-	Agent=DpsAgentInit(NULL,Env,0);
-	if (Agent == NULL) {
-	  if(httpd){
-	    printf("Content-Type: text/plain\r\n\r\n");
-	  }
-	  printf("Can't alloc Agent\n");
-	  exit(0);
-	}
+	DpsVarListReplaceStr(&Agent->Conf->Vars, "tmplt", template_filename);
+	DPS_FREE(template_filename);
 
 	Agent->st_tmpl.Env_Vars = &Env->Vars;
 
@@ -149,12 +208,14 @@ int main(int argc, char **argv, char **envp) {
 		if(httpd)printf("Content-Type: text/plain\r\n\r\n");
 		printf("%s\n",Env->errstr);
 		DpsEnvFree(Env);
+		DPS_FREE(query_string);
 		return(0);
 	    }
 	  } else {
 		if(httpd)printf("Content-Type: text/plain\r\n\r\n");
 		printf("%s\n",Env->errstr);
 		DpsEnvFree(Env);
+		DPS_FREE(query_string);
 		return(0);
 	  }
 	}
@@ -312,6 +373,7 @@ fin:
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->st_tmpl, "bottom");
 	DpsAgentFree(Agent);
 	DpsEnvFree(Env);
+	DPS_FREE(query_string);
 	DPS_FREE(HDoc);
 
 	return(0);
