@@ -1818,7 +1818,9 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
 #endif
 			);
 		for (i = 0; i < Indexer->Conf->Parsers.nparsers; i++) {
-		  sprintf(DPS_STREND(accept_str), ",%s;q=0.6", Indexer->Conf->Parsers.Parser[i].from_mime);
+		  sprintf(DPS_STREND(accept_str), ",%s", Indexer->Conf->Parsers.Parser[i].from_mime);
+		  DpsRTrim(accept_str, "*");
+		  sprintf(DPS_STREND(accept_str), ";q=0.6");
 		}
 		sprintf(DPS_STREND(accept_str), ",*;q=0.1");
 
