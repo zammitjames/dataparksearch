@@ -968,9 +968,11 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	int		result=DPS_OK;
 	
 	if(!strcmp(DPS_NULL2EMPTY(Doc->CurURL.filename), "robots.txt")) return DPS_OK;
+
+	if(Doc->method != DPS_METHOD_HEAD) {
 	
 #ifdef HAVE_ZLIB
-	if(!strcasecmp(ce,"gzip") || !strcasecmp(ce,"x-gzip")){
+	  if(!strcasecmp(ce,"gzip") || !strcasecmp(ce,"x-gzip")){
 		DPS_THREADINFO(Indexer,"UnGzip",url);
 		if (status == 206) {
 		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't ungzip it.");
@@ -978,8 +980,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		}
 		DpsUnGzip(Indexer, Doc);
 		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
-	}else
-	if(!strcasecmp(ce,"deflate")){
+	  }else
+	  if(!strcasecmp(ce,"deflate")){
 		DPS_THREADINFO(Indexer,"Inflate",url);
 		if (status == 206) {
 		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't inflate it.");
@@ -987,8 +989,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		}
 		DpsInflate(Indexer, Doc);
 		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
-	}else
-	if(!strcasecmp(ce,"compress") || !strcasecmp(ce,"x-compress")){
+	  }else
+	  if(!strcasecmp(ce,"compress") || !strcasecmp(ce,"x-compress")){
 		DPS_THREADINFO(Indexer,"Uncompress",url);
 		if (status == 206) {
 		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't uncomress it.");
@@ -996,26 +998,26 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		}
 		DpsUncompress(Indexer, Doc);
 		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
-	}else
+	  }else
 #endif	
-	if(!strcasecmp(ce,"identity") || !strcasecmp(ce,"")){
+	  if(!strcasecmp(ce,"identity") || !strcasecmp(ce,"")){
 		/* Nothing to do*/
-	}else{
+	  }else{
 		DpsLog(Indexer,DPS_LOG_ERROR,"Unsupported Content-Encoding");
 /*		DpsVarListReplaceInt(&Doc->Sections,"Status",DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);*/
-	}
+	  }
 	
 #ifdef WITH_PARSER
-	/* Let's try to start external parser for this Content-Type */
+	  /* Let's try to start external parser for this Content-Type */
 
-	if((Parser = DpsParserFind(&Indexer->Conf->Parsers, ct))) {
+	  if((Parser = DpsParserFind(&Indexer->Conf->Parsers, ct))) {
 		DpsLog(Indexer,DPS_LOG_DEBUG,"Found external parser '%s' -> '%s'",
 			Parser->from_mime?Parser->from_mime:"NULL",
 			Parser->to_mime?Parser->to_mime:"NULL");
-	}
-	if(Parser) {
-	  if (status == DPS_HTTP_STATUS_OK) {
-	    if (DpsParserExec(Indexer, Parser, Doc)) {
+	  }
+	  if(Parser) {
+	    if (status == DPS_HTTP_STATUS_OK) {
+	      if (DpsParserExec(Indexer, Parser, Doc)) {
 		char *to_charset;
 		real_content_type=Parser->to_mime?Parser->to_mime:"unknown";
 		DpsLog(Indexer,DPS_LOG_DEBUG,"Parser-Content-Type: %s",real_content_type);
@@ -1027,26 +1029,22 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #ifdef DEBUG_PARSER
 		fprintf(stderr,"content='%s'\n",Doc->content);
 #endif
+	      }
+	    } else {
+	      DpsLog(Indexer, DPS_LOG_WARN, "Parser not executed, document status: %d", status);
+	      return result;
 	    }
-	  } else {
-	    DpsLog(Indexer, DPS_LOG_WARN, "Parser not executed, document status: %d", status);
-	    return result;
 	  }
-	}
 #endif
 	
-	if(!real_content_type)real_content_type=ct;
-	DpsVarListAddStr(&Doc->Sections,"Parser-Content-Type",real_content_type);
+	  if(!real_content_type)real_content_type=ct;
+	  DpsVarListAddStr(&Doc->Sections,"Parser-Content-Type",real_content_type);
 
-	/* Guesser/save stuff was here */	
-	
-	/* CRC32 without headers */
-	{
-	  size_t crclen=Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf);
-	  DpsVarListReplaceInt(&Doc->Sections, "crc32", (int)DpsHash32(Doc->Buf.content, crclen));
-	}
-
-	if(Doc->method!=DPS_METHOD_HEAD) {
+	  /* CRC32 without headers */
+	  {
+	    size_t crclen=Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf);
+	    DpsVarListReplaceInt(&Doc->Sections, "crc32", (int)DpsHash32(Doc->Buf.content, crclen));
+	  }
 
 	  if (Indexer->Conf->BodyPatterns.nmatches != 0) {
 	    char            *buf;
@@ -1140,7 +1138,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 
 #ifdef HAVE_ZLIB
-	if ( strncmp(real_content_type, "text/", 5) == 0) {
+	if ((Doc->method != DPS_METHOD_HEAD) && (strncmp(real_content_type, "text/", 5) == 0)) {
 	  char reason[PATH_MAX+1];
 	  int m =  DpsStoreFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->StoreFilters, Doc, reason);
 	  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
