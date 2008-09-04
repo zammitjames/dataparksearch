@@ -99,9 +99,9 @@
 #define DPS_BINARY 0
 #endif
 
-/*
+
 #define DEBUG_SEARCH 1
-*/
+
 
 /* uncomment this to enable MODE_ALL realisation via search limits */
 /*#define MODE_ALL_VIA_LIMITS*/
@@ -3824,6 +3824,7 @@ int DpsResAddDocInfoCache(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t 
       if (!DpsURLParse(&D->CurURL, url)) {
 /*	DpsVarListInsStr(&D->Sections, "url.host", DPS_NULL2EMPTY(D->CurURL.hostname));
 	DpsVarListInsStr(&D->Sections, "url.path", DPS_NULL2EMPTY(D->CurURL.path));
+	DpsVarListInsStr(&D->Sections, "url.directory", DPS_NULL2EMPTY(D->CurURL.directory));
 	DpsVarListInsStr(&D->Sections, "url.file", DPS_NULL2EMPTY(D->CurURL.filename));*/
 	D->fetched = 1;
 	Res->fetched++;

@@ -1,5 +1,6 @@
 <!--variables
-DBAddr		searchd://localhost/
+DBAddr		searchd://v.sochi.org.ru/
+DBAddr		searchd://v.sochi.org.ru/?label=sochi
 StoredocURL     /cgi-bin/storedoc.cgi
 LocalCharset 	koi8-r
 BrowserCharset  utf-8
@@ -8,8 +9,9 @@ HTTPHeader "Cache-control: public"
 
 ReplaceVar 43N39E.lng "43&deg;N 39&deg;E"
 ReplaceVar all.lng "all words"
-ReplaceVar any.lng "any words"
+ReplaceVar any.lng "any word"
 ReplaceVar AU.lng "Search on Australia"
+ReplaceVar BE.lng "Search on Belgium"
 ReplaceVar Books.lng "Books at 43&deg;N 39&deg;E"
 ReplaceVar Compr.lng "Search on compression related sites"
 ReplaceVar Justine.lng "Search pages about Justine Henin-Hardenne"
@@ -81,6 +83,7 @@ ReplaceVar stcopy.lng "Cached copy"
 ReplaceVar allresfrom.lng "All results from"
 ReplaceVar onmap.lng "on the map"
 ReplaceVar price.lng "Price"
+ReplaceVar phone.lng "Ph."
 ReplaceVar rur.lng "RUR"
 ReplaceVar prev.lng "Previous"
 ReplaceVar next.lng "Next"
@@ -88,20 +91,21 @@ ReplaceVar instplugin.lng "Install search plugin"
 ReplaceVar mkreport.lng "Send report"
 ReplaceVar bytes.lng "bytes"
 ReplaceVar score.lng "Score"
-ReplaceVar google.ad.channel "9845973379"
 ReplaceVar extended.lng "Extended search"
-ReplaceVar Sochi.org.ru.lng "Sochi'S Internet"
+ReplaceVar Sochi.org.ru.lng "Sochi's Internet"
+ReplaceVar wholinks.lng "Who links here"
+ReplaceVar qwords.lng "Words of the query"
 
 MinWordLength 1
 MaxWordLength 64
 DetectClones no
-ExcerptSize 156
-ExcerptPadding 40
+ExcerptSize 312
+ExcerptPadding 60
 HlBeg <span class="rhl">
 HlEnd </span>
 GrBeg <div class="group">
 GrEnd </div>
-DateFormat %d %b %Y
+DateFormat %d.%m.%Y
 m near
 sp 1
 sy 0
@@ -112,11 +116,9 @@ sy 0
    "http://www.w3.org/TR/html4/loose.dtd">
 <HTML lang="en">
   <HEAD>
-<!-- google_ad_section_start -->
     <TITLE>$(43N39E.lng): $&(q)</TITLE>
-<!-- google_ad_section_end -->
-    <link href="/css/therm2.css" rel="stylesheet" type="text/css">
     <link href="http://sochi.org.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="$(self)?q=$%(q)&amp;c=$&(c)&amp;site=$&(site)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;&amp;s=$&(s)&amp;label=$&(label)&amp;tmplt=rss8.htm.en">
     <script type="text/javascript"><!--
       var dpstate = 'h';
       var ext1Content = null;
@@ -158,8 +160,7 @@ sy 0
 		BODY { margin-left: 1em; margin-right: 1em; }
 		SELECT { width: 15em; }
 	</style>
-    <script type="text/javascript" src="http://sochi.org.ru/js/serpbubble.js"></script>
-    <script type="text/javascript" src="/htmlhttprequest_commented.js"></script>
+    <script type="text/javascript" src="/js/htmlhttprequest_commented.js"></script>
     <script type="text/javascript">
 function myCopyContent(domDoc, uri) {
  var destId = 'resultArea';
@@ -168,7 +169,15 @@ function myCopyContent(domDoc, uri) {
  if (!dest) return;
  if (dest.innerHTML) dest.innerHTML = domDoc;
 }
+function myCopyContent2(domDoc, uri) {
+ var destId = 'similarArea';
+ var dest = document.getElementById ? document.getElementById(destId) :
+  (document.all ? document.all[destId] : null);
+ if (!dest) return;
+ if (dest.innerHTML) dest.innerHTML = domDoc;
+}
     </script>
+    <link href="/css/therm2.css" rel="stylesheet" type="text/css">
 </HEAD>
 <!-- BrowserCharset: $(BrowserCharset) -->
 <BODY onload="showBooksAndVideo()">
@@ -183,6 +192,7 @@ function myCopyContent(domDoc, uri) {
 <!ELIF NAME="c" CONTENT="01"><a href="http://sochi.org.ru/">$(Sochi.org.ru.lng)</a>
 <!ELIF NAME="c" CONTENT="09"><a href="http://www.43n39e.ru/gday">$(AU.lng)</a>
 <!ELIF NAME="c" CONTENT="0F"><a href="http://www.43n39e.ru/nz">$(NZ.lng)</a>
+<!ELIF NAME="c" CONTENT="0K"><a href="http://www.43n39e.ru/be">$(BE.lng)</a>
 <!ELIF NAME="c" CONTENT="0D"><a href="http://www.43n39e.ru/oregon">$(Oregon.lng)</a>
 <!ELIF NAME="c" CONTENT="04"><a href="http://www.maxime.net.ru/">$(Compr.lng)</a>
 <!ELIF NAME="c" CONTENT="06"><a href="http://justine.43n39e.ru/">$(Justine.lng)</a>
@@ -202,6 +212,7 @@ function myCopyContent(domDoc, uri) {
 	      <input type="hidden" name="t" value="$&(t)">
 	      <input type="hidden" name="c" value="$&(c)">
 	      <input type="hidden" name="tmplt" value="janus.htm.en">
+	      <input type="hidden" name="label" value="$&(label)">
 	      <input type="hidden" name="s" value="$&(s)">
 <div id="exth">
 	<input type="hidden" name="m" value="$&(m)">
@@ -235,7 +246,7 @@ function myCopyContent(domDoc, uri) {
 			</table>
 </td>
 </tr>
-<tr><td width="100%" align="right"><small><a href="" onclick="return swap();">$(extended.lng)</a></small></td></tr>
+<tr><td width="100%" align="right"><small><a href="#" onclick="return swap();">$(extended.lng)</a></small></td></tr>
 <tr id="ext1" style="visibility: hidden;">
 <td width="100%" align="right">
  <select name="m" class="inputrev">
@@ -273,7 +284,7 @@ function myCopyContent(domDoc, uri) {
 <option value="3" selected="$&(rm)">ultra</option>
 </select>
 <select class="inputrev" name="wf">
-<option value="33F37FFF" selected="$&(wf)">$(doc.lng)</option>
+<option value="F1F1" selected="$&(wf)">$(doc.lng)</option>
 <option value="00000F00" selected="$&(wf)">$(ref.lng)</option>
 <option value="000000F0" selected="$&(wf)">$(tit.lng)</option>
 <option value="0000000F" selected="$&(wf)">$(body.lng)</option>
@@ -311,15 +322,15 @@ dp_init();
 <br>
 <!IFNOT NAME="q" CONTENT="">
 <small>$(SearchFor.lng) &laquo;$&(q)&raquo; $(otherse.lng):
-<a href="http://li.ru/go?www.google.com/search?ie=UTF-8&amp;hl=en&amp;q=$%(q:utf-8)">Google</a> &#150;
-<a href="http://li.ru/go?www.yandex.ru/yandsearch?text=$%(q:cp1251)&amp;stype=www">$(yandex.lng)</a> &#150;
-<a href="http://li.ru/go?search.rambler.ru/cgi-bin/rambler_search?english=0&and=1&words=$%(q:cp1251)">$(rambler.lng)</a> &#150;
-<a href="http://li.ru/go?gogo.ru/go?q=$%(q:cp1251)">GoGo</a> &#150;
-<a href="http://li.ru/go?www.nigma.ru/index.php?0=1&1=1&2=1&3=1&4=1&5=1&6=1&7=1&q=$%(q:cp1251)">$(nigma.lng)</a> &#150;
-<a href="http://li.ru/go?search.yahoo.com/bin/query?p=$%(q:koi8-r)&amp;ei=KOI8-R">Yahoo!</a> &#150;
-<a href="http://li.ru/go?search.msn.com/results.aspx?q=$%(q:UTF-8)">MSN</a>
+<a href="http://www.google.com/search?ie=UTF-8&amp;hl=en&amp;q=$%(q:utf-8)">Google</a> &#150;
+<a href="http://www.yandex.ru/yandsearch?text=$%(q:cp1251)&amp;stype=www">$(yandex.lng)</a> &#150;
+<a href="http://www.rambler.ru/srch?oe=1251&set=www&words=$%(q:cp1251)">$(rambler.lng)</a> &#150;
+<a href="http://gogo.ru/go?q=$%(q:cp1251)">GoGo</a> &#150;
+<a href="http://www.nigma.ru/index.php?0=1&1=1&2=1&3=1&4=1&5=1&6=1&7=1&q=$%(q:cp1251)">$(nigma.lng)</a> &#150;
+<a href="http://search.yahoo.com/bin/query?p=$%(q:koi8-r)&amp;ei=KOI8-R">Yahoo!</a> &#150;
+<a href="http://search.msn.com/results.aspx?q=$%(q:UTF-8)">MSN</a>
 </small>
-</!ENDIF>
+<!ENDIF>
 <table border="0" width="100%">
 <tr>
 <td align="center" valign="top">
@@ -327,7 +338,7 @@ dp_init();
 </td>
 </tr>
 <tr><td align="center" valign="middle">
-<small>(C)2007, &laquo;<a href="http://www.datapark.ru/">$(datapark.lng)</a>&raquo;<br>
+<small>(C)2008, &laquo;<a href="http://www.datapark.ru/">$(datapark.lng)</a>&raquo;<br>
 <a href="http://www.dataparksearch.org/">$(usingdp.lng)</a></small><br>
 </td></tr>
 </table>
@@ -337,7 +348,7 @@ dp_init();
 <!--/bottom-->
 
 <!--restop-->
-<div id="topmenu">
+<div class="news">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr><td colspan="2" align="left" class="serp">
 <small>&nbsp;$(showndocs.lng) <b>$(first)</b>-<b>$(last)</b> $(iz.lng) <b>$(total)</b> $(found.lng).</small>
@@ -355,10 +366,10 @@ dp_init();
 <div class="bottom">
 <table width="100%" border="0" cellspacing="3" cellpadding="0"><tr><td valign="bottom">
 <table align="center" border="0" cellspacing="0" cellpadding="3"><tr><td>$(pages.lng):</td>$(NL)$(NB)$(NR)</tr></table></td>
-<td width="180" align="right" rowspan="2"><img src="http://sochi.org.ru/img/rss_icon.gif" width="14" height="14" border="0"><small>&nbsp;<a href="$(self)?q=$%(q)&amp;c=$&(c)&amp;site=$&(site)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;&amp;s=DRP&amp;tmplt=rss8.htm.en">$(rssres.lng) &laquo;$&(q)&raquo;</a></small>
+<td width="180" align="right" rowspan="2">&nbsp;
 </td></tr><tr><td align="left" valign="middle">$(sortedby.lng):&nbsp;
 <!IF NAME="s" CONTENT="DRP"><!SET NAME="auxs" CONTENT="PRD">
-<a href="$(FirstPage)&s=IRPD">$(isort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&s=RPD">$(rsort.lng)</a>&nbsp;|&nbsp;<span class="hl">$(dsort.lng)</span>&nbsp;|&nbsp;<a href="$(FirstPage)&s=PRD">$(psort.lng)</a><!ELIF NAME="s" CONTENT="IRPD"><!SET NAME="auxs" CONTENT="ARPD">
+<a href="$(FirstPage)&s=IRPD">$(isort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&s=RPD">$(rsort.lng)</a>&nbsp;|&nbsp;<span class="hl">$(dsort.lng)</span>&nbsp;|&nbsp;<a href="$(FirstPage)&s=PRD">$(psort.lng)</a><!ELIF NAME="s" CONTENT="IRPD"><!SET NAME="auxs" CONTENT="RPD">
 <span class="hl">$(isort.lng)</span>&nbsp;|&nbsp;<a href="$(FirstPage)&s=RPD">$(rsort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&s=DRP">$(dsort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&s=PRD">$(psort.lng)</a><!ELIF NAME="s" CONTENT="PRD"><!SET NAME="auxs" CONTENT="AD">
 <a href="$(FirstPage)&s=IRPD">$(isort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&s=RPD">$(rsort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&s=DRP">$(dsort.lng)</a>&nbsp;|&nbsp;<span class="hl">$(psort.lng)</span><!ELSE><!SET NAME="auxs" CONTENT="DA">
 <a href="$(FirstPage)&s=IRPD">$(isort.lng)</a>&nbsp;|&nbsp;<span class="hl">$(rsort.lng)</span>&nbsp;|&nbsp;<a href="$(FirstPage)&s=DRP">$(dsort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&s=PRD">$(psort.lng)</a>
@@ -366,10 +377,8 @@ dp_init();
 </div>
 <div id="dir">
 <table width="100%" cellpadding="5" cellspacing="0" border="0">
-<tr><td rowspan="2" valign="top" align="left" style="width:14em; border-right:1px solid #f4f4f4;">
-<br><div id="resultArea">&nbsp;</div>
-</td><td rowspan="2" valign="top" allign="left">
-<!-- google_ad_section_start -->
+<tr>
+<td rowspan="2" valign="top" allign="left">
 <!--/restop-->
 
 
@@ -382,10 +391,10 @@ dp_init();
 <!ELIF NAME="Content-Type" CONTENT="text/rtf"><b class="mimetype">[RTF]</b>&nbsp;
 <!ELIKE NAME="Content-Type" CONTENT="image/*"><b class="mimetype">[IMG]</b>&nbsp;
 <!ELIF NAME="Content-Type" CONTENT="application/x-shockwave-flash"><b class="mimetype">[SWF]</b>&nbsp;
-<!ENDIF><!IF NAME="url.host" CONTENT="www.books.ru"><a onMouseDown="return clk($(DP_ID),$(Order))" class="restop" href="$(URL)?partner=datapark">
-<!ELIF NAME="url.host" CONTENT="www.bolero.ru"><a onMouseDown="return clk($(DP_ID),$(Order))" class="restop" href="http://www.bolero.ru//cgi-bin/superptr.cgi?partner=datapark&amp;new=1&amp;uri=$(URL.path)$(URL.file)">
-<!ELIF NAME="url.host" CONTENT="www.ozon.ru"><a onMouseDown="return clk($(DP_ID),$(Order))" class="restop" href="$(URL)?partner=datapark">
-<!ELSE><a id="link$(Order)" onMouseOver="attachBubble('link$(Order)','http://$(url.host)/')" onMouseOut="detachBubble('link$(Order)');" onMouseDown="return clk($(DP_ID),$(Order))" class="restop" href="$(URL)"><!ENDIF><!--
+<!ENDIF><!IF NAME="url.host" CONTENT="www.books.ru"><a onclick="return clk($(DP_ID),$(Order))" class="restop" href="$(URL)?partner=datapark">
+<!ELIF NAME="url.host" CONTENT="www.bolero.ru"><a onclick="return clk($(DP_ID),$(Order))" class="restop" href="http://www.bolero.ru//cgi-bin/superptr.cgi?partner=datapark&amp;new=1&amp;uri=$(URL.path)$(URL.file)">
+<!ELIF NAME="url.host" CONTENT="www.ozon.ru"><a onclick="return clk($(DP_ID),$(Order))" class="restop" href="$(URL)?partner=datapark">
+<!ELSE><a id="link$(Order)" onclick="return clk($(DP_ID),$(Order))" class="restop" href="$(URL)"><!ENDIF><!--
  --><!IF NAME="Title" CONTENT="[no title]">
 	 <!IF NAME="MP3.Artist" CONTENT="">$(notitle.lng)<!ELSE>$(artist.lng): $&(MP3.Artist)<!ENDIF>
 	 <!ELIKE NAME="Title" CONTENT="/tmp/ind*">$(notitle.lng)
@@ -394,7 +403,7 @@ dp_init();
 <div class="serp2">
 <!IF NAME="url.host" CONTENT="www.books.ru">
 <table border="0" cellpadding="0" cellspacing="0"><tr><td align="center" valign="middle">
-<a onMouseDown="return clk($(DP_ID),$(Order))" href="$(URL)?partner=datapark"><img src="http://www.books.ru/img/$(url.file)s.jpg" border="0"></a>
+<a onclick="return clk($(DP_ID),$(Order))" href="$(URL)?partner=datapark"><img src="http://www.books.ru/img/$(url.file)s.jpg" border="0"></a>
 </td><td align="left" valign="top" style="padding-left: 0.5em;"><!ENDIF>
 <!IF NAME="MP3.Album" CONTENT=""> <!ELSE><span class="result">$(album.lng): </span> 
 $&(MP3.Album)<br><!ENDIF>
@@ -402,17 +411,19 @@ $&(MP3.Album)<br><!ENDIF>
 $&(MP3.Song)<br><!ENDIF>
 <!IF NAME="MP3.Year" CONTENT=""> <!ELSE><span class="result">$(year.lng): </span>
 $&(MP3.Year)<br><!ENDIF>
-<!IF NAME="Body" CONTENT=""> <!ELSE><small>$&(Body)</small><br><!ENDIF></div>
-<!IFNOT NAME="sea" CONTENT=""><div class="serp3"><small class="restop">$(summary.lng):</small> <small>$&(sea:256)</small></div><!ENDIF>
+<!IF NAME="Body" CONTENT=""><!IFNOT NAME="sea" CONTENT=""><div class="serp3"><small class="restop">$(summary.lng):</small> <small>$&(sea:600)</small></div><!ENDIF><!ELSE><small>$&(Body)</small><br><!ENDIF></div>
 <div class="serp2"><small class="result">$&(URL:40)<br>$(Last-Modified) - $(FancySize) $(bytes.lng) - $(Content-Language)<!-- - $(Charset)--></small>
-<small class="result">- $(score.lng): $(Score) [$(Pop_Rank)]<br>
-	      <!IFNOT NAME="stored_href" CONTENT=""><a onMouseDown="return clk($(DP_ID),$(Order))" href="$(stored_href)">$(stcopy.lng)</a><!ENDIF>
+<small class="result">- $(score.lng): $(Score) [$(Pop_Rank)]
+<!IFNOT NAME="Price" CONTENT=""><span class="result"> - $(price.lng): </span>$(Price) $(rur.lng)<!ENDIF>
+<!IFNOT NAME="Phone" CONTENT=""><span class="result"> - $(phone.lng): </span>$(Phone)<!ENDIF>
+<br>
+	      <!IFNOT NAME="stored_href" CONTENT=""><a onclick="return clk($(DP_ID),$(Order))" href="$(stored_href)">$(stcopy.lng)</a><!ENDIF>
 	      <!IFNOT NAME="sitelimit_href" CONTENT=""> &nbsp;&nbsp;<a href="$(self)$(sitelimit_href)">$(allresfrom.lng) $(url.host)
 				<!IFNOT NAME="PerSite" CONTENT="0">($(PerSite))<!ENDIF><!--
 --></a>
 	      <!ENDIF>
 <!IFNOT NAME="geo.lat" CONTENT=""> &nbsp;&nbsp;<a href="/cgi-bin/gmap.cgi.ru?q=$%(q)&amp;c=$&(c)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;s=$&(s)&amp;tmplt=gmap43.htm.en&amp;s_tmplt=$&(tmplt)&amp;title=$%(title)&amp;geo.lat=$&(geo.lat)&amp;geo.lon=$&(geo.lon)">$(onmap.lng)</a><!ENDIF>
-<!IFNOT NAME="Price" CONTENT=""><span class="result"><br>$(price.lng): </span>$(Price) $(rur.lng)<!ENDIF>
+&nbsp;<a href="$(self)?q=$%(q)&amp;c=$&(c)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;s=$&(s)&amp;label=$&(label)&amp;tmplt=janus.htm.en&amp;link=$(DP_ID)">$(wholinks.lng)</a>
 </small>
 <!IF NAME="url.host" CONTENT="www.books.ru">
 </td></tr></table><!ENDIF>
@@ -445,24 +456,33 @@ $(CL)
 <!--/navigator-->
 
 <!--resbot-->
-<!-- google_ad_section_end -->
-</td><td width="160" valign="top" align="right" style="border-left: 1px solid #f4f4f4">
+</td>
+<td rowspan="2" valign="top" align="left" style="width:14em; border-right:1px solid #f4f4f4;">
+<br><div id="similarArea">&nbsp;</div>
+<div id="resultArea">&nbsp;</div>
+</td>
+<td width="160" valign="top" align="right" style="border-left: 1px solid #f4f4f4">
 <br><br>
-<script type="text/javascript"><!--
-google_ad_client = "pub-2379770140407936";
-google_ad_channel ="$&(google.ad.channel)";
-google_ad_width = 160;
-google_ad_height = 600;
-google_ad_format = "160x600_as";
-google_color_border = "FFFFFF";
-google_color_text = "333333";
-google_color_bg = "FFFFFF";
-google_color_link = "0050A0";
-google_color_url = "006000";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
+<!-- ads here -->
+ <SCRIPT type="text/javascript">
+   var begun_utf8 = 1;
+   var begun_auto_colors = new Array();
+   var begun_auto_fonts_size = new Array();
+<!IFLIKE NAME="ENV.SERVER_NAME" CONTENT="*sochi.org.ru">   begun_auto_pad = 90069626; // pad id<!ELSE>   begun_auto_pad = 90026481; // pad id<!ENDIF>
+   begun_auto_limit = 5; // number of ads shown
+   begun_auto_width = 160; // width of ads block.
+   begun_auto_colors[0] = '#0055AA'; // link color
+   begun_auto_colors[1] = '#333333'; // text color
+   begun_auto_colors[2] = '#1F8101'; // domain color
+   begun_auto_colors[3] = '#FFFFFF'; // background color
+   begun_auto_fonts_size[0] = '9pt'; // link font size
+   begun_auto_fonts_size[1] = '9pt'; // text font size
+   begun_auto_fonts_size[2] = '9pt'; // domain font size
+   begun_auto_fonts_size[3] = '8pt'; // plug font size
+   begun_block_type = 'Vertical'; // block type
+</SCRIPT>
+<SCRIPT src="http://autocontext.begun.ru/autocontext.js" type="text/javascript">
+</SCRIPT>
 </td>
 </tr>
 <tr><td width="160" align="center" valign="bottom">
@@ -470,7 +490,14 @@ google_color_url = "006000";
 <script type="text/javascript">
 function showBooksAndVideo() {
 var CommerceLoader = new HTMLHttpRequest('CommerceLoader', myCopyContent);
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(auxs)&ps=7&tmplt=duo8.htm.en');
+var SimilarLoader = new HTMLHttpRequest('SimilarLoader', myCopyContent2);
+<!IF NAME="c" CONTENT="01">
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(auxs)&link=$&(link)&ps=7&tmplt=phones8.htm.en&label=phones');
+<!ELSE>
+//CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(auxs)&link=$&(link)&ps=7&tmplt=duo8.htm.en');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&&ps=5&tmplt=rutube8.htm.en&label=rutube');
+<!ENDIF>
+SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=7&tmplt=qsimilar8.htm.en&label=qsimilar&s_label=$&(label)');
 }
 </script>
 <a class="bottom" href="javascript:add_dpSearch()"><small>$(instplugin.lng)</small></a>
@@ -514,6 +541,7 @@ $(sortedby.lng):&nbsp;
 	<input type="hidden" name="c" value="$&(c)">
 	<input type="hidden" name="s" value="$&(s)">
 	<input type="hidden" name="tmplt" value="janus.htm.en">
+	<input type="hidden" name="label" value="$&(label)">
 	<input type="hidden" name="g" value="$&(g)">
 	<input type="hidden" name="GroupBySite" value="$&(GroupBySite)">
 	<input type="hidden" name="sy" value="$&(sy)">
@@ -546,7 +574,7 @@ $(sortedby.lng):&nbsp;
 
 
 <!--notfound-->
-<div id="topmenu">
+<div class="news">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr><td align="right">
 <small>$(stime.lng):&nbsp;$(SearchTime) $(sec.lng)&nbsp;</small>

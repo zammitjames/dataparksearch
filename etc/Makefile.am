@@ -220,6 +220,7 @@ langmap/su.utf-8.lm \
 langmap/sv.latin1.lm \
 langmap/sv.latin1.bible.lm \
 langmap/sv.utf-8.lm \
+langmap/sv.utf-8.bible.lm \
 langmap/sw.latin1.lm \
 langmap/sw.utf-8.lm \
 langmap/ta.tscii.lm \

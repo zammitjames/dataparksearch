@@ -550,6 +550,15 @@ int DpsParseURLText(DPS_AGENT *A,DPS_DOCUMENT *Doc){
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
 	}
+	if((Sec=DpsVarListFind(&Doc->Sections,"url.directory"))) {
+		char sc[]="url.directory\0";
+		Item.str = DPS_NULL2EMPTY(Doc->CurURL.directory);
+		Item.section = Sec->section;
+		Item.strict = Sec->strict;
+		Item.section_name = sc;
+		Item.len = 0;
+		DpsTextListAdd(&Doc->TextList, &Item);
+	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.file"))) {
 	        char *str, sc[]="url.file\0";
 		size_t len;

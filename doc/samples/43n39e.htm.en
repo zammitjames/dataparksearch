@@ -1,5 +1,5 @@
 <!--variables
-DBAddr		searchd://localhost/
+DBAddr		searchd://v.sochi.org.ru/
 StoredocURL     /cgi-bin/storedoc.cgi
 LocalCharset 	koi8-r
 BrowserCharset  utf-8
@@ -87,8 +87,8 @@ ReplaceVar instplugin.lng "Install search plugin"
 ReplaceVar mkreport.lng "Send report"
 ReplaceVar bytes.lng "bytes"
 ReplaceVar score.lng "Score"
-ReplaceVar google.ad.channel ""
-ReplaceVar google.ad.client "<!-- place your AdSense client ID here -->"
+ReplaceVar google.ad.channel "9845973379"
+ReplaceVar extended.lng "Extended search"
 
 MinWordLength 1
 MaxWordLength 64
@@ -100,18 +100,48 @@ HlEnd </span>
 GrBeg <div class="group">
 GrEnd </div>
 DateFormat %d %b %Y
+m near
+sp 1
+sy 0
 -->
 
 <!--top-->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
 <HTML lang="en">
   <HEAD>
-<!-- google_ad_section_start -->
     <TITLE>$(43N39E.lng): $&(q)</TITLE>
-<!-- google_ad_section_end -->
     <link href="http://sochi.org.ru/css/therm2.css" rel="stylesheet" type="text/css">
     <link href="http://sochi.org.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <script type="text/javascript"><!--
+      var dpstate = 'h';
+      var ext1Content = null;
+      var ext2Content = null;
+      var mainContent = null;
+      function dp_init() {
+	mainContent = document.getElementById('ext0');
+	ext1Content = document.getElementById('ext1');
+	ext2Content = document.getElementById('ext2');
+	try {
+		mainContent.removeChild(ext1Content);
+		mainContent.removeChild(ext2Content);
+	} catch (ex) {
+	}
+	ext1Content.style.visibility = 'visible';
+	ext2Content.style.visibility = 'visible';
+      }
+      function swap() {
+	if (dpstate == 'h') {
+		mainContent.appendChild(ext1Content);
+		mainContent.appendChild(ext2Content);
+		dpstate = 'v';
+	} else {
+	        mainContent.removeChild(ext1Content);
+        	mainContent.removeChild(ext2Content);
+		dpstate = 'h';
+	}
+	return false;
+      }
       function clk(id,pos){(new Image()).src="/cgi-bin/c.pl?id="+id+"&pos="+pos;return true;}
       //--></script>
 	<style type="text/css">
@@ -119,27 +149,13 @@ DateFormat %d %b %Y
 		SELECT { width: 15em; }
 	</style>
     <script type="text/javascript" src="http://sochi.org.ru/js/serpbubble.js"></script>
-    <script type="text/javascript" src="/htmlhttprequest_commented.js"></script>
-    <script type="text/javascript">
-function myCopyContent(domDoc, uri) {
- var destId = 'resultArea';
- var dest = document.getElementById ? document.getElementById(destId) :
-  (document.all ? document.all[destId] : null);
- if (!dest) return;
- if (dest.innerHTML) dest.innerHTML = domDoc;
-}
-function showBooksAndVideo() {
-var CommerceLoader = new HTMLHttpRequest('CommerceLoader', myCopyContent);
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q)&m=$&(m)&c=0B09&sp=1&sy=0&p=$&(p)&GroupBySite=no&s=RD&ps=3&tmplt=books8.htm.en');
-}
-    </script>
 </HEAD>
 <!-- BrowserCharset: $(BrowserCharset) -->
-<BODY onload="showBooksAndVideo()">
+<BODY>
 
 <div id="form">
 <center>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="background: url(/tdbg.png) repeat-x #f4f4f4;">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="background: url(/tdbg2.png) repeat-x #f4f4f4;">
 
 <tr>
 <td class="headruler" align="left" valign="top">&nbsp;<b>
@@ -170,23 +186,33 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q)&m=$&(m)&c=0B09&sp=1&sy=0&p=$&(p
 	<input type="hidden" name="site" value="-572280698">
 <!ENDIF>
 
-<table border="0" cellpadding="2" cellspacing="0">
+<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<tbody id="ext0">
 <tr>
-<td width="100%" colspan="2">
- &nbsp;<b class="inputrev">$(SearchFor.lng):</b> <INPUT class="inputrev" TYPE="text" NAME="q" SIZE="50" VALUE="$&(q)">
- <INPUT class="inputrev" TYPE="submit" VALUE="&gt;&gt;&gt;">
- <!--/td><td-->&nbsp;
+<td width="100%">
+			<table width="100%" border="0" cellpadding="2" cellspacing="0">
+			    <tr>
+			      <td width="99%" style="vertical-align: middle;">
+				  <input class="inputsearch" type="text" name="q" size="60" value="$&(q)" style="width:100%;">
+			      </td><td>
+				  <input class="inputsearch" type="submit" value="Search">
+			      </td>
+			    </tr>
+			    <!--tr>
+			      <td class="inputrev">&nbsp;</td>
+			    </tr-->
+			</table>
+</td>
+</tr>
+<tr><td width="100%" align="right"><small><a href="" onclick="return swap();">$(extended.lng)</a></small></td></tr>
+<tr id="ext1" style="visibility: hidden;">
+<td width="100%" align="right">
  <select name="m" class="inputrev">
  <option value="all" selected="$&(m)"> $(all.lng) 
  <option value="near" selected="$&(m)"> $(near.lng) 
  <option value="any" selected="$&(m)"> $(any.lng)
  <option value="bool" selected="$&(m)"> $(bool.lng)
  </select>
- </td>
-</tr>
-
-<tr>
-<td width="100%" align="right">
 <select class="inputrev" name="g">
 <OPTION VALUE="" SELECTED="$&(g)">$(langany.lng)</option>
 <OPTION VALUE="ru" SELECTED="$&(g)">$(langru.lng)</option>
@@ -208,7 +234,7 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q)&m=$&(m)&c=0B09&sp=1&sy=0&p=$&(p
 </select><br>
 </td></tr>
 
-<tr>
+<tr id="ext2" style="visibility: hidden;">
 <td width="100%" align="right">
 <!IFNOT NAME="rm" CONTENT=""><select class="inputrev" name="rm">
 <option value="1" selected="$&(rm)">fast</option>
@@ -216,7 +242,7 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q)&m=$&(m)&c=0B09&sp=1&sy=0&p=$&(p
 <option value="3" selected="$&(rm)">ultra</option>
 </select><!ENDIF>
 <select class="inputrev" name="wf">
-<option value="33F37F73" selected="$&(wf)">$(doc.lng)</option>
+<option value="F1F1" selected="$&(wf)">$(doc.lng)</option>
 <option value="00000F00" selected="$&(wf)">$(ref.lng)</option>
 <option value="000000F0" selected="$&(wf)">$(tit.lng)</option>
 <option value="0000000F" selected="$&(wf)">$(body.lng)</option>
@@ -235,13 +261,18 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q)&m=$&(m)&c=0B09&sp=1&sy=0&p=$&(p
 <option value="0" selected="$&(sp)">$(exact.lng)</option>
 <option value="1" selected="$&(sp)">$(wforms.lng)</option>
 </select>
-</td></tr></table>
+</td></tr>
+</tbody>
+</table>
 </FORM>
 </td>
 </tr>
 </table>
 </center>
 </div>
+<script type="text/javascript"><!--
+dp_init();
+//--></script>
 <!--/top-->
 
 <!--bottom-->
@@ -252,6 +283,7 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q)&m=$&(m)&c=0B09&sp=1&sy=0&p=$&(p
 <a href="http://li.ru/go?www.google.com/search?ie=UTF-8&amp;hl=en&amp;q=$%(q:utf-8)">Google</a> &#150;
 <a href="http://li.ru/go?www.yandex.ru/yandsearch?text=$%(q:cp1251)&amp;stype=www">$(yandex.lng)</a> &#150;
 <a href="http://li.ru/go?search.rambler.ru/cgi-bin/rambler_search?english=0&and=1&words=$%(q:cp1251)">$(rambler.lng)</a> &#150;
+<a href="http://li.ru/go?gogo.ru/go?q=$%(q:cp1251)">GoGo</a> &#150;
 <a href="http://li.ru/go?www.nigma.ru/index.php?0=1&1=1&2=1&3=1&4=1&5=1&6=1&7=1&q=$%(q:cp1251)">$(nigma.lng)</a> &#150;
 <a href="http://li.ru/go?search.yahoo.com/bin/query?p=$%(q:koi8-r)&amp;ei=KOI8-R">Yahoo!</a> &#150;
 <a href="http://li.ru/go?search.msn.com/results.aspx?q=$%(q:UTF-8)">MSN</a>
@@ -304,7 +336,6 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q)&m=$&(m)&c=0B09&sp=1&sy=0&p=$&(p
 <div id="dir">
 <table width="100%" cellpadding="5" cellspacing="0" border="0">
 <tr><td rowspan="2" valign="top" allign="left">
-<!-- google_ad_section_start -->
 <!--/restop-->
 
 
@@ -337,7 +368,7 @@ $&(MP3.Album)<br><!ENDIF>
 $&(MP3.Song)<br><!ENDIF>
 <!IF NAME="MP3.Year" CONTENT=""> <!ELSE><span class="result">$(year.lng): </span>
 $&(MP3.Year)<br><!ENDIF>
-<!IF NAME="Body" CONTENT=""> <!ELSE>$&(Body)<br><!ENDIF></div>
+<!IF NAME="Body" CONTENT=""> <!ELSE><small>$&(Body)</small><br><!ENDIF></div>
 <!IFNOT NAME="sea" CONTENT=""><div class="serp3"><small class="restop">$(summary.lng):</small> <small>$&(sea:256)</small></div><!ENDIF>
 <div class="serp2"><small class="result">$&(URL:40)<br>$(Last-Modified) - $(FancySize) $(bytes.lng) - $(Content-Language)<!-- - $(Charset)--></small>
 <small class="result">- $(score.lng): $(Score) [$(Pop_Rank)]<br>
@@ -380,25 +411,10 @@ $(CL)
 <!--/navigator-->
 
 <!--resbot-->
-<!-- google_ad_section_end -->
 </td><td width="160" valign="top" align="right" style="border-left: 1px solid #f4f4f4">
 <div id="resultArea">&nbsp;</div>
 <br><br>
-<script type="text/javascript"><!--
-google_ad_client = "$&(google.ad.client)";
-google_ad_channel ="$&(google.ad.channel)";
-google_ad_width = 160;
-google_ad_height = 600;
-google_ad_format = "160x600_as";
-google_color_border = "FFFFFF";
-google_color_text = "333333";
-google_color_bg = "FFFFFF";
-google_color_link = "0050A0";
-google_color_url = "006000";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
+<!-- ads here -->
 </td>
 </tr>
 <tr><td width="160" align="center" valign="bottom">
@@ -432,7 +448,7 @@ $(sortedby.lng):&nbsp;
 <div class="form">
 <br>
 <center>
-<table width="100%" border="0" cellpadding="2" cellspacing="0" align="center" style="background-image: url(/tdbg.png);">
+<table width="100%" border="0" cellpadding="2" cellspacing="0" align="center" style="background-image: url(/tdbg2.png);">
 <tr>
 <td valign="middle" align="center">
 

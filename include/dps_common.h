@@ -524,6 +524,7 @@ typedef struct dps_url {
 	char	*auth;
 	char	*hostname;
 	char	*path;
+        char    *directory;
 	char	*filename;
 	char	*anchor;
         char    *query_string;

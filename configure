@@ -1116,7 +1116,7 @@ Optional Packages:
   --with-posfactor=NUM    Define NUM as factor of first word position in relevance calculation.
                           Default value is 0.5.
   --with-lessposfactor=NUM    Define NUM as factor of first word position in relevance calculation.
-                          Default value is --with-positionfactor multyply by 4.
+                          Default value is --with-posfactor multyply by 4.
   --with-wrdcntfactor=NUM Define NUM as factor of word count in relevance calculation.
                           Default value is 0.4.
   --with-lesswrdcntfactor=NUM Define NUM as factor of word count in relevance calculation.
