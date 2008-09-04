@@ -13,7 +13,7 @@ use vars qw( $VERSION @ISA $AUTOLOAD );
 require DynaLoader;
 
 @ISA     = qw( DynaLoader );
-$VERSION = '4.48';
+$VERSION = '4.51';
 
 bootstrap Dataparksearch $VERSION;
 

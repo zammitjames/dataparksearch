@@ -156,8 +156,8 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	DpsCheckLangMap(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, 2 * DPS_LM_TOPCNT + 2);
 /*	links[i * List.nitems + j] =  (double)(DPS_LM_TOPCNT - MapStat.miss) / (double)(MapStat.hits + MapStat.miss + 1);*/
 /*	links[j * List.nitems + i] = links[i * List.nitems + j] = List.nitems / ((double)MapStat.hits + 1.0);*/
-	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.hits == 0) ? ((MapStat.miss == 0) ? 1.0 : -1.0) :
-	  (1.0 - (double)MapStat.miss / (double)MapStat.hits);
+	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0) ? ((MapStat.hits == 0) ? 0.0 : 1.0) :
+	  (1.0 / (double)MapStat.miss);
 #ifdef DEBUG
 	DpsLog(Indexer, DPS_LOG_INFO, "Link %u->%u: %f [hits:%d miss:%d]", i, j, links[i * List.nitems + j], MapStat.hits, MapStat.miss);
 #endif
@@ -197,7 +197,11 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 
 	if (fabs(delta) > 0.0) {
 /*	  for (j = 0; j < List.nitems; j++) links[j * List.nitems + l] += List.Sent[j].Oi * delta;*/
-	  for (j = 0; j < List.nitems; j++) links[l * List.nitems + j] += List.Sent[j].Oi * delta;
+	  for (j = 0; j < List.nitems; j++) {
+	    links[l * List.nitems + j] += List.Sent[j].Oi * delta;
+	    if (links[l * List.nitems + j] < 0.0) links[l * List.nitems + j] = 0.0;
+	    if (links[l * List.nitems + j] > 1.0) links[l * List.nitems + j] = 1.0;
+	  }
 	} else {
 	  continue; /*break;*/
 	}

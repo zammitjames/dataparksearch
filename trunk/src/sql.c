@@ -493,7 +493,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	default:
 	  break;
 	}
-	if (fromserver && ((Agent->Flags.cmd == DPS_IND_POPRANK) || (Agent->flags & DPS_FLAG_SORT_POPRANK))) {
+	if (fromserver && ((Agent->Flags.cmd == DPS_IND_POPRANK) /*|| (Agent->flags & DPS_FLAG_SORT_POPRANK)*/)) {
 	  fromserver = 0;
 	  fromstr = (char*)DpsRealloc(fromstr, dps_strlen(fromstr) + 12);
 	  if (fromstr == NULL) {
@@ -3033,7 +3033,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
-	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC,s.weight DESC" : "pop_rank DESC,s.weight DESC");
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "pop_rank DESC");
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_EXPIRED) {
@@ -4414,6 +4414,7 @@ static void SQLResToDoc(DPS_ENV *Conf, DPS_DOCUMENT *D, DPS_SQLRES *sqlres, size
 /*	if (!DpsURLParse(&D->CurURL, dc_url)) {
 	  DpsVarListInsStr(&D->Sections, "url.host", DPS_NULL2EMPTY(D->CurURL.hostname));
 	  DpsVarListInsStr(&D->Sections, "url.path", DPS_NULL2EMPTY(D->CurURL.path));
+	  DpsVarListInsStr(&D->Sections, "url.directory", DPS_NULL2EMPTY(D->CurURL.directory));
 	  DpsVarListInsStr(&D->Sections, "url.file", DPS_NULL2EMPTY(D->CurURL.filename));
 	}*/
 

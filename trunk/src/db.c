@@ -1521,6 +1521,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	    if (!DpsURLParse(&D->CurURL, url)) {
 	      DpsVarListInsStr(&D->Sections, "url.host", DPS_NULL2EMPTY(D->CurURL.hostname));
 	      DpsVarListInsStr(&D->Sections, "url.path", DPS_NULL2EMPTY(D->CurURL.path));
+	      DpsVarListInsStr(&D->Sections, "url.directory", DPS_NULL2EMPTY(D->CurURL.directory));
 	      DpsVarListInsStr(&D->Sections, "url.file", DPS_NULL2EMPTY(D->CurURL.filename));
 	      D->fetched = 1;
 	      Res->fetched++;

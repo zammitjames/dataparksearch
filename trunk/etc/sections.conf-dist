@@ -38,68 +38,70 @@ Section	meta.description	4	128
 
 Section url			6	0 	strict
 #Section url.file		6	0	strict
-#Section url.path		7	0	strict
-#Section url.host		8	0	strict
-#Section url.proto		9	0	strict
+#Section url.directory          7       0       strict
+#Section url.path		8	0	strict
+#Section url.host		9	0	strict
+#Section url.proto		10	0	strict
 
 # CrossWords
 
-Section crosswords		10
+Section crosswords		11
 
-Section Charset 		11 	32
-Section Content-Type		12	64
-Section Content-Language	13	16
+Section Charset 		12 	32
+Section Content-Type		13	64
+Section Content-Language	14	16
 
 # Uncomment the following lines if you want tag attributes
 # to be indexed
 
-#Section attribute.alt		14	128
-#Section attribute.label	15	128
-#Section attribute.summary	16	128
-#Section attribute.title	17	128
-#Section attribute.longdesc	18	128
+#Section attribute.alt		15	128
+#Section attribute.label	16	128
+#Section attribute.summary	17	128
+#Section attribute.title	18	128
+#Section attribute.longdesc	19	128
 
 # Uncomment the following lines if you want use NewsExtensions
 # You may add any Newsgroups header to be indexed and stored in urlinfo table
 
-#Section References		19	0
-#Section Message-ID		20	0
-#Section Parent-ID		21	0
+#Section References		20	0
+#Section Message-ID		21	0
+#Section Parent-ID		22	0
 
 # Uncomment the following lines if you want index MP3 tags.
-#Section MP3.Song           	22    128
-#Section MP3.Album          	23    128
-#Section MP3.Artist         	24    128
-#Section MP3.Year           	25    128
-#Section MP3.Comment            26    128
+#Section MP3.Song           	23    128
+#Section MP3.Album          	24    128
+#Section MP3.Artist         	25    128
+#Section MP3.Year           	26    128
+#Section MP3.Comment            27    128
 # These are ID3v.2.2 tags
-#Section ID3.TT1                27    128
-#Section ID3.TT2                28    128
-#Section ID3.TT3                29    128
-#Section ID3.TP1                30    128
-#Section ID3.TP2                31    128
-#Section ID3.TP3                32    128
-#Section ID3.TP4                33    128
-#Section ID3.TCM                34    128
-#Section ID3.TXT                35    128
-#Section ID3.TLA                36    128
-#Section ID3.TAL                37    128
-#Section ID3.TYE                38    128
-#Section ID3.TCR                39    128
-#Section ID3.TPB                40    128
-#Section ID3.TOT                41    128
-#Section ID3.TOA                42    128
-#Section ID3.TOL                43    128
-#Section ID3.TOR                44    128
+#Section ID3.TT1                28    128
+#Section ID3.TT2                29    128
+#Section ID3.TT3                30    128
+#Section ID3.TP1                31    128
+#Section ID3.TP2                32    128
+#Section ID3.TP3                33    128
+#Section ID3.TP4                34    128
+#Section ID3.TCM                35    128
+#Section ID3.TXT                36    128
+#Section ID3.TLA                37    128
+#Section ID3.TAL                38    128
+#Section ID3.TYE                39    128
+#Section ID3.TCR                40    128
+#Section ID3.TPB                41    128
+#Section ID3.TOT                42    128
+#Section ID3.TOA                43    128
+#Section ID3.TOL                44    128
+#Section ID3.TOR                45    128
 
 
 # Uncomment the following line if you want index images comment extensions.
-#Section IMG.comment		45    0
+#Section IMG.comment		46    0
 
 # Uncomment the following line if you want use Summary Extraction Algorithm.
 # Change maxlen value from 0, if you want to use $(sea) value if search template.
-#Section sea			46    0
+#Section sea			47    0
 
 # Uncomment the following line if you fish to store geopositions found.
 #Section geo.lat                0     32
 #Section geo.lon                0     32
+

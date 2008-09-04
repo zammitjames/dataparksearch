@@ -606,6 +606,7 @@ __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len) {
 	DPS_FREE(CDoc);
 	return NULL;
       }
+      fprintf(stderr, " === CDoc: %x   CDoc[0]:%x  CDoc[1]:%x  2:%x  3:%x\n", CDoc, CDoc[0], CDoc[1], CDoc[2], CDoc[3]);
       inflateInit2(&zstream, P->zlib_windowBits);
       res = inflate(&zstream, Z_FINISH);
 /*      fprintf(stderr, "inflate exit: %d  avail_out: %d  total_out: %d  avail_in: %d\n", 

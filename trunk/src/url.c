@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -48,6 +48,7 @@ void __DPSCALL DpsURLFree(DPS_URL *url) {
 	DPS_FREE(url->auth);
 	DPS_FREE(url->hostname);
 	DPS_FREE(url->path);
+	DPS_FREE(url->directory);
 	DPS_FREE(url->filename);
 	DPS_FREE(url->anchor);
 	DPS_FREE(url->query_string);
@@ -72,6 +73,7 @@ int DpsURLParse(DPS_URL *url,const char *str){
 	url->port=0;
 	url->default_port=0;
 	DPS_FREE(url->path);
+	DPS_FREE(url->directory);
 	DPS_FREE(url->filename);
 	DPS_FREE(url->query_string);
 
@@ -245,6 +247,19 @@ int DpsURLParse(DPS_URL *url,const char *str){
 	if((file=strrchr(url->path,'/'))&&(strcmp(file,"/"))){
 		url->filename = (char*)DpsStrdup(file + 1);
 		*(file+1)=0;
+	}
+
+	/* Now find right '/' sign and copy the rest to directory */
+
+	if (file = strrchr(url->path,'/')) {
+	  char *p_save = file;
+	  for(file--; (file < url->path) && (*file != '/'); file--);
+	  file++;
+	  if (*file) {
+	    *p_save = '\0';
+	    url->directory = (char*)DpsStrdup(file);
+	    *p_save = '/';
+	  }
 	}
 
 	DPS_FREE(s);
