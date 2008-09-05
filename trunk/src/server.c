@@ -100,13 +100,13 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 		if((res=DpsURLParse(&from,urlstr))){
 			switch(res){
 				case DPS_URL_LONG:
-				  DpsLog(A, DPS_LOG_ERROR, "URL too long");
+				  DpsLog(A, DPS_LOG_ERROR, "URL too long: %s", urlstr);
 				  break;
 				case DPS_URL_BAD:
-				  DpsLog(A, DPS_LOG_ERROR, "Badly formed URL");
+				  DpsLog(A, DPS_LOG_ERROR, "Badly formed URL: %s", urlstr);
 				  break;
 				default:
-				  DpsLog(A, DPS_LOG_ERROR, "Error while parsing URL");
+				  DpsLog(A, DPS_LOG_ERROR, "Error while parsing URL: %s", urlstr);
 				  break;
 			}
 			DpsURLFree(&from);
