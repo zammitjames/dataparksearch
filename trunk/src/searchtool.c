@@ -1129,7 +1129,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		DpsDSTRAppendStrWithSpace(&suggest, wrd);
 	      }
 #endif
-	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "NEAR") == 0)) {
+	    } else if ((search_mode == DPS_MODE_BOOL) && !(state.nphrasecmd & 1) && (strcasecmp(clex, "NEAR") == 0)) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_NEAR;
 	      state.add_cmd = add_cmd;
@@ -1141,7 +1141,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		DpsDSTRAppendStrWithSpace(&suggest, wrd);
 	      }
 #endif
-	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "ANYWORD") == 0)) {
+	    } else if ((search_mode == DPS_MODE_BOOL) && !(state.nphrasecmd & 1) && (strcasecmp(clex, "ANYWORD") == 0)) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_ANYWORD;
 	      state.add_cmd = add_cmd;
@@ -1153,7 +1153,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		DpsDSTRAppendStrWithSpace(&suggest, wrd);
 	      }
 #endif
-	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "ANY") == 0)) {
+	    } else if ((search_mode == DPS_MODE_BOOL) && !(state.nphrasecmd & 1) && (strcasecmp(clex, "ANY") == 0)) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_ANYWORD;
 	      state.add_cmd = add_cmd;
@@ -1165,7 +1165,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		DpsDSTRAppendStrWithSpace(&suggest, wrd);
 	      }
 #endif
-	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "OR") == 0)) {
+	    } else if ((search_mode == DPS_MODE_BOOL) && !(state.nphrasecmd & 1) && (strcasecmp(clex, "OR") == 0)) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_OR;
 	      state.add_cmd = add_cmd;
@@ -1177,7 +1177,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		DpsDSTRAppendStrWithSpace(&suggest, wrd);
 	      }
 #endif
-	    } else if (!(state.nphrasecmd & 1) && ((strcasecmp(clex, "NOT") == 0) || (strcasecmp(clex, "~") == 0))) {
+	    } else if ((search_mode == DPS_MODE_BOOL) && !(state.nphrasecmd & 1) && ((strcasecmp(clex, "NOT") == 0) || (strcasecmp(clex, "~") == 0))) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_NOT;
 	      state.add_cmd = add_cmd;
