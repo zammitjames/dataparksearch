@@ -346,6 +346,7 @@ int main(int argc, char **argv, char **envp) {
 	Env->flags |= DPS_FLAG_UNOCON;
 	DpsSetLogLevel(NULL, DpsVarListFindInt(&Env->Vars, "LogLevel", 0));
 	DpsOpenLog("search.cgi", Env, !strcasecmp(DpsVarListFindStr(&Env->Vars, "Log2stderr", (!httpd) ? "yes" : "no"), "yes"));
+	TRACE_IN(Agent, "search.cgi");
 	DpsLog(Agent,DPS_LOG_ERROR,"search.cgi started with '%s'",template_name);
 		DpsLog(Agent, DPS_LOG_DEBUG, "VarDir: '%s'", DpsVarListFindStr(&Agent->Conf->Vars, "VarDir", DPS_VAR_DIR));
 		DpsLog(Agent, DPS_LOG_DEBUG, "Affixes: %d, Spells: %d, Synonyms: %d, Acronyms: %d, Stopwords: %d",
@@ -497,6 +498,7 @@ int main(int argc, char **argv, char **envp) {
 		DpsVarListAddStr(&Agent->Vars, "E", DpsEnvErrMsg(Agent->Conf));
 		DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "top");
 		DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "error");
+		TRACE_LINE(Agent);
 		if (Res != NULL) goto freeres;
 		goto end;
 	}
@@ -520,6 +522,7 @@ int main(int argc, char **argv, char **envp) {
 	  }
 	}
 #endif
+	TRACE_LINE(Agent);
 
 	{ 
 	  const char *s_save = DpsStrdup(DpsVarListFindStr(&query_vars, "s", ""));
@@ -596,6 +599,7 @@ int main(int argc, char **argv, char **envp) {
 	  exit(0);
 	}
 	nav[0] = '\0';
+	TRACE_LINE(Agent);
 	
 	/* build NL NB NR */
 	for(i = (size_t)page1; i < (size_t)page2; i++){
@@ -845,6 +849,7 @@ int main(int argc, char **argv, char **envp) {
 		
 		DpsFree(clist);
 	}
+	TRACE_LINE(Agent);
         DpsVarListReplaceInt(&Agent->Vars, (have_p) ? "p" : "np", page_number + have_p);
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "resbot");
 	DPS_FREE(searchwords);
@@ -876,6 +881,7 @@ end:
 	}
 #endif /* HAVE_ASPELL*/	
 
+	TRACE_OUT(Agent);
 	DpsVarListFree(&query_vars);
 	DpsAgentFree(Agent);
 	DpsEnvFree(Env);
