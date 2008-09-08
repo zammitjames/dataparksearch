@@ -493,7 +493,8 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	default:
 	  break;
 	}
-	if (fromserver && ((Agent->Flags.cmd == DPS_IND_POPRANK) /*|| (Agent->flags & DPS_FLAG_SORT_POPRANK)*/)) {
+#if 0
+	if (fromserver /* && ((Agent->Flags.cmd == DPS_IND_POPRANK) || (Agent->flags & DPS_FLAG_SORT_POPRANK))*/) {
 	  fromserver = 0;
 	  fromstr = (char*)DpsRealloc(fromstr, dps_strlen(fromstr) + 12);
 	  if (fromstr == NULL) {
@@ -510,7 +511,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	  }
 	  sprintf(DPS_STREND(serverstr), "%ss.rec_id=url.site_id", (serverstr[0]) ? " AND " : "");
 	}
-
+#endif
 
 	if( !urlstr[0] && !tagstr[0] && !statusstr[0] && !catstr[0] && !langstr[0] 
 	    && !typestr[0] && !serverstr[0] && !fromstr[0] && !sitestr[0] && !timestr[0] && !hopstr[0] ){
@@ -2188,27 +2189,6 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	      } else is_not_same_site = 0;
 	    } else is_not_same_site = 1;
 
-	    if (is_not_same_site) {
-
-		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  
-			     qu, ot, qu, qu, rec_id, qu);
-
-		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
-		}
-		rc = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
-		DpsSQLFree(&SQLRes);
-
-		if (rc == 0) {
-		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight,valid) VALUES (%s%i%s,%s%i%s,%s%s%s,'t')",
-			       qu, ot, qu,  qu, rec_id, qu,  qu, weight, qu);
-		} else {
-		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
-			       qu, ot, qu,  qu, rec_id, qu);
-		}
-		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
-		}
 #if 1
 	      if (ot != rec_id /*k*/) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  
@@ -2232,6 +2212,27 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		}
 	      }
 #endif
+	    if (is_not_same_site) {
+
+		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  
+			     qu, ot, qu, qu, rec_id, qu);
+
+		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
+		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		}
+		rc = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
+		DpsSQLFree(&SQLRes);
+
+		if (rc == 0) {
+		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight,valid) VALUES (%s%i%s,%s%i%s,%s%s%s,'t')",
+			       qu, ot, qu,  qu, rec_id, qu,  qu, weight, qu);
+		} else {
+		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
+			       qu, ot, qu,  qu, rec_id, qu);
+		}
+		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
+		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		}
 	    } else {
 /*	      DpsLog(Indexer, DPS_LOG_ERROR, "AddURL: URL not found: %s", e_url);*/
 	    }
@@ -2323,6 +2324,28 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		is_not_same_site = (site_id != ot_site_id);
 	      } else is_not_same_site = 0;
 	    } else is_not_same_site = 1;
+#if 1
+	    if (ot != k) {
+		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  qu, k, qu, qu, k, qu);
+
+		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
+		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		}
+		rc = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
+		DpsSQLFree(&SQLRes);
+
+		if (rc == 0) {
+		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight) VALUES (%s%i%s,%s%i%s,%s%s%s)",
+			       qu, k, qu,  qu, k, qu,  qu, "1.0"/*weight*/, qu);
+		} else {
+		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
+			       qu, k, qu,  qu, k, qu);
+		}
+		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
+		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		}
+	    }
+#endif
 	    if (is_not_same_site) {
 
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s", qu, ot, qu, qu, k, qu);
@@ -2346,28 +2369,6 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	    } else {
 /*	      DpsLog(Indexer, DPS_LOG_DEBUG, "AddLink: URL not found: %s", e_url);*/
 	    }
-#if 1
-	    if (ot != k) {
-		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  qu, k, qu, qu, k, qu);
-
-		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
-		}
-		rc = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
-		DpsSQLFree(&SQLRes);
-
-		if (rc == 0) {
-		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight) VALUES (%s%i%s,%s%i%s,%s%s%s)",
-			       qu, k, qu,  qu, k, qu,  qu, "1.0"/*weight*/, qu);
-		} else {
-		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
-			       qu, k, qu,  qu, k, qu);
-		}
-		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
-		}
-	    }
-#endif
 	}
 	DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url);
 	return DPS_OK;
