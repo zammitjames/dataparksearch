@@ -253,7 +253,7 @@ int DpsURLParse(DPS_URL *url,const char *str){
 
 	if (file = strrchr(url->path,'/')) {
 	  char *p_save = file;
-	  for(file--; (file < url->path) && (*file != '/'); file--);
+	  for(file--; (file > url->path) && (*file != '/'); file--);
 	  file++;
 	  if (*file) {
 	    *p_save = '\0';
