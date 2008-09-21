@@ -55,4 +55,16 @@ for the tag option. </para -->
 </programlisting>
 	</para>
 	<para>и т.д....</para>
+
+
+<note><para>Для способа хранения cache вам нужно указать секцию category в вашем файле <filename>sections.conf</filename> с ненулевой
+максимальной длиной:
+<programlisting>
+Section category 0 64
+</programlisting>
+</para>
+</note>
+
+
+
 </sect1>

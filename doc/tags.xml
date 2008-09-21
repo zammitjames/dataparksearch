@@ -16,6 +16,15 @@ form. Take a look into <xref linkend="tag_cmd"/>, <filename>indexer.conf-dist</f
 <filename>search.htm-dist</filename> for explanation and
 examples.</para>
 
+<note><para>For dbmode cache you need to have the following section defined in your
+<filename>sections.conf</filename> file:
+<programlisting>
+Section tag 0 64
+</programlisting>
+in overall you need to have the section 'tag' defined with non-zero maximum length.
+</para>
+</note>
+
 
 <sect2 id="tag_cmd">
 <title><command>Tag</command> command</title>

@@ -547,11 +547,13 @@ int main(int argc, char **argv, char **envp) {
 
 	if((Res->WWList.nwords == 0) && (Res->nitems - Res->ncmds == 0) && (Res->num_rows == 0)){
 		DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "noquery");
+		TRACE_LINE(Agent);
 		goto freeres;
 	}
 	
 	if(Res->num_rows == 0) {
 		DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "notfound");
+		TRACE_LINE(Agent);
 		goto freeres;
 	}
 	
