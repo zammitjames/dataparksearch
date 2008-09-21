@@ -47,4 +47,15 @@ CREATE INDEX srv_tag ON "server" ("tag");
 </para>
 		</note>
 	</sect2>
+
+
+<note><para>Для способа хранения cache вам нужно указать секцию tag в вашем файле <filename>sections.conf</filename> с ненулевой
+максимальной длиной:
+<programlisting>
+Section tag 0 64
+</programlisting>
+</para>
+</note>
+
+
 </sect1>

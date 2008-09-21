@@ -373,7 +373,8 @@ test-sections/search.htm \
 test-sections/search.res \
 test-sections/htdocs/test1.html \
 test-sections/htdocs/test2.html \
-test-sections/htdocs/test.xml
+test-sections/htdocs/test.xml \
+test-sections/htdocs/directory/test.html
 
 test_sample_FILES = \
 test-sample/indexer.conf \
@@ -692,7 +693,7 @@ check-TESTS: $(TESTS)
 	else :; fi
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/test-boolean $(distdir)/test-boolean/htdocs $(distdir)/test-cache $(distdir)/test-cache/htdocs $(distdir)/test-cached $(distdir)/test-cached/htdocs $(distdir)/test-charset $(distdir)/test-charset/htdocs $(distdir)/test-complexbody $(distdir)/test-complexbody/htdocs $(distdir)/test-follow $(distdir)/test-follow/htdocs1 $(distdir)/test-follow/htdocs2 $(distdir)/test-hrefonly $(distdir)/test-hrefonly/htdocs $(distdir)/test-include $(distdir)/test-include/htdocs $(distdir)/test-mailto $(distdir)/test-mailto/htdocs $(distdir)/test-multi $(distdir)/test-multi/htdocs $(distdir)/test-parsehtml $(distdir)/test-parsehtml/htdocs $(distdir)/test-quotes $(distdir)/test-quotes/htdocs $(distdir)/test-revalias $(distdir)/test-revalias/htdocs $(distdir)/test-revalias1 $(distdir)/test-revalias1/htdocs $(distdir)/test-sample $(distdir)/test-sample/htdocs $(distdir)/test-sections $(distdir)/test-sections/htdocs
+	$(mkdir_p) $(distdir)/test-boolean $(distdir)/test-boolean/htdocs $(distdir)/test-cache $(distdir)/test-cache/htdocs $(distdir)/test-cached $(distdir)/test-cached/htdocs $(distdir)/test-charset $(distdir)/test-charset/htdocs $(distdir)/test-complexbody $(distdir)/test-complexbody/htdocs $(distdir)/test-follow $(distdir)/test-follow/htdocs1 $(distdir)/test-follow/htdocs2 $(distdir)/test-hrefonly $(distdir)/test-hrefonly/htdocs $(distdir)/test-include $(distdir)/test-include/htdocs $(distdir)/test-mailto $(distdir)/test-mailto/htdocs $(distdir)/test-multi $(distdir)/test-multi/htdocs $(distdir)/test-parsehtml $(distdir)/test-parsehtml/htdocs $(distdir)/test-quotes $(distdir)/test-quotes/htdocs $(distdir)/test-revalias $(distdir)/test-revalias/htdocs $(distdir)/test-revalias1 $(distdir)/test-revalias1/htdocs $(distdir)/test-sample $(distdir)/test-sample/htdocs $(distdir)/test-sections $(distdir)/test-sections/htdocs $(distdir)/test-sections/htdocs/directory
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

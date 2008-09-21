@@ -1243,18 +1243,23 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
      Stat->hits = Stat->miss = 0;
      for (i = 0; i < DPS_LM_TOPCNT; i++) {
        if ( (HIT = bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
-	 Stat->miss += 2;
+	 Stat->miss += 1;
        } else {
-/*	 Stat->hits++;*/
 	 register int p = (HIT - map0->memb3);
 	 Stat->hits += (i >= p) ? (i - p) : (p - i);
        }
        if ( (HIT = bsearch(&map1->memb6[i], map0->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        } else {
-/*	 Stat->hits++;*/
 	 register int p = (HIT - map0->memb6);
 	 Stat->hits += (i >= p) ? (i - p) : (p - i);
+       }
+
+       if ( (HIT = bsearch(&map0->memb3[i], map1->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+	 Stat->miss += 1;
+       }
+       if ( (HIT = bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+	 Stat->miss += 1;
        }
 /*       if (Stat->miss > InfMiss) break;*/
      }
@@ -1270,11 +1275,16 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
        if ( (HIT = bsearch(&map1->memb6[i], map0->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss++;
        } else {
-/*	 Stat->hits++;*/
 	 register int p = (HIT - map0->memb6);
 	 Stat->hits += (i >= p) ? (i - p) : (p - i);
        }
-       if (Stat->miss > InfMiss) break;
+       if ( (HIT = bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+	 Stat->miss++;
+       } else {
+	 register int p = (HIT - map1->memb6);
+	 Stat->hits += (i >= p) ? (i - p) : (p - i);
+       }
+/*       if (Stat->miss > InfMiss) break;*/
      }
 }
 

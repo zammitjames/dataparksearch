@@ -1835,11 +1835,11 @@ static inline dps_uint4 DpsCalcCosineWeightUltra(dps_uint4 *R, double x, double 
 
 static int DpsOriginWeightFull(int origin) {  /* Weight for origin can be from 1 to 15 */
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x10;
-  if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x20;
-  if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x50;
-  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x60;
-  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x80;
-  if (origin & DPS_WORD_ORIGIN_QUERY)   return 0x90;
+  if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x10;
+  if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x20;
+  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x40;
+  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x40;
+  if (origin & DPS_WORD_ORIGIN_QUERY)   return 0x80;
   if (origin & DPS_WORD_ORIGIN_COMMON)  return 0xF0;
   return 0;
 }
@@ -1942,7 +1942,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   wordorder = Res->WWList.Word[wordnum].order_inquery;
   cur_order = (wordorder == 0) ? 0 : -1;
 
-  xy_o = (0xF | DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON));
+  xy_o = DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON);
 /*  fprintf(stderr, " *** R.xy_o: %d\n", xy_o);*/
   Rbc = DpsOriginWeightFull(DPS_WORD_ORIGIN_QUERY) * (double)xy_o * 0xF * nsections;
 /*  fprintf(stderr, " *** Rbc: %f\n", Rbc);*/
@@ -1950,7 +1950,6 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 
   xy = (xy_o = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin));
   xy_wf = wf[wordsec];
-  xy_o = (wf[wordsec] | xy_o);
   nsec = D[DPS_N_ADD + wordsec] = 1;
 
 /**********************************************/
@@ -1994,7 +1993,6 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       register int b = wf[wordsec];
       xy += a;
       xy_wf += b;
-      a |= b;
       xy_o |= a;
       if (D[DPS_N_ADD + wordsec] == 0) nsec++;
       D[DPS_N_ADD + wordsec]++;
@@ -2011,14 +2009,13 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       if (wordorder && (wordorder != prev_wordorder + 1)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;
 #endif
       count[wordorder]++;
-      /*if (Crd[i].url_id == 47325700) DpsLog(query, DPS_LOG_ERROR, "wordorder:%d cur_order:%d  wordpos:%d prev_pos:%d::%d\n", wordorder, cur_order, wordpos, prev_wordpos, D[DPS_N_PHRASE]);*/
-      if ((wordorder == cur_order + 1) && (/*(cur_order == 0) ||*/ (wordpos == prev_wordpos + 1))) {
+      if ((wordorder == cur_order + 1) && ((cur_order == -1) || (wordpos == prev_wordpos + 1))) {
 	cur_order++;
       	if (cur_order == Res->max_order_inquery) {
 		D[DPS_N_PHRASE] = 1; cur_order = (wordorder == 0) ? 0 : -1;
 	}
-      } else if ((cur_order != 0) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) cur_order = -1; 
-      /*if (Crd[i].url_id == 47325700) DpsLog(query, DPS_LOG_ERROR, " wrdorder:%d cur_order:%d  wordpos:%d prev_pos:%d::%d\n\n", wordorder, cur_order, wordpos, prev_wordpos, D[DPS_N_PHRASE]);*/
+      } else if ((cur_order != wordorder) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) 
+	cur_order = (wordorder == 0) ? 0 :-1; 
 
     } else {
       /* Next document */
@@ -2054,22 +2051,18 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 /*	    fprintf(stderr, "** URL_ID: %d [phr_n:%d]\n", Crd[j].url_id, phr_n);*/
 /* fprintf(stderr, " +++ xy: %f  xy_o: %d[x%x]  phr_n: %d  origin: %d\n", xy, xy_o, xy_o, phr_n, DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON));*/
-      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, (xy * xy_o) / (phr_n + 4) * xy_wf * nsec / phr_n, D
+      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / phr_n ) * xy_wf * nsec / phr_n, D
 #ifdef WITH_REL_TRACK
 					     , &Track[j].y
 #endif
 					     );
 #ifdef WITH_REL_TRACK
       Track[j].x = Rbc;
-      Track[j].xy = (xy * xy_o) / (phr_n + 4) * xy_wf * nsec / phr_n;
+      Track[j].xy = ((xy * xy_o) / phr_n) * xy_wf * nsec / phr_n;
 #endif
       j++;
 
       Crd[j] = Crd[i];
-/*
-      bzero((void*)D, D_size);
-      bzero((void*)count, count_size);
-*/
       dps_memcpy(D, (char*)D + D_size, D_size);
       dps_memcpy(count, (char*)count + count_size, count_size);
 

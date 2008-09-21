@@ -994,7 +994,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
     dir = opendir(vardir);
     if (dir) {
       while((item = readdir(dir))) {
-	if (strncmp(item->d_name, "track.", 6)) continue;
+	if (strncmp(item->d_name, "track.", 6) && strncmp(item->d_name, "query.", 6)) continue;
 	to_delete = 0;
 	dps_snprintf(fullname, sizeof(fullname), "%s%s%s", vardir, DPSSLASHSTR, item->d_name);
 	if ((fd = DpsOpen2(fullname, O_RDONLY | DPS_BINARY)) > 0) {
@@ -1004,49 +1004,54 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 	  if (n > 0) {
 	    query[n] = '\0';
 
-	    DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: query[%d]: %s", dps_strlen(query + sizeof(long)), query + sizeof(long) );
 
+	    DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: query[%d]: %s", dps_strlen(query + sizeof(long)), query + sizeof(long) );
+	      
 	    to_delete = 1;
 	    for (i = dbfrom; (i < dbto); i++) {
 	      db = &DBL->db[i];
 	      if(TrackDBAddr || db->TrackQuery) {
 		const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 
-		IP = dps_strtok_r(query + sizeof(long), "\2", &lt);
+		if (strncmp(item->d_name, "track.", 6)) {
+		  res = DpsSQLAsyncQuery(db, NULL, query);
+		  if (res != DPS_OK) {to_delete = 0; continue; }
+		} else {
+		  IP = dps_strtok_r(query + sizeof(long), "\2", &lt);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: IP: %s", IP);*/
-		qwords = dps_strtok_r(NULL, "\2", &lt);
+		  qwords = dps_strtok_r(NULL, "\2", &lt);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: qwords: %s", qwords);*/
-		qtime = dps_strtok_r(NULL, "\2", &lt);
+		  qtime = dps_strtok_r(NULL, "\2", &lt);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: qtime: %s", qtime);*/
-		total_found = dps_strtok_r(NULL, "\2", &lt); 
+		  total_found = dps_strtok_r(NULL, "\2", &lt); 
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: total: %s", total_found);*/
-		wtime = dps_strtok_r(NULL, "\2", &lt); 
+		  wtime = dps_strtok_r(NULL, "\2", &lt); 
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: wtime: %s", wtime);*/
       
-		dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qtrack (ip,qwords,qtime,found,wtime) VALUES ('%s','%s',%s,%s,%s)",
-			     IP, qwords, qtime, total_found, wtime );
+		  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qtrack (ip,qwords,qtime,found,wtime) VALUES ('%s','%s',%s,%s,%s)",
+			       IP, qwords, qtime, total_found, wtime );
  
-		res = DpsSQLQuery(db, NULL, qbuf);
-		if (res != DPS_OK) {to_delete = 0; continue; }
+		  res = DpsSQLAsyncQuery(db, NULL, qbuf);
+		  if (res != DPS_OK) {to_delete = 0; continue; }
 
-		dps_snprintf(qbuf, sizeof(qbuf), "SELECT rec_id FROM qtrack WHERE ip='%s' AND qtime=%s", IP, qtime);
-		res = DpsSQLQuery(db, &sqlRes, qbuf);
-		if (res != DPS_OK) { to_delete = 0; continue; }
-		if (DpsSQLNumRows(&sqlRes) == 0) { DpsSQLFree(&sqlRes); res = DPS_ERROR; continue; }
-		rec_id = DPS_ATOI(DpsSQLValue(&sqlRes, 0, 0));
-		DpsSQLFree(&sqlRes);
+		  dps_snprintf(qbuf, sizeof(qbuf), "SELECT rec_id FROM qtrack WHERE ip='%s' AND qtime=%s", IP, qtime);
+		  res = DpsSQLQuery(db, &sqlRes, qbuf);
+		  if (res != DPS_OK) { to_delete = 0; continue; }
+		  if (DpsSQLNumRows(&sqlRes) == 0) { DpsSQLFree(&sqlRes); res = DPS_ERROR; continue; }
+		  rec_id = DPS_ATOI(DpsSQLValue(&sqlRes, 0, 0));
+		  DpsSQLFree(&sqlRes);
 
-		do {
-		  var = dps_strtok_r(NULL, "\2", &lt);
-		  if (var != NULL) {
-		    val = dps_strtok_r(NULL, "\2", &lt); 
-		    dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qinfo (q_id,name,value) VALUES (%s%i%s,'%s','%s')", 
-				 qu, rec_id, qu, var, val);
-		    res = DpsSQLAsyncQuery(db, NULL, qbuf);
-		    if (res != DPS_OK) continue;
-		  }
-		} while (var != NULL);
-
+		  do {
+		    var = dps_strtok_r(NULL, "\2", &lt);
+		    if (var != NULL) {
+		      val = dps_strtok_r(NULL, "\2", &lt); 
+		      dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qinfo (q_id,name,value) VALUES (%s%i%s,'%s','%s')", 
+				   qu, rec_id, qu, var, val);
+		      res = DpsSQLAsyncQuery(db, NULL, qbuf);
+		      if (res != DPS_OK) continue;
+		    }
+		  } while (var != NULL);
+		}
 	      }
 	    }
 	  }

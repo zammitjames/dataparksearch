@@ -105,7 +105,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	  sentence = DpsUniDup(sentence);
 	  DpsUniStrToLower(sentence);
 	  bzero(&List.Sent[List.nitems].LangMap, sizeof(DPS_LANGMAP));
-	  DpsBuildLangMap(&List.Sent[List.nitems].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
+	  DpsBuildLangMap6(&List.Sent[List.nitems].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
 	  if (sent_len < min_len) { min_len = sent_len; min_pos = List.nitems; }
 	  List.nitems++;
 	  DPS_FREE(sentence);
@@ -116,7 +116,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	  sentence = DpsUniDup(sentence);
 	  DpsUniStrToLower(sentence);
 	  bzero(&List.Sent[min_pos].LangMap, sizeof(DPS_LANGMAP));
-	  DpsBuildLangMap(&List.Sent[min_pos].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
+	  DpsBuildLangMap6(&List.Sent[min_pos].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
 	  DPS_FREE(sentence);
 	  min_len = List.Sent[0].len; min_pos = 0;
 	  for(i = 1; i < List.nitems; i++) if (List.Sent[i].len < min_len) { min_len = List.Sent[i].len; min_pos = i; }
@@ -137,7 +137,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
     return DPS_OK; 
   }
   for (i = 0; i < List.nitems; i++)
-    DpsPrepareLangMap(&List.Sent[i].LangMap);
+    DpsPrepareLangMap6(&List.Sent[i].LangMap);
 
   links = (double*)DpsMalloc(sizeof(double) * List.nitems * List.nitems);
 /*
@@ -153,7 +153,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
       for (j = i + 1/*0*/; j < List.nitems; j++) {
 /*	if (i == j) { links[i * List.nitems + j] = 1.0 / List.nitems; continue; }*/
 	MapStat.map = &List.Sent[j].LangMap;
-	DpsCheckLangMap(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, 2 * DPS_LM_TOPCNT + 2);
+	DpsCheckLangMap6(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, 4 * DPS_LM_TOPCNT + 2);
 /*	links[i * List.nitems + j] =  (double)(DPS_LM_TOPCNT - MapStat.miss) / (double)(MapStat.hits + MapStat.miss + 1);*/
 /*	links[j * List.nitems + i] = links[i * List.nitems + j] = List.nitems / ((double)MapStat.hits + 1.0);*/
 	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0) ? ((MapStat.hits == 0) ? 0.0 : 1.0) :

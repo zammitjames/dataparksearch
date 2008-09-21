@@ -47,6 +47,8 @@
 #include "dps_result.h"
 #include "dps_parsedate.h"
 #include "dps_unicode.h"
+#include "dps_unidata.h"
+#include "dps_uniconv.h"
 #include "dps_contentencoding.h"
 #include "dps_vars.h"
 #include "dps_guesser.h"
@@ -1031,7 +1033,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #endif
 	      }
 	    } else {
-	      DpsLog(Indexer, DPS_LOG_WARN, "Parser not executed, document status: %d", status);
+	      DpsLog(Indexer, DPS_LOG_WARN, "Parser is not executed, document status: %d", status);
 	      return result;
 	    }
 	  }
@@ -1566,7 +1568,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			DpsVarListReplaceInt(&Doc->Sections, "Status", status);
 		}
 		
-		if(status==DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK){
+		if(status == DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK || status == DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
@@ -1672,13 +1674,48 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		return result;
 	}
 
+	{
+	  DPS_CHARSET *parent_cs = DpsGetCharSetByID(Parent->charset_id), *doc_cs = DpsGetCharSetByID(Doc->charset_id);
+	  DPS_CONV     dc_parent;
+	  DPS_TEXTLIST *tlist = &Doc->TextList;
+	  char *src, *dst = NULL;
+	  size_t srclen = (size_t)DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
+	  size_t dstlen = (size_t)DpsVarListFindInt(&Parent->Sections, "Content-Length", 0);
+
+	  DpsVarListReplaceInt(&Parent->Sections, "Content-Length", (int)(srclen + dstlen));
+	  DpsConvInit(&dc_parent, parent_cs, doc_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
+	  for(i = 0; i < tlist->nitems; i++) {
+	    DPS_TEXTITEM *Item = &tlist->Items[i];
+	    srclen = ((Item->len) ? Item->len : (dps_strlen(Item->str)) + 1);	/* with '\0' */
+	    dstlen = (16 * (srclen + 1)) * sizeof(char);	/* with '\0' */
+	    if ((dst = (char*)DpsRealloc(dst, dstlen + 1)) == NULL) {
+	      DPS_FREE(origurl); DPS_FREE(aliasurl);
+	      DpsDocFree(Doc);
+	      if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
+	      TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+	      DpsViolationExit(paran);
+#endif
+	      return DPS_ERROR;
+	    }
+	    src = Item->str;
+	    DpsConv(&dc_parent, dst, dstlen, src, srclen);
+	    Item->str = dst;
+/*	    fprintf(stderr, "Section: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
+	    DpsTextListAdd(&Parent->TextList, Item);
+	    Item->str = src;
+	  }
+	  DPS_FREE(dst);
+	  
+	}
+/*
 	for (i = 0; i < Doc->Words.nwords; i++) {
 	  DpsWordListAdd(Parent, &Doc->Words.Word[i], DPS_WRDSEC(Doc->Words.Word[i].coord));
 	}
 	for (i = 0; i < Doc->CrossWords.ncrosswords; i++) {
 	  DpsCrossListAdd(Parent, &Doc->CrossWords.CrossWord[i]);
 	}
-	
+*/	
 	DpsDocFree(Doc);
 	if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 
@@ -2005,7 +2042,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			DpsVarListReplaceInt(&Doc->Sections, "Status", status);
 		}
 		
-		if(status==DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK){
+		if(status == DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK || status == DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;

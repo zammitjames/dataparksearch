@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* HrefSection proccessing has been fixed in XML parser.
 	* $(url.directory) meta-variable has been added.
 	* storedoc.cgi accepts now the name of template in &tmplt= CGI-parameter.
 	* Accept: HTTP header has been fixed for case when pattern is used for Content-Type in MIME command.

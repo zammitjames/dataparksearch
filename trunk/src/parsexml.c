@@ -134,6 +134,7 @@ static int endElement(DPS_XML_PARSER *parser, const char *name, size_t l) {
   return(DPS_XML_OK);
 }
 
+
 static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
   XML_PARSER_DATA *D = parser->user_data;
   DPS_AGENT *Indexer = D->Indexer;
@@ -144,7 +145,6 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
   size_t slen;
 
 /*  if (D->sec == NULL) return DPS_XML_OK;*/
-
   bzero((void*)&Item, sizeof(Item));
   Item.str = DpsStrndup(s, (size_t)len);
   Item.len = (size_t)len;
@@ -154,34 +154,42 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
     Item.strict = Sec->strict;
     Item.section_name = Sec->name;
     DpsVarListReplaceStr(&Doc->Sections, "geo.lat", Item.str);
+    DpsTextListAdd(&Doc->TextList, &Item);
   } else if ((D->sec != NULL) && (!strcasecmp(D->sec, "icbm:longitude") || !strcasecmp(D->sec, "geo:lon"))
       && (Sec = DpsVarListFind(&Doc->Sections, "geo.lon"))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = Sec->name;
     DpsVarListReplaceStr(&Doc->Sections, "geo.lon", Item.str);
+    DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Indexer->Conf->HrefSections, D->secpath))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = D->sec;
+    DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Doc->Sections, D->secpath))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = D->sec;
+    DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Indexer->Conf->HrefSections, D->sec))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = D->sec;
+    DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Doc->Sections, D->sec))) {
-    Item.section = Sec->section;
+/*    Item.section = Sec->section;
     Item.strict = Sec->strict;
-    Item.section_name = D->sec;
+    Item.section_name = D->sec;*/
+    DpsSGMLUnescape(Item.str);
+    DpsHTMLParseBuf(D->Indexer, D->Doc,  D->sec, Item.str);
   } else {
-    Item.section = D->body_sec;
+/*    Item.section = D->body_sec;
     Item.strict = D->body_strict;
-    Item.section_name = "body";
+    Item.section_name = "body";*/
+    DpsSGMLUnescape(Item.str);
+    DpsHTMLParseBuf(D->Indexer, D->Doc, "body", Item.str);
   }
-  DpsTextListAdd(&Doc->TextList, &Item);
 #ifdef DEBUG_XML
   fprintf(stderr, "sec: %s\nsecpath: %s\nItem.sec:%s str: %s\n\n", 
 	  DPS_NULL2EMPTY(D->sec), DPS_NULL2EMPTY(D->secpath), Item.section_name, Item.str);
@@ -579,7 +587,7 @@ static int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t l
 	    }
           } else {
 #if DEBUG_XML
-	    fprintf(stderr, " LEX=%s\n", DpsLex2str(lex));
+	    fprintf(stderr, ".LEX=%s\n", DpsLex2str(lex));
 #endif
 	    /* Do nothing */
           }
@@ -590,7 +598,7 @@ static int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t l
       }
 
 #if DEBUG_XML
-      fprintf(stderr, " LEX=%s level:%d\n", DpsLex2str(lex), level);
+      fprintf(stderr, ":LEX=%s level:%d\n", DpsLex2str(lex), level);
 #endif
       if (lex == DPS_XML_SLASH) {
         if (DPS_XML_OK != DpsXMLLeave(p, NULL, 0)) {
@@ -676,12 +684,12 @@ gt:
 
       DpsXMLNormText(&a);
       if (a.beg!=a.end) {
-	XML_PARSER_DATA *ud = p->user_data;
+/*	XML_PARSER_DATA *ud = p->user_data;
 	char *html_content = DpsStrndup(a.beg, a.end - a.beg);
 	DpsSGMLUnescape(html_content);
 	DpsHTMLParseBuf(ud->Indexer, ud->Doc,  ud->sec, html_content);
-	DPS_FREE(html_content);
-/*        int rc = DpsXMLValue(p, a.beg, a.end - a.beg);*/
+	DPS_FREE(html_content);*/
+        int rc = DpsXMLValue(p, a.beg, a.end - a.beg);
       }
     }
   }
