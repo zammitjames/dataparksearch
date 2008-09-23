@@ -207,8 +207,6 @@ typedef struct {
 	size_t		max_word_len;
 	size_t		correct_factor;
 	size_t		incorrect_factor;
-	size_t		number_factor;
-	size_t		alnum_factor;
 } DPS_WORDPARAM;
 
 
@@ -901,6 +899,7 @@ typedef struct {
         int             Resegment;        /**< Resegmenting flags for East-Asian languages */
         int             PagesInGroup;     /**< Number of additional pages from same site when google-like groupping is enabled */
         int             LongestTextItems; /**< Number of longest text items to index */
+        int             SubDocLevel;      /**< Maximum nested level for sub-documents */
    enum dps_prmethod    poprank_method;
    enum dps_indcmd      cmd;
 } DPS_FLAGS;

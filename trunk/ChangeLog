@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* SubDocLevel command has been added. Use it to specify maximal nesting level for sub-documents.
 	* HrefSection proccessing has been fixed in XML parser.
 	* $(url.directory) meta-variable has been added.
 	* storedoc.cgi accepts now the name of template in &tmplt= CGI-parameter.

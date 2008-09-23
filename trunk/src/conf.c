@@ -1404,8 +1404,6 @@ static int env_rpl_num_var(void *Cfg, size_t ac,char **av){
 	int	res = DPS_ATOI(av[1]);
 	if(!strcasecmp(av[0],"IspellCorrectFactor"))Conf->WordParam.correct_factor=res;
 	else if(!strcasecmp(av[0],"IspellIncorrectFactor"))Conf->WordParam.incorrect_factor=res;
-	else if(!strcasecmp(av[0],"NumberFactor"))Conf->WordParam.number_factor=res;
-	else if(!strcasecmp(av[0],"AlnumFactor"))Conf->WordParam.alnum_factor=res;
 	else if(!strcasecmp(av[0],"MinWordLength"))Conf->WordParam.min_word_len=res;
 	else if(!strcasecmp(av[0],"MaxWordLength"))Conf->WordParam.max_word_len=res;
 	else if(!strcasecmp(av[0],"PopRankNeoIterations"))Conf->Flags.PopRankNeoIterations = res;
@@ -1415,6 +1413,7 @@ static int env_rpl_num_var(void *Cfg, size_t ac,char **av){
 	else if(!strcasecmp(av[0],"SEASentenceMinLength"))Conf->Flags.SEASentenceMinLength = res;
 	else if(!strcasecmp(av[0],"PagesInGroup"))Conf->Flags.PagesInGroup = res;
 	else if(!strcasecmp(av[0],"LongestTextItems"))Conf->Flags.LongestTextItems = res;
+	else if(!strcasecmp(av[0],"SubDocLevel"))Conf->Flags.SubDocLevel = res;
 	return DPS_OK;
 }		
 
