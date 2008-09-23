@@ -1246,7 +1246,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	  TRACE_OUT(Indexer);
 	  return DPS_ERROR;
 	}
-	Doc->subdoc = 1;
+	Doc->subdoc = Parent->subdoc + 1;
 	Doc->Spider = Parent->Spider;
 	
 	if ((newURL = DpsURLInit(NULL)) == NULL) {

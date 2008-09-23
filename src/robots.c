@@ -308,7 +308,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 	    return NULL;
 	  }
 	  rDoc->Buf.buf[0]='\0';
-	  rDoc->subdoc = (Doc) ? Doc->subdoc : 1;
+	  rDoc->subdoc = (Doc) ? Doc->subdoc : 0;
 
 	  dps_snprintf(rurl, rurlen, "%s://%s/robots.txt", DPS_NULL2EMPTY(URL->schema), DPS_NULL2EMPTY(URL->hostinfo));
 	  DpsVarListAddStr(&rDoc->Sections, "URL", rurl);

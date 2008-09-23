@@ -75,8 +75,6 @@ DPS_ENV *DpsEnvInit(DPS_ENV *Conf){
 	Conf->WordParam.max_word_len = 32;
 	Conf->WordParam.correct_factor = 1;
 	Conf->WordParam.incorrect_factor = 1;
-	Conf->WordParam.number_factor = 1;
-	Conf->WordParam.alnum_factor = 1;
 	Conf->url_number = 0x7FFFFFFF;
 	Conf->lcs=DpsGetCharSet("latin1");
 	Conf->bcs=DpsGetCharSet("latin1");
