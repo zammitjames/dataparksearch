@@ -546,6 +546,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	if ((var = DpsVarListFind(&Doc->Sections, "Location"))) {
 	  if ((Doc->subdoc < Indexer->Flags.SubDocLevel) && 
 	      ((status == DPS_HTTP_STATUS_MOVED_TEMPORARILY) 
+	       || (status == DPS_HTTP_STATUS_MOVED_PARMANENTLY && Doc->subdoc > 1)
 	       || (status == DPS_HTTP_STATUS_SEE_OTHER) 
 	       || (status == DPS_HTTP_STATUS_TEMPORARY_REDIRECT) )) {
 	    DpsIndexSubDoc(Indexer, Doc, NULL, NULL, var->val);
