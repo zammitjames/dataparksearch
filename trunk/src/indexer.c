@@ -1299,8 +1299,8 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	DpsVarListReplaceStr(&Doc->Sections, "base.href", (base) ? base : DpsVarListFindStr(&Parent->Sections, "URL", url));
 	DpsVarListReplaceInt(&Doc->Sections, "crc32old", DpsVarListFindInt(&Doc->Sections, "crc32", 0));
 	if (lang != NULL) DpsVarListReplaceStr(&Doc->RequestHeaders, "Accept-Language", lang);
-	DpsLog(Indexer, (Indexer->Flags.cmd != DPS_IND_POPRANK) ? DPS_LOG_INFO : DPS_LOG_DEBUG, "[%s] Subdoc URL: %s", 
-	       DPS_NULL2EMPTY(lang), newhref);
+	DpsLog(Indexer, (Indexer->Flags.cmd != DPS_IND_POPRANK) ? DPS_LOG_INFO : DPS_LOG_DEBUG, "[%s] Subdoc level:%d, URL: %s", 
+	       DPS_NULL2EMPTY(lang), Doc->subdoc, newhref);
 	
 	/* To see the URL being indexed in "ps" output on xBSD */
 	if (Indexer->Flags.cmd != DPS_IND_POPRANK) dps_setproctitle("[%d] Subdoc:%s", Indexer->handle, newhref);
@@ -1348,6 +1348,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			Doc->lcs = Indexer->Conf->lcs;
 			DpsVarList2Doc(Doc, Server);
 			Doc->Spider.ExpireAt = Server->ExpireAt;
+			Doc->Server = Server;
 			
 			DpsDocAddConfExtraHeaders(Indexer->Conf, Doc);
 			DpsDocAddServExtraHeaders(Server, Doc);
@@ -1568,7 +1569,10 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			DpsVarListReplaceInt(&Doc->Sections, "Status", status);
 		}
 		
-		if(status == DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK || status == DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
+		if(status == DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK 
+		   || status == DPS_HTTP_STATUS_MOVED_TEMPORARILY
+		   || (status == DPS_HTTP_STATUS_MOVED_PARMANENTLY && Doc->subdoc > 1)
+		   ) {
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
