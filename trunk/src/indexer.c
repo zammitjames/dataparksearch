@@ -1298,7 +1298,10 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	DpsVarListReplaceStr(&Doc->Sections, "URL", newhref);
 	DpsVarListReplaceStr(&Doc->Sections, "base.href", (base) ? base : DpsVarListFindStr(&Parent->Sections, "URL", url));
 	DpsVarListReplaceInt(&Doc->Sections, "crc32old", DpsVarListFindInt(&Doc->Sections, "crc32", 0));
-	if (lang != NULL) DpsVarListReplaceStr(&Doc->RequestHeaders, "Accept-Language", lang);
+	if (lang != NULL) {
+	  Doc->fetched = 1;
+	  DpsVarListReplaceStr(&Doc->RequestHeaders, "Accept-Language", lang);
+	}
 	DpsLog(Indexer, (Indexer->Flags.cmd != DPS_IND_POPRANK) ? DPS_LOG_INFO : DPS_LOG_DEBUG, "[%s] Subdoc level:%d, URL: %s", 
 	       DPS_NULL2EMPTY(lang), Doc->subdoc, newhref);
 	

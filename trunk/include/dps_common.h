@@ -549,7 +549,7 @@ typedef struct {
 	int	freeme;		/**< Whether  memory was allocated for doc   */
 	int	stored;		/**< If it is already stored, forAddHref()   */
 	int	method;		/**< How to download document: GET, HEAD etc */
-        int     fetched;        /**< Whether Doc's info was fetched          */
+        int     fetched;        /**< Whether Doc's info was fetched or VaryLang is processing */
         int     charset_id;     /**< Document's charset ID                   */
         int     subdoc;         /**< Subdocument flag                        */
     dpshash32_t id;             /**< Hash32(url) for seding and rec_id in special mode */

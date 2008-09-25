@@ -446,7 +446,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	const int       parent = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 	const int       status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
 
-	if (vary != NULL) {
+	if ((vary != NULL) && (Doc->fetched == 0)) {
 	  if (strcasestr(vary, "accept-language") != NULL) {
 	    DPS_HREF Href;
 	    DPS_URL *newURL = DpsURLInit(NULL);
