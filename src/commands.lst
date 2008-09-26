@@ -63,6 +63,7 @@
 	{"IspellCorrectFactor",	1,1,	env_rpl_num_var},
 	{"IspellInCorrectFactor",1,1,	env_rpl_num_var},
 	{"SubDocLevel",		1,1,	env_rpl_num_var},
+	{"SubDocCnt",		1,1,	env_rpl_num_var},
 	{"MinWordLength",	1,1,	env_rpl_num_var},
 	{"MaxWordLength",	1,1,	env_rpl_num_var},
 	{"PopRankNeoIterations",1,1,	env_rpl_num_var},

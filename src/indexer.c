@@ -1715,6 +1715,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	  DPS_FREE(dst);
 	  
 	}
+	Parent->sd_cnt += 1 + Doc->sd_cnt;
 /*
 	for (i = 0; i < Doc->Words.nwords; i++) {
 	  DpsWordListAdd(Parent, &Doc->Words.Word[i], DPS_WRDSEC(Doc->Words.Word[i].coord));

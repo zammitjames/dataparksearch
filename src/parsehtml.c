@@ -1174,7 +1174,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		DPS_HREF	Href;
 
 		
-		if ((Doc->subdoc < Indexer->Flags.SubDocLevel) 
+		if ((Doc->subdoc < Indexer->Flags.SubDocLevel) && (Doc->sd_cnt < Indexer->Flags.SubDocCnt)
 		    && (!strcasecmp(name, "IFRAME") || !strcasecmp(name, "EMBED") || !strcasecmp(name, "FRAME") 
 					   || !strcasecmp(name, "META"))) {
 		  DpsSGMLUnescape(href);

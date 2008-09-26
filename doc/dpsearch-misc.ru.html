@@ -211,11 +211,11 @@ Reading symbols from /usr/libexec/ld-elf.so.1...done.
 ><P
 >Затем наберите команду <TT
 CLASS="literal"
->backtrace</TT
+>thread apply all backtrace</TT
 >:
 		<PRE
 CLASS="programlisting"
->&#13;(gdb) backtrace
+>&#13;(gdb) thread apply all bt
 #0  0x80483f3 in main () at indexer.c:4
 #1  0x804837d in _start ()
 </PRE

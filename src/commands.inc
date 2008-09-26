@@ -154,6 +154,7 @@
 	{"StopwordFile",	1,1,	add_stoplist},
 	{"Store",               1,100,  add_store_filter},
 	{"StoredFiles",		1,1,	env_rpl_var},
+	{"SubDocCnt",		1,1,	env_rpl_num_var},
 	{"SubDocLevel",		1,1,	env_rpl_num_var},
 	{"Subnet",		1,100,	add_srv},
 	{"SubnetDB",            1,100,  add_srv_db},
