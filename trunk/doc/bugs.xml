@@ -43,9 +43,9 @@ Reading symbols from /usr/libexec/ld-elf.so.1...done.
 4               printf("%d",0/0);
 </programlisting>
 		</para>
-		<para>Then type <literal>backtrace</literal> command:
+		<para>Then type <literal>thread apply all backtrace</literal> command:
 		<programlisting>
-(gdb) backtrace
+(gdb) thread apply all bt
 #0  0x80483f3 in main () at indexer.c:4
 #1  0x804837d in _start ()
 </programlisting>

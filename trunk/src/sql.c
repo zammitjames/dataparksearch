@@ -5574,7 +5574,7 @@ int DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type
 #define HI_BORDER_EPS2 (1.0 - 0.000001)
 
 #define LINK_WEIGHT_HI 1.0
-#define LINK_WEIGHT_LO 0.0
+#define LINK_WEIGHT_LO 0.000001
 
 typedef struct {
   double weight, pop_rank;

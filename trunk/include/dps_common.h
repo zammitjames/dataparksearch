@@ -551,7 +551,8 @@ typedef struct {
 	int	method;		/**< How to download document: GET, HEAD etc */
         int     fetched;        /**< Whether Doc's info was fetched or VaryLang is processing */
         int     charset_id;     /**< Document's charset ID                   */
-        int     subdoc;         /**< Subdocument flag                        */
+        int     subdoc;         /**< Subdocument level                       */
+        int     sd_cnt;         /**< Number of subdocuments                  */
     dpshash32_t id;             /**< Hash32(url) for seding and rec_id in special mode */
         dps_uint2               dbnum;
 	
@@ -900,6 +901,7 @@ typedef struct {
         int             PagesInGroup;     /**< Number of additional pages from same site when google-like groupping is enabled */
         int             LongestTextItems; /**< Number of longest text items to index */
         int             SubDocLevel;      /**< Maximum nested level for sub-documents */
+        int             SubDocCnt;        /**< Maximum number of subdocuments to be indexed */
    enum dps_prmethod    poprank_method;
    enum dps_indcmd      cmd;
 } DPS_FLAGS;

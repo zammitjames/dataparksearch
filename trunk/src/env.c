@@ -71,6 +71,7 @@ DPS_ENV *DpsEnvInit(DPS_ENV *Conf){
 	Conf->Flags.SEASentences = 32;
 	Conf->Flags.SEASentenceMinLength = 64;
 	Conf->Flags.PagesInGroup = 1;
+	Conf->Flags.SubDocCnt = 5;
 	Conf->WordParam.min_word_len = 1;
 	Conf->WordParam.max_word_len = 32;
 	Conf->WordParam.correct_factor = 1;
