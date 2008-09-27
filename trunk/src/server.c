@@ -287,29 +287,32 @@ void DpsServerListFree(DPS_SERVERLIST *List){
 	DPS_FREE(List->Server);
 }
 
+int cmpsrvpnt(const void *p1,const void *p2) {
+  const DPS_SERVER **s1 = p1, **s2 = p2;
+  if ((*s1)->site_id < (*s2)->site_id) return -1;
+  if ((*s1)->site_id > (*s2)->site_id) return 1;
+  return 0;
+}
+
 /* This fuction finds Server entry for given URL         */
 /* and return Alias in "aliastr" if it is not NULL       */
 /* "aliastr" must be big enough to store result          */
 /* not more than DPS_URLSTR bytes are written to aliastr */
 
-DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, const char *url, int charset_id, char **aliastr) {
+DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url, int charset_id, char **aliastr) {
 #define NS 10
   DPS_MATCH_PART P[NS];
   DPS_SERVERLIST *List;	
   size_t	 i, cur_idx = dps_max_server_ordre, tix;
-  char		 *robots = NULL;
   DPS_SERVER	 *Res = NULL;
   DPS_CONN       conn;
   char           net[32];
-	
-  /* If it's a robot.txt, cut to hostinfo and find result */
-  if((robots=strstr(url,"/robots.txt"))){
-    if(!strcmp(robots,"/robots.txt")){
-      robots = (char*)DpsStrdup(url);
-      robots[dps_strlen(url)-10]='\0';
-    }else{
-      robots=NULL;
-    }
+
+  if (/*!(Agent->flags & DPS_FLAG_ADD_SERVURL) &&*/ (server_id != 0)) {
+    DPS_SERVER key, *pkey = &key, **res;
+    key.site_id = server_id;
+    res = bsearch(&pkey, Agent->Conf->SrvPnt, Agent->Conf->total_srv_cnt, sizeof(DPS_SERVER*), cmpsrvpnt); 
+    if (res != NULL) return *res;
   }
 	
   net[0] = '\0';
@@ -367,7 +370,6 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, const char *url, int charset_id, ch
 	    (List->nservers > 0) ? List->Server[List->nservers-1].ordre : 0);
     if (i < List->nservers) fprintf(stderr, "\t\tServer[i].ordre:%d\n", List->Server[i].ordre);*/
   }
-  DPS_FREE(robots);
   return(Res);
 }
 

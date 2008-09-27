@@ -920,6 +920,8 @@ typedef struct dps_config_struct {
 	
 	DPS_SERVERLIST	Servers[DPS_MATCH_max];	/**< List of servers and realms */
         DPS_SERVER      *Cfg_Srv;
+        DPS_SERVER      **SrvPnt;
+        int             total_srv_cnt;  /**< total number of servers    */
 	DPS_ROBOTS	Robots;		/**< robots.txt information     */
 	
 	DPS_MATCHLIST	Aliases;	/**< Straight aliases           */

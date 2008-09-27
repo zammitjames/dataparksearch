@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -28,10 +28,11 @@
 #define DPS_FOLLOW_WORLD	3
 
 extern int		DpsSpiderParamInit(DPS_SPIDERPARAM *);
+extern int cmpsrvpnt(const void *p1,const void *p2);
 extern __C_LINK int	__DPSCALL DpsServerInit(DPS_SERVER * srv);
 extern __C_LINK void __DPSCALL DpsServerFree(DPS_SERVER * srv);
 extern __C_LINK int	__DPSCALL DpsServerAdd(DPS_AGENT * A, DPS_SERVER * srv);
-extern DPS_SERVER *	DpsServerFind(DPS_AGENT *A, const char * url, int charset_id, char **alias);
+extern DPS_SERVER *	DpsServerFind(DPS_AGENT *A, urlid_t server_id, const char * url, int charset_id, char **alias);
 extern void		DpsServerListFree(DPS_SERVERLIST *);
 extern void		DpsServerListSort(DPS_SERVERLIST *);
 extern urlid_t          DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Doc);

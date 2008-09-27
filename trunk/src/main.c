@@ -589,7 +589,22 @@ static int DpsIndexerEnvLoad(DPS_AGENT *Indexer, const char *fname, dps_uint8 lf
           if (rc) {
                sprintf(Indexer->Conf->errstr, "Error: '%s': No required DBAddr commands were specified", fname);
                rc= DPS_ERROR;
-          } else rc = DPS_OK;
+          } else {
+	    size_t i, tix, cpnt;
+	    DPS_SERVERLIST *List;	
+	    rc = DPS_OK;
+	    if (Indexer->Conf->total_srv_cnt) DPS_FREE(Indexer->Conf->SrvPnt)  else  Indexer->Conf->SrvPnt = NULL;
+	    Indexer->Conf->total_srv_cnt = 0; cpnt = 0;
+	    for (tix = DPS_MATCH_min; tix < DPS_MATCH_max; tix++) {
+	      List = &Indexer->Conf->Servers[tix];
+	      Indexer->Conf->total_srv_cnt += List->nservers;
+	      Indexer->Conf->SrvPnt =(DPS_SERVER**)DpsRealloc(Indexer->Conf->SrvPnt, Indexer->Conf->total_srv_cnt * sizeof(DPS_SERVER*)+1);
+	      for (i = 0; i < List->nservers; i++) {
+		Indexer->Conf->SrvPnt[cpnt++] = &List->Server[i];
+	      }
+	    }
+	    if (Indexer->Conf->total_srv_cnt > 1) DpsSort(Indexer->Conf->SrvPnt, cpnt, sizeof(DPS_SERVER*), cmpsrvpnt);
+	  }
      }
      return rc;
 }
