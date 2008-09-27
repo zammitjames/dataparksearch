@@ -886,7 +886,7 @@ static int add_url(void *Cfg, size_t ac,char **av){
 		DPS_CHARSET *cs = DpsGetCharSet(DpsVarListFindStr(&C->Srv->Vars, "RemoteCharset", 
 								  DpsVarListFindStr(&C->Srv->Vars, "URLCharset", "iso-8859-1")));
 
-		if((Srv = DpsServerFind(Indexer, av[1], cs->id, &al))) {
+		if((Srv = DpsServerFind(Indexer, 0, av[1], cs->id, &al))) {
 		        DPS_CHARSET *s_cs = DpsGetCharSet(DpsVarListFindStr(&Srv->Vars, "RemoteCharset", 
 									    DpsVarListFindStr(&Srv->Vars, "URLCharset", "iso-8859-1")));
 			if (s_cs == NULL) s_cs = cs;

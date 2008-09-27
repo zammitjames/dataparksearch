@@ -3046,7 +3046,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		
 			
 	if(db->DBSQL_LIMIT){
-	  dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id%s%s%s FROM url%s WHERE %s%u %s %s %s %s LIMIT %d%s",
+	  dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%u %s %s %s %s LIMIT %d%s",
 		       select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
@@ -3054,7 +3054,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	}else{
 	  db->res_limit=url_num;
 	  if(!qbuf[0])
-	    dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id%s%s%s FROM url%s WHERE %s%u %s %s %s %s %s %s",
+	    dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%u %s %s %s %s %s %s",
 			 select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from, 
 			 (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
 			 (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
@@ -3111,6 +3111,8 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		DpsVarListReplaceInt(&Doc->Sections, "PrevStatus", DPS_ATOI(DpsSQLValue(&SQLRes,i,3)));
 		DpsVarListReplaceInt(&Doc->Sections, "Hops", DPS_ATOI(DpsSQLValue(&SQLRes,i,4)));
 		DpsVarListReplaceInt(&Doc->Sections, "crc32", DPS_ATOI(DpsSQLValue(&SQLRes,i,5)));
+		DpsVarListReplaceInt(&Doc->Sections, "Site_id", DPS_ATOI(DpsSQLValue(&SQLRes, i, 10)));
+		DpsVarListReplaceInt(&Doc->Sections, "Server_id", DPS_ATOI(DpsSQLValue(&SQLRes, i, 11)));
 		last_mod_time = (time_t) atol(DpsSQLValue(&SQLRes,i,6));
 		DpsTime_t2HttpStr(last_mod_time, buf);
 		if (last_mod_time != 0 && *buf != '\0') {
@@ -3118,10 +3120,10 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		}
 		DpsVarListReplaceStr(&Doc->Sections, "Since", DpsSQLValue(&SQLRes, i, 7));
 		DpsVarListReplaceStr(&Doc->Sections, "Pop_Rank", DpsSQLValue(&SQLRes, i, 8));
-		if (Indexer->Flags.provide_referer) DpsVarListReplaceStr(&Doc->Sections, "Referrer-ID", DpsSQLValue(&SQLRes, i, 10));
+		if (Indexer->Flags.provide_referer) DpsVarListReplaceStr(&Doc->Sections, "Referrer-ID", DpsSQLValue(&SQLRes, i, 12));
 	}
 	if ((Indexer->Flags.cmd & DPS_IND_POPRANK) && (nrows != 0)) 
-	  nit = DPS_ATOI(DpsSQLValue(&SQLRes, nrows - 1, (Indexer->Flags.provide_referer) ? 11 : 10));
+	  nit = DPS_ATOI(DpsSQLValue(&SQLRes, nrows - 1, (Indexer->Flags.provide_referer) ? 13 : 12));
 	DpsSQLFree(&SQLRes);
 	
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {

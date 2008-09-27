@@ -316,7 +316,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 	  DpsLog(Indexer, DPS_LOG_INFO, "ROBOTS: %s", rurl);
 
 	  if (Server != NULL) rServer = Server;
-	  else rServer = DpsServerFind(Indexer, rurl, URL->charset_id, NULL);
+	  else rServer = DpsServerFind(Indexer, (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0), rurl, URL->charset_id, NULL);
 
 	  if (Doc != NULL) {
 	    DpsVarListReplaceLst(&rDoc->RequestHeaders, &Doc->RequestHeaders, NULL, "*"); 
