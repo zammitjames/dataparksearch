@@ -85,6 +85,7 @@
 	{"CheckInsertSQL",      1,1,	env_rpl_bool_var},
 	{"MarkForIndex",        1,1,	env_rpl_bool_var},
 	{"UseDateHeader",       1,1,	env_rpl_bool_var},
+	{"FastHrefCheck",	1,1,	env_rpl_bool_var},
 	{"LocalCharset",	1,1,	env_rpl_charset},
 	{"BrowserCharset",	1,1,	env_rpl_charset},
 	
