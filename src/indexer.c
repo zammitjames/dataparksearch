@@ -238,57 +238,59 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	}else{
 		DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
 	}
-	
-	if(!(Srv = DpsServerFind(Indexer, 0, newhref, newURL->charset_id, NULL))) {
+
+	if (!(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
+	  if(!(Srv = DpsServerFind(Indexer, 0, newhref, newURL->charset_id, NULL))) {
 		DpsLog(Indexer, DPS_LOG_DEBUG, "no Server, skip it");
 		Href->method = DPS_METHOD_DISALLOW;
 		goto check_ret;
-	}
+	  }
 	
-	DpsLog(Indexer, DPS_LOG_DEBUG, " Server applied: site_id: %d URL: %s", Srv->site_id, Srv->Match.pattern);
+	  DpsLog(Indexer, DPS_LOG_DEBUG, " Server applied: site_id: %d URL: %s", Srv->site_id, Srv->Match.pattern);
 	
-	method = DpsVarListFindStr(&Srv->Vars, "Method", "Allow");
-	if((Href->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {
-	  /* Check Allow/Disallow/CheckOnly stuff */
-	  Href->method = DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, newhref, reason, Href->method);
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
-	}
+	  method = DpsVarListFindStr(&Srv->Vars, "Method", "Allow");
+	  if((Href->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {
+	    /* Check Allow/Disallow/CheckOnly stuff */
+	    Href->method = DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, newhref, reason, Href->method);
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
+	  }
 	
-	if(Href->method == DPS_METHOD_DISALLOW) {
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "Disallowed by Server/Realm/Disallow command, skip it");
-	  goto check_ret;
-	}
+	  if(Href->method == DPS_METHOD_DISALLOW) {
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "Disallowed by Server/Realm/Disallow command, skip it");
+	    goto check_ret;
+	  }
 
-	if(Href->method == DPS_METHOD_VISITLATER) {
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "Visit later by Server/Realm/Skip command, skip it");
-	  goto check_ret;
-	}
+	  if(Href->method == DPS_METHOD_VISITLATER) {
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "Visit later by Server/Realm/Skip command, skip it");
+	    goto check_ret;
+	  }
 
-	if (Href->hops > Srv->MaxHops) {
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "too many hops (%d, max: %d), skip it", Href->hops, Srv->MaxHops);
-	  Href->method = DPS_METHOD_DISALLOW;
-	  goto check_ret;
-	}
+	  if (Href->hops > Srv->MaxHops) {
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "too many hops (%d, max: %d), skip it", Href->hops, Srv->MaxHops);
+	    Href->method = DPS_METHOD_DISALLOW;
+	    goto check_ret;
+	  }
 
-	depth = 0;
-	for(s = strchr(newURL->path, (int)'/'); s != NULL; s = strchr(++s, (int)'/')) depth++;
-	if (depth > Srv->MaxDepth) {
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "too deep depth (%d, max: %d), skip it", depth, Srv->MaxDepth);
-	  Href->method = DPS_METHOD_DISALLOW;
-	  goto check_ret;
-	}
+	  depth = 0;
+	  for(s = strchr(newURL->path, (int)'/'); s != NULL; s = strchr(++s, (int)'/')) depth++;
+	  if (depth > Srv->MaxDepth) {
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "too deep depth (%d, max: %d), skip it", depth, Srv->MaxDepth);
+	    Href->method = DPS_METHOD_DISALLOW;
+	    goto check_ret;
+	  }
 
-	if (Srv->use_robots) {
-	  rule = DpsRobotRuleFind(Indexer, Srv, NULL, newURL, 0, 0);
-	  if (rule) {
-	    DpsLog(Indexer, DPS_LOG_DEBUG, "Href.robots.txt: '%s %s'", (rule->cmd==DPS_METHOD_DISALLOW) ? "Disallow" : "Allow", rule->path);
-	    if ((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) ) {
-	      Href->method = rule->cmd;
-	      goto check_ret;
+	  if (Srv->use_robots) {
+	    rule = DpsRobotRuleFind(Indexer, Srv, NULL, newURL, 0, 0);
+	    if (rule) {
+	      DpsLog(Indexer, DPS_LOG_DEBUG, "Href.robots.txt: '%s %s'", (rule->cmd==DPS_METHOD_DISALLOW)?"Disallow":"Allow", rule->path);
+	      if ((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) ) {
+		Href->method = rule->cmd;
+		goto check_ret;
+	      }
 	    }
 	  }
+	  Href->server_id = Srv->site_id;
 	}
-	Href->server_id = Srv->site_id;
  check_ret:
 	DpsURLFree(newURL);
 	return DPS_OK;
