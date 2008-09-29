@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* FastHrefCheck command has been added. Use it to skip href checking against server list during parsing.
 	* SubDocCnt command has been added. Use it to specity the maximal number of sub-documents indexed per one document.
 	* SubDocLevel command has been added. Use it to specify maximal nesting level for sub-documents.
 	* HrefSection proccessing has been fixed in XML parser.

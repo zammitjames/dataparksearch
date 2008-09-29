@@ -1386,6 +1386,7 @@ static int env_rpl_bool_var(void *Cfg, size_t ac,char **av){
 	else if(!strcasecmp(av[0], "MarkForIndex")) Conf->Flags.mark_for_index = res;
 	else if(!strcasecmp(av[0], "UseDateHeader")) Conf->Flags.use_date_header = res;
 	else if(!strcasecmp(av[0], "ProvideReferer")) Conf->Flags.provide_referer = res;
+	else if(!strcasecmp(av[0], "FastHrefCheck")) Conf->flags |= DPS_FLAG_FAST_HREF_CHECK;
 	else if(!strcasecmp(av[0], "ResegmentChinese"))  if (res) { Conf->Flags.Resegment |= DPS_RESEGMENT_CHINESE;
 	                                                 } else Conf->Flags.Resegment &= ~DPS_RESEGMENT_CHINESE;
 	else if(!strcasecmp(av[0], "ResegmentJapanese")) if (res) { Conf->Flags.Resegment |= DPS_RESEGMENT_JAPANESE;
