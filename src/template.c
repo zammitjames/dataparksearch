@@ -189,6 +189,7 @@ static size_t PrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void *
 				  
 				        switch(type) {
 					case '*':
+					case '%':
 					case '&': value = var->val; 
 					  if (vcs != NULL) {
 					    DpsConvInit(&bc_vc, A->Conf->bcs, vcs, A->Conf->CharsToEscape, DPS_RECODE_HTML);
