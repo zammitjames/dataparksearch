@@ -449,6 +449,7 @@ static dpsunicode_t *DpsUniCanonicalDecomposition(dpsunicode_t *buf, dpsunicode_
   DpsDSTRInit(&temp, length);
 
   buf = (dpsunicode_t*)DpsRealloc(buf, sizeof(dpsunicode_t) * (bulen));
+  if (buf == NULL) return str;
   buf[0] = 0;
 
   for(i = 0; i < length - 4; i++) {
