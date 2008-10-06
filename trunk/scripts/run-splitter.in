@@ -1,8 +1,10 @@
 #!/bin/sh
 
-VAR=@prefix@/var
-SPLITTER="@prefix@/sbin/splitter"
-INDEXER="@prefix@/sbin/indexer"
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+VAR=@localstatedir@
+SPLITTER="@sbindir@/splitter"
+INDEXER="@sbindir@/indexer"
 HUP=0
 PRESPLIT=0
 SPLIT=0
