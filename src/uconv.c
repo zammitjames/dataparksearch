@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,11 @@ static int dps_ENTITYprint(char *dest, char sym, dpsunicode_t n) {
   return (int)(d - dest);
 }
 
-int __DPSCALL DpsConv(DPS_CONV *c, char *d, size_t dlen,const char *s, size_t slen) {
+#ifdef DEBUG_CONV
+int __DPSCALL _DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t slen, const char *filename, int line) {
+#else
+int __DPSCALL DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t slen) {
+#endif
   size_t	i, codes;
   int           res;
   dpsunicode_t  wc[32]; /* Are 32 is enough? */
@@ -61,6 +65,10 @@ int __DPSCALL DpsConv(DPS_CONV *c, char *d, size_t dlen,const char *s, size_t sl
   const char	*s_e=s+slen;
   char		*d_e=d+dlen;
   const char	*s_o=s;
+
+#ifdef DEBUG_CONV
+  fprintf(stderr, "conv. @ %s:%d from %s (size:%d) to %s (size:%d)\n", filename, line, c->from->name, slen, c->to->name, dlen); 
+#endif
   
   c->istate = 0; /* set default state */
   c->ostate = 0; /* set default state */

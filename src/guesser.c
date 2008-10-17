@@ -1261,6 +1261,7 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
        if ( (HIT = bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        }
+
 /*       if (Stat->miss > InfMiss) break;*/
      }
 }
@@ -1410,6 +1411,12 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
 	 return DPS_ERROR;
        }
      
+#ifdef DEBUG_GUESSER
+     fprintf(stderr, "use_meta:%d  forte_lang:%d  forte_charset:%d\n", use_meta, forte_lang, forte_charset);
+     if (DpsNeedLog(DPS_LOG_EXTRA))
+       fprintf(stderr, "Guesser start: lang: %s, charset: %s\n", DPS_NULL2EMPTY(lang), DPS_NULL2EMPTY(charset));
+#endif
+
        for(i=0;i<List->nmaps;i++){
           mapstat[i].map = &List->Map[i];
 	  if (forte_charset && strcasecmp(charset, mapstat[i].map->charset)) {
@@ -1475,7 +1482,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
 	     }
 	   }
 	   if (*charset != '\0') break;
-	   if ((i > 5) && (mapstat[i].miss > mapstat[0].miss + 1)) break;
+	   if ((i > 5) && (mapstat[i].miss > mapstat[0].miss + 2)) break;
 	 }
           
        for(i=0;i<List->nmaps;i++){
@@ -1507,7 +1514,6 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
      }
      
 #ifdef DEBUG_GUESSER
-     fprintf(stderr, "use_meta:%d  forte_lang:%d  forte_charset:%d\n", use_meta, forte_lang, forte_charset);
      if (DpsNeedLog(DPS_LOG_EXTRA))
        fprintf(stderr, "Guesser start0: meta_lang: %s, meta_charset: %s\n", DPS_NULL2EMPTY(meta_lang), DPS_NULL2EMPTY(meta_charset));
      if (DpsNeedLog(DPS_LOG_EXTRA))

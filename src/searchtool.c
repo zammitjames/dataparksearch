@@ -2050,7 +2050,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 /*	    fprintf(stderr, "** URL_ID: %d [phr_n:%d]\n", Crd[j].url_id, phr_n);*/
 /* fprintf(stderr, " +++ xy: %f  xy_o: %d[x%x]  phr_n: %d  origin: %d\n", xy, xy_o, xy_o, phr_n, DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON));*/
-      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / phr_n ) * xy_wf * nsec / phr_n, D
+      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n + 1) ) * xy_wf * nsec / (phr_n + 1), D
 #ifdef WITH_REL_TRACK
 					     , &Track[j].y
 #endif
@@ -2117,7 +2117,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	
   Res->CoordList.ncoords = j + 1;
 	
-  Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / phr_n) * xy_wf * nsec / phr_n, D
+  Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n + 1)) * xy_wf * nsec / (phr_n + 1), D
 #ifdef WITH_REL_TRACK
 					 , &Track[j].y
 #endif

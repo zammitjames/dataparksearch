@@ -525,6 +525,7 @@ static int DpsDocConvertHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 	int		hops=DpsVarListFindInt(&Doc->Sections,"Hops",0);
 	urlid_t		url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	dps_uint4           maxhops = DpsVarListFindUnsigned(&Doc->Sections, "MaxHops", 255);
+	urlid_t         server_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0);
 
 	for(i=0;i<Doc->Hrefs.nhrefs;i++){
 		DPS_HREF	*Href=&Doc->Hrefs.Href[i];
@@ -532,7 +533,7 @@ static int DpsDocConvertHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 		Href->charset_id = Doc->charset_id;
 		DpsConvertHref(Indexer,&Doc->CurURL,Href);
 		Href->referrer=url_id;
-		if (maxhops > Href->hops) {
+		if ((server_id != Href->server_id) || (maxhops > Href->hops)) {
 		  Href->stored = 0;
 		} else {
 		  if (Href->method != DPS_METHOD_DISALLOW) 
@@ -1532,7 +1533,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 
 /*			DpsParseHTTPResponse(Indexer, Doc);*/
 			DpsDocProcessResponseHeaders(Indexer, Doc);
-			DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
+/*			DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");*/
 			
 			status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
 			
@@ -1665,6 +1666,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			    return result;
 			  }
 		}
+		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	}
 
 	if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {
@@ -2011,7 +2013,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 
 /*			DpsParseHTTPResponse(Indexer, Doc);*/
 			DpsDocProcessResponseHeaders(Indexer, Doc);
-			DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
+/*			DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");*/
 			
 			status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
 			
@@ -2138,6 +2140,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			    return result;
 			  }
 		}
+		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	}
 
 	if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {

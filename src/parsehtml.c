@@ -517,63 +517,94 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 /**************************** Built-in Parsers ***************************/
 
-int DpsParseURLText(DPS_AGENT *A,DPS_DOCUMENT *Doc){
+int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 	DPS_TEXTITEM	Item;
+	DPS_URL         dcURL;
+	DPS_CONV        lc_dc;
 	DPS_VAR		*Sec;
+	DPS_CHARSET	*doccs, *loccs;
+	const char      *lc_url = DpsVarListFindStr(&Doc->Sections, "E_URL", NULL);
+	char            *dc_url;
+	size_t          len;
+
+
+	if (lc_url == NULL) {
+	  ld_url = DpsVarListFindStr(&Doc->Sections, "URL", "");
+	}
+	len =  = dps_strlen(lc_url);
+	dc_url = (char*)DpsMalloc(24 * len + sizeof(dpsunicode_t));
+	if (dc_url == NULL) return DPS_ERROR;
+
+	loccs = A->Conf->lcs;
+	if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
+	doccs = DpsGetCharSetByID(Doc->charset_id);
+	if(!doccs) doccs = DpsGetCharSet("iso-8859-1");
+	DpsConvInit(&lc_dc, loccs, doccs, A->Conf->CharsToEscape, DPS_RECODE_URL_FROM);
+	DpsConv(&lc_dc, dc_url, (size_t)24 * len,  lc_url, (size_t)(len + 1));
+
+	DpsURLInit(&dcURL);
+	if (DpsURLParse(&dcURL, dc_url)) { DPS_FREE(dc_url); return DPS_ERROR; }
 	
-	Item.href=NULL;
+	Item.href = NULL;
 	
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.proto"))) {
-		char sc[]="url.proto\0";
-		Item.str = DPS_NULL2EMPTY(Doc->CurURL.schema);
+		char sc[] = "url.proto\0";
+		Item.str = DPS_NULL2EMPTY(dcURL.schema);
 		Item.section = Sec->section;
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
+		DpsVarListReplaceStr(&Doc->Sections, "url.proto", Item.str);
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.host"))) {
-		char sc[]="url.host\0";
-		Item.str = DPS_NULL2EMPTY(Doc->CurURL.hostname);
+		char sc[] = "url.host\0";
+		Item.str = DPS_NULL2EMPTY(dcURL.hostname);
 		Item.section = Sec->section;
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
+		DpsVarListReplaceStr(&Doc->Sections, "url.host", Item.str);
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.path"))) {
-		char sc[]="url.path\0";
-		Item.str = DPS_NULL2EMPTY(Doc->CurURL.path);
+		char sc[] = "url.path\0";
+		Item.str = DPS_NULL2EMPTY(dcURL.path);
 		Item.section = Sec->section;
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
+		DpsVarListReplaceStr(&Doc->Sections, "url.path", Item.str);
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.directory"))) {
 		char sc[]="url.directory\0";
-		Item.str = DPS_NULL2EMPTY(Doc->CurURL.directory);
+		Item.str = DPS_NULL2EMPTY(dcURL.directory);
 		Item.section = Sec->section;
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
+		DpsVarListReplaceStr(&Doc->Sections, "url.directory", Item.str);
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.file"))) {
 	        char *str, sc[]="url.file\0";
 		size_t len;
-		str = (char*)DpsMalloc((len = dps_strlen(DPS_NULL2EMPTY(Doc->CurURL.filename))) + 1);
+		str = (char*)DpsMalloc((len = dps_strlen(DPS_NULL2EMPTY(dcURL.filename))) + 1);
 		if (str != NULL) {
-		  DpsUnescapeCGIQuery(str, DPS_NULL2EMPTY(Doc->CurURL.filename));
+		  DpsUnescapeCGIQuery(str, DPS_NULL2EMPTY(dcURL.filename));
 		  Item.str = str;
 		  Item.section = Sec->section;
 		  Item.strict = Sec->strict;
 		  Item.section_name = sc;
 		  Item.len = len;
 		  DpsTextListAdd(&Doc->TextList, &Item);
+		  DpsVarListReplaceStr(&Doc->Sections, "url.file", Item.str);
 		  DPS_FREE(str);
 		}
 	}
+	DpsURLFree(&dcURL);
+	DPS_FREE(dc_url);
 	return DPS_OK;
 }
 /*
@@ -1246,6 +1277,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	  const char *tmpbeg;
 	  const char *tmpend;
 
+
 	  switch(tag.type){
 			
 	  case DPS_HTML_COM:
@@ -1259,7 +1291,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	    if(tmpbeg>=tmpend)break;
 				
 	    tmp = DpsStrndup(tmpbeg,(size_t)(tmpend-tmpbeg+1));
-				
+
 	    if (BSec && !tag.comment && !tag.title && tag.body && !tag.script && !tag.style && tag.index && !tag.select 
 		&& tag.visible[tag.level]) {
 	      Item.href=tag.lasthref;

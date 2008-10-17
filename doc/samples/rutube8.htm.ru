@@ -1,5 +1,5 @@
 <!--variables
-DBAddr		searchd://localhost/?label=qsimilar
+DBAddr		searchd://localhost/?label=rutube
 StoredocURL     /cgi-bin/storedoc.cgi
 LocalCharset 	koi8-r
 BrowserCharset  UTF-8
@@ -35,21 +35,29 @@ Locale ru_RU.UTF-8
 <!--/bottom-->
 
 <!--restop-->
-<div id="topmenu"><b>Похожие запросы:</b></div>
+<div id="topmenu"><b>Видеоролики:</b></div>
 <table border="0" cellspacing="0" cellpadding="0"><tr><td align="left">
 <!--/restop-->
 
 
 <!--res-->
-<div class="qsimilar">
-<small class="restop">
-<a class="restop" href="$(self)?q=$%(query)&amp;wf=F1F1&amp;m=$&(mode)&amp;c=$&(s_c)&amp;sp=$&(s_sp)&amp;sy=$&(s_sy)&amp;GroupBySite=$&(s_GroupBySite)&amp;tmplt=janus.htm.ru&amp;s=IRPD&amp;label=$&(s_label)">
-$&(query:128)</a></small><br/>
+<div class="serp1">
+<small class="restop"><a class="restop" href="$(url)">$&(title:128)</a></small><br>
+<small class="restop"><a class="restop" href="$(url)">
+<!IFNOT NAME="ytid" VALUE=""><img src="http://img.youtube.com/vi/$(ytid)/default.jpg" border="0"></a> 
+<!ELSEIFNOT NAME="myvi" VALUE=""><!IF NAME="ruid" VALUE=""><!SET NAME="ruid" CONTENT="a"><!ENDIF><img src="http://fs-$*(ruid).myvi.ru/$*(myvi).th1" border="0"></a>
+<!ELSE><img src="http://img.rutube.ru/thumbs/$&(ruid)-2.jpg" border="0"></a><!ENDIF>
+</small><br>
+<!IFNOT NAME="meta.description" CONTENT=""><div class="serp2"><small>$&(meta.description:128)</small></div>
+<!ELSE>
+ <!IFNOT NAME="meta.keywords" CONTENT=""><div class="serp2"><small>$&(meta.keywords:128)</small></div><!ENDIF>
+<!ENDIF>
+<small class="result">$(Last-Modified) - $(Score)</small>
 </div>
 <!--/res-->
 
 <!--clone-->
-<li><A HREF="$(URL)">$(URL:50)</A>,&nbsp; $(Last-Modified)
+<li><A HREF="$(URL)">$(URL:50)</A>, $(Last-Modified)
 <!--/clone-->
 
 <!--navleft-->
@@ -74,16 +82,19 @@ $&(query:128)</a></small><br/>
 
 <!--resbot-->
 </td></tr></table>
-<br/>
+<div class="bottom" align="center">
+<a href="/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&GroupBySite=no&s=RD&tmplt=vi8.htm.ru&label=rutube"><small>больше видео</small></a>
+</div>
+<br>
 <!--/resbot-->
 
 
 <!--notfound-->
-&nbsp;
+
 <!--/notfound-->
 
 <!--noquery-->
-&nbsp;
+
 <!--/noquery-->
 
 <!--error-->

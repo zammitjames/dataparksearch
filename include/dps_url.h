@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,10 +22,17 @@
 #define DPS_URL_OK	0
 #define DPS_URL_LONG	1
 #define DPS_URL_BAD	2
-
+/*
+#define DEBUG_URL
+*/
 extern __C_LINK DPS_URL * __DPSCALL DpsURLInit(DPS_URL *url);
 extern __C_LINK void __DPSCALL DpsURLFree(DPS_URL *url);
+#ifdef DEBUG_URL
+extern int _DpsURLParse(DPS_URL *url, const char *s, const char *file, int line);
+#define DpsURLParse(u, s) _DpsURLParse(u, s, __FILE__, __LINE__)
+#else
 extern int DpsURLParse(DPS_URL *url,const char *s);
+#endif
 extern char * DpsURLNormalizePath(char * path);
 
 #endif

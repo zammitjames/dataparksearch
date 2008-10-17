@@ -1,5 +1,5 @@
 <!--variables
-DBAddr		searchd://v.sochi.org.ru/?label=qsimilar
+DBAddr		searchd://localhost/?label=qsimilar
 StoredocURL     /cgi-bin/storedoc.cgi
 LocalCharset 	koi8-r
 BrowserCharset  UTF-8

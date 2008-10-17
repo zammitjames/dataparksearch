@@ -16,9 +16,11 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 */
 
-#ifndef DPS_CHARSET_H
-#define DPS_CHARSET_H
-
+#ifndef DPS_UNICONV_H
+#define DPS_UNICONV_H
+/*
+#define DEBUG_CONV 1
+*/
 #include <sys/types.h>
 
 #define DPS_RECODE_TEXT_FROM            1
@@ -317,7 +319,12 @@ extern __C_LINK DPS_CHARSET * __DPSCALL DpsGetCharSetByID(int id);
 extern  const char * DpsCharsetCanonicalName(const char * alias);
 
 extern __C_LINK void __DPSCALL DpsConvInit(DPS_CONV *c, DPS_CHARSET *from, DPS_CHARSET *to, char *CharsToEscape, int fl);
+#ifdef DEBUG_CONV
+extern __C_LINK int  __DPSCALL _DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t slen, const char *file, int line);
+#define DpsConv(c, d, dl, s, sl) _DpsConv(c, d, dl, s, sl, __FILE__, __LINE__)
+#else
 extern __C_LINK int  __DPSCALL DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t slen);
+#endif
 extern void DpsConvFree(DPS_CONV *c);
 
 #endif

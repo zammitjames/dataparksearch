@@ -35,6 +35,7 @@
 #include "dps_socket.h"
 #include "dps_http.h"
 #include "dps_charsetutils.h"
+#include "dps_url.h"
 
 #include <stdlib.h>
 #include <string.h>

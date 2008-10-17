@@ -339,10 +339,10 @@ dp_init();
 <small>$(SearchFor.lng) &laquo;$&(q)&raquo; $(otherse.lng):
 <a href="http://www.google.com/search?ie=UTF-8&amp;hl=ru&amp;q=$%(q:utf-8)">Google</a> &#150;
 <a href="http://www.yandex.ru/yandsearch?text=$%(q:cp1251)&amp;stype=www">$(yandex.lng)</a> &#150;
-<a href="http://www.rambler.ru/srch?oe=1251&set=www&words=$%(q:koi8-r)">$(rambler.lng)</a> &#150;
+<a href="http://www.rambler.ru/srch?oe=1251&set=www&words=$%(q:cp1251)">$(rambler.lng)</a> &#150;
 <a href="http://gogo.ru/go?q=$%(q:cp1251)">GoGo</a> &#150;
 <a href="http://www.nigma.ru/index.php?0=1&1=1&2=1&3=1&4=1&5=1&6=1&7=1&q=$%(q:cp1251)">$(nigma.lng)</a> &#150;
-<a href="http://search.yahoo.com/bin/query?p=$%(q:koi8-r)&amp;ei=KOI8-R">Yahoo!</a> &#150;
+<a href="http://search.yahoo.com/bin/query?p=$%(q:UTF-8)&amp;ei=UTF-8">Yahoo!</a> &#150;
 <a href="http://search.live.com/results.aspx?q=$%(q:UTF-8)">Live.com</a>
 </small>
 <!ENDIF>
