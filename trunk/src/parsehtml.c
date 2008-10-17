@@ -529,9 +529,9 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 
 
 	if (lc_url == NULL) {
-	  ld_url = DpsVarListFindStr(&Doc->Sections, "URL", "");
+	  lc_url = DpsVarListFindStr(&Doc->Sections, "URL", "");
 	}
-	len =  = dps_strlen(lc_url);
+	len = dps_strlen(lc_url);
 	dc_url = (char*)DpsMalloc(24 * len + sizeof(dpsunicode_t));
 	if (dc_url == NULL) return DPS_ERROR;
 
