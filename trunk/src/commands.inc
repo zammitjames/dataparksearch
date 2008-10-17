@@ -6,6 +6,7 @@
 	
 	{"AccentExtensions",    1,1,    env_rpl_bool_var},
 	{"Acronym",		1,1,	add_acronym},
+	{"ActionSQL",	        1,3,    add_actionsql},
 	{"AddType",		1,100,	add_type},
 	{"Affix",		3,3,	add_affix},
 	{"Alias",		1,100,	add_alias},

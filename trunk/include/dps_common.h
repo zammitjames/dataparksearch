@@ -934,6 +934,7 @@ typedef struct dps_config_struct {
         DPS_MATCHLIST   HrefSectionMatch;   /**< HrefSection's patterns         */
 	DPS_MATCHLIST	SubSectionMatch;/**< TagIf, CategoryIf          */
         DPS_MATCHLIST   BodyPatterns;   /**< Body extraction patterns   */
+        DPS_MATCHLIST   ActionSQLMatch; /**< ActionSQL patterns         */
 	
 	DPS_RESULT	Targets;	/**< Targets cache              */
 	

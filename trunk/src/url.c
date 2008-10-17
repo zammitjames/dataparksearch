@@ -59,10 +59,18 @@ void __DPSCALL DpsURLFree(DPS_URL *url) {
 	}
 }
 
-int DpsURLParse(DPS_URL *url,const char *str){
+#ifdef DEBUG_URL
+int _DpsURLParse(DPS_URL *url, const char *str, const char *filename, int line) {
+#else
+int DpsURLParse(DPS_URL *url, const char *str) {
+#endif
 	char *schema,*anchor,*file,*query;
 	char *s;
 /*	size_t len = dps_strlen(str);*/
+
+#ifdef DEBUG_URL
+	fprintf(stderr, " -- %s:%d Parser url: %s\n", filename, line, str);
+#endif
 	
 	DPS_FREE(url->schema);
 	DPS_FREE(url->specific);

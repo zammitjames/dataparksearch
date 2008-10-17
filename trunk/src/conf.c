@@ -747,6 +747,42 @@ static int add_hrefsection(void *Cfg, size_t ac,char **av){
 	return DPS_OK;
 }
 
+static int add_actionsql(void *Cfg, size_t ac,char **av) {
+	DPS_CFG	*C=(DPS_CFG*)Cfg;
+	DPS_ENV	*Conf=C->Indexer->Conf;
+	DPS_VAR S;
+	DPS_MATCH M;
+	char err[128] = "";
+
+	if (ac == 3) {
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "two arguments isn't supported for ActionSQL command");
+	  return DPS_ERROR;
+	}
+
+	bzero((void*)&S, sizeof(S));
+	S.name = av[1];
+	S.section = 0;
+	S.maxlen = 0;
+
+	if (ac == 4) {
+
+	  if(!(C->flags & DPS_FLAG_ADD_SERV))
+	    return DPS_OK;
+	
+	  DpsMatchInit(&M);
+	  M.match_type = DPS_MATCH_REGEX;
+	  M.case_sense = 1;
+	  M.section = av[1];
+	  M.pattern = av[2];
+	  M.arg = av[3];
+	  if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->ActionSQLMatch, &M, err, sizeof(err), ++C->ordre)) {
+	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "%s", err);
+	    return DPS_ERROR;
+	  }
+	}
+/*	DpsVarListReplace(&Conf->ActionSQLSections, &S);*/
+	return DPS_OK;
+}
 
 
 static int do_include(void *Cfg, size_t ac,char **av){
