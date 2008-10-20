@@ -542,6 +542,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 	DpsConvInit(&lc_dc, loccs, doccs, A->Conf->CharsToEscape, DPS_RECODE_URL_FROM);
 	DpsConv(&lc_dc, dc_url, (size_t)24 * len,  lc_url, (size_t)(len + 1));
 
+	dcURL.freeme = 0;
 	DpsURLInit(&dcURL);
 	if (DpsURLParse(&dcURL, dc_url)) { DPS_FREE(dc_url); return DPS_ERROR; }
 	
