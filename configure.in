@@ -1706,24 +1706,43 @@ AC_ARG_WITH(pgsql,
                           base install directory, defaults to /usr/local/pgsql.],
 [
   if test "$withval" != "no"; then
-	PGSQL_INCDIR=/usr/local/include/pgsql
-	test -f /usr/include/pgsql/libpq-fe.h && PGSQL_INCDIR=/usr/include/pgsql
-	test -f /usr/local/pgsql/include/libpq-fe.h && PGSQL_INCDIR=/usr/local/pgsql/include
-	test -f /usr/include/postgresql/libpq-fe.h && PGSQL_INCDIR=/usr/include/postgresql
-        test -f /usr/local/include/postgresql/libpq-fe.h && PGSQL_INCDIR=/usr/local/include/postgresql
-	test -f /usr/local/include/libpq-fe.h && PGSQL_INCDIR=/usr/local/include
-	PGSQL_LIBDIR=/usr/local/lib
-	test -f /usr/lib/libpq.a && PGSQL_LIBDIR=/usr/lib
-	test -f /usr/local/pgsql/lib/libpq.a && PGSQL_LIBDIR=/usr/local/pgsql/lib
 
   	if test "$withval" != "yes"; then
-   		test -f /usr/include/pgsql/libpq-fe.h && PGSQL_INCDIR=$withval/include
+   		test -f $withval/include/libpq-fe.h && PGSQL_INCDIR=$withval/include
    		test -d $withval/include/pgsql && PGSQL_INCDIR=$withval/include/pgsql
-   		test -f /usr/lib/libpq.a && PGSQL_LIBDIR=$withval/lib
+   		test -f $withval/lib/libpq.a && PGSQL_LIBDIR=$withval/lib
    		test -d $withval/lib/pgsql && PGSQL_LIBDIR=$withval/lib/pgsql
-   	fi
+	else
+	    PATH_DIRS=`echo $PATH | tr : \ `
+	    MY_DIRS="/usr/bin /usr/local/pgsql/bin /usr/local/bin"
+	    for DIR in $PATH_DIRS $MY_DIRS; do
+        	if test -f $DIR/pg_config; then
+		    	PGCONFIG=$DIR/pg_config
+			break;
+		fi
+	    done
+	    if test -z "$PGCONFIG"; then
+dnl 		AC_MSG_ERROR([pg_config not found in $PATH_DIRS $MY_DIRS])
+		PGSQL_INCDIR=/usr/local/include/pgsql
+		test -f /usr/include/pgsql/libpq-fe.h && PGSQL_INCDIR=/usr/include/pgsql
+		test -f /usr/local/pgsql/include/libpq-fe.h && PGSQL_INCDIR=/usr/local/pgsql/include
+		test -f /usr/include/postgresql/libpq-fe.h && PGSQL_INCDIR=/usr/include/postgresql
+	        test -f /usr/local/include/postgresql/libpq-fe.h && PGSQL_INCDIR=/usr/local/include/postgresql
+		test -f /usr/local/include/libpq-fe.h && PGSQL_INCDIR=/usr/local/include
+		PGSQL_LIBDIR=/usr/local/lib
+		test -f /usr/lib/libpq.a && PGSQL_LIBDIR=/usr/lib
+		test -f /usr/local/pgsql/lib/libpq.a && PGSQL_LIBDIR=/usr/local/pgsql/lib
+	    fi
+	    PGSQL_INCDIR=`$PGCONFIG --includedir 2>/dev/null`
+	    PGSQL_LIBDIR=`$PGCONFIG --libdir 2>/dev/null`
+dnl 	    PGSQL_CF_CFLAGS=`$PGCONFIG --cflags 2>/dev/null`
+dnl 	    PGSQL_CF_LFLAGS=`$PGCONFIG --ldflags 2>/dev/null`
+	    PGSQL_CF_LIBS=`$PGCONFIG --libs 2>/dev/null`
+  	fi
+
+
     PGSQL_INCLUDE="-I$PGSQL_INCDIR"
-    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq"
+    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq $PGSQL_CF_LIBS"
     AC_DEFINE(HAVE_DP_PGSQL)
     AC_MSG_RESULT(yes)
     have_db=yes
