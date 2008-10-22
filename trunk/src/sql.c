@@ -3493,10 +3493,10 @@ int DpsClearDBSQL(DPS_AGENT *Indexer, DPS_DB *db) {
 					  }
 					  if (db->DBMode == DPS_DBMODE_CACHE)
 					    if (DPS_OK != (rc = DpsDeleteWordFromURL(Indexer, &Doc, db))) return rc;
-/*					  if(DPS_OK!=DpsDeleteURL(Indexer,&Doc,db)) {
+					  if(DPS_OK!=DpsDeleteURL(Indexer,&Doc,db)) {
 					    DpsSQLFree(&SQLres);
 					    return(DPS_ERROR);
-					  }*/
+					  }
 					}
 					if (rows_num < url_num) break;
 					continue;
