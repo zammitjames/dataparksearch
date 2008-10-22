@@ -302,6 +302,8 @@ int main(int argc, char **argv, char **envp) {
 	    DpsVarListReplaceStr(&Doc->Sections, "URL", origurl);
 	    Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Agent->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
 	    DpsURLParse(&Doc->CurURL, origurl);
+	    DpsDocAddConfExtraHeaders(Agent->Conf, Doc);
+	    DpsDocAddServExtraHeaders(Agent->Conf->Cfg_Srv, Doc);
 	    DpsDocAddDocExtraHeaders(Agent, Doc);
 	    DpsDocLookupConn(Agent, Doc);
 	    if (DpsGetURL(Agent, Doc, origurl) != DPS_OK) goto fin;
