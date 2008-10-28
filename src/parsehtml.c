@@ -1000,6 +1000,16 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		    }
 		    tag->visible[tag->level] = visible;
 		  }
+		  z = strcasestr(y, "display:");
+		  if (z != NULL) {
+		    char *p = strchr(z, (int)';');
+		    char *x = strcasestr(z, "none");
+		    visible = tag->visible[tag->level];
+		    if (x && ((p == NULL) || (p > x))) {
+		      visible = 0;
+		    } else visible = 1;
+		    tag->visible[tag->level] = visible;
+		  }
 		  DPS_FREE(y);
 		}else
 		if(ISTAG(i, "src")) {
