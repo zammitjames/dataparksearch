@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Content-Encoding support</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,10 +87,14 @@ CLASS="sect1"
 NAME="content-enc"
 >3.3. Content-Encoding support</A
 ></H1
-><A
+>
+	
+<A
 NAME="AEN725"
 ></A
-><P
+>
+
+	<P
 >&#13;		<SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -100,9 +104,12 @@ major impact on the performance of HTTP transactions. The only way to
 obtain higher performance is to reduce the number of bytes
 transmitted.
 </P
-><P
+>
+
+	<P
 >Using content encoding to receive a server's response you can reduce the traffic by twice or more.</P
-><P
+>
+	<P
 >The <A
 HREF="ftp://ftp.isi.edu/in-notes/rfc2616.txt"
 TARGET="_top"
@@ -115,7 +122,9 @@ CLASS="literal"
 CLASS="literal"
 >identity</TT
 >.</P
-><P
+>
+
+	<P
 >When Content-encoding is enabled,
 <SPAN
 CLASS="application"
@@ -126,10 +135,13 @@ CLASS="literal"
 >Accept-Encoding: gzip,deflate,compress</TT
 > string in HTTP
 headers. </P
-><P
+>
+
+	<P
 >If the server supports any of gzip, deflate or compress
 encoding, it sends gziped, deflated or compressed response.</P
-><P
+>
+	<P
 >To compile <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -139,24 +151,29 @@ CLASS="literal"
 >zlib</TT
 > library is
 required.</P
-><P
+>
+
+	<P
 >To enable HTTP Content encoding support, configure
 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with the following
 option:</P
-><P
->&#13;		<TT
+>
+
+	<P
+>&#13;		<KBD
 CLASS="userinput"
-><B
->./configure --with-zlib</B
-></TT
+>./configure --with-zlib</KBD
 >
 	</P
-><P
+>
+
+	<P
 >Use this option along with all the other necessary ones.</P
-></DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

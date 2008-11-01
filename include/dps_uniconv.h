@@ -325,6 +325,8 @@ extern __C_LINK int  __DPSCALL _DpsConv(DPS_CONV *c, char *d, size_t dlen, const
 #else
 extern __C_LINK int  __DPSCALL DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t slen);
 #endif
+extern int  DpsNConv(DPS_CONV *c, size_t n, char *d, size_t dlen, const char *s, size_t slen);
+extern size_t DpsUniConvLength(DPS_CONV *c, const char *s);
 extern void DpsConvFree(DPS_CONV *c);
 
 #endif

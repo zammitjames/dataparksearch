@@ -1,8 +1,11 @@
-builtin([include], [docbook.m4])
-builtin([include], [net.m4])
-builtin([include], [threads.m4])
-dnl builtin([include], [libtool15.m4])
-dnl builtin([include], [largefiles.m4])
+sinclude(docbook.m4)
+sinclude(net.m4)
+sinclude(threads.m4)
+dnl builtin([include], [docbook.m4])
+dnl builtin([include], [net.m4])
+dnl builtin([include], [threads.m4])
+dnl dnl builtin([include], [libtool15.m4])
+dnl dnl builtin([include], [largefiles.m4])
 
 dnl Macro to check for a function prototype in a given header.
 dnl

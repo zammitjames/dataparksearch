@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -96,20 +96,24 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 <A
-NAME="AEN3117"
+NAME="AEN3129"
 ></A
 ></A
 ></H1
-><P
+>
+	
+
+<P
 >Способ хранения cache - самый быстрый в <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 >.
 Используйте его, если хотите получить максимальную скорость поиска.
 </P
-><P
+>
+<P
 ><A
-NAME="AEN3122"
+NAME="AEN3134"
 ></A
 >
 Если после окончания индексирования содержимое вашей директории <TT
@@ -132,7 +136,10 @@ CLASS="command"
 >). Это позволит вам сэкономить некоторое время,
 затрачиваемое на блокировку файлов.
 </P
-><DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -143,22 +150,22 @@ CLASS="command"
 >searchd</B
 ></A
 ></H2
-><P
+>
+
+<P
 >Если вы планируете использовать синонимы, стоп-слова или данные ispell,
 рекомендуется воспользоваться демоном <B
 CLASS="command"
 >searchd</B
-> (См. <A
-HREF="dpsearch-searchd.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 5.4</A
->).
+> (См. ).
 Демон <B
 CLASS="command"
 >searchd</B
 > при запуске загружает эти данные и держит их в памяти.
 Это позволяет сократить среднее время выполнения запросов на поиск.
 </P
-><P
+>
+<P
 >Таже <B
 CLASS="command"
 >searchd</B
@@ -166,8 +173,11 @@ CLASS="command"
 (по 20 байт на каждую проиндекированую страницу) и лимиты cache mode (4 или 8 байт на каждый URL в зависимости от
 типа лимита). Это позволяет сократить среднее время обработки запроса.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -175,7 +185,9 @@ CLASS="sect2"
 NAME="mfs-rec"
 >5.3.2. Рекомендация использовать файловую систему в памяти (mfs)</A
 ></H2
-><P
+>
+
+<P
 >Если вы планируете использовать cache mode и имеете достаточно оперативной памяти на вашем компьютере, 
 вы можете разместить директорию <TT
 CLASS="filename"
@@ -183,7 +195,8 @@ CLASS="filename"
 >
 на файловой системе в памяти компьютера (mfs). Это ускорит как индексирование, так и поиск.
 </P
-><P
+>
+<P
 >Если памяти недостаточно, что поместить в ней <TT
 CLASS="filename"
 >/usr/local/dpsearch/var</TT
@@ -200,8 +213,11 @@ CLASS="filename"
 >/usr/local/dpsearch/var/store</TT
 >.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -209,18 +225,24 @@ CLASS="sect2"
 NAME="urlinfo-cmd"
 >5.3.3. Команда URLInfoSQL</A
 ></H2
-><A
-NAME="AEN3150"
+>
+
+<A
+NAME="AEN3162"
 ></A
-><P
+>
+<P
 >Для способа хранения cache вы можете использовать команду <B
 CLASS="command"
 >URLInfoSQL no</B
 > для выключения сохранения
 информации об URL в SQL-базе. Однако использовав эту команду, вы потеряете возможность использовать лимиты по языку и типу документов.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -228,10 +250,13 @@ CLASS="sect2"
 NAME="markforindex-cmd"
 >5.3.4. Команда MarkForIndex</A
 ></H2
-><A
-NAME="AEN3157"
+>
+
+<A
+NAME="AEN3169"
 ></A
-><P
+>
+<P
 >По умолчанию, <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -247,8 +272,12 @@ CLASS="filename"
 >indexer.conf</TT
 >.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -259,10 +288,13 @@ CLASS="command"
 >CheckInsertSQL</B
 ></A
 ></H2
-><A
-NAME="AEN3167"
+>
+
+<A
+NAME="AEN3179"
 ></A
-><P
+>
+<P
 >По умолчанию, <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -277,8 +309,12 @@ CLASS="filename"
 >indexer.conf</TT
 >.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -289,24 +325,29 @@ CLASS="application"
 >MySQL</SPAN
 ></A
 ></H2
-><P
+>
+		
+
+		<P
 >Пользователи <SPAN
 CLASS="application"
 >MySQL</SPAN
 > могут задать
-опцию <TT
+опцию <CODE
 CLASS="option"
->DELAY_KEY_WRITE=1</TT
+>DELAY_KEY_WRITE=1</CODE
 > для таблиц <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 >.
 Это позволит быстрее обновлять индексы, т.к.они не будут записываться на диск пока файл не будет закрыт.
-<TT
+<CODE
 CLASS="option"
->DELAY_KEY_WRITE</TT
+>DELAY_KEY_WRITE</CODE
 > целиком исключает обновление индексов на диске. </P
-><P
+>
+
+		<P
 >С этой опцией индексы хранятся только в памяти и записываются на диск
 в последнюю очередь, по команду  <B
 CLASS="command"
@@ -332,16 +373,21 @@ CLASS="literal"
 >mysqld</TT
 > был убит до этого.
 </P
-><P
+>
+
+		<P
 >По этим причинам мы не включили эту опцию в структуру наших таблиц по умолчанию.
 Т.к. вся информация в индексах может быть восстановлена из данных, находящихся в таблицах, вы не потеряете данные,
-используя опцию <TT
+используя опцию <CODE
 CLASS="option"
->DELAY_KEY_WRITE</TT
+>DELAY_KEY_WRITE</CODE
 >. Но используйте её на свой страх и риск.
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -349,16 +395,21 @@ CLASS="sect2"
 NAME="perf-optimization"
 >5.3.7. Оптимизация после индексирования</A
 ></H2
-><P
->Этот раздел был добавлен Randy Winch <TT
+>
+		
+
+		<P
+>Этот раздел был добавлен Randy Winch <CODE
 CLASS="email"
 >&#60;<A
 HREF="mailto:gumby@cafes.net"
 >gumby@cafes.net</A
->&#62;</TT
+>&#62;</CODE
 >
 		</P
-><P
+>
+
+		<P
 >У меня есть мысля о производителности, которая может заинтересовать некоторых из вас.
 Я использую <TT
 CLASS="literal"
@@ -396,10 +447,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
->Я оптимизировал данные, выгрузив их в файл используя <TT
+>
+
+		<P
+>Я оптимизировал данные, выгрузив их в файл используя <CODE
 CLASS="option"
->SELECT * INTO OUTFILE</TT
+>SELECT * INTO OUTFILE</CODE
 >,
 отсортировал их при помощи системной процедуры сортировки по полю <TT
 CLASS="literal"
@@ -411,16 +464,26 @@ HREF="http://www.mysql.com/documentation/mysql/commented/manual.php?section=Inse
 TARGET="_top"
 >mysql online manual</A
 >.</P
-><P
+>
+
+		<P
 >Производительность великолепна. Мой любимый тест - поиск "John Smith".
 Оптимизированная база показала результат в 13 секунд. База до оптимизации показывала примерно 73 секунды.</P
-><PRE
+>
+
+		<PRE
 CLASS="programlisting"
 >&#13;Search results: john : 620241 smith : 177096
 Displaying documents 1-20 of total 128656 found
 </PRE
-></DIV
-><DIV
+>
+
+		
+
+	</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -428,7 +491,9 @@ CLASS="sect2"
 NAME="ares"
 >5.3.8. Библиотека асинхронного резолвера</A
 ></H2
-><P
+>
+
+<P
 >Использование <A
 HREF="ftp://athena-dist.mit.edu/pub/ATHENA/ares/"
 TARGET="_top"
@@ -437,8 +502,11 @@ TARGET="_top"
 библиотеки асинхронного резолвера (dns/ares в коллекции портов FreeBSD), позволяет для каждой индексирующей нити выполнять 
 запросы к DNS без блокировки. Пожалуйста учтите, это также повышает число одновременных запросов к вашему DNS серверу.
 </P
-></DIV
-></DIV
+>
+</DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -485,7 +553,7 @@ ALIGN="left"
 VALIGN="top"
 >Способ хранения Cache
 <A
-NAME="AEN2886"
+NAME="AEN2898"
 ></A
 ></TD
 ><TD
@@ -503,7 +571,7 @@ ALIGN="right"
 VALIGN="top"
 >Поддержка SearchD
 <A
-NAME="AEN3213"
+NAME="AEN3225"
 ></A
 ></TD
 ></TR

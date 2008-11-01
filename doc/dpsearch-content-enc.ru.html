@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -93,7 +93,9 @@ NAME="AEN761"
 ></A
 ></A
 ></H1
-><P
+>
+	
+	<P
 >&#13;		Поисковый движок <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -101,9 +103,13 @@ CLASS="application"
 запросов и ответов (Content encoding). Сжатие запросов и ответов http-сервера позволяет значительно
 улучшить производительность обработки http-запросов за счет уменьшения объёма передаваемых данных.
 </P
-><P
+>
+
+	<P
 >Использование сжатия http-запросов позволяет уменьшить трафик в два и более раз.</P
-><P
+>
+
+	<P
 >В <A
 HREF="ftp://ftp.isi.edu/in-notes/rfc2616.txt"
 TARGET="_top"
@@ -118,7 +124,9 @@ CLASS="literal"
 >identity</TT
 >.
 </P
-><P
+>
+
+	<P
 >Если включена поддержка Content-encoding, <B
 CLASS="command"
 >indexer</B
@@ -128,10 +136,14 @@ CLASS="command"
 CLASS="literal"
 >Accept-Encoding: gzip,deflate,compress</TT
 >. </P
-><P
+>
+
+	<P
 >Если http-сервер поддерживает любой из методов кодирования gzip, deflate or compress
 он шлёт ответ, закодированый этим методом.</P
-><P
+>
+
+	<P
 >Для сборки <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -140,24 +152,29 @@ HTTP-запросов, необходимо наличие библиотеки <TT
 CLASS="literal"
 >zlib</TT
 >, установленной на вашем компьютере.</P
-><P
+>
+
+	<P
 >Чтобы включить поддержку Content encoding, сконфигурируйте
 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > с указанием следующего ключа:
 </P
-><P
->&#13;		<TT
+>
+
+	<P
+>&#13;		<KBD
 CLASS="userinput"
-><B
->./configure --with-zlib</B
-></TT
+>./configure --with-zlib</KBD
 >
 	</P
-><P
+>
+
+	<P
 >Используете этот ключ совместно с другими нужными вам ключами.</P
-></DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

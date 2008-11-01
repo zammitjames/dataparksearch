@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Aliases</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,7 +87,9 @@ CLASS="sect1"
 NAME="aliases"
 >3.7. Aliases</A
 ></H1
-><P
+>
+	
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -97,7 +99,9 @@ you index local web server, it is possible to take pages directly from
 disk without involving your web server in indexing process. Another
 example is building of search engine for primary site and using its
 mirror while indexing. There are several ways of using aliases.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -111,10 +115,14 @@ CLASS="filename"
 >indexer.conf</TT
 > command</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN1057"
 ></A
-><P
+>
+
+		<P
 >Format of "Alias" <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -125,7 +133,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		
+		<P
 >E.g. you wish to index
 <TT
 CLASS="literal"
@@ -144,7 +154,8 @@ Alias  http://search.mnogo.ru/  http://www.gstammw.de/mirrors/mnoGoSearch/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >&#13;			<TT
 CLASS="filename"
 >search.cgi</TT
@@ -158,7 +169,9 @@ indexer will take corresponding page from mirror site
 CLASS="literal"
 >http://www.gstammw.de/mirrors/mnoGoSearch/</TT
 >.</P
-><P
+>
+
+		<P
 >Another example. If you want to index everything
 in udm.net domain and one of servers, for example
 <TT
@@ -177,13 +190,17 @@ Alias http://home.udm.net/ file:/home/httpd/htdocs/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Indexer will take <TT
 CLASS="literal"
 >home.udm.net</TT
 > from local disk and index other sites using HTTP.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -191,7 +208,9 @@ CLASS="sect2"
 NAME="aliases-diff"
 >3.7.2. Different aliases for server parts</A
 ></H2
-><P
+>
+		
+		<P
 >Aliases are searched in the order of their
 appearance in <TT
 CLASS="filename"
@@ -210,11 +229,12 @@ Alias http://home.udm.net/ file:/usr/local/apache/htdocs/
 </PRE
 >
 		</P
-><DIV
+>
+		<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;			<P
 ><B
 >Note: </B
 >if you change the order of these
@@ -223,10 +243,15 @@ CLASS="filename"
 >/stat/</TT
 > directory will never
 be found.</P
-></BLOCKQUOTE
+>
+
+		</BLOCKQUOTE
 ></DIV
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -237,7 +262,9 @@ CLASS="command"
 >Server</B
 > commands</A
 ></H2
-><P
+>
+		
+		<P
 >You may specify location used by indexer as an optional argument for Server command:
 		<PRE
 CLASS="programlisting"
@@ -245,8 +272,11 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -257,17 +287,21 @@ CLASS="command"
 >Realm</B
 > commands</A
 ></H2
-><P
+>
+		
+		<P
 >Aliases in Realm command is a very powerful
 feature based on regular expressions. The idea of aliases in Realm
 command implementation is similar to how PHP
-<TT
+<CODE
 CLASS="function"
->preg_replace()</TT
+>preg_replace()</CODE
 > function works. Aliases in Realm
 command work only if "regex" match type is used and does not work with
 "string" match type.</P
-><P
+>
+
+		<P
 >Use this syntax for Realm aliases:
 		<PRE
 CLASS="programlisting"
@@ -275,7 +309,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Indexer searches URL for matches to URL_pattern
 and builds an URL alias using alias_pattern. alias_pattern may contain
 references of the form $n. Where n is a number in the range of
@@ -283,7 +318,9 @@ references of the form $n. Where n is a number in the range of
 n'th parenthesized pattern. $0 refers to text matched by the whole
 pattern. Opening parentheses are counted from left to right (starting
 from 1) to obtain the number of the capturing subpattern.</P
-><P
+>
+
+		<P
 >Example: your company hosts several hundreds
 users with their domains in the form of
 <TT
@@ -295,7 +332,9 @@ stored on disk in "htdocs" under user's home directory:
 CLASS="literal"
 >/home/username/htdocs/</TT
 >.</P
-><P
+>
+
+		<P
 >You may write this command into indexer.conf
 (note that dot '.' character has a special meaning in regular
 expressions and must be escaped with '\' sign when dot is used in
@@ -306,14 +345,17 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Imagine indexer process
 <TT
 CLASS="filename"
 >http://www.john.yourname.com/news/index.html</TT
 >
 page. It will build patterns from $0 to $4:</P
-><P
+>
+
+		<P
 CLASS="literallayout"
 ><br>
 &nbsp;&nbsp;&nbsp;$0&nbsp;=&nbsp;'http://www.john.yourname.com/news/index.htm'&nbsp;(whole&nbsp;patter&nbsp;match)<br>
@@ -322,7 +364,8 @@ CLASS="literallayout"
 &nbsp;&nbsp;&nbsp;$3&nbsp;=&nbsp;'.yourname.com/'&nbsp;&nbsp;&nbsp;subpattern&nbsp;matches&nbsp;'(\.yourname\.com/)'<br>
 &nbsp;&nbsp;&nbsp;$4&nbsp;=&nbsp;'/news/index.html'&nbsp;subpattern&nbsp;matches&nbsp;'(.*)'<br>
 </P
-><P
+>
+		<P
 >Then indexer will compose alias using $2 and $4 patterns:
 		<PRE
 CLASS="programlisting"
@@ -330,10 +373,14 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >and will use the result as document location to fetch it.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -344,10 +391,14 @@ CLASS="command"
 >AliasProg</B
 > command</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN1112"
 ></A
-><P
+>
+
+		<P
 >You may also specify "AliasProg" command for
 aliasing purposes. AliasProg is useful for major web hosting companies
 which want to index their web space taking documents directly from a
@@ -356,7 +407,9 @@ process. Documents layout may be very complex to describe it using
 alias in Realm command. AliasProg is an external program that can be
 called, that takes a URL and returns one string with the appropriate
 alias to stdout. Use $1 to pass URL to command line.</P
-><P
+>
+
+		<P
 >For example this AliasProg command uses
 'replace' command from MySQL distribution and replaces URL substring
 <TT
@@ -374,10 +427,14 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >You may also write your own very complex program to process URLs.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -388,10 +445,14 @@ CLASS="command"
 >ReverseAlias</B
 > command</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN1124"
 ></A
-><P
+>
+
+		<P
 >The ReverseAlias
 <TT
 CLASS="filename"
@@ -408,17 +469,21 @@ Server       http://name2.yourname.com/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >All links with short server name will be mapped
 to links with full server name before they are inserted into
 database.</P
-><P
+>
+
+		<P
 >One of the possible use is cutting various unnecessary strings like <TT
 CLASS="literal"
 >PHPSESSION=XXXX</TT
 >
 		</P
-><P
+>
+		<P
 >E.g. cutting from URL like
 <TT
 CLASS="literal"
@@ -432,7 +497,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Cutting from URL like
 <TT
 CLASS="literal"
@@ -448,7 +514,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Cutting from URL like
 <TT
 CLASS="literal"
@@ -467,8 +534,11 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -482,10 +552,14 @@ CLASS="filename"
 >search.htm</TT
 > search template</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN1147"
 ></A
-><P
+>
+
+		<P
 >It is also possible to define aliases in search
 template (<TT
 CLASS="filename"
@@ -500,7 +574,9 @@ CLASS="filename"
 >indexer.conf</TT
 >, however it is active during
 searching, not indexing.</P
-><P
+>
+
+		<P
 >The syntax of the
 <TT
 CLASS="filename"
@@ -517,7 +593,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >For example, there is the following command in <TT
 CLASS="filename"
 >search.htm</TT
@@ -528,7 +605,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Search returned a page with the following URL:
 		<PRE
 CLASS="programlisting"
@@ -536,7 +614,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >As a result, the $(DU) variable will be replace NOT with this URL:
 		<PRE
 CLASS="programlisting"
@@ -544,7 +623,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >but with the following URL (that results in processing with Alias):
 		<PRE
 CLASS="programlisting"
@@ -552,8 +632,10 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

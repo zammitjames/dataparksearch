@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Specifying WEB space to be indexed </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,7 +87,9 @@ CLASS="sect1"
 NAME="follow"
 >3.6. Specifying WEB space to be indexed</A
 ></H1
-><P
+>
+	
+	<P
 >When indexer tries to insert a new URL into database or
 is trying to index an existing one, it first of all checks whether
 this URL has corresponding <B
@@ -120,23 +122,33 @@ Server/Realm/Subnet commands from <TT
 CLASS="filename"
 >indexer.conf</TT
 >.</P
-><P
+>
+
+
+<P
 >These commands have following format:
 <PRE
 CLASS="programlisting"
 >[Server | Realm | Subnet] [method] [subsection] [CaseType] [MatchType] [CmpType] pattern [alias]</PRE
 >
 </P
-><P
->Mandatory parameter <TT
+>
+
+<P
+>Mandatory parameter <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > specify an URL, or it part, or pattern to compare.
 </P
-><P
->&#13;			Optional parameter <TT
+>
+
+
+
+
+		<P
+>&#13;			Optional parameter <CODE
 CLASS="option"
->method</TT
+>method</CODE
 > specify an document action for this command.
 May take values:
 			<TT
@@ -171,7 +183,7 @@ CLASS="literal"
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Allow</B
@@ -181,7 +193,8 @@ NAME="AEN809"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Value <TT
 CLASS="literal"
 >Allow</TT
@@ -191,9 +204,10 @@ CLASS="literal"
 >Content-Type</TT
 > appropriate external parser is executed if need.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Disallow</B
@@ -203,16 +217,18 @@ NAME="AEN819"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Value <TT
 CLASS="literal"
 >Disallow</TT
 > specify that all corresponding documents will be ignored and
 deleted from database, if its was placed into before.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >HrefOnly</B
@@ -222,7 +238,8 @@ NAME="AEN828"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Value <TT
 CLASS="literal"
 >HrefOnly</TT
@@ -236,9 +253,10 @@ Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/
 </PRE
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >CheckOnly</B
@@ -248,7 +266,8 @@ NAME="AEN838"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Value <TT
 CLASS="literal"
 >CheckOnly</TT
@@ -262,7 +281,8 @@ Realm  CheckOnly *
 </PRE
 >
 </P
-><P
+>
+<P
 >&#13;These commands instruct <B
 CLASS="command"
 >indexer</B
@@ -276,9 +296,10 @@ CLASS="command"
 >indexer -S</B
 > command will show status for all documents from this site.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Skip</B
@@ -288,7 +309,8 @@ NAME="AEN852"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Value <TT
 CLASS="literal"
 >Skip</TT
@@ -296,9 +318,10 @@ CLASS="literal"
 while indexing. This is useful when need temporally disable reindexing several sites, but able search on.
 These documents will marked as expired.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >CheckMP3</B
@@ -308,7 +331,8 @@ NAME="AEN861"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Value <TT
 CLASS="literal"
 >CheckMP3</TT
@@ -333,9 +357,10 @@ CLASS="literal"
 >Content-Type</TT
 >.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >CheckMP3Only</B
@@ -345,7 +370,9 @@ NAME="AEN875"
 ></A
 >
 				</P
-><P
+>
+
+				<P
 >&#13;					This value is equal to <TT
 CLASS="literal"
 >CheckMP3</TT
@@ -355,14 +382,26 @@ CLASS="literal"
 >Content-Type</TT
 > will not be taken.
 				</P
-></LI
+>
+			</LI
 ></OL
 >
 		</P
-><P
->&#13;  Use optional <TT
+>
+
+
+
+
+
+
+
+
+
+
+<P
+>&#13;  Use optional <CODE
 CLASS="option"
->subsection</TT
+>subsection</CODE
 >
 parameter to specify server's checking behavior.  Subsection value must be
 one of the following: <TT
@@ -388,12 +427,13 @@ default.
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >path</TT
 > subsection</P
-><P
+>
+				<P
 >When indexer seeks for a
 "Server" command corresponding to an URL it checks that the discovered
 URL starts with URL given in Server command argument but without
@@ -407,9 +447,12 @@ CLASS="literal"
 >http://localhost/path/to/</TT
 > at the beginning
 correspond to this Server command.</P
-><P
+>
+
+				<P
 >The following commands have the same effect except that they insert different URLs into database:</P
-><P
+>
+				<P
 >&#13;					<PRE
 CLASS="programlisting"
 >&#13;Server path http://localhost/path/to/index.html
@@ -419,14 +462,16 @@ Server path http://localhost/path/to/index?q=bla
 </PRE
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >site</TT
 > subsection</P
-><P
+>
+				<P
 >indexer checks that the
 discovered URL have the same hostname with URL given in Server
 command. For example, <TT
@@ -438,43 +483,53 @@ http://localhost/path/to/a.html</TT
 CLASS="literal"
 >http://localhost/</TT
 > server. </P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >world</TT
 > subsection</P
-><P
+>
+				<P
 >If world subsection is specified
 in Server command, it has the same effect that URL is considered to
 match this Server command. See explanation below.</P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >page</TT
 > subsection</P
-><P
+>
+				<P
 >This subsection describes the only one URL given in Server argument.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 ><TT
 CLASS="literal"
 >nofollow</TT
 > subsection</P
-><P
+>
+<P
 >Skip links following for URL that match the pattern.</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >subsection in <TT
 CLASS="literal"
 >news://</TT
 > schema</P
-><P
+>
+				<P
 >Subsection is always considered
 as "site" for news:// URL schema. This is because news:// schema has
 no nested paths like ftp:// or http://  Use  <TT
@@ -487,11 +542,16 @@ CLASS="literal"
 >Server news://news.server.com/udm</TT
 > to index
 all messages from "udm" hierarchy.</P
-></LI
+>
+
+			</LI
 ></OL
 >
 </P
-><P
+>
+
+
+<P
 >&#13;Optional parameter <TT
 CLASS="literal"
 >CaseType</TT
@@ -504,7 +564,10 @@ CLASS="literal"
 >nocase</TT
 > - case sensitive comparison.
 </P
-><P
+>
+
+
+		<P
 >&#13;Optional parameter <TT
 CLASS="literal"
 >CmpType</TT
@@ -528,11 +591,13 @@ CLASS="programlisting"
 >Realm http://*.ru/*</PRE
 >
 		</P
-><P
+>
+		
+		<P
 >Regex comparison type takes a regular expression
-as it's argument. Activate regex comparison type using <TT
+as it's argument. Activate regex comparison type using <CODE
 CLASS="option"
->Regex</TT
+>Regex</CODE
 >
 keyword. For example, you can describe everything in .ru domain using
 regex comparison type: <PRE
@@ -540,7 +605,10 @@ CLASS="programlisting"
 >Realm Regex ^http://.*\.ru/</PRE
 >
 		</P
-><P
+>
+
+		
+		<P
 >Optional parameter <TT
 CLASS="literal"
 >MatchType</TT
@@ -559,9 +627,9 @@ default. <TT
 CLASS="literal"
 >Realm NoMatch</TT
 > has reverse effect. It means
-that URL that does not match given <TT
+that URL that does not match given <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > will correspond to this
 <B
 CLASS="command"
@@ -572,31 +640,39 @@ CLASS="programlisting"
 >Realm NoMatch http://*.com/*</PRE
 >
 		</P
-><P
->Optional <TT
+>
+		
+		<P
+>Optional <CODE
 CLASS="option"
->alias</TT
+>alias</CODE
 > argument allows providing very
 complicated URL rewrite more powerful than other aliasing
-mechanism. Take a look <A
-HREF="dpsearch-aliases.en.html"
->Section 3.7</A
-> for <TT
+mechanism. Take a look  for <CODE
 CLASS="option"
->alias</TT
+>alias</CODE
 > argument usage
-explanation. <TT
+explanation. <CODE
 CLASS="option"
->Alias</TT
-> works only with <TT
+>Alias</CODE
+> works only with <CODE
 CLASS="option"
->Regex</TT
+>Regex</CODE
 > comparison type and has no
-effect with <TT
+effect with <CODE
 CLASS="option"
->String</TT
+>String</CODE
 > type.</P
-><DIV
+>
+
+
+
+
+
+
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -607,10 +683,14 @@ CLASS="command"
 >Server</B
 > command</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN955"
 ></A
-><P
+>
+
+		<P
 >This is the main command of the
 <TT
 CLASS="filename"
@@ -619,7 +699,10 @@ CLASS="filename"
 their parts to be indexed. 
 
 This command also says indexer to insert given URL into database at startup.</P
-><P
+>
+
+
+		<P
 >E.g. command <TT
 CLASS="literal"
 >Server
@@ -636,11 +719,13 @@ CLASS="literal"
 http://localhost/subsection/</TT
 >. It also says indexer to insert
 given URL at startup.</P
-><DIV
+>
+
+		<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;			<P
 ><B
 >Note: </B
 >You can suppress indexer behavior to add
@@ -648,10 +733,16 @@ URL given in Server command by using -q indexer command line
 argument. It is useful when you have hundreds or thousands Server
 commands and their URLs are already in database. This allows having
 more quick indexer startup.</P
-></BLOCKQUOTE
+>
+
+		</BLOCKQUOTE
 ></DIV
-></DIV
-><DIV
+>
+	</DIV
+>
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -662,24 +753,35 @@ CLASS="command"
 >Realm</B
 > command</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN969"
 ></A
-><P
+>
+
+		<P
 >Realm command is a more powerful means of describing web area to be indexed.
 
 It works almost like <B
 CLASS="command"
 >Server</B
 > command but takes
-a regular expression or string wildcards as it's <TT
+a regular expression or string wildcards as it's <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > parameter and
 do not insert any URL into database for indexing.
 		</P
-></DIV
-><DIV
+>
+
+
+
+	</DIV
+>
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -690,19 +792,23 @@ CLASS="command"
 >Subnet</B
 > command</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN978"
 ></A
-><P
+>
+
+		<P
 >Subnet command is another way to describe web area to be indexed.
 
 It works almost like <B
 CLASS="command"
 >Server</B
 > command but takes
-a string wildcards or network specified in CIDR presentation format as it's <TT
+a string wildcards or network specified in CIDR presentation format as it's <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > argument which is compared against IP
 address instead of URL. In case of string wilcards formant, argument may have * and ? signs, they means
 "one character" and "any number of characters" respectively. For
@@ -717,7 +823,8 @@ CLASS="programlisting"
 >Subnet 1291.168.10.0/24</PRE
 >
 		</P
-><P
+>
+		<P
 >You may use "NoMatch" optional argument. For
 example, if you want to index everything without
 <TT
@@ -728,8 +835,11 @@ CLASS="programlisting"
 >Subnet NoMatch 195.*.*.*</PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -737,7 +847,9 @@ CLASS="sect2"
 NAME="follow-difparam"
 >3.6.4. Using different parameter for server and it's subsections</A
 ></H2
-><P
+>
+		
+		<P
 >Indexer seeks for "Server" and "Realm" commands
 in order of their appearance. Thus if you want to give different
 parameters to e.g. whole server and its subsection you should add
@@ -745,7 +857,9 @@ subsection line before whole server's. Imagine that you have server
 subdirectory which contains news articles. Surely those articles are
 to be reindexed more often than the rest of the server. The following
 combination may be useful in such cases:</P
-><P
+>
+
+		<P
 >&#13;			<PRE
 CLASS="programlisting"
 >&#13;# Add subsection
@@ -758,7 +872,8 @@ Server http://servername/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >These commands give different reindexing period
 for <TT
 CLASS="filename"
@@ -770,8 +885,11 @@ CLASS="filename"
 >http://servername/news/page1.html</TT
 > as far
 as it matches and was given first.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -782,7 +900,9 @@ CLASS="command"
 >indexer</B
 > behavior</A
 ></H2
-><P
+>
+		
+		<P
 >The default behavior of indexer is to follow
 through links having correspondent Server/Realm command in the
 <TT
@@ -795,7 +915,9 @@ CLASS="filename"
 >
 either directly in Server command or indirectly in Realm command. For
 example, there are two Server commands:</P
-><P
+>
+
+		<P
 >&#13;			<PRE
 CLASS="programlisting"
 >&#13;Server http://www/
@@ -803,7 +925,8 @@ Server http://web/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >When indexing
 <TT
 CLASS="filename"
@@ -815,25 +938,31 @@ CLASS="filename"
 > if the last one has
 been found. Note that these pages are on different servers, but BOTH
 of them have correspondent Server record.</P
-><P
+>
+
+		<P
 >If one of the Server command is deleted, indexer
 will remove all expired URLs from this server during next
 reindexing.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
 ><A
 NAME="follow-f"
->3.6.6. Using <TT
+>3.6.6. Using <KBD
 CLASS="userinput"
-><B
->indexer -f &#60;filename&#62;</B
-></TT
+>indexer -f &#60;filename&#62;</KBD
 ></A
 ></H2
-><P
+>
+		
+		<P
 >The third scheme is very useful for
 <TT
 CLASS="literal"
@@ -848,8 +977,14 @@ CLASS="filename"
 >url.txt</TT
 > indexer will index the server
 of this URL during next startup. </P
-></DIV
-><DIV
+>
+
+
+	</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -860,23 +995,30 @@ CLASS="command"
 >ServerDB, RealmDB, SubnetDB and URLDB</B
 > commands</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1019"
 ></A
-><A
+>
+<A
 NAME="AEN1022"
 ></A
-><A
+>
+<A
 NAME="AEN1025"
 ></A
-><A
+>
+<A
 NAME="AEN1028"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;URLDB pgsql://foo:bar@localhost/portal/links?field=url
 </PRE
-><P
+>
+<P
 >&#13;These commands are equal to <B
 CLASS="command"
 >Server</B
@@ -891,20 +1033,23 @@ CLASS="command"
 CLASS="command"
 >URL</B
 > commands respectively, but takes arguments from field of SQL-table specified. 
-In example above, URLs are takes from database <TT
+In example above, URLs are takes from database <CODE
 CLASS="option"
->portal</TT
->, SQL-table <TT
+>portal</CODE
+>, SQL-table <CODE
 CLASS="option"
->links</TT
+>links</CODE
 >
-and filed <TT
+and filed <CODE
 CLASS="option"
->url</TT
+>url</CODE
 >.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -915,23 +1060,31 @@ CLASS="command"
 >URL</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1043"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;URL http://localhost/path/to/page.html
 </PRE
-><P
->&#13;This command inserts given <TT
+>
+<P
+>&#13;This command inserts given <CODE
 CLASS="option"
->URL</TT
+>URL</CODE
 > into database. This is usefull to add
 several entry points to one server. Has no effect if an URL is already
 in the database. 
 </P
-></DIV
-></DIV
+>
+</DIV
+>
+
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

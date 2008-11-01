@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Miscellaneous</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -81,8 +81,8 @@ CLASS="chapter"
 ><H1
 ><A
 NAME="misc"
->Chapter 9. Miscellaneous</A
-></H1
+></A
+>Chapter 9. Miscellaneous</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -115,7 +115,9 @@ HREF="dpsearch-donations.en.html"
 ></DT
 ></DL
 ></DIV
-><DIV
+>
+		
+<DIV
 CLASS="sect1"
 ><H1
 CLASS="sect1"
@@ -123,10 +125,13 @@ CLASS="sect1"
 NAME="bugs"
 >9.1. Reporting bugs</A
 ></H1
-><A
-NAME="AEN5463"
+>
+	
+<A
+NAME="AEN5475"
 ></A
-><P
+>
+	<P
 >When reporting bugs, please specify <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -136,7 +141,9 @@ possible. Such information as your platform and OS details, database
 version, database statistics like number of URLs in database or
 probably count of records in different tables would be very helpful to
 find and fix possible bugs. </P
-><P
+>
+
+	<P
 >Please, submit bug reports using our <A
 HREF="http://www.dataparksearch.org/cgi-bin/bt.pl"
 TARGET="_top"
@@ -148,7 +155,11 @@ TARGET="_top"
 >DataparkSearch web site</A
 >.  
 Please do not send reports to mailing list or to personal authors addresses!</P
-><DIV
+>
+
+	
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -156,7 +167,9 @@ CLASS="sect2"
 NAME="bugs-core"
 >9.1.1. Core dump reports</A
 ></H2
-><P
+>
+		
+		<P
 >If indexer or <TT
 CLASS="filename"
 >search.cgi</TT
@@ -172,18 +185,20 @@ CLASS="filename"
 CLASS="filename"
 >core</TT
 > on some platforms).</P
-><P
+>
+
+		<P
 >Run GNU Debugger with executable as the first argument and with  core file as the second:</P
-><P
->&#13;			<TT
+>
+		<P
+>&#13;			<KBD
 CLASS="userinput"
-><B
 >&#13;gdb indexer indexer.core
-</B
-></TT
+</KBD
 >
 		</P
-><P
+>
+		<P
 >Some information about the crash location will appear:
 		<PRE
 CLASS="programlisting"
@@ -196,7 +211,8 @@ Reading symbols from /usr/libexec/ld-elf.so.1...done.
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Then type <TT
 CLASS="literal"
 >thread apply all backtrace</TT
@@ -209,11 +225,24 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Send us either first and second outputs or just a screenshot of gdb session.</P
-></DIV
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
+>
+
+
+
+
+
+
+
+
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

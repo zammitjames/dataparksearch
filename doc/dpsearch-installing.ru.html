@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -104,24 +104,27 @@ NAME="AEN306"
 ></A
 ></A
 ></H1
-><P
+>
+		
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >Разархивируйте дистрибутив и перейдите а корневую директорию распакованного дерева исходников.</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->tar -zxf dpsearch-x.x.tar.gz</B
-></TT
+>tar -zxf dpsearch-x.x.tar.gz</KBD
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Для упрощения процесса конфигурирования мы добавили скрипт конфигурации
 <TT
 CLASS="filename"
@@ -149,45 +152,50 @@ CLASS="application"
 >
 как описано в разделе 3.
 </P
-><P
+>
+
+				<P
 >В случае, если вы желаете сконфигурировать <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 >
 вручную без использования скрипта конфигурирования, проделайте следующие шаги:</P
-><P
+>
+
+				<P
 >Если нужна поддержка SQL базы данных:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ ./configure --with-mysql</B
-></TT
+>sh$ ./configure --with-mysql</KBD
 >
 				</P
-><P
+>
+				<P
 >или</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ ./configure --with-pgsql</B
-></TT
+>sh$ ./configure --with-pgsql</KBD
 >
 				</P
-><P
+>
+				<P
 >или другим ключом, соответствующим выбраной базе данных,</P
-><P
+>
+				<P
 >или с несколькими базами:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ ./configure --with-mysql --with-pgsql --with-msql --with-freetds</B
-></TT
+>sh$ ./configure --with-mysql --with-pgsql --with-msql --with-freetds</KBD
 >
 				</P
-><P
+>
+				<P
 >По умолчанию, <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -196,35 +204,30 @@ CLASS="application"
 CLASS="literal"
 >/usr/local/dpsearch</TT
 > и поддериктории:</P
-><DIV
+>
+
+				<DIV
 CLASS="informaltable"
+><P
+></P
 ><A
 NAME="AEN337"
 ></A
-><P
-></P
-><TABLE
+>
+					<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Поддиректория</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Содержимое</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >bin</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >search.cgi</TT
@@ -239,12 +242,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >lib</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >libdpsearch.a(so)</TT
@@ -257,12 +256,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >sbin</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >indexer</TT
@@ -288,12 +283,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >etc</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >indexer.conf-dist, search.htm-dist</TT
@@ -321,20 +312,18 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >share</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Документация и sql-скрипты</TD
 ></TR
 ></TBODY
 ></TABLE
-><P
+>
+				<P
 ></P
 ></DIV
-><P
+>
+				<P
 >Если у вас нет прав для создания этой директории, или вы хотите установить 
 <SPAN
 CLASS="application"
@@ -343,20 +332,21 @@ CLASS="application"
 CLASS="command"
 >configure</B
 > ключ 
-<TT
+<CODE
 CLASS="option"
->--prefix</TT
+>--prefix</CODE
 >,
 например,</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --prefix=/user/home/data --with-mysql</B
-></TT
+>./configure --prefix=/user/home/data --with-mysql</KBD
 >
 				</P
-><P
+>
+				<P
 >Для установки <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -365,42 +355,46 @@ CLASS="application"
 CLASS="command"
 >configure</B
 >:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-openssl</B
-></TT
+>./configure --with-openssl</KBD
 >
 				</P
-><P
+>
+				<P
 >или, в случае, когда, библиотека OpenSSL установлена не в стандартной пути:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-openssl=/path/to/library</B
-></TT
+>./configure --with-openssl=/path/to/library</KBD
 >
 				</P
-><DIV
+>
+				<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;					<P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Пожалйста, имейте в виду, что установка библиотеки OpenSSL на вашем компьютере
 необходима для поддержки HTTPS.</P
-></BLOCKQUOTE
+>
+
+				</BLOCKQUOTE
 ></DIV
-><P
+>
+				<P
 >Вы можете видеть все ключи, запустив <TT
 CLASS="literal"
 >./configure --help</TT
 >
 				</P
-><P
+>
+				<P
 >Если вы хотите передать для компилятора C некоторые специфицеские ключи
 (например, <TT
 CLASS="literal"
@@ -410,15 +404,16 @@ CLASS="literal"
 CLASS="trademark"
 >Pentium</SPAN
 >&#8482;, если используется компилятор egcs/pgcc), это можно сделать при помощи следующей команды</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$  CFLAGS="-O7 -mpentium"</B
-></TT
+>sh$  CFLAGS="-O7 -mpentium"</KBD
 >
 				</P
-><P
+>
+				<P
 >&#13;					<SPAN
 CLASS="emphasis"
 ><I
@@ -429,7 +424,8 @@ CLASS="emphasis"
 CLASS="command"
 >configure</B
 >.</P
-><P
+>
+				<P
 >Для компиляции <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -441,15 +437,15 @@ CLASS="application"
 CLASS="literal"
 >Solid</TT
 > в старом aout формате, используйте</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ CFLAGS="-aout"</B
-></TT
+>sh$ CFLAGS="-aout"</KBD
 >
 				</P
-><P
+>
+				<P
 >&#13;					<SPAN
 CLASS="emphasis"
 ><I
@@ -460,7 +456,8 @@ CLASS="emphasis"
 CLASS="command"
 >configure</B
 >.</P
-><P
+>
+				<P
 >Для компиляции <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -469,15 +466,15 @@ CLASS="application"
 >FreeBSD</SPAN
 >
 с aout InterBase используйте</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ CFLAGS="-aout -static"</B
-></TT
+>sh$ CFLAGS="-aout -static"</KBD
 >
 				</P
-><P
+>
+				<P
 >&#13;					<SPAN
 CLASS="emphasis"
 ><I
@@ -488,16 +485,19 @@ CLASS="emphasis"
 CLASS="command"
 >configure</B
 >.</P
-><P
->Вы можете также указать <TT
+>
+				<P
+>Вы можете также указать <CODE
 CLASS="option"
->--enable-pthreads</TT
+>--enable-pthreads</CODE
 >
 				для компиляции многопоточной версии <B
 CLASS="command"
 >indexer</B
 >.</P
-><P
+>
+
+				<P
 >&#13;<A
 NAME="AEN422"
 ></A
@@ -507,132 +507,134 @@ HREF="http://sourceforge.net/projects/dmalloc/"
 TARGET="_top"
 >отладчика памяти DMALLOC</A
 >
-используйте ключ <TT
+используйте ключ <CODE
 CLASS="option"
->--enable-dmalloc</TT
+>--enable-dmalloc</CODE
 >. </P
-><P
+>
+
+				<P
 >Кодировки euc-kr, big5, gb2312, tscii, gujarati и shift-jis не поддерживаются по умолчанию.
-Для включения поддержки используйте ключ <TT
+Для включения поддержки используйте ключ <CODE
 CLASS="option"
->--with-extra-charsets</TT
+>--with-extra-charsets</CODE
 >.</P
-><P
+>
+
+				<P
 >Для включения поддержки всех кодовых страниц, используйте:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=all</B
-></TT
+>./configure --with-extra-charsets=all</KBD
 >
 				</P
-><P
+>
+				<P
 >Для включения поддержки только какой-то одной кодовой страницы:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=tscii</B
-></TT
+>./configure --with-extra-charsets=tscii</KBD
 >
 				</P
-><P
+>
+				<P
 >Для включения поддержки симейства кодировок китайского или японского языков:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=chinese</B
-></TT
+>./configure --with-extra-charsets=chinese</KBD
 >
 или
-					<TT
+					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=japanese</B
-></TT
+>./configure --with-extra-charsets=japanese</KBD
 >
 				</P
-><P
+>
+				<P
 >Чтобы включить поддержку нескольких нужных кодовых страниц, указывайте их через запятую:</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charset=chinese,gujarati</B
-></TT
+>./configure --with-extra-charset=chinese,gujarati</KBD
 >
 				</P
-><P
->Если у вас возникли трудности с конфигурированием, пожалуйста, смотрите <A
-HREF="dpsearch-installproblem.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 2.5</A
->.</P
-></LI
+>
+				<P
+>Если у вас возникли трудности с конфигурированием, пожалуйста, смотрите .</P
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Скомпилируйте и установите <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 >.</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ make</B
-></TT
+>sh$ make</KBD
 >
 				</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ make install</B
-></TT
+>sh$ make install</KBD
 >
 				</P
-><P
->Если у вас возникли трудности с компиляцией, пожалуйста, смотрите <A
-HREF="dpsearch-installproblem.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 2.5</A
->.</P
-></LI
+>
+				<P
+>Если у вас возникли трудности с компиляцией, пожалуйста, смотрите .</P
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Создайте базу данных <TT
 CLASS="literal"
 >search</TT
 > (только для SQL баз данных).</P
-><P
+>
+				<P
 >Вы можете использовать существующую базу данных, в этом случае пропустите этот пункт.</P
-><P
+>
+				<P
 >MySQL:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ mysqladmin create search</B
-></TT
+>sh$ mysqladmin create search</KBD
 >
 				</P
-><P
+>
+				<P
 >PostgreSQL:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ createdb search</B
-></TT
+>sh$ createdb search</KBD
 >
 				</P
-><P
+>
+				<P
 >Для других баз данных см. документацию на соответсвующую базу данных.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Создайте sql-таблицы</P
-><P
+>
+<P
 >Отредактируйте файл <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -642,25 +644,29 @@ CLASS="command"
 > используемый SQL-сервер и
 желаемый dbmode. После этого запустите:
 </P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->sh$ indexer -Ecreate</B
-></TT
+>sh$ indexer -Ecreate</KBD
 >
 </P
-><P
+>
+<P
 >&#13;<B
 CLASS="command"
 >indexer</B
 > автоматически создаст все нужные таблицы по этим параметрам.
 </P
-></LI
+>
+
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Установка программы поиска</P
-><P
+>
+				<P
 >Скопируйте <TT
 CLASS="filename"
 >search.cgi</TT
@@ -676,9 +682,12 @@ CLASS="filename"
 CLASS="application"
 >DataparkSearch</SPAN
 >. </P
-></LI
+>
+
+			</LI
 ></OL
-></DIV
+>
+	</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

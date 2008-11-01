@@ -54,7 +54,7 @@ dnl            LDADD="$LDADD -lbsd"
             LDFLAGS="$LDFLAGS -lbsd"
             ;;
 	*-*-freebsd*)
-	    LIBS="$LIBS -L/usr/local/lib"
+	    LIBS="$LIBS -L/usr/local/lib -lc"
 	    CFLAGS="$CFLAGS -I/usr/local/include"
 	    INCLUDES="$INCLUDES -I/usr/local/include"
 	    ;;
@@ -125,8 +125,8 @@ AC_CHECK_FUNCS(strdup strndup strstr strnlen strcasecmp strncasecmp bzero strtok
 AC_CHECK_FUNCS(regcomp socket vsnprintf snprintf mergesort heapsort setproctitle)
 AC_CHECK_FUNCS(setenv putenv break)
 AC_CHECK_FUNCS(unsetenv daemon)
-AC_CHECK_FUNC(inet_addr, , AC_CHECK_LIB(xnet, inet_addr, LIBS="-lxnet $LIBS"))
-dnl AC_CHECK_FUNC(setproctitle, , AC_CHECK_LIB(util, setproctitle, LIBS="-lutil $LIBS"))
+AC_CHECK_FUNC(inet_addr, , AC_CHECK_LIB(xnet, inet_addr, LIBS="$LIBS -lxnet"))
+dnl AC_CHECK_FUNC(setproctitle, , AC_CHECK_LIB(util, setproctitle, LIBS="$LIBS -lutil"))
 AC_CHECK_FUNC(sqrt, , AC_CHECK_LIB(m, sqrt, LIBS="$LIBS -lm"))
 
 dnl Check for libtre
@@ -1215,17 +1215,17 @@ if test "$zlib" = "no" ; then
 elif test "$zlib" = "yes" ; then
   AC_CHECK_LIB(z, inflate, AC_DEFINE(HAVE_ZLIB) LIBS="$LIBS -lz",
 	LIBS_save="$LIBS"
-	LIBS="-L/usr/local/lib $LIBS"
+	LIBS="$LIBS -L/usr/local/lib"
 	AC_CHECK_LIB(z,inflate,AC_DEFINE(HAVE_ZLIB) LIBS="$LIBS -lz",
 		LIBS="$LIBS_save"
 		AC_MSG_ERROR([Unable to find working zlib library])
 		)
 	)
 else
-  CFLAGS="-I$zlib/include $CFLAGS"
-  LIBS="-L$zlib/lib -lz $LIBS"
+  CFLAGS="$CFLAGS -I$zlib/include"
+  LIBS="$LIBS -L$zlib/lib -lz"
   AC_CHECK_LIB(z,inflate,AC_DEFINE(HAVE_ZLIB),AC_MSG_ERROR([Unable to find working zlib library under $zlib]))
-  INCLUDES="-I$zlib/include $INCLUDES"
+  INCLUDES="$INCLUDES -I$zlib/include"
 fi
 
 
@@ -1252,20 +1252,20 @@ elif test "$aspell" = "yes" ; then
 		;;
   esac
   AC_CHECK_LIB(aspell, new_aspell_config, AC_DEFINE(HAVE_ASPELL),
-      	LIBS="-L/usr/local/lib $LIBS"
+      	LIBS="$LIBS -L/usr/local/lib"
       	AC_CHECK_LIB(aspell,new_aspell_config,AC_DEFINE(HAVE_ASPELL) LIBS="$LIBS -laspell" INCLUDES="$INCLUDES -I/usr/local/include",
 		LIBS="$LIBS_save"
 		AC_MSG_ERROR([Unable to find working aspell library])
 		)
 	)
 else
-  CFLAGS="-I$aspell/include $CFLAGS"
+  CFLAGS="$CFLAGS -I$aspell/include"
   case "$host" in
 	*-*-freebsd*)
-  		LIBS="-L$aspell/lib -laspell -lstdc++ -lintl $LIBS"
+  		LIBS="$LIBS -L$aspell/lib -laspell -lstdc++ -lintl"
 		;;
 	*)
-  		LIBS="-L$aspell/lib -laspell -lstdc++ $LIBS"
+  		LIBS="$LIBS -L$aspell/lib -laspell -lstdc++"
 		;;
   esac
   AC_CHECK_LIB(aspell,new_aspell_config,AC_DEFINE(HAVE_ASPELL),AC_MSG_ERROR([Unable to find working aspell library under $aspell]))
@@ -1742,7 +1742,11 @@ dnl 	    PGSQL_CF_LFLAGS=`$PGCONFIG --ldflags 2>/dev/null`
 
 
     PGSQL_INCLUDE="-I$PGSQL_INCDIR"
-    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq $PGSQL_CF_LIBS"
+    if test "$LINKING" != "dynamic"; then
+	    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq $PGSQL_CF_LIBS"
+    else
+	    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq"
+    fi
     AC_DEFINE(HAVE_DP_PGSQL)
     AC_MSG_RESULT(yes)
     have_db=yes

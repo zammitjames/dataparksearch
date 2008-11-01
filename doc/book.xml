@@ -1,4 +1,4 @@
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" [
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
 	<!ENTITY intro SYSTEM "intro.xml">
 	<!ENTITY install SYSTEM "install.xml">
 	<!ENTITY general SYSTEM "general.xml">

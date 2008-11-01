@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >External parsers</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,15 +87,20 @@ CLASS="sect1"
 NAME="pars"
 >3.9. External parsers</A
 ></H1
-><A
+>
+	
+<A
 NAME="AEN1209"
 ></A
-><P
+>
+
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > indexer can use external parsers to index various file types (mime types).</P
-><P
+>
+	<P
 >Parser is an executable program which converts one of
 the mime types to <TT
 CLASS="literal"
@@ -107,7 +112,9 @@ CLASS="literal"
 >. For example, if you have postscript
 files, you can use ps2ascii parser (filter), which reads postscript
 file from stdin and produces ascii to stdout.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -115,30 +122,39 @@ CLASS="sect2"
 NAME="pars-sup"
 >3.9.1. Supported parser types</A
 ></H2
-><P
+>
+		
+		<P
 >Indexer supports four types of parsers that can:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >read data from stdin and send result to stdout</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >read data from file  and send result to stdout</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >read data from file  and send result to file</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >read data from stdin and send result to file</P
-></LI
+>
+			</LI
 ></UL
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -146,14 +162,17 @@ CLASS="sect2"
 NAME="pars-setup"
 >3.9.2. Setting up parsers</A
 ></H2
-><P
+>
+		
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >Configure mime types</P
-><P
+>
+				<P
 >Configure your web server to
 send appropriate "Content-Type" header. For apache, have a look at
 <TT
@@ -161,7 +180,9 @@ CLASS="filename"
 >mime.types</TT
 > file, most mime types are already
 defined there.</P
-><P
+>
+
+				<P
 >&#13;<A
 NAME="AEN1236"
 ></A
@@ -183,15 +204,17 @@ CLASS="programlisting"
 </PRE
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;<A
 NAME="AEN1244"
 ></A
 >
 Add parsers</P
-><P
+>
+				<P
 >Add lines with parsers definitions. Lines have the following format with three arguments:
 				<PRE
 CLASS="programlisting"
@@ -199,7 +222,8 @@ CLASS="programlisting"
 </PRE
 >
 				</P
-><P
+>
+				<P
 >For example, the following line defines parser for man pages:
 				<PRE
 CLASS="programlisting"
@@ -208,9 +232,11 @@ Mime  application/x-troff-man   text/plain   deroff
 </PRE
 >
 				</P
-><P
+>
+				<P
 >This parser will take data from stdin and output result to stdout.</P
-><P
+>
+				<P
 >Many parsers can not operate on
 stdin and require a file to read from. In this case indexer creates a
 temporary file in /tmp and will remove it when parser exits. Use $1
@@ -224,7 +250,8 @@ CLASS="programlisting"
 </PRE
 >
 				</P
-><P
+>
+				<P
 >If your parser writes result
 into output file, use $2 macro. indexer will replace $2 by temporary
 file name, start parser, read result from this temporary file then
@@ -235,17 +262,23 @@ CLASS="programlisting"
 </PRE
 >
 				</P
-><P
+>
+				<P
 >The parser above will read data
 from first temporary file and write result to second one. Both
 temporary files will be removed when parser exists. Note that result
 of usage of this parser will be absolutely  the same with the previous
 one, but they use different execution mode: file-&#62;stdout and
 file-&#62;file correspondingly.</P
-></LI
+>
+
+			</LI
 ></OL
-></DIV
-><DIV
+>
+	</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -253,7 +286,9 @@ CLASS="sect2"
 NAME="ParserTimeOut"
 >3.9.3. Avoid indexer hang on parser execution</A
 ></H2
-><P
+>
+
+<P
 >&#13;<A
 NAME="AEN1260"
 ></A
@@ -272,11 +307,17 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >&#13;Default value is 300 seconds, i.e. 5 minutes.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -284,7 +325,9 @@ CLASS="sect2"
 NAME="pars-pipes"
 >3.9.4. Pipes in parser's command line</A
 ></H2
-><P
+>
+		
+		<P
 >You can use pipes in parser's command line. For
 example, these lines will be useful to index gzipped man pages from
 local disk:
@@ -295,8 +338,10 @@ Mime     application/x-gzipped-man  text/plain  "zcat | deroff"
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -304,10 +349,14 @@ CLASS="sect2"
 NAME="pars-char"
 >3.9.5. Charsets and parsers</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN1273"
 ></A
-><P
+>
+
+		<P
 >Some parsers can produce output in other charset
 than given in LocalCharset command. Specify charset to make indexer
 convert parser's output to proper one. For example, if your catdoc is
@@ -319,8 +368,10 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -328,18 +379,24 @@ CLASS="sect2"
 NAME="pars-udmurl"
 >3.9.6. DPS_URL environment variable</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN1280"
 ></A
-><P
+>
+		<P
 >When executing a parser <B
 CLASS="command"
 >indexer</B
 > creates DPS_URL
 environment variable with an URL being processed as a value. You can
 use this variable in parser scripts.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -347,22 +404,27 @@ CLASS="sect2"
 NAME="pars-links"
 >3.9.7. Some third-party parsers</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN1286"
 ></A
-><P
+>
+
+		<P
 ></P
 ><UL
 ><LI
-><P
->RPM parser by Mario Lang <TT
+>&#13;				<P
+>RPM parser by Mario Lang <CODE
 CLASS="email"
 >&#60;<A
 HREF="mailto:lang@zid.tu-graz.ac.at"
 >lang@zid.tu-graz.ac.at</A
->&#62;</TT
+>&#62;</CODE
 ></P
-><P
+>
+<P
 >        /usr/local/bin/rpminfo:
 
 <PRE
@@ -374,7 +436,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+        <P
 >indexer.conf:
 <PRE
 CLASS="programlisting"
@@ -382,7 +446,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+        <P
 >It renders to such nice RPM information:
 
 <PRE
@@ -396,11 +461,13 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >catdoc MS Word to text converter</P
-><P
+>
+				<P
 >&#13;					<A
 HREF="http://freshmeat.net/redir/catdoc/1055/url_homepage/"
 TARGET="_top"
@@ -411,7 +478,8 @@ TARGET="_top"
 >Freshmeat</A
 >.
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -423,14 +491,17 @@ Mime application/msword         text/plain      "catdoc $1"
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >xls2csv MS Excel to text converter</P
-><P
+>
+				<P
 >It is supplied with catdoc.
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -442,13 +513,16 @@ Mime application/vnd.ms-excel   text/plain      "xls2csv $1"
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >pdftotext Adobe PDF converter</P
-><P
+>
+				<P
 >Supplied with xpdf project.</P
-><P
+>
+				<P
 >&#13;					<A
 HREF="http://freshmeat.net/redir/xpdf/12080/url_homepage/"
 TARGET="_top"
@@ -459,7 +533,8 @@ TARGET="_top"
 >Freshmeat</A
 >.
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -471,18 +546,21 @@ Mime application/pdf            text/plain      "pdftotext $1 -"
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >unrtf RTF to html converter</P
-><P
+>
+				<P
 >&#13;					<A
 HREF="ftp://ftp.gnu.org/pub/gnu/unrtf/"
 TARGET="_top"
 >Homepage</A
 >
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -495,18 +573,21 @@ Mime application/rtf  text/html  "/usr/local/dpsearch/sbin/unrtf --html $1"
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >xlhtml XLS to html converter</P
-><P
+>
+				<P
 >&#13;					<A
 HREF="http://chicago.sourceforge.net/xlhtml/"
 TARGET="_top"
 >Homepage</A
 >
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -518,21 +599,24 @@ Mime	application/vnd.ms-excel  text/html  "/usr/local/dpsearch/sbin/xlhtml $1"
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >ppthtml PowerPoint (PPT) to html converter. Part of <SPAN
 CLASS="application"
 >xlhtml 0.5</SPAN
 >.</P
-><P
+>
+				<P
 >&#13;					<A
 HREF="http://chicago.sourceforge.net/xlhtml/"
 TARGET="_top"
 >Homepage</A
 >
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -544,15 +628,17 @@ Mime	application/vnd.ms-powerpoint  text/html  "/usr/local/dpsearch/sbin/ppthtml
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Using <A
 HREF="http://wvWare.sourceforge.net/"
 TARGET="_top"
 >vwHtml</A
 > (DOC to html).</P
-><P
+>
+				<P
 ><TT
 CLASS="filename"
 >/usr/local/dpsearch/sbin/0vwHtml.pl</TT
@@ -571,7 +657,8 @@ system("/usr/local/bin/wvHtml --targetdir=$p $ARGV[0] $f");
 </PRE
 >
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -584,9 +671,10 @@ Mime  application/vnd.ms-word  text/html  "/usr/local/dpsearch/sbin/0wvHtml.pl $
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >swf2html from 
 <A
 HREF="http://www.macromedia.com/software/flash/download/search_engine/"
@@ -594,7 +682,8 @@ TARGET="_top"
 >Flash Search Engine SDK</A
 >
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -606,9 +695,10 @@ Mime  application/x-shockwave-flash  text/html  "/usr/local/dpsearch/sbin/swf2ht
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >djvutxt from 
 <A
 HREF="http://djvu.sourceforge.net/"
@@ -616,7 +706,8 @@ TARGET="_top"
 >djvuLibre</A
 >
 </P
-><P
+>
+        <P
 ><TT
 CLASS="filename"
 >indexer.conf</TT
@@ -631,10 +722,13 @@ Mime  image/vnd.djvu  text/plain  "/usr/local/bin/djvutxt $1 $2"
 </PRE
 >
 </P
-></LI
+>
+			</LI
 ></UL
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

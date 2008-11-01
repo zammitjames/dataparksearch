@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Oracle notes</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,10 +87,14 @@ CLASS="sect1"
 NAME="oracle"
 >5.5. Oracle notes</A
 ></H1
-><A
-NAME="AEN3026"
+>
+	
+<A
+NAME="AEN3038"
 ></A
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -98,7 +102,9 @@ CLASS="sect2"
 NAME="oracle-intro"
 >5.5.1. </A
 ></H2
-><DIV
+>
+		
+		<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -106,7 +112,9 @@ CLASS="sect3"
 NAME="oracle-why"
 >5.5.1.1. Why Oracle?</A
 ></H3
-><P
+>
+			
+			<P
 >Oracle is a powerful, tunable, scalable
 and reliable industrial RDBMS. It provides some functionalities which
 are absent in simple freeware RDBMS like MySQL and PostgresSQL, such
@@ -127,8 +135,11 @@ of megabytes or several gigabytes of information, reliability is one
 of the primary concerns, need high availability of the database, and
 you are ready to pay higher sums for hardware and Oracle DBA to
 achieve better quality of service. </P
-></DIV
-><DIV
+>
+
+		</DIV
+>
+		<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -139,17 +150,20 @@ CLASS="application"
 >DataparkSearch</SPAN
 >+Oracle8 Installation Requirements</A
 ></H3
-><P
+>
+			
+			<P
 >In order to install <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with Oracle RDBMS support 
 you must ensure the following requirements:</P
-><P
+>
+			<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;					<P
 >Oracle8 Server must be
 properly installed on any computer accessible from the site where
 <SPAN
@@ -157,9 +171,11 @@ CLASS="application"
 >DataparkSearch</SPAN
 > are to be installed. See the documentation provided with
 your Oracle server. </P
-></LI
+>
+
+				</LI
 ><LI
-><P
+>&#13;					<P
 >Oracle client software
 and libraries must be installed on the site where you plan to install
 <SPAN
@@ -167,14 +183,19 @@ CLASS="application"
 >DataparkSearch</SPAN
 >. I strongly recommend to install utilities also, it help
 you to test the client and server accessibility. </P
-></LI
+>
+
+				</LI
 ><LI
-><P
+>&#13;					<P
 >glibc 2.0 or glibc 2.1. Oracle 8.0.5.X libraries are built for glibc 2.0.</P
-></LI
+>
+				</LI
 ></UL
-></DIV
-><DIV
+>
+		</DIV
+>
+		<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -182,27 +203,35 @@ CLASS="sect3"
 NAME="oracle-platforms"
 >5.5.1.3. Currently supported/tested platforms</A
 ></H3
-><P
+>
+			
+			<P
 >Oracle versions:</P
-><P
+>
+			<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;					<P
 >Oracle 8.0.5.X </P
-></LI
+>
+				</LI
 ></UL
-><P
+>
+			<P
 >Operation systems:</P
-><P
+>
+			<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;					<P
 >Linux RedHat 6.1 (2.2.X + glibc 2.0) </P
-></LI
+>
+				</LI
 ></UL
-><P
+>
+			<P
 >Oracle Server may be ran on any platform
 supporting tcp/ip connections. I see no difficulties to port
 <SPAN
@@ -210,9 +239,13 @@ CLASS="application"
 >DataparkSearch</SPAN
 > Oracle driver to any commercial and freeware unix systems,
 any contribution is appreciated. </P
-></DIV
-></DIV
-><DIV
+>
+
+		</DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -220,7 +253,9 @@ CLASS="sect2"
 NAME="oracle-install"
 >5.5.2. Compilation, Installation and Configuration</A
 ></H2
-><DIV
+>
+		
+		<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -228,9 +263,12 @@ CLASS="sect3"
 NAME="oracle-compil"
 >5.5.2.1. Compilation</A
 ></H3
-><P
+>
+			
+			<P
 >Oracle 8.0.5.X and Linux RedHat 6.1</P
-><P
+>
+			<P
 >&#13;				<PRE
 CLASS="programlisting"
 >&#13;./Configure --with-oracle8=oracle_home_dir
@@ -239,7 +277,8 @@ make install
 </PRE
 >
 			</P
-><P
+>
+			<P
 >If you have any troubles, try to put
 <TT
 CLASS="literal"
@@ -250,8 +289,11 @@ CLASS="filename"
 >src/Makefile</TT
 >, this is old version of gcc compiler
 for glibc 2.0. </P
-></DIV
-><DIV
+>
+
+		</DIV
+>
+		<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -259,7 +301,9 @@ CLASS="sect3"
 NAME="oracle-install-config"
 >5.5.2.2. Installation and Configuration</A
 ></H3
-><P
+>
+			
+			<P
 >&#13;				<SPAN
 CLASS="emphasis"
 ><I
@@ -268,7 +312,8 @@ CLASS="emphasis"
 ></SPAN
 >
 			</P
-><P
+>
+			<P
 >First, try DataparkSearch service is accessible
 			<PRE
 CLASS="programlisting"
@@ -286,7 +331,8 @@ OK (10 msec)
 </PRE
 >
 			</P
-><P
+>
+			<P
 >Second, try to connect to Oracle Server with svrmgrl and check whether 
 <SPAN
 CLASS="application"
@@ -330,7 +376,8 @@ URL
 </PRE
 >
 			</P
-><P
+>
+			<P
 >&#13;				<SPAN
 CLASS="emphasis"
 ><I
@@ -339,7 +386,8 @@ CLASS="emphasis"
 ></SPAN
 >
 			</P
-><P
+>
+			<P
 >&#13;				<PRE
 CLASS="programlisting"
 >&#13;[oracle@ant oracle]$ cat /etc/ld.so.conf
@@ -352,7 +400,8 @@ CLASS="programlisting"
 </PRE
 >
 			</P
-><P
+>
+			<P
 >This file should contain line
 <TT
 CLASS="literal"
@@ -362,7 +411,9 @@ CLASS="application"
 >DataparkSearch</SPAN
 > will be
 able to open libclntsh.so, the shared Oracle Client library</P
-><P
+>
+
+			<P
 >&#13;				<SPAN
 CLASS="emphasis"
 ><I
@@ -371,16 +422,16 @@ CLASS="emphasis"
 ></SPAN
 >
 			</P
-><P
->&#13;				<TT
+>
+			<P
+>&#13;				<KBD
 CLASS="userinput"
-><B
 >&#13;ln -s /oracle8/app/oracle/product/8.0.5/network/admin/tnsnames.ora /etc
-</B
-></TT
+</KBD
 >
 			</P
-><P
+>
+			<P
 >&#13;				<SPAN
 CLASS="emphasis"
 ><I
@@ -389,18 +440,19 @@ CLASS="emphasis"
 ></SPAN
 >
 			</P
-><P
+>
+			<P
 >You should specify
-<TT
+<CODE
 CLASS="option"
->DBName</TT
->, <TT
+>DBName</CODE
+>, <CODE
 CLASS="option"
->DBUser</TT
+>DBUser</CODE
 >,
-<TT
+<CODE
 CLASS="option"
->DBPass</TT
+>DBPass</CODE
 > in order that <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -412,7 +464,9 @@ CLASS="filename"
 > file,
 DBUSer and DBPass are Oracle user and his password
 correspondingly. You can run indexer now. </P
-><P
+>
+
+			<P
 >&#13;				<SPAN
 CLASS="emphasis"
 ><I
@@ -421,7 +475,8 @@ CLASS="emphasis"
 ></SPAN
 >
 			</P
-><P
+>
+			<P
 >Copy the file
 <TT
 CLASS="filename"
@@ -435,13 +490,16 @@ lines to apache's <TT
 CLASS="filename"
 >http.conf</TT
 > file:</P
-><P
+>
+
+			<P
 CLASS="literallayout"
 ><br>
 SetEnv&nbsp;ORACLE_HOME&nbsp;/oracle8/app/oracle/product/8.0.5<br>
 PassEnv&nbsp;ORACLE_HOME<br>
 </P
-><P
+>
+			<P
 >Correct the
 <TT
 CLASS="filename"
@@ -451,9 +509,13 @@ information. <TT
 CLASS="filename"
 >search.cgi</TT
 > should work now. </P
-></DIV
-></DIV
-></DIV
+>
+
+		</DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

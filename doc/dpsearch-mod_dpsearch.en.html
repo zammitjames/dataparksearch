@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >mod_dpsearch module for Apache httpd</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -90,19 +90,26 @@ CLASS="literal"
 >mod_dpsearch</TT
 > module for Apache httpd</A
 ></H1
-><A
-NAME="AEN4310"
+>
+	
+<A
+NAME="AEN4322"
 ></A
-><A
-NAME="AEN4312"
+>
+<A
+NAME="AEN4324"
 ></A
-><A
-NAME="AEN4315"
+>
+<A
+NAME="AEN4327"
 ></A
-><A
-NAME="AEN4318"
+>
+<A
+NAME="AEN4330"
 ></A
-><P
+>
+
+	<P
 >Since version 4.19 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -114,7 +121,9 @@ module for <SPAN
 CLASS="application"
 >Apache</SPAN
 > web server.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -125,45 +134,50 @@ CLASS="literal"
 >mod_dpsearch</TT
 ></A
 ></H2
-><P
+>
+		
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;<P
 >As for <B
 CLASS="command"
 >searchd</B
-> (see <A
-HREF="dpsearch-searchd.en.html#searchd-why"
->Section 5.4.1</A
->), <B
+> (see ), <B
 CLASS="command"
 >mod_dpsearch</B
 > can hold preloaded in memory 
 some data to speed-up searches.
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 >In additional, <B
 CLASS="command"
 >mod_dpsearch</B
 > hold in memory last used search template. 
 This save time on template loading and parsing for every request since second.
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 >As a plus, the <B
 CLASS="command"
 >mod_dpsearch</B
 > itself already loaded into memory when search request come from user, while
 search.cgi usualy loads from disk for every search request.
 </P
-></LI
+>
+</LI
 ></UL
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -174,10 +188,13 @@ CLASS="literal"
 >mod_dpsearch</TT
 ></A
 ></H2
-><P
->To enable this extension, add <TT
+>
+		
+
+<P
+>To enable this extension, add <CODE
 CLASS="option"
->--enable-apache-module</TT
+>--enable-apache-module</CODE
 > switch to <B
 CLASS="command"
 >configure</B
@@ -214,45 +231,51 @@ DataparkSearchdConf /usr/local/dpsearch/etc/modsearchd.conf
 </PRE
 >
 </P
-><P
->There are three configuration directives supported by this module: <TT
+>
+
+<P
+>There are three configuration directives supported by this module: <CODE
 CLASS="option"
->DataparkSearchdConf</TT
+>DataparkSearchdConf</CODE
 >,
-<TT
+<CODE
 CLASS="option"
->DataparkSearchTemplate</TT
-> and <TT
+>DataparkSearchTemplate</CODE
+> and <CODE
 CLASS="option"
->DataparkStoredocTemplate</TT
+>DataparkStoredocTemplate</CODE
 > . 
-The <TT
+The <CODE
 CLASS="option"
->DataparkSearchdConf</TT
+>DataparkSearchdConf</CODE
 > optional directive specify a <B
 CLASS="command"
 >searchd</B
 >
 related configuration file. It may be only one per server. 
-The <TT
+The <CODE
 CLASS="option"
->DataparkSearchdTemplate</TT
+>DataparkSearchdTemplate</CODE
 > directive specify a search template file. 
-The <TT
+The <CODE
 CLASS="option"
->DataparkStoredocTemplate</TT
+>DataparkStoredocTemplate</CODE
 > directive specify a storedoc template file. 
 There can be several templates specified per servers, by one per location. 
-If <TT
+If <CODE
 CLASS="option"
->DataparkSearchdConf</TT
-> directive specified, there no need specify <TT
+>DataparkSearchdConf</CODE
+> directive specified, there no need specify <CODE
 CLASS="option"
->DBAddr</TT
+>DBAddr</CODE
 > command in templates.
 </P
-></DIV
-></DIV
+>
+
+	</DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

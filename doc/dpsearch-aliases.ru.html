@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Алиасы</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -89,7 +89,9 @@ CLASS="sect1"
 NAME="aliases"
 >3.7. Алиасы</A
 ></H1
-><P
+>
+	
+	<P
 >Встроенная в <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -99,7 +101,9 @@ CLASS="application"
 страницы напрямую с жесткого диска без использования веб-сервера и сетевых
 протоколов. Либо, например, можно для индексации какого-либо сайта использовать
 не его основной адрес, а его более быстрое зеркало.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -111,7 +115,9 @@ NAME="AEN1133"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Формат команды "Alias" <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -122,7 +128,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		
+		<P
 >Например, для индексации
 <TT
 CLASS="literal"
@@ -141,7 +149,8 @@ Alias  http://search.mnogo.ru/  http://www.gstammw.de/mirrors/mnoGoSearch/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >&#13;			<TT
 CLASS="filename"
 >search.cgi</TT
@@ -155,7 +164,9 @@ CLASS="literal"
 CLASS="literal"
 >http://www.gstammw.de/mirrors/mnoGoSearch/</TT
 >.</P
-><P
+>
+
+		<P
 >Другой пример. Допустим, вы хотите индексировать весь домен
 udm.net. И один из серверов этого домена,
 <TT
@@ -174,13 +185,16 @@ Alias http://home.udm.net/ file:/home/httpd/htdocs/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Индексатор скачает <TT
 CLASS="literal"
 >home.udm.net</TT
 > с локального диска,а другие сайты скачает по HTTP.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -188,7 +202,9 @@ CLASS="sect2"
 NAME="aliases-diff"
 >3.7.2. Алиасы для различных частей сервера</A
 ></H2
-><P
+>
+		
+		<P
 >Алиасы просматриваются в порядке их появления в
 <TT
 CLASS="filename"
@@ -207,11 +223,12 @@ Alias http://home.udm.net/ file:/usr/local/apache/htdocs/
 </PRE
 >
 		</P
-><DIV
+>
+		<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;			<P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Обратите внимание на то, что при изменении порядка следования 
@@ -219,10 +236,14 @@ CLASS="note"
 CLASS="filename"
 >/stat/</TT
 > никогда не будет обработан.</P
-></BLOCKQUOTE
+>
+
+		</BLOCKQUOTE
 ></DIV
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -230,7 +251,9 @@ CLASS="sect2"
 NAME="alias-server"
 >3.7.3. использование алиасов в команде Server</A
 ></H2
-><P
+>
+		
+		<P
 >Возможно указание расположения данных для 
 		выборки индексером используя дополнительный аргумент команды Server:
 		<PRE
@@ -239,8 +262,10 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -248,17 +273,21 @@ CLASS="sect2"
 NAME="alias-realm"
 >3.7.4. Использование алиасов в команде Realm</A
 ></H2
-><P
+>
+		
+		<P
 >Алиасы в команде Realm command являются очень мощным
 инструментом при использовании регулярных выражений. Результат работы такой команды
 подобен работе функции PHP
-<TT
+<CODE
 CLASS="function"
->preg_replace()</TT
+>preg_replace()</CODE
 >. Алиасы в команде Realm
 работают только при использовании "regex" типов сравнений и не работают для
 "string" типов сравнений.</P
-><P
+>
+
+		<P
 >Синтаксис Realm алиасов:
 		<PRE
 CLASS="programlisting"
@@ -266,7 +295,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Индексатор пропускает URL на совпадение с  URL_выражение
 строит алиас используя алиас_выражение. алиас_выражение может содержать
 ссылки вида $n. n - это число в диапазоне
@@ -275,7 +305,9 @@ n-ого по счету regex-выражения в круглых скобках. При этом
 $0 ссылается на текст которому соответствует все выражение целиком.
 Выражения в круглых скобках нумеруются слева направо (начиная с
 1).</P
-><P
+>
+
+		<P
 >Пример: пусть ваша фирма хостит несколько тысяч
 пользователей и их доменов вида
 <TT
@@ -287,7 +319,9 @@ CLASS="literal"
 CLASS="literal"
 >/home/username/htdocs/</TT
 >.</P
-><P
+>
+
+		<P
 >Для правильной настройки нужно следующее
 (напоминаем, что символ '.' имеет специальное значение в регулярных выражениях
 и должен быть экранирован использованием символа '\' в тех случаях, когда символ точки
@@ -298,14 +332,17 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Представим процесс индексации страницы
 <TT
 CLASS="filename"
 >http://www.john.yourname.com/news/index.html</TT
 >
 . Он построит пять ссылок - от $0 до $4:</P
-><P
+>
+
+		<P
 CLASS="literallayout"
 ><br>
 &nbsp;&nbsp;&nbsp;$0&nbsp;=&nbsp;'http://www.john.yourname.com/news/index.htm'&nbsp;(сожержит&nbsp;все&nbsp;выражение&nbsp;удовлетворяющее&nbsp;regex&nbsp;целиком)<br>
@@ -314,7 +351,8 @@ CLASS="literallayout"
 &nbsp;&nbsp;&nbsp;$3&nbsp;=&nbsp;'.yourname.com/'&nbsp;&nbsp;&nbsp;соответствует&nbsp;подвыражению&nbsp;'(\.yourname\.com/)'<br>
 &nbsp;&nbsp;&nbsp;$4&nbsp;=&nbsp;'/news/index.html'&nbsp;соответствует&nbsp;подвыражению&nbsp;'(.*)'<br>
 </P
-><P
+>
+		<P
 >Затем индексатор построит алиас используя $2 and $4 ссылки:
 		<PRE
 CLASS="programlisting"
@@ -322,10 +360,13 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >и использует этот результат для получения документа.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -337,7 +378,9 @@ NAME="AEN1185"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >&#13;			<B
 CLASS="command"
 >AliasProg</B
@@ -357,7 +400,9 @@ CLASS="command"
 			в качестве аргумента URL, и возвразает его алиас на STDOUT. Использыйте $1 чтобы
 			передать значение URL.
 		</P
-><P
+>
+
+		<P
 >&#13;			Например, эта команда использует программу <TT
 CLASS="literal"
 >replace</TT
@@ -376,8 +421,11 @@ CLASS="programlisting"
 >AliasProg  "echo $1 | /usr/local/mysql/bin/mysql/replace http://www.apache.org/ file:/usr/local/apache/htdocs/"</PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -389,7 +437,9 @@ NAME="AEN1200"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >&#13;			Команда <B
 CLASS="command"
 >ReverseAlias</B
@@ -402,13 +452,17 @@ Server       http://name2.yourname.com/
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >&#13;			В это примере все ссылки с коротким именем сервера будут преобразованы
 			в ссылки с полным именем сервера. Это произойдет сразу же после обнаружения
 			"короткой" ссылки, а в базу данных попадет документ с уже длинным именем сервера
 			в адресе.
 		</P
-><P
+>
+
+		<P
 >&#13;			Еще одно возможное применение команды <B
 CLASS="command"
 >ReverseAlias</B
@@ -418,7 +472,9 @@ CLASS="literal"
 >PHPSESSION=XXXX</TT
 >.
 		</P
-><P
+>
+
+		<P
 >&#13;			Например, для вырезания параметра PHPSESSION из URL типа <TT
 CLASS="literal"
 >http://www/a.php?PHPSESSION=XXX</TT
@@ -429,7 +485,9 @@ CLASS="programlisting"
 >ReverseAlias regex  (http://[^?]*)[?]PHPSESSION=[^&#38;]*$   $1</PRE
 >
 		</P
-><P
+>
+
+		<P
 >&#13;			Чтобы вырезать PHPSESSION, когда он является первым параметром, при условии, что
 			после него следуют другие параметры, т.е. <TT
 CLASS="literal"
@@ -442,7 +500,8 @@ CLASS="programlisting"
 >
 			Знак '&#38;' после аргумента PHPSESSION будет вырезан, а знак вопроса не будет.
 		</P
-><P
+>
+		<P
 >&#13;			Для вырезания из URL типа
 			<TT
 CLASS="literal"
@@ -460,8 +519,10 @@ CLASS="programlisting"
 			Знак '&#38;' перед PHPSESSION будет тоже вырезан.
 
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -473,7 +534,9 @@ NAME="AEN1222"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >&#13;			Вы также можете использовать алиасы и в <TT
 CLASS="filename"
 >search.htm</TT
@@ -491,7 +554,9 @@ CLASS="filename"
 >, но работате во время
 			поиска, а не во время индексации.
 		</P
-><P
+>
+
+		<P
 >&#13;			Синтаксис команды также аналогичен команде в <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -501,7 +566,9 @@ CLASS="programlisting"
 >Alias &#60;find-prefix&#62; &#60;replace-prefix&#62;</PRE
 >
 		</P
-><P
+>
+
+		<P
 >&#13;			Например, пусть в <TT
 CLASS="filename"
 >search.htm</TT
@@ -511,7 +578,9 @@ CLASS="programlisting"
 >Alias http://localhost/ http://www.mnogo.ru/</PRE
 >
 		</P
-><P
+>
+
+		<P
 >&#13;			Пусть поиск вернул страницу с адресом <TT
 CLASS="literal"
 >http://localhost/news/article10.html</TT
@@ -522,8 +591,10 @@ CLASS="literal"
 >http://www.mnogo.ru/news/article10.html</TT
 >
 		</P
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

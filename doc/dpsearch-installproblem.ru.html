@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -101,11 +101,13 @@ NAME="AEN481"
 ></A
 ></A
 ></H1
-><P
+>
+		
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Каждый раз, когда вы запускаете <TT
 CLASS="literal"
 >configure</TT
@@ -114,32 +116,33 @@ CLASS="literal"
 CLASS="literal"
 >make</TT
 > для перекомпиляции.</P
-><P
+>
+
+				<P
 >Во избежание использования информации о предыдущей конфигурации или устаревших объектных файлов,
 выполните эти команды перед повторным запуском <TT
 CLASS="literal"
 >configure</TT
 >:
 </P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ rm config.cache</B
-></TT
+>sh$ rm config.cache</KBD
 >
 				</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ make clean</B
-></TT
+>sh$ make clean</KBD
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Завершение компиляции с ошибками иногда может быть связана с некорректной версией 
 <B
 CLASS="command"
@@ -163,14 +166,16 @@ CLASS="command"
 >gmake</B
 >.
 </P
-><P
+>
+				<P
 >GNU <TT
 CLASS="filename"
 >make</TT
 > версии 3.77 проверена и работает.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 >Если при запуске <SPAN
 CLASS="application"
 >Apache</SPAN
@@ -178,11 +183,9 @@ CLASS="application"
 CLASS="application"
 >mod_dpsearch</SPAN
 > вы получаете такое
-сообщение об ошибке:  <TT
+сообщение об ошибке:  <KBD
 CLASS="userinput"
-><B
->Undefined symbol "pthread_join"</B
-></TT
+>Undefined symbol "pthread_join"</KBD
 > (или что-то подобное относящееся к pthreads),
 попробуйте добавить следующую команду в файл конфигурации <TT
 CLASS="filename"
@@ -192,26 +195,28 @@ CLASS="filename"
 >mod_dpsearch.so</TT
 >:
 </P
-><P
-><TT
+>
+<P
+><KBD
 CLASS="userinput"
-><B
->LoadFile /usr/lib/libpthread.so</B
-></TT
+>LoadFile /usr/lib/libpthread.so</KBD
 ></P
-></LI
+>
+</LI
 ></UL
-><P
+>
+		<P
 >Если информация выше не помогла вам, пожалуйста, отправьте описание вашей проблемы на список рассылки
-<TT
+<CODE
 CLASS="email"
 >&#60;<A
 HREF="mailto:dataparksearch@yahoogroups.com"
 >dataparksearch@yahoogroups.com</A
->&#62;</TT
+>&#62;</CODE
 > (пажалуйста, пишите только на английском).
 </P
-></DIV
+>
+	</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

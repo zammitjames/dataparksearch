@@ -134,6 +134,115 @@ outaway:
   c->ibytes=s-s_o;
   return (c->obytes = d - d_o );
 }
+ 
+ 
+ 
+int __DPSCALL DpsNConv(DPS_CONV *c, size_t n, char *d, size_t dlen, const char *s, size_t slen) {
+  size_t	i, codes, nw = 0;
+  int           res;
+  dpsunicode_t  wc[32]; /* Are 32 is enough? */
+  dpsunicode_t  zero = 0;
+  char		*d_o = d;
+  const char	*s_e = s + slen;
+  char		*d_e = d + dlen;
+  const char	*s_o = s;
+
+  c->istate = 0; /* set default state */
+  c->ostate = 0; /* set default state */
+  while(s < s_e && d < d_e) {
+    
+    res = c->from->mb_wc(c, c->from, wc, (const unsigned char*)s, (const unsigned char*)s_e);
+    if (res > 0) {
+      s += res;
+    } else if ((res==DPS_CHARSET_ILSEQ) || (res==DPS_CHARSET_ILSEQ2) || (res==DPS_CHARSET_ILSEQ3) || (res==DPS_CHARSET_ILSEQ4) 
+	     || (res==DPS_CHARSET_ILSEQ5) || (res==DPS_CHARSET_ILSEQ6)) {
+
+	switch (res) {
+	case DPS_CHARSET_ILSEQ6: s++;
+	case DPS_CHARSET_ILSEQ5: s++;
+	case DPS_CHARSET_ILSEQ4: s++;
+	case DPS_CHARSET_ILSEQ3: s++;
+	case DPS_CHARSET_ILSEQ2: s++;
+	case DPS_CHARSET_ILSEQ:
+	default: s++; break;
+	}
+        wc[0] = '?';
+    } else  break;
+
+    codes = c->ocodes;
+    for(i = 0; i < codes; i += c->icodes) {
+outp:
+      if (wc[i] == 0 || ++nw > n) goto outaway;
+      res = c->to->wc_mb(c, c->to, &wc[i], (unsigned char*)d, (unsigned char*)d_e);
+      if (res > 0) {
+	d += res;
+      } else if (res == DPS_CHARSET_ILUNI && wc[i] != '?') {
+	if (c->flags & DPS_RECODE_HTML_TO) {
+	  if (d_e-d > 11) {
+/*	    res = sprintf(d, "&#%d;", (wc[i] & 0xFFFFFF));*/
+	    res = dps_ENTITYprint(d, '&', (wc[i] & 0xFFFFFF));
+	    d += res;
+	  }
+	  else
+	    break;
+	} else if (c->flags & DPS_RECODE_URL_TO) {
+	  if (d_e-d > 11) {
+/*	    res = sprintf(d, "!#%d;", (wc[i] & 0xFFFFFF));*/
+	    res = dps_ENTITYprint(d, '!', (wc[i] & 0xFFFFFF));
+	    d += res;
+	  }
+	  else
+	    break;
+	} else {
+	  wc[i] = '?';
+	  goto outp;
+	}
+      } else
+	goto outaway;
+    }
+  }
+
+outaway:  
+  if(d <= d_e) {
+    res = c->to->wc_mb(c, c->to, &zero, (unsigned char*)d, (unsigned char*)d_e);
+  }
+  c->ibytes=s-s_o;
+  return (c->obytes = d - d_o );
+}
+
+
+extern size_t DpsUniConvLength(DPS_CONV *c, const char *s) {
+  dpsunicode_t  wc[32]; /* Are 32 is enough? */
+  size_t slen = dps_strlen(s), res_len = 0;
+  const char *s_e = s + slen;
+  int           res;
+
+  c->istate = 0; /* set default state */
+  c->ostate = 0; /* set default state */
+  while (s < s_e) {
+    res = c->from->mb_wc(c, c->from, wc, (const unsigned char*)s, (const unsigned char*)s_e);
+    if (res > 0) {
+      s += res;
+    } else if ((res==DPS_CHARSET_ILSEQ) || (res==DPS_CHARSET_ILSEQ2) || (res==DPS_CHARSET_ILSEQ3) || (res==DPS_CHARSET_ILSEQ4) 
+	     || (res==DPS_CHARSET_ILSEQ5) || (res==DPS_CHARSET_ILSEQ6)) {
+
+	switch (res) {
+	case DPS_CHARSET_ILSEQ6: s++;
+	case DPS_CHARSET_ILSEQ5: s++;
+	case DPS_CHARSET_ILSEQ4: s++;
+	case DPS_CHARSET_ILSEQ3: s++;
+	case DPS_CHARSET_ILSEQ2: s++;
+	case DPS_CHARSET_ILSEQ:
+	default: s++; break;
+	}
+        wc[0] = '?';
+    } else  break;
+    res_len += c->ocodes;
+  }
+  return res_len;
+}
+
+
 
 __C_LINK const char * __DPSCALL DpsCsGroup(const DPS_CHARSET *cs) {
      switch(cs->family){

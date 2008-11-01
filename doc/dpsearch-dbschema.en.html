@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Database schema</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,10 +87,13 @@ CLASS="sect1"
 NAME="dbschema"
 >9.3. Database schema</A
 ></H1
-><A
-NAME="AEN5529"
+>
+
+<A
+NAME="AEN5541"
 ></A
-><P
+>
+<P
 >Full database schema used by <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -107,39 +110,33 @@ NAME="db-server"
 ></A
 ><P
 ><B
->Table 9-1. <TT
+>Table 9-1. <CODE
 CLASS="varname"
->server</TT
+>server</CODE
 > table schema</B
 ></P
-><TABLE
+>
+
+<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->rec_id</TT
+>rec_id</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Unique record identificator.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->enabled</TT
+>enabled</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >A flag to enable/disable record for <B
 CLASS="command"
 >indexer</B
@@ -148,41 +145,29 @@ CLASS="command"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->url</TT
+>url</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >URL or pattern.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->tag</TT
+>tag</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Tag value.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->category</TT
+>category</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><TT
 CLASS="literal"
 >Categories</TT
@@ -190,102 +175,86 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->command</TT
+>command</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
->=S - this record is a <TT
+>=S - this record is a <CODE
 CLASS="varname"
->server</TT
+>server</CODE
 >.</P
 >
 <P
->=F - this record is a <TT
+>=F - this record is a <CODE
 CLASS="varname"
->filter</TT
+>filter</CODE
 >.</P
 >
 </TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->ordre</TT
+>ordre</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Sorting key, it define records order for <TT
+>Sorting key, it define records order for <CODE
 CLASS="varname"
->server</TT
+>server</CODE
 > table loading.
 </TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->parent</TT
+>parent</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >If not null, this record is added automaticaly by <B
 CLASS="command"
 >indexer</B
 > and
-<TT
+<CODE
 CLASS="varname"
->url</TT
+>url</CODE
 > field contain a server name accepted on record pointed by this filed value.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->weight</TT
+>weight</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >This record weight for PopRank calculation.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->pop_weight</TT
+>pop_weight</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >One link weight from pages of this server.
 Calculated automatically. Manually change will have no effect.</TD
 ></TR
 ></TBODY
 ></TABLE
-></DIV
+>
+</DIV
 >
 </P
-><P
->Other server's parameters store in <TT
+>
+
+
+<P
+>Other server's parameters store in <CODE
 CLASS="varname"
->srvinfo</TT
+>srvinfo</CODE
 > table. Possible values for several parameters is
 given in table below.
 
@@ -296,177 +265,131 @@ NAME="db-srvinfo"
 ></A
 ><P
 ><B
->Table 9-2. Several server's parameters values in <TT
+>Table 9-2. Several server's parameters values in <CODE
 CLASS="varname"
->srvinfo</TT
+>srvinfo</CODE
 > table</B
 ></P
-><TABLE
+>
+
+<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><THEAD
+><COL><COL><THEAD
 ><TR
 ><TH
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->sname</TT
+>sname</CODE
 > value</TH
 ><TH
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Possible <TT
+>Possible <CODE
 CLASS="varname"
->sval</TT
+>sval</CODE
 > values.</TH
 ></TR
 ></THEAD
 ><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Alias</TT
+>Alias</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Alias used for <TT
+>Alias used for <CODE
 CLASS="varname"
->url</TT
+>url</CODE
 >.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Period</TT
+>Period</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Reindexing period in seconds.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->DeleteOlder</TT
+>DeleteOlder</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >How much time to hold URLs before deleting them from the database.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->RemoteCharset</TT
+>RemoteCharset</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Default charset value.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->DefaultLang</TT
+>DefaultLang</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Default language value.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Request.Authorization</TT
+>Request.Authorization</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >For basic authorization.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Request.Proxy</TT
+>Request.Proxy</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Proxy server to access documents from this resource.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Request.Proxy-Authorization</TT
+>Request.Proxy-Authorization</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Proxy server authorization.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->MaxHops</TT
+>MaxHops</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Maximum depth of way in "mouse" clicks from start url.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Index</TT
+>Index</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >A flag to enable/disable documents indexing.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Follow</TT
+>Follow</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
 >=0, "page"</P
 >
@@ -483,15 +406,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Robots</TT
+>Robots</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >A flag to enable/disable <TT
 CLASS="filename"
 >robots.txt</TT
@@ -499,67 +418,47 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->DetectClones</TT
+>DetectClones</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >A flag to enable/disable "clones" detection.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->MaxNetErrors</TT
+>MaxNetErrors</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Maximum network errors for this server.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->NetDelayTime</TT
+>NetDelayTime</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Indexing delay time if a network error is occurred.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->ReadTimeout</TT
+>ReadTimeout</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Network timeout value.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->match_type</TT
+>match_type</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >=0, DPS_MATCH_FULL - full coincidence.</P
 >
@@ -585,15 +484,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->case_sense</TT
+>case_sense</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >=1, - case insensitive comparison.</P
 >
@@ -604,15 +499,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->nomatch</TT
+>nomatch</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >=1, - URLs not match this record is accepted.</P
 >
@@ -623,15 +514,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Method</TT
+>Method</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >Specify a document action for this command.</P
 >
@@ -673,15 +560,11 @@ i.e. inly brief info about documents (size, last modified, content type) will be
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Section</TT
+>Section</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >Section name used in pattern matching for IndexIf and NotIndexIf methods.</P
 >
@@ -689,10 +572,14 @@ VALIGN="MIDDLE"
 ></TR
 ></TBODY
 ></TABLE
-></DIV
+>
+</DIV
 >
 </P
-></DIV
+>
+
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

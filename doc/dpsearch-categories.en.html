@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Categories</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,10 +87,14 @@ CLASS="sect1"
 NAME="categories"
 >6.2. Categories</A
 ></H1
-><A
-NAME="AEN3168"
+>
+	
+<A
+NAME="AEN3180"
 ></A
-><P
+>
+
+	<P
 >There is a categories editor written in  Perl. You can
 get it in <TT
 CLASS="filename"
@@ -100,36 +104,40 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 installation.</P
-><P
+>
+	<P
 >Categories are similar to tag feature, but nested. So you can have one category inside another and so on.</P
-><P
+>
+	<P
 >Basic points:
 	<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;			<P
 >there are up to 6 nested levels;</P
-></LI
+>
+		</LI
 ><LI
-><P
+>&#13;			<P
 >every level occupies 2 hex or 36 base digits;</P
-></LI
+>
+		</LI
 ><LI
-><P
+>&#13;			<P
 >parameter for setting category is
-<TT
+<CODE
 CLASS="parameter"
-><I
->path</I
-></TT
+>path</CODE
 >, which can be empty (means root category)
 or up to 10 chars long (means deepest category).</P
-></LI
+>
+		</LI
 ></UL
 >
         </P
-><P
+>
+	<P
 >You can also set up symlinks, e.g. categories that are
 actually links to other categories. <TT
 CLASS="literal"
@@ -137,13 +145,17 @@ CLASS="literal"
 > database
 field is used for that. In the symlink last two characters should be
 @@. In example above Moto-&#62;BMW is a link to Auto-&#62;BMW.</P
-><P
+>
+
+	<P
 >First notice that category in the server table is set to be
 11 characters long. This means you can use a valid character to keep
 track of categories. If you are going to keep a category tree of any
 size, then I would suggest using the category editor. But anyways, here's how it works.
 </P
-><P
+>
+
+	<P
 >You can use either the tag column or the category column
 in the server for the same thing. Or you can categorize a site in two
 different ways. For example you could keep track of sites that are
@@ -151,7 +163,9 @@ owned by a certain company and then categorize them as well. You could
 use the tag option to keep of ownership and use the category option
 for categories. When I explain the category option, it goes the same
 for the tag option. </P
-><P
+>
+
+	<P
 >A category can be broken down any way you choose. But
 for it to work with the category editor, I believe for now, you have
 to use two characters for each level. If you use the category editor
@@ -165,7 +179,9 @@ category and then 02 because it's the next category. So its id would
 be 0102. If VW had a sub category called 'Engine' then it's id would
 start at 01 again and it would get the 'VW' id 02 and 'Auto' id of 01,
 making it 010201.</P
-><P
+>
+
+	<P
 >If you want to search for sites under that category then
 you pass it <TT
 CLASS="literal"
@@ -179,9 +195,12 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+	<P
 >and so on...</P
-><DIV
+>
+
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
@@ -200,9 +219,13 @@ CLASS="programlisting"
 >
 i.e. in overall you need to have the section 'category' defined with non-zero maximum length.
 </P
-></BLOCKQUOTE
+>
+</BLOCKQUOTE
 ></DIV
-><DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -213,21 +236,22 @@ CLASS="command"
 >Category</B
 > command</A
 ></H2
-><A
-NAME="AEN3199"
+>
+
+<A
+NAME="AEN3211"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Category &#60;string&#62;
 </PRE
-><P
+>
+<P
 >&#13;You may distribute documents between nested categories. Category
 is a string in hex number notation. You may have up to 6 levels with
 256 members per level. Empty category means the root of category tree.
-Take a look into <A
-HREF="dpsearch-categories.en.html"
->Section 6.2</A
-> for more information.
+Take a look into  for more information.
 <PRE
 CLASS="programlisting"
 >&#13;# This command means a category on first level:
@@ -237,8 +261,12 @@ Category FFAABBCCDD
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -249,31 +277,33 @@ CLASS="command"
 >CategoryIf</B
 > command</A
 ></H2
-><A
-NAME="AEN3209"
+>
+
+<A
+NAME="AEN3221"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;CategoryIf &#60;category&#62; [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
 </PRE
-><P
->&#13;Mark document by &#60;category&#62; category, if the value of <TT
+>
+<P
+>&#13;Mark document by &#60;category&#62; category, if the value of <CODE
 CLASS="option"
->section</TT
-> match <TT
+>section</CODE
+> match <CODE
 CLASS="option"
->arg</TT
+>arg</CODE
 > pattern given.
 The meaning of first three optional parameters is exactly the same 
 as for the <B
 CLASS="command"
 >Allow</B
-> command (see <A
-HREF="dpsearch-indexcmd.en.html#allow_cmd"
->Section 3.10.14</A
->).
+> command (see ).
 </P
-><P
+>
+<P
 >Example
 <PRE
 CLASS="programlisting"
@@ -281,8 +311,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-></DIV
+>
+</DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

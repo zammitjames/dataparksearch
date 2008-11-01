@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Making multi-language search pages</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,39 +87,50 @@ CLASS="sect1"
 NAME="multilang"
 >7.2. Making multi-language search pages</A
 ></H1
-><A
-NAME="AEN3736"
+>
+	
+<A
+NAME="AEN3748"
 ></A
-><P
+>
+
+	<P
 >Original idea instructions by Craig Small
-<TT
+<CODE
 CLASS="email"
 >&#60;<A
 HREF="mailto:csmall@eye-net.com.au"
 >csmall@eye-net.com.au</A
->&#62;</TT
+>&#62;</CODE
 >.  Some minor changes by Alex
-Barkov <TT
+Barkov <CODE
 CLASS="email"
 >&#60;<A
 HREF="mailto:bar@mnogosearch.org"
 >bar@mnogosearch.org</A
->&#62;</TT
+>&#62;</CODE
 >.</P
-><P
+>
+
+	<P
 >It is often required to allow for different languages
 which means different search.htm files depending on what language
 users have set in their browser. </P
-><P
+>
+
+	
+	<P
 >Further installation should be done in three steps.</P
-><P
+>
+	<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;			<P
 >Installing several templates.</P
-><P
+>
+			<P
 >The general idea is to have one
 <TT
 CLASS="filename"
@@ -140,7 +151,8 @@ symlink to <TT
 CLASS="filename"
 >search.en.htm</TT
 >) for the default.</P
-><P
+>
+			<P
 >If the name of the script is
 <TT
 CLASS="filename"
@@ -166,7 +178,8 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 installation.</P
-><P
+>
+			<P
 >You would then populate
 <TT
 CLASS="filename"
@@ -180,83 +193,72 @@ CLASS="filename"
 CLASS="filename"
 >/somewhere/etc</TT
 > has:</P
-><DIV
+>
+			<DIV
 CLASS="informaltable"
-><A
-NAME="AEN3763"
-></A
 ><P
 ></P
-><TABLE
+><A
+NAME="AEN3775"
+></A
+>
+				<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.en.htm</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >English template</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.pl.htm</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Polish template</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.ru.htm</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Russian template</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.htm</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Symlink to English template</TD
 ></TR
 ></TBODY
 ></TABLE
-><P
+>
+			<P
 ></P
 ></DIV
-></LI
+>
+		</LI
 ><LI
-><P
+>&#13;			<P
 >Installing front-ends</P
-><P
+>
+			<P
 >Create a directory and put
 <TT
 CLASS="filename"
@@ -267,159 +269,137 @@ CLASS="filename"
 >
 there (along with the include files if you want, but I fiddle with the
 php include_path and put them elsewhere).</P
-><P
+>
+			<P
 >Then setup the symlinks:</P
-><DIV
+>
+			<DIV
 CLASS="informaltable"
-><A
-NAME="AEN3788"
-></A
 ><P
 ></P
-><TABLE
+><A
+NAME="AEN3800"
+></A
+>
+				<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.cgi</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Original file</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.en.cgi</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >symlink</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.pl.cgi</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >symlink</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.ru.cgi</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >symlink</TD
 ></TR
 ></TBODY
 ></TABLE
-><P
+>
+			<P
 ></P
 ></DIV
-><P
+>
+			<P
 >Or in the case of PHP front-end:</P
-><DIV
+>
+			<DIV
 CLASS="informaltable"
-><A
-NAME="AEN3808"
-></A
 ><P
 ></P
-><TABLE
+><A
+NAME="AEN3820"
+></A
+>
+				<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.php</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Original file</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.en.php</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >symlink</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.pl.php</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >symlink</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;								<TT
 CLASS="filename"
 >search.ru.php</TT
 >
 							</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >symlink</TD
 ></TR
 ></TBODY
 ></TABLE
-><P
+>
+			<P
 ></P
 ></DIV
-></LI
+>
+		</LI
 ><LI
-><P
+>&#13;			<P
 >Configuring Apache</P
-><P
+>
+			<P
 >Then you need to make apache understand
 what weirdness you are doing here. So you need to get negotiation
 happening and some magic with the indexes. I used
@@ -439,9 +419,11 @@ Options FollowSymlinks MultiViews
 </PRE
 >
 			</P
-></LI
+>
+		</LI
 ></OL
-><DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -449,12 +431,14 @@ CLASS="sect2"
 NAME="multilang-how"
 >7.2.1. How does it work?</A
 ></H2
-><P
+>
+		
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >You type url <TT
 CLASS="literal"
 >http://myhost/mydir/search</TT
@@ -467,17 +451,19 @@ CLASS="emphasis"
 ></SPAN
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Your browser says <TT
 CLASS="literal"
 >"I like english (well language negotiation en) "</TT
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Apache finds
 <TT
 CLASS="filename"
@@ -491,9 +477,10 @@ CLASS="literal"
 CLASS="literal"
 >en.cgi</TT
 >)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >The
 <B
 CLASS="command"
@@ -511,11 +498,12 @@ CLASS="filename"
 >somepath/search.en.cgi</TT
 >
 				</P
-><DIV
+>
+				<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;					<P
 ><B
 >Note: </B
 >Most other variables
@@ -527,11 +515,13 @@ CLASS="literal"
 CLASS="literal"
 >search.cgi</TT
 >)</P
-></BLOCKQUOTE
+>
+				</BLOCKQUOTE
 ></DIV
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Your hack in
 <TT
 CLASS="filename"
@@ -541,9 +531,11 @@ CLASS="filename"
 CLASS="filename"
 >search.en.htm</TT
 >.</P
-></LI
+>
+			</LI
 ></OL
-><P
+>
+		<P
 >So what happens if the user wants, say, German?
 Well there is no <TT
 CLASS="filename"
@@ -559,13 +551,16 @@ CLASS="filename"
 >search.php</TT
 >  OK, they get the page in English, but
 it's better than a 404.</P
-><P
+>
+		<P
 >This does work, you may need some more apache
 fiddling to get negotiation to work because I am testing this on a
 server that already has it setup, so I may have missed
 something.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -573,30 +568,39 @@ CLASS="sect2"
 NAME="multilang-problem"
 >7.2.2. Possible troubles</A
 ></H2
-><P
+>
+		
+		<P
 >You may get some language negotiation problems caused by:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Dumb caches that don't follow standards</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Dumb versions of browsers that don't follow standards</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Dumb users fiddling with language settings and putting weird stuff in.</P
-></LI
+>
+			</LI
 ></UL
-><P
+>
+		<P
 >The apache team is working on some workarounds
 for most of these, if possible.  For a reasonably heavily used web site
 you can expect an email about it once a week or so.</P
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

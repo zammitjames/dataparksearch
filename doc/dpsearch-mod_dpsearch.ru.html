@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -9,8 +10,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -97,23 +97,25 @@ CLASS="literal"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN4591"
+NAME="AEN4603"
 ></A
 >
 <A
-NAME="AEN4593"
+NAME="AEN4605"
 ></A
 >
 <A
-NAME="AEN4596"
+NAME="AEN4608"
 ></A
 >
 <A
-NAME="AEN4599"
+NAME="AEN4611"
 ></A
 ></A
 ></H1
-><P
+>
+	
+	<P
 >Начиная с версии 4.19 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -129,7 +131,9 @@ CLASS="command"
 >search.cgi</B
 >.
 </P
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -140,35 +144,36 @@ CLASS="literal"
 >mod_dpsearch</TT
 ></A
 ></H2
-><P
+>
+		
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;<P
 >Как и <B
 CLASS="command"
 >searchd</B
-> (см. <A
-HREF="dpsearch-searchd.ru.html#searchd-why"
->&#1056;&#1072;&#1079;&#1076;. 5.4.1</A
->), для ускорения поиска, <B
+> (см. ), для ускорения поиска, <B
 CLASS="command"
 >mod_dpsearch</B
 > может 
 держать в памяти предварительно загруженными некоторые данные.
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 >В дополнение, <B
 CLASS="command"
 >mod_dpsearch</B
 > держит в памяти последний использованый шаблон поиска. 
 Тем саммым время поиска сокращается на время загрузки и разбора шаблона поиска для каждого поискового запроса начиная со второго.
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 >Сам модуль <B
 CLASS="command"
 >mod_dpsearch</B
@@ -178,10 +183,14 @@ CLASS="filename"
 >search.cgi</TT
 >, как правило, загружается с диска для каждого запроса.
 </P
-></LI
+>
+</LI
 ></UL
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -192,13 +201,17 @@ CLASS="literal"
 >mod_dpsearch</TT
 ></A
 ></H2
-><P
+>
+		
+
+
+<P
 >Чтобы включить поддержку этой возможности, добавьте к <B
 CLASS="command"
 >configure</B
-> ключ <TT
+> ключ <CODE
 CLASS="option"
->--enable-apache-module</TT
+>--enable-apache-module</CODE
 >.
 В добавление к основным программам, будет создана библиотека <TT
 CLASS="literal"
@@ -232,60 +245,66 @@ DataparkSearchdConf /usr/local/dpsearch/etc/modsearchd.conf
 </PRE
 >
 </P
-><P
->Этим модулем поддерживаются три директивы конфигурации: <TT
+>
+
+<P
+>Этим модулем поддерживаются три директивы конфигурации: <CODE
 CLASS="option"
->DataparkSearchdConf</TT
+>DataparkSearchdConf</CODE
 >,
-<TT
+<CODE
 CLASS="option"
->DataparkSearchTemplate</TT
-> и <TT
+>DataparkSearchTemplate</CODE
+> и <CODE
 CLASS="option"
->DataparkStoredocTemplate</TT
+>DataparkStoredocTemplate</CODE
 >. 
-Необязательная директива <TT
+Необязательная директива <CODE
 CLASS="option"
->DataparkSearchdConf</TT
+>DataparkSearchdConf</CODE
 > задаёт файл конфигурации, 
 аналогичный файлу конфигурации для <B
 CLASS="command"
 >searchd</B
 >. Для сервера может быть указана только один такой файл.
-Директива <TT
+Директива <CODE
 CLASS="option"
->DataparkSearchdTemplate</TT
+>DataparkSearchdTemplate</CODE
 > указывает поисковый шаблон, аналогичный шаблону, используемому программой
 <B
 CLASS="command"
 >search.cgi</B
 >. 
-Директива <TT
+Директива <CODE
 CLASS="option"
->DataparkStoredocTemplate</TT
+>DataparkStoredocTemplate</CODE
 > указывает шаблон, для отображения сохранённой копии документа,
 аналогичный шаблону, используемому программой <B
 CLASS="command"
 >storedoc.cgi</B
 >. 
-Для сервера можут быть указано несколько директив <TT
+Для сервера можут быть указано несколько директив <CODE
 CLASS="option"
->DataparkSearchdTemplate</TT
-> и <TT
+>DataparkSearchdTemplate</CODE
+> и <CODE
 CLASS="option"
->DataparkStoredocTemplate</TT
+>DataparkStoredocTemplate</CODE
 >,
-по одной для каждого Location. Если указана директива <TT
+по одной для каждого Location. Если указана директива <CODE
 CLASS="option"
->DataparkSearchdConf</TT
+>DataparkSearchdConf</CODE
 >, то в поисковых шаблонах не нужно указывать
-команды <TT
+команды <CODE
 CLASS="option"
->DBAddr</TT
+>DBAddr</CODE
 >.
 </P
-></DIV
-></DIV
+>
+
+	</DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -346,7 +365,7 @@ ALIGN="right"
 VALIGN="top"
 >Как создавать шаблоны результатов поиска
 <A
-NAME="AEN4649"
+NAME="AEN4661"
 ></A
 ></TD
 ></TR

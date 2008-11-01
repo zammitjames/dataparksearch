@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Указание веб-пространства для индексирования</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -87,7 +87,10 @@ CLASS="sect1"
 NAME="follow"
 >3.6. Указание веб-пространства для индексирования</A
 ></H1
-><P
+>
+	
+
+	<P
 >Каждый раз когда <B
 CLASS="command"
 >indexer</B
@@ -122,46 +125,53 @@ CLASS="filename"
 >indexer.conf</TT
 >), то они удаляются при очередной попытке их индексации.
 	</P
-><P
->Эти команды имеют один обязательный параметр <TT
+>
+
+<P
+>Эти команды имеют один обязательный параметр <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > и шесть необязательных:
-<TT
+<CODE
 CLASS="option"
->method</TT
->, <TT
+>method</CODE
+>, <CODE
 CLASS="option"
->subsection</TT
->, <TT
+>subsection</CODE
+>, <CODE
 CLASS="option"
->CaseType</TT
->, <TT
+>CaseType</CODE
+>, <CODE
 CLASS="option"
->MatchType</TT
+>MatchType</CODE
 >,
-<TT
+<CODE
 CLASS="option"
->CmpType</TT
-> и <TT
+>CmpType</CODE
+> и <CODE
 CLASS="option"
->Alias</TT
+>Alias</CODE
 >. Формат этих команд:
 <PRE
 CLASS="programlisting"
 >[Server | Realm | Subnet] [method] [subsection] [CaseType] [MatchType] [CmpType] pattern [alias]</PRE
 >
 </P
-><P
->Обязательный параметр <TT
+>
+
+<P
+>Обязательный параметр <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > задаёт либо URL, либо его фргамент, или шаблон для сравнения.
 </P
-><P
->&#13;		Значение параметра <TT
+>
+
+
+		<P
+>&#13;		Значение параметра <CODE
 CLASS="option"
->subsection</TT
+>subsection</CODE
 > должно быть одним из <TT
 CLASS="literal"
 >page</TT
@@ -185,13 +195,14 @@ CLASS="literal"
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Server path</B
 >
 				</P
-><P
+>
+				<P
 >&#13;					Описывает документы, расположенные на том же сервере и в том же подкаталоге,
 					что и аргумент <B
 CLASS="command"
@@ -213,7 +224,9 @@ CLASS="command"
 >Server</B
 >.
 				</P
-><P
+>
+
+				<P
 >Следующие команды имеют одинаковый эффект на задание пространства индексации, и лишь 
 					отличаются адресами документов, добавляемых в базу при старте:
 <PRE
@@ -225,15 +238,17 @@ Server path http://localhost/path/to/index?q=bla
 </PRE
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Server site</B
 >
 				</P
-><P
+>
+				<P
 >&#13;					Описывает все документы с того же самого сервера, что и аргумент  команды <B
 CLASS="command"
 >Server</B
@@ -247,18 +262,20 @@ CLASS="literal"
 >http://localhost/</TT
 >.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Server world</B
 >
 				</P
-><P
->&#13;					Если в качестве значения параметра <TT
+>
+				<P
+>&#13;					Если в качестве значения параметра <CODE
 CLASS="option"
->subsection</TT
+>subsection</CODE
 > каманды
 					<B
 CLASS="command"
@@ -269,18 +286,21 @@ CLASS="literal"
 >, то это описывает
 					абсолютно любой документ. См. объяснение ниже.
 				</P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Server page</B
 >
 				</P
-><P
->&#13;					При этом значении параметра <TT
+>
+				<P
+>&#13;					При этом значении параметра <CODE
 CLASS="option"
->subsection</TT
+>subsection</CODE
 > только URL,
 					указанный в качестве параметра команды <B
 CLASS="command"
@@ -288,33 +308,37 @@ CLASS="command"
 >,
 					соответствует этой команде.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 ><B
 CLASS="command"
 >Server nofollow</B
 ></P
-><P
+>
+<P
 >Не идти по ссылкам для любого URL, подпадающего под указаный шаблон.</P
-></LI
+>
+</LI
 ><LI
-><P
->&#13;					<TT
+>&#13;				<P
+>&#13;					<CODE
 CLASS="option"
->subsection</TT
+>subsection</CODE
 > для схемы <TT
 CLASS="literal"
 >news://</TT
 >
 				</P
-><P
+>
+				<P
 >&#13;					Для схемы <TT
 CLASS="literal"
 >news://</TT
-> значение <TT
+> значение <CODE
 CLASS="option"
->subsection</TT
+>subsection</CODE
 >
 					всегда равно <TT
 CLASS="literal"
@@ -336,11 +360,15 @@ CLASS="literal"
 >Server news://news.server.com/udm</TT
 >
 				</P
-></LI
+>
+			</LI
 ></OL
 >
 		</P
-><P
+>
+
+
+<P
 >&#13;Необязательный параметр <TT
 CLASS="literal"
 >CaseType</TT
@@ -354,7 +382,10 @@ CLASS="literal"
 > - чувствительное
 сравнение.
 </P
-><P
+>
+
+
+		<P
 >&#13;			Необязятельный параметр <TT
 CLASS="literal"
 >CmpType</TT
@@ -370,9 +401,9 @@ CLASS="literal"
 CLASS="literal"
 >String</TT
 > означает сравнение строкового шаблона и
-			используется по умолчанию. В параметре <TT
+			используется по умолчанию. В параметре <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > Вы можете использовать символы ? и *,
 			они обозначают "один символ" и "любое число символов" соответсвенно. Например, если Вы хотите описать
 			все HTTP сайты в домене <TT
@@ -384,10 +415,12 @@ CLASS="programlisting"
 >Realm http://*.ru/*</PRE
 >
 		</P
-><P
->&#13;			Сравнение как регулярных выражений производится если указан параметр <TT
+>
+		
+		<P
+>&#13;			Сравнение как регулярных выражений производится если указан параметр <CODE
 CLASS="option"
->Regex</TT
+>Regex</CODE
 >.
 			Например, Вы можете описать все HTTP сервера домена <TT
 CLASS="literal"
@@ -398,7 +431,9 @@ CLASS="programlisting"
 >Realm Regex ^http://.*\.ru/</PRE
 >
 		</P
-><P
+>
+		
+		<P
 >&#13;			Необязательный параметр <TT
 CLASS="literal"
 >MatchType</TT
@@ -434,28 +469,29 @@ CLASS="programlisting"
 >Realm NoMatch http://*.com/*</PRE
 >
 		</P
-><P
->&#13;			Необязательный параметр <TT
+>
+		
+		<P
+>&#13;			Необязательный параметр <CODE
 CLASS="option"
->alias</TT
+>alias</CODE
 > позволяет организовать сложный механизм замены URL,
-			нежели предоставляет механизм алиасов. Смотрете <A
-HREF="dpsearch-aliases.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 3.7</A
-> для объяснения использования параметра
-			<TT
+			нежели предоставляет механизм алиасов. Смотрете  для объяснения использования параметра
+			<CODE
 CLASS="option"
->alias</TT
->. <TT
+>alias</CODE
+>. <CODE
 CLASS="option"
->Alias</TT
+>Alias</CODE
 > работает только с типом сравнения Regex, и не даёт никакого
 			эффекта при типе сравнении String.
 		</P
-><P
->&#13;			Необязательный параметр <TT
+>
+
+		<P
+>&#13;			Необязательный параметр <CODE
 CLASS="option"
->method</TT
+>method</CODE
 > в командах <B
 CLASS="command"
 >Server</B
@@ -501,7 +537,7 @@ CLASS="literal"
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Allow</B
@@ -511,7 +547,8 @@ NAME="AEN942"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Параметр <TT
 CLASS="literal"
 >Allow</TT
@@ -524,9 +561,10 @@ CLASS="literal"
 					соответствующий внутренний или внешний парсер, а полученные в результате слова
 					будут помещены в индекс для поиска.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Disallow</B
@@ -536,7 +574,8 @@ NAME="AEN952"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Параметр <TT
 CLASS="literal"
 >Disallow</TT
@@ -545,9 +584,10 @@ CLASS="literal"
 					добавляться в базу данных. Те же документы, которые уже были в базе данных,
 					и соответствующие команде, будут удаляться в момент из очередной индексации.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >HrefOnly</B
@@ -557,7 +597,8 @@ NAME="AEN961"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Параметр <TT
 CLASS="literal"
 >HrefOnly</TT
@@ -576,9 +617,10 @@ Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/
 </PRE
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >CheckOnly</B
@@ -588,7 +630,8 @@ NAME="AEN971"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Параметр <TT
 CLASS="literal"
 >CheckOnly</TT
@@ -607,7 +650,8 @@ Realm  CheckOnly *
 </PRE
 >
 </P
-><P
+>
+<P
 >&#13;					Эта комбинация команд заставляет <B
 CLASS="command"
 >indexer</B
@@ -626,9 +670,10 @@ CLASS="command"
 > затем поможет
 					увидеть все ли внутренние и внешние ссылки верны.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >Skip</B
@@ -638,7 +683,8 @@ NAME="AEN987"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Параметр <TT
 CLASS="literal"
 >Skip</TT
@@ -653,9 +699,10 @@ CLASS="command"
 					Эту команду можно использовать, например, для временной отмены индексации временно
 					недоступного по каким-то причинам сайта.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >CheckMP3</B
@@ -665,7 +712,8 @@ NAME="AEN997"
 ></A
 >
 				</P
-><P
+>
+				<P
 >&#13;					Параметр <TT
 CLASS="literal"
 >CheckMP3</TT
@@ -695,9 +743,10 @@ CLASS="literal"
 >Content-Type</TT
 >: запуск внутреннего или внешного парсера.
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<B
 CLASS="command"
 >CheckMP3Only</B
@@ -707,7 +756,9 @@ NAME="AEN1012"
 ></A
 >
 				</P
-><P
+>
+
+				<P
 >&#13;					Этот параметр работает аналогично <TT
 CLASS="literal"
 >CheckMP3</TT
@@ -721,11 +772,20 @@ CLASS="literal"
 >Content-Type</TT
 >.
 				</P
-></LI
+>
+			</LI
 ></OL
 >
 		</P
-><DIV
+>
+		
+
+
+
+
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -740,23 +800,28 @@ NAME="AEN1023"
 ></A
 ></A
 ></H2
-><P
+>
+		
+
+		<P
 >&#13;			Это основная команда в файле <TT
 CLASS="filename"
 >indexer.conf</TT
 >.
 			Она используется для описания веб-пространства для индексирования в виде серверов
 			и их частей, а также добавляет заданый URL, указанный в качестве обязательного параметра
-<TT
+<CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 > в базу при старте <B
 CLASS="command"
 >indexer</B
 >
 			для использования его в качестве стартовой точки.
 		</P
-><P
+>
+		
+		<P
 >&#13;			Например, команда <TT
 CLASS="literal"
 >Server http://localhost/</TT
@@ -774,7 +839,9 @@ CLASS="literal"
 >http://localhost/</TT
 > в базу данных.
 		</P
-><P
+>
+		
+		<P
 >&#13;			Вы также можете задать некоторый подкаталог для индексирования только части сервера:
 			<TT
 CLASS="literal"
@@ -785,7 +852,7 @@ CLASS="literal"
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;			<P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Вы можете заставить <B
@@ -795,9 +862,9 @@ CLASS="command"
 				в командах <B
 CLASS="command"
 >Server</B
->, задав в командной строке ключ <TT
+>, задав в командной строке ключ <CODE
 CLASS="option"
->-q</TT
+>-q</CODE
 >. 
 				Это полезно, когда у вас несколько сотен или тысяч команд <B
 CLASS="command"
@@ -808,12 +875,21 @@ CLASS="command"
 >indexer</B
 >.
 			</P
-></BLOCKQUOTE
+>
+		</BLOCKQUOTE
 ></DIV
 >
 		</P
-></DIV
-><DIV
+>
+		
+		
+	</DIV
+>
+
+	
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -828,7 +904,9 @@ NAME="AEN1047"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >&#13;			Команда <B
 CLASS="command"
 >Realm</B
@@ -843,21 +921,28 @@ CLASS="command"
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >&#13;					получает в качестве аргумента не адрес сервера или его подкаталога, а шаблон адресов. 
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					не добавляет аргумент в качестве стартовой точки для индексирования, поскольку
 					аргумент не является правильным адресом, а шаблоном.
 				</P
-></LI
+>
+			</LI
 ></UL
 >
 		</P
-></DIV
-><DIV
+>
+
+		
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -872,7 +957,9 @@ NAME="AEN1061"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >&#13;			Команда <B
 CLASS="command"
 >Subnet</B
@@ -882,9 +969,9 @@ CLASS="command"
 CLASS="command"
 >Server</B
 >, с тем отличием, что указанный текстовый шаблон
-			сравнивается не с URL, а с IP-адресом, соответствующим проверяемому URL.  Параметр <TT
+			сравнивается не с URL, а с IP-адресом, соответствующим проверяемому URL.  Параметр <CODE
 CLASS="option"
->pattern</TT
+>pattern</CODE
 >
 для этой команды может содержать символы * и ?, обозначающие "один символ" и "любое число сиволов" соответственно, или же задаваться в виде
 сети в CIDR формате (a.b.c.d/m, a.b.c, a.b, a).
@@ -898,10 +985,12 @@ CLASS="programlisting"
 >Subnet 192.168.10.0/24</PRE
 >
 		</P
-><P
->&#13;			Вы можете использовать необязательный параметр <TT
+>
+
+		<P
+>&#13;			Вы можете использовать необязательный параметр <CODE
 CLASS="option"
->MatchType</TT
+>MatchType</CODE
 >, работающий так же,
 			как и аналогичный у команды <B
 CLASS="command"
@@ -916,8 +1005,11 @@ CLASS="programlisting"
 >Subnet NoMatch 195.*.*.*</PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -925,7 +1017,10 @@ CLASS="sect2"
 NAME="follow-difparam"
 >3.6.4. Использование различным параметров для сервера и его подсекций</A
 ></H2
-><P
+>
+		
+
+		<P
 >&#13;			<B
 CLASS="command"
 >Indexer</B
@@ -954,7 +1049,9 @@ Server http://servername/
 </PRE
 >
 			</P
-><P
+>
+
+		<P
 >Эти команды задают другой период переиндексирования для поддиректории
 <TT
 CLASS="filename"
@@ -976,21 +1073,25 @@ CLASS="command"
 >Server</B
 >.
 </P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
 ><A
 NAME="follow-f"
->3.6.5. Использование <TT
+>3.6.5. Использование <KBD
 CLASS="userinput"
-><B
->indexer -f &#60;filename&#62;</B
-></TT
+>indexer -f &#60;filename&#62;</KBD
 ></A
 ></H2
-><P
+>
+		
+		<P
 >The third scheme is very useful for
 <TT
 CLASS="literal"
@@ -1005,8 +1106,13 @@ CLASS="filename"
 >url.txt</TT
 > indexer will index the server
 of this URL during next startup. </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1017,23 +1123,30 @@ CLASS="command"
 >ServerDB, RealmDB, SubnetDB и URLDB</B
 ></A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1098"
 ></A
-><A
+>
+<A
 NAME="AEN1101"
 ></A
-><A
+>
+<A
 NAME="AEN1104"
 ></A
-><A
+>
+<A
 NAME="AEN1107"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;URLDB pgsql://foo:bar@localhost/portal/links?field=url
 </PRE
-><P
+>
+<P
 >&#13;Эти команды аналогичны командам <B
 CLASS="command"
 >Server</B
@@ -1048,20 +1161,24 @@ CLASS="command"
 CLASS="command"
 >URL</B
 >соответственно, но аргументы для вставки в базу выбираются из указанного поля SQL-таблицы. 
-В примере выше ссылки выбираются из базы <TT
+В примере выше ссылки выбираются из базы <CODE
 CLASS="option"
->portal</TT
->, SQL-таблицы <TT
+>portal</CODE
+>, SQL-таблицы <CODE
 CLASS="option"
->links</TT
+>links</CODE
 >
-и поля <TT
+и поля <CODE
 CLASS="option"
->url</TT
+>url</CODE
 >.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1072,19 +1189,28 @@ CLASS="command"
 >URL</B
 ></A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1122"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;URL http://localhost/path/to/page.html
 </PRE
-><P
+>
+<P
 >&#13;Эта команда добавляет указаный URL в базу. Это полезно когда нужно добавить несколько
 стартовых точек для одного сервера. Не имеет эффекта, если указываемый URL уже находится в базе.
 </P
-></DIV
-></DIV
+>
+</DIV
+>
+
+
+	
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

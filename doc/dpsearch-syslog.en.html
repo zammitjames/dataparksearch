@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Using syslog</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,13 +87,18 @@ CLASS="sect1"
 NAME="syslog"
 >3.12. Using syslog</A
 ></H1
-><A
+>
+	
+<A
 NAME="AEN2217"
 ></A
-><A
+>
+<A
 NAME="AEN2219"
 ></A
-><P
+>
+
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -102,7 +107,8 @@ Different verbose levels could be specified with -v option or by <B
 CLASS="command"
 >LogLevel</B
 > command in config files:</P
-><DIV
+>
+	<DIV
 CLASS="table"
 ><A
 NAME="AEN2225"
@@ -111,98 +117,66 @@ NAME="AEN2225"
 ><B
 >Table 3-1. Verbose levels</B
 ></P
-><TABLE
+>
+		
+		<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >0</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >SILENT</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >suppress all log. Bad idea, better use -l option.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >1</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >ERROR</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >log only critical errors</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >2</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >WARNING</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >log warnings as well</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >3</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >INFO</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >add info messages to log. Default.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >4</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >EXTRA</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >extra logging</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >5</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >DEBUG</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >for debug purposes</TD
 ></TR
 ></TBODY
 ></TABLE
-></DIV
-><P
+>
+	</DIV
+>
+	<P
 >You may use -l option to suppress log to stdout/stderr
 when running indexer via crontab. Without -l option log is sent both
 to stdout/stderr and to log files. If you do not like such behavior,
@@ -212,7 +186,8 @@ CLASS="literal"
 > flag and
 recompile indexer. Compiled without syslog support, indexer uses only
 stdout/stderr.</P
-><P
+>
+	<P
 >Syslog uses different facilities to separate log
 messages. The indexer's default facility is LOCAL7. Facility could be
 changed during configure with
@@ -225,7 +200,8 @@ should be one of the standard facilities, usually listed in
 CLASS="filename"
 >/usr/include/sys/syslog.h</TT
 > header file.</P
-><P
+>
+	<P
 >Facility helps to separate <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -245,7 +221,8 @@ local7.*        -/var/log/DataparkSearch.log
 </PRE
 >
 	</P
-><P
+>
+	<P
 >Other example:
 	<PRE
 CLASS="programlisting"
@@ -255,7 +232,8 @@ local7.*        @central
 </PRE
 >
 	</P
-><P
+>
+	<P
 >By default all messages are logged to
 <TT
 CLASS="literal"
@@ -267,7 +245,8 @@ CLASS="application"
 populate this file with a number of messages. To avoid this, add
 local7.none or local7.!* (ignore any messages from local7 facility) to
 your 'catch-all' log files.</P
-><P
+>
+	<P
 >For example:
 	<PRE
 CLASS="programlisting"
@@ -282,11 +261,13 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+	<P
 >Please take a look at syslogd(8) and syslog.conf(5) man
 pages for more detailed information about syslog and its configuration
 notes.</P
-></DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

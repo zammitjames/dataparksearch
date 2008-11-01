@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -93,17 +93,21 @@ CLASS="sect1"
 NAME="searchd"
 >5.4. Поддержка SearchD
 <A
-NAME="AEN3213"
+NAME="AEN3225"
 ></A
 ></A
 ></H1
-><P
+>
+	
+	<P
 ><B
 CLASS="command"
 >searchd</B
 > предназначен для ускорения поиска, особенно при использовании ispell-данных,
 синонимов и стоп-слов. </P
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -114,11 +118,13 @@ CLASS="command"
 >searchd</B
 ></A
 ></H2
-><P
+>
+		
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Для быстрого поиска, особенно если используется нечёткий поиск на основе ispell или 
 синонимов, а также сегментеры для азиатских языков. 
 Необходимые файлы загружаются в память однажды при запуске <B
@@ -132,7 +138,9 @@ CLASS="filename"
 CLASS="command"
 >searchd</B
 > загружает эти данные для каждого запроса.</P
-><P
+>
+
+<P
 >Таже <B
 CLASS="command"
 >searchd</B
@@ -140,14 +148,19 @@ CLASS="command"
 (по 20 байт на каждую проиндекированую страницу) и лимиты cache mode (4 или 8 байт на каждый URL в зависимости от
 типа лимита).
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Для возможности разнесения поискового и веб-серверов на разные машины.</P
-></LI
+>
+			</LI
 ></UL
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -158,16 +171,19 @@ CLASS="command"
 >searchd</B
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Для запуска <B
 CLASS="command"
 >searchd</B
 > проделайте следующее:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Скопируйте <TT
 CLASS="filename"
 >$PREFIX/etc/searchd.conf-dist</TT
@@ -175,19 +191,22 @@ CLASS="filename"
 CLASS="filename"
 >searchd.conf</TT
 >.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Отредактируйте <TT
 CLASS="filename"
 >searchd.conf</TT
 >.</P
-></LI
+>
+			</LI
 ><LI
-><A
-NAME="AEN3244"
+>&#13;<A
+NAME="AEN3256"
 ></A
-><P
+>
+<P
 >Если вы ходите для ускорения поиска загрузить в память и информацию об url (примерно по 20 байт на url),
 Добавьте в <TT
 CLASS="filename"
@@ -199,12 +218,14 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></LI
+>
+</LI
 ><LI
-><A
-NAME="AEN3251"
+>&#13;<A
+NAME="AEN3263"
 ></A
-><P
+>
+<P
 >Вы также можете загрузить в память индексы для наиболее часто исползуемых значений лимитов режима хранения cache используя
 команду <B
 CLASS="command"
@@ -219,7 +240,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >Например:
 			<PRE
 CLASS="programlisting"
@@ -227,14 +249,16 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Добавьте следующую команду в <TT
 CLASS="filename"
 >search.htm</TT
 >:</P
-><P
+>
+				<P
 >&#13;<TT
 CLASS="literal"
 >DBAddr searchd://hostname/</TT
@@ -248,16 +272,18 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+				<P
 >Значение по умолчанию для <TT
 CLASS="literal"
 >port</TT
 > равно 7003</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 ><A
-NAME="AEN3271"
+NAME="AEN3283"
 ></A
 >
 Вы можете запустить несколько чилдов searchd, отвечающих на поисковые заапросы параллельно. 
@@ -266,28 +292,32 @@ CLASS="command"
 >MaxClients</B
 > для задания этого числа. Значение по умолчанию: 1.
 </P
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;MaxClients 2
 </PRE
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Запустите <B
 CLASS="command"
 >searchd</B
 >:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->/usr/local/dpsearch/sbin/searchd &#38;</B
-></TT
+>/usr/local/dpsearch/sbin/searchd &#38;</KBD
 >
 				</P
-></LI
+>
+			</LI
 ></UL
-><P
+>
+
+		<P
 >Чтобы обойтись без вывода на stderr, используйте ключ
 <TT
 CLASS="literal"
@@ -299,15 +329,15 @@ CLASS="literal"
 >--disable-syslog</TT
 >). В случае, если поддержка syslog выключена, можно
 перенаправить stderr в файл: </P
-><P
->&#13;			<TT
+>
+		<P
+>&#13;			<KBD
 CLASS="userinput"
-><B
->/usr/local/dpsearch/sbin/searchd 2&#62;/var/log/searchd.log &#38;</B
-></TT
+>/usr/local/dpsearch/sbin/searchd 2&#62;/var/log/searchd.log &#38;</KBD
 >
 		</P
-><P
+>
+		<P
 >&#13;			Для <TT
 CLASS="literal"
 >searchd</TT
@@ -330,18 +360,22 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >или указав абсолютный путь:</P
-><P
->&#13;			<TT
+>
+		<P
+>&#13;			<KBD
 CLASS="userinput"
-><B
->searchd /usr/local/dpsearch/etc/searchd1.conf</B
-></TT
+>searchd /usr/local/dpsearch/etc/searchd1.conf</KBD
 >
 		</P
-></DIV
-></DIV
+>
+	</DIV
+>
+
+	
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -391,7 +425,7 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 <A
-NAME="AEN3117"
+NAME="AEN3129"
 ></A
 ></TD
 ><TD
@@ -409,7 +443,7 @@ ALIGN="right"
 VALIGN="top"
 >Oracle notes
 <A
-NAME="AEN3297"
+NAME="AEN3309"
 ></A
 ></TD
 ></TR

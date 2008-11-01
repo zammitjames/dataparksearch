@@ -1,17 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Хранение данных</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
 REL="PREVIOUS"
-TITLE="Шаблоны для индексирования"
-HREF="dpsearch-htmlparser-bodypatterns.ru.html"><LINK
+TITLE="Sub-documents"
+HREF="dpsearch-subdocs.ru.html"><LINK
 REL="NEXT"
 TITLE="Способ хранения Cache
 
@@ -55,7 +55,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-htmlparser-bodypatterns.ru.html"
+HREF="dpsearch-subdocs.ru.html"
 ACCESSKEY="P"
 >&#1055;&#1088;&#1077;&#1076;.</A
 ></TD
@@ -83,8 +83,8 @@ CLASS="chapter"
 ><H1
 ><A
 NAME="howstore"
->&#1043;&#1083;&#1072;&#1074;&#1072; 5. Хранение данных</A
-></H1
+></A
+>&#1043;&#1083;&#1072;&#1074;&#1072; 5. Хранение данных</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -102,7 +102,7 @@ HREF="dpsearch-howstore.ru.html#sql-stor"
 HREF="dpsearch-cachemode.ru.html"
 >Способ хранения Cache
 <A
-NAME="AEN2886"
+NAME="AEN2898"
 ></A
 ></A
 ></DT
@@ -114,7 +114,7 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 <A
-NAME="AEN3117"
+NAME="AEN3129"
 ></A
 ></A
 ></DT
@@ -123,7 +123,7 @@ NAME="AEN3117"
 HREF="dpsearch-searchd.ru.html"
 >Поддержка SearchD
 <A
-NAME="AEN3213"
+NAME="AEN3225"
 ></A
 ></A
 ></DT
@@ -132,13 +132,15 @@ NAME="AEN3213"
 HREF="dpsearch-oracle.ru.html"
 >Oracle notes
 <A
-NAME="AEN3297"
+NAME="AEN3309"
 ></A
 ></A
 ></DT
 ></DL
 ></DIV
-><DIV
+>
+		
+<DIV
 CLASS="sect1"
 ><H1
 CLASS="sect1"
@@ -146,7 +148,9 @@ CLASS="sect1"
 NAME="sql-stor"
 >5.1. SQL режимы хранения</A
 ></H1
-><DIV
+>
+	
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -154,7 +158,9 @@ CLASS="sect2"
 NAME="sql-stor-general"
 >5.1.1. Общая инфоромация о хранении</A
 ></H2
-><P
+>
+		
+		<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -163,8 +169,11 @@ CLASS="application"
 Число появлений каждого слова в документе не влияет на релевантность. Однако номер секции документа, в которой встречается слово,
 может влиять на релевантность.
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -172,16 +181,18 @@ CLASS="sect2"
 NAME="sql-stor-modes"
 >5.1.2. Разнообразные способы хранения слов</A
 ></H2
-><P
+>
+		
+		<P
 >На данный момент <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > поддерживает следующие способы хранения слов
 для SQL серверов:
 "single", "multi", "crc", "crc-multi", "cache". Режимом по умолчанию является "cache". Способ задаётся параметром
- <TT
+ <CODE
 CLASS="option"
->dbmode</TT
+>dbmode</CODE
 > команды <B
 CLASS="command"
 >DBAddr</B
@@ -193,7 +204,9 @@ CLASS="filename"
 CLASS="filename"
 >search.htm</TT
 >.</P
-><PRE
+>
+
+		<PRE
 CLASS="programlisting"
 >&#13;Примеры:
 DBAddr mysql://localhost/search/?dbmode=single
@@ -201,8 +214,12 @@ DBAddr mysql://localhost/search/?dbmode=multi
 DBAddr mysql://localhost/search/?dbmode=crc
 DBAddr mysql://localhost/search/?dbmode=crc-multi
 </PRE
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -210,19 +227,24 @@ CLASS="sect2"
 NAME="sql-stor-single"
 >5.1.3. Способ хранения single
                  <A
-NAME="AEN2844"
+NAME="AEN2856"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Если указан режим хранения "single", все слова сохраняются в одной таблице (или текстовом файле, для
 втсроенной базы данных) со структурой (url_id,word,weight), где url_id - идентификатор документа, равный значению поля rec_id
 таблицы "url". Word имеет SQL тип <TT
 CLASS="literal"
 >variable char(32)</TT
 >.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -230,17 +252,22 @@ CLASS="sect2"
 NAME="sql-stor-multi"
 >5.1.4. Способ хранения multi
                  <A
-NAME="AEN2851"
+NAME="AEN2863"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Если выбран способ хранения "multi", слова будут сохранены в 13 различных таблицах, в зависимости от их длины.
 Структура этих таблиц идентична структуре таблицы для способа хранения "single", только для Word используется тип char фиксированной длины,
 что даёт выигрыш в скорости для большинства баз данных. Это делает режим "multi" более быстрым, по сравнению с "single".
 Этот режим не реализован для встроенной базы данных.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -248,11 +275,13 @@ CLASS="sect2"
 NAME="sql-stor-crc"
 >5.1.5. Способ хранения crc
                  <A
-NAME="AEN2857"
+NAME="AEN2869"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Если выбран способ хранения "crc", <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -263,8 +292,11 @@ CLASS="application"
 Большая часть этих пар (&#62;90%) содержит по меньшей мере одно слово с ошибкой. Инфоромация о каждом слове хранится в следующей
 структуре (url_id,word_id,weight), где word_id - 32-битовый идентификатор слова, посчитаный как его CRC32 сумма.
 Этот режим хранения рекомендуется для больших поисковиков.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -272,11 +304,13 @@ CLASS="sect2"
 NAME="sql-stor-crcmulti"
 >5.1.6. Способ хранения crc-multi
                  <A
-NAME="AEN2864"
+NAME="AEN2876"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Если выбран способ хранения "crc-multi", <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -284,8 +318,11 @@ CLASS="application"
 хранит CRC32 идентификаторы  в нескольких таблицах (или двоичных файлах для встроенной базы данных) с такой же структурой, как и для
 способа хранения "crc", и в зависимости от лины слова, как при режиме 
 хранения "multi". Обычно это самый быстрый способ и рекомендован для больших поисковиков.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -293,7 +330,9 @@ CLASS="sect2"
 NAME="sql-stor-structure"
 >5.1.7. Замечание о стуктуре таблиц для SQL серверов</A
 ></H2
-><P
+>
+		
+		<P
 >Учтите, что мы разрабатываем <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -315,8 +354,11 @@ CLASS="application"
 >PostgreSQL</SPAN
 >
 всегда поддерживается в обновлённом состоянии.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -324,7 +366,9 @@ CLASS="sect2"
 NAME="sql-stor-noncrc"
 >5.1.8. Дополнительные возможности не-CRC режимов хранения</A
 ></H2
-><P
+>
+		
+		<P
 >Режимы хранения <TT
 CLASS="literal"
 >single</TT
@@ -340,9 +384,24 @@ CLASS="literal"
 >crc-multi</TT
 >
 хранятся не слова сами по себе, а только их CRC-идентификаторы, то осуществить поиск подстрок не представляется возможным.</P
-></DIV
-></DIV
-></DIV
+>
+	</DIV
+>
+
+</DIV
+>
+
+
+
+
+
+
+
+
+
+
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -359,7 +418,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="dpsearch-htmlparser-bodypatterns.ru.html"
+HREF="dpsearch-subdocs.ru.html"
 ACCESSKEY="P"
 >&#1055;&#1088;&#1077;&#1076;.</A
 ></TD
@@ -387,7 +446,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Шаблоны для индексирования</TD
+>Sub-documents</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -399,7 +458,7 @@ ALIGN="right"
 VALIGN="top"
 >Способ хранения Cache
 <A
-NAME="AEN2886"
+NAME="AEN2898"
 ></A
 ></TD
 ></TR

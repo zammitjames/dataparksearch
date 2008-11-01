@@ -96,6 +96,31 @@ AC_DEFUN([PGAC_PATH_COLLATEINDEX],
 if test -n "$DOCBOOKSTYLE"; then
   AC_PATH_PROGS(COLLATEINDEX, collateindex.pl, [],
                 [$DOCBOOKSTYLE/bin $PATH])
+  if test "x$COLLATEINDEX" = "x"; then
+  	AC_MSG_CHECKING(once again collateindex.pl)
+	PATH_DIRS=`echo $PATH | tr : \ `
+	MY_DIRS="$DOCBOOKSTYLE/bin"
+  	for pgac_prefix in $MY_DIRS $PATH_DIRS; do
+		pgac_candidate="$pgac_prefix/collateindex.pl"
+		if test -f "$pgac_candidate"; then
+			COLLATEINDEX="$pgac_candidate"
+			break
+		fi
+	done
+	AC_MSG_RESULT([$COLLATEINDEX])
+  fi
 else
   AC_PATH_PROGS(COLLATEINDEX, collateindex.pl)
+  if test "x$COLLATEINDEX" = "x"; then
+  	AC_MSG_CHECKING(once again collateindex.pl)
+	PATH_DIRS=`echo $PATH | tr : \ `
+  	for pgac_prefix in $PATH_DIRS; do
+		pgac_candidate="$pgac_prefix/collateindex.pl"
+		if test -f "$pgac_candidate"; then
+			COLLATEINDEX="$pgac_candidate"
+			break
+		fi
+	done
+	AC_MSG_RESULT([$COLLATEINDEX])
+  fi
 fi])# PGAC_PATH_COLLATEINDEX

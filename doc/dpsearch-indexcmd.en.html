@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Other commands uses in indexer.conf</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -90,7 +90,10 @@ CLASS="filename"
 >indexer.conf</TT
 ></A
 ></H1
-><DIV
+>
+	
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -101,19 +104,21 @@ CLASS="command"
 >Include</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1371"
 ></A
-><P
+>
+
+<P
 >You may include another configuration file in any place of the <TT
 CLASS="filename"
 >indexer.conf</TT
 >
-using <TT
+using <KBD
 CLASS="userinput"
-><B
->Include &#60;filename&#62;</B
-></TT
+>Include &#60;filename&#62;</KBD
 > command.
 Absolute path if &#60;<TT
 CLASS="filename"
@@ -124,7 +129,9 @@ CLASS="programlisting"
 >&#13;Include /usr/local/dpsearch/etc/inc1.conf
 </PRE
 ></P
-><P
+>
+
+<P
 >Relative path else:
 
 <PRE
@@ -133,8 +140,14 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -145,10 +158,14 @@ CLASS="command"
 >DBAddr</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1384"
 ></A
-><P
+>
+
+<P
 ><B
 CLASS="command"
 >DBAddr</B
@@ -174,11 +191,13 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><DIV
+>
+
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;<P
 ><B
 >Note: </B
 ><SPAN
@@ -186,60 +205,63 @@ CLASS="application"
 >ODBC</SPAN
 > related.
        Use DBName to specify ODBC data source name (DSN)
-       <TT
+       <CODE
 CLASS="option"
->Host</TT
+>Host</CODE
 > does not matter, use "localhost".
 </P
-></BLOCKQUOTE
+>
+</BLOCKQUOTE
 ></DIV
-><DIV
+>
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;<P
 ><B
 >Note: </B
 ><SPAN
 CLASS="application"
 >Solid</SPAN
 > related.
-       Use <TT
+       Use <CODE
 CLASS="option"
->Host</TT
+>Host</CODE
 > to specify Solid server
        DBName does not matter for <SPAN
 CLASS="application"
 >Solid</SPAN
 >.
 </P
-></BLOCKQUOTE
+>
+</BLOCKQUOTE
 ></DIV
-><P
->You may use CGI-like encoding for <TT
+>
+
+<P
+>You may use CGI-like encoding for <CODE
 CLASS="option"
->User</TT
-> and <TT
+>User</CODE
+> and <CODE
 CLASS="option"
->Pass</TT
+>Pass</CODE
 > if you need use special characters 
-in user name or password. For example, if you have <TT
+in user name or password. For example, if you have <KBD
 CLASS="userinput"
-><B
->ABC@DEF</B
-></TT
+>ABC@DEF</KBD
 > as password, you should write it as
-<TT
+<KBD
 CLASS="userinput"
-><B
->ABC%40DEF</B
-></TT
+>ABC%40DEF</KBD
 >.
 </P
-><P
-> Currently supported <TT
+>
+
+<P
+> Currently supported <CODE
 CLASS="option"
->Type</TT
+>Type</CODE
 > values are
 <TT
 CLASS="literal"
@@ -271,7 +293,9 @@ Actually, it does not matter for native libraries support.
 But ODBC users should specify one of supported values.
 If your database type is not supported, you may use "unknown" instead.
 </P
-><P
+>
+
+<P
 ><SPAN
 CLASS="application"
 >MySQL</SPAN
@@ -280,51 +304,51 @@ CLASS="application"
 >PostgreSQL</SPAN
 >users can specify path to Unix socket 
 when connecting to localhost:
-<TT
+<KBD
 CLASS="userinput"
-><B
 >&#13;mysql://foo:bar@localhost/dpsearch/?socket=/tmp/mysql.sock
-</B
-></TT
+</KBD
 >
 </P
-><P
+>
+
+<P
 >If you are using <SPAN
 CLASS="application"
 >PostgreSQL</SPAN
 > and do not specify hostname,
-       e.g. <TT
+       e.g. <KBD
 CLASS="userinput"
-><B
->pgsql://user:password@/dbname/</B
-></TT
+>pgsql://user:password@/dbname/</KBD
 >
 then <SPAN
 CLASS="application"
 >PostgreSQL</SPAN
 > will not work via TCP, but will use default Unix socket.
 </P
-><P
+>
+
+<P
 ><TT
 CLASS="literal"
 >dbmode parameter</TT
 >. You may also select database mode of words storage.
-When "<TT
+When "<CODE
 CLASS="option"
->single</TT
+>single</CODE
 >" is specified, all words are stored in the same table (file).
-If "<TT
+If "<CODE
 CLASS="option"
->multi</TT
+>multi</CODE
 >" is selected, words will be located in different tables (files)
-depending of their lengths. "<TT
+depending of their lengths. "<CODE
 CLASS="option"
->multi</TT
+>multi</CODE
 >" mode is usually faster but requires more
 tables (files).
-If "<TT
+If "<CODE
 CLASS="option"
->crc</TT
+>crc</CODE
 >" mode is selected, <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -332,22 +356,22 @@ CLASS="application"
 word IDs calculated by HASH32 algorithm instead of words. This mode requires
 less disk space and it is faster comparing with "single" and "multi" modes,
 however it doesn't support substring searches.
-"<TT
+"<CODE
 CLASS="option"
->crc-multi</TT
+>crc-multi</CODE
 >" uses the same storage structure with the "crc" mode, but also
 stores words in different tables (files) depending on words lengths like
 "multi" mode. Default mode is "single".
 </P
-><P
+>
+
+<P
 ><TT
 CLASS="literal"
 >stored parameter</TT
->. Format:<TT
+>. Format:<KBD
 CLASS="userinput"
-><B
->&#13;stored=StoredHost[:StoredPort]</B
-></TT
+>&#13;stored=StoredHost[:StoredPort]</KBD
 >.
 This parameter is used to specify host and port, if specified, where <B
 CLASS="command"
@@ -355,15 +379,15 @@ CLASS="command"
 > daemon is running, if you plan
 to use document excerpts and cached copies.
 </P
-><P
+>
+
+<P
 ><TT
 CLASS="literal"
 >cached parameter</TT
->. Format:<TT
+>. Format:<KBD
 CLASS="userinput"
-><B
->&#13;cached=CachedHost[:CachedPort]</B
-></TT
+>&#13;cached=CachedHost[:CachedPort]</KBD
 >.
 Use <B
 CLASS="command"
@@ -372,10 +396,7 @@ CLASS="command"
 It is required for <TT
 CLASS="literal"
 >cache</TT
-> storage mode only (see <A
-HREF="dpsearch-cachemode.en.html"
->Section 5.2</A
->).
+> storage mode only (see ).
 Each <B
 CLASS="command"
 >indexer</B
@@ -384,15 +405,15 @@ CLASS="filename"
 >cached</TT
 > on given address at startup.
 </P
-><P
+>
+
+<P
 ><TT
 CLASS="literal"
 >charset parameter</TT
->. Format:<TT
+>. Format:<KBD
 CLASS="userinput"
-><B
->&#13;charset=DBCharacterSet</B
-></TT
+>&#13;charset=DBCharacterSet</KBD
 >.
 This parameter can be used to specity database connection charset. The charset specified by DBCharacterSet should be equal to
 charset specified by <B
@@ -400,22 +421,22 @@ CLASS="command"
 >LocalCharset</B
 > command.
 </P
-><P
+>
+
+<P
 ><TT
 CLASS="literal"
 >label parameter</TT
->. Format: <TT
+>. Format: <KBD
 CLASS="userinput"
-><B
->&#13;label=DBAlabel</B
-></TT
+>&#13;label=DBAlabel</KBD
 >.
 This parameter may be used to assign a label to <B
 CLASS="command"
 >DBAddr</B
-> command. So, if you pass <TT
+> command. So, if you pass <CODE
 CLASS="option"
->label</TT
+>label</CODE
 > CGI-variable to 
 the <SPAN
 CLASS="application"
@@ -428,29 +449,33 @@ Thus, you can use one <B
 CLASS="command"
 >searchd</B
 > daemon to answer queries for several search databases selectible by 
-<TT
+<CODE
 CLASS="option"
->label</TT
+>label</CODE
 > variable.
 </P
-><DIV
+>
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
 ><P
 ><B
 >Note: </B
->If no <TT
+>If no <CODE
 CLASS="option"
->label</TT
-> is passed as CGI-parameter, then only DBAddr without a <TT
+>label</CODE
+> is passed as CGI-parameter, then only DBAddr without a <CODE
 CLASS="option"
->label</TT
+>label</CODE
 > will be used
 to perform search query.</P
-></BLOCKQUOTE
+>
+</BLOCKQUOTE
 ></DIV
-><P
+>
+
+<P
 >Example:
 <PRE
 CLASS="programlisting"
@@ -458,8 +483,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -470,10 +499,13 @@ CLASS="command"
 >VarDir</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1467"
 ></A
-><P
+>
+<P
 >You may choose alternative working directory for cache mode:
 <PRE
 CLASS="programlisting"
@@ -481,8 +513,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -493,10 +528,13 @@ CLASS="command"
 >NewsExtensions</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1475"
 ></A
-><P
+>
+<P
 >Whether to enable news extensions. Default value is no.
 <PRE
 CLASS="programlisting"
@@ -504,8 +542,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -516,10 +557,13 @@ CLASS="command"
 >SyslogFacility</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1483"
 ></A
-><P
+>
+<P
 > This is used if <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -535,8 +579,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -544,13 +592,17 @@ CLASS="sect2"
 NAME="wordlengths_cmd"
 >3.10.6. Word length commands</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1492"
 ></A
-><A
+>
+<A
 NAME="AEN1495"
 ></A
-><P
+>
+<P
 >Word lengths. You may change default length range of words
 stored in database. By default, words with the length in the
 range from 1 to 32 are stored.
@@ -561,8 +613,11 @@ MaxWordLength 32
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -573,10 +628,13 @@ CLASS="command"
 >MaxDocSize</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1503"
 ></A
-><P
+>
+<P
 >This command is used for specify maximal document size.
 Default value 1048576 (1 Megabyte). Takes global effect for whole config file.
 <PRE
@@ -585,8 +643,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -597,10 +658,13 @@ CLASS="command"
 >MinDocSize</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1511"
 ></A
-><P
+>
+<P
 >This command is used to checkonly urls with content size less than value specified.
 Default value 0. Takes global effect for whole config file.
 <PRE
@@ -609,8 +673,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -621,10 +688,13 @@ CLASS="command"
 >IndexDocSizeLimit</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1519"
 ></A
-><P
+>
+<P
 >Use this command to specify the maximal amount of data stored in index per document.
 Default value 0. This mean no limit. Takes effect till next <B
 CLASS="command"
@@ -636,8 +706,14 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -648,10 +724,13 @@ CLASS="command"
 >URLSelectCacheSize</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1528"
 ></A
-><P
+>
+<P
 >Select number of targets to index at once. Default value is 1024.
 <PRE
 CLASS="programlisting"
@@ -659,8 +738,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -671,10 +753,13 @@ CLASS="command"
 >URLDumpCacheSize</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1536"
 ></A
-><P
+>
+<P
 >Select at once this number of urls to write cache mode indexes, to preload url data or to calculate the Popularity Rank. 
 Default value is 100000.
 <PRE
@@ -683,8 +768,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -695,10 +784,13 @@ CLASS="command"
 >UseCRC32URLId</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1544"
 ></A
-><P
+>
+<P
 >Switch on or off the ID generation for URL using HASH32. 
 Default value is "no".
 <PRE
@@ -707,10 +799,15 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >Switching it on allow speed up indexing a bit, but some small number of collisions is possible.</P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -721,10 +818,13 @@ CLASS="command"
 >HTTPHeader</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1553"
 ></A
-><P
+>
+<P
 >You may add desired headers to indexer's HTTP request.
 You should not use "If-Modified-Since", "Accept-Charset" headers,
 these headers are composed by indexer itself.
@@ -738,8 +838,11 @@ HTTPHeader "From: webmaster@mysite.com"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -750,51 +853,55 @@ CLASS="command"
 >Allow</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1561"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Allow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
 </PRE
-><P
+>
+<P
 >Use this command to allow URLs that match (doesn't match) given argument.
 First three optional parameters describe the type of comparison.
 Default values are Match, NoCase, String.
-Use <TT
+Use <CODE
 CLASS="option"
->NoCase</TT
-> or <TT
+>NoCase</CODE
+> or <CODE
 CLASS="option"
->Case</TT
+>Case</CODE
 > values to choose case sensitive or case insensitive
 comparison.
-Use <TT
+Use <CODE
 CLASS="option"
->Regex</TT
+>Regex</CODE
 > to choose regular expression comparison. 
-Use <TT
+Use <CODE
 CLASS="option"
->String</TT
+>String</CODE
 > to choose string with wildcards comparison.
 Wildcards are '*' for any number of characters and '?' for one character.
-Note that '?' and '*' have special meaning in <TT
+Note that '?' and '*' have special meaning in <CODE
 CLASS="option"
->String</TT
+>String</CODE
 > match type. Please use
-<TT
+<CODE
 CLASS="option"
->Regex</TT
+>Regex</CODE
 > to describe documents with '?' and '*' signs in URL.
-<TT
+<CODE
 CLASS="option"
->String</TT
-> match is much faster than <TT
+>String</CODE
+> match is much faster than <CODE
 CLASS="option"
->Regex</TT
->. Use <TT
+>Regex</CODE
+>. Use <CODE
 CLASS="option"
->String</TT
+>String</CODE
 > where it 
 is possible.
 You may use several arguments for one <B
@@ -810,7 +917,8 @@ CLASS="application"
 command after reading config file. It means that allowed everything
 that is not disallowed.
 </P
-><P
+>
+<P
 >Examples
 <PRE
 CLASS="programlisting"
@@ -823,8 +931,11 @@ Allow NoCase *.HTM
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -835,14 +946,18 @@ CLASS="command"
 >Disallow</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1582"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Disallow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
 </PRE
-><P
+>
+<P
 >&#13;Use this command to disallow URLs that match (doesn't match) given argument.
 The meaning of first three optional parameters is exactly the same 
 with <B
@@ -869,8 +984,11 @@ Disallow Regex  \?
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -881,14 +999,18 @@ CLASS="command"
 >CheckOnly</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1593"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;CheckOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
 </PRE
-><P
+>
+<P
 >&#13;The meaning of first three optional parameters is exactly the same 
 with <B
 CLASS="command"
@@ -916,8 +1038,11 @@ CheckOnly NoMatch Regex \/$|\.html$|\.shtml$|\.phtml$|\.php$|\.txt$
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -928,14 +1053,18 @@ CLASS="command"
 >HrefOnly</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1604"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;HrefOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
 </PRE
-><P
+>
+<P
 >&#13;The meaning of first three optional parameters is exactly the same 
 with <B
 CLASS="command"
@@ -955,8 +1084,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -967,14 +1100,18 @@ CLASS="command"
 >CheckMp3</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1614"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;CheckMp3 [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]
 </PRE
-><P
+>
+<P
 >&#13;The meaning of first three optional parameters is exactly the same 
 with <B
 CLASS="command"
@@ -993,8 +1130,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1005,14 +1145,18 @@ CLASS="command"
 >CheckMp3Only</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1624"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;CheckMP3Only [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]
 </PRE
-><P
+>
+<P
 >&#13;The meaning of first three optional parameters is exactly the same 
 with <B
 CLASS="command"
@@ -1031,8 +1175,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1043,31 +1191,33 @@ CLASS="command"
 >IndexIf</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1635"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;IndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
 </PRE
-><P
->&#13;Use this command to allow indexing, if the value of <TT
+>
+<P
+>&#13;Use this command to allow indexing, if the value of <CODE
 CLASS="option"
->section</TT
-> match the <TT
+>section</CODE
+> match the <CODE
 CLASS="option"
->arg</TT
+>arg</CODE
 > pattern given.
 The meaning of first three optional parameters is exactly the same 
 as for the <B
 CLASS="command"
 >Allow</B
-> command (see <A
-HREF="dpsearch-indexcmd.en.html#allow_cmd"
->Section 3.10.14</A
->).
+> command (see ).
 </P
-><P
+>
+<P
 >Example
 <PRE
 CLASS="programlisting"
@@ -1076,8 +1226,12 @@ IndexIf body "*important detail*"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1088,31 +1242,33 @@ CLASS="command"
 >NoIndexIf</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1649"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;NoIndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
 </PRE
-><P
->&#13;Use this command to disallow indexing, if the value of <TT
+>
+<P
+>&#13;Use this command to disallow indexing, if the value of <CODE
 CLASS="option"
->section</TT
-> match the <TT
+>section</CODE
+> match the <CODE
 CLASS="option"
->arg</TT
+>arg</CODE
 > pattern given.
 The meaning of first three optional parameters is exactly the same 
 as for the <B
 CLASS="command"
 >Allow</B
-> command (see <A
-HREF="dpsearch-indexcmd.en.html#allow_cmd"
->Section 3.10.14</A
->).
+> command (see ).
 </P
-><P
+>
+<P
 >Example
 <PRE
 CLASS="programlisting"
@@ -1121,8 +1277,15 @@ IndexIf body *xxx*
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1133,14 +1296,18 @@ CLASS="command"
 >HoldBadHrefs</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1663"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;HoldBadHrefs &#60;time&#62;
 </PRE
-><P
+>
+<P
 >&#13;How much time to hold URLs with erroneous status before deleting them
 from the database. For example, if host is down, indexer will not delete
 pages from this site immediately and search will use previous content
@@ -1149,18 +1316,19 @@ it's time to remove these pages from the database.
 For &#60;time&#62; format see description of <B
 CLASS="command"
 >Period</B
-> command in <A
-HREF="dpsearch-indexcmd.en.html#period_cmd"
->Section 3.10.26</A
->.
+> command in .
 <PRE
 CLASS="programlisting"
 >&#13;HoldBadHrefs 30d
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1171,23 +1339,24 @@ CLASS="command"
 >DeleteOlder</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1674"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;DeleteOlder &#60;time&#62;
 </PRE
-><P
+>
+<P
 >&#13;How much time to hold URLs before deleting them from the database. For example, 
 for news sites indexing, you may delete automatically old news articles after specified period.
 For &#60;time&#62; format see description of <B
 CLASS="command"
 >Period</B
-> command in <A
-HREF="dpsearch-indexcmd.en.html#period_cmd"
->Section 3.10.26</A
->.
+> command in .
 Default value is 0. "0" value mean "do not check". You may specify several <B
 CLASS="command"
 >DeleteOlder</B
@@ -1202,8 +1371,14 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1214,14 +1389,18 @@ CLASS="command"
 >UseRemoteContentType</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1687"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;UseRemoteContentType yes/no
 </PRE
-><P
+>
+<P
 >&#13;This command specifies if the indexer should get content type
 from http server headers (yes) or from it's AddType settings (no).
 If set to 'no' and the indexer could not determine content-type
@@ -1233,8 +1412,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1245,14 +1427,18 @@ CLASS="command"
 >AddType</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1696"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;AddType [String|Regex] [Case|NoCase] &#60;mime type&#62; &#60;arg&#62; [&#60;arg&#62;...]
 </PRE
-><P
+>
+<P
 >&#13;This command associates filename extensions (for services
 that don't automatically include them) with their mime types.
 Currently "file:" protocol uses these commands.
@@ -1265,8 +1451,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1277,14 +1466,18 @@ CLASS="command"
 >Period</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1705"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Period &#60;time&#62;
 </PRE
-><P
+>
+<P
 >&#13;Set reindex period.
 &#60;time&#62; is in the form 'xxxA[yyyB[zzzC]]'                                   
  (Spaces are allowed between xxx and A and yyy and so on)                     
@@ -1308,7 +1501,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >&#13; If you specify only number without any character, it is assumed
  that time is given in seconds.
 
@@ -1326,8 +1520,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1338,20 +1536,25 @@ CLASS="command"
 >PeriodByHops</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1718"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;PeriodByHops &#60;hops&#62; [ &#60;time&#62; ]
 </PRE
-><P
+>
+<P
 >Set reindex period per &#60;hops&#62; basis. The format for &#60;time&#62; is the same as for <B
 CLASS="command"
 >Period</B
 >.
 </P
-><P
+>
+ <P
 >&#13;Can be set many times before <B
 CLASS="command"
 >Server</B
@@ -1362,7 +1565,8 @@ CLASS="command"
 > command with same &#60;hops&#62; value.
 If  &#60;time&#62; parameter is omitted, this undefine the previous defined value.
 </P
-><P
+>
+<P
 >If for given &#60;hops&#62; value the appropriate <B
 CLASS="command"
 >PeriodByHops</B
@@ -1372,8 +1576,11 @@ CLASS="command"
 >Period</B
 > command is used.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1384,14 +1591,18 @@ CLASS="command"
 >ExpireAt</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1733"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;ExpireAt [ A [ B [ C [ D [ E ]]]]]
 </PRE
-><P
+>
+<P
 >This command allow specify the exactly expiration time for documents. 
 May be specified per Server/Realm basis and takes effect till the end of config file or till next <B
 CLASS="command"
@@ -1414,8 +1625,12 @@ CLASS="command"
 >PeriodByHops</B
 > command.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1426,18 +1641,30 @@ CLASS="command"
 >UseDateHeader</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1746"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;UseDateHeader yes|no
 </PRE
-><P
+>
+<P
 >Use Date header if no Last-Modified header is sent by remote web-server. Default value: no.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1448,14 +1675,18 @@ CLASS="command"
 >MaxHops</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1754"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;MaxHops &#60;number&#62;
 </PRE
-><P
+>
+<P
 >Maximum way in "mouse clicks" from start url.
 Default value is 256.
 Can be set multiple times before "Server" command and
@@ -1466,8 +1697,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1478,14 +1713,18 @@ CLASS="command"
 >TrackHops</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1763"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;TrackHops yes|no
 </PRE
-><P
+>
+<P
 >This command enable or disable hops tracking in reindexing.
 Default value is no.
 If enabled, the value of hops for url is recalculated when reindexing.
@@ -1496,8 +1735,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1508,14 +1751,18 @@ CLASS="command"
 >MaxDepth</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1772"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;MaxDepth &#60;number&#62;
 </PRE
-><P
+>
+<P
 >Maximum directory depth of url.
 Default value is 16.
 Can be set multiple times before "Server" command and
@@ -1526,8 +1773,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1538,14 +1789,18 @@ CLASS="command"
 >MaxDocsPerServer</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1781"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;MaxDocsPerServer &#60;number&#62;
 </PRE
-><P
+>
+<P
 >Limits the number of documents retrieved from Server.
 Default value is -1, that means no limits.
 If set to positive value, no more than given number of pages will be
@@ -1564,8 +1819,13 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1576,14 +1836,18 @@ CLASS="command"
 >MaxNetErrors</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1792"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;MaxNetErrors &#60;number&#62;
 </PRE
-><P
+>
+<P
 >&#13;Maximum network errors for each server.
 Default value is 16. Use 0 for unlimited errors number.
 If there too many network errors on some server 
@@ -1591,9 +1855,9 @@ If there too many network errors on some server
 CLASS="command"
 >indexer</B
 > will try to do 
-not more then <TT
+not more then <CODE
 CLASS="option"
->'number'</TT
+>'number'</CODE
 > attempts to connect to this server.
 Takes effect till the end of config file or till next <B
 CLASS="command"
@@ -1605,8 +1869,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1617,22 +1885,23 @@ CLASS="command"
 >ReadTimeOut</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1804"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;ReadTimeOut &#60;time&#62;
 </PRE
-><P
+>
+<P
 >&#13;Connect timeout and stalled connections timeout.
-For <TT
+For <CODE
 CLASS="option"
->&#60;time&#62;</TT
-> format see <A
-HREF="dpsearch-indexcmd.en.html#period_cmd"
->Section 3.10.26</A
->.
+>&#60;time&#62;</CODE
+> format see .
 Default value is 30 seconds.
 Can be set any times before <B
 CLASS="command"
@@ -1648,8 +1917,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1660,22 +1932,23 @@ CLASS="command"
 >DocTimeOut</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1817"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;DocTimeOut &#60;time&#62;
 </PRE
-><P
+>
+<P
 >&#13;Maximum amount of time indexer spends for one document downloading.
-For <TT
+For <CODE
 CLASS="option"
->&#60;time&#62;</TT
-> format see <A
-HREF="dpsearch-indexcmd.en.html#period_cmd"
->Section 3.10.26</A
->.
+>&#60;time&#62;</CODE
+> format see .
 Default value is 90 seconds.
 Can be set any times before <B
 CLASS="command"
@@ -1691,8 +1964,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1703,22 +1979,23 @@ CLASS="command"
 >NetErrorDelayTime</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1830"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;NetErrorDelayTime &#60;time&#62;
 </PRE
-><P
+>
+<P
 >&#13;Specify document processing delay time if network error has occurred.
-For <TT
+For <CODE
 CLASS="option"
->&#60;time&#62;</TT
-> format see <A
-HREF="dpsearch-indexcmd.en.html#period_cmd"
->Section 3.10.26</A
->.
+>&#60;time&#62;</CODE
+> format see .
 Default value is one day
 <PRE
 CLASS="programlisting"
@@ -1726,8 +2003,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1738,14 +2019,18 @@ CLASS="command"
 >Cookies</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1841"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Cookies yes/no
 </PRE
-><P
+>
+<P
 >&#13;Enables/Disables the support for HTTP cookies.
 Command may be used several times before <B
 CLASS="command"
@@ -1762,8 +2047,13 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1774,21 +2064,25 @@ CLASS="command"
 >Robots</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1852"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Robots yes/no
 </PRE
-><P
+>
+<P
 >&#13;Allows/disallows using <TT
 CLASS="filename"
 >robots.txt</TT
 > and &#60;META NAME="robots" ...&#62;
-exclusions. Use <TT
+exclusions. Use <CODE
 CLASS="option"
->no</TT
+>no</CODE
 >, for example for link validation of your server(s).
 Command may be used several times before <B
 CLASS="command"
@@ -1805,8 +2099,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1817,7 +2114,9 @@ CLASS="command"
 >RobotsPeriod</B
 > command</A
 ></H2
-><P
+>
+
+<P
 ><A
 NAME="AEN1866"
 ></A
@@ -1835,18 +2134,18 @@ CLASS="programlisting"
 For &#60;time&#62; format see description of <B
 CLASS="command"
 >Period</B
-> command in <A
-HREF="dpsearch-indexcmd.en.html#period_cmd"
->Section 3.10.26</A
->.
+> command in .
 <PRE
 CLASS="programlisting"
 >&#13;RobotsPeriod 30d
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1857,7 +2156,9 @@ CLASS="command"
 >CrawlDelay</B
 > command</A
 ></H2
-><P
+>
+
+<P
 ><A
 NAME="AEN1878"
 ></A
@@ -1884,8 +2185,12 @@ CLASS="command"
 > and crawl-delay is used as 
 interval between consecutive fetches.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1896,46 +2201,51 @@ CLASS="command"
 >Section</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1889"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [strict] [ &#60;pattern&#62; &#60;replacement&#62; ]
 </PRE
-><P
->&#13;where <TT
+>
+<P
+>&#13;where <CODE
 CLASS="option"
->&#60;string&#62;</TT
-> is a section name and <TT
+>&#60;string&#62;</CODE
+> is a section name and <CODE
 CLASS="option"
->&#60;number&#62;</TT
+>&#60;number&#62;</CODE
 > is section ID
 between 0 and 255. Use 0 if you don't want to index some of 
 these sections. It is better to use different IDs
 for different sections. In this case during search 
 time you'll be able to give different weight to each section
 or even disallow some sections at a search time.
-<TT
+<CODE
 CLASS="option"
->&#60;maxlen&#62;</TT
+>&#60;maxlen&#62;</CODE
 > argument contains a maximum length of section
-which will be stored in database. Use 0 for <TT
+which will be stored in database. Use 0 for <CODE
 CLASS="option"
->&#60;maxlen&#62;</TT
+>&#60;maxlen&#62;</CODE
 >, if you don't want to store this section.
-<TT
+<CODE
 CLASS="option"
->&#60;pattern&#62;</TT
-> and <TT
+>&#60;pattern&#62;</CODE
+> and <CODE
 CLASS="option"
->&#60;replacement&#62;</TT
+>&#60;replacement&#62;</CODE
 > are a regex-like
 pattern and replacement to extract section value from document content.</P
-><P
->You can specify <TT
+>
+<P
+>You can specify <CODE
 CLASS="option"
->strict</TT
+>strict</CODE
 > option to set strict string tokenization for a section, which mean word break 
 at any non-character symbol despite the context. It's useful, for example, in indexing of URL, where hyphen, the character, 
 uses as delimiter between words.
@@ -1951,8 +2261,12 @@ Section GoodName                4       128 "&#60;h1&#62;([^&#60;]*)&#60;/h1&#62
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1963,24 +2277,28 @@ CLASS="command"
 >HrefSection</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1906"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;HrefSection &#60;string&#62; [ &#60;pattern&#62; &#60;replacement&#62; ]
 </PRE
-><P
->&#13;where <TT
+>
+<P
+>&#13;where <CODE
 CLASS="option"
->&#60;string&#62;</TT
+>&#60;string&#62;</CODE
 > is a section name,
-<TT
+<CODE
 CLASS="option"
->&#60;pattern&#62;</TT
-> and <TT
+>&#60;pattern&#62;</CODE
+> and <CODE
 CLASS="option"
->&#60;replacement&#62;</TT
+>&#60;replacement&#62;</CODE
 > are a regex-like
 pattern and replacement to extract section value from document content.
 Use this command to extract links from document content.
@@ -1992,8 +2310,12 @@ HrefSection     NewLink "&#60;newlink&#62;([^&#60;]*)&#60;/newlink&#62;" "$1"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2004,14 +2326,18 @@ CLASS="command"
 >Index</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1918"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Index yes/no
 </PRE
-><P
+>
+<P
 >&#13;Prevent indexer from storing words into database.
 Useful for example for link validation.
 Can be set multiple times before <B
@@ -2029,8 +2355,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2041,14 +2371,18 @@ CLASS="command"
 >ProxyAuthBasic</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1929"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;ProxyAuthBasic login:passwd
 </PRE
-><P
+>
+<P
 >&#13;Use http proxy basic authorization.
 Can be used before every <B
 CLASS="command"
@@ -2069,8 +2403,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2081,14 +2419,18 @@ CLASS="command"
 >Proxy</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1941"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Proxy your.proxy.host[:port]
 </PRE
-><P
+>
+<P
 >&#13;Use proxy rather then connect directly.
 One can index ftp servers when using proxy
 Default port value if not specified is 3128 (Squid)
@@ -2117,8 +2459,11 @@ Proxy
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2129,14 +2474,18 @@ CLASS="command"
 >AuthBasic</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1953"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;AuthBasic login:passwd
 </PRE
-><P
+>
+<P
 >&#13;Use basic http authorization.
 Can be set before every <B
 CLASS="command"
@@ -2160,8 +2509,11 @@ Server http://my.server.com/
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2172,26 +2524,32 @@ CLASS="command"
 >ServerWeight</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1964"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;ServerWeight &#60;number&#62;
 </PRE
-><P
->&#13;Server weight for Popularity Rank calculation (see <A
-HREF="dpsearch-rel.en.html#poprank"
->Section 8.5.3</A
->). Default value is 1.
+>
+<P
+>&#13;Server weight for Popularity Rank calculation (see ). Default value is 1.
 <PRE
 CLASS="programlisting"
 >&#13;ServerWeight 1
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2202,14 +2560,18 @@ CLASS="command"
 >OptimizeAtUpdate</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1974"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;OptimizeAtUpdate yes
 </PRE
-><P
+>
+<P
 >&#13;Specify word index optimize strategy. Default value: no
 If enabled, this save disk space, but slow down indexing.
 May be placed in <TT
@@ -2220,8 +2582,11 @@ CLASS="filename"
 >cached.conf</TT
 >.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2232,23 +2597,28 @@ CLASS="command"
 >SkipUnreferred</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1984"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;SkipUnreferred yes|no|del
 </PRE
-><P
+>
+<P
 >&#13;Default value: no. Use this command to skip reindexing or delete unreferred documents.
 An unreferred document is a document with no links to it.
-This command require the links collection to be enabled (see <A
-HREF="dpsearch-rel.en.html#poprank"
->Section 8.5.3</A
->).
+This command require the links collection to be enabled (see ).
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2259,18 +2629,26 @@ CLASS="command"
 >Bind</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN1993"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Bind 127.0.0.1
 </PRE
-><P
+>
+<P
 >&#13;You may use this command to specify local ip address, if your system have several network interfaces.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2281,21 +2659,29 @@ CLASS="command"
 >ProvideReferer</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN2001"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;ProvideReferer yes
 </PRE
-><P
+>
+<P
 >&#13;Use this command to provide <TT
 CLASS="literal"
 >Referer:</TT
 > request header for HTTP and HTTPS connections.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -2306,18 +2692,26 @@ CLASS="command"
 >LongestTextItems</B
 > command</A
 ></H2
-><A
+>
+
+<A
 NAME="AEN2010"
 ></A
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;LongestTextItems 4
 </PRE
-><P
+>
+<P
 >&#13;Use this command to specify the number of longest text items to index.
 </P
-></DIV
-></DIV
+>
+</DIV
+>
+
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
