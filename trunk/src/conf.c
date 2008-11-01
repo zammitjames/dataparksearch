@@ -1221,6 +1221,9 @@ static int srv_rpl_charset(void *Cfg, size_t ac,char **av){
 
 static int srv_rpl_mirror(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
+	if (ac == 1) {
+	  DpsVarListDel(&C->Srv->Vars, av[0]);
+	} else 
 	if(!strcasecmp(av[0],"MirrorRoot") || !strcasecmp(av[0],"MirrorHeadersRoot")){
 		char	fname[PATH_MAX];
 		DpsRelVarName(C->Indexer->Conf, fname, sizeof(fname)-1, av[1]);

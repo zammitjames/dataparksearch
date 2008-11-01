@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Searching documents</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -81,8 +81,8 @@ CLASS="chapter"
 ><H1
 ><A
 NAME="doingsearch"
->Chapter 8. Searching documents</A
-></H1
+></A
+>Chapter 8. Searching documents</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -135,7 +135,9 @@ HREF="dpsearch-fuzzy.en.html"
 ></DT
 ></DL
 ></DIV
-><DIV
+>
+		
+<DIV
 CLASS="sect1"
 ><H1
 CLASS="sect1"
@@ -143,7 +145,9 @@ CLASS="sect1"
 NAME="search"
 >8.1. Using search front-ends</A
 ></H1
-><DIV
+>
+	
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -151,7 +155,9 @@ CLASS="sect2"
 NAME="search-perform"
 >8.1.1. Performing search</A
 ></H2
-><P
+>
+		
+		<P
 >Open your preferred front-end in Web browser:
 		<PRE
 CLASS="programlisting"
@@ -161,37 +167,39 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		<P
 >To find something just type words you want to
-find and press SUBMIT button. For example: <TT
+find and press SUBMIT button. For example: <KBD
 CLASS="userinput"
-><B
 >mysql
-odbc</B
-></TT
+odbc</KBD
 >. <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > will find all documents that
-contain word <TT
+contain word <CODE
 CLASS="option"
->mysql</TT
-> and/or word <TT
+>mysql</CODE
+> and/or word <CODE
 CLASS="option"
->odbc</TT
+>odbc</CODE
 >. Best documents having bigger
 weights will be displayed first.</P
-><P
+>
+
+<P
 >To find a phrase, simple enclose it in quotas. For example: 
-<TT
+<KBD
 CLASS="userinput"
-><B
->"uncontrollable sphere"</B
-></TT
+>"uncontrollable sphere"</KBD
 >.
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -199,17 +207,23 @@ CLASS="sect2"
 NAME="search_params"
 >8.1.2. Search parameters</A
 ></H2
-><A
-NAME="AEN3998"
+>
+		
+<A
+NAME="AEN4010"
 ></A
-><P
+>
+
+		<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > front-ends support the following
 parameters given in CGI query string. You may use them in HTML form on
 search page.</P
-><DIV
+>
+
+		<DIV
 CLASS="table"
 ><A
 NAME="search-params"
@@ -218,44 +232,31 @@ NAME="search-params"
 ><B
 >Table 8-1. Available search parameters</B
 ></P
-><TABLE
+>
+			
+			<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >q</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >text parameter with search query</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >vq</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >text parameter with search query in the <SPAN
 CLASS="application"
 >Verity Query Language</SPAN
-> (prefix variant), see <A
-HREF="dpsearch-doingsearch.en.html#vql"
->Section 8.1.8</A
->. To use this parameter, you need to leave empty the q parameter.</TD
+> (prefix variant), see . To use this parameter, you need to leave empty the q parameter.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >s</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >characters sequence, specify results sorting order. 
 Small caps specify ascendant sorting, upper caps - descendant.
 Following characters can be used: <TT
@@ -301,12 +302,8 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >ps</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >page size,
 number of search results displayed on one page, 20 by default. Maximum
 page size is 100. This value does not allow passing very big page
@@ -320,42 +317,26 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >np</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >page number, starting by 0, 0 by default (first page)</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >p</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >page number starting by 1. Suitable for use with OpenSearch</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >m</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >search mode. Currently "all","any", "near" and "bool" values are supported.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >wm</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >word match. You
 may use this parameter to choose word match type.	There are
 "wrd", "beg", "end" and "sub" values that respectively mean whole
@@ -363,38 +344,23 @@ word, word beginning, word ending and word substring match.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >t</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Tag
 limit. Limits search through only documents with given tag. This
 parameter has the same effect with -t indexer option</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >c</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Category
-limit. Take a look into <A
-HREF="dpsearch-categories.en.html"
->Section 6.2</A
-> for details.</TD
+limit. Take a look into  for details.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >ul</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >URL limit, URL
 substring to limit search through subsection	of database. It
 supports SQL % and _  LIKE wildcards. This parameter has the same
@@ -431,12 +397,8 @@ CLASS="note"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >wf</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Weight
 factors. It allows changing different document sections weights at a
 search time. Should be passed in the form of hex number.	Check
@@ -444,24 +406,16 @@ the explanation below.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >g</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Language
 limit. Language abbreviation to limit search results by url.lang
 field.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >tmplt</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Template filename (without path).
 To specify template file other standard <TT
 CLASS="filename"
@@ -471,12 +425,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >type</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Content-Type limit.
 Content-type to limit search results by url.content_type field.
 For cache mode storage this should be exact match. For SQL-modes it may be sql-like pattern.
@@ -484,12 +434,8 @@ For cache mode storage this should be exact match. For SQL-modes it may be sql-l
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >sp</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Words forms limit.
 =1, if you need search all forms (include spelling suggestions, if aspell support is enabled) for entered words.
 =0, if you need search only entered words. Default value is 1. You may switch it to 0 for faster search.
@@ -497,12 +443,8 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >sy</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Synonyms limit.
 =1, if you need add synonyms for entered words.
 =0, do not use synonyms. Default value is 1. You may switch it to 0 for faster search.
@@ -510,12 +452,8 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >empty</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Use limits to show results if no query words is entered (only for cache mode).
 =yes, to show results from limits, if no query words is entered (default).
 =no, do not show results from limits, if no query words is entered.
@@ -523,12 +461,8 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >dt</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Limit by time. Three types is supported.
 				<P
 >If <TT
@@ -552,13 +486,13 @@ CLASS="literal"
 >er</TT
 >, 
 that means the search will be limited to pages newer or older than date given.
-Variable <TT
+Variable <CODE
 CLASS="option"
->dx</TT
+>dx</CODE
 > is newer/older flag (1 means newer or after, -1 means older or before).
-Date is specified in variables <TT
+Date is specified in variables <CODE
 CLASS="option"
->dm, dy, dd</TT
+>dm, dy, dd</CODE
 >.</P
 >
 				<P
@@ -569,12 +503,12 @@ CLASS="literal"
 CLASS="literal"
 >range</TT
 >, 
-that means search within given range of dates. Variables <TT
+that means search within given range of dates. Variables <CODE
 CLASS="option"
->db</TT
-> and <TT
+>db</CODE
+> and <CODE
 CLASS="option"
->de</TT
+>de</CODE
 > 
 are used here and stands for beginning and end date.</P
 >
@@ -591,12 +525,8 @@ CLASS="note"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >dp</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Limit by recentness, if <TT
 CLASS="literal"
 >dt</TT
@@ -621,12 +551,8 @@ CLASS="programlisting"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >dx</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >is newer/older flag (1 means newer or after, -1 means older or before), 
 if <TT
 CLASS="literal"
@@ -638,12 +564,8 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >dm</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Month, if <TT
 CLASS="literal"
 >dt</TT
@@ -655,12 +577,8 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >dy</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Year, if <TT
 CLASS="literal"
 >dt</TT
@@ -671,12 +589,8 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >dd</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Day, if <TT
 CLASS="literal"
 >dt</TT
@@ -687,12 +601,8 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >db</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Beginning date, if <TT
 CLASS="literal"
 >dt</TT
@@ -704,12 +614,8 @@ Each date is string in the form dd/mm/yyyy, there dd is day, mm is month and yyy
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >de</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >End date, if <TT
 CLASS="literal"
 >dt</TT
@@ -721,9 +627,12 @@ Each date is string in the form dd/mm/yyyy, there dd is day, mm is month and yyy
 ></TR
 ></TBODY
 ></TABLE
-></DIV
-></DIV
-><DIV
+>
+		</DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -731,7 +640,9 @@ CLASS="sect2"
 NAME="search-changeweight"
 >8.1.3. Changing different document parts weights at search time</A
 ></H2
-><P
+>
+		
+		<P
 >It is possible to pass "wf" HTML form variable
 to <TT
 CLASS="filename"
@@ -744,7 +655,9 @@ defined META and HTTP headers are supported. Take a look into
 CLASS="filename"
 >indexer.conf-dist</TT
 >.</P
-><P
+>
+
+		<P
 >To be able use this feature it is recommended to
 set different sections IDs for different document parts in "Section"
 <TT
@@ -752,7 +665,9 @@ CLASS="filename"
 >indexer.conf</TT
 > command. Currently up to 256
 different sections are supported.</P
-><P
+>
+
+		<P
 >Imagine that we have these default sections in <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -766,12 +681,15 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >"wf" value is a string of hex digits ABCD. Each
 digit is a factor for corresponding section weight. The most right
 digit corresponds to section 1. For the given above sections
 configuration:</P
-><P
+>
+
+		<P
 CLASS="literallayout"
 ><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D&nbsp;is&nbsp;a&nbsp;factor&nbsp;for&nbsp;section&nbsp;1&nbsp;(body)<br>
@@ -779,9 +697,11 @@ CLASS="literallayout"
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;is&nbsp;a&nbsp;factor&nbsp;for&nbsp;section&nbsp;3&nbsp;(keywords)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;is&nbsp;a&nbsp;factor&nbsp;for&nbsp;section&nbsp;4&nbsp;(description)<br>
 </P
-><P
+>
+		<P
 >Examples:</P
-><P
+>
+		<P
 CLASS="literallayout"
 ><br>
 &nbsp;&nbsp;&nbsp;wf=0001&nbsp;will&nbsp;search&nbsp;through&nbsp;body&nbsp;only.<br>
@@ -795,20 +715,23 @@ CLASS="literallayout"
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Title&nbsp;with&nbsp;factor&nbsp;&nbsp;2<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Body&nbsp;with&nbsp;factor&nbsp;1<br>
 </P
-><P
+>
+		<P
 >By default, if "wf" variable is omitted in the
 query, all sections factors are 1, it means all sections have the same
 weight.</P
-><P
+>
+
+<P
 >By default, <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > uses fast relevance calculation.
 In this case, only zero and non-zero values for "wf" variable takes an effect (this allows only include/exclude
 specified sections in search results).
-To enable full support for dynamic section weight, you need specify <TT
+To enable full support for dynamic section weight, you need specify <CODE
 CLASS="option"
->--enable-fullrel</TT
+>--enable-fullrel</CODE
 >
 option for <B
 CLASS="command"
@@ -818,8 +741,14 @@ CLASS="application"
 >DataparkSearch</SPAN
 >.
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -827,7 +756,9 @@ CLASS="sect2"
 NAME="search-scriptname"
 >8.1.4. Using front-end with an shtml page</A
 ></H2
-><P
+>
+		
+		<P
 >When using a dynamic shtml page containing SSI
 that calls <TT
 CLASS="filename"
@@ -843,7 +774,9 @@ page and not to <TT
 CLASS="filename"
 >search.cgi</TT
 >.</P
-><P
+>
+
+		<P
 >For example, when a shtml page contains a line
 <TT
 CLASS="literal"
@@ -854,7 +787,9 @@ SCRIPT_NAME variable will still point to
 CLASS="filename"
 >search.cgi</TT
 >, but not to the shtml page.</P
-><P
+>
+
+		<P
 >To override SCRIPT_NAME variable we implemented
 a DPSEARCH_SELF variable that you may add to Apache's
 <TT
@@ -874,7 +809,9 @@ CLASS="command"
 CLASS="filename"
 >httpd.conf</TT
 > command:</P
-><P
+>
+
+		<P
 >&#13;			<PRE
 CLASS="programlisting"
 >&#13;SetEnv DPSEARCH_SELF /path/to/search.cgi
@@ -882,8 +819,10 @@ PassEnv DPSEARCH_SELF
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -891,7 +830,9 @@ CLASS="sect2"
 NAME="search-templates"
 >8.1.5. Using several templates</A
 ></H2
-><P
+>
+		
+		<P
 >It is often required to use several templates
 with the same <TT
 CLASS="filename"
@@ -902,19 +843,23 @@ several ways to do it. They are given here in the order how
 CLASS="filename"
 >search.cgi</TT
 > detects template name.</P
-><P
+>
+
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >&#13;<TT
 CLASS="filename"
 >search.cgi</TT
 > checks environment variable DPSEARCH_TEMPLATE. So you can put a path to desired search template into this variable. </P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;<P
 ><TT
 CLASS="filename"
 >search.cgi</TT
@@ -934,9 +879,10 @@ CLASS="filename"
 >search2.htm</TT
 >, and so on.
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="filename"
 >search.cgi</TT
@@ -953,7 +899,8 @@ Action zhtml /cgi-bin/search.cgi
 </PRE
 >
 				</P
-><P
+>
+				<P
 >Put
 <TT
 CLASS="filename"
@@ -970,9 +917,11 @@ CLASS="literal"
 >http://www.site.com/path/to/template.zhtml</TT
 > You may
 use any unused extension instead of .zthml of course. </P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >If the above two ways fail,
 search.cgi opens a template which has the same name with the script
 being executed using SCRIPT_NAME environment
@@ -1016,12 +965,18 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 installation.</P
-><P
+>
+
+				<P
 >Take a look also into Making multi-language search pages section</P
-></LI
+>
+			</LI
 ></OL
-></DIV
-><DIV
+>
+	</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1029,7 +984,9 @@ CLASS="sect2"
 NAME="search-operators"
 >8.1.6. Search operators</A
 ></H2
-><P
+>
+
+<P
 >The operator <B
 CLASS="command"
 >allin&#60;section&#62;:</B
@@ -1042,15 +999,17 @@ CLASS="filename"
 CLASS="command"
 >Section</B
 > command) with non-zero section number 
-(see <A
-HREF="dpsearch-indexcmd.en.html#section_cmd"
->Section 3.10.42</A
->), 
+(see ), 
 that operator allows to limit the search domain for a query word by the section specified.</P
-><P
+>
+
+
+<P
 >This operator differ from limiting search domain using &#38;wf= CGI-variable in a way, 
 that such limit is imposing only on query words specified after this operator.</P
-><P
+>
+
+<P
 >For example, if you have the following commands in <TT
 CLASS="filename"
 >sections.conf</TT
@@ -1073,16 +1032,19 @@ CLASS="command"
 CLASS="command"
 >allinurl:</B
 >.</P
-><P
->For the query <TT
+>
+
+<P
+>For the query <KBD
 CLASS="userinput"
-><B
->computer allintitle: science</B
-></TT
+>computer allintitle: science</KBD
 > it will be found the documents that contain the word 
 "science" in the title and the word "computer" in any document section.</P
-></DIV
-><DIV
+>
+</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1090,139 +1052,119 @@ CLASS="sect2"
 NAME="search-bool"
 >8.1.7. Advanced boolean search</A
 ></H2
-><A
-NAME="AEN4228"
+>
+		
+<A
+NAME="AEN4240"
 ></A
-><P
+>
+		<P
 >If you want more advanced results you may use
 query language. You should select "bool" search mode in the search
 from.</P
-><P
+>
+
+		<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > understands the following boolean operators:</P
-><P
-><TT
+>
+		<P
+><KBD
 CLASS="userinput"
-><B
->AND</B
-></TT
-> or <TT
+>AND</KBD
+> or <KBD
 CLASS="userinput"
-><B
->&#38;</B
-></TT
+>&#38;</KBD
 > - logical AND. For example, 
-"<TT
+"<KBD
 CLASS="userinput"
-><B
->mysql &#38; odbc</B
-></TT
->" or "<TT
+>mysql &#38; odbc</KBD
+>" or "<KBD
 CLASS="userinput"
-><B
->mysql AND odbc</B
-></TT
+>mysql AND odbc</KBD
 >" - 
 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > will find any URLs that contain both "mysql" and
 "odbc".</P
-><P
-><TT
+>
+
+		<P
+><KBD
 CLASS="userinput"
-><B
->NEAR</B
-></TT
+>NEAR</KBD
 > - NEAR operator, identical to AND operator, but come true if both 
 words are within 16 words of each other. 
-For example, "<TT
+For example, "<KBD
 CLASS="userinput"
-><B
->mysql NEAR odbc</B
-></TT
+>mysql NEAR odbc</KBD
 >"  - 
 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > will find any URLs that contain both "mysql" and
 "odbc" within 16 words of each other.</P
-><P
-><TT
+>
+
+		<P
+><KBD
 CLASS="userinput"
-><B
->ANYWORD</B
-></TT
-> or <TT
+>ANYWORD</KBD
+> or <KBD
 CLASS="userinput"
-><B
->*</B
-></TT
+>*</KBD
 > - ANYWORD operator, 
 identical to AND operator, but come true if both words have any one word between and left operand have lesser position than right operand. 
-For example, "<TT
+For example, "<KBD
 CLASS="userinput"
-><B
->mysql * odbc</B
-></TT
+>mysql * odbc</KBD
 >"  - 
 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > will find any URLs that contain both "mysql" and
 "odbc" within any word between, for example, any document with "mysql via odbc" phrase.</P
-><P
-><TT
+>
+
+		<P
+><KBD
 CLASS="userinput"
-><B
->OR</B
-></TT
-> or <TT
+>OR</KBD
+> or <KBD
 CLASS="userinput"
-><B
->|</B
-></TT
+>|</KBD
 > - logical OR. For example,
-"<TT
+"<KBD
 CLASS="userinput"
-><B
->mysql | odbc</B
-></TT
->" or "<TT
+>mysql | odbc</KBD
+>" or "<KBD
 CLASS="userinput"
-><B
->mysql OR odbc</B
-></TT
+>mysql OR odbc</KBD
 >" - 
 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > will find any URLs  that contain word
 "mysql" or word "odbc".</P
-><P
-><TT
+>
+
+		<P
+><KBD
 CLASS="userinput"
-><B
->NOT</B
-></TT
-> or <TT
+>NOT</KBD
+> or <KBD
 CLASS="userinput"
-><B
->~</B
-></TT
+>~</KBD
 > - logical NOT. For example,
-"<TT
+"<KBD
 CLASS="userinput"
-><B
->mysql &#38; ~ odbc</B
-></TT
->"  or "<TT
+>mysql &#38; ~ odbc</KBD
+>"  or "<KBD
 CLASS="userinput"
-><B
->mysql AND NOT odbc</B
-></TT
+>mysql AND NOT odbc</KBD
 >" - 
 <SPAN
 CLASS="application"
@@ -1230,18 +1172,22 @@ CLASS="application"
 > will find URLs that contain word "mysql" and do
 not contain word "odbc" at the same time. Note that ~ just excludes
 given word from results. Query "~ odbc" will find nothing!</P
-><P
-><TT
+>
+
+		<P
+><KBD
 CLASS="userinput"
-><B
->()</B
-></TT
+>()</KBD
 > - group command to compose more complex
 queries. For example "(mysql | msql) &#38; ~ postgres". Query language
 is simple and powerful at the same time. Just consider query as usual
 boolean expression.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1249,7 +1195,9 @@ CLASS="sect2"
 NAME="vql"
 >8.1.8. The Verity Query Language, VQL</A
 ></H2
-><P
+>
+
+<P
 >Only the prefix variant of the <SPAN
 CLASS="application"
 >Verity Query Language</SPAN
@@ -1257,12 +1205,15 @@ CLASS="application"
 CLASS="application"
 >DataparkSearch</SPAN
 >.</P
-><P
+>
+<P
 >Also, only the following subset of VQL operators is supported by <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 >:</P
-><DIV
+>
+
+<DIV
 CLASS="table"
 ><A
 NAME="vql-operators"
@@ -1271,125 +1222,88 @@ NAME="vql-operators"
 ><B
 >Table 8-2. VQL operators supported by DataparkSearch</B
 ></P
-><TABLE
+>
+
+<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;ACCRUE&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->equal to <TT
+>equal to <KBD
 CLASS="userinput"
-><B
->OR</B
-></TT
+>OR</KBD
 > operator in boolean mode.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;AND&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->equal to <TT
+>equal to <KBD
 CLASS="userinput"
-><B
->AND</B
-></TT
+>AND</KBD
 > operator in boolean mode.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;ANY&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->equal to <TT
+>equal to <KBD
 CLASS="userinput"
-><B
->OR</B
-></TT
+>OR</KBD
 > operator in boolean mode.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;NEAR&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->equal to <TT
+>equal to <KBD
 CLASS="userinput"
-><B
->NEAR</B
-></TT
+>NEAR</KBD
 > operator in boolean mode.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;NOT&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->equal to <TT
+>equal to <KBD
 CLASS="userinput"
-><B
->NOT</B
-></TT
+>NOT</KBD
 > operator in boolean mode.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;OR&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->equal to <TT
+>equal to <KBD
 CLASS="userinput"
-><B
->OR</B
-></TT
+>OR</KBD
 > operator in boolean mode.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;PHRASE&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >equal to a phrase in boolean mode.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#60;WORD&#62;</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >is considered as an empty operator.</TD
 ></TR
 ></TBODY
 ></TABLE
-></DIV
-></DIV
-><DIV
+>
+</DIV
+>
+
+</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -1397,11 +1311,32 @@ CLASS="sect2"
 NAME="search-exp"
 >8.1.9. How search handles expired documents</A
 ></H2
-><P
+>
+		
+		<P
 >Expired documents are still searchable with their old content.</P
-></DIV
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

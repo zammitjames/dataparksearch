@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -94,7 +94,9 @@ NAME="AEN2515"
 ></A
 ></A
 ></H1
-><P
+>
+	
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -116,7 +118,9 @@ CLASS="application"
 CLASS="filename"
 >/usr/local/dpsearch/sbin</TT
 >).</P
-><P
+>
+
+<P
 ><A
 NAME="AEN2524"
 ></A
@@ -151,7 +155,9 @@ CLASS="command"
 >DoExcerpt no</B
 > в вашем поисковом шаблоне.
 </P
-><P
+>
+
+<P
 ><A
 NAME="AEN2539"
 ></A
@@ -175,7 +181,9 @@ CLASS="command"
 >DoStore yes</B
 >.
 </P
-><P
+>
+
+	<P
 >Сохраненные копии документов отображаются отдельной CGI-программой
 <TT
 CLASS="filename"
@@ -187,7 +195,9 @@ CLASS="command"
 > и отображает содержимое этого документа в окне броузера предварительно
 выделив слова из поискового запроса.
 </P
-><P
+>
+
+<P
 > Для использования возможностей <B
 CLASS="command"
 >stored</B
@@ -205,7 +215,9 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+
+<P
 >&#13;<A
 NAME="AEN2556"
 ></A
@@ -225,12 +237,11 @@ CLASS="command"
 CLASS="command"
 >Allow</B
 > 
-(см. <A
-HREF="dpsearch-indexcmd.ru.html#allow_cmd"
->&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
->). Все документы сохраняются по умолчанию, если включена поддержка stored.
+(см. ). Все документы сохраняются по умолчанию, если включена поддержка stored.
 </P
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -238,16 +249,19 @@ CLASS="sect2"
 NAME="stored-start"
 >3.13.1. Конфигурирование stored</A
 ></H2
-><P
+>
+		
+		<P
 >Перед использованием <B
 CLASS="command"
 >stored</B
 >, пожалуйста, проделпйте следующее:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;<P
 >Скопируйте <TT
 CLASS="filename"
 >/usr/local/dpsearch/etc/stored.conf-dist</TT
@@ -256,22 +270,25 @@ CLASS="filename"
 CLASS="filename"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >.</P
-><P
+>
+				<P
 >Отредактируйте <TT
 CLASS="filename"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >
 				</P
-><P
+>
+				<P
 >Следующие команды используются для конфигурирования <B
 CLASS="command"
 >stored</B
 >: </P
-><P
+>
+				<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;						<P
 >&#13;<B
 CLASS="command"
 ><A
@@ -288,37 +305,37 @@ CLASS="command"
 >stored</B
 > привязывается к порту 7004 и каждому адресу.
 Возможно указывать только порт:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->Listen 7004 </B
-></TT
+>Listen 7004 </KBD
 >
 						</P
-><P
+>
+						<P
 >Или только адрес:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->Listen 127.0.0.2</B
-></TT
+>Listen 127.0.0.2</KBD
 >
 						</P
-><P
+>
+						<P
 >Или оба, алрес и порт:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->Listen 127.0.0.2:7004</B
-></TT
+>Listen 127.0.0.2:7004</KBD
 >
 						</P
-></LI
+>
+					</LI
 ><LI
-><P
+>&#13;						<P
 >&#13;<B
 CLASS="command"
 ><A
@@ -330,17 +347,17 @@ NAME="AEN2599"
 CLASS="filename"
 >var/</TT
 >, например:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->VarDir /mnt/d/dpsearch/var/ </B
-></TT
+>VarDir /mnt/d/dpsearch/var/ </KBD
 >
 						</P
-></LI
+>
+					</LI
 ><LI
-><P
+>&#13;<P
 ><B
 CLASS="command"
 ><A
@@ -352,17 +369,17 @@ NAME="AEN2608"
 CLASS="filename"
 >var/stored/</TT
 >, например:</P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->StoredFiles 256</B
-></TT
+>StoredFiles 256</KBD
 >
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 ><B
 CLASS="command"
 ><A
@@ -371,17 +388,17 @@ NAME="AEN2617"
 >OptimizeInterval</B
 >
 задаёт интервал в секундах между попытками оптимизировать очередной файл-хранилище, например:</P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->OptimizeInterval 300</B
-></TT
+>OptimizeInterval 300</KBD
 >
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 ><B
 CLASS="command"
 ><A
@@ -391,34 +408,35 @@ NAME="AEN2625"
 >
 задаёт уровень дефрагментации в процентах, по достижении которого файл-хранилище оптимизируется, например:.  
 </P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->OptimizeRatio 3</B
-></TT
+>OptimizeRatio 3</KBD
 >
 </P
-></LI
+>
+</LI
 ></UL
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Запустите <B
 CLASS="command"
 >stored</B
 >:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->/usr/local/dpsearch/sbin/stored &#38; </B
-></TT
+>/usr/local/dpsearch/sbin/stored &#38; </KBD
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Отредактиируйте <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -448,18 +466,21 @@ CLASS="command"
 >DBAddr</B
 >,
 например:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->DBAddr mysql://localhost/search/?dbmode=cache&#38;stored=localhost:7004</B
-></TT
+>DBAddr mysql://localhost/search/?dbmode=cache&#38;stored=localhost:7004</KBD
 >
 				</P
-></LI
+>
+			</LI
 ></UL
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -467,7 +488,9 @@ CLASS="sect2"
 NAME="stored-how"
 >3.13.2. Как работает stored</A
 ></H2
-><P
+>
+		
+		<P
 >После того, как вы сконфигурируете и запустите
 <B
 CLASS="command"
@@ -480,8 +503,11 @@ CLASS="filename"
 CLASS="command"
 >stored</B
 > будет сжимать полученные документы и сохранять их на диске.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -489,13 +515,16 @@ CLASS="sect2"
 NAME="stored-search"
 >3.13.3. Использование stored при поиске</A
 ></H2
-><P
+>
+		
+		<P
 >Для включения отображения сохраненных документов при поиске, проделайте следующее: </P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Отредактируйте
 <TT
 CLASS="filename"
@@ -504,9 +533,10 @@ CLASS="filename"
 CLASS="filename"
 >storedoc.cgi</TT
 >), если необходимо.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Добавьте в секцию <TT
 CLASS="literal"
 >&#60;!--res--&#62;</TT
@@ -523,9 +553,10 @@ CLASS="literal"
 >&#60;A HREF="$(stored_href)"&#62;Cached copy&#60;/A&#62; </TT
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Укажите URL CGI-программы
 <TT
 CLASS="filename"
@@ -548,37 +579,40 @@ CLASS="filename"
 >search.htm</TT
 >
 					следующую строку:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->StoredocURL /path/to/storedoc.cgi</B
-></TT
+>StoredocURL /path/to/storedoc.cgi</KBD
 >
 				</P
-><P
+>
+				<P
 >Или для абсолютной ссылки:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->StoredocURL http://servername/path/to/storedoc.cgi</B
-></TT
+>StoredocURL http://servername/path/to/storedoc.cgi</KBD
 >
 				</P
-></LI
+>
+			</LI
 ></UL
-><P
+>
+
+		<P
 >Если все сконфигурировано правильно, при поиске <B
 CLASS="command"
 >stored</B
 > работает следующим образом:</P
-><P
+>
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="filename"
 >search.htm</TT
@@ -586,9 +620,10 @@ CLASS="filename"
 CLASS="filename"
 >storedoc.cgi</TT
 >;</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Когда пользователь кликает по ссылке,
 <TT
 CLASS="filename"
@@ -609,9 +644,10 @@ CLASS="literal"
 CLASS="command"
 >DBAddr</B
 >;</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >По этому запросу, <B
 CLASS="command"
 >stored</B
@@ -619,9 +655,10 @@ CLASS="command"
 CLASS="filename"
 >storedoc.cgi</TT
 >;</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="filename"
 >storedoc.cgi</TT
@@ -642,10 +679,13 @@ NAME="AEN2706"
 ></A
 >HlEnd</B
 >;</P
-></LI
+>
+			</LI
 ></OL
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

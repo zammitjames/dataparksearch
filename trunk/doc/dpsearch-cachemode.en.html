@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Cache mode storage</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,10 +87,14 @@ CLASS="sect1"
 NAME="cachemode"
 >5.2. Cache mode storage</A
 ></H1
-><A
-NAME="AEN2638"
+>
+	
+<A
+NAME="AEN2650"
 ></A
-><DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -98,14 +102,19 @@ CLASS="sect2"
 NAME="cachemode-intro"
 >5.2.1. Introduction</A
 ></H2
-><P
+>
+		
+		<P
 ><TT
 CLASS="literal"
 >cache</TT
 > words storage mode is able to index and search 
 quickly through several millions of documents.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -113,7 +122,9 @@ CLASS="sect2"
 NAME="cachemode-str"
 >5.2.2. Cache mode word indexes structure</A
 ></H2
-><P
+>
+		
+		<P
 >The main idea of cache storage mode is that word
 index and URLs sorting information is stored on disk rather than in <SPAN
 CLASS="application"
@@ -130,7 +141,7 @@ CLASS="literal"
 >urlinfo</TT
 >). 
 <A
-NAME="AEN2652"
+NAME="AEN2664"
 ></A
 >
 Word index is divided into number of files specified by <B
@@ -138,7 +149,7 @@ CLASS="command"
 >WrdFiles</B
 > command (default value is 0x300).
 <A
-NAME="AEN2656"
+NAME="AEN2668"
 ></A
 >
 URLs sorting information is divided into number of files specified by <B
@@ -160,11 +171,14 @@ CLASS="command"
 >URLDataFiles</B
 > commands
 in all your configs.</P
-></BLOCKQUOTE
+>
+</BLOCKQUOTE
 ></DIV
 >
 </P
-><P
+>
+
+<P
 > Word index is located in files under <TT
 CLASS="filename"
 >/var/tree</TT
@@ -181,8 +195,11 @@ CLASS="application"
 >DataparkSearch</SPAN
 > installation. 
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -190,7 +207,9 @@ CLASS="sect2"
 NAME="cachemode-tools"
 >5.2.3. Cache mode tools</A
 ></H2
-><P
+>
+		
+		<P
 >There are two additional programs
 <TT
 CLASS="filename"
@@ -202,7 +221,9 @@ CLASS="filename"
 CLASS="literal"
 >cache mode</TT
 > indexing.</P
-><P
+>
+
+<P
 > <TT
 CLASS="filename"
 >cached</TT
@@ -219,7 +240,9 @@ and <TT
 CLASS="filename"
 >splitter</TT
 > functionality are combined.</P
-><P
+>
+
+<P
 > <TT
 CLASS="filename"
 >splitter</TT
@@ -229,8 +252,11 @@ a program to create fast word indexes using data collected by
 CLASS="filename"
 >cached</TT
 >. Those indexes are used later in search process.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -238,34 +264,36 @@ CLASS="sect2"
 NAME="cachemode-start"
 >5.2.4. Starting cache mode</A
 ></H2
-><P
+>
+		
+		<P
 >To start "cache mode" follow these steps:</P
-><P
+>
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >Start <TT
 CLASS="filename"
 >cached</TT
 > server:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->cd /usr/local/dpsearch/sbin </B
-></TT
+>cd /usr/local/dpsearch/sbin </KBD
 ></P
-><P
-><TT
+>
+<P
+><KBD
 CLASS="userinput"
-><B
->./cached  2&#62;cached.out &#38;</B
-></TT
+>./cached  2&#62;cached.out &#38;</KBD
 >
 				</P
-><P
+>
+				<P
 >It will write some debug
 information into <TT
 CLASS="filename"
@@ -282,7 +310,9 @@ CLASS="filename"
 CLASS="application"
 >DataparkSearch</SPAN
 > installation.</P
-><P
+>
+
+				<P
 ><TT
 CLASS="filename"
 >cached</TT
@@ -304,22 +334,24 @@ In new mode it stores in <TT
 CLASS="filename"
 >/var/tree/</TT
 > directory.</P
-><P
+>
+
+<P
 >By default, <TT
 CLASS="filename"
 >cached</TT
 > starts in new mode. To run it in old mode, i.e. logs only mode, run it with
 -l switch:</P
-><P
-><TT
+>
+<P
+><KBD
 CLASS="userinput"
-><B
->cached -l</B
-></TT
+>cached -l</KBD
 ></P
-><P
+>
+<P
 >Or by specify <A
-NAME="AEN2710"
+NAME="AEN2722"
 ></A
 >
 <B
@@ -329,46 +361,51 @@ CLASS="command"
 CLASS="filename"
 >cached.conf</TT
 >.</P
-><P
+>
+
+				<P
 >You can specify port for
 <TT
 CLASS="filename"
 >cached</TT
 > to use without recompiling. In order to do that, please run
 </P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
 >&#13;./cached -p8000 
-</B
-></TT
+</KBD
 >
 				</P
-><P
+>
+				<P
 >where <TT
 CLASS="literal"
 >8000</TT
 > is the port number you choose.</P
-><P
+>
+				<P
 >You can as well specify a
 directory to store data (it is <TT
 CLASS="literal"
 >/var</TT
 > directory by
 default) with this command:</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
 >&#13;./cached -w /path/to/var/dir
-</B
-></TT
+</KBD
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Configure your <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -389,14 +426,12 @@ CLASS="literal"
 as value of <TT
 CLASS="literal"
 >cached</TT
-> parameter (see <A
-HREF="dpsearch-indexcmd.en.html#dbaddr_cmd"
->Section 3.10.2</A
->).
+> parameter (see ).
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Run indexers. Several indexers
 can be executed simultaneously. Note that you may install indexers on
 different machines and then execute them with the same <TT
@@ -405,7 +440,8 @@ CLASS="filename"
 >
 server. This distributed system allows making indexing faster.
 </P
-></LI
+>
+			</LI
 ><LI
 ><P
 >Flushing <SPAN
@@ -424,21 +460,22 @@ You can use <TT
 CLASS="filename"
 >cached.pid</TT
 > file to do this:</P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
 >&#13;kill -HUP `cat /usr/local/dpsearch/var/cached.pid`
-</B
-></TT
+</KBD
 >
 </P
-><P
+>
+<P
 >N.B.: you needs wait till all buffers will be flushed before going to next step.
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Creating word index. This stage is no needs, if 
 <TT
 CLASS="filename"
@@ -463,21 +500,23 @@ CLASS="filename"
 > directory. Note
 that indexes can be created anytime without interrupting current
 indexing process.</P
-><P
+>
+
+				<P
 > Run <TT
 CLASS="filename"
 >splitter</TT
 > without any arguments:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
 >&#13;/usr/local/dpsearch/sbin/splitter
-</B
-></TT
+</KBD
 >
 						</P
-><P
+>
+						<P
 >It will take
 sequentially all prepared files in
 <TT
@@ -489,10 +528,14 @@ CLASS="filename"
 >/var/splitter/</TT
 >
 directory are truncated after this operation.</P
-></LI
+>
+
+			</LI
 ></OL
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -500,7 +543,9 @@ CLASS="sect2"
 NAME="cachelog-sevspl"
 >5.2.5. Optional usage of several splitters</A
 ></H2
-><P
+>
+		
+		<P
 >splitter has two command line arguments:
 <TT
 CLASS="literal"
@@ -517,7 +562,9 @@ using files in the range from 000 to A00. These keys allow using
 several splitters at the same time. It usually gives more quick
 indexes building. For example, this shell script starts four splitters
 in background:</P
-><PRE
+>
+
+		<PRE
 CLASS="programlisting"
 >&#13;#!/bin/sh
 splitter -f 000 -t 3f0 &#38;
@@ -525,8 +572,11 @@ splitter -f 400 -t 7f0 &#38;
 splitter -f 800 -t bf0 &#38;
 splitter -f c00 -t ff0 &#38;
 </PRE
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -534,7 +584,9 @@ CLASS="sect2"
 NAME="cachelog-runspl"
 >5.2.6. Using run-splitter script</A
 ></H2
-><P
+>
+		
+		<P
 >There is a <TT
 CLASS="filename"
 >run-splitter</TT
@@ -548,41 +600,45 @@ CLASS="application"
 >
 installation. It helps to execute subsequently all three indexes
 building steps.</P
-><P
+>
+
+		<P
 >"run-splitter" has these two command line parameters:</P
-><P
->&#13;			<TT
+>
+		<P
+>&#13;			<KBD
 CLASS="userinput"
-><B
 >&#13;run-splitter --hup --split
-</B
-></TT
+</KBD
 >
 		</P
-><P
+>
+		<P
 >or a short version:</P
-><P
->&#13;			<TT
+>
+		<P
+>&#13;			<KBD
 CLASS="userinput"
-><B
 >&#13;run-splitter -k -s
-</B
-></TT
+</KBD
 >
 		</P
-><P
+>
+		<P
 >Each parameter activates corresponding indexes
 building step. <TT
 CLASS="filename"
 >run-splitter</TT
 > executes all three
 steps of index building in proper order:</P
-><P
+>
+
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >Sending -HUP signal to
 cached. <TT
 CLASS="literal"
@@ -592,9 +648,11 @@ CLASS="literal"
 >-k</TT
 >)
 run-splitter arguments are responsible for this.</P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Running splitter. Keys <TT
 CLASS="literal"
 >--split</TT
@@ -602,9 +660,11 @@ CLASS="literal"
 CLASS="literal"
 >-s</TT
 >).</P
-></LI
+>
+			</LI
 ></OL
-><P
+>
+		<P
 >In most cases just run <B
 CLASS="command"
 >run-splitter</B
@@ -615,7 +675,9 @@ CLASS="literal"
 > arguments. Separate usage of those
 three flags which correspond to three steps of indexes building is
 rarely required. </P
-><P
+>
+
+<P
 ><B
 CLASS="command"
 >run-splitter</B
@@ -635,8 +697,12 @@ CLASS="literal"
 >m</TT
 > is verbosity level (default value: 4).
 </P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -644,7 +710,9 @@ CLASS="sect2"
 NAME="cachelog-search"
 >5.2.7. Doing search</A
 ></H2
-><P
+>
+		
+		<P
 >To start using <B
 CLASS="command"
 >search.cgi</B
@@ -662,8 +730,11 @@ CLASS="command"
 > command.
 
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -671,7 +742,9 @@ CLASS="sect2"
 NAME="limits"
 >5.2.8. Using search limits</A
 ></H2
-><P
+>
+
+<P
 >To use search limits in cache mode, you should add appropriate
 <TT
 CLASS="literal"
@@ -698,9 +771,12 @@ CLASS="literal"
 >searchd</TT
 > is used).
 </P
-><P
+>
+
+
+<P
 ><A
-NAME="AEN2816"
+NAME="AEN2828"
 ></A
 >
 To use, for example, search limit by tag, by category and by site, add follow lines to
@@ -719,13 +795,15 @@ CLASS="literal"
 >searchd</TT
 > is used).
 </P
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;Limit t:tag
 Limit c:category
 Limit site:siteid
 </PRE
-><P
+>
+<P
 >&#13;where <TT
 CLASS="literal"
 >t</TT
@@ -735,108 +813,85 @@ CLASS="literal"
 >tag</TT
 > - type of constraint.
 </P
-><P
+>
+
+<P
 >Instead of tag/category/siteid in example above you can use any of values from table below:
 <DIV
 CLASS="table"
 ><A
-NAME="AEN2828"
+NAME="AEN2840"
 ></A
 ><P
 ><B
 >Table 5-1. Cache limit types</B
 ></P
-><TABLE
+>
+
+ <TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >category</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Category limit.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >tag</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Tag limit.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >time</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Time limit (a hour precision).</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >language</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Language limit.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >content</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Content-Type limit.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >siteid</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >url.site_id limit.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >link</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Limit by pages what links to url.rec_id specified.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >hostname (obsolete)</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Hostname (url) limit. This limit is obsolete and should be replaced by site_id limit</TD
 ></TR
 ></TBODY
 ></TABLE
-></DIV
+>
+</DIV
 >
 </P
-></DIV
-></DIV
+>
+
+</DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

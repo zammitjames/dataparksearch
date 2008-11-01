@@ -55,7 +55,7 @@ int DpsMatchComp(DPS_MATCH *Match,char *errstr,size_t errstrsize){
 				flag|=REG_ICASE;
 			if((err=regcomp(Match->reg, Match->pattern, flag))){
 				regerror(err, Match->reg, errstr, errstrsize);
-				fprintf(stderr, " !!! - regexcomp: %s\n", errstr);
+				fprintf(stderr, "DpsMatchComp of %s !!! - regexcomp[%d]: %s\n", Match->pattern, err, errstr);
 				DPS_FREE(Match->reg);
 				return(1);
 			}

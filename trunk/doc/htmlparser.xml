@@ -155,4 +155,24 @@ These patterns are trying to apply to all pages indexed. Beware, huge number of 
 </para>
 </sect1>
 
+<sect1 id="subdocs">
+<title>Sub-documents</title>
+<indexterm><primary>Command</primary><secondary>SubDocLevel</secondary></indexterm>
+<indexterm><primary>Command</primary><secondary>SubDocCnt</secondary></indexterm>
+<para>The sub-documents are: frames, iframes and embedded objects
+(flash tubes in general); temporary redirects (often used to place
+cookies or redirect to a page, depending on the language preferences
+of the user); versions of the same page in different languages
+obtained with Content negotiation.</para>
+
+<para>The indexing of sub-documents is controlled by two commands: the
+<command>SubDocLevel</command> command sets the maximum nesting level of a sub-document
+to be indexed. The default value is 0, which prohibits the
+sub-document indexing. The <command>SubDocCnt</command> command sets the maximum number
+of sub-documents to be indexed at all nesting levels (this command is
+mainly to prevent endless cycles of pages nested into each
+others). The default value is 5.</para>
+</sect1>
+
+
 </chapter>

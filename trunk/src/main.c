@@ -1403,12 +1403,12 @@ int main(int argc, char **argv, char **envp) {
      
      /* DpsOpenCache was here */
 /*     if (cmd != DPS_IND_INDEX && cmd != DPS_IND_POPRANK) {*/
-       if(DPS_OK != DpsOpenCache(&Main, (Main.flags & DPS_FLAG_UNOCON) ? 0 : 0/*1*/, 0)) {
+     if(DPS_OK != DpsOpenCache(&Main, (Main.flags & DPS_FLAG_UNOCON) ? 0 : 0/*1*/, 0)) {
 	 fprintf(stderr,"Cache mode initializing error: '%s'\n",DpsEnvErrMsg(&Conf));
 	 DpsEnvFree(&Conf);
 	 exit(1);
-       }
-       cache_opened = 1;
+     }
+     cache_opened = 1;
 /*     }*/
     
      if (cmd==DPS_IND_SQLMON){

@@ -1630,7 +1630,7 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						, double *D_y
 #endif
 						) {
-  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : x/*DPS_PHRASE_FACTOR*/;
+  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : (4 * x)/*DPS_PHRASE_FACTOR*/;
 
 #ifdef WITH_REL_WRDCOUNT
   if (D[DPS_N_WRDCOUNT] > R[DPS_N_WRDCOUNT]) {
@@ -1867,7 +1867,7 @@ static int DpsOriginWeightUltra(int origin) {  /* Weight for origin can be from 
 
 #define DPS_DISTANCE_INIT (150 + (10 * DPS_BEST_WRD_CNT))
 #define DPS_POSITION_INIT 500
-#define DPS_ORDER_PENALTY 1024
+#define DPS_ORDER_PENALTY 16
 
 static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t	i, j = 0, D_size, R_size, phr_n;

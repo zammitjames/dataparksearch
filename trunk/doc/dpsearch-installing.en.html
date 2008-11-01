@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Installing DataparkSearch</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -90,29 +90,34 @@ CLASS="application"
 >DataparkSearch</SPAN
 ></A
 ></H1
-><A
+>
+		
+<A
 NAME="AEN302"
 ></A
-><P
+>
+
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >Unpack the distribution and
 change directory into the top-level directory of the unpacked
 distribution.</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->tar -zxf dpsearch-x.x.tar.gz</B
-></TT
+>tar -zxf dpsearch-x.x.tar.gz</KBD
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >To simplify configuration
 process we included a configuration script with the package -
 <TT
@@ -135,46 +140,51 @@ will also create install.options file containing your configuration
 preferences that you can use to run the script later bypassing
 questions. After configuration is finished, build and install the
 package as described in section 3.</P
-><P
+>
+
+				<P
 >In case you would like to
 configure <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > manually without using the configuration script,
 do the following:</P
-><P
+>
+
+				<P
 >If you would like to configure the package with SQL database support:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ ./configure --with-mysql</B
-></TT
+>sh$ ./configure --with-mysql</KBD
 >
 				</P
-><P
+>
+				<P
 >or</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ ./configure --with-pgsql</B
-></TT
+>sh$ ./configure --with-pgsql</KBD
 >
 				</P
-><P
+>
+				<P
 >or with another depending on what database you prefer,</P
-><P
+>
+				<P
 >or with multiple databases:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ ./configure --with-mysql --with-pgsql --with-msql --with-freetds</B
-></TT
+>sh$ ./configure --with-mysql --with-pgsql --with-msql --with-freetds</KBD
 >
 				</P
-><P
+>
+				<P
 >By default, <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -184,35 +194,30 @@ CLASS="literal"
 >/usr/local/dpsearch</TT
 > in the following
 subdirectories:</P
-><DIV
+>
+
+				<DIV
 CLASS="informaltable"
+><P
+></P
 ><A
 NAME="AEN331"
 ></A
-><P
-></P
-><TABLE
+>
+					<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Directory</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Contents</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >bin</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >search.cgi</TT
@@ -227,12 +232,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >lib</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >libdpsearch.a(so)</TT
@@ -245,12 +246,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >sbin</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >indexer</TT
@@ -276,12 +273,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >etc</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;									<TT
 CLASS="filename"
 >indexer.conf-dist, search.htm-dist</TT
@@ -309,80 +302,83 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >share</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >various documentation and sql scripts</TD
 ></TR
 ></TBODY
 ></TABLE
-><P
+>
+				<P
 ></P
 ></DIV
-><P
+>
+				<P
 >If you have no permission to
 write to that directory or just want to install <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > to another
-location, please use configure with <TT
+location, please use configure with <CODE
 CLASS="option"
->--prefix</TT
+>--prefix</CODE
 > option,
 e.g.</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --prefix=/user/home/data --with-mysql</B
-></TT
+>./configure --prefix=/user/home/data --with-mysql</KBD
 >
 				</P
-><P
+>
+				<P
 >To install <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with HTTPS support
 use configure with the following option:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-openssl</B
-></TT
+>./configure --with-openssl</KBD
 >
 				</P
-><P
+>
+				<P
 >or in case the OpenSSL library is installed in a non-standard location:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-openssl=/path/to/library</B
-></TT
+>./configure --with-openssl=/path/to/library</KBD
 >
 				</P
-><DIV
+>
+				<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;					<P
 ><B
 >Note: </B
 >Please note that OpenSSL
 library installed on your system is required for HTTPS support.</P
-></BLOCKQUOTE
+>
+
+				</BLOCKQUOTE
 ></DIV
-><P
+>
+				<P
 >You can see all available options with <TT
 CLASS="literal"
 >./configure --help</TT
 >
 				</P
-><P
+>
+				<P
 >If you want to provide some
 specific flags to C compiler (for example, <TT
 CLASS="literal"
@@ -394,15 +390,16 @@ CLASS="trademark"
 >Pentium</SPAN
 >&#8482; processor if you use egcs/pgcc), you
 can do so using command</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$  CFLAGS="-O7 -mpentium"</B
-></TT
+>sh$  CFLAGS="-O7 -mpentium"</KBD
 >
 				</P
-><P
+>
+				<P
 >&#13;					<SPAN
 CLASS="emphasis"
 ><I
@@ -410,20 +407,21 @@ CLASS="emphasis"
 >before</I
 ></SPAN
 > running configure.</P
-><P
+>
+				<P
 >To compile <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > on FreeBSD with Solid in old aout format use</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ CFLAGS="-aout"</B
-></TT
+>sh$ CFLAGS="-aout"</KBD
 >
 				</P
-><P
+>
+				<P
 >&#13;					<SPAN
 CLASS="emphasis"
 ><I
@@ -431,20 +429,21 @@ CLASS="emphasis"
 >before</I
 ></SPAN
 > running configure.</P
-><P
+>
+				<P
 >To compile <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > on FreeBSD with aout InterBase use</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ CFLAGS="-aout -static"</B
-></TT
+>sh$ CFLAGS="-aout -static"</KBD
 >
 				</P
-><P
+>
+				<P
 >&#13;					<SPAN
 CLASS="emphasis"
 ><I
@@ -452,18 +451,21 @@ CLASS="emphasis"
 >before</I
 ></SPAN
 > running configure.</P
-><P
+>
+				<P
 >You may also specify
-<TT
+<CODE
 CLASS="option"
->--enable-freebsd-pthreads</TT
+>--enable-freebsd-pthreads</CODE
 > or
-<TT
+<CODE
 CLASS="option"
->--enable-linux-pthreads</TT
+>--enable-linux-pthreads</CODE
 > to compile multi-threaded
 indexer on FreeBSD and Linux machines.</P
-><P
+>
+
+				<P
 >&#13;<A
 NAME="AEN408"
 ></A
@@ -472,147 +474,149 @@ To enable <A
 HREF="http://sourceforge.net/projects/dmalloc/"
 TARGET="_top"
 >DMALLOC memory debugger</A
-> support use <TT
+> support use <CODE
 CLASS="option"
->--enable-dmalloc</TT
+>--enable-dmalloc</CODE
 >. </P
-><P
+>
+
+				<P
 >The euc-kr, big5, gb2312, tscii, gujarati and shift-jis character sets are not supported by default.
 To built <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with these charsets support use
-configure with <TT
+configure with <CODE
 CLASS="option"
->--with-extra-charsets</TT
+>--with-extra-charsets</CODE
 > command line
 argument.</P
-><P
+>
+
+				<P
 >To build <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with all additional charsets support use:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=all</B
-></TT
+>./configure --with-extra-charsets=all</KBD
 >
 				</P
-><P
+>
+				<P
 >To build <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with only one specified charset support use:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=tscii</B
-></TT
+>./configure --with-extra-charsets=tscii</KBD
 >
 				</P
-><P
+>
+<P
 >To build <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with support for Chinese or Japanese charsets, use:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=japanese</B
-></TT
+>./configure --with-extra-charsets=japanese</KBD
 >
 or
-					<TT
+					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charsets=chinese</B
-></TT
+>./configure --with-extra-charsets=chinese</KBD
 >
 				</P
-><P
+>
+				<P
 >To build <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > with support for several specified charsets, 
 use a comma separated list of charsets you want:</P
-><P
->&#13;					<TT
+>
+
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->./configure --with-extra-charset=japanese,tscii</B
-></TT
+>./configure --with-extra-charset=japanese,tscii</KBD
 >
 				</P
-><P
->If you run into problems with configure, please see <A
-HREF="dpsearch-installproblem.en.html"
->Section 2.5</A
->.</P
-></LI
+>
+				<P
+>If you run into problems with configure, please see .</P
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Build and install the package.</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ make</B
-></TT
+>sh$ make</KBD
 >
 				</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ make install</B
-></TT
+>sh$ make install</KBD
 >
 				</P
-><P
->If you run into problems with configure, please see <A
-HREF="dpsearch-installproblem.en.html"
->Section 2.5</A
->.</P
-></LI
+>
+				<P
+>If you run into problems with configure, please see .</P
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Create database <TT
 CLASS="literal"
 >search</TT
 > (for SQL database only).</P
-><P
+>
+				<P
 >You can use existing database, skip this step in this case.</P
-><P
+>
+				<P
 >MySQL:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ mysqladmin create search</B
-></TT
+>sh$ mysqladmin create search</KBD
 >
 				</P
-><P
+>
+				<P
 >PostgreSQL:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ createdb search</B
-></TT
+>sh$ createdb search</KBD
 >
 				</P
-><P
+>
+				<P
 >See database specific information if you use another database.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Create sql-tables</P
-><P
+>
+<P
 >Edit <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -622,25 +626,28 @@ CLASS="command"
 > command according SQL-database used and
 dbmode selected. Then run:
 </P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->sh$ indexer -Ecreate</B
-></TT
+>sh$ indexer -Ecreate</KBD
 >
 </P
-><P
+>
+<P
 >&#13;<B
 CLASS="command"
 >indexer</B
 > will create all tables automatically.
 </P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Installing search scripts</P
-><P
+>
+				<P
 >Copy
 <TT
 CLASS="filename"
@@ -654,9 +661,12 @@ CLASS="literal"
 CLASS="application"
 >DataparkSearch</SPAN
 > bin directory. </P
-></LI
+>
+
+			</LI
 ></OL
-></DIV
+>
+	</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

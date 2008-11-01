@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Использование syslog</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -89,13 +89,18 @@ CLASS="sect1"
 NAME="syslog"
 >3.12. Использование syslog</A
 ></H1
-><A
+>
+	
+<A
 NAME="AEN2461"
 ></A
-><A
+>
+<A
 NAME="AEN2463"
 ></A
-><P
+>
+
+	<P
 >Все приложения <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -106,7 +111,9 @@ CLASS="application"
 CLASS="command"
 >LogLevel</B
 > в файле конфигурации:</P
-><DIV
+>
+	
+	<DIV
 CLASS="table"
 ><A
 NAME="AEN2469"
@@ -115,98 +122,67 @@ NAME="AEN2469"
 ><B
 >&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 3-1. уровни подробности сообщений indexer'а</B
 ></P
-><TABLE
+>
+		
+		<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >0</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >SILENT</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Подавить весь вывод</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >1</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >ERROR</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >только критические ошибки</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >2</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >WARNING</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >предупреждения</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >3</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >INFO</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Сообщения информационного характера. Используется по-умолчанию.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >4</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >EXTRA</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Дополнительный информационный вывод</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >5</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >DEBUG</TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Отладочный вывод</TD
 ></TR
 ></TBODY
 ></TABLE
-></DIV
-><P
+>
+	</DIV
+>
+
+	<P
 >Параллельно с записью в syslog, indexer так же производит
 вывод на stdout/stderr. Чтобы подавить этот вывод, например, при запуске
 из cron, используйте опцию -l. Если Вы не хотите использовать syslog,
@@ -217,7 +193,9 @@ CLASS="literal"
 Собраный таким образом, indexer будет использовать только stdout/stderr для
 вывода своих сообщений.
 	</P
-><P
+>
+
+	<P
 >Syslog использует различные "facilities", чтобы направлять
 вывод от разных програм в разные логи. По-умолчанию indexer исполтьзует
 facility LOCAL7, который можно поменять во время сборки, указав configure опцию
@@ -231,7 +209,9 @@ CLASS="filename"
 >/usr/include/sys/syslog.h</TT
 >
 	</P
-><P
+>
+	
+	<P
 >Вы можете отредактировать файл <TT
 CLASS="filename"
 >/etc/syslog.conf</TT
@@ -247,7 +227,9 @@ local7.*        -/var/log/DataparkSearch.log
 </PRE
 >
 	</P
-><P
+>
+	
+	<P
 >Еще пример:
 	<PRE
 CLASS="programlisting"
@@ -257,7 +239,9 @@ local7.*        @central
 </PRE
 >
 	</P
-><P
+>
+
+	<P
 >По-умолчанию, все сообщения пишутся так же в лог-файл
 <TT
 CLASS="literal"
@@ -265,7 +249,8 @@ CLASS="literal"
 >. Чтобы избежать этого, добавьте
 local7.none or local7.!* (игнорировать любые сообщения с facility local7) в
 Ваши 'catch-all' лог-файлы.</P
-><P
+>
+	<P
 >For example:
 	<PRE
 CLASS="programlisting"
@@ -280,11 +265,13 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+	<P
 >Для получения более подробной справки о syslog и его
 	конфигурации, посмотрите страницы man syslogd(8) и syslog.conf(5).
 	</P
-></DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

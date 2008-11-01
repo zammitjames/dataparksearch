@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
         </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -85,13 +85,13 @@ CLASS="chapter"
 ><H1
 ><A
 NAME="intro"
+></A
 >&#1043;&#1083;&#1072;&#1074;&#1072; 1. Введение
         <A
 NAME="AEN16"
 ></A
 >
-        </A
-></H1
+        </H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -139,7 +139,9 @@ HREF="dpsearch-authors.ru.html"
 ></DT
 ></DL
 ></DIV
-><P
+>
+	
+	<P
 >&#13;		<SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -163,7 +165,9 @@ CLASS="command"
 >ом.
 
 </P
-><P
+>
+
+	<P
 >&#13;<SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -187,7 +191,9 @@ CLASS="application"
 CLASS="application"
 >UDMSearch</SPAN
 >.</P
-><P
+>
+
+	<P
 ><A
 NAME="AEN32"
 ></A
@@ -197,7 +203,9 @@ HREF="http://www.dataparksearch.org/ChangeLog"
 TARGET="_top"
 >на нашем web-сервере</A
 >.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect1"
 ><H1
 CLASS="sect1"
@@ -212,61 +220,70 @@ NAME="AEN38"
 ></A
 ></A
 ></H1
-><P
+>
+		
+		<P
 >Основные возможности <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 >:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Поддержка MySQL (требуется библиотека <TT
 CLASS="literal"
 >libz</TT
 >),
 PostgreSQL,   iODBC, unixODBC, EasySoft
-ODBC-ODBC bridge,  InterBase, Oracle (см. <A
-HREF="dpsearch-oracle.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 5.5</A
->), 
+ODBC-ODBC bridge,  InterBase, Oracle (см. ), 
  MS SQL SQL-серверов.</P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка <TT
 CLASS="literal"
 >HTTP</TT
 >.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка HTTP-прокси.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка HTTPS.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка FTP.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддежка NNTP (обе схемы URL news:// и nntp://).</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Виртуальная схема URL htdb://. Позволяет индексировать и искать по
 большим текстовым/блобовым полям SQL-баз данных.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Возможности зеркалирования.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					Встроенная поддержка <TT
 CLASS="literal"
 >text/html</TT
@@ -284,82 +301,100 @@ CLASS="literal"
 CLASS="literal"
 >image/gif</TT
 >.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка внешних парсеров для остальных типов документов.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 >Возможность индексировать мультиязычные сайты используя механизм согласования содержимого.</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Нечёткий поиск на основе синонимов, акронимов и аббревиатур и всех форм (включая корректировку правописания) слов из поисковых запросов.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка Basic-авторизации. Позволяет индекировать интранет сервера, защищенные паролем.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Proxy authorization support.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Реентерабельность. Возможно выполнять одновременно несколько процессов
 индексирования и/или поиска по одной и тоже базе. Поддержка многопоточночти.</P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка стоп-листов.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка &#60;META NAME="robots" content="..."&#62; и <TT
 CLASS="filename"
 >robots.txt</TT
 >.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Интерфейсы и фронтэнды на C .</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка логических запросов.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 >Испольщзование синонимов и словоформ для улучшения результатов поиска.</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Сортировка документов по релевантности, популярности, дфте последнего изменения и
 по важности (произведению релевантности и популярности).</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка почти всех популярных в Интерете кодировок, включая Восточно-Азиатские мультибайтные и UTF8.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Поддержка HTML шаблонов для гибкой настройки вывода результатов поиска.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Расширенные возможности поиска: тэги, категории, лимиты по времени и т.д.</P
-></LI
+>
+			</LI
 ><LI
 ><P
 >Возможность разбиения на отдельные слова фраз японского, корейского, китайского и тайского языков.</P
 ></LI
 ><LI
-><P
+>&#13;	<P
 >Поиск без учёта акцентов символов.</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;	<P
 ><B
 CLASS="command"
 >mod_dpsearch</B
@@ -368,18 +403,30 @@ HREF="http://httpd/apache.org/"
 TARGET="_top"
 >Apache</A
 >.</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;        <P
 >Поддержка доменных имён в национальных кдировках (Internationalized Domain Names).</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;        <P
 >Алгоритм автоматического построения рефератов (SEA).</P
-></LI
+>
+</LI
 ></UL
-></DIV
-></DIV
+>
+	</DIV
+>
+
+	
+
+	
+
+	
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

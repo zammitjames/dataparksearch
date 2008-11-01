@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >SearchD support</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,10 +87,16 @@ CLASS="sect1"
 NAME="searchd"
 >5.4. SearchD support</A
 ></H1
-><A
-NAME="AEN2950"
+>
+	
+<A
+NAME="AEN2962"
 ></A
-><DIV
+>
+
+	
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -98,11 +104,13 @@ CLASS="sect2"
 NAME="searchd-why"
 >5.4.1. Why using searchd</A
 ></H2
-><P
+>
+		
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Faster searching, especially when using
 ISpell, synonyms or segmenters for east asian languages. Related files are loaded into memory when searchd
 is started, while <TT
@@ -110,22 +118,28 @@ CLASS="filename"
 >search.cgi</TT
 > loads data before
 every query.</P
-><P
+>
+<P
 >Also, <B
 CLASS="command"
 >searchd</B
 > can preload url info data (20 bytes per URL indexed) and 
 cache mode limits (4 or 8 bytes per URL depend on limit type). This allow reduce average search time.
 </P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >It is possible to distribute
 words index and web-server between different machines.</P
-></LI
+>
+			</LI
 ></UL
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -133,13 +147,16 @@ CLASS="sect2"
 NAME="searchd-start"
 >5.4.2. Starting searchd</A
 ></H2
-><P
+>
+		
+		<P
 >To start using searchd:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Copy <TT
 CLASS="filename"
 >$PREFIX/etc/searchd.conf-dist</TT
@@ -147,18 +164,20 @@ CLASS="filename"
 CLASS="filename"
 >searchd.conf</TT
 >.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Edit <TT
 CLASS="filename"
 >searchd.conf</TT
 >.</P
-></LI
+>
+			</LI
 ><LI
 ><P
 >&#13;<A
-NAME="AEN2975"
+NAME="AEN2987"
 ></A
 >
 If you need preload url data to speed-up searches (this cost about 20 bytes of memory per url),
@@ -172,11 +191,12 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></LI
+>
+</LI
 ><LI
 ><P
 >&#13;<A
-NAME="AEN2982"
+NAME="AEN2994"
 ></A
 >
 You may also preload cache mode limits for most frequently used limit values using
@@ -193,7 +213,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >For example:
 			<PRE
 CLASS="programlisting"
@@ -201,14 +222,16 @@ CLASS="programlisting"
 </PRE
 >
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Add the following command to <TT
 CLASS="filename"
 >search.htm</TT
 >:</P
-><P
+>
+				<P
 >&#13;<TT
 CLASS="literal"
 >DBAddr searchd://hostname/</TT
@@ -222,16 +245,18 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+				<P
 >Default <TT
 CLASS="literal"
 >port</TT
 > value is 7003</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 ><A
-NAME="AEN3001"
+NAME="AEN3013"
 ></A
 >
 You may start several searchd's children answering search queries simultaneously. Use <B
@@ -240,25 +265,28 @@ CLASS="command"
 > comamnd to specify the number of
 searchd's children. Value by default is 1.
 </P
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;MaxClients 2
 </PRE
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Start searchd:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->/usr/local/dpsearch/sbin/searchd &#38;</B
-></TT
+>/usr/local/dpsearch/sbin/searchd &#38;</KBD
 >
 				</P
-></LI
+>
+			</LI
 ></UL
-><P
+>
+		<P
 >To suppress output to stderr, use
 <TT
 CLASS="literal"
@@ -270,15 +298,15 @@ CLASS="literal"
 >--disable-syslog</TT
 >). In case syslog is disabled, it
 is possible to direct stderr to a file: </P
-><P
->&#13;			<TT
+>
+		<P
+>&#13;			<KBD
 CLASS="userinput"
-><B
->/usr/local/dpsearch/sbin/searchd 2&#62;/var/log/searchd.log &#38;</B
-></TT
+>/usr/local/dpsearch/sbin/searchd 2&#62;/var/log/searchd.log &#38;</KBD
 >
 		</P
-><P
+>
+		<P
 >&#13;			<TT
 CLASS="literal"
 >searchd</TT
@@ -301,18 +329,23 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >or with absolute path:</P
-><P
->&#13;			<TT
+>
+		<P
+>&#13;			<KBD
 CLASS="userinput"
-><B
->searchd /usr/local/dpsearch/etc/searchd1.conf</B
-></TT
+>searchd /usr/local/dpsearch/etc/searchd1.conf</KBD
 >
 		</P
-></DIV
-></DIV
+>
+	</DIV
+>
+
+	
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

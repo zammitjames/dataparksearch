@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Indexing</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -81,8 +81,8 @@ CLASS="chapter"
 ><H1
 ><A
 NAME="indexing"
->Chapter 3. Indexing</A
-></H1
+></A
+>Chapter 3. Indexing</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -160,7 +160,9 @@ HREF="dpsearch-stored.en.html"
 ></DT
 ></DL
 ></DIV
-><DIV
+>
+		
+<DIV
 CLASS="sect1"
 ><H1
 CLASS="sect1"
@@ -168,7 +170,9 @@ CLASS="sect1"
 NAME="general"
 >3.1. Indexing in general</A
 ></H1
-><DIV
+>
+	
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -176,7 +180,9 @@ CLASS="sect2"
 NAME="general-conf"
 >3.1.1. Configuration</A
 ></H2
-><P
+>
+		
+		<P
 >First, you should configure <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -198,7 +204,9 @@ CLASS="literal"
 >doc/samples</TT
 >
 directory. </P
-><P
+>
+
+		<P
 >To set up <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -218,7 +226,9 @@ CLASS="filename"
 CLASS="filename"
 >indexer.conf</TT
 > and edit it.</P
-><P
+>
+
+		<P
 >To configure search front-ends
 (<TT
 CLASS="filename"
@@ -238,12 +248,12 @@ CLASS="application"
 installation to <TT
 CLASS="filename"
 >search.htm</TT
-> and edit it. See <A
-HREF="dpsearch-templates.en.html"
->Section 8.3</A
-> for detailed description.</P
-></DIV
-><DIV
+> and edit it. See  for detailed description.</P
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -254,17 +264,22 @@ CLASS="command"
 >indexer</B
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Just run indexer once a week (a day, an hour
 ...) to find the latest modifications in your web sites. You may also
 insert indexer into your <TT
 CLASS="literal"
 >crontab</TT
 > job.</P
-><A
+>
+
+<A
 NAME="AEN536"
 ></A
-><P
+>
+		<P
 >By default, indexer being called without any
 command line arguments reindex only expired documents. You can change
 expiration period with <B
@@ -277,12 +292,14 @@ CLASS="filename"
 >indexer.conf</TT
 > command. If
 you want to reindex all documents irrelevant if those are expired or
-not, use <TT
+not, use <CODE
 CLASS="option"
->-a</TT
+>-a</CODE
 > option. indexer will mark all documents
 as expired at startup. </P
-><P
+>
+
+		<P
 >Retrieving documents, indexer sends
 <TT
 CLASS="literal"
@@ -291,9 +308,9 @@ CLASS="literal"
 are already stored in database. When indexer gets  next document it
 calculates document's checksum. If checksum is the same with old
 checksum stored in database, it will not parse document again. indexer
-<TT
+<CODE
 CLASS="option"
->-m</TT
+>-m</CODE
 > command line option prevents indexer from sending
 <TT
 CLASS="literal"
@@ -309,7 +326,9 @@ CLASS="filename"
 >indexer.conf </TT
 > and it is required to add new pages
 that was disallowed earlier.</P
-><P
+>
+
+		<P
 >If <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -319,8 +338,12 @@ CLASS="application"
 CLASS="literal"
 >Location:</TT
 > field of HTTP-header instead.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -328,10 +351,14 @@ CLASS="sect2"
 NAME="general-create-tables"
 >3.1.3. How to create SQL table structure</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN554"
 ></A
-><P
+>
+
+		<P
 >To create SQL tables required for 
 <SPAN
 CLASS="application"
@@ -362,8 +389,11 @@ CLASS="application"
 CLASS="filename"
 >/usr/local/dpsearch/share/</TT
 >. </P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -371,10 +401,14 @@ CLASS="sect2"
 NAME="general-drop-tables"
 >3.1.4. How to drop SQL table structure</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN566"
 ></A
-><P
+>
+
+		<P
 >To drop all SQL tables created by 
 <SPAN
 CLASS="application"
@@ -392,8 +426,11 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 installation.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -401,14 +438,19 @@ CLASS="sect2"
 NAME="general-subsect"
 >3.1.5. Subsection control</A
 ></H2
-><P
+>
+		
+		<P
 >indexer has -t, -u, -s options to limit action
 to only a part of the database. -t corresponds 'Tag' limitation, -u is
 a URL substring limitation (SQL LIKE wildcards). -s limits URLs with
 given HTTP status. All limit options in the same group are ORed and in
 the different groups are ANDed.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -416,15 +458,22 @@ CLASS="sect2"
 NAME="general-cleardb"
 >3.1.6. How to clear database</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN578"
 ></A
-><P
+>
+
+		<P
 >To clear the whole database, use 'indexer
 -C'. You may also delete only the part of database by using -t,-u,-s
 subsection control options.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -432,10 +481,14 @@ CLASS="sect2"
 NAME="general-dbstat"
 >3.1.7. Database Statistics</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN583"
 ></A
-><P
+>
+
+		<P
 >If you run <TT
 CLASS="literal"
 >indexer -S</TT
@@ -443,107 +496,126 @@ CLASS="literal"
 will show database statistics, including count of total and expired
 documents of each status. -t, -u, -s filters are usable in this mode
 too.</P
-><P
+>
+
+		<P
 >The meaning of status is:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >0 - new (not indexed yet) URL</P
-></LI
+>
+			</LI
 ></UL
-><P
+>
+		<P
 >If status is not 0, then it is HTTP response code, some of the HTTP codes are:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >200</TT
 > - "OK" (url is successfully indexed)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >206</TT
 > - "Partial OK" (a part of url is successfully indexed)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >301</TT
 > - "Moved Permanently" (redirect to another URL)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >302</TT
 > - "Moved Temporarily" (redirect to another URL)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >303</TT
 > - "See Other" (redirect to another URL)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >304</TT
 > - "Not modified" (url has not been modified since last indexing)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >401</TT
 > - "Authorization required" (use login/password for given URL)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >403</TT
 > - "Forbidden" (you have no access to this URL(s))</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >404</TT
 > - "Not found" (there were references to URLs that do not exist)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >500</TT
 > - "Internal Server Error" (error in cgi, etc)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >503</TT
 > - "Service Unavailable" (host is down, connection timed out)</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >504</TT
 > - "Gateway Timeout" (read timeout when retrieving document)</P
-></LI
+>
+			</LI
 ></UL
-><P
+>
+		<P
 >&#13;<A
 NAME="AEN630"
 ></A
@@ -564,20 +636,26 @@ CLASS="filename"
 CLASS="literal"
 >login:password</TT
 > for this URL(s).</P
-><P
+>
+
+		<P
 >&#13;			<TT
 CLASS="literal"
 >HTTP 404</TT
 > means that you
 have incorrect reference in one of your document (reference to
 resource that does not exist).</P
-><P
+>
+
+		<P
 >Take a look on <A
 HREF="http://www.w3.org/Protocols/"
 TARGET="_top"
 >HTTP specific documentation</A
 > for further explanation of different HTTP status codes.</P
-><P
+>
+
+<P
 >Status codes <TT
 CLASS="literal"
 >2xxx</TT
@@ -587,8 +665,11 @@ CLASS="literal"
 >xxx</TT
 > - one of status codes described above.
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -596,10 +677,14 @@ CLASS="sect2"
 NAME="general-linkval"
 >3.1.8. Link validation</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN646"
 ></A
-><P
+>
+
+		<P
 >Being started with -I command line argument,
 indexer displays URL and it's referrer pairs. It is very useful to
 find bad links on your site. Don't use <B
@@ -625,8 +710,11 @@ CLASS="application"
 >DataparkSearch</SPAN
 > special for site
 validation purposes.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -634,10 +722,14 @@ CLASS="sect2"
 NAME="general-parallel"
 >3.1.9. Parallel indexing</A
 ></H2
-><A
+>
+		
+<A
 NAME="AEN656"
 ></A
-><P
+>
+
+		<P
 >MySQL and PostgreSQL users may run several
 indexers simultaneously with the same indexer.conf file. We have
 successfully tested 30 simultaneous indexers with MySQL
@@ -648,7 +740,9 @@ other back-ends yet. You may use multi-threaded version of indexer
 with any SQL  back-end though which does support several simultaneous
 connections. Multi-threaded indexer version uses own locking
 mechanism.</P
-><P
+>
+
+		<P
 >It is not recommended to use the same database
 with different <TT
 CLASS="filename"
@@ -656,13 +750,47 @@ CLASS="filename"
 > files! First process
 could add something but second could delete it, and it may never
 stop.</P
-><P
+>
+
+		<P
 >On the other hand, you may run several indexer
 processes with different databases with ANY supported SQL
 back-end.</P
-></DIV
-></DIV
-></DIV
+>
+
+	</DIV
+>
+</DIV
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

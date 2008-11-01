@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -91,11 +91,13 @@ CLASS="sect1"
 NAME="rel"
 >8.5. Релевантность
 <A
-NAME="AEN5210"
+NAME="AEN5222"
 ></A
 ></A
 ></H1
-><DIV
+>
+	
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -103,7 +105,9 @@ CLASS="sect2"
 NAME="rel-order"
 >8.5.1. Упорядочивание документов</A
 ></H2
-><P
+>
+		
+<P
 >При сортировке документов перед выдачей результата поиска <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -117,8 +121,11 @@ CLASS="literal"
 >.
 Сначала документы сортируются по релевантности, а при равенстве, по популярности.
 </P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -126,7 +133,8 @@ CLASS="sect2"
 NAME="relevancy"
 >8.5.2. Расчёт релевантности</A
 ></H2
-><P
+>
+<P
 >Релевантность каждого документа вычисляется как косинус угла между вектором весов этого документа и вектором весов,
 соответствующему поисковому запросу, умноженный на 100%.
 Число координат векторов весов равно произведению числа слов в запросе
@@ -135,18 +143,16 @@ NAME="relevancy"
 CLASS="filename"
 >indexer.conf</TT
 >. Каждая координата вектора весов соответсвует слову из запроса в той или иной секции
-документа. И значение для этой координаты вычисляется на основе весов секций, заданных параметром <TT
+документа. И значение для этой координаты вычисляется на основе весов секций, заданных параметром <CODE
 CLASS="option"
->wf</TT
+>wf</CODE
 >
-(см. <A
-HREF="dpsearch-doingsearch.ru.html#search-changeweight"
->&#1056;&#1072;&#1079;&#1076;. 8.1.3</A
->) и на основании
+(см. ) и на основании
 того, является ли данное слово именно указанным в запросе или его словоформой. Также еще одна координата соответсвует
 среднему расстоянию между найденными словами в данном документе. Для вектора запроса эта координата полагается равной 0.
 </P
-><P
+>
+<P
 >  Т.к. в файлах конфигурации поисковых фронтэндов
 (<TT
 CLASS="filename"
@@ -156,7 +162,7 @@ CLASS="filename"
 >search.htm</TT
 >) не предусмотрено указание секцией,
 используйте <A
-NAME="AEN5227"
+NAME="AEN5239"
 ></A
 > команду
 <B
@@ -166,10 +172,12 @@ CLASS="command"
 Впрочем, точное число секций не играет решающей роли в порядке сортировки документов, только
 в значении рейтинга релевантности.
 </P
-><DIV
+>
+
+<DIV
 CLASS="table"
 ><A
-NAME="AEN5231"
+NAME="AEN5243"
 ></A
 ><P
 ><B
@@ -178,21 +186,18 @@ CLASS="command"
 >configure</B
 >)</B
 ></P
-><TABLE
+>
+	<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--enable-fullrel</TT
+>--enable-fullrel</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
 >Включает полный вариант расчёта релевантности. Значение по умолчанию: выключено (или быстрый расчёт релевантности).
 </P
@@ -200,15 +205,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--disable-reldistance</TT
+>--disable-reldistance</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
 >Выключает учёт среднего растояния между словами при расчёте релевантности. Значение по умолчанию: включено.
 </P
@@ -216,15 +217,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--disable-relposition</TT
+>--disable-relposition</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
 >Выключает учёт позиции первого слова из запроса в тексте документа при расчёте релевантности. Значение по умолчанию: включено.
 </P
@@ -232,15 +229,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--disable-relwrdcount</TT
+>--disable-relwrdcount</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
 >Выключает учёт чисел вхождения слов из запроса в найденом документе при расчёте релевантности. Значение по умолчанию: включено.
 </P
@@ -248,22 +241,18 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--with-bestpos=<TT
+>--with-bestpos=<CODE
 CLASS="option"
->NUM</TT
-></TT
+>NUM</CODE
+></CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
->Задаёт <TT
+>Задаёт <CODE
 CLASS="option"
->NUM</TT
+>NUM</CODE
 > в качестве лучшего значения первой позиции слова запроса в найденом документе. 
 Значение по умолчанию: 4.
 </P
@@ -271,22 +260,18 @@ CLASS="option"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--with-bestwrdcnt=<TT
+>--with-bestwrdcnt=<CODE
 CLASS="option"
->NUM</TT
-></TT
+>NUM</CODE
+></CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
->Задаёт <TT
+>Задаёт <CODE
 CLASS="option"
->NUM</TT
+>NUM</CODE
 > в качестве лучшего числа каждого из слов запроса в найденом документе. 
 Значение по умолчанию: 11.
 </P
@@ -294,22 +279,18 @@ CLASS="option"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--with-distfactor=<TT
+>--with-distfactor=<CODE
 CLASS="option"
->NUM</TT
-></TT
+>NUM</CODE
+></CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
->Задаёт <TT
+>Задаёт <CODE
 CLASS="option"
->NUM</TT
+>NUM</CODE
 > в качестве коэффициента для среднего растояния между словами запроса в найденом документе. 
 Значение по умолчанию: 0.2.
 </P
@@ -317,25 +298,21 @@ CLASS="option"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--with-posfactor=<TT
+>--with-posfactor=<CODE
 CLASS="option"
->NUM</TT
-></TT
+>NUM</CODE
+></CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
->Задаёт <TT
+>Задаёт <CODE
 CLASS="option"
->NUM</TT
-> в качестве коэффициента для расстояния между первой позицией слова запроса в найденом документе и значением, указаным параметром <TT
+>NUM</CODE
+> в качестве коэффициента для расстояния между первой позицией слова запроса в найденом документе и значением, указаным параметром <CODE
 CLASS="option"
->--with-bestpos</TT
+>--with-bestpos</CODE
 >. 
 Значение по умолчанию: 0.5.
 </P
@@ -343,25 +320,21 @@ CLASS="option"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--with-wrdcntfactor=<TT
+>--with-wrdcntfactor=<CODE
 CLASS="option"
->NUM</TT
-></TT
+>NUM</CODE
+></CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
->Задаёт <TT
+>Задаёт <CODE
 CLASS="option"
->NUM</TT
-> в качестве коэффициента для расстояния между числом слова запроса в найденом документе и значением, указаным параметром <TT
+>NUM</CODE
+> в качестве коэффициента для расстояния между числом слова запроса в найденом документе и значением, указаным параметром <CODE
 CLASS="option"
->--with-bestwrdcnt</TT
+>--with-bestwrdcnt</CODE
 >. 
 Значение по умолчанию: 0.4.
 </P
@@ -369,22 +342,18 @@ CLASS="option"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="option"
->--with-wrdunifactor=<TT
+>--with-wrdunifactor=<CODE
 CLASS="option"
->NUM</TT
-></TT
+>NUM</CODE
+></CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
->Задаёт <TT
+>Задаёт <CODE
 CLASS="option"
->NUM</TT
+>NUM</CODE
 > в качестве коэффициента для величины отклонения количеств вхождения слов запроса в найденый документ от равномерного распределения. 
 Значение по умолчанию: 1.5.
 </P
@@ -392,22 +361,31 @@ CLASS="option"
 ></TR
 ></TBODY
 ></TABLE
-></DIV
-></DIV
-><DIV
+>
+</DIV
+>
+
+</DIV
+>
+
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
 ><A
 NAME="poprank"
 >8.5.3. Рейтинг популярности<A
-NAME="AEN5302"
+NAME="AEN5314"
 ></A
 ></A
 ></H2
-><P
+>
+
+<P
 ><A
-NAME="AEN5305"
+NAME="AEN5317"
 ></A
 >
 <SPAN
@@ -435,9 +413,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+<P
 ><A
-NAME="AEN5315"
+NAME="AEN5327"
 ></A
 >
 Для метода расчёта популярности <TT
@@ -457,29 +437,33 @@ CLASS="filename"
 >. Однако, это незначительно уменьшает скорость индексирования, поэтому по умолчанию
 сбор этих ссылок выключен. 
 </P
-><P
+>
+
+<P
 >По умолчанию, для расчета рейтинга популярности используются только ссылки между различными сайтами.
  Если в <TT
 CLASS="filename"
 >indexer.conf</TT
 > указана опция 
-<TT
+<CODE
 CLASS="option"
 ><A
-NAME="AEN5325"
+NAME="AEN5337"
 ></A
->PopRankSkipSameSite no</TT
+>PopRankSkipSameSite no</CODE
 >,
  то при расчёте рейтинга популярности учитываются все ссылки.
 </P
-><P
+>
+
+<P
 >Вы можете присвоить начальное значение рейтинга популярности страницы используя МЕТА таг DP.PopRank 
-(см. <A
-HREF="dpsearch-htmlparser-meta.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 4.3</A
->).
+(см. ).
 </P
-><DIV
+>
+
+
+<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -487,23 +471,27 @@ CLASS="sect3"
 NAME="Goo-poprank"
 >8.5.3.1. Метод расчёта популярности Goo</A
 ></H3
-><P
->Рейтинг популярности рассчитывается в два этапа. На первом этапе значение параметра <TT
+>
+
+<P
+>Рейтинг популярности рассчитывается в два этапа. На первом этапе значение параметра <CODE
 CLASS="option"
->Weight</TT
+>Weight</CODE
 >
 для каждого сервера делится на число ссылок со страниц этого сервера. Таким образом определяется вес одной ссылки с этого сервера.
 На втором этапе для каждой страницы находится ссума весов всех ссылок, указывающих на эту страницу.
 Эта сумма и является индексом популярности страницы.
 </P
-><P
+>
+
+<P
 ><A
-NAME="AEN5335"
+NAME="AEN5347"
 ></A
 >
-По умолчанию значение параметра <TT
+По умолчанию значение параметра <CODE
 CLASS="option"
->Weight</TT
+>Weight</CODE
 > для каждого сервера равно 1. Изменить это значение вы можете непосредственно
 в SQL-таблице <TT
 CLASS="literal"
@@ -517,38 +505,44 @@ CLASS="filename"
 >indexer.conf</TT
 >.
 </P
-><P
+>
+
+<P
 >Если в <TT
 CLASS="filename"
 >indexer.conf</TT
 > указана опция
-<TT
+<CODE
 CLASS="option"
 ><A
-NAME="AEN5345"
+NAME="AEN5357"
 ></A
->PopRankFeedBack yes</TT
+>PopRankFeedBack yes</CODE
 >,
 то перед расчётом рейтинга популярности страниц рассчитывается рейтинг сайтов. Для этого для каждого сайта находится сумма
 популярности всех его страниц, если она окажется меньше 1, то рейтинг сайта полагается равным 1, в противном случае он
 полагается равным найденной сумме.
 </P
-><P
+>
+
+<P
 >Если в <TT
 CLASS="filename"
 >indexer.conf</TT
 > указана опция
-<TT
+<CODE
 CLASS="option"
 ><A
-NAME="AEN5351"
+NAME="AEN5363"
 ></A
->PopRankUseTracking yes</TT
+>PopRankUseTracking yes</CODE
 >,
 то перед расчётом рейтинга популярности страниц в качестве рейтинга сайтов будет использована сумма числа запросов уточнения поиска
 для каждого сайта (т.е. число запросов поиска только среди документов с этого сайта).
 </P
-><P
+>
+
+<P
 >Если в <TT
 CLASS="filename"
 >search.htm</TT
@@ -556,20 +550,20 @@ CLASS="filename"
 CLASS="filename"
 >searchd.conf</TT
 >) указана опция
-<TT
+<CODE
 CLASS="option"
 ><A
-NAME="AEN5358"
+NAME="AEN5370"
 ></A
->PopRankUseShowCnt yes</TT
+>PopRankUseShowCnt yes</CODE
 >,
 то для каждого выводимого пользователю результата поиска, имеющего значение релевантности выше, заданного командой
-<TT
+<CODE
 CLASS="option"
 ><A
-NAME="AEN5362"
+NAME="AEN5374"
 ></A
->PopRankShowCntRatio</TT
+>PopRankShowCntRatio</CODE
 >
 (по умолчанию используется значение 25.0), значение <TT
 CLASS="literal"
@@ -578,26 +572,29 @@ CLASS="literal"
 Если в <TT
 CLASS="filename"
 >indexer.conf</TT
-> указана опция <TT
+> указана опция <CODE
 CLASS="option"
->PopRankUseShowCnt yes</TT
+>PopRankUseShowCnt yes</CODE
 >,
 то при расчёте рейтинга популярности страниц, к полученному на предыдущих этапах значению рейтига каждой страницы будет прибавлено значение
 <TT
 CLASS="literal"
 >url.shows</TT
 >, умноженное на значение, заданное опцией
-<TT
+<CODE
 CLASS="option"
 ><A
-NAME="AEN5370"
+NAME="AEN5382"
 ></A
->PopRankShowCntWeight</TT
+>PopRankShowCntWeight</CODE
 >
 (по умолчанию используется значение 0.01).
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -605,8 +602,11 @@ CLASS="sect3"
 NAME="Neo-poprank"
 >8.5.3.2. Метод расчёта популярности Neo</A
 ></H3
-></DIV
-><P
+>
+</DIV
+>
+
+<P
 >При этом методе расчёта популярности подразумевается, что страницы являются нейронами, а ссылки между страницами
 являются связями между нейронами. Такми образом для образованой нейросети можно использовать один методов её обучения -
 метод обратного распространения ошибки. Рейтингом популярности страницы в данном случае считается уровень активности 
@@ -616,38 +616,49 @@ TARGET="_top"
 >краткое описание метода расчёта популярности Neo</A
 >.
 </P
-><P
+>
+
+<P
 >Вы можете использовать команду
-<TT
+<CODE
 CLASS="option"
 ><A
-NAME="AEN5379"
+NAME="AEN5391"
 ></A
->PopRankNeoIterations</TT
+>PopRankNeoIterations</CODE
 >
 для задания числа итераций при расчёте популярности методом  "Neo". Значение по умолчанию: 3.
 </P
-><P
+>
+
+<P
 ><A
-NAME="AEN5383"
+NAME="AEN5395"
 ></A
 >
 По умолчанию, расчёт рейтинга популярности методом "Neo" ведётся одновременно с индексирования. Для ускорения индексирования,
 вы можете отложить расчёт рейтинга популярности методом "Neo" указав команду:
 </P
-><PRE
+>
+<PRE
 CLASS="programlisting"
 >&#13;PopRankPostpone yes
 </PRE
-><P
+>
+<P
 >Затем вы можете расчитать рейтинг популярности методом "Neo" также как и для метода "Goo", т.е.:
 <B
 CLASS="command"
 >indexer -TR</B
 >
 </P
-></DIV
-><DIV
+>
+
+</DIV
+>
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -655,30 +666,29 @@ CLASS="sect2"
 NAME="rel-bool"
 >8.5.4. Булевы запросы
 <A
-NAME="AEN5391"
+NAME="AEN5403"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >При булевом поиске, состоящем из двух и более слов, необходимо вводить операторы (&#38;, |, ~).
-Т.е. необходимо вводить <TT
+Т.е. необходимо вводить <KBD
 CLASS="userinput"
-><B
->a &#38; book</B
-></TT
-> вместо <TT
+>a &#38; book</KBD
+> вместо <KBD
 CLASS="userinput"
-><B
->a book</B
-></TT
+>a book</KBD
 >.
-См. также <A
-HREF="dpsearch-doingsearch.ru.html#search-bool"
->&#1056;&#1072;&#1079;&#1076;. 8.1.7</A
->.
+См. также .
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -686,11 +696,13 @@ CLASS="sect2"
 NAME="rel-cwords"
 >8.5.5. Crosswords
 <A
-NAME="AEN5400"
+NAME="AEN5412"
 ></A
 ></A
 ></H2
-><P
+>
+		
+		<P
 >Эта возможность позволяет связать слова между
 &#60;a href="xxx"&#62; и &#60;/a&#62; с документов, на который указывает данная ссылка.
 
@@ -699,7 +711,7 @@ NAME="AEN5400"
 CLASS="command"
 >CrossWords yes
 <A
-NAME="AEN5404"
+NAME="AEN5416"
 ></A
 >
 </B
@@ -710,18 +722,19 @@ CLASS="filename"
 CLASS="filename"
 >search.htm</TT
 >, а также определите секцию
-<TT
+<KBD
 CLASS="userinput"
-><B
->crosswords</B
-></TT
+>crosswords</KBD
 > в файле <TT
 CLASS="filename"
 >sections.conf</TT
 >.
 </P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -729,19 +742,25 @@ CLASS="sect2"
 NAME="sea"
 >8.5.6. Алгоритм Построения Рефератов (SEA)</A
 ></H2
-><A
-NAME="AEN5413"
+>
+
+<A
+NAME="AEN5425"
 ></A
-><A
-NAME="AEN5415"
+>
+<A
+NAME="AEN5427"
 ></A
-><A
-NAME="AEN5418"
+>
+<A
+NAME="AEN5430"
 ></A
-><A
-NAME="AEN5421"
+>
+<A
+NAME="AEN5433"
 ></A
-><P
+>
+<P
 ><TT
 CLASS="literal"
 >Алгоритм Построения Рефератов (SEA)</TT
@@ -756,29 +775,32 @@ CLASS="programlisting"
 >&#13;Section sea x y
 </PRE
 >
-где <TT
+где <CODE
 CLASS="option"
->x</TT
-> - номер секции и <TT
+>x</CODE
+> - номер секции и <CODE
 CLASS="option"
->y</TT
+>y</CODE
 > - максимальный размер значения секции, задайте его равным 0, если вы не хотите
 показывать эту секцию на тсраницах результатов поиска.
-Если вы указываете ненулевое значение для <TT
+Если вы указываете ненулевое значение для <CODE
 CLASS="option"
->y</TT
+>y</CODE
 >, вы можете использовать мета-переменную <TT
 CLASS="literal"
 >$(sea)</TT
 > 
 в вашем шаблоне поиска для отображения реферата в результатах поиска.
 </P
-><P
+>
+
+<P
 >Соответствующие команды конфигурирования:
 </P
-><P
+>
+<P
 ><A
-NAME="AEN5434"
+NAME="AEN5446"
 ></A
 >
 Команда <B
@@ -787,9 +809,10 @@ CLASS="command"
 > задаёт минимальную длину предложения, которое будет использовано для создания реферата.
 Значение по умолчанию: 32.
 </P
-><P
+>
+<P
 ><A
-NAME="AEN5439"
+NAME="AEN5451"
 ></A
 >
 Команда <B
@@ -799,8 +822,14 @@ CLASS="command"
 Значение по умолчанию: 64. В виду нелинейной сложности алгоритма SEA, вы можете установить значение этого параметра исходя из желаемой
 производительности индексирования.
 </P
-></DIV
-></DIV
+>
+
+</DIV
+>
+
+
+	
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -861,7 +890,7 @@ ALIGN="right"
 VALIGN="top"
 >Регистрация поисковых запросов
 <A
-NAME="AEN5445"
+NAME="AEN5457"
 ></A
 ></TD
 ></TR

@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Possible installation problems</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,14 +87,18 @@ CLASS="sect1"
 NAME="installproblem"
 >2.5. Possible installation problems</A
 ></H1
-><A
+>
+		
+<A
 NAME="AEN470"
 ></A
-><P
+>
+
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Every time you run
 <TT
 CLASS="literal"
@@ -104,7 +108,9 @@ CLASS="literal"
 >make</TT
 >
 again to recompile.</P
-><P
+>
+
+				<P
 >To prevent old configuration
 information or object files from being used, run these commands before
 re-running <TT
@@ -113,25 +119,24 @@ CLASS="literal"
 >:
 
 </P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ rm config.cache</B
-></TT
+>sh$ rm config.cache</KBD
 >
 				</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->sh$ make clean</B
-></TT
+>sh$ make clean</KBD
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >If your compile fails with make
 errors, this can be because you are using the wrong version of
 make. The behavior of Solaris, FreeBSD, OpenBSD make is slightly
@@ -145,14 +150,16 @@ TARGET="_top"
 >GNU make</A
 > instead, often installed as gmake.
 </P
-><P
+>
+				<P
 >GNU <TT
 CLASS="filename"
 >make</TT
 > version 3.77 is known to work.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 >If starting <SPAN
 CLASS="application"
 >Apache</SPAN
@@ -161,11 +168,9 @@ CLASS="application"
 >mod_dpsearch</SPAN
 > module, 
 you're getting the following error:
-<TT
+<KBD
 CLASS="userinput"
-><B
->Undefined symbol "pthread_join"</B
-></TT
+>Undefined symbol "pthread_join"</KBD
 > (or something similar related to pthreads), 
 try to add the following commmand into <TT
 CLASS="filename"
@@ -175,26 +180,30 @@ CLASS="filename"
 >mod_dpsearch.so</TT
 >:
 </P
-><P
-><TT
+>
+<P
+><KBD
 CLASS="userinput"
-><B
->LoadFile /usr/lib/libpthread.so</B
-></TT
+>LoadFile /usr/lib/libpthread.so</KBD
 ></P
-></LI
+>
+</LI
 ></UL
-><P
+>
+
+<P
 >If above information doesn't help you, please feel free to contact DataparkSearch mailing list
-<TT
+<CODE
 CLASS="email"
 >&#60;<A
 HREF="mailto:dataparksearch@yahoogroups.com"
 >dataparksearch@yahoogroups.com</A
->&#62;</TT
+>&#62;</CODE
 >.
 </P
-></DIV
+>
+
+	</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

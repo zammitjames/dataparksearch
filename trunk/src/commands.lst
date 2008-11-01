@@ -125,9 +125,9 @@
 	{"HTTPHeader",		1,2,	srv_rpl_hdr},
 	{"ProxyAuthBasic",	1,1,	srv_rpl_auth},
 	{"AuthBasic",		1,1,	srv_rpl_auth},
-	{"MirrorRoot",		1,1,	srv_rpl_mirror},
-	{"MirrorHeadersRoot",	1,1,	srv_rpl_mirror},
-	{"MirrorPeriod",	1,1,	srv_rpl_mirror},
+	{"MirrorRoot",		0,1,	srv_rpl_mirror},
+	{"MirrorHeadersRoot",	0,1,	srv_rpl_mirror},
+	{"MirrorPeriod",	0,1,	srv_rpl_mirror},
 	{"RemoteCharset",	0,1,	srv_rpl_charset},
 	{"URLCharset",	        0,1,	srv_rpl_charset},
 	

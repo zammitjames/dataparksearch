@@ -21342,7 +21342,7 @@ case "$host" in
             LDFLAGS="$LDFLAGS -lbsd"
             ;;
 	*-*-freebsd*)
-	    LIBS="$LIBS -L/usr/local/lib"
+	    LIBS="$LIBS -L/usr/local/lib -lc"
 	    CFLAGS="$CFLAGS -I/usr/local/include"
 	    INCLUDES="$INCLUDES -I/usr/local/include"
 	    ;;
@@ -23100,7 +23100,7 @@ fi
 { $as_echo "$as_me:$LINENO: result: $ac_cv_lib_xnet_inet_addr" >&5
 $as_echo "$ac_cv_lib_xnet_inet_addr" >&6; }
 if test $ac_cv_lib_xnet_inet_addr = yes; then
-  LIBS="-lxnet $LIBS"
+  LIBS="$LIBS -lxnet"
 fi
 
 fi
@@ -29096,7 +29096,7 @@ _ACEOF
  LIBS="$LIBS -lz"
 else
   LIBS_save="$LIBS"
-	LIBS="-L/usr/local/lib $LIBS"
+	LIBS="$LIBS -L/usr/local/lib"
 	{ $as_echo "$as_me:$LINENO: checking for inflate in -lz" >&5
 $as_echo_n "checking for inflate in -lz... " >&6; }
 if test "${ac_cv_lib_z_inflate+set}" = set; then
@@ -29179,8 +29179,8 @@ fi
 fi
 
 else
-  CFLAGS="-I$zlib/include $CFLAGS"
-  LIBS="-L$zlib/lib -lz $LIBS"
+  CFLAGS="$CFLAGS -I$zlib/include"
+  LIBS="$LIBS -L$zlib/lib -lz"
   { $as_echo "$as_me:$LINENO: checking for inflate in -lz" >&5
 $as_echo_n "checking for inflate in -lz... " >&6; }
 if test "${ac_cv_lib_z_inflate+set}" = set; then
@@ -29257,7 +29257,7 @@ $as_echo "$as_me: error: Unable to find working zlib library under $zlib" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
-  INCLUDES="-I$zlib/include $INCLUDES"
+  INCLUDES="$INCLUDES -I$zlib/include"
 fi
 
 
@@ -29359,7 +29359,7 @@ if test $ac_cv_lib_aspell_new_aspell_config = yes; then
 _ACEOF
 
 else
-  LIBS="-L/usr/local/lib $LIBS"
+  LIBS="$LIBS -L/usr/local/lib"
       	{ $as_echo "$as_me:$LINENO: checking for new_aspell_config in -laspell" >&5
 $as_echo_n "checking for new_aspell_config in -laspell... " >&6; }
 if test "${ac_cv_lib_aspell_new_aspell_config+set}" = set; then
@@ -29442,13 +29442,13 @@ fi
 fi
 
 else
-  CFLAGS="-I$aspell/include $CFLAGS"
+  CFLAGS="$CFLAGS -I$aspell/include"
   case "$host" in
 	*-*-freebsd*)
-  		LIBS="-L$aspell/lib -laspell -lstdc++ -lintl $LIBS"
+  		LIBS="$LIBS -L$aspell/lib -laspell -lstdc++ -lintl"
 		;;
 	*)
-  		LIBS="-L$aspell/lib -laspell -lstdc++ $LIBS"
+  		LIBS="$LIBS -L$aspell/lib -laspell -lstdc++"
 		;;
   esac
   { $as_echo "$as_me:$LINENO: checking for new_aspell_config in -laspell" >&5
@@ -30519,7 +30519,11 @@ if test "${with_pgsql+set}" = set; then
 
 
     PGSQL_INCLUDE="-I$PGSQL_INCDIR"
-    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq $PGSQL_CF_LIBS"
+    if test "$LINKING" != "dynamic"; then
+	    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq $PGSQL_CF_LIBS"
+    else
+	    PGSQL_LFLAGS="-L$PGSQL_LIBDIR -lpq"
+    fi
     cat >>confdefs.h <<\_ACEOF
 #define HAVE_DP_PGSQL 1
 _ACEOF
@@ -32477,6 +32481,21 @@ fi
   test -n "$COLLATEINDEX" && break
 done
 
+  if test "x$COLLATEINDEX" = "x"; then
+  	{ $as_echo "$as_me:$LINENO: checking once again collateindex.pl" >&5
+$as_echo_n "checking once again collateindex.pl... " >&6; }
+	PATH_DIRS=`echo $PATH | tr : \ `
+	MY_DIRS="$DOCBOOKSTYLE/bin"
+  	for pgac_prefix in $MY_DIRS $PATH_DIRS; do
+		pgac_candidate="$pgac_prefix/collateindex.pl"
+		if test -f "$pgac_candidate"; then
+			COLLATEINDEX="$pgac_candidate"
+			break
+		fi
+	done
+	{ $as_echo "$as_me:$LINENO: result: $COLLATEINDEX" >&5
+$as_echo "$COLLATEINDEX" >&6; }
+  fi
 else
   for ac_prog in collateindex.pl
 do
@@ -32523,6 +32542,20 @@ fi
   test -n "$COLLATEINDEX" && break
 done
 
+  if test "x$COLLATEINDEX" = "x"; then
+  	{ $as_echo "$as_me:$LINENO: checking once again collateindex.pl" >&5
+$as_echo_n "checking once again collateindex.pl... " >&6; }
+	PATH_DIRS=`echo $PATH | tr : \ `
+  	for pgac_prefix in $PATH_DIRS; do
+		pgac_candidate="$pgac_prefix/collateindex.pl"
+		if test -f "$pgac_candidate"; then
+			COLLATEINDEX="$pgac_candidate"
+			break
+		fi
+	done
+	{ $as_echo "$as_me:$LINENO: result: $COLLATEINDEX" >&5
+$as_echo "$COLLATEINDEX" >&6; }
+  fi
 fi
 doc_FILES_EN="HTML_DEP_NOJADE_EN"
 doc_FILES_RU="HTML_DEP_NOJADE_RU"

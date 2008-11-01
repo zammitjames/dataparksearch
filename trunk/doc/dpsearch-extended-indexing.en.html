@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Extended indexing features</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,7 +87,11 @@ CLASS="sect1"
 NAME="extended-indexing"
 >3.11. Extended indexing features</A
 ></H1
-><DIV
+>
+			
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -95,30 +99,38 @@ CLASS="sect2"
 NAME="htdb"
 >3.11.1. Indexing SQL database tables (htdb: virtual URL scheme)</A
 ></H2
-><A
+>
+	
+<A
 NAME="AEN2019"
 ></A
-><P
+>
+
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > can index SQL database text fields - the 
 so called  htdb: virtual URL scheme.</P
-><P
+>
+	<P
 >Using htdb:/ virtual scheme you can build full text
 index of your SQL tables as well as index your database driven WWW
 server.</P
-><DIV
+>
+	<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;		<P
 ><B
 >Note: </B
 >You must have PRIMARY key on the table you want to index.</P
-></BLOCKQUOTE
+>
+	</BLOCKQUOTE
 ></DIV
-><DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -126,7 +138,9 @@ CLASS="sect3"
 NAME="htdb-indexer"
 >3.11.1.1. HTDB indexer.conf commands</A
 ></H3
-><P
+>
+		
+		<P
 >Five <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -149,7 +163,8 @@ CLASS="command"
 >HTDBText</B
 >. 
 </P
-><P
+>
+<P
 >&#13;<A
 NAME="AEN2037"
 ></A
@@ -163,7 +178,9 @@ CLASS="command"
 >DBAddr</B
 > command.
 </P
-><P
+>
+
+		<P
 >&#13;<A
 NAME="AEN2043"
 ></A
@@ -175,7 +192,8 @@ CLASS="command"
 generate list of all URLs which correspond to records in the table
 using PRIMARY key field. You may use either absolute or relative URLs
 in HTDBList command:</P
-><P
+>
+		<P
 >For example:
 		<PRE
 CLASS="programlisting"
@@ -185,7 +203,9 @@ HTDBList "SELECT id FROM messages"
 </PRE
 >
 </P
-><P
+>
+
+<P
 ><A
 NAME="AEN2050"
 ></A
@@ -201,7 +221,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+		<P
 >&#13;<A
 NAME="AEN2056"
 ></A
@@ -210,15 +232,17 @@ NAME="AEN2056"
 CLASS="command"
 >HTDBDoc</B
 > is a query to get only certain record from database using PRIMARY key value.</P
-><P
+>
+		<P
 >HTDBList SQL query is used for all URLs which
 end with '/' sign. For other URLs SQL query given in HTDBDoc is
 used.</P
-><DIV
+>
+		<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;			<P
 ><B
 >Note: </B
 >HTDBDoc query must return FULL HTTP
@@ -226,9 +250,12 @@ response with headers. So, you can build very flexible indexing system
 giving different HTTP status in query. Take a look at HTTP response
 codes section of documentation to understand indexer behavior when it
 gets different HTTP status.</P
-></BLOCKQUOTE
+>
+
+		</BLOCKQUOTE
 ></DIV
-><P
+>
+		<P
 >If there is no result of HTDBDoc or query does
 return several records, HTDB retrieval system generates "HTTP 404 Not
 Found". This may happen at reindex time if record was deleted from
@@ -240,14 +267,18 @@ delete such records from <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > tables as well.</P
-><P
+>
+
+		<P
 >You may use several HTDBDoc/List commands in one
 <TT
 CLASS="filename"
 >indexer.conf</TT
 > with corresponding Server
 commands.</P
-><P
+>
+
+<P
 >&#13;<A
 NAME="AEN2069"
 ></A
@@ -286,7 +317,9 @@ Server htdb:/
 </PRE
 >
 </P
-><P
+>
+
+<P
 >It' possible to specify both <B
 CLASS="command"
 >HTDBDoc</B
@@ -305,8 +338,11 @@ CLASS="command"
 >HTDBText</B
 > commands are processing first.
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -314,10 +350,14 @@ CLASS="sect3"
 NAME="htdb-var"
 >3.11.1.2. HTDB variables</A
 ></H3
-><A
+>
+		
+<A
 NAME="AEN2086"
 ></A
-><P
+>
+
+		<P
 >You may use PATH parts of URL as parameters of
 both HTDBList and HTDBDoc SQL queries. All parts are to be used as $1,
 $2,  ... $n, where number is the number of PATH part:
@@ -329,7 +369,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		<P
 >For example, you have this <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -340,7 +381,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >When htdb:/cars/  URL is indexed, $1 will be replaced with 'cars':
 		<PRE
 CLASS="programlisting"
@@ -348,7 +390,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >You may use long URLs to provide several
 parameters to both HTDBList and HTDBDoc queries. For example,
 <TT
@@ -361,7 +404,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >This query will generate the following URLs:
 		<PRE
 CLASS="programlisting"
@@ -371,10 +415,13 @@ htdb:/path1/path2/path3/path4/idN
 </PRE
 >
 </P
-><P
+>
+		<P
 >for all values of the field "id" which are in HTDBList output.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -382,7 +429,9 @@ CLASS="sect3"
 NAME="htdb-fulltext"
 >3.11.1.3. Creating full text index</A
 ></H3
-><P
+>
+		
+		<P
 >Using htdb:/ scheme you can create full text
 index and use it further in your application. Lets imagine you have a
 big SQL table which stores for example web board messages in plain
@@ -397,7 +446,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Using <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -430,7 +480,8 @@ Server htdb:/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >After start indexer will insert 'htdb:/' URL
 into database and will run an SQL query given in HTDBList. It will
 produce 1,2,3, ..., N values in result. Those values will be
@@ -448,11 +499,13 @@ Content-Type: text/plain
 </PRE
 >
 		</P
-><P
+>
+		<P
 >This document will be used to create full text
 index using words from 'message' fields. Words will be stored in
 'dict' table assuming that we are using 'single' storage mode.</P
-><P
+>
+		<P
 >After indexing you can use <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -466,14 +519,16 @@ AND dict.word='someword';
 </PRE
 >
 		</P
-><P
+>
+		<P
 >As far as <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > 'dict' table has an index
 on 'word' field this query will be executed much faster than queries
 which use SQL LIKE search on 'messages' table.</P
-><P
+>
+		<P
 >You can also use several words in search:
 		<PRE
 CLASS="programlisting"
@@ -486,13 +541,16 @@ ORDER BY c DESC;
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Both queries will return 'htdb:/XXX' values in
 url.url field. Then your application has to cat leading 'htdb:/' from
 those values to get PRIMARY key values of your 'messages'
 table.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -500,13 +558,16 @@ CLASS="sect3"
 NAME="htdb-web"
 >3.11.1.4. Indexing SQL database driven web server</A
 ></H3
-><P
+>
+		
+		<P
 >You can also use htdb:/ scheme to index your
 database driven WWW server. It allows to create indexes without having
 to invoke your web server while indexing. So, it is much faster and
 requires less CPU resources when direct indexing from WWW
 server. </P
-><P
+>
+		<P
 >The main idea of indexing database driven web
 server is to build full text index in usual order. The only thing is
 that search must produce real URLs instead of URLs in 'htdb:/...'
@@ -514,7 +575,9 @@ form. This can be achieved using <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > aliasing tools.</P
-><P
+>
+		
+		<P
 >HTDBList command generates URLs in the form:
 		<PRE
 CLASS="programlisting"
@@ -522,9 +585,11 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >where XXX is a "messages" table primary key values.</P
-><P
+>
+		<P
 >For each primary key value HTDBDoc command generates text/html document with HTTP headers and content like this:
 		<PRE
 CLASS="programlisting"
@@ -537,7 +602,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		<P
 >At the end of <TT
 CLASS="filename"
 >doc/samples/htdb.conf</TT
@@ -550,7 +616,8 @@ Alias  http://search.mnogo.ru/board/message.php?id=  htdb:/
 </PRE
 >
 		</P
-><P
+>
+		<P
 >First command says indexer to execute HTDBList query which will generate a list of messages in the form:
 		<PRE
 CLASS="programlisting"
@@ -558,9 +625,11 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >Second command allow indexer to accept such message URLs using string match with '*' wildcard at the end.</P
-><P
+>
+		<P
 >Third command replaces
 "http://search.mnogo.ru/board/message.php?id=" substring in URL with
 "htdb:/" when indexer retrieve documents with messages. It means that
@@ -568,9 +637,13 @@ CLASS="programlisting"
 in search result, but "htdb:/xxx" URL will be indexed instead, where
 xxx is the PRIMARY key value, the ID of record in "messages"
 table.</P
-></DIV
-></DIV
-><DIV
+>
+	</DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -578,10 +651,14 @@ CLASS="sect2"
 NAME="exec"
 >3.11.2. Indexing binaries output (exec: and cgi: virtual URL schemes)</A
 ></H2
-><A
+>
+	
+<A
 NAME="AEN2141"
 ></A
-><P
+>
+
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -589,7 +666,9 @@ CLASS="application"
 schemes. They allows running an external program. This program must
 return a result to it's stdout. Result must be in HTTP standard,
 i.e. HTTP response header followed by document's content.</P
-><P
+>
+
+	<P
 >For example, when indexing both
 <TT
 CLASS="literal"
@@ -603,7 +682,9 @@ the <TT
 CLASS="filename"
 >/usr/local/bin/myprog</TT
 > program.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -611,7 +692,9 @@ CLASS="sect3"
 NAME="exec-cgi"
 >3.11.2.1. Passing parameters to cgi: virtual scheme</A
 ></H3
-><P
+>
+		
+		<P
 >When executing a program given in cgi: virtual
 scheme, indexer emulates that program is running under HTTP server. It
 creates REQUEST_METHOD environment variable with "GET" value and
@@ -645,8 +728,10 @@ Alias  http://localhost/		file:/usr/local/apache/htdocs/
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -654,7 +739,9 @@ CLASS="sect3"
 NAME="exec-exec"
 >3.11.2.2. Passing parameters to exec: virtual scheme</A
 ></H3
-><P
+>
+		
+		<P
 >indexer does not create QUERY_STRING variable
 like in cgi: scheme. It creates a command line with argument given in
 URL after ? sign. For example, when indexing
@@ -669,8 +756,10 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -678,7 +767,9 @@ CLASS="sect3"
 NAME="exec-ext"
 >3.11.2.3. Using exec: virtual scheme as an external retrieval system</A
 ></H3
-><P
+>
+		
+		<P
 >exec: virtual scheme allow using it as an
 external retrieval system. It allows using protocols which are not
 supported natively by <SPAN
@@ -690,7 +781,9 @@ HREF="http://curl.haxx.se/"
 TARGET="_top"
 >http://curl.haxx.se/</A
 > to index HTTPS sites.</P
-><P
+>
+
+		<P
 >Put this short script to
 <TT
 CLASS="literal"
@@ -707,11 +800,13 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		<P
 >This script takes an URL given in command line
 argument and executes curl program to download it.  -i argument says
 curl to output result together with HTTP headers.</P
-><P
+>
+		<P
 >Now use these commands in your <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -723,7 +818,8 @@ Alias  https://  exec:/usr/local/dpsearch/etc/curl.sh?https://
 </PRE
 >
 		</P
-><P
+>
+		<P
 >When indexing
 <TT
 CLASS="filename"
@@ -736,7 +832,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >execute the <TT
 CLASS="filename"
 >curl.sh</TT
@@ -747,11 +844,16 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >and take it's output.</P
-></DIV
-></DIV
-><DIV
+>
+	</DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -759,10 +861,14 @@ CLASS="sect2"
 NAME="mirror"
 >3.11.3. Mirroring</A
 ></H2
-><A
+>
+	
+<A
 NAME="AEN2184"
 ></A
-><P
+>
+
+	<P
 >&#13;<A
 NAME="AEN2187"
 ></A
@@ -774,7 +880,8 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+	<P
 >&#13;<A
 NAME="AEN2192"
 ></A
@@ -786,7 +893,8 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+	<P
 >&#13;<A
 NAME="AEN2197"
 ></A
@@ -798,7 +906,8 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+	<P
 >It is very useful when you do some experiments with
 <SPAN
 CLASS="application"
@@ -811,7 +920,8 @@ AddType commands will be used. Default value of the MirrorPeriod is
 CLASS="literal"
 >do not use mirrored files</TT
 >.</P
-><P
+>
+	<P
 >&#60;time&#62; is in the form
 <TT
 CLASS="literal"
@@ -830,9 +940,11 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+	<P
 >(these letters are the same as in strptime/strftime functions)</P
-><P
+>
+	<P
 >Examples:
 	<PRE
 CLASS="programlisting"
@@ -843,11 +955,13 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+	<P
 >If you specify only number without any character, it is
 assumed that time is given in seconds (this behavior is for
 compatibility with versions prior to 3.1.7).</P
-><P
+>
+	<P
 >The following command will force using local copies for one day:
 	<PRE
 CLASS="programlisting"
@@ -855,21 +969,26 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+	<P
 >If your pages are already indexed, when you re-index
 with -a indexer will check the headers and only download files that
 have been modified since the last indexing. Thus, all pages that are
 not modified will not be downloaded and therefore not mirrored
 either. To create the mirror you need to either (a) start again with a
 clean database or (b) use the -m switch. </P
-><P
+>
+	<P
 >You can actually use the created files as a full
 featured mirror to you site. However be careful: indexer will not
 download a document that is larger than MaxDocSize. If a document is
 larger it will be only partially downloaded. If you site has no large
 documents, everything will be fine.</P
-></DIV
-></DIV
+>
+</DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

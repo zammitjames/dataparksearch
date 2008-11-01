@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Расширенные возможности индексирования</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -87,7 +87,11 @@ CLASS="sect1"
 NAME="extended-indexing"
 >3.11. Расширенные возможности индексирования</A
 ></H1
-><DIV
+>
+			
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -102,7 +106,10 @@ NAME="AEN2196"
 ></A
 ></A
 ></H2
-><P
+>
+	
+
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -111,23 +118,30 @@ CLASS="application"
 CLASS="literal"
 >htdb:</TT
 >.</P
-><P
+>
+
+	<P
 >Используя виртуальную URL схему <TT
 CLASS="literal"
 >htdb:/</TT
 > вы можете создать полный индекс текстовых полей вашей
 SQL базы данных, а также вашего WWW сервера, использующего SQL для хранения информации.</P
-><DIV
+>
+
+	<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;		<P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Необходимо иметь PRIMARY индекс для таблиц, которые вы собираетесь индексировать.</P
-></BLOCKQUOTE
+>
+	</BLOCKQUOTE
 ></DIV
-><DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -138,7 +152,10 @@ CLASS="filename"
 >indexer.conf</TT
 ></A
 ></H3
-><P
+>
+		
+
+		<P
 >Для поддержки HTTDB в <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -160,7 +177,9 @@ CLASS="command"
 CLASS="command"
 >HTDBText</B
 >. </P
-><P
+>
+
+		<P
 >&#13;			Команда <B
 CLASS="command"
 >HTDBAddr
@@ -175,7 +194,9 @@ CLASS="command"
 >DBAddr</B
 >.
 </P
-><P
+>
+
+		<P
 >&#13;			<B
 CLASS="command"
 >HTDBList
@@ -189,7 +210,8 @@ NAME="AEN2224"
 CLASS="command"
 >HTDBList</B
 > вы можете использовать и относительные и абсолютные URL.</P
-><P
+>
+		<P
 >Например:
 		<PRE
 CLASS="programlisting"
@@ -199,7 +221,9 @@ HTDBList "SELECT id FROM messages"
 </PRE
 >
 </P
-><P
+>
+
+<P
 >Команда <A
 NAME="AEN2231"
 ></A
@@ -216,7 +240,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+		<P
 >&#13;			<B
 CLASS="command"
 >HTDBDoc
@@ -226,7 +252,9 @@ NAME="AEN2238"
 >
 </B
 > - это запрос для получения из базы записи, определенной по первичному ключу.</P
-><P
+>
+
+		<P
 >SQL запрос <TT
 CLASS="literal"
 >HTDBList</TT
@@ -235,11 +263,13 @@ CLASS="literal"
 CLASS="literal"
 >HTDBDoc</TT
 >.</P
-><DIV
+>
+
+		<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;			<P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Запрос <TT
@@ -247,17 +277,17 @@ CLASS="literal"
 >HTDBDoc</TT
 > должен возвращать ПОЛНЫЙ HTTP ответ с заголовками.
 Таким образом вы можете гибко управлять вашей системой индексирования выдавая различные HTTP коды статуса.
-См. <A
-HREF="dpsearch-http-codes.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 3.2</A
-> для информации о реакции <B
+См.  для информации о реакции <B
 CLASS="command"
 >indexer</B
 > на различные коды статуса HTTP.
 </P
-></BLOCKQUOTE
+>
+
+		</BLOCKQUOTE
 ></DIV
-><P
+>
+		<P
 >Если по запросу <TT
 CLASS="literal"
 >HTDBDoc</TT
@@ -272,7 +302,9 @@ CLASS="application"
 >DataparkSearch</SPAN
 >.
 </P
-><P
+>
+
+		<P
 >Вы можете использовать несколько команд <TT
 CLASS="literal"
 >HTDBDoc/List</TT
@@ -285,7 +317,9 @@ CLASS="command"
 >Server</B
 >.
 </P
-><P
+>
+
+<P
 ><B
 CLASS="command"
 >HTDBText &#60;section&#62;
@@ -326,7 +360,9 @@ Server htdb:/
 </PRE
 >
 </P
-><P
+>
+
+<P
 >Возможно задавать одновременно обе команды <B
 CLASS="command"
 >HTDBDoc</B
@@ -345,8 +381,11 @@ CLASS="command"
 >HTDBText</B
 >.
 </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -358,7 +397,10 @@ NAME="AEN2275"
 ></A
 ></A
 ></H3
-><P
+>
+		
+
+		<P
 >Вы можете использовать части пути в URL в качестве параметров для обоих SQL запросов
 <TT
 CLASS="literal"
@@ -375,7 +417,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+		<P
 >Например, пусть в <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -387,7 +431,9 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >При использовании URL <TT
 CLASS="literal"
 >htdb:/cars/</TT
@@ -398,7 +444,9 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Вы можете использовать длинные URL при передаче нескольких параметров для обоих SQL
 запросов <TT
 CLASS="literal"
@@ -417,7 +465,9 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Это запрос создаст списое таких URL:
 		<PRE
 CLASS="programlisting"
@@ -427,7 +477,8 @@ htdb:/path1/path2/path3/path4/idN
 </PRE
 >
 </P
-><P
+>
+		<P
 >для всех значений поля <TT
 CLASS="literal"
 >id</TT
@@ -435,8 +486,11 @@ CLASS="literal"
 CLASS="literal"
 >HTDBList</TT
 >.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -444,7 +498,9 @@ CLASS="sect3"
 NAME="htdb-fulltext"
 >3.11.1.3. Создание текстового индекса</A
 ></H3
-><P
+>
+		
+		<P
 >Используя схему <TT
 CLASS="literal"
 >htdb:/</TT
@@ -470,7 +526,9 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Используя <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -505,7 +563,9 @@ Server htdb:/
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >После запуска <B
 CLASS="command"
 >indexer</B
@@ -532,10 +592,14 @@ Content-Type: text/plain
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Этот документ будет использован для создания текстового индекса по словам из полей 'message'.
 Слова будут сохранены в таблице 'dict' (предполагая, что используется способ хранения 'single').</P
-><P
+>
+
+		<P
 >После индексирования, вы можете использовать для поиска таблицы <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -549,10 +613,14 @@ AND dict.word='someword';
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Так как таблица 'dict' имеет индекс по полю 'word', этот запрос будет выполнен быстрее, нежели
 запрос с использованием SQL LIKE оператора при запросе по таблице 'messages'.</P
-><P
+>
+
+		<P
 >Вы также можете задать несколько слов при поиске:
 		<PRE
 CLASS="programlisting"
@@ -565,12 +633,17 @@ ORDER BY c DESC;
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Оба запроса вернут значения 'htdb:/XXX' в поле urll.url.
 Ваше приложение может отбросить 'htdb:/' для получения значения первичного ключа таблицы 'messages'.
 </P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -578,7 +651,9 @@ CLASS="sect3"
 NAME="htdb-web"
 >3.11.1.4. Индексирование веб-сервера, использующего SQL базу данных</A
 ></H3
-><P
+>
+		
+		<P
 >Вы можете также использовать виртуальную схему <TT
 CLASS="literal"
 >htdb:/</TT
@@ -586,7 +661,8 @@ CLASS="literal"
 веб-сервера, использующего базу данных для хранения отображаемой информации, без обращения к веб-серверу при индексировании.
 Т.е. намного быстрее и используя меньше ресурсов процессора нежели индексируя обращаясь к веб-серверу.
  </P
-><P
+>
+		<P
 >Основная идея похожа на создание текстового индекса, за исключением того, что поиск должен
 давать реальные URL вместо URL в виде 'htdb:/...'. 
 Это достигается при помощи механизма алиасов <SPAN
@@ -594,7 +670,10 @@ CLASS="application"
 >DataparkSearch</SPAN
 >.
 </P
-><P
+>
+		
+
+		<P
 >Команда <TT
 CLASS="literal"
 >HTDBList</TT
@@ -605,9 +684,13 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >где XXX - значение первичного ключа таблицы "messages".</P
-><P
+>
+
+		<P
 >Для каждого значения первичного ключа команда <TT
 CLASS="literal"
 >HTDBDoc</TT
@@ -624,7 +707,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+		<P
 >В конце <TT
 CLASS="filename"
 >doc/samples/htdb.conf</TT
@@ -637,7 +722,9 @@ Alias  http://search.mnogo.ru/board/message.php?id=  htdb:/
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Первая команда указывает <B
 CLASS="command"
 >indexer</B
@@ -652,12 +739,16 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+
+		<P
 >Вторая команда позволяет <B
 CLASS="command"
 >indexer</B
 > принимать такие URL сообщений.</P
-><P
+>
+
+		<P
 >Третья команда заменяет в URL подстроку "htdb:/" на подстроку
 "http://search.mnogo.ru/board/message.php?id=" при получении документа с сообщением.
 Что обозначает, что URL в виде <TT
@@ -670,9 +761,13 @@ CLASS="literal"
 >,
 где xxx - значение первичного ключа, ID записи в таблице "messages".
 </P
-></DIV
-></DIV
-><DIV
+>
+	</DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -690,7 +785,9 @@ NAME="AEN2355"
 ></A
 ></A
 ></H2
-><P
+>
+	
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -708,7 +805,9 @@ CLASS="literal"
 >. Результат должен быть оформлен по
 стандарту HTTP, т.е. заголовок ответа HTTP, а за ним содержимое документа.
 </P
-><P
+>
+
+	<P
 >Например, при индексировании обоих
 <TT
 CLASS="literal"
@@ -725,7 +824,9 @@ CLASS="command"
 CLASS="filename"
 >/usr/local/bin/myprog</TT
 >.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -736,7 +837,9 @@ CLASS="literal"
 >cgi:</TT
 ></A
 ></H3
-><P
+>
+		
+		<P
 >При выполнении программы по виртуальной схеме <TT
 CLASS="literal"
 >cgi:</TT
@@ -779,8 +882,11 @@ Alias  http://localhost/		file:/usr/local/apache/htdocs/
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -791,7 +897,9 @@ CLASS="literal"
 >exec:</TT
 ></A
 ></H3
-><P
+>
+		
+		<P
 ><B
 CLASS="command"
 >indexer</B
@@ -811,8 +919,11 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-></DIV
-><DIV
+>
+	</DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -823,7 +934,9 @@ CLASS="literal"
 >exec:</TT
 > в качестве внешней системы получения</A
 ></H3
-><P
+>
+		
+		<P
 >Виртуальную URL схему <TT
 CLASS="literal"
 >exec:</TT
@@ -841,7 +954,9 @@ HREF="http://curl.haxx.se/"
 TARGET="_top"
 >http://curl.haxx.se/</A
 > для индексирования HTTPS сайтов.</P
-><P
+>
+
+		<P
 >Поместите этот короткий скрипт в
 <TT
 CLASS="literal"
@@ -857,20 +972,22 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		<P
 >Этот скрипт берёт URL, указанный в качестве параметра командной строки и выполняет программу
 <B
 CLASS="command"
 >curl</B
-> для получения этого документа. Ключ <TT
+> для получения этого документа. Ключ <CODE
 CLASS="option"
->-i</TT
+>-i</CODE
 > говорит <B
 CLASS="command"
 >curl</B
 >
 выводить результат вместе с HTTP заголовками.</P
-><P
+>
+		<P
 >Теперь вы можете использовать такие команды в вашем <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -882,7 +999,8 @@ Alias  https://  exec:/usr/local/dpsearch/etc/curl.sh?https://
 </PRE
 >
 		</P
-><P
+>
+		<P
 >При индексировании <TT
 CLASS="filename"
 >https://some.https.site/path/to/page.html</TT
@@ -897,7 +1015,8 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >выполнит скрипт <TT
 CLASS="filename"
 >curl.sh</TT
@@ -908,11 +1027,16 @@ CLASS="programlisting"
 </PRE
 >
 		</P
-><P
+>
+		<P
 >и получит его вывод для дальнейшей своей работы.</P
-></DIV
-></DIV
-><DIV
+>
+	</DIV
+>
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -924,7 +1048,10 @@ NAME="AEN2417"
 ></A
 ></A
 ></H2
-><P
+>
+	
+
+	<P
 >&#13;<A
 NAME="AEN2420"
 ></A
@@ -936,7 +1063,9 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+
+	<P
 >&#13;<A
 NAME="AEN2425"
 ></A
@@ -952,7 +1081,9 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+
+	<P
 >&#13;<A
 NAME="AEN2431"
 ></A
@@ -964,29 +1095,33 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+
+	<P
 >Зеркалирование очень полезно когда вы экспериментируете с индексированием 
 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > одних и тех же хостов и не хотите создавать много трафика в/из интернета.
-Если не задан <TT
+Если не задан <CODE
 CLASS="option"
->MirrorHeadersRoot</TT
+>MirrorHeadersRoot</CODE
 > и тем самым заголовки не сохраняются на локальном диске,
-тогда тип файлов определяется по значениям, заданным командами <TT
+тогда тип файлов определяется по значениям, заданным командами <CODE
 CLASS="option"
->AddType</TT
+>AddType</CODE
 >.
-Значение <TT
+Значение <CODE
 CLASS="option"
->MirrorPeriod</TT
+>MirrorPeriod</CODE
 > по умолчанию равно -1, что означает <TT
 CLASS="literal"
 >не использовать зеркалированые файлы</TT
 >.
 </P
-><P
+>
+
+	<P
 >&#60;time&#62; указывается в форме
 <TT
 CLASS="literal"
@@ -1004,7 +1139,9 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+	<P
 >(эти буквы такие же, как и в функциях <TT
 CLASS="literal"
 >strptime</TT
@@ -1012,7 +1149,9 @@ CLASS="literal"
 CLASS="literal"
 >strftime</TT
 >)</P
-><P
+>
+
+	<P
 >Примеры:
 	<PRE
 CLASS="programlisting"
@@ -1023,10 +1162,14 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+
+	<P
 >Если указано только число без какой-либо буквы, считается, что время указано в секундах 
 (это сделано для совместимости с версиями, младше 3.1.7).</P
-><P
+>
+
+	<P
 >Следующая команда задаёт использование локальных копий в течении одного дня:
 	<PRE
 CLASS="programlisting"
@@ -1034,35 +1177,43 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
->Если ваши страницы уже проиндексированы, и вы реиндексируете с ключом <TT
+>
+
+	<P
+>Если ваши страницы уже проиндексированы, и вы реиндексируете с ключом <CODE
 CLASS="option"
->-a</TT
+>-a</CODE
 >,
 <B
 CLASS="command"
 >indexer</B
 > будет проверять только заголовки и выкачивать только файлы, изменённые с момента
 предыдущего индексирования. Таким образом, все неизменившиесы файлы не будут выкачиваться, и тем самым не будут и зеркалироваться.
-Для создания зеркала, вам необходимо либо очистить базу и начать заново, либо использовать ключ <TT
+Для создания зеркала, вам необходимо либо очистить базу и начать заново, либо использовать ключ <CODE
 CLASS="option"
->-m</TT
+>-m</CODE
 >.
 </P
-><P
+>
+
+	<P
 >Вы можете использовать созданное зеркало как полноценное зеркало вашего сайта.
 Тем не менее, обратите внимание: <B
 CLASS="command"
 >indexer</B
 > не выкачивает документ, имеющий размер более
-<TT
+<CODE
 CLASS="option"
->MaxDocSize</TT
+>MaxDocSize</CODE
 >, вернее, усекает размер файлов до этого значения, если оно превышено.
 Если ваш сайт не cодержит таких больших документов, все будет нормально.
 </P
-></DIV
-></DIV
+>
+
+</DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

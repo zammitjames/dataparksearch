@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Designing search.html</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,9 +87,12 @@ CLASS="sect1"
 NAME="html"
 >8.4. Designing search.html</A
 ></H1
-><P
+>
+	
+	<P
 >This section is assuming that you are using the CGI front end.</P
-><DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -97,25 +100,33 @@ CLASS="sect2"
 NAME="html-respage"
 >8.4.1. How the results page is created</A
 ></H2
-><P
+>
+		
+		<P
 >The file <TT
 CLASS="filename"
 >etc/search.htm</TT
 >
 consists of a number of blocks delimited by HTML comments that start
 with &#60;!--comment--&#62; and end with &#60;!--/comment--&#62;.</P
-><P
+>
+
+		<P
 >The &#60;!--variables--&#62; block is only used by
 <TT
 CLASS="filename"
 >search.cgi</TT
 >. The other blocks form part of the
 results output depending on the situation. </P
-><P
+>
+
+		<P
 >The blocks &#60;--top--&#62; and
 &#60;!--bottom--&#62; are always returned to the user as the top and
 bottom part of the output respectively. </P
-><P
+>
+
+		<P
 >There are three series of &#60;!--restop--&#62;,
 &#60;!--res--&#62; and &#60;!--resbot--&#62; blocks. The first series is
 returned to users that have requested long results (default), the
@@ -128,9 +139,12 @@ CLASS="filename"
 is a series of navigation blocks and the blocks &#60;!--notfound--&#62;,
 &#60;!--noquery--&#62; and &#60;!--error--&#62;. The latter are returned
 occasionally instead of results.</P
-><P
+>
+
+		<P
 >Any HTML that is outside the pre-defined blocks in search.htm is completely ignored. </P
-><P
+>
+		<P
 >Thus, the output of <TT
 CLASS="filename"
 >search.cgi</TT
@@ -148,14 +162,18 @@ CLASS="programlisting"
 			</PRE
 >
 </P
-><P
+>
+		<P
 >The navigation part is built in the same way,
 with the elements that pertain to each results page. For example,
 &#60;!--navleft--&#62; and &#60;!--navright--&#62; are used to link to the
 previous and next results pages, while &#60;!--navXXX_nop--&#62; is used
 when there are no more pages in one or either direction. </P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -163,14 +181,18 @@ CLASS="sect2"
 NAME="html-yourhtml"
 >8.4.2. Your HTML</A
 ></H2
-><P
+>
+		
+		<P
 >The simplest HTML is provided ready for use in
 <TT
 CLASS="filename"
 >etc/search.htm-dist</TT
 >. It is advisable that you use this
 until your back-end works fine. </P
-><P
+>
+
+		<P
 >Once you decide to add bells and whistles to
 your search, you have two options. One is to keep the simple design of
 <TT
@@ -182,7 +204,9 @@ output of <TT
 CLASS="filename"
 >search.htm</TT
 > in another.</P
-><P
+>
+
+		<P
 >The other option is to incorporate your entire
 design in <TT
 CLASS="filename"
@@ -191,7 +215,9 @@ CLASS="filename"
 "blocks" system described above, this should not be too difficult. The
 one most important factor is to keep track of elements that need to be
 opened in one block and closed in another. </P
-><P
+>
+
+		<P
 >For example, you might want a page in tables that looks like this:
 		<PRE
 CLASS="programlisting"
@@ -209,7 +235,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		<P
 >If you are planning to put your results in the
 main table, you can put all the HTML code in the &#60;!--top--&#62;
 block of <TT
@@ -222,14 +249,18 @@ page in the &#60;!--bottom--&#62; block
 (&#60;/table&#62;&#60;/tr&#62;&#60;/td&#62;&#60;/body&#62;&#60;/html&#62;) and
 leave all other blocks unformatted, you will have the design of your
 choice and all your results in the right place. </P
-><P
+>
+
+		<P
 >In a more complicated design, where you want to
 format results individually, you can apply the same method as long as
 you keep track of the opening and closing of HTML elements. You must
 either open and close them in the same block, or make sure that any
 possible combination of blocks will result in properly opened and
 closed HTML tags. </P
-><P
+>
+
+		<P
 >What you cannot do without editing the source
 code, is change the order in which the blocks are parsed. Taking the
 above example, let's assume that you want your page to look like this:
@@ -249,19 +280,22 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+		<P
 >To get this, you need to have everything except
 the results and navigation in the &#60;!--top--&#62; block, since that
 is the only block that can draw the page even if there are no results
 at all. In this case your search.htm would look like this:</P
-><DIV
+>
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4870"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4882"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13; &#60;!--variables--&#62;
   [your configuration]
@@ -291,21 +325,25 @@ CLASS="programlisting"
   &#60;/html&#62;
   &#60;!--/bottom--&#62;
 		</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >The individual blocks can be formatted
 individually as long as that formatting is closed within each
 block. Thus, nothing stops you from doing things like </P
-><DIV
+>
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4873"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4885"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;  &#60;!--error--&#62;
     &#60;table&#62;
@@ -317,13 +355,17 @@ CLASS="programlisting"
     &#60;/table&#62;
   &#60;!--error--&#62;
 		</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >as long as such formatting is opened and closed properly within the same block. </P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -331,21 +373,26 @@ CLASS="sect2"
 NAME="html-forms"
 >8.4.3. Forms considerations</A
 ></H2
-><P
+>
+		
+		<P
 >Most modern browsers can handle forms that
 stretch over different tables, but writing such forms is against all
 standards and is bad HTML. Unless you really can't avoid it, don't do
 it. </P
-><P
+>
+		<P
 >For example, </P
-><DIV
+>
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4880"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4892"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;  &#60;table&#62;
   &#60;tr&#62;&#60;td&#62;
@@ -357,19 +404,23 @@ CLASS="programlisting"
   &#60;/tr&#62;&#60;/td&#62;
   &#60;/table&#62;
 			</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >is fine, but </P
-><DIV
+>
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4883"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4895"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;  &#60;table&#62;
     &#60;tr&#62;&#60;td&#62;
@@ -385,10 +436,12 @@ CLASS="programlisting"
     &#60;/tr&#62;&#60;/td&#62;
     &#60;/table&#62;
 			</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >is <SPAN
 CLASS="emphasis"
 ><I
@@ -396,7 +449,8 @@ CLASS="emphasis"
 >not</I
 ></SPAN
 >.</P
-><P
+>
+		<P
 >Note that the input forms in search.htm can be
 changed at will. The default is drop-down menus, but nothing stops you
 from using radio buttons or hidden input or even text boxes. For
@@ -404,14 +458,16 @@ instance, where <TT
 CLASS="filename"
 >search.htm</TT
 > says </P
-><DIV
+>
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4889"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4901"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;  Results per page:
   &#60;SELECT NAME="ps"&#62;
@@ -420,52 +476,65 @@ CLASS="programlisting"
   &#60;OPTION VALUE="50" SELECTED="$(ps)"&#62;50
   &#60;/SELECT&#62;
 			</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >you can very well substitute </P
-><DIV
+>
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4892"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4904"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;  &#60;input type="radio" name="ps" value="10" checked="$(ps)"&#62;
   &#60;input type="radio" name="ps" value="20" checked="$(ps)"&#62;
   &#60;input type="radio" name="ps" value="50" checked="$(ps)"&#62;
 			</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >which will result in three radio buttons instead
 of a drop-down menu, with "20" as the default and the exact same
 functionality. What you obviously cannot do is provide multiple-choice
 menus like &#60;type="checkbox"&#62; or &#60;select multiple&#62;. </P
-><P
+>
+		<P
 >Note that you can also use the </P
-><DIV
+>
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4896"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4908"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;  &#60;input type="hidden" name="XX" value="YY"&#62;
   			</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >format if you want to set other defaults than the pre-defined and not allow the user to change them. </P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -473,7 +542,9 @@ CLASS="sect2"
 NAME="html-rellinks"
 >8.4.4. Relative links in search.htm</A
 ></H2
-><P
+>
+		
+		<P
 >It might be worth mentioning that
 <TT
 CLASS="filename"
@@ -489,34 +560,43 @@ CLASS="filename"
 > lives in cgi-bin, any links to images
 etc in search.htm will assume cgi-bin as the base
 directory. Therefore, if you have a file system structure like </P
-><DIV
+>
+
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4904"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4916"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;   home/
    home/your_document_root/
    home/your_document_root/img/
    home/cgi-bin/
 			</PRE
-><P
+>
+		<P
 ></P
 ></DIV
-><P
+>
+		<P
 >the correct relative link from <TT
 CLASS="filename"
 >search.cgi</TT
 > to images in img/ would still be </P
-><P
+>
+		<P
 >&#60;img src="../img/image.gif"&#62;</P
-><P
+>
+		<P
 >despite the fact that it doesn't match the file system structure.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -524,18 +604,23 @@ CLASS="sect2"
 NAME="html-searchform"
 >8.4.5. Adding Search form to other pages</A
 ></H2
-><P
+>
+		
+		<P
 >To place a search form to any of your pages,
 please place the following code where you would like the form to be
 displayed:</P
-><DIV
+>
+
+		<DIV
 CLASS="informalexample"
-><A
-NAME="AEN4913"
-></A
 ><P
 ></P
-><PRE
+><A
+NAME="AEN4925"
+></A
+>
+			<PRE
 CLASS="programlisting"
 >&#13;&#60;FORM 
 	METHOD=GET 
@@ -545,11 +630,14 @@ CLASS="programlisting"
 
 &#60;/FORM&#62;
 </PRE
-><P
+>
+		<P
 ></P
 ></DIV
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

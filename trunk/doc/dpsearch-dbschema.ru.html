@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Структура таблиц базы данных</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -89,10 +89,14 @@ CLASS="sect1"
 NAME="dbschema"
 >9.3. Структура таблиц базы данных</A
 ></H1
-><A
-NAME="AEN5758"
+>
+
+<A
+NAME="AEN5770"
 ></A
-><P
+>
+
+<P
 >Полная структура таблиц базы данных, используемых <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -110,39 +114,33 @@ NAME="db-server"
 ></A
 ><P
 ><B
->&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-1. Структура таблицы <TT
+>&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-1. Структура таблицы <CODE
 CLASS="varname"
->server</TT
+>server</CODE
 ></B
 ></P
-><TABLE
+>
+
+<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><TBODY
+><COL><COL><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->rec_id</TT
+>rec_id</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Уникальный идентификатор записи.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->enabled</TT
+>enabled</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Флаг включения записи для загрузки при старте <B
 CLASS="command"
 >indexer</B
@@ -151,41 +149,29 @@ CLASS="command"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->url</TT
+>url</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >URL или его фрагмент или шаблон, указываемый в соответствующей команде.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->tag</TT
+>tag</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Значение тэга для этого ресурса.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->category</TT
+>category</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Ссылка на запись в наблице <TT
 CLASS="literal"
 >categories</TT
@@ -194,43 +180,35 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->command</TT
+>command</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
->=S - тип записи <TT
+>=S - тип записи <CODE
 CLASS="varname"
->сервер</TT
+>сервер</CODE
 ></P
 >
 <P
->=F - типа записи <TT
+>=F - типа записи <CODE
 CLASS="varname"
->фильтр</TT
+>фильтр</CODE
 ></P
 >
 </TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->ordre</TT
+>ordre</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Ключ сортировки, задающий порядок загрузки записей таблицы <TT
+>Ключ сортировки, задающий порядок загрузки записей таблицы <CODE
 CLASS="varname"
->server</TT
+>server</CODE
 >
 при запуске <B
 CLASS="command"
@@ -239,62 +217,53 @@ CLASS="command"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->parent</TT
+>parent</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Если значение не ноль, запись содержит в поле <TT
+>Если значение не ноль, запись содержит в поле <CODE
 CLASS="varname"
->url</TT
+>url</CODE
 > имя
 сервера, добавленного автоматически при индексировании. Значение этого поля равно url_id записи этой таблицы, на основании которой
 дабавлена эта запись.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->weight</TT
+>weight</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Вес данной записи при подсчёте рейтинга популярности документов.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->pop_weight</TT
+>pop_weight</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Вес одной ссылки со страниц данного русурса. Рассчитывается автоматически.
 Изменнеие значения вручную никакого влияния не оказывает.</TD
 ></TR
 ></TBODY
 ></TABLE
-></DIV
+>
+</DIV
 >
 </P
-><P
->Остальные параметры серверов хранятся в таблице <TT
+>
+
+<P
+>Остальные параметры серверов хранятся в таблице <CODE
 CLASS="varname"
->srvinfo</TT
+>srvinfo</CODE
 >, аналогичной по структуре таблице
-<TT
+<CODE
 CLASS="varname"
->urlinfo</TT
+>urlinfo</CODE
 >. Значения некоторых параметров приведены в таблице ниже.
 
 <DIV
@@ -304,178 +273,132 @@ NAME="db-srvinfo"
 ></A
 ><P
 ><B
->&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-2. Значения некоторых параметров серверов в таблице <TT
+>&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-2. Значения некоторых параметров серверов в таблице <CODE
 CLASS="varname"
->srvinfo</TT
+>srvinfo</CODE
 ></B
 ></P
-><TABLE
+>
+
+<TABLE
 BORDER="1"
 CLASS="CALSTABLE"
-><THEAD
+><COL><COL><THEAD
 ><TR
 ><TH
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Значение <TT
+>Значение <CODE
 CLASS="varname"
->sname</TT
+>sname</CODE
 ></TH
 ><TH
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Возможные значения <TT
+>Возможные значения <CODE
 CLASS="varname"
->sval</TT
+>sval</CODE
 >.</TH
 ></TR
 ></THEAD
 ><TBODY
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Alias</TT
+>Alias</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
->Алиас для указанного в поле <TT
+>Алиас для указанного в поле <CODE
 CLASS="varname"
->server.url</TT
+>server.url</CODE
 >.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Period</TT
+>Period</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Интервал между повторными индексированиями этого ресурса, задаваемый в секундах.
 </TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->DeleteOlder</TT
+>DeleteOlder</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Задаёт сколько времени хранить проиндексированные документы в базе.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->RemoteCharset</TT
+>RemoteCharset</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Значение кодировки документа по умолчанию для данного ресурса.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->DefaultLang</TT
+>DefaultLang</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Значение языка документа по умолчанию для данного русурса.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Request.Authorization</TT
+>Request.Authorization</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Учётные данные, используемые для доступа с использованием авторизации.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Request.Proxy</TT
+>Request.Proxy</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Имя прокси-сервера, используемое при доступе через прокси-сервер.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Request.Proxy-Authorization</TT
+>Request.Proxy-Authorization</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Авторизация на прокси-сервере.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->MaxHops</TT
+>MaxHops</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Максимальная глубина перехода по ссылкам от корневого индеска.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Index</TT
+>Index</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Флаг, указывающий индексировать или нет документы данного ресурса.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Follow</TT
+>Follow</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 ><P
 >=0, "page"</P
 >
@@ -492,15 +415,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Robots</TT
+>Robots</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Флаг указывающий использование <TT
 CLASS="filename"
 >robots.txt</TT
@@ -509,28 +428,20 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->DetectClones</TT
+>DetectClones</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Флаг включения механизма определения "клонов".</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->MaxNetErrors</TT
+>MaxNetErrors</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Максимальное число ошибок сети для этой записи.
 Аналог команды <B
 CLASS="command"
@@ -542,42 +453,30 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->NetDelayTime</TT
+>NetDelayTime</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Время задержки индексирования сети при обнаружении ошибки сети при его
 пролучении.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->ReadTimeout</TT
+>ReadTimeout</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >Таймаут ожидания получения документа с этого ресурса.</TD
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->match_type</TT
+>match_type</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >=0, DPS_MATCH_FULL - полное совпадение.</P
 >
@@ -603,15 +502,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->case_sense</TT
+>case_sense</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >=1, - сравнивать без учёта регистра.</P
 >
@@ -622,15 +517,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->nomatch</TT
+>nomatch</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >=1, - соответствующими данной записи считаются URL, не совпадающие с указаным шаблоном.</P
 >
@@ -641,15 +532,11 @@ VALIGN="MIDDLE"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Method</TT
+>Method</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >Задаёт действие, которое будет произведено с документами.</P
 >
@@ -712,15 +599,11 @@ CLASS="literal"
 ></TR
 ><TR
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
-><TT
+><CODE
 CLASS="varname"
->Section</TT
+>Section</CODE
 ></TD
 ><TD
-ALIGN="LEFT"
-VALIGN="MIDDLE"
 >&#13;<P
 >Имя секции, используемой для сравнения с шаблоном для методов IndexIf и NoIndexIf.</P
 >
@@ -728,10 +611,13 @@ VALIGN="MIDDLE"
 ></TR
 ></TBODY
 ></TABLE
-></DIV
+>
+</DIV
 >
 </P
-></DIV
+>
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -781,7 +667,7 @@ CLASS="literal"
 >libdpsearch</TT
 >
 <A
-NAME="AEN5716"
+NAME="AEN5728"
 ></A
 ></TD
 ><TD

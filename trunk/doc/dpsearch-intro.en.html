@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Introduction</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -81,8 +81,8 @@ CLASS="chapter"
 ><H1
 ><A
 NAME="intro"
->Chapter 1. Introduction</A
-></H1
+></A
+>Chapter 1. Introduction</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -115,10 +115,14 @@ HREF="dpsearch-authors.en.html"
 ></DT
 ></DL
 ></DIV
-><A
+>
+	
+        <A
 NAME="AEN16"
 ></A
-><P
+>
+
+	<P
 >&#13;		<SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -136,7 +140,9 @@ The second part is a CGI front-end to
 provide the search service using the data collected by the indexer.
 
 </P
-><P
+>
+
+<P
 >&#13;<SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -159,7 +165,9 @@ Lavtech.Com Corp. and changed its name to
 CLASS="application"
 >mnoGoSearch</SPAN
 >.</P
-><P
+>
+
+	<P
 ><A
 NAME="AEN29"
 ></A
@@ -169,7 +177,9 @@ HREF="http://www.dataparksearch.org/ChangeLog"
 TARGET="_top"
 >on our website</A
 >.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect1"
 ><H1
 CLASS="sect1"
@@ -177,68 +187,74 @@ CLASS="sect1"
 NAME="features"
 >1.1. DataparkSearch Features</A
 ></H1
-><A
+>
+		
+                <A
 NAME="AEN34"
 ></A
-><P
+>
+                
+		<P
 >Main <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > features are as follows:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >MySQL (<TT
 CLASS="literal"
 >libz</TT
 >
 library required), PostgreSQL,   iODBC, unixODBC, EasySoft
-ODBC-ODBC bridge,  InterBase, Oracle (see <A
-HREF="dpsearch-oracle.en.html"
->Section 5.5</A
->), 
+ODBC-ODBC bridge,  InterBase, Oracle (see ), 
  MS SQL back-ends support.</P
-></LI
-><LI
-><P
->HTTP support.</P
-></LI
-><LI
-><P
->HTTP proxy support.</P
-></LI
-><LI
-><P
->HTTPS support.</P
-></LI
-><LI
-><P
->FTP support.</P
-></LI
-><LI
-><P
->NNTP support (both news:// and nntp:// URL schemes).</P
-></LI
-><LI
-><P
-><A
-HREF="dpsearch-extended-indexing.en.html#htdb"
->HTDB virtual URL scheme</A
 >
+
+			</LI
+><LI
+>&#13;				<P
+>HTTP support.</P
+>
+			</LI
+><LI
+>&#13;				<P
+>HTTP proxy support.</P
+>
+			</LI
+><LI
+>&#13;				<P
+>HTTPS support.</P
+>
+			</LI
+><LI
+>&#13;				<P
+>FTP support.</P
+>
+			</LI
+><LI
+>&#13;				<P
+>NNTP support (both news:// and nntp:// URL schemes).</P
+>
+			</LI
+><LI
+>&#13;				<P
+>HTDB virtual URL scheme
 support. One may build index and search through the big text
 fields/blobs of SQL database.</P
-></LI
+>
+
+			</LI
 ><LI
-><P
-><A
-HREF="dpsearch-extended-indexing.en.html#mirror"
->Mirroring features</A
->.</P
-></LI
+>&#13;				<P
+>Mirroring features.</P
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="literal"
 >text/html</TT
@@ -256,129 +272,135 @@ CLASS="literal"
 CLASS="literal"
 >image/gif</TT
 > built-in support.</P
-></LI
+>
+			</LI
 ><LI
-><P
-><A
-HREF="dpsearch-pars.en.html"
->External parsers</A
-> support for other document types.</P
-></LI
+>&#13;				<P
+>External parsers support for other document types.</P
+>
+			</LI
 ><LI
-><P
+>&#13;<P
 >Ability to index multilingual sites using content negotiation.</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;				<P
 >Searching all of the word forms using ispell affixes and dictionaries</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Basic authorization support. One may index password protected  intranet HTTP servers.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Proxy authorization support.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Reentry capability. One may use
 several indexing and searching processes at the same time even on the
 same database. Multi-threaded indexing support.</P
-></LI
+>
+
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Stop-list support.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#60;META NAME="robots" content="..."&#62; and <TT
 CLASS="filename"
 >robots.txt</TT
 > support.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >C language CGI  web front-end.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Boolean query language support.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Results sorting by relevancy, popularity rank, last modified date and by importance 
 (a multiplication of relevancy and popularity rank).</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Fuzzy search: different word forms, spelling corrections, 
-<A
-HREF="dpsearch-fuzzy.en.html#synonyms"
->synonyms</A
->, 
-<A
-HREF="dpsearch-fuzzy.en.html#acronym"
->acronyms and abbreviations</A
->.</P
-></LI
+synonyms, 
+acronyms and abbreviations.</P
+>
+			</LI
 ><LI
-><P
-><A
-HREF="dpsearch-international.en.html#charset"
->Various character sets support</A
->.</P
-></LI
+>&#13;				<P
+>Various character sets support.</P
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >HTML templates to easily customize search results.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Advanced search options like time limits, category and tags limits etc.</P
-></LI
+>
+			</LI
 ><LI
-><P
-><A
-HREF="dpsearch-cjk.en.html"
->Phrases segmenting for Chinese, Japanese, Korean and Thai languages</A
->.</P
-></LI
+>&#13;			<P
+>Phrases segmenting for Chinese, Japanese, Korean and Thai languages.</P
+>
+		</LI
 ><LI
-><P
-><A
-HREF="dpsearch-fuzzy.en.html#accent"
->Accent insensitive search</A
->.</P
-></LI
+>&#13;	<P
+>Accent insensitive search.</P
+>
+</LI
 ><LI
-><P
-><A
-HREF="dpsearch-mod_dpsearch.en.html"
+>&#13;	<P
 ><B
 CLASS="command"
 >mod_dpsearch</B
-></A
 > - search module for <A
 HREF="http://httpd.apache.org/"
 TARGET="_top"
 >Apache</A
 > web server.</P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;        <P
 >Internationalized Domain Names support.</P
-></LI
+>
+</LI
 ><LI
-><P
-><A
-HREF="dpsearch-rel.en.html#sea"
->The Summary Extraction Algorithm</A
-> (SEA).</P
-></LI
+>&#13;        <P
+>The Summary Extraction Algorithm (SEA).</P
+>
+</LI
 ></UL
-></DIV
-></DIV
+>
+	</DIV
+>
+
+	
+
+	
+	
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

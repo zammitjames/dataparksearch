@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Search queries tracking</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,15 +87,20 @@ CLASS="sect1"
 NAME="track"
 >8.6. Search queries tracking</A
 ></H1
-><A
-NAME="AEN5229"
+>
+	
+<A
+NAME="AEN5241"
 ></A
-><P
+>
+
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > supports query tracking.</P
-><P
+>
+	<P
 >When doing a search,
 front-end uses table <TT
 CLASS="literal"
@@ -109,7 +114,9 @@ CLASS="literal"
 >qinfo</TT
 > to store
 all search parameters.</P
-><P
+>
+
+	<P
 >To enable tracking, add the <TT
 CLASS="literal"
 >trackquery</TT
@@ -117,21 +124,19 @@ CLASS="literal"
 CLASS="command"
 >DBAddr</B
 > command
-(see <A
-HREF="dpsearch-indexcmd.en.html#dbaddr_cmd"
->Section 3.10.2</A
->) in your search template. For example:
+(see ) in your search template. For example:
 <PRE
 CLASS="programlisting"
 >&#13;DBAddr pgsql://user:pass@localhost/search/?dbmode=cache&#38;trackquery
 </PRE
 >
 </P
-><DIV
+>
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13; <P
 ><B
 >Note: </B
 >
@@ -143,9 +148,10 @@ CLASS="filename"
 >searchd.conf</TT
 > file.
  </P
-><P
+>
+ <P
 ><A
-NAME="AEN5247"
+NAME="AEN5259"
 ></A
 >
  You may use <B
@@ -160,9 +166,12 @@ CLASS="literal"
 >qinfo</TT
 > tables as in DataparkSearch's database.
  </P
-></BLOCKQUOTE
+>
+</BLOCKQUOTE
 ></DIV
-><P
+>
+
+	<P
 >Query tracking is useful to have a statistics of your
 search engine usage. To make a search queries summary, you may
 execute, for example, this SQL expression:
@@ -172,7 +181,8 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-></DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

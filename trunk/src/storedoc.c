@@ -26,6 +26,7 @@
 
 int main(int argc, char **argv, char **envp) {
 	char		template_name[PATH_MAX+4] = "";
+	DPS_SERVER	Srv;
 	char            *template_filename = NULL;
 	char		*query_string = NULL;
 	char		self[1024] = "";
@@ -196,6 +197,8 @@ int main(int argc, char **argv, char **envp) {
 	DPS_FREE(template_filename);
 
 	Agent->st_tmpl.Env_Vars = &Env->Vars;
+	DpsServerInit(&Srv);
+	Agent->Conf->Cfg_Srv = &Srv;
 
 	DpsURLNormalizePath(template_name);
 	
@@ -207,6 +210,7 @@ int main(int argc, char **argv, char **envp) {
 	    if ((res = DpsTemplateLoad(Agent, Env, &Agent->st_tmpl, template_name))) {
 		if(httpd)printf("Content-Type: text/plain\r\n\r\n");
 		printf("%s\n",Env->errstr);
+		DpsServerFree(&Srv);
 		DpsEnvFree(Env);
 		DPS_FREE(query_string);
 		return(0);
@@ -214,6 +218,7 @@ int main(int argc, char **argv, char **envp) {
 	  } else {
 		if(httpd)printf("Content-Type: text/plain\r\n\r\n");
 		printf("%s\n",Env->errstr);
+		DpsServerFree(&Srv);
 		DpsEnvFree(Env);
 		DPS_FREE(query_string);
 		return(0);
@@ -373,6 +378,7 @@ fin:
 	DpsDocFree(Doc);
 	
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->st_tmpl, "bottom");
+	DpsServerFree(&Srv);
 	DpsAgentFree(Agent);
 	DpsEnvFree(Env);
 	DPS_FREE(query_string);

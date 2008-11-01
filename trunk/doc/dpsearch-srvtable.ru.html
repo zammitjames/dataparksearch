@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -6,8 +7,7 @@
 </TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.ru.html"><LINK
@@ -95,7 +95,10 @@ NAME="AEN1241"
 ></A
 ></A
 ></H1
-><P
+>
+  
+
+  <P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -107,7 +110,10 @@ CLASS="command"
 CLASS="filename"
 >indexer.conf</TT
 >. </P
-><DIV
+>
+
+
+  <DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -115,7 +121,9 @@ CLASS="sect2"
 NAME="srvtable-load"
 >3.8.1. Загрузка таблицы серверов</A
 ></H2
-><P
+>
+    
+    <P
 >Когда задана команда <B
 CLASS="command"
 >ServerTable mysql://user:pass@host/dbname/tablename[?srvinfo=infotablename]</B
@@ -144,14 +152,20 @@ CLASS="filename"
 >create/mysql/create.txt</TT
 >. Если для вашей базы данных нет соответсвующего скрипта со структурой
 этой таблицы, возьмите этот файл в качестве образца. </P
-><P
+>
+
+
+    <P
 >Вы можете использовать несколько команд <B
 CLASS="command"
 >ServerTable</B
 > для
 загрузки информации о серверах из различных таблиц. </P
-></DIV
-><DIV
+>
+  </DIV
+>
+
+  <DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -159,7 +173,9 @@ CLASS="sect2"
 NAME="srvtable-structure"
 >3.8.2. Структура таблицы серверов</A
 ></H2
-><P
+>
+    
+    <P
 >Таблица серверов содержит поля для описания всех необходимых параметров серверов.
 Имена полей соответсвуют командам в <TT
 CLASS="filename"
@@ -180,7 +196,9 @@ CLASS="filename"
 >indexer.conf</TT
 >.
 </P
-><P
+>
+
+    <P
 >Поле <TT
 CLASS="literal"
 >gindex</TT
@@ -189,17 +207,17 @@ CLASS="command"
 >Index</B
 >.
 Имя слегка изменено во избежания использования зарезервированного в SQL имени.</P
-><P
->&#13;Зачения некоторых полей расшифрованы в <A
-HREF="dpsearch-dbschema.ru.html"
->&#1056;&#1072;&#1079;&#1076;. 9.3</A
->.
+>
+
+<P
+>&#13;Зачения некоторых полей расшифрованы в .
 </P
-><DIV
+>
+    <DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;      <P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Из таблицы серверов считываются только те записи, для которых значение поля <TT
@@ -212,10 +230,15 @@ CLASS="literal"
 > равно 0. Это даёт возможность пользователям добавлять новые
 URL в таблицу серверов, а администраторам - авторизовать добавленные записи.
 </P
-></BLOCKQUOTE
+>
+
+    </BLOCKQUOTE
 ></DIV
-></DIV
-><DIV
+>
+  </DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -227,7 +250,9 @@ NAME="AEN1279"
 ></A
 ></A
 ></H2
-><P
+>
+  
+<P
 >&#13; Сбрасывает server.enabled в неактивное состояние для всех записей таблицы серверов. 
 Используйте эту команду для деактивирования всех команд в таблице серверов перед загрузкой новых из <TT
 CLASS="filename"
@@ -235,8 +260,10 @@ CLASS="filename"
 >
 или из другой таблицы серверов.
 </P
-></DIV
-></DIV
+>
+</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Fuzzy search</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,7 +87,9 @@ CLASS="sect1"
 NAME="fuzzy"
 >8.8. Fuzzy search</A
 ></H1
-><DIV
+>
+		
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -95,10 +97,14 @@ CLASS="sect2"
 NAME="ispell"
 >8.8.1. Ispell</A
 ></H2
-><A
-NAME="AEN5284"
+>
+	
+<A
+NAME="AEN5296"
 ></A
-><P
+>
+
+	<P
 >When <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -106,7 +112,9 @@ CLASS="application"
 extend search query by all grammatical forms of the query words. E.g. search front-end will try to
 find the word "test" if "testing" or "tests" is given in search
 query.</P
-><DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -114,7 +122,9 @@ CLASS="sect3"
 NAME="typesispellfiles"
 >8.8.1.1. Two types of ispell files</A
 ></H3
-><P
+>
+		
+		<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -133,7 +143,10 @@ Flag *N:
 </PRE
 >
 </P
-><P
+>
+
+
+		<P
 >Ispell dictionary file contains words themselves and has the following format:
 <PRE
 CLASS="programlisting"
@@ -146,8 +159,10 @@ wordless/P
 </PRE
 >
 </P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -155,13 +170,17 @@ CLASS="sect3"
 NAME="using-ispell"
 >8.8.1.2. Using Ispell</A
 ></H3
-><A
-NAME="AEN5297"
+>
+		
+<A
+NAME="AEN5309"
 ></A
-><A
-NAME="AEN5300"
+>
+<A
+NAME="AEN5312"
 ></A
-><P
+>
+		<P
 >To make <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -184,7 +203,8 @@ Spell [lang] [charset] [ispell dictionary filename]
 </PRE
 >
 </P
-><P
+>
+		<P
 >The first parameter of both commands is two
 letters language abbreviation. The second is ispell files charset.
 The third one is filename. File names are relative to <SPAN
@@ -196,11 +216,13 @@ CLASS="literal"
 >/etc</TT
 > directory. Absolute paths can be also
 specified.</P
-><DIV
+>
+
+		<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
-><P
+>&#13;			<P
 ><B
 >Note: </B
 >Simultaneous loading of several languages is supported, e.g.:
@@ -213,11 +235,14 @@ Spell de iso-8859-1 de.dict
 </PRE
 >
 </P
-><P
+>
+			<P
 >Will load support for both English and German languages.</P
-></BLOCKQUOTE
+>
+		</BLOCKQUOTE
 ></DIV
-><P
+>
+		<P
 >If you use <TT
 CLASS="literal"
 >searchd</TT
@@ -225,7 +250,8 @@ CLASS="literal"
 CLASS="filename"
 >searchd.conf</TT
 >.</P
-><P
+>
+		<P
 >When <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -239,8 +265,12 @@ several languages support. Otherwise the starting time of
 CLASS="filename"
 >search.cgi</TT
 > increases.</P
-></DIV
-><DIV
+>
+
+	</DIV
+>
+
+	<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -248,11 +278,15 @@ CLASS="sect3"
 NAME="addwords-dict"
 >8.8.1.3. Customizing dictionary</A
 ></H3
-><P
+>
+		
+		<P
 >It is possible that several rare words are found
 in your site which are not in ispell dictionaries. In such case, an entry with longest match suffix is taking
 	  to produce word forms.</P
-><P
+>
+
+<P
 >But you can also create the
 list of such words in plain text file with the following format (one
 word per line):
@@ -269,7 +303,8 @@ http
 			</PRE
 >
 </P
-><P
+>
+		<P
 >You may also use ispell flags in this file (for
 ispell flags refer to ISpell documentation). This will allow not
 writing the same word with different endings to the rare words file,
@@ -277,21 +312,26 @@ for example "webmaster" and "webmasters". You may choose the word
 which has the same changing rules from existing ispell dictionary and
 just to copy flags from it. For example, English dictionary has this
 line:</P
-><P
+>
+
+		<P
 >&#13;			<TT
 CLASS="literal"
 >postmaster/MS</TT
 >
 		</P
-><P
+>
+		<P
 >So, webmaster with MS flags will be probably OK:</P
-><P
+>
+		<P
 >&#13;			<TT
 CLASS="literal"
 >webmaster/MS</TT
 >
 		</P
-><P
+>
+		<P
 >Then copy this file to <TT
 CLASS="filename"
 >/etc</TT
@@ -307,12 +347,20 @@ CLASS="command"
 CLASS="application"
 >DataparkSearch</SPAN
 > configuration:</P
-><P
+>
+
+		<P
 >During next reindexing using of all documents
 new words will be considered as words with correct spelling. The only
 really incorrect words will remain.</P
-></DIV
-><DIV
+>
+
+
+
+	</DIV
+>
+
+<DIV
 CLASS="sect3"
 ><H3
 CLASS="sect3"
@@ -320,7 +368,10 @@ CLASS="sect3"
 NAME="where-to-get-ispell"
 >8.8.1.4. Where to get Ispell files</A
 ></H3
-><P
+>
+
+
+<P
 >You may find ispell files for many of languages at
 <A
 HREF="http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html"
@@ -328,7 +379,9 @@ TARGET="_top"
 >this page</A
 >.
 </P
-><P
+>
+
+<P
 >For Japanese language there exist quasi-ispell files suitable for use with <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -338,14 +391,19 @@ HREF="http://www.dataparksearch.org/"
 TARGET="_top"
 >our web site</A
 > or from one of our mirrors.
-See <A
-HREF="dpsearch-get.en.html"
->Section 1.2</A
->.
+See .
 </P
-></DIV
-></DIV
-><DIV
+>
+
+
+</DIV
+>
+
+
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -353,10 +411,14 @@ CLASS="sect2"
 NAME="aspell"
 >8.8.2. Aspell</A
 ></H2
-><A
-NAME="AEN5350"
+>
+	
+<A
+NAME="AEN5362"
 ></A
-><P
+>
+
+<P
 >With <SPAN
 CLASS="application"
 >Aspell</SPAN
@@ -371,15 +433,13 @@ CLASS="application"
 >DataparkSearch</SPAN
 > build. Then you need to place
 <A
-NAME="AEN5356"
+NAME="AEN5368"
 ></A
 >
-<TT
+<KBD
 CLASS="userinput"
-><B
 >&#13;AspellExtensions yes
-</B
-></TT
+</KBD
 >
 command into your <TT
 CLASS="filename"
@@ -396,18 +456,21 @@ CLASS="command"
 >searchd</B
 > is used) files to activate this feature.
 </P
-><P
->Automatically spelling suggestion for search query words is going only if <TT
+>
+
+<P
+>Automatically spelling suggestion for search query words is going only if <CODE
 CLASS="option"
->sp</TT
+>sp</CODE
 > search parameter is set, see
-<A
-HREF="dpsearch-doingsearch.en.html#search_params"
->Section 8.1.2</A
->.
+.
 </P
-></DIV
-><DIV
+>
+
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -415,16 +478,22 @@ CLASS="sect2"
 NAME="synonyms"
 >8.8.3. Synonyms</A
 ></H2
-><A
-NAME="AEN5369"
+>
+	
+<A
+NAME="AEN5381"
 ></A
-><P
+>
+
+	<P
 ><SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > also support a synonyms-based
 fuzzy search.</P
-><P
+>
+
+	<P
 >Synonyms files are installed into
 <TT
 CLASS="filename"
@@ -434,13 +503,12 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 installation. Large synonyms files you need to download separately from our web site, or from one of our mirrors,
-see <A
-HREF="dpsearch-get.en.html"
->Section 1.2</A
->.</P
-><P
+see .</P
+>
+
+	<P
 ><A
-NAME="AEN5378"
+NAME="AEN5390"
 ></A
 >
 To enable synonyms, add to
@@ -459,7 +527,9 @@ Synonym synonym/russian.syn
 </PRE
 >
 </P
-><P
+>
+
+	<P
 >Filenames are relative to <TT
 CLASS="filename"
 >etc</TT
@@ -469,7 +539,9 @@ CLASS="application"
 >DataparkSearch</SPAN
 > installation or absolute if begin with
 /</P
-><P
+>
+
+	<P
 >If you use <TT
 CLASS="literal"
 >searchd</TT
@@ -478,7 +550,9 @@ commands to <TT
 CLASS="filename"
 >searchd.conf</TT
 >.</P
-><P
+>
+
+	<P
 >You may create your own synonyms lists. As an example you may take the
 English synonyms file. In the beginning of the list please specify the
 following two commands:
@@ -489,33 +563,36 @@ Charset:  us-ascii
 </PRE
 >
 </P
-><P
+>
+
+	<P
 ></P
 ><UL
 ><LI
-><P
->&#13;				<TT
+>&#13;			<P
+>&#13;				<CODE
 CLASS="varname"
->Language</TT
+>Language</CODE
 > - standard
 (ISO 639) two-letter language abbreviation.</P
-></LI
+>
+		</LI
 ><LI
-><P
->&#13;				<TT
+>&#13;			<P
+>&#13;				<CODE
 CLASS="varname"
->Charset</TT
+>Charset</CODE
 > - any
 charset supported by <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
-> (see <A
-HREF="dpsearch-international.en.html#charset"
->Section 7.1</A
->).</P
-></LI
+> (see ).</P
+>
+		</LI
 ></UL
-><P
+>
+
+<P
 >Optionaly you may specify following command in the list:
 	<PRE
 CLASS="programlisting"
@@ -523,11 +600,17 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >This command enable thesaurus mode for synonyms list. For this mode, only words at one line treats as synonyms.
 </P
-></DIV
-><DIV
+>
+
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -535,19 +618,25 @@ CLASS="sect2"
 NAME="accent"
 >8.8.4. Accent insensitive search</A
 ></H2
-><A
-NAME="AEN5406"
+>
+	
+<A
+NAME="AEN5418"
 ></A
-><A
-NAME="AEN5408"
+>
+<A
+NAME="AEN5420"
 ></A
-><P
+>
+	<P
 >Since version 4.17 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > also support an
 accent insensitive search.</P
-><P
+>
+
+<P
 >To enable this extension, use <B
 CLASS="command"
 >AccentExtensions</B
@@ -573,7 +662,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >If <B
 CLASS="command"
 >AccentExtensions</B
@@ -586,8 +676,12 @@ CLASS="command"
 > commands,
 accent-free copies for those data also will be loaded automaticaly.
 </P
-></DIV
-><DIV
+>
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -595,16 +689,22 @@ CLASS="sect2"
 NAME="acronym"
 >8.8.5. Acronyms and abbreviations</A
 ></H2
-><A
-NAME="AEN5426"
+>
+	
+<A
+NAME="AEN5438"
 ></A
-><P
+>
+
+	<P
 >Since version 4.30 <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
 > also support an
 acronyms and abbreviation based fuzzy search.</P
-><P
+>
+
+	<P
 >Acronyms files are installed into
 <TT
 CLASS="filename"
@@ -614,9 +714,11 @@ CLASS="application"
 >DataparkSearch</SPAN
 >
 installation.</P
-><P
+>
+
+	<P
 ><A
-NAME="AEN5434"
+NAME="AEN5446"
 ></A
 >
 To enable acronyms, add to
@@ -635,7 +737,9 @@ Acronym acronym/en.acr
 </PRE
 >
 </P
-><P
+>
+
+	<P
 >Filenames are relative to <TT
 CLASS="filename"
 >etc</TT
@@ -645,7 +749,9 @@ CLASS="application"
 >DataparkSearch</SPAN
 > installation or absolute if begin with
 /</P
-><P
+>
+
+	<P
 >If you use <TT
 CLASS="literal"
 >searchd</TT
@@ -654,7 +760,9 @@ commands to <TT
 CLASS="filename"
 >searchd.conf</TT
 >.</P
-><P
+>
+
+	<P
 >You may create your own acronyms lists. 
 As an example you may take the
 English acronyms file. In the beginning of the list please specify the
@@ -666,43 +774,51 @@ Charset:  us-ascii
 </PRE
 >
 </P
-><P
+>
+
+	<P
 ></P
 ><UL
 ><LI
-><P
->&#13;				<TT
+>&#13;			<P
+>&#13;				<CODE
 CLASS="varname"
->Language</TT
+>Language</CODE
 > - standard
 (ISO 639) two-letter language abbreviation.</P
-></LI
+>
+		</LI
 ><LI
-><P
->&#13;				<TT
+>&#13;			<P
+>&#13;				<CODE
 CLASS="varname"
->Charset</TT
+>Charset</CODE
 > - any
 charset supported by <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
-> (see <A
-HREF="dpsearch-international.en.html#charset"
->Section 7.1</A
->).</P
-></LI
+> (see ).</P
+>
+		</LI
 ></UL
-><P
->&#13;Please send your own acronym files to <TT
+>
+<P
+>&#13;Please send your own acronym files to <CODE
 CLASS="email"
 >&#60;<A
 HREF="mailto:maxime@maxime.net.ru"
 >maxime@maxime.net.ru</A
->&#62;</TT
+>&#62;</CODE
 >, if you want share its with other users.
 </P
-></DIV
-></DIV
+>
+
+</DIV
+>
+
+
+
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

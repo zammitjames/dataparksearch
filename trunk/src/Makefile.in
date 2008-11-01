@@ -46,7 +46,8 @@ DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.in
+	$(top_srcdir)/docbook.m4 $(top_srcdir)/net.m4 \
+	$(top_srcdir)/threads.m4 $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -405,7 +406,7 @@ JADE = @JADE@
 LDFLAGS = @LDFLAGS@
 LIBLIB = @LIBLIB@
 LIBOBJS = @LIBOBJS@
-LIBS = @STATIC_LFLAGS@ \
+LIBS = @LIBS@ @STATIC_LFLAGS@ \
 @VIRT_LFLAGS@ \
 @SOLID_LFLAGS@ \
 @UNIXODBC_LFLAGS@ \
@@ -425,8 +426,7 @@ LIBS = @STATIC_LFLAGS@ \
 @SSL_LFLAGS@ \
 @DMALLOC_LFLAGS@ \
 @BOEHMGC_LFLAGS@ \
-@MECAB_LFLAGS@ \
-@LIBS@ 
+@MECAB_LFLAGS@ 
 
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@

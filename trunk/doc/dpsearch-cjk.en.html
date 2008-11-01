@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Segmenters for Chinese, Japanese, Korean and Thai languages</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -87,25 +87,30 @@ CLASS="sect1"
 NAME="cjk"
 >7.3. Segmenters for Chinese, Japanese, Korean and Thai languages</A
 ></H1
-><P
+>
+	
+
+<P
 >Chinese, Japanese, Korean and Thai writings have no spaces between words in phrase as in western languages.
 Thus, while indexing documents in these languages, it's need additionally to segment phrases into words.
 </P
-><P
+>
+
+<P
 ><A
-NAME="AEN3881"
+NAME="AEN3893"
 ></A
 >
 <A
-NAME="AEN3884"
+NAME="AEN3896"
 ></A
 >
 <A
-NAME="AEN3887"
+NAME="AEN3899"
 ></A
 >
 <A
-NAME="AEN3890"
+NAME="AEN3902"
 ></A
 >
 Sometimes, a text in Chinese, Japanese, Korean or Thai can be typed with a space between every hieroglyph for better view. 
@@ -126,7 +131,9 @@ CLASS="command"
 With resegmenting enabled, all spaces between characters are removing and then all the text is segmenting again using 
 DataparkSearch's segmenters (see below).
 </P
-><DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -134,10 +141,14 @@ CLASS="sect2"
 NAME="ja-segment"
 >7.3.1. Japanese language phrase segmenter</A
 ></H2
-><A
-NAME="AEN3899"
+>
+
+<A
+NAME="AEN3911"
 ></A
-><P
+>
+
+<P
 >For Japanese language phrase segmenting the one of 
 <SPAN
 CLASS="application"
@@ -162,21 +173,27 @@ CLASS="application"
 >DataparkSearch</SPAN
 >'s configuring and building.
 </P
-><P
->To enable Japanese language phrase segmenting use <TT
+>
+
+<P
+>To enable Japanese language phrase segmenting use <CODE
 CLASS="option"
->--enable-chasen</TT
-> or <TT
+>--enable-chasen</CODE
+> or <CODE
 CLASS="option"
->--enable-mecab</TT
+>--enable-mecab</CODE
 >
  switch for <B
 CLASS="command"
 >configure</B
 >.
 </P
-></DIV
-><DIV
+>
+
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -184,14 +201,19 @@ CLASS="sect2"
 NAME="zh-segment"
 >7.3.2. Chinese language phrase segmenter</A
 ></H2
-><A
-NAME="AEN3914"
+>
+
+<A
+NAME="AEN3926"
 ></A
-><P
+>
+
+<P
 >For Chinese language phrase segmenting the frequency dictionary of Chinese words is used.
 And segmenting itself is done by dynamic programming method to maximize the cumulative frequency of produced words.
 </P
-><P
+>
+<P
 >&#13;To enable Chinese language phrase segmenting it's need to enable the support for Chinese charsets while 
 <SPAN
 CLASS="application"
@@ -199,7 +221,7 @@ CLASS="application"
 > configuring,
  and specify the frequency dictionary of Chinese words by
 <A
-NAME="AEN3920"
+NAME="AEN3932"
 ></A
 >
 <B
@@ -215,7 +237,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >&#13;By default, the <TT
 CLASS="literal"
 >GB2312</TT
@@ -224,7 +247,8 @@ CLASS="filename"
 >mandarin.freq</TT
 > dictionary is used.
 </P
-><DIV
+>
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
@@ -232,14 +256,15 @@ CLASS="note"
 ><B
 >Note: </B
 >You need to download frequency dictionaries from our web site, or from one of our mirrors,
-see <A
-HREF="dpsearch-get.en.html"
->Section 1.2</A
->.</P
+see .</P
 ></BLOCKQUOTE
 ></DIV
-></DIV
-><DIV
+>
+
+</DIV
+>
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -247,17 +272,22 @@ CLASS="sect2"
 NAME="th-segment"
 >7.3.3. Thai language phrase segmenter</A
 ></H2
-><A
-NAME="AEN3934"
+>
+
+<A
+NAME="AEN3946"
 ></A
-><P
+>
+
+<P
 >For Thai language phrase segmenting the frequency dictionary of Thai words is used.
 And segmenting itself is done as for Chinese language.
 </P
-><P
+>
+<P
 >&#13;To enable Thai language phrase segmenting it's need to specify the frequency dictionary of Thai words by
 <A
-NAME="AEN3939"
+NAME="AEN3951"
 ></A
 >
 <B
@@ -273,7 +303,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >&#13;By default, the <TT
 CLASS="literal"
 >tis-620</TT
@@ -282,7 +313,8 @@ CLASS="filename"
 >thai.freq</TT
 > dictionary is used.
 </P
-><DIV
+>
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
@@ -291,15 +323,17 @@ CLASS="note"
 >Note: </B
 >
 You need to download frequency dictionaries from our web site, or from one of our mirrors,
-see <A
-HREF="dpsearch-get.en.html"
->Section 1.2</A
->.
+see .
 </P
 ></BLOCKQUOTE
 ></DIV
-></DIV
-><DIV
+>
+
+</DIV
+>
+
+
+<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -307,17 +341,22 @@ CLASS="sect2"
 NAME="ko-segment"
 >7.3.4. Korean language phrase segmenter</A
 ></H2
-><A
-NAME="AEN3953"
+>
+
+<A
+NAME="AEN3965"
 ></A
-><P
+>
+
+<P
 >For Korean language phrase segmenting the frequency dictionary of Korean words is used.
 And segmenting itself is done as for Chinese language.
 </P
-><P
+>
+<P
 >&#13;To enable Korean language phrase segmenting it's need to specify the frequency dictionary of Korean words by
 <A
-NAME="AEN3958"
+NAME="AEN3970"
 ></A
 >
 <B
@@ -333,7 +372,8 @@ CLASS="programlisting"
 </PRE
 >
 </P
-><P
+>
+<P
 >By default, the <TT
 CLASS="literal"
 >euc-kr</TT
@@ -341,7 +381,8 @@ CLASS="literal"
 CLASS="filename"
 >korean.freq</TT
 > dictionary is used.</P
-><DIV
+>
+<DIV
 CLASS="note"
 ><BLOCKQUOTE
 CLASS="note"
@@ -349,14 +390,14 @@ CLASS="note"
 ><B
 >Note: </B
 >You need to download frequency dictionaries from our web site, or from one of our mirrors,
-see <A
-HREF="dpsearch-get.en.html"
->Section 1.2</A
->.</P
+see .</P
 ></BLOCKQUOTE
 ></DIV
-></DIV
-></DIV
+>
+
+</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

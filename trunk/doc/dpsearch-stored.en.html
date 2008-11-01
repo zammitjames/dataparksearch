@@ -1,11 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Storing compressed document copies</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="DataparkSearch Engine 4.50"
 HREF="index.en.html"><LINK
@@ -88,10 +88,14 @@ CLASS="sect1"
 NAME="stored"
 >3.13. Storing compressed document copies</A
 ></H1
-><A
+>
+	
+<A
 NAME="AEN2273"
 ></A
-><P
+>
+
+	<P
 >In <SPAN
 CLASS="application"
 >DataparkSearch</SPAN
@@ -113,7 +117,9 @@ CLASS="application"
 CLASS="filename"
 >/usr/local/dpsearch/sbin</TT
 >).</P
-><P
+>
+
+<P
 ><A
 NAME="AEN2282"
 ></A
@@ -143,7 +149,9 @@ CLASS="command"
 >DoExcerpt no</B
 > command in your search template.
 </P
-><P
+>
+
+<P
 ><A
 NAME="AEN2296"
 ></A
@@ -164,7 +172,9 @@ CLASS="command"
 >stored</B
 > daemon configuration.
 </P
-><P
+>
+
+	<P
 >Stored document copies are retrieved by means of
 <TT
 CLASS="filename"
@@ -176,7 +186,9 @@ CLASS="command"
 >, then a copy is
 displayed with user's web browser with search keywords highlighted.
 </P
-><P
+>
+
+<P
 > To enable <B
 CLASS="command"
 >stored</B
@@ -195,7 +207,10 @@ CLASS="programlisting"
 </PRE
 >
 	</P
-><P
+>
+
+
+<P
 >&#13;<A
 NAME="AEN2312"
 ></A
@@ -215,13 +230,13 @@ For arguments of those commands are exactly the same
 as for the <B
 CLASS="command"
 >Allow</B
-> command (see <A
-HREF="dpsearch-indexcmd.en.html#allow_cmd"
->Section 3.10.14</A
->). All documents are stores by defaults, 
+> command (see ). All documents are stores by defaults, 
 if support for stored is enabled.
 </P
-><DIV
+>
+
+
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -229,16 +244,19 @@ CLASS="sect2"
 NAME="stored-start"
 >3.13.1. Configure stored</A
 ></H2
-><P
+>
+		
+		<P
 >To start using <B
 CLASS="command"
 >stored</B
 >, please do the following:</P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;<P
 >Copy <TT
 CLASS="filename"
 >/usr/local/dpsearch/etc/stored.conf-dist</TT
@@ -247,23 +265,26 @@ CLASS="filename"
 CLASS="filename"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >.</P
-><P
+>
+				<P
 >Edit <TT
 CLASS="filename"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >
 				</P
-><P
+>
+				<P
 >There are several commands available
 for using with <B
 CLASS="command"
 >stored</B
 >: </P
-><P
+>
+				<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;						<P
 >&#13;<B
 CLASS="command"
 ><A
@@ -280,37 +301,37 @@ CLASS="command"
 >stored</B
 > listens to port 7004 and any
 address. It is possible to specify port only:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->Listen 7004 </B
-></TT
+>Listen 7004 </KBD
 >
 						</P
-><P
+>
+						<P
 >Or address only:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->Listen 127.0.0.2</B
-></TT
+>Listen 127.0.0.2</KBD
 >
 						</P
-><P
+>
+						<P
 >Or both address and port:</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->Listen 127.0.0.2:7004</B
-></TT
+>Listen 127.0.0.2:7004</KBD
 >
 						</P
-></LI
+>
+					</LI
 ><LI
-><P
+>&#13;						<P
 >&#13;<B
 CLASS="command"
 ><A
@@ -323,17 +344,17 @@ CLASS="filename"
 >var/</TT
 > working
 directory, e.g.</P
-><P
->&#13;							<TT
+>
+						<P
+>&#13;							<KBD
 CLASS="userinput"
-><B
->VarDir /mnt/d/dpsearch/var/ </B
-></TT
+>VarDir /mnt/d/dpsearch/var/ </KBD
 >
 						</P
-></LI
+>
+					</LI
 ><LI
-><P
+>&#13;<P
 ><B
 CLASS="command"
 ><A
@@ -346,17 +367,17 @@ CLASS="filename"
 >var/stored/</TT
 > directory,
 e.g.</P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->StoredFiles 256</B
-></TT
+>StoredFiles 256</KBD
 >
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 ><B
 CLASS="command"
 ><A
@@ -365,17 +386,17 @@ NAME="AEN2373"
 >OptimizeInterval</B
 >
 command specifies interval in seconds between attempts to optimize a stored datafile, e.g.</P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->OptimizeInterval 300</B
-></TT
+>OptimizeInterval 300</KBD
 >
 </P
-></LI
+>
+</LI
 ><LI
-><P
+>&#13;<P
 ><B
 CLASS="command"
 ><A
@@ -385,34 +406,35 @@ NAME="AEN2381"
 >
 command  specifies defragmentation threshold for a stored datafile optimization.  
 </P
-><P
->&#13;<TT
+>
+<P
+>&#13;<KBD
 CLASS="userinput"
-><B
->OptimizeRatio 3</B
-></TT
+>OptimizeRatio 3</KBD
 >
 </P
-></LI
+>
+</LI
 ></UL
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Run <B
 CLASS="command"
 >stored</B
 >:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->/usr/local/dpsearch/sbin/stored &#38; </B
-></TT
+>/usr/local/dpsearch/sbin/stored &#38; </KBD
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Configure <TT
 CLASS="filename"
 >indexer.conf</TT
@@ -440,18 +462,20 @@ CLASS="literal"
 CLASS="command"
 >DBAddr</B
 > command, e.g.:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->DBAddr mysql://localhost/search/?dbmode=cache&#38;stored=localhost:7004</B
-></TT
+>DBAddr mysql://localhost/search/?dbmode=cache&#38;stored=localhost:7004</KBD
 >
 				</P
-></LI
+>
+			</LI
 ></UL
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -459,7 +483,9 @@ CLASS="sect2"
 NAME="stored-how"
 >3.13.2. How stored works</A
 ></H2
-><P
+>
+		
+		<P
 >After you have successfully configured
 <B
 CLASS="command"
@@ -477,8 +503,10 @@ CLASS="command"
 >stored</B
 > will compress the received documents and
 save them.</P
-></DIV
-><DIV
+>
+	</DIV
+>
+	<DIV
 CLASS="sect2"
 ><H2
 CLASS="sect2"
@@ -486,13 +514,16 @@ CLASS="sect2"
 NAME="stored-search"
 >3.13.3. Using stored during search</A
 ></H2
-><P
+>
+		
+		<P
 >To enable displaying stored documents during search, do the following: </P
-><P
+>
+		<P
 ></P
 ><UL
 ><LI
-><P
+>&#13;				<P
 >Configure
 <TT
 CLASS="filename"
@@ -502,9 +533,10 @@ CLASS="filename"
 >storedoc.cgi</TT
 >
 template)  if necessary.</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Add a <TT
 CLASS="filename"
 >storedoc.cgi</TT
@@ -520,9 +552,10 @@ CLASS="literal"
 >&#60;A HREF="$(stored_href)"&#62;Cached copy&#60;/A&#62; </TT
 >
 				</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >Specify
 <TT
 CLASS="filename"
@@ -548,37 +581,39 @@ CLASS="filename"
 CLASS="literal"
 >variables</TT
 > section the following line:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->StoredocURL /path/to/storedoc.cgi</B
-></TT
+>StoredocURL /path/to/storedoc.cgi</KBD
 >
 				</P
-><P
+>
+				<P
 >Or an absolute path:</P
-><P
->&#13;					<TT
+>
+				<P
+>&#13;					<KBD
 CLASS="userinput"
-><B
->StoredocURL http://servername/path/to/storedoc.cgi</B
-></TT
+>StoredocURL http://servername/path/to/storedoc.cgi</KBD
 >
 				</P
-></LI
+>
+			</LI
 ></UL
-><P
+>
+		<P
 >This is how <B
 CLASS="command"
 >stored</B
 > works during search, if everything configured correctly:</P
-><P
+>
+		<P
 ></P
 ><OL
 TYPE="1"
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="filename"
 >search.htm</TT
@@ -586,9 +621,10 @@ CLASS="filename"
 CLASS="filename"
 >storedoc.cgi</TT
 >;</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >When user clicks the link,
 <TT
 CLASS="filename"
@@ -609,9 +645,10 @@ CLASS="literal"
 CLASS="command"
 >DBAddr</B
 > command;</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >After the query, <B
 CLASS="command"
 >stored</B
@@ -619,9 +656,10 @@ CLASS="command"
 CLASS="filename"
 >storedoc.cgi</TT
 >;</P
-></LI
+>
+			</LI
 ><LI
-><P
+>&#13;				<P
 >&#13;					<TT
 CLASS="filename"
 >storedoc.cgi</TT
@@ -642,10 +680,13 @@ NAME="AEN2464"
 ></A
 >HlEnd</B
 > commands;</P
-></LI
+>
+			</LI
 ></OL
-></DIV
-></DIV
+>
+	</DIV
+>
+</DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
