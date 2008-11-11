@@ -1878,7 +1878,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   DPS_URLTRACK *Track;
 #endif
   size_t nsections = DpsVarListFindInt(&query->Vars, "NumSections", 256);
-  size_t cur_order; /*Res->max_order;*/
+  size_t cur_order, cur_sec; /*Res->max_order;*/
   int wf[256];
 /*  int cnt_pas;*/
   double Rbc;
@@ -1940,7 +1940,9 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   wordsec = DPS_WRDSEC(Crd[0].coord);
   prev_wordpos = wordpos = DPS_WRDPOS(Crd[0].coord);
   wordorder = Res->WWList.Word[wordnum].order_inquery;
-  cur_order = (wordorder == 0) ? 0 : -1;
+  if (wordorder == 0) {
+    cur_order = 0; cur_sec = wordsec;
+  } else cur_order = -1; 
 
   xy_o = DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON);
 /*  fprintf(stderr, " *** R.xy_o: %d\n", xy_o);*/
@@ -2008,13 +2010,17 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       if (wordorder && (wordorder != prev_wordorder + 1)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;
 #endif
       count[wordorder]++;
-      if ((wordorder == cur_order + 1) && ((cur_order == -1) || (wordpos == prev_wordpos + 1))) {
+      if ((wordorder == cur_order + 1) && ((cur_order == -1) || ((wordpos == prev_wordpos + 1) && (wordsec == cur_sec)))) {
 	cur_order++;
+	if (cur_order == 0) cur_sec = wordsec;
       	if (cur_order == Res->max_order_inquery) {
 		D[DPS_N_PHRASE] = 1; cur_order = (wordorder == 0) ? 0 : -1;
 	}
-      } else if ((cur_order != wordorder) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) 
-	cur_order = (wordorder == 0) ? 0 :-1; 
+      } else if ((cur_order != wordorder) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) {
+	    if (wordorder == 0) {
+	      cur_order = 0; cur_sec = wordsec;
+	    } else cur_order = -1; 
+	  }
 
     } else {
       /* Next document */
@@ -2077,7 +2083,9 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
       prev_wordpos = wordpos;
       count[wordorder] = 1;
-      cur_order = (wordorder == 0) ? 0 : -1;
+      if (wordorder == 0) {
+	cur_order = 0; cur_sec = wordsec;
+      } else cur_order = -1; 
       xy = (xy_o = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin));
       xy_wf = wf[wordsec];
       nsec = D[DPS_N_ADD + wordsec] = 1;

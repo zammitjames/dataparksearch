@@ -294,7 +294,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 	if(DPS_OK != DpsServerAdd(Indexer, C->Srv)) {
 		char * s_err;
 		s_err = (char*)DpsStrdup(Conf->errstr);
-		dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "%s", s_err);
+		dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "%s [%s:%d]", s_err, __FILE__, __LINE__);
 		DPS_FREE(s_err);
 		DPS_FREE(C->Srv->Match.pattern);
 #ifdef WITH_PARANOIA

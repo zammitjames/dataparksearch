@@ -607,13 +607,14 @@ int DpsVarListAddEnviron(DPS_VARLIST *Vars, const char *name){
 	return DPS_OK;
 }
 
-int DpsVarListLog(DPS_AGENT *A,DPS_VARLIST *V,int l,const char *pre){
+int DpsVarListLog(DPS_AGENT *A, DPS_VARLIST *V, int l, const char *pre) {
 	size_t h, r;
 	if (DpsNeedLog(l)) {
 	  for (r = 0; r < 256; r++)
 	    for(h=0; h < V->Root[r].nvars; h++) {
 		DPS_VAR *v = &V->Root[r].Var[h];
-		DpsLog(A, l, "%s.%s: %s", pre, v->name, DPS_NULL2STR(v->val));
+		if (v->section || v->maxlen) DpsLog(A, l, "%s.%s [%d,%d]: %s", pre, v->name, v->section, v->maxlen, DPS_NULL2STR(v->val));
+		else DpsLog(A, l, "%s.%s: %s", pre, v->name, DPS_NULL2STR(v->val));
 	    }
 	}
 	return DPS_OK;

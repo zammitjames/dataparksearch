@@ -371,6 +371,7 @@ typedef struct {
 	char		*pattern;
 	regex_t		*reg;
 	char		*arg;
+        char            *dbaddr;
 	urlid_t         server_id;        /**< server.rec_id            */
 } DPS_MATCH;
 

@@ -48,7 +48,7 @@ static size_t dps_max_server_ordre = 0;
 /* return values: 0 on success, non-zero on error */
 
 __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
-	int		res;
+	int		res = DPS_OK;
 	int		add = 1;
 	DPS_URL		from;
 	char		*urlstr;
@@ -186,7 +186,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	    List->mservers += M_SERVERS_ADD;
 	    List->Server = (DPS_SERVER *)DpsRealloc(List->Server, List->mservers * sizeof(DPS_SERVER));
 	    if (List->Server == NULL) {
-	      DpsLog(A, DPS_LOG_ERROR, "Cant' realloc %d bytes at "__FILE__":%d", List->mservers * sizeof(DPS_SERVER), __LINE__);
+	      DpsLog(A, DPS_LOG_ERROR, "Can't realloc %d bytes at "__FILE__":%d", List->mservers * sizeof(DPS_SERVER), __LINE__);
 	      List->nservers = List->mservers = 0;
 #ifdef WITH_PARANOIA
 	      DpsViolationExit(paran);
@@ -232,7 +232,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  if (srv->last_crawled == NULL) {
 	    new->last_crawled = (time_t*)DpsMalloc(sizeof(time_t));
 	    if (new->last_crawled == NULL) {
-	      DpsLog(A, DPS_LOG_ERROR, "Cant' alloc %d bytes at "__FILE__":%d", sizeof(time_t), __LINE__);
+	      DpsLog(A, DPS_LOG_ERROR, "Can't alloc %d bytes at "__FILE__":%d", sizeof(time_t), __LINE__);
 #ifdef WITH_PARANOIA
 	      DpsViolationExit(paran);
 #endif
@@ -308,11 +308,16 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
   DPS_CONN       conn;
   char           net[32];
 
+  TRACE_IN(Agent, "DpsDocCheck");
+
   if (/*!(Agent->flags & DPS_FLAG_ADD_SERVURL) &&*/ (server_id != 0)) {
     DPS_SERVER key, *pkey = &key, **res;
     key.site_id = server_id;
     res = bsearch(&pkey, Agent->Conf->SrvPnt, Agent->Conf->total_srv_cnt, sizeof(DPS_SERVER*), cmpsrvpnt); 
-    if (res != NULL) return *res;
+    if (res != NULL) {
+      TRACE_OUT(Agent);
+      return *res;
+    }
   }
 	
   net[0] = '\0';
@@ -370,6 +375,7 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
 	    (List->nservers > 0) ? List->Server[List->nservers-1].ordre : 0);
     if (i < List->nservers) fprintf(stderr, "\t\tServer[i].ordre:%d\n", List->Server[i].ordre);*/
   }
+  TRACE_OUT(Agent);
   return(Res);
 }
 

@@ -1746,7 +1746,6 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 
 
 
-
 __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	int		result=DPS_OK, status = 0;
 	DPS_DOCUMENT	*Doc;
