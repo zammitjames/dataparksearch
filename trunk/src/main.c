@@ -1572,6 +1572,8 @@ int main(int argc, char **argv, char **envp) {
 	       DpsLog(&Main, DPS_LOG_EXTRA, "Thai dictionary with %d entries", Main.Conf->Thai.nwords);
 	       DpsLog(&Main, DPS_LOG_EXTRA, "LogsOnly: %s", Main.Conf->logs_only ? "yes" : "no");
                DpsLog(&Main, DPS_LOG_DEBUG, "mutexes used: %d", DpsNsems);
+	       DpsLog(&Main, DPS_LOG_DEBUG, "The following sections are defined");
+	       if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListLog(&Main, &Conf.Sections, DPS_LOG_DEBUG, "Sections");
                DpsStoreHrefs(&Main);    /**< store hrefs from config and command line */
 	       DpsRobotClean(&Main);    /**< clean expired robots.txt data */
 	       DpsCookiesClean(&Main);  /**< clean expired cookies data */

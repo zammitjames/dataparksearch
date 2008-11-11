@@ -1350,7 +1350,7 @@ AC_ARG_ENABLE(apache-module,
   if test "$apache" != "no"; then
         if test "$apache" = "yes"; then
 	    PATH_DIRS=`echo $PATH | tr : \ `
-	    MY_DIRS="/usr/sbin /usr/local/apache/bin /home/httpd/bin /httpd/bin /usr/bin"
+	    MY_DIRS="/usr/sbin /usr/local/sbin /usr/local/apache/bin /home/httpd/bin /httpd/bin /usr/bin"
 	    for DIR in $PATH_DIRS $MY_DIRS; do
         	if test -f $DIR/apxs; then
             		APXS=$DIR/apxs

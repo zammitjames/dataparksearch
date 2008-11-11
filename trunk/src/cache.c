@@ -542,10 +542,10 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 		wrd[curwrd].wrd_id = DpsStrHash32(lcsword);
 
-/*		DpsLog(Indexer, DPS_LOG_DEBUG, "url_id: %d  %s  %d(%x)  0x%x", 
+		DpsLog(Indexer, DPS_LOG_DEBUG, "url_id: %d  %s  %d(%x)  0x%x", 
 		       url_id,
 		       lcsword, wrd[curwrd].wrd_id, wrd[curwrd].wrd_id,
-		       DPS_FILENO(wrd[curwrd].wrd_id, 0x300));*/
+		       DPS_FILENO(wrd[curwrd].wrd_id, 0x300));
 		curwrd++;
 	}
 	if (Indexer->Flags.use_crosswords) {
@@ -2371,7 +2371,6 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
   TRACE_OUT(Indexer);
   return DPS_OK;
 }
-
 
 
 

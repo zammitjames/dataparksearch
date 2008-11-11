@@ -118,7 +118,7 @@ static size_t PrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void *
 		char *value = NULL, *eval = NULL, *eval2 = NULL;
 		char empty[] = "";
 		size_t maxlen = 0;
-		size_t curlen = 0, strlen;
+		size_t curlen = 0, charlen;
 
 		if(*s=='$'){
 			const char * vbeg=NULL, * vend;
@@ -214,15 +214,15 @@ static size_t PrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void *
 		}
 		if(!value)value=empty;
 
-		curlen = DpsUniConvLength(cnv, value); strlen = dps_strlen(value);
+		curlen = DpsUniConvLength(cnv, value); charlen = dps_strlen(value);
 		
 		if((curlen > maxlen) && (maxlen > 0)) {
 		  if ((newvalue = (char*)DpsRealloc(newvalue, 23 * curlen /*maxlen*/ + 23))) {
 			  char *c2, *c3;
 			  if (align == DPS_VAR_ALIGN_RIGHT) {
-			    DpsNConv(cnv, curlen - maxlen, newvalue, 23 * curlen, value, strlen);
+			    DpsNConv(cnv, curlen - maxlen, newvalue, 23 * curlen, value, charlen);
 			    dps_strcpy(newvalue, "...");
-			    DpsNConv(cnv, maxlen + 1, newvalue + 3, 23 * curlen + 1, value + cnv->ibytes, strlen - cnv->ibytes);
+			    DpsNConv(cnv, maxlen + 1, newvalue + 3, 23 * curlen + 1, value + cnv->ibytes, charlen - cnv->ibytes);
 			    newvalue[3 + cnv->obytes] = '\0';
 			    c2 = strrchr(newvalue, '\2');
 			    c3 = strrchr(newvalue, '\3');
@@ -244,7 +244,7 @@ static size_t PrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void *
 		  }
 		} else if ((newvalue = (char*)DpsRealloc(newvalue, 23 * curlen + 23))) {
 			  char *c2, *c3;
-			  DpsConv(cnv, newvalue, 23 * curlen + 1, value, strlen + 1);
+			  DpsConv(cnv, newvalue, 23 * curlen + 1, value, charlen + 1);
 			  newvalue[cnv->obytes] = '\0';
 			  c2 = strrchr(newvalue, '\2');
 			  c3 = strrchr(newvalue, '\3');
