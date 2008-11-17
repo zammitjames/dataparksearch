@@ -107,9 +107,9 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 	void *paran = DpsViolationEnter(paran);
 #endif
 	
-	/*
+/*	
 	fprintf(stderr, "DpsMatchExec: '%s' -> '%s' '%s'\n",string, Match->pattern, DpsMatchTypeStr(Match->match_type));
-	*/
+*/	
 	
 	switch(Match->match_type){
 		case DPS_MATCH_REGEX:
@@ -230,7 +230,7 @@ int DpsMatchApply(char *res, size_t size, const char *string, const char *rpl,
 			dst=res;
 
 			while((*repl)&&((size_t)(dst-res)<(size-1))){
-				if(*repl=='$'){
+				if(*repl=='$' && repl[1] > '0' && repl[1] <= '9') {
 							
 					digit[0]=repl[1];
 					digit[1]='\0';

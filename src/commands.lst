@@ -159,7 +159,7 @@
 	{"Section",		2,5,	add_section},
 	{"HrefSection",         1,3,    add_hrefsection},
 	{"BodyPattern",         2,2,    add_body_pattern},
-	{"ActionSQL",	        1,3,    add_actionsql},
+	{"ActionSQL",	        3,4,    add_actionsql},
 	{"Affix",		3,3,	add_affix},
 	{"Spell",		3,3,	add_spell},
 	{"StopwordFile",	1,1,	add_stoplist},

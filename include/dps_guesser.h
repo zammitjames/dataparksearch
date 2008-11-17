@@ -249,7 +249,8 @@ enum {
   DPS_LANG_ZU = 213,
   DPS_LANG_MY = 214,
   DPS_LANG_EN_IE = 215,
-  DPS_LANG_FR_FX = 216
+  DPS_LANG_FR_FX = 216,
+  DPS_LANG_RU_OLD = 217
 };
 
 extern int DpsLMstatcmp(const void * i1, const void * i2);

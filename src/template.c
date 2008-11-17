@@ -96,7 +96,7 @@ enum {
   DPS_VAR_ALIGN_RIGHT = 1
 };
 
-static size_t PrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * stream, char * dst, size_t dst_len, 
+size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * stream, char * dst, size_t dst_len, 
 				DPS_TEMPLATE *tmplt, const char * templ) {
         DPS_VARLIST *vars = tmplt->Env_Vars;
 	DPS_CONV bc_bc, bc_bc_txt, bc_vc, *cnv = &bc_bc;
@@ -105,10 +105,6 @@ static size_t PrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void *
 	char *newvalue = NULL;
 	size_t dlen=0;
 	int align = DPS_VAR_ALIGN_LEFT;
-/*	const char * HlBeg=DpsVarListFindStrTxt(vars,"HlBeg","");
-	const char * HlEnd=DpsVarListFindStrTxt(vars,"HlEnd","");
-*/
-/*	if (stream) dps_out(stream, "|HlBeg: %s\nHlEnd:%s\n|<br>", HlBeg, HlEnd);*/
 
 	DpsConvInit(&bc_bc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&bc_bc_txt, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_TEXT);
@@ -350,7 +346,7 @@ static void TemplateInclude(DPS_AGENT *Agent, DPS_OUTPUTFUNCTION dps_out, void *
 		char  *vurl = (char*)DpsMalloc(vurlen);
 
 		if (vurl == NULL) return;
-		PrintTextTemplate(Agent, dps_out, NULL, vurl, vurlen, tmplt, tag_content);
+		DpsPrintTextTemplate(Agent, dps_out, NULL, vurl, vurlen, tmplt, tag_content);
 		DpsURLParse(&Inc->CurURL,vurl);
 		DPS_FREE(vurl);
 		DpsVarListReplaceStr(&Inc->RequestHeaders, "Host", DPS_NULL2EMPTY(Inc->CurURL.hostname));
@@ -441,7 +437,7 @@ static size_t TemplateTag(DPS_AGENT *Agent, DPS_OUTPUTFUNCTION dps_out, void *st
 	if (vname) { DPS_FREE(vname); }
 	if (value) { DPS_FREE(value); }
 
-	res = PrintTextTemplate(Agent, dps_out, stream, dst, dst_len, tmplt, opt);
+	res = DpsPrintTextTemplate(Agent, dps_out, stream, dst, dst_len, tmplt, opt);
 	DPS_FREE(opt);
 	return res;
 }
@@ -652,7 +648,7 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 			if(!strncasecmp(tok,"<!INCLUDE",9)){
 				if(Agent)TemplateInclude(Agent, dps_out, stream, tmplt, tok);
 			}else{
-				dlen += PrintTextTemplate(Agent, dps_out, stream, dst + dlen, dst_len - dlen, tmplt, tok);
+				dlen += DpsPrintTextTemplate(Agent, dps_out, stream, dst + dlen, dst_len - dlen, tmplt, tok);
 			}
 		}
 		DPS_FREE(tok);

@@ -154,6 +154,7 @@ DPS_LANG_ALIAS dps_language[] = {
   {DPS_LANG_RMY, "rmy"},
   {DPS_LANG_RO, "ro"},
   {DPS_LANG_RU, "ru"},
+  {DPS_LANG_RU_OLD, "ru-old"},
   {DPS_LANG_SA, "sa"},
   {DPS_LANG_SCN, "scn"},
   {DPS_LANG_SCO, "sco"},

@@ -154,6 +154,7 @@ typedef struct {
 #define DPS_CHARSET_KOI8_T      81
 #define DPS_CHARSET_GEO_ACADEMY 82
 #define DPS_CHARSET_GEO_PS      83
+#define DPS_CHARSET_KOI8_C      84
 #define DPS_CHARSET_SYS_INT    255
 
 typedef struct {

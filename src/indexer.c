@@ -24,6 +24,7 @@
 #include "dps_indexertool.h"
 #include "dps_robots.h"
 #include "dps_db.h"
+#include "dps_sqldbms.h"
 #include "dps_url.h"
 #include "dps_parser.h"
 #include "dps_proto.h"
@@ -58,6 +59,7 @@
 #include "dps_wild.h"
 #include "dps_image.h"
 #include "dps_charsetutils.h"
+#include "dps_template.h"
 #ifdef HAVE_ZLIB
 #include "dps_store.h"
 #endif
@@ -893,7 +895,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   const char *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
   DPS_TEXTITEM Item;
   DPS_HREF     Href;
-  size_t i, buf_len;
+  size_t i, z, buf_len;
 
   if (Indexer->Conf->SectionMatch.nmatches == 0 && Indexer->Conf->HrefSectionMatch.nmatches == 0) return DPS_OK;
 
@@ -959,6 +961,64 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   return DPS_OK;
 }
 
+
+static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
+  DPS_MATCH       *Alias;
+  DPS_MATCH_PART  Parts[10];
+  size_t nparts = 10;
+  DPS_VAR *Sec;
+  DPS_VAR S;
+  char *lt, *buf;
+  const char *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
+  DPS_TEXTITEM Item;
+  DPS_HREF     Href;
+  size_t i, z, buf_len;
+
+  if (Indexer->Conf->ActionSQLMatch.nmatches == 0) return DPS_OK;
+
+  buf = (char*)DpsMalloc(buf_len = (Doc->Buf.size + 1024));
+  if (buf == NULL) return DPS_OK;
+
+  {
+    char qbuf[16384];
+    DPS_TEMPLATE t;
+    DPS_DBLIST      dbl;
+    DPS_DB *db;
+    bzero(&t, sizeof(t));
+    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = NULL;
+    t.Env_Vars = &Doc->Sections;
+    for (i = 0; i < Indexer->Conf->ActionSQLMatch.nmatches; i++) {
+      DPS_TEXTLIST	*tlist = &Doc->TextList;
+      Alias = &Indexer->Conf->ActionSQLMatch.Match[i];
+
+      Sec = DpsVarListFind(&Indexer->Conf->Sections, Alias->section);
+      if (! Sec) continue;
+      if (Alias->dbaddr != NULL) {
+	DpsDBListInit(&dbl);
+	DpsDBListAdd(&dbl, Alias->dbaddr, DPS_OPEN_MODE_READ);
+	db = &dbl.db[0];
+      } else {
+	db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[0] :  &Indexer->dbl.db[0];
+      }
+      for(z = 0; z < tlist->nitems; z++) {
+	DPS_TEXTITEM	*Item = &tlist->Items[z];
+	if (Item->section != Sec->section) continue;
+	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) continue;
+/*	fprintf(stderr, " -- SQLAction:%s, before match apply: %s\n", Alias->section, Alias->arg);*/
+	DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
+/*	fprintf(stderr, " -- SQLAction:%s, after match apply: %s\n", Alias->section, buf);*/
+	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf);
+/*	fprintf(stderr, " -- SQLAction:%s, after template patch: %s\n", Alias->section, qbuf);*/
+	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
+      }
+      if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
+    }  
+    DpsTemplateFree(&t);
+  }
+
+  DPS_FREE(buf);
+  return DPS_OK;
+}
 
 static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
@@ -1666,6 +1726,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			    return result;
 			  }
 		}
+/*		DpsExecActions(Indexer, Doc);*/
 		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	}
 
@@ -2139,6 +2200,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			    return result;
 			  }
 		}
+		DpsExecActions(Indexer, Doc);
 		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	}
 

@@ -532,7 +532,7 @@ AC_DEFINE_UNQUOTED(DPS_BEST_POSITION, $relposition)
 
 rel_avgpos=324
 AC_MSG_CHECKING(for best average word position in relevance)
-AC_ARG_WITH(avgtpos,
+AC_ARG_WITH(avgpos,
 [  --with-avgpos=NUM       Define NUM as best average word position for relevance calculation. 
                           Default value is 324.],
 [

@@ -460,6 +460,15 @@ static DPS_CHARSET built_charsets[]={
   idx_uni_koi7
 },
 {
+  DPS_CHARSET_KOI8_C,
+  dps_mb_wc_8bit,
+  dps_wc_mb_8bit,
+  "KOI8-C",
+  DPS_CHARSET_CYRILLIC,
+  tab_koi8_c_uni,
+  idx_uni_koi8_c
+},
+{
   DPS_CHARSET_KOI8_R,
   dps_mb_wc_8bit,
   dps_wc_mb_8bit,
@@ -931,7 +940,10 @@ DPS_CHARSET_ALIAS dps_cs_alias[]={
 	{"csisolatincyrillic",	DPS_CHARSET_8859_5},
 	{"csisolatingreek",	DPS_CHARSET_8859_7},
 	{"csisolatinhebrew",	DPS_CHARSET_8859_8},
+	{"cskoi8Ó",		DPS_CHARSET_KOI8_C},
 	{"cskoi8r",		DPS_CHARSET_KOI8_R},
+	{"cskoi8t",		DPS_CHARSET_KOI8_T},
+	{"cskoi8u",		DPS_CHARSET_KOI8_U},
 	{"csmacintosh",		DPS_CHARSET_MACROMAN},
 	{"cspc850multilingual",	DPS_CHARSET_CP850},
 	{"csshiftjis",		DPS_CHARSET_SJIS},
@@ -1083,9 +1095,11 @@ DPS_CHARSET_ALIAS dps_cs_alias[]={
 	{"iso_8859-9:1989",	DPS_CHARSET_8859_9},
 	{"koi-7",		DPS_CHARSET_KOI_7},
 	{"koi7",		DPS_CHARSET_KOI_7},
+	{"koi8-c",		DPS_CHARSET_KOI8_C},
 	{"koi8-r",		DPS_CHARSET_KOI8_R},
 	{"koi8-t",		DPS_CHARSET_KOI8_T},
 	{"koi8-u",		DPS_CHARSET_KOI8_U},
+	{"koi8c",		DPS_CHARSET_KOI8_C},
 	{"koi8r",		DPS_CHARSET_KOI8_R},
 	{"koi8t",		DPS_CHARSET_KOI8_T},
 	{"koi8u",		DPS_CHARSET_KOI8_U},

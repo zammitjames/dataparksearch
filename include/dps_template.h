@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,9 @@
 
 extern int  DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *tmplt, const char *tname);
 extern __C_LINK void __DPSCALL DpsTemplatePrint(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, void *stream, char *dst, size_t dst_len, 
-			     DPS_TEMPLATE *tmplt, const char *where);
+						DPS_TEMPLATE *tmplt, const char *where);
+extern size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * stream, char * dst, size_t dst_len, 
+				   DPS_TEMPLATE *tmplt, const char * templ);
 extern void DpsTemplateFree(DPS_TEMPLATE *tmplt);
 
 #endif
