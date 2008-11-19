@@ -153,8 +153,9 @@ if test -n "$ac_cv_pthreads_lib"; then
   LIBS="$LIBS -l$ac_cv_pthreads_lib"
 fi
 
-LIBS="$LIBS $PTHREAD_LFLAGS $PTHREAD_LDADD"
-CFLAGS="$PTHREAD_CFLAGS $CFLAGS"
+LIBS="$LIBS $PTHREAD_LDADD"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+LFLAGS="$LFLAGS $PTHREAD_LFLAGS"
 
 if test -n "$ac_cv_pthreads_cflags"; then
   CFLAGS="$CFLAGS $ac_cv_pthreads_cflags"
