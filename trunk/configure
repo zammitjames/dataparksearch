@@ -1022,7 +1022,7 @@ enable_reldistance
 enable_relposition
 enable_relwrdcount
 with_bestpos
-with_avgtpos
+with_avgpos
 with_bestwrdcnt
 with_avgdist
 with_distfactor
@@ -27403,9 +27403,9 @@ rel_avgpos=324
 { $as_echo "$as_me:$LINENO: checking for best average word position in relevance" >&5
 $as_echo_n "checking for best average word position in relevance... " >&6; }
 
-# Check whether --with-avgtpos was given.
-if test "${with_avgtpos+set}" = set; then
-  withval=$with_avgtpos;
+# Check whether --with-avgpos was given.
+if test "${with_avgpos+set}" = set; then
+  withval=$with_avgpos;
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_avgpos="$withval"
   	fi
@@ -27786,8 +27786,9 @@ if test -n "$ac_cv_pthreads_lib"; then
   LIBS="$LIBS -l$ac_cv_pthreads_lib"
 fi
 
-LIBS="$LIBS $PTHREAD_LFLAGS $PTHREAD_LDADD"
-CFLAGS="$PTHREAD_CFLAGS $CFLAGS"
+LIBS="$LIBS $PTHREAD_LDADD"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+LFLAGS="$LFLAGS $PTHREAD_LFLAGS"
 
 if test -n "$ac_cv_pthreads_cflags"; then
   CFLAGS="$CFLAGS $ac_cv_pthreads_cflags"

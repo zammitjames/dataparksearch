@@ -440,6 +440,8 @@ langmap/ro.ascii.lm \
 langmap/ro.cp1250.lm \
 langmap/ro.latin2.lm \
 langmap/ro.utf-8.lm \
+langmap/ru-old.koi8-c.lm \
+langmap/ru-old.utf-8.lm \
 langmap/ru.cp1251.lm \
 langmap/ru.cp866.lm \
 langmap/ru.cyrillic.lm \

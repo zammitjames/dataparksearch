@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -127,7 +127,8 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
     return -1;
 
   /* check magic identificator */
-  if (memcmp(Doc->Buf.content, gzheader, 2) != 0) return -1;
+  if (Doc->Buf.content[0] != gzheader[0]) return -1;
+  if (Doc->Buf.content[1] != gzheader[1]) return -1;
 
   gap = (Doc->Buf.content - Doc->Buf.buf)/* + 1*/;
   csize = Doc->Buf.size - gap;
