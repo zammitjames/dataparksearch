@@ -1932,7 +1932,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   R[DPS_N_FIRSTPOS] = DPS_BEST_POSITION;
 #endif
 #ifdef WITH_REL_WRDCOUNT
-  R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT * (Res->max_order_inquery + 1);
+  R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT /* * (Res->max_order_inquery + 1)*/;
 #endif
   R[DPS_N_COUNT] = 0;
 

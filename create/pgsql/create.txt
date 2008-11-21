@@ -11,7 +11,7 @@ CREATE TABLE "url" (
 	"referrer"        int4 NOT NULL DEFAULT 0,
 	"hops"            int4 NOT NULL DEFAULT 0,
 	"crc32"           int4 NOT NULL DEFAULT -1,
-	"seed"            int NOT NULL DEFAULT 0,
+	"seed"            int NOT NULL DEFAULT 32768*random(),
 	"bad_since_time"  int4,
 	"site_id"	  int4,
 	"server_id"	  int4,
