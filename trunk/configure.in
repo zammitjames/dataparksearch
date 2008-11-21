@@ -54,7 +54,7 @@ dnl            LDADD="$LDADD -lbsd"
             LDFLAGS="$LDFLAGS -lbsd"
             ;;
 	*-*-freebsd*)
-	    LIBS="$LIBS -L/usr/local/lib -lc"
+	    LIBS="$LIBS -L/usr/local/lib"
 	    CFLAGS="$CFLAGS -I/usr/local/include"
 	    INCLUDES="$INCLUDES -I/usr/local/include"
 	    ;;

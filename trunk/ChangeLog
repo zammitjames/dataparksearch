@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* CAS based synchronization has been implemented for i386/x86_64 platform.
 	* The ActionSQL command has been added. Use it to execute SQL-queries with document related data while indexing.
 	* The support for KOI8-C (an extension of KOI8-R with old-Russian letters) charset has been added.
 	* FastHrefCheck command has been added. Use it to skip href checking against server list during parsing.

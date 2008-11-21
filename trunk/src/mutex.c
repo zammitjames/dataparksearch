@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -98,9 +98,13 @@ static DPS_MUTEX *MuMu = NULL;
 
 size_t DpsNsems = DPS_LOCK_MAX;
 
+#if defined(CAS_MUTEX) && (defined(__i386) || defined(__x86_64__))
 
+void DpsGetSemLimit(void) {
+    DpsNsems = (size_t) 0x1000 + DPS_LOCK_MAX;
+}
 
-#if !defined(HAVE_PTHREAD) && defined(HAVE_SYS_SEM_H)
+#elif !defined(HAVE_PTHREAD) && defined(HAVE_SYS_SEM_H)
 
 void DpsGetSemLimit(void) {
 
@@ -188,12 +192,63 @@ void DpsGetSemLimit(void) {
 #endif
 
 
+#if defined(CAS_MUTEX) && (defined(__i386) || defined(__x86_64__))
 
-#if !defined(HAVE_PTHREAD) && defined(HAVE_SYS_SEM_H)
+inline char CAS(dps_mutex_t *target, dps_mutex_t exchange, dps_mutex_t compare) {
+  char ret;
+  __asm__ __volatile__ (
+			"lock\n\t"
+			"cmpxchg %3,%1\n\t"
+			"sete %0\n\t"
+			: "=q" (ret), "+m" (*target), "+a" (compare)
+			: "r" (exchange)
+			: "cc", "memory");
+  return ret;
+}
+
+void DpsInitMutexes(void) {
+	size_t i;
+  
+	DpsGetSemLimit();
+
+	MuMu = (DPS_MUTEX*)DpsMalloc((DpsNsems + 1) * sizeof(DPS_MUTEX));
+	if (MuMu == NULL) {
+	  fprintf(stderr, "DataparkSearch: Can't alloc for %d mutexes\n", DpsNsems);
+	  exit(1);
+	}
+
+	for(i = 0; i < DpsNsems; i++) {
+		InitMutex(&MuMu[i].mutex);
+		MuMu[i].cnt = 0;
+	}
+	
+}
+
+void DpsDestroyMutexes(void) {
+	int i;
+	if (MuMu) {
+	  for(i=0;i<DPS_LOCK_MAX;i++){
+		DestroyMutex(&MuMu[i].mutex);
+	  }
+	  DPS_FREE(MuMu);
+	}
+}
+
+
+void DpsCAS_lock(DPS_AGENT *A, dps_mutex_t *mut) {
+  while(!CAS(mut, A, NULL)) DPSSLEEP(0);
+}
+
+void DpsCAS_unlock(DPS_AGENT *A, dps_mutex_t *mut) {
+  while(!CAS(mut, NULL, A));
+}
+
+
+#elif !defined(HAVE_PTHREAD) && defined(HAVE_SYS_SEM_H)
 
 int semid;
 
-void DPS_MUTEX_LOCK(dps_mutex_t *x) {
+void DPS_MUTEX_LOCK(DPS_AGENT *A, dps_mutex_t *x) {
   struct sembuf waitop;
   
   waitop.sem_num = (unsigned short)*x;
@@ -202,7 +257,7 @@ void DPS_MUTEX_LOCK(dps_mutex_t *x) {
   semop(semid, &waitop, 1);
 }
 
-void DPS_MUTEX_UNLOCK(dps_mutex_t *x) {
+void DPS_MUTEX_UNLOCK(DPS_AGENT *A, dps_mutex_t *x) {
   struct sembuf postop;
   
   postop.sem_num = (unsigned short)*x;
@@ -382,7 +437,7 @@ __C_LINK void __DPSCALL DpsLockProc(DPS_AGENT *A, int command, size_t type, cons
 	switch(command){
 		case DPS_LOCK:
 		        if (A->Locked[type] == 0) {
-			  DPS_MUTEX_LOCK(&MuMu[type].mutex);
+			  DPS_MUTEX_LOCK(A, &MuMu[type].mutex);
 			}
 			A->Locked[type]++;
 #ifdef DEBUG_LOCK
@@ -392,7 +447,7 @@ __C_LINK void __DPSCALL DpsLockProc(DPS_AGENT *A, int command, size_t type, cons
 		case DPS_UNLOCK:
 			A->Locked[type]--;
 			u = (A->Locked[type] == 0);
-			if (u) DPS_MUTEX_UNLOCK(&MuMu[type].mutex); 
+			if (u) DPS_MUTEX_UNLOCK(A, &MuMu[type].mutex); 
 			break;
 	}
 #ifdef DEBUG_LOCK

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,33 +19,43 @@
 #ifndef _DPS_MUTEX_H
 #define _DPS_MUTEX_H
 
-
 #include <sys/types.h>
+
 #ifdef HAVE_SYS_SYSCTL_H
 #include <sys/sysctl.h>
 #endif
 
-
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_PTHREAD
+
+
+#define CAS_MUTEX 1
+
+
+#if defined(CAS_MUTEX) && (defined(__i386) || defined(__x86_64__))
+
+#define dps_mutex_t             DPS_AGENT*
+#define InitMutex(x)            (*(x) = NULL)
+#define DestroyMutex(x)
+#define DPS_MUTEX_LOCK(A,x)       DpsCAS_lock(A,x)
+#define DPS_MUTEX_UNLOCK(A,x)     DpsCAS_unlock(A,x)
+
+#elif defined HAVE_PTHREAD
 #include <pthread.h>
 #define dps_mutex_t		pthread_mutex_t
 #define InitMutex(x)		pthread_mutex_init(x,NULL)
 #define DestroyMutex(x)		pthread_mutex_destroy(x)
-#define DPS_MUTEX_LOCK(x)	pthread_mutex_lock(x)
-#define DPS_MUTEX_UNLOCK(x)	pthread_mutex_unlock(x)
-#else
+#define DPS_MUTEX_LOCK(A,x)	pthread_mutex_lock(x)
+#define DPS_MUTEX_UNLOCK(A,x)	pthread_mutex_unlock(x)
 
-
-#ifdef HAVE_SYS_SEM_H
+#elif defined HAVE_SYS_SEM_H
 #include <sys/ipc.h>
 #include <sys/sem.h>
 #define dps_mutex_t             int
 void InitMutex(dps_mutex_t *);
-void DPS_MUTEX_LOCK(dps_mutex_t *x);
-void DPS_MUTEX_UNLOCK(dps_mutex_t *x);
+void DPS_MUTEX_LOCK(DPS_AGENT *A, dps_mutex_t *x);
+void DPS_MUTEX_UNLOCK(DPS_AGENT *A, dps_mutex_t *x);
 
 
 #elif defined HAVE_SEMAPHORE_H
@@ -53,18 +63,16 @@ void DPS_MUTEX_UNLOCK(dps_mutex_t *x);
 #define dps_mutex_t             sem_t*
 void InitMutex(dps_mutex_t *);
 #define DestroyMutex(x)         sem_close(x)
-#define DPS_MUTEX_LOCK(x)       sem_wait(x)
-#define DPS_MUTEX_UNLOCK(x)     sem_post(x)
+#define DPS_MUTEX_LOCK(A,x)       sem_wait(x)
+#define DPS_MUTEX_UNLOCK(A,x)     sem_post(x)
 
 
 #else
 #define dps_mutex_t		int
 #define InitMutex(x)		*(x)=0
 #define DestroyMutex(x)
-#define DPS_MUTEX_LOCK(x)
-#define DPS_MUTEX_UNLOCK(x)
-#endif
-
+#define DPS_MUTEX_LOCK(A,x)
+#define DPS_MUTEX_UNLOCK(A,x)
 #endif
 
 
