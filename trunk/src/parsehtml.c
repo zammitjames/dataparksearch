@@ -113,6 +113,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
   }
 /*  ustr = (dps_need2segment(nfc)) ? DpsUniSegment(Indexer, nfc, content_lang) : nfc;*/
 
+  TRACE_LINE(Indexer);
   if (ustr != NULL)
     for(tok = DpsUniGetToken(ustr, &lt, &have_bukva_forte, Item->strict); 
 	tok ; 
@@ -143,6 +144,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 #endif
 	}
 
+	TRACE_LINE(Indexer);
 	dps_memcpy(uword, tok, tlen * sizeof(dpsunicode_t)); /* was: dps_memmove */
 	uword[tlen]=0;
 
@@ -150,6 +152,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	Word.uword = uword;
 	Word.ulen = tlen;
 				
+	TRACE_LINE(Indexer);
 	res = DpsWordListAdd(Doc, &Word, Item->section);
 	if(res!=DPS_OK)break;
 
@@ -163,9 +166,9 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  DpsCrossListAdd(Doc, &cw);
 	}
 
+	TRACE_LINE(Indexer);
 	if (Indexer->Flags.use_accentext) {
 	  af_uword = DpsUniAccentStrip(uword);
-	  de_uword = DpsUniGermanReplace(uword);
 	  if (DpsUniStrCmp(af_uword, uword) != 0) {
 
 	    Word.uword = af_uword;
@@ -183,6 +186,9 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	      DpsCrossListAddFantom(Doc, &cw);
 	    }
 	  }
+	  DPS_FREE(af_uword);
+	  TRACE_LINE(Indexer);
+	  de_uword = DpsUniGermanReplace(uword);
 	  if (DpsUniStrCmp(de_uword, uword) != 0) {
 
 	    Word.uword = de_uword;
@@ -200,7 +206,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	      DpsCrossListAddFantom(Doc, &cw);
 	    }
 	  }
-	  DPS_FREE(af_uword);
 	  DPS_FREE(de_uword);
 	}
 
@@ -210,6 +215,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	    ) {
 	  register int ii;
 
+	  TRACE_LINE(Indexer);
 	  DpsConv(&Indexer->uni_utf, utf_str, 16 * uwordlen, (char*)uword, (int)(sizeof(dpsunicode_t) * (tlen + 1)));
 	  ii = aspell_speller_check(speller, (const char *)utf_str, (int)(tlen = dps_strlen(utf_str)));
 	  if ( ii == 0) {
@@ -219,6 +225,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 		 (ii < 2) && ((asug = (char*)aspell_string_enumeration_next(elements)) != NULL);
 		 ii++ ) { 
 
+	      TRACE_LINE(Indexer);
 	      DpsConv(&Indexer->utf_uni, (char*)uword, 2 * uwordlen * (sizeof(*uword) + 1), (char*)(asug), sizeof(asug[0])*(tlen + 1));
       
 	      Word.uword = uword;
@@ -244,17 +251,21 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
     }
 
     if((Sec = DpsVarListFind(&Doc->Sections, Item->section_name))) {
+      int cnvres;
 			
       /* +4 to avoid attempts to fill the only one  */
       /* last byte with multibyte sequence          */
       /* as well as to add a space between portions */
 			
-      if(Sec->curlen < Sec->maxlen){
-	int cnvres;
+      if(Sec->curlen < Sec->maxlen || Sec->maxlen == 0) {
 				
-	if(!Sec->val){
-	  Sec->val=(char*)DpsMalloc(Sec->maxlen+1);
+	src = (char*)UStr;
+	srclen = DpsUniLen(UStr) * sizeof(dpsunicode_t);
+	if(!Sec->val) {
+	  dstlen = dps_min(Sec->maxlen, 24 * srclen);
+	  Sec->val = (char*)DpsMalloc( dstlen + 32 );
 	  if (Sec->val == NULL) {
+	    Sec->curlen = 0;
 	    DPS_FREE(uword);
 #ifdef HAVE_ASPELL
 	    DPS_FREE(utf_str);
@@ -262,24 +273,32 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	    TRACE_OUT(Indexer);
 	    return DPS_ERROR;
 	  }
+	  Sec->curlen = 0;
 	} else {
+	  TRACE_LINE(Indexer);
+	  if (Sec->maxlen) dstlen = Sec->maxlen - Sec->curlen;
+	  else dstlen = 24 * srclen;
+	  if ((Sec->val = DpsRealloc(Sec->val, Sec->curlen + dstlen + 32)) == NULL) {
+	      Sec->curlen = 0;
+	      DPS_FREE(uword);
+#ifdef HAVE_ASPELL
+	      DPS_FREE(utf_str);
+#endif
+	      TRACE_OUT(Indexer);
+	      return DPS_ERROR;
+	  }
 	  /* Add space */
-	  DpsConv(&Indexer->uni_lc, Sec->val + Sec->curlen, 1, (char*)(&uspace), sizeof(uspace));
+	  DpsConv(&Indexer->uni_lc, Sec->val + Sec->curlen, 24, (char*)(uspace), sizeof(uspace));
 	  Sec->curlen += Indexer->uni_lc.obytes;
 	  Sec->val[Sec->curlen] = '\0';
 	}
-				
-	src = (char*)UStr;
-	srclen = DpsUniLen(UStr) * sizeof(dpsunicode_t);
-	dstlen = Sec->maxlen-Sec->curlen;
 	cnvres = DpsConv(&Indexer->uni_lc, Sec->val + Sec->curlen, dstlen, src, srclen);
 	Sec->curlen += Indexer->uni_lc.obytes;
 	Sec->val[Sec->curlen] = '\0';
 				
-	if (cnvres < 0) {
-	  Sec->curlen = Sec->maxlen;
+	if (cnvres < 0 && Sec->maxlen) {
+	  Sec->curlen = 0 /*Sec->maxlen*/;
 	}
-
       }
     }
     DPS_FREE(ustr);

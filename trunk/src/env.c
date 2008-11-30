@@ -133,6 +133,7 @@ void DpsEnvFree(DPS_ENV * Env){
 	DpsChineseListFree(&Env->Korean);
 
 	DPS_FREE(Env->CharsToEscape);
+	DPS_FREE(Env->SrvPnt);
 
 	if(Env->freeme)DPS_FREE(Env);
 }

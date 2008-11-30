@@ -2190,7 +2190,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	    } else is_not_same_site = 1;
 
 #if 1
-	      if (ot != rec_id /*k*/) {
+	      if (1 /*ot != rec_id*/ /*k*/) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  
 			     qu, rec_id, qu, qu, rec_id, qu);
 
