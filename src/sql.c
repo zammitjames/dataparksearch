@@ -2225,7 +2225,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight,valid) VALUES (%s%i%s,%s%i%s,%s%s%s,'t')",
-			       qu, ot, qu,  qu, rec_id, qu,  qu, weight, qu);
+			       qu, ot, qu,  qu, rec_id, qu,  qu, "1.0" /*weight*/, qu);
 		} else {
 		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
 			       qu, ot, qu,  qu, rec_id, qu);
@@ -2358,7 +2358,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight) VALUES (%s%i%s,%s%i%s,%s%s%s)",
-			       qu, ot, qu, qu, k, qu,  qu, weight, qu);
+			       qu, ot, qu, qu, k, qu,  qu, "1.0"/*weight*/, qu);
 		} else {
 		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
 			       qu, ot, qu,  qu, k, qu);
@@ -5578,7 +5578,9 @@ int DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type
 #define HI_BORDER_EPS2 (1.0 - 0.000001)
 
 #define LINK_WEIGHT_HI 1.0
-#define LINK_WEIGHT_LO 0.000001
+#define LINK_WEIGHT_LO -1.0
+#define PAS_HI -0.1
+#define PAS_LO -0.9
 
 typedef struct {
   double weight, pop_rank;
@@ -5766,13 +5768,11 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
     
     if ((cur_div > pdiv) && ((cur_div - pdiv) > EPS)) {
       pas *= 0.73;
-    } else if (fabs(delta) < 10.1 && fabs(pas) < 1000000.0) {
-      if (fabs(cur_div - pdiv) < 0.1 * pdiv) {
-	pas *= 9.99;
-      } else if (fabs(cur_div - pdiv) < 0.5 * pdiv) {
-	pas *= 2.11;
-      }
+    } else if (fabs(delta) < 10.1 && fabs(pas) < PAS_HI) {
+      pas *= 2.11;
     } else if (fabs(delta) > 1.0) pas *= 0.95;
+    if (pas > PAS_HI) pas = PAS_HI;
+    else if (PAS_LO > pas) pas = PAS_LO;
 
     DpsLog(A, DPS_LOG_EXTRA, "%s:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
 	   rec_id, it, pdiv, cur_div,  di, Oi, delta, pas);
@@ -5909,9 +5909,9 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   if (need_count) A->Conf->url_number--;
 
 #ifdef WITH_POPHOPS
-  pas = -0.99997 * hops;
+  pas = -0.07 * hops;
 #else
-  pas = -0.99997;
+  pas = -0.7;
 #endif
 
   pdiv = cur_div = fabs(di - Oi);
@@ -5951,13 +5951,12 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
     
     if ((cur_div > pdiv) && ((cur_div - pdiv) > EPS)) {
       pas *= 0.73;
-    } else if (fabs(delta) < 10.1 && fabs(pas) < 1000000.0) {
-      if (fabs(cur_div - pdiv) < 0.1 * pdiv) {
-	pas *= 9.99;
-      } else if (fabs(cur_div - pdiv) < 0.5 * pdiv) {
-	pas *= 2.11;
-      }
+    } else if (fabs(delta) < 10.1 && fabs(pas) < PAS_HI) {
+      pas *= 2.11;
+      
     } else if (fabs(delta) > 1.0) pas *= 0.95;
+    if (pas > PAS_HI) pas = PAS_HI;
+    else if (PAS_LO > pas) pas = PAS_LO;
 
     DpsLog(A, DPS_LOG_EXTRA, "%s:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
 	   rec_id, it, pdiv, cur_div,  di, Oi, delta, pas);

@@ -1053,7 +1053,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	if(Doc->method != DPS_METHOD_HEAD) {
 	
 #ifdef HAVE_ZLIB
-	  if(!strcasecmp(ce,"gzip") || !strcasecmp(ce,"x-gzip")){
+	  if((!strcasecmp(ce, "gzip")) || (!strcasecmp(ce, "x-gzip"))) {
 		DPS_THREADINFO(Indexer,"UnGzip",url);
 		if (status == 206) {
 		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't ungzip it.");
@@ -1071,7 +1071,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		DpsInflate(Indexer, Doc);
 		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
 	  }else
-	  if(!strcasecmp(ce,"compress") || !strcasecmp(ce,"x-compress")){
+	    if((!strcasecmp(ce, "compress")) || (!strcasecmp(ce, "x-compress"))) {
 		DPS_THREADINFO(Indexer,"Uncompress",url);
 		if (status == 206) {
 		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't uncomress it.");
@@ -1081,7 +1081,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
 	  }else
 #endif	
-	  if(!strcasecmp(ce,"identity") || !strcasecmp(ce,"")){
+	      if((!strcasecmp(ce,"identity")) || (!strcasecmp(ce,""))) {
 		/* Nothing to do*/
 	  }else{
 		DpsLog(Indexer,DPS_LOG_ERROR,"Unsupported Content-Encoding");

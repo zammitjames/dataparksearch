@@ -36,6 +36,8 @@
 #define LOW_BORDER_EPS2 0.000001
 #define HI_BORDER_EPS  (1.0 - 0.000001)
 #define HI_BORDER_EPS2 (1.0 - 0.000001)
+#define PAS_HI -0.1
+#define PAS_LO -0.9
 
 
 const dpsunicode_t SentDelim[] = { '.', '!', '?', 0 };
@@ -148,7 +150,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
   if (links != NULL) {
     for (i = 0; i < List.nitems; i++) {
       List.Sent[i].Oi =  HI_BORDER_EPS / (List.nitems + 1);
-      List.Sent[i].pas = -0.99999;
+      List.Sent[i].pas = -0.499999;
       links[i * List.nitems + i] = 1.0 /* / List.nitems*/;
       for (j = i + 1/*0*/; j < List.nitems; j++) {
 /*	if (i == j) { links[i * List.nitems + j] = 1.0 / List.nitems; continue; }*/
@@ -226,13 +228,15 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 
 	if ((cur_div > pdiv) && ((cur_div - pdiv) > EPS)) {
 	  List.Sent[l].pas *= 0.73;
-	} else if (fabs(delta) < 0.1 && fabs(List.Sent[l].pas) < 10000) {
+	} else if (fabs(delta) < 0.1 && fabs(List.Sent[l].pas) < PAS_HI) {
 	  if (fabs(cur_div - pdiv) < 0.1 * pdiv) {
 	    List.Sent[l].pas *= 9.99;
 	  } else if (fabs(cur_div - pdiv) < 0.5 * pdiv) {
 	    List.Sent[l].pas *= 2.11;
 	  }
 	} else if (fabs(delta) > 1.0) List.Sent[l].pas *= 0.95;
+	if (List.Sent[l].pas > PAS_HI) List.Sent[l].pas = PAS_HI;
+	else if (PAS_LO > List.Sent[l].pas) List.Sent[l].pas = PAS_LO;
 
 	DpsLog(Indexer, DPS_LOG_DEBUG, "%d:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
 	       l, it, pdiv, cur_div,  List.Sent[l].di, List.Sent[l].Oi, delta, List.Sent[l].pas);

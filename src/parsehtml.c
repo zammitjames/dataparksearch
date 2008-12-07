@@ -250,7 +250,8 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
       }
     }
 
-    if((Sec = DpsVarListFind(&Doc->Sections, Item->section_name))) {
+    if((Sec = DpsVarListFind(&Doc->Sections, Item->section_name))
+       && (strncasecmp(Item->section_name, "url.", 4) != 0)) {
       int cnvres;
 			
       /* +4 to avoid attempts to fill the only one  */
@@ -275,7 +276,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  }
 	  Sec->curlen = 0;
 	} else {
-	  TRACE_LINE(Indexer);
 	  if (Sec->maxlen) dstlen = Sec->maxlen - Sec->curlen;
 	  else dstlen = 24 * srclen;
 	  if ((Sec->val = DpsRealloc(Sec->val, Sec->curlen + dstlen + 32)) == NULL) {
