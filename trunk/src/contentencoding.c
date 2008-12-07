@@ -114,6 +114,7 @@ struct gztrailer {
     int zlen;
 };
 
+
 __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 
   const unsigned char gzheader[10] = { 0x1f, 0x8b, Z_DEFLATED, 0, 0, 0, 0, 0, 0, 3 };
@@ -125,10 +126,9 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   
   if( (Doc->Buf.size) <= (Doc->Buf.content - Doc->Buf.buf + sizeof(gzheader)) )
     return -1;
-
   /* check magic identificator */
-  if (Doc->Buf.content[0] != gzheader[0]) return -1;
-  if (Doc->Buf.content[1] != gzheader[1]) return -1;
+ if ((unsigned char)Doc->Buf.content[0] != gzheader[0]) return -1;
+ if ((unsigned char)Doc->Buf.content[1] != gzheader[1]) return -1;
 
   gap = (Doc->Buf.content - Doc->Buf.buf)/* + 1*/;
   csize = Doc->Buf.size - gap;
