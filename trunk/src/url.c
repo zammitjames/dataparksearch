@@ -259,7 +259,7 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 
 	/* Now find right '/' sign and copy the rest to directory */
 
-	if (file = strrchr(url->path,'/')) {
+	if ((file = strrchr(url->path,'/'))) {
 	  char *p_save = file;
 	  for(file--; (file > url->path) && (*file != '/'); file--);
 	  file++;

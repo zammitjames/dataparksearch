@@ -947,8 +947,9 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	        size_t name_len = dps_strlen(name);
 		opening = 1;
 		if (tag->level < sizeof(tag->visible)) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
+		tag->Sec[tag->level] = DpsVarListFind(&Doc->Sections, name);
 		tag->level++;
-		if ((tag->trailend - tag->trail + name_len + 1) > sizeof(tag->trail)) {
+		if ((tag->level >= sizeof(tag->visible)) && ((tag->trailend - tag->trail + name_len + 1) > sizeof(tag->trail)) ) {
 		  DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML");
 		  return 0;
 		}
@@ -1324,11 +1325,14 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 
 	    if (BSec && !tag.comment && !tag.title && tag.body && !tag.script && !tag.style && tag.index && !tag.select 
 		&& tag.visible[tag.level]) {
+	      DPS_VAR *Sec = NULL;
+	      int z;
+	      for(z = tag.level; z >= 0 && !(Sec = tag.Sec[z]); z--);
 	      Item.href=tag.lasthref;
 	      Item.str=tmp;
-	      Item.section = body_sec;
-	      Item.strict = body_strict;
-	      Item.section_name = (section_name) ? section_name : "body";
+	      Item.section = (Sec) ? Sec->section : body_sec;
+	      Item.strict = (Sec) ? Sec->strict : body_strict;
+	      Item.section_name = (section_name) ? section_name : ((Sec) ? Sec->name : "body");
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      DpsTextListAdd(&Doc->TextList,&Item);
 	    }

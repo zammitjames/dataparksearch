@@ -86,9 +86,6 @@
 #define DEBUG
 */
 
-#define OLD_NEO 1
-
-
 
 static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num,
 			    int need_count);
@@ -611,9 +608,8 @@ static int DpsURLDB(DPS_AGENT *Indexer, DPS_SERVER *S, DPS_DB *db) {
   size_t	rows, i;
   DPS_SQLRES	SQLRes;
   char    *url;
-  DPS_SERVER	*Srv;
   DPS_HREF	Href;
-  int           res, charset_id;
+  int           res;
   DPS_CHARSET *cs = DpsGetCharSet(DpsVarListFindStr(&Indexer->Conf->Cfg_Srv->Vars, "RemoteCharset", 
 						    DpsVarListFindStr(&Indexer->Conf->Cfg_Srv->Vars, "URLCharset", "iso-8859-1")));
   const char *tablename = ((db->addr.filename != NULL) && (db->addr.filename[0] != '\0')) ? db->addr.filename : "links";
@@ -2159,7 +2155,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	  urlid_t ot = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 
 	  if (rec_id != 0 && ot != 0) {
-	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "0.001");
+	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "1.0");
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    int is_not_same_site = (rec_id == ot);
 /*	    urlid_t k = rec_id;*/
@@ -2202,7 +2198,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight,valid) VALUES (%s%i%s,%s%i%s,%s%s%s,'t')",
-			       qu, rec_id, qu,  qu, rec_id, qu,  qu, "1.0"/*weight*/, qu);
+			       qu, rec_id, qu,  qu, rec_id, qu,  qu, weight, qu);
 		} else {
 		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
 			       qu, rec_id, qu,  qu, rec_id, qu);
@@ -2225,7 +2221,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight,valid) VALUES (%s%i%s,%s%i%s,%s%s%s,'t')",
-			       qu, ot, qu,  qu, rec_id, qu,  qu, "1.0" /*weight*/, qu);
+			       qu, ot, qu,  qu, rec_id, qu,  qu, weight, qu);
 		} else {
 		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
 			       qu, ot, qu,  qu, rec_id, qu);
@@ -2296,7 +2292,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 	if (rc != 0) {
 	    urlid_t ot = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "0.001");
+	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "1.0");
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    int is_not_same_site = (ot == k);
 
@@ -2336,7 +2332,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight) VALUES (%s%i%s,%s%i%s,%s%s%s)",
-			       qu, k, qu,  qu, k, qu,  qu, "1.0"/*weight*/, qu);
+			       qu, k, qu,  qu, k, qu,  qu, weight, qu);
 		} else {
 		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
 			       qu, k, qu,  qu, k, qu);
@@ -2358,7 +2354,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight) VALUES (%s%i%s,%s%i%s,%s%s%s)",
-			       qu, ot, qu, qu, k, qu,  qu, "1.0"/*weight*/, qu);
+			       qu, ot, qu, qu, k, qu,  qu, weight, qu);
 		} else {
 		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
 			       qu, ot, qu,  qu, k, qu);
@@ -4547,9 +4543,9 @@ static int DpsStoredRehash(DPS_AGENT *A, DPS_DB *db) {
   DPS_BASE_PARAM P;
   long offset = 0L;
   int u = 1, rc = DPS_OK;
-  size_t i, nrows, qbuflen, ncached, data_len;
+  size_t i, nrows, qbuflen, ncached;
   size_t url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLSelectCacheSize", DPS_URL_SELECT_CACHE_SIZE);
-  char *qbuf, *data;
+  char *qbuf;
   urlid_t rec_id = 0;
   unsigned int NFiles = DpsVarListFindInt(&A->Vars, "StoredFiles", 0x100);
     
@@ -5253,7 +5249,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 	DPS_VARLIST     cat;
 	DPS_SQLRES	SQLres, CatRes;
 	int		rc = DPS_OK, u;
- 	char *cat_query = "SELECT c.rec_id, c.path, c.link, l.rec_id FROM categories c, categories l WHERE c.link=l.path ORDER BY c.rec_id";
+ 	const char *cat_query = "SELECT c.rec_id, c.path, c.link, l.rec_id FROM categories c, categories l WHERE c.link=l.path ORDER BY c.rec_id";
 	urlid_t         rec_id = 0;
 	const char      *val0, *val1, *oldlist, *valink;
 	char            *p;
@@ -5387,12 +5383,10 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int type, DPS_DB *db) {
 	char		*qbuf;
 	char            *var_dir = (db->vardir) ? db->vardir : DpsVarListFindStr(&A->Vars, "VarDir", DPS_VAR_DIR);
-	size_t		c, i, nrows, qbuflen, ncats;
-	size_t          url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
+	size_t		i, nrows, qbuflen, ncats;
 	DPS_SQLRES	SQLres;
 	int		rc = DPS_OK, fd;
 	const char      *val0, *val1;
-	char            *p;
 
 	dps_snprintf(L->shm_name, PATH_MAX, "%s%sLINK.%d", var_dir, DPSSLASHSTR, A->handle);
 	if ((fd = DpsOpen3(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
@@ -5579,8 +5573,8 @@ int DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type
 
 #define LINK_WEIGHT_HI 1.0
 #define LINK_WEIGHT_LO -1.0
-#define PAS_HI -0.1
-#define PAS_LO -0.9
+#define PAS_HI -0.01
+#define PAS_LO -9999999.99
 
 typedef struct {
   double weight, pop_rank;
@@ -5652,11 +5646,7 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
 
   if (need_count) A->Conf->url_number--;
 
-#ifdef WITH_POPHOPS
-  pas = -0.99997 * hops;
-#else
-  pas = -0.99997;
-#endif
+  pas = -0.7;
 
   pdiv = cur_div = fabs(di - Oi);
   /* u_it = ((di != 0.0) && (di != 1.0));*/
@@ -5665,11 +5655,7 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
   for (it = 0; u_it && (it < A->Flags.PopRankNeoIterations); it++) {
 
 /*    delta = pas * (di - Oi) * Oi * (1.0 - Oi);*/
-#ifdef OLD_NEO
     delta = pas * (Oi - di) * di * (1.0 - di);
-#else
-    delta = pas * (Oi - di) * di * (di - 1.0);
-#endif
 
 /*   DpsLog(A, DPS_LOG_EXTRA, "%s:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
 	   rec_id, it, pdiv, cur_div,  di, Oi, delta, pas);*/
@@ -5693,13 +5679,9 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
 	jrows = DpsSQLNumRows(&SQLres);
 	for (j = 0; j < jrows; j++) {
 
-#ifdef OLD_NEO		
 	  dw = delta * DPS_ATOF(DpsSQLValue(&SQLres, j, 1));
-#else
-	  dw = delta * (1.0 - DPS_ATOF(DpsSQLValue(&SQLres, j, 1)));
-#endif
 	    
-	  if (fabs(dw) > 0.000000000001 && strcmp(rec_id, DpsSQLValue(&SQLres, j, 0)) ) {
+	  if (fabs(dw) > 0.000000000001) {
 	    dps_snprintf(qbuf, sizeof(qbuf), 
 			 "UPDATE links SET weight = MAX(%d, MIN(%d, weight + (%.12f))) WHERE k=%s%s%s AND ot=%s%s%s", 
 			 LINK_WEIGHT_LO, LINK_WEIGHT_HI, dw, qu, DpsSQLValue(&SQLres, j, 0), qu, qu, rec_id, qu);
@@ -5767,8 +5749,8 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
     cur_div = fabs(di - Oi);
     
     if ((cur_div > pdiv) && ((cur_div - pdiv) > EPS)) {
-      pas *= 0.73;
-    } else if (fabs(delta) < 10.1 && fabs(pas) < PAS_HI) {
+      pas *= 0.43;
+    } else if (fabs(delta) < 1.1) {
       pas *= 2.11;
     } else if (fabs(delta) > 1.0) pas *= 0.95;
     if (pas > PAS_HI) pas = PAS_HI;
@@ -5817,10 +5799,10 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
   char		qbuf[512];
   double di = 0.0, Oi = 0.0, delta, pas, pdiv, cur_div, dw;
-  size_t j, jrows, li_offset;
+  size_t j, jrows;
   size_t n_di, n_Oi;
-  int  rc = DPS_ERROR, v, it, u_it, to_update = 0;
-  urlid_t li_rec_id = 0, rec_id_num = DPS_ATOI(rec_id);
+  int  rc = DPS_ERROR, it, u_it, to_update = 0;
+  urlid_t rec_id_num = DPS_ATOI(rec_id);
 #ifdef WITH_POPHOPS
   double hops = DPS_POPHOPS_FACTOR / (DPS_ATOI(hops_str) + 1);
 #endif
@@ -5894,7 +5876,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   for (j = 0; j < jrows && j < n_Oi; j++) {
     OUT[j].rec_id = DPS_ATOI(DpsSQLValue(&SQLres, j, 0));
     OUT[j].pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, j, 1));
-    OUT[j].weight = (OUT[j].rec_id == rec_id_num) ? 1.0 : DPS_ATOF(DpsSQLValue(&SQLres, j, 2));
+    OUT[j].weight = DPS_ATOF(DpsSQLValue(&SQLres, j, 2));
     if (OUT[j].weight > LINK_WEIGHT_HI) OUT[j].weight = LINK_WEIGHT_HI;
     else if (OUT[j].weight < LINK_WEIGHT_LO) OUT[j].weight = LINK_WEIGHT_LO;
     Oi += OUT[j].pop_rank * OUT[j].weight;
@@ -5908,11 +5890,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
 
   if (need_count) A->Conf->url_number--;
 
-#ifdef WITH_POPHOPS
-  pas = -0.07 * hops;
-#else
   pas = -0.7;
-#endif
 
   pdiv = cur_div = fabs(di - Oi);
   u_it = ( cur_div > EPS && n_Oi > 0);
@@ -5920,21 +5898,13 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   for (it = 0; u_it && (it < A->Flags.PopRankNeoIterations); it++) {
 
 /*    delta = pas * (di - Oi) * Oi * (1.0 - Oi);*/
-#ifdef OLD_NEO
     delta = pas * (Oi - di) * di * (1.0 - di);
-#else
-    delta = pas * (Oi - di) * di * (di - 1.0);
-#endif
     if (fabs(delta) > 0.0) {
 
       A->poprank_pas++; to_update++;
       Oi = 0.0;
       for (j = 0; j < n_Oi; j++) {
-#ifdef OLD_NEO
 	  dw = delta * OUT[j].pop_rank;
-#else
-	  dw = delta * (1.0 - OUT[j].pop_rank);
-#endif
 	  if (OUT[j].rec_id != rec_id_num) {
 	    OUT[j].weight += dw;
 	    if (OUT[j].weight > LINK_WEIGHT_HI) OUT[j].weight = LINK_WEIGHT_HI;
@@ -5950,10 +5920,9 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
     cur_div = fabs(di - Oi);
     
     if ((cur_div > pdiv) && ((cur_div - pdiv) > EPS)) {
-      pas *= 0.73;
-    } else if (fabs(delta) < 10.1 && fabs(pas) < PAS_HI) {
+      pas *= 0.43;
+    } else if (fabs(delta) < 1.1) {
       pas *= 2.11;
-      
     } else if (fabs(delta) > 1.0) pas *= 0.95;
     if (pas > PAS_HI) pas = PAS_HI;
     else if (PAS_LO > pas) pas = PAS_LO;
@@ -6432,7 +6401,7 @@ unsigned int   DpsGetCategoryIdSQL(DPS_ENV *Conf, char *category, DPS_DB *db) {
   dps_snprintf(qbuf, 128, "SELECT rec_id FROM categories WHERE path='%s'", category);
   if(DPS_OK != (rc = DpsSQLQuery(db, &Res, qbuf))) return rc;
   if ( DpsSQLNumRows(&Res) > 0) {
-    sscanf(DpsSQLValue(&Res, 0, 0), "%i", &rc);
+    sscanf(DpsSQLValue(&Res, 0, 0), "%d", &rc);
   }
   DpsSQLFree(&Res);
   return rc;
