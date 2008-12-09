@@ -895,7 +895,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   const char *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
   DPS_TEXTITEM Item;
   DPS_HREF     Href;
-  size_t i, z, buf_len;
+  size_t i, buf_len;
 
   if (Indexer->Conf->SectionMatch.nmatches == 0 && Indexer->Conf->HrefSectionMatch.nmatches == 0) return DPS_OK;
 
@@ -967,11 +967,8 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_MATCH_PART  Parts[10];
   size_t nparts = 10;
   DPS_VAR *Sec;
-  DPS_VAR S;
-  char *lt, *buf;
-  const char *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
-  DPS_TEXTITEM Item;
-  DPS_HREF     Href;
+  char *buf;
+  DPS_TEXTITEM *Item;
   size_t i, z, buf_len;
 
   if (Indexer->Conf->ActionSQLMatch.nmatches == 0) return DPS_OK;
@@ -1014,7 +1011,7 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[0] :  &Indexer->dbl.db[0];
       }
       for(z = 0; z < tlist->nitems; z++) {
-	DPS_TEXTITEM	*Item = &tlist->Items[z];
+	Item = &tlist->Items[z];
 	if (Item->section != Sec->section) continue;
 	if (strcasecmp(Item->section_name, Alias->section)) continue;
 	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) continue;

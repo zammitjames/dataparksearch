@@ -555,7 +555,6 @@ typedef struct {
         int     subdoc;         /**< Subdocument level                       */
         int     sd_cnt;         /**< Number of subdocuments                  */
     dpshash32_t id;             /**< Hash32(url) for seding and rec_id in special mode */
-        dps_uint2               dbnum;
 	
         DPS_SERVER              *Server;
 
@@ -574,6 +573,7 @@ typedef struct {
 	DPS_SPIDERPARAM		Spider;		/**< Spider prms  */
 	DPS_CONN		connp;		/**< For FTP      */
 	
+        dps_uint2               dbnum;
 } DPS_DOCUMENT;
 
 /********************************************************/
@@ -885,7 +885,7 @@ typedef struct {
         int             PreloadURLData;
         int             cold_var;         /**< Do not use file locking for read-only operations */
         int             PopRankNeoIterations;
-        int             GuesserBytes;     /**< Number of bytes used for language and charset guessing */
+        size_t          GuesserBytes;     /**< Number of bytes used for language and charset guessing */
         int             skip_unreferred;
         int             track_hops;
         int             poprank_postpone; /**< Skip the Neo PopRank calculation at indexing */
@@ -1164,8 +1164,9 @@ typedef struct {
 		size_t     vlen;
 	} toks[DPS_MAXTAGVAL+1];
         char visible[2048];
-        char trail[4096];
+        char trail[8192];
         char *trailend;
+        DPS_VAR *Sec[2048];
 } DPS_HTMLTOK;
 
 typedef struct dps_cfg_st {
