@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -70,7 +70,7 @@ static int DpsVarCopy(DPS_VAR *D, DPS_VAR *S) {
 	    D->val = (char*)DpsMalloc(len + 4);
 	    if (D->val == NULL) {
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(paran);
+	      DpsViolationExit(-1, paran);
 #endif
 	      return DPS_ERROR;
 	    }
@@ -83,7 +83,7 @@ static int DpsVarCopy(DPS_VAR *D, DPS_VAR *S) {
 	    D->txt_val = (char*)DpsMalloc(len + 4);
 	    if (D->txt_val == NULL) {
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(paran);
+	      DpsViolationExit(-1, paran);
 #endif
 	      return DPS_ERROR;
 	    }
@@ -92,7 +92,7 @@ static int DpsVarCopy(DPS_VAR *D, DPS_VAR *S) {
 	  }
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return DPS_OK;
 }
@@ -110,7 +110,7 @@ static int DpsVarCopyNamed(DPS_VAR *D, DPS_VAR *S, const char *name) {
 		D->name = (char*)DpsMalloc(len);
 		if (D->name == NULL) {
 #ifdef WITH_PARANOIA
-		  DpsViolationExit(paran);
+		  DpsViolationExit(-1, paran);
 #endif
 		  return DPS_ERROR;
 		}
@@ -130,7 +130,7 @@ static int DpsVarCopyNamed(DPS_VAR *D, DPS_VAR *S, const char *name) {
 	    D->val = (char*)DpsMalloc(len + 4);
 	    if (D->val == NULL) {
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(paran);
+	      DpsViolationExit(-1, paran);
 #endif
 	      return DPS_ERROR;
 	    }
@@ -143,7 +143,7 @@ static int DpsVarCopyNamed(DPS_VAR *D, DPS_VAR *S, const char *name) {
 	    D->txt_val = (char*)DpsMalloc(len + 4);
 	    if (D->txt_val == NULL) {
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(paran);
+	      DpsViolationExit(-1, paran);
 #endif
 	      return DPS_ERROR;
 	    }
@@ -152,7 +152,7 @@ static int DpsVarCopyNamed(DPS_VAR *D, DPS_VAR *S, const char *name) {
 	  }
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return DPS_OK;
 }
@@ -230,7 +230,7 @@ int DpsVarListDel(DPS_VARLIST *vars, const char *name) {
 	  v = DpsVarListFind(vars, name);
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return DPS_OK;
 }
@@ -507,7 +507,7 @@ int DpsVarListReplaceLst(DPS_VARLIST *D, DPS_VARLIST *S, const char *name, const
 		}
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return DPS_OK;
 }

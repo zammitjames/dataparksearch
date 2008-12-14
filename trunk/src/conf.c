@@ -224,7 +224,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 	
 	if(!(C->flags & DPS_FLAG_ADD_SERV)) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_OK;
 	}
@@ -278,7 +278,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 			}else{
 			  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "too many argiments: '%s'", av[i]);
 #ifdef WITH_PARANOIA
-			  DpsViolationExit(paran);
+			  DpsViolationExit(-1, paran);
 #endif
 			  return DPS_ERROR;
 			}
@@ -287,7 +287,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 	if (!C->Srv->Match.pattern) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr), "too few argiments in '%s' command", av[0]);
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_ERROR;
 	}
@@ -298,7 +298,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 		DPS_FREE(s_err);
 		DPS_FREE(C->Srv->Match.pattern);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(-1, paran);
 #endif
 		return DPS_ERROR;
 	}
@@ -328,7 +328,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return DPS_OK;
 }
@@ -1043,7 +1043,7 @@ static int add_srv_table(void *Cfg, size_t ac,char **av){
 	
 	if(!(C->flags & DPS_FLAG_ADD_SERV)) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_OK;
 	}
@@ -1061,7 +1061,7 @@ static int add_srv_table(void *Cfg, size_t ac,char **av){
 
 	DpsDBListFree(&dbl);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return res;
 }
@@ -1317,9 +1317,16 @@ static int env_rpl_env_var (void *Cfg, size_t ac, char **av) {
 static int env_rpl_var(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
+	int res = 0;
+#ifdef WITH_PARANOIA
+	void * paran = DpsViolationEnter(paran);
+#endif
 	if(!strcasecmp(av[0],"DBAddr")){
 		if(DPS_OK != DpsDBListAdd(&Conf->dbl, av[1] ? av[1] : "", DPS_OPEN_MODE_WRITE)){
 		  dps_snprintf(Conf->errstr,  sizeof(Conf->errstr) - 1, "Invalid DBAddr: '%s'",av[1]?av[1]:"");
+#ifdef WITH_PARANOIA
+		  DpsViolationExit(-1, paran);
+#endif
 		  return DPS_ERROR;
 		}
 	}else if(!strcasecmp(av[0],"Bind")){
@@ -1330,7 +1337,6 @@ static int env_rpl_var(void *Cfg, size_t ac,char **av){
 	  DPS_FREE(Conf->CharsToEscape);
 	  Conf->CharsToEscape = DpsStrdup(av[1]);
 	} else if(!strcasecmp(av[0], "SkipUnreferred")) {
-	  int res = 0;
 	  if (!strcasecmp(av[1], "yes")) res = DPS_METHOD_VISITLATER;
 	  else if (!strncasecmp(av[1], "del", 3)) res = DPS_METHOD_DISALLOW;
 	  Conf->Flags.skip_unreferred = res;
@@ -1338,6 +1344,9 @@ static int env_rpl_var(void *Cfg, size_t ac,char **av){
 	  Conf->Flags.poprank_method = DpsPRMethod(av[1]);
 	}
 	DpsVarListReplaceStr(&Conf->Vars,av[0],av[1]);
+#ifdef WITH_PARANOIA
+	DpsViolationExit(-1, paran);
+#endif
 	return DPS_OK;
 }
 
@@ -1603,9 +1612,12 @@ static DPS_CONFCMD commands[] =
 __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
 	DPS_ENV		*Conf=C->Indexer->Conf;
 	DPS_CONFCMD	*Cmd, key;
-	char		*av[255];
+	char		*av[256];
 	size_t		ac;
 	int             res = DPS_OK;
+	int             argc;
+	size_t          i;
+	char            *p;
 #ifdef WITH_PARANOIA
 	void * paran = DpsViolationEnter(paran);
 #endif
@@ -1614,7 +1626,7 @@ __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
 
 	if (ac == 0) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_OK;
 	}
@@ -1622,16 +1634,12 @@ __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
 	key.name = DPS_NULL2EMPTY(av[0]);
 	Cmd = bsearch(&key, commands, sizeof(commands) / sizeof(commands[0]), sizeof(commands[0]), (qsort_cmp)dps_commands_cmp);
 	if (Cmd != NULL) {
-	    
-			int argc=ac;
-			size_t i;
-			char *p;
-			
+	  argc = ac;
 			argc--;
 			if(ac<Cmd->argmin+1){
 			  dps_snprintf(Conf->errstr,  sizeof(Conf->errstr) - 1, "too few (%d) arguments for command '%s'",argc,Cmd->name);
 #ifdef WITH_PARANOIA
-			  DpsViolationExit(paran);
+			  DpsViolationExit(-1, paran);
 #endif
 			  return DPS_ERROR;
 			}
@@ -1639,7 +1647,7 @@ __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
 			if(ac>Cmd->argmax+1){
 			  dps_snprintf(Conf->errstr,  sizeof(Conf->errstr) - 1, "too many (%d) arguments for command '%s'",argc,Cmd->name);
 #ifdef WITH_PARANOIA
-			  DpsViolationExit(paran);
+			  DpsViolationExit(-1, paran);
 #endif
 			  return DPS_ERROR;
 			}
@@ -1650,7 +1658,7 @@ __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
 				if (! p) {
 				  dps_snprintf(Conf->errstr,  sizeof(Conf->errstr) - 1, "An error occured while parsing '%s'", av[i]);
 #ifdef WITH_PARANOIA
-				  DpsViolationExit(paran);
+				  DpsViolationExit(-1, paran);
 #endif
 				  return DPS_ERROR;
 				}
@@ -1665,14 +1673,14 @@ __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
 
 			if(Cmd->action){
 #ifdef WITH_PARANOIA
-			  DpsViolationExit(paran);
+			  DpsViolationExit(-1, paran);
 #endif
 			  return res;
 			}
 	}
 	dps_snprintf(Conf->errstr,  sizeof(Conf->errstr) - 1, "Unknown command: %s", DPS_NULL2EMPTY(av[0]));
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return DPS_ERROR;
 }
@@ -1695,7 +1703,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	if ((str0 = (char*)DpsMalloc(str0size)) == NULL) {
 		sprintf(Cfg->Indexer->Conf->errstr, "Can't alloc %d bytes at '%s': %d", str0size, __FILE__, __LINE__);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(-1, paran);
 #endif
 		return DPS_ERROR;
 	}
@@ -1706,7 +1714,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to stat config file '%s': %s", cname, strerror(errno));
 	  DPS_FREE(str0);
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_ERROR;
 	}
@@ -1720,7 +1728,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	  DPS_FREE(str0);
 	  close(fd);
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_ERROR;
 	}
@@ -1730,7 +1738,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	  DPS_FREE(str0);
 	  close(fd);
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_ERROR;
 	}
@@ -1760,7 +1768,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 			  if ((str0 = (char*)DpsRealloc(str0, str0size)) == NULL) {
 			    sprintf(Cfg->Indexer->Conf->errstr, "Can't realloc %d bytes at '%s': %d", str0size, __FILE__, __LINE__);
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(paran);
+			    DpsViolationExit(-1, paran);
 #endif
 			    return DPS_ERROR;
 			  }
@@ -1802,7 +1810,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	DPS_FREE(str0);
 	close(fd);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return rc;
 }
@@ -1880,7 +1888,7 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
 freeex:
 	DpsServerFree(&Srv);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return rc;
 }

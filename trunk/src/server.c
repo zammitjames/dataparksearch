@@ -64,14 +64,14 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 
 	if (srv == NULL) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(A->handle, paran);
 #endif
 	  return DPS_ERROR;
 	}
 	idx = (size_t)srv->Match.match_type;
 	if (idx >= DPS_MATCH_max) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(A->handle, paran);
 #endif
 	  return DPS_ERROR;
 	}
@@ -84,7 +84,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	if ((urlstr = (char*)DpsMalloc(len + 1)) == NULL) {
 	  DpsLog(A, DPS_LOG_ERROR, "Can't alloc %d bytes at "__FILE__":%d", len, __LINE__);
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(A->handle, paran);
 #endif
 	  return DPS_ERROR;
 	}
@@ -112,7 +112,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 			DpsURLFree(&from);
 			DPS_FREE(urlstr);
 #ifdef WITH_PARANOIA
-			DpsViolationExit(paran);
+			DpsViolationExit(A->handle, paran);
 #endif
 			return(DPS_ERROR);
 		}
@@ -167,7 +167,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 			DPS_FREE(urlstr);
 			DpsURLFree(&from);
 #ifdef WITH_PARANOIA
-			DpsViolationExit(paran);
+			DpsViolationExit(A->handle, paran);
 #endif
 			return(DPS_ERROR);
 		}
@@ -189,7 +189,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	      DpsLog(A, DPS_LOG_ERROR, "Can't realloc %d bytes at "__FILE__":%d", List->mservers * sizeof(DPS_SERVER), __LINE__);
 	      List->nservers = List->mservers = 0;
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(paran);
+	      DpsViolationExit(A->handle, paran);
 #endif
 	      return DPS_ERROR;
 	    }
@@ -234,7 +234,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	    if (new->last_crawled == NULL) {
 	      DpsLog(A, DPS_LOG_ERROR, "Can't alloc %d bytes at "__FILE__":%d", sizeof(time_t), __LINE__);
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(paran);
+	      DpsViolationExit(A->handle, paran);
 #endif
 	      return DPS_ERROR;
 	    }
@@ -263,7 +263,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	DPS_FREE(urlstr);
 	DpsURLFree(&from);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(A->handle, paran);
 #endif
 	return(res);
 }
@@ -308,13 +308,29 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
   DPS_CONN       conn;
   char           net[32];
 
-  TRACE_IN(Agent, "DpsDocCheck");
+  TRACE_IN(Agent, "DpsServerFind");
 
+  net[0] = '\0';
   if (/*!(Agent->flags & DPS_FLAG_ADD_SERVURL) &&*/ (server_id != 0)) {
     DPS_SERVER key, *pkey = &key, **res;
     key.site_id = server_id;
     res = bsearch(&pkey, Agent->Conf->SrvPnt, Agent->Conf->total_srv_cnt, sizeof(DPS_SERVER*), cmpsrvpnt); 
     if (res != NULL) {
+      Res = *res;
+      {
+	const char      *alias = DpsVarListFindStr(&Res->Vars,"Alias",NULL);
+	size_t          aliastrlen;
+	int             follow = DpsVarListFindInt(&Res->Vars, "Follow", DPS_FOLLOW_PATH);
+
+	if(follow == DPS_FOLLOW_WORLD || !DpsMatchExec(&Res->Match, url, net, &conn.sin, NS, P) ) {
+	  if((aliastr != NULL) && (alias != NULL)) {
+	    aliastrlen = 128 + dps_strlen(url) + dps_strlen(alias) + dps_strlen(Res->Match.pattern);
+	    *aliastr = (char*)DpsMalloc(aliastrlen + 1);
+	    if (*aliastr != NULL)
+	      DpsMatchApply(*aliastr, aliastrlen, url, alias, &Res->Match, 10, P);
+	  }
+	}
+      }
       TRACE_OUT(Agent);
       return *res;
     }
@@ -357,8 +373,6 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
       size_t          aliastrlen;
       int             follow = DpsVarListFindInt(&srv->Vars, "Follow", DPS_FOLLOW_PATH);
       
-/*      fprintf(stderr, "FindServer pattern: %s\n", DPS_NULL2EMPTY(srv->Match.pattern));*/
-
       if(follow == DPS_FOLLOW_WORLD || !DpsMatchExec(&srv->Match, url, net, &conn.sin, NS, P) ) {
 	cur_idx = srv->ordre;
 	Res = srv;

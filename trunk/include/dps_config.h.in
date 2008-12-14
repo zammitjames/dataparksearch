@@ -662,8 +662,11 @@ extern void *DpsRealloc(void *p, size_t size);
 
 
 #ifdef WITH_PARANOIA
+#define DpsViolationExit(h,A) _DpsViolationExit(A, __FILE__, __LINE__, h)
+#define DpsViolationCheck(h,A) _DpsViolationCheck(A,__FILE__, __LINE__, h)
 extern void *DpsViolationEnter(void *);
-extern void DpsViolationExit(void *);
+extern void _DpsViolationExit(void*, const char*, int, int h);
+extern void _DpsViolationCheck(void*, const char*, int, int h);
 #endif
 
 
