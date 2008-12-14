@@ -1,4 +1,4 @@
-/* Copyright (C) 2006-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2006-2008 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
       }
       if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
 #ifdef WITH_PARANOIA
-      DpsViolationExit(paran);
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_OK;
     }
@@ -76,7 +76,7 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
     Cookies->ncookies = 0;
     if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(Indexer->handle, paran);
 #endif
     return DPS_ERROR;
   }
@@ -100,7 +100,7 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
   Cookies->ncookies++;
   if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
 #ifdef WITH_PARANOIA
-  DpsViolationExit(paran);
+  DpsViolationExit(Indexer->handle, paran);
 #endif
 
 #endif /*HAVE_SQL*/

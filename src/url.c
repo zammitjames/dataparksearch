@@ -67,6 +67,9 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	char *schema,*anchor,*file,*query;
 	char *s;
 /*	size_t len = dps_strlen(str);*/
+#ifdef WITH_PARANOIA
+	void * paran = DpsViolationEnter(paran);
+#endif
 
 #ifdef DEBUG_URL
 	fprintf(stderr, " -- %s:%d Parser url: %s\n", filename, line, str);
@@ -87,7 +90,12 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 
 /*	if(len >= DPS_URLSIZE)return(DPS_URL_LONG);  FIXME: Chage this cheking for configured parameter, not DPS_URLSIZE */
 	s = (char*)DpsStrdup(str);
-	if (s == NULL) return DPS_ERROR;
+	if (s == NULL) {
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
+	  return DPS_ERROR;
+	}
 
 	url->len = dps_strlen(str);
 	
@@ -189,6 +197,9 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 			   || !strcasecmp(url->schema,"feed")
 			   ) {
 			        DPS_FREE(s);
+#ifdef WITH_PARANOIA
+				DpsViolationExit(-1, paran);
+#endif
 				return(DPS_URL_BAD);
 			} else
 			if(!strcasecmp(url->schema,"file"))
@@ -210,6 +221,9 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 				url->path = (char*)DpsMalloc(dps_strlen(url->specific) + 2);
 				if (url->path == NULL) {
 				  DPS_FREE(s);
+#ifdef WITH_PARANOIA
+				  DpsViolationExit(-1, paran);
+#endif
 				  return DPS_ERROR;
 				}
 				sprintf(url->path,"/%s",url->specific);
@@ -217,6 +231,9 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 			}else{
 				/* Unknown strange schema */
 			        DPS_FREE(s);
+#ifdef WITH_PARANOIA
+				DpsViolationExit(-1, paran);
+#endif
 				return(DPS_URL_BAD);
 			}
 		}
@@ -275,7 +292,12 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	  DpsRTrim(url->hostname, ".");
 	  for (s = url->hostname; *s; s++) {
 	    *s = dps_tolower(*s);
-	    if (strchr(",'\";", (int)*s)) return DPS_URL_BAD;
+	    if (strchr(",'\";", (int)*s)) {
+#ifdef WITH_PARANOIA
+	      DpsViolationExit(-1, paran);
+#endif
+	      return DPS_URL_BAD;
+	    }
 	  }
 	}
 	if (url->hostinfo != NULL) {
@@ -284,6 +306,9 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	  for (s = (s == NULL) ? url->hostinfo : s + 1; *s; s++) *s = dps_tolower(*s);
 	}
 	if (url->schema != NULL) for (s = url->schema; *s; s++) *s = dps_tolower(*s);
+#ifdef WITH_PARANOIA
+	DpsViolationExit(-1, paran);
+#endif
 	return DPS_OK;
 }
 

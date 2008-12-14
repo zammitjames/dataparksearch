@@ -675,14 +675,14 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
   if (stat(filename, &sb)) {
     fprintf(stderr, "Unable to stat synonyms file '%s': %s", filename, strerror(errno));
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
   if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
     dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to open synonyms file '%s': %s", filename, strerror(errno));
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
@@ -690,7 +690,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
     dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to alloc %d bytes", sb.st_size);
     DpsClose(fd);
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
@@ -699,7 +699,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
     DPS_FREE(data);
     DpsClose(fd);
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
@@ -716,14 +716,14 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
   affix_charset = DpsGetCharSet(charset);
   if (affix_charset == NULL) {
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
   sys_int = DpsGetCharSet("sys-int");
   if (sys_int == NULL) {
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
@@ -861,7 +861,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
   DPS_FREE(data);
 	    
 #ifdef WITH_PARANOIA
-  DpsViolationExit(paran);
+  DpsViolationExit(-1, paran);
 #endif
   return 0;
 }
@@ -965,13 +965,13 @@ static void CheckSuffix(const dpsunicode_t *word, size_t len, DPS_AFFIX *Affix, 
   *res = DpsUniStrBNCmp(word, Affix->repl, Affix->replen);
   if (*res < 0) {
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return;
   }
   if (*res > 0) {
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return;
   }
@@ -983,7 +983,7 @@ static void CheckSuffix(const dpsunicode_t *word, size_t len, DPS_AFFIX *Affix, 
     if(err){
       DpsUniRegFree(&(Affix->reg));
 #ifdef WITH_PARANOIA
-      DpsViolationExit(paran);
+      DpsViolationExit(-1, paran);
 #endif
       return;
     }
@@ -1003,13 +1003,13 @@ static void CheckSuffix(const dpsunicode_t *word, size_t len, DPS_AFFIX *Affix, 
       Indexer->spellang = curspellang;
 */
 #ifdef WITH_PARANOIA
-      DpsViolationExit(paran);
+      DpsViolationExit(-1, paran);
 #endif
       return;
     }
   }
 #ifdef WITH_PARANOIA
-  DpsViolationExit(paran);
+  DpsViolationExit(-1, paran);
 #endif
   return;
 }
@@ -1027,7 +1027,7 @@ static int CheckPrefix(const dpsunicode_t *word, DPS_AFFIX *Affix, DPS_AGENT *In
   res = DpsUniStrNCaseCmp(word, Affix->repl, Affix->replen);
   if (res != 0) {
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(-1, paran);
 #endif
     return res;
   }
@@ -1039,7 +1039,7 @@ static int CheckPrefix(const dpsunicode_t *word, DPS_AFFIX *Affix, DPS_AGENT *In
     if(err){
       DpsUniRegFree(&(Affix->reg));
 #ifdef WITH_PARANOIA
-      DpsViolationExit(paran);
+      DpsViolationExit(-1, paran);
 #endif
       return (0);
     }
@@ -1063,7 +1063,7 @@ static int CheckPrefix(const dpsunicode_t *word, DPS_AFFIX *Affix, DPS_AGENT *In
     }
   }
 #ifdef WITH_PARANOIA
-  DpsViolationExit(paran);
+  DpsViolationExit(-1, paran);
 #endif
   return 0;
 }

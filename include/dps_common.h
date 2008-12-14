@@ -1163,10 +1163,11 @@ typedef struct {
 		size_t     nlen;
 		size_t     vlen;
 	} toks[DPS_MAXTAGVAL+1];
-        char visible[2048];
-        char trail[8192];
+        char visible[1024];
+        char trail[4096];
         char *trailend;
-        DPS_VAR *Sec[2048];
+        char section[1024], strict[1024];
+        char *section_name[1024];
 } DPS_HTMLTOK;
 
 typedef struct dps_cfg_st {

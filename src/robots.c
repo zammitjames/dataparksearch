@@ -63,7 +63,7 @@ DPS_ROBOT* DpsRobotFind(DPS_ROBOTS *Robots,const char *hostinfo){
 	r = bsearch(&key, Robots->Robot, Robots->nrobots, sizeof(DPS_ROBOT), (qsort_cmp)DpsRobotCmp);
 
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return r;
 }
@@ -98,12 +98,12 @@ static DPS_ROBOT* DeleteRobotRules(DPS_AGENT *A, DPS_ROBOTS *Robots,char *hostin
 		robot->nrules=0;
 		DPS_FREE(robot->Rule);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(A->handle, paran);
 #endif
 		return robot;
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(A->handle, paran);
 #endif
 	return NULL;
 }
@@ -118,7 +118,7 @@ static DPS_ROBOT* DpsRobotAddEmpty(DPS_ROBOTS *Robots, const char *hostinfo, tim
 	if(Robots->Robot==NULL) {
 	  Robots->nrobots = 0;
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return NULL;
 	}
@@ -132,7 +132,7 @@ static DPS_ROBOT* DpsRobotAddEmpty(DPS_ROBOTS *Robots, const char *hostinfo, tim
 	  Robots->Robot[Robots->nrobots].last_crawled = (time_t*)DpsMalloc(sizeof(time_t));
 	  if (Robots->Robot[Robots->nrobots].last_crawled == NULL) {
 #ifdef WITH_PARANOIA
-	    DpsViolationExit(paran);
+	    DpsViolationExit(-1, paran);
 #endif
 	    return NULL;
 	  }
@@ -148,7 +148,7 @@ static DPS_ROBOT* DpsRobotAddEmpty(DPS_ROBOTS *Robots, const char *hostinfo, tim
 	  r = &Robots->Robot[Robots->nrobots - 1];
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return r;
 }
@@ -170,7 +170,7 @@ static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int
 	  if(robot->Rule==NULL) {
 	    robot->nrules = 0;
 #ifdef WITH_PARANOIA
-	    DpsViolationExit(paran);
+	    DpsViolationExit(A->handle, paran);
 #endif
 	    return DPS_ERROR;
 	  }
@@ -202,7 +202,7 @@ static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int
 
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(A->handle, paran);
 #endif
 
 #endif /*HAVE_SQL*/
@@ -217,7 +217,7 @@ int DpsRobotListFree(DPS_ROBOTS *Robots){
 	
 	if(!Robots->nrobots){
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(-1, paran);
 #endif
 	  return 0;
 	}
@@ -232,7 +232,7 @@ int DpsRobotListFree(DPS_ROBOTS *Robots){
 	DPS_FREE(Robots->Robot);
 	Robots->nrobots=0;
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return 0;
 }
@@ -303,7 +303,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 	    DpsDocFree(rDoc);
 	    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	    DpsViolationExit(paran);
+	    DpsViolationExit(Indexer->handle, paran);
 #endif
 	    return NULL;
 	  }
@@ -415,7 +415,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
 	TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 
 #endif /*HAVE_SQL*/
@@ -444,7 +444,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 
 	if (strcasecmp(DPS_NULL2EMPTY(URL->schema), "http")) { /* robots.txt exist only for http scheme */
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(Indexer->handle, paran);
 #endif
 	  return NULL;
 	}
@@ -461,7 +461,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	if ( rurl == NULL) {
 	  DpsDocFree(&HostDoc);
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(Indexer->handle, paran);
 #endif
 	  return &DpsRobotErrRule;
 	}
@@ -535,7 +535,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 			    if (rurlen > PATH_MAX) DPS_FREE(rurl);
 			    DpsDocFree(&HostDoc);
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(paran);
+			    DpsViolationExit(Indexer->handle, paran);
 #endif
 			    return NULL;
 			  } else {
@@ -543,7 +543,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 			    if (rurlen > PATH_MAX) DPS_FREE(rurl);
 			    DpsDocFree(&HostDoc);
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(paran);
+			    DpsViolationExit(Indexer->handle, paran);
 #endif
 			    return r;
 			  }
@@ -563,7 +563,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 			    if (rurlen > PATH_MAX) DPS_FREE(rurl);
 			    DpsDocFree(&HostDoc);
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(paran);
+			    DpsViolationExit(Indexer->handle, paran);
 #endif
 			    return NULL;
 			  }
@@ -574,12 +574,12 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	DpsDocFree(&HostDoc);
 	if (have_host && !aliased) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(Indexer->handle, paran);
 #endif
 	  return &dps_host_disallow;
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return NULL;
 }

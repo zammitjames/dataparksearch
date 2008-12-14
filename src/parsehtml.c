@@ -349,7 +349,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   if (DpsDSTRInit(&exrpt, dps_max( 4096, Doc->Buf.size >> 2 )) == NULL) {
     TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(Indexer->handle, paran);
 #endif
     return DPS_ERROR;
   }
@@ -358,7 +358,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
     DpsDSTRFree(&exrpt);
     TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(Indexer->handle, paran);
 #endif
     return DPS_ERROR;
   }
@@ -366,7 +366,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
     DpsDSTRFree(&exrpt);
     TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-    DpsViolationExit(paran);
+    DpsViolationExit(Indexer->handle, paran);
 #endif
     return DPS_ERROR; 
   }
@@ -434,7 +434,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-      DpsViolationExit(paran);
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }
@@ -451,7 +451,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-      DpsViolationExit(paran);
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }
@@ -463,9 +463,8 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       various pseudo-graphics, commas, semicolons
       and so on to improve clone detection quality
     */
-		
     if (strncasecmp(DPS_NULL2EMPTY(Item->section_name), "url", 3) != 0) /* do not calculate crc32  on url* sections */
-      crc32 = DpsHash32Update(crc32, (char*)ustr, reslen);
+      crc32 = DpsHash32Update(crc32, (char*)ustr, reslen * sizeof(dpsunicode_t));
 
     /* Collect links from HrefSections */
     if((Sec = DpsVarListFind(&Indexer->Conf->HrefSections, Item->section_name))) {
@@ -495,7 +494,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	DpsDSTRFree(&exrpt);
 	TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return DPS_ERROR;
       }
@@ -528,7 +527,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   DpsDSTRFree(&exrpt);
   TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-  DpsViolationExit(paran);
+  DpsViolationExit(Indexer->handle, paran);
 #endif
   return res;
 }
@@ -684,13 +683,17 @@ static void DpsNextCharE(void *d) {
 }
 
 
-int DpsHTMLTOKInit(DPS_HTMLTOK *tag) {
+void DpsHTMLTOKInit(DPS_HTMLTOK *tag) {
   bzero((void*)tag, sizeof(*tag));
   tag->next_b = &DpsNextCharB;
   tag->next_e = &DpsNextCharE;
   tag->trailend = tag->trail;
   tag->visible[0] = 1;
-  return DPS_OK;
+}
+
+void DpsHTMLTOKFree(DPS_HTMLTOK *tag) {
+/*  register size_t i;
+  for (i = 0; i < sizeof(tag->section); i++) DPS_FREE(tag->section_name[i]);*/
 }
 
 
@@ -898,19 +901,19 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 
 	if(!tag->ntoks) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(Indexer->handle, paran);
 #endif
 	  return(0);
 	}
 	if(!tag->toks[0].name) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(Indexer->handle, paran);
 #endif
 	  return(0);
 	}
 	if(tag->toks[0].nlen>sizeof(name)-1) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(Indexer->handle, paran);
 #endif
 	  return(0);
 	}
@@ -918,7 +921,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	secname = (char*)DpsMalloc(seclen + 1);
 	if (secname == NULL) {
 #ifdef WITH_PARANOIA
-	  DpsViolationExit(paran);
+	  DpsViolationExit(Indexer->handle, paran);
 #endif
 	  return(0);
 	}
@@ -930,24 +933,24 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	if(name[0]=='/'){
 	        char *e;
 		size_t glen, slen;
-		char s[256];
-		char g[256];
 		opening = 0;
 		dps_memcpy(name, name + 1, (slen = dps_strlen(name+1)) + 1); /* was: dps_memmove */
 		do {
 		  /* Find previous '.' or beginning */
 		  for(e = tag->trailend; (e > tag->trail) && (e[0] != '.'); e--);
 		  glen = (e[0] == '.') ? (tag->trailend - e - 1) : tag->trailend - e;
-//		  dps_mstr(g, e + 1, sizeof(g) - 1, glen);
 		  *e = '\0';
 		  tag->trailend = e;
-		  if (tag->level) tag->level--;
+		  if (tag->level) { tag->level--; tag->section[tag->level] = 0; }
 		} while ((strcmp(e + 1, name) != 0) && tag->trailend > tag->trail);
 	}else{
 	        size_t name_len = dps_strlen(name);
+		Sec = DpsVarListFind(&Doc->Sections, name);
 		opening = 1;
 		if (tag->level < sizeof(tag->visible)) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
-		tag->Sec[tag->level] = DpsVarListFind(&Doc->Sections, name);
+		tag->section[tag->level] = (Sec) ? Sec->section : 0;
+		tag->strict[tag->level] = (Sec) ? Sec->strict : 0;
+		tag->section_name[tag->level] = (Sec) ? Sec->name : NULL;
 		tag->level++;
 		if ((tag->level >= sizeof(tag->visible)) && ((tag->trailend - tag->trail + name_len + 1) > sizeof(tag->trail)) ) {
 		  DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML");
@@ -1051,7 +1054,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 			  secname = (char*)DpsRealloc(secname, seclen = (tag->toks[i].nlen + 12));
 			  if (secname == NULL) {
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(paran);
+			    DpsViolationExit(Indexer->handle, paran);
 #endif
 			    return(0);
 			  }
@@ -1264,7 +1267,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	DPS_FREE(secname);
 	
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return 0;
 }
@@ -1325,14 +1328,19 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 
 	    if (BSec && !tag.comment && !tag.title && tag.body && !tag.script && !tag.style && tag.index && !tag.select 
 		&& tag.visible[tag.level]) {
-	      DPS_VAR *Sec = NULL;
 	      int z;
-	      for(z = tag.level; z >= 0 && !(Sec = tag.Sec[z]); z--);
+	      for(z = tag.level - 1; z >= 0 && tag.section[z] == 0; z--);
 	      Item.href=tag.lasthref;
 	      Item.str=tmp;
-	      Item.section = (Sec) ? Sec->section : body_sec;
-	      Item.strict = (Sec) ? Sec->strict : body_strict;
-	      Item.section_name = (section_name) ? section_name : ((Sec) ? Sec->name : "body");
+	      if (z >= 0) {
+		Item.section = tag.section[z];
+		Item.strict = tag.strict[z];
+		Item.section_name = (section_name) ? section_name : tag.section_name[z];
+	      } else {
+		Item.section = body_sec;
+		Item.strict = body_strict;
+		Item.section_name = (section_name) ? section_name : "body";
+	      }
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      DpsTextListAdd(&Doc->TextList,&Item);
 	    }
@@ -1357,8 +1365,9 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 		
 	}
 	DPS_FREE(tag.lasthref);	
+	DpsHTMLTOKFree(&tag);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return DPS_OK;
 }

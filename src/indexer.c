@@ -126,7 +126,7 @@ static int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, c
 	    sprintf(reason, "%s by default", DpsMethodStr(default_method));
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return res;
 }
@@ -150,7 +150,7 @@ static int DpsSectionFilterFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *D
 	    dps_snprintf(reason, PATH_MAX, "%s method is used", DpsMethodStr(Doc->method));
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return res;
 }
@@ -174,7 +174,7 @@ static int DpsStoreFilterFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc
 	    sprintf(reason, "Store by default");
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return res;
 }
@@ -201,7 +201,7 @@ static int DpsSubSectionMatchFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT 
 	  *subsection = NULL;
 	}
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return res;
 }
@@ -517,7 +517,7 @@ int DpsConvertHref(DPS_AGENT *Indexer, DPS_URL *CurURL, DPS_HREF *Href){
 	DPS_FREE(newhref);
 	DpsURLFree(newURL);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return DPS_OK;
 }
@@ -627,7 +627,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 			result = DpsURLAction(Indexer, NULL, DPS_URL_ACTION_EXPIRE);
 			if(result!=DPS_OK) { DpsURLFree(myurl); 
 #ifdef WITH_PARANOIA
-			  DpsViolationExit(paran);
+			  DpsViolationExit(Indexer->handle, paran);
 #endif
 			return(result); }
 			DpsVarListDel(&Indexer->Vars, "ul");
@@ -642,7 +642,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 			/*result =*/ DpsAppendTarget(Indexer, str, "", 0, 0);
 /*			if(result!=DPS_OK) { DpsURLFree(myurl); 
 #ifdef WITH_PARANOIA
-			  DpsViolationExit(paran);
+			  DpsViolationExit(Indexer->handle, paran);
 #endif
 			return(result); }*/
 			if (cnt_flag) Indexer->Conf->url_number++;
@@ -658,7 +658,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 			result=DpsClearDatabase(Indexer);
 			if(result!=DPS_OK) { DpsURLFree(myurl); 
 #ifdef WITH_PARANOIA
-			  DpsViolationExit(paran);
+			  DpsViolationExit(Indexer->handle, paran);
 #endif
 			return(DPS_ERROR); }
 			DpsVarListDel(&Indexer->Vars, "ul");
@@ -688,7 +688,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 				}
 				DpsURLFree(myurl);
 #ifdef WITH_PARANOIA
-				DpsViolationExit(paran);
+				DpsViolationExit(Indexer->handle, paran);
 #endif
 				return(DPS_ERROR);
 			}
@@ -700,7 +700,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 		fclose(url_file);
 	DpsURLFree(myurl);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return(DPS_OK);
 }
@@ -1396,7 +1396,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		  if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 		  TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		  DpsViolationExit(paran);
+		  DpsViolationExit(Indexer->handle, paran);
 #endif
 		  return DPS_ERROR;
 		}
@@ -1486,7 +1486,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -1525,7 +1525,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -1536,7 +1536,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	    if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 	    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	    DpsViolationExit(paran);
+	    DpsViolationExit(Indexer->handle, paran);
 #endif
 	    return result;
 	  }
@@ -1597,7 +1597,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 				TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-				DpsViolationExit(paran);
+				DpsViolationExit(Indexer->handle, paran);
 #endif
 				return result;
 			}
@@ -1634,7 +1634,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 			TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-			DpsViolationExit(paran);
+			DpsViolationExit(Indexer->handle, paran);
 #endif
 			return result;
 		}
@@ -1677,7 +1677,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 				TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-				DpsViolationExit(paran);
+				DpsViolationExit(Indexer->handle, paran);
 #endif
 				return result;
 			}
@@ -1734,7 +1734,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			    if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 			    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(paran);
+			    DpsViolationExit(Indexer->handle, paran);
 #endif
 			    return result;
 			  }
@@ -1755,7 +1755,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -1780,7 +1780,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	      if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 	      TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(paran);
+	      DpsViolationExit(Indexer->handle, paran);
 #endif
 	      return DPS_ERROR;
 	    }
@@ -1812,7 +1812,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
 	TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return result;
 }
@@ -1840,7 +1840,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	        if (Indexer->action != DPS_OK && Indexer->action != DPS_NOTARGET) {
 		  TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		  DpsViolationExit(paran);
+		  DpsViolationExit(Indexer->handle, paran);
 #endif
 		  return Indexer->action;
 		}
@@ -1851,7 +1851,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		DpsDocFree(Doc);	/* To free Doc.connp->connp */
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -1860,7 +1860,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		DpsDocFree(Doc);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -1883,7 +1883,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		  DpsDocFree(Doc);
 		  TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		  DpsViolationExit(paran);
+		  DpsViolationExit(Indexer->handle, paran);
 #endif
 		  return DPS_ERROR;
 		}
@@ -1971,7 +1971,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		DpsDocFree(Doc);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -2009,7 +2009,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		DpsDocFree(Doc);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -2019,7 +2019,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	    DpsDocFree(Doc);
 	    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	    DpsViolationExit(paran);
+	    DpsViolationExit(Indexer->handle, paran);
 #endif
 	    return result;
 	  }
@@ -2077,7 +2077,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 				DpsDocFree(Doc);
 				TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-				DpsViolationExit(paran);
+				DpsViolationExit(Indexer->handle, paran);
 #endif
 				return result;
 			}
@@ -2113,7 +2113,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			DpsDocFree(Doc);
 			TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-			DpsViolationExit(paran);
+			DpsViolationExit(Indexer->handle, paran);
 #endif
 			return result;
 		}
@@ -2152,7 +2152,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 				DpsDocFree(Doc);
 				TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-				DpsViolationExit(paran);
+				DpsViolationExit(Indexer->handle, paran);
 #endif
 				return result;
 			}
@@ -2208,7 +2208,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			    DpsDocFree(Doc);
 			    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(paran);
+			    DpsViolationExit(Indexer->handle, paran);
 #endif
 			    return result;
 			  }
@@ -2228,7 +2228,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		DpsDocFree(Doc);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(paran);
+		DpsViolationExit(Indexer->handle, paran);
 #endif
 		return result;
 	}
@@ -2260,7 +2260,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			     );
 #endif
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return result;
 }

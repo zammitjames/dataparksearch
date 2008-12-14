@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -208,7 +208,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 	}
 	if (Match->nomatch) res = !res;
 #ifdef WITH_PARANOIA
-	DpsViolationExit(paran);
+	DpsViolationExit(-1, paran);
 #endif
 	return res;
 }
@@ -224,7 +224,7 @@ int DpsMatchApply(char *res, size_t size, const char *string, const char *rpl,
 	size_t          len1, avail1;
 
 	if(!size)return 0;
-	
+
 	switch(Match->match_type){
 		case DPS_MATCH_REGEX:
 			dst=res;

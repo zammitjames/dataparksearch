@@ -2297,7 +2297,7 @@ int dps_demonize(void) {
 #error requires the binary to be compiled with frame pointers
 #endif
 
-#define NSAVE 10
+#define NSAVE 20
 /*#define PRINTF_DEBUGINFO*/
 
 #ifdef WITH_SYSLOG
@@ -2323,14 +2323,14 @@ getbp()
 }
 */
 #ifdef WITH_SYSLOG
-#define SUICIDE \
+#define SUICIDE(h,i,X, file, line)						\
 /*	openlog(__progname,LOG_NDELAY|LOG_PERROR|LOG_PID|LOG_CONS,LOG_USER);*/ \
-        syslog(LOG_ERR,"Stack violation - exiting");\
+  syslog(LOG_ERR,"{%d} Stack violation %d:%s - exiting [%s:%d]", h, i, X, file, line); \
         closelog();\
         kill(SIGSEGV,getpid());\
         exit(1) ;
 #else
-#define SUICIDE \
+#define SUICIDE(h,i,X,file,line)			\
         kill(SIGSEGV,getpid());\
         exit(1) ;
 #endif
@@ -2345,7 +2345,7 @@ void * DpsViolationEnter(void *param) {
 	DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)DpsMalloc(sizeof(DPS_PARANOIA_PARAM));
 
 #if defined(PRINTF_DEBUGINFO)
-	printf("\nEnter p: %lx  bp:%x  obp:%x\n", p, bp, obp);
+	printf("\nEnter p: %lx  bp:%x  obp:%x\n", p, bp/*, obp*/);
 #endif
 	if (p == NULL) exit(2);
 
@@ -2388,7 +2388,7 @@ void * DpsViolationEnter(void *param) {
 };
 
 
-void DpsViolationExit(void *v) { 
+void _DpsViolationExit(void *v, const char *filename, int line, int handle) { 
 /*	unsigned bp = getbp();*/
         unsigned bp = &v - 2;
 	int i = 2;
@@ -2416,19 +2416,58 @@ void DpsViolationExit(void *v) {
 #endif
 		if(!p->save[i]) break;
 		if(bp != p->save[i]) { 
-			SUICIDE;
+		  SUICIDE(handle, 0, "bp", filename, line);
 		};
 		if(!bp) break;
 #if defined(PRINTF_DEBUGINFO)
 		printf("restoring ip %lx : %x \n", p->saveip[i], *((unsigned*)bp + 1));
 #endif
 		if(p->saveip[i] != *((unsigned*)bp+1)) { 
-			SUICIDE;
+		  SUICIDE(handle, i, "ip", filename, line);
 		};
 		bp = *(unsigned*)bp;
 	};
 	p->invflag--;
 	if (p->invflag == 0) DPS_FREE(p);
+	return;
+};
+
+
+void _DpsViolationCheck(void *v, const char *filename, int line, int handle) { 
+/*	unsigned bp = getbp();*/
+        unsigned bp = &v - 2;
+	int i = 2;
+	DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)v;
+
+#if defined(PRINTF_DEBUGINFO)
+	printf("Check p: %lx\n", p);
+#endif
+#ifdef PARANOIDAL_ROOT
+	/* at exit_violation we always have paranoidal_check set to 0 or 1 */
+	if(!p->paranoidal_check) {
+	  DPS_FREE(p);
+	  return; 
+	}
+#endif
+
+	bp = *((unsigned*)bp);
+	for(i = 0; i < NSAVE; i++) { 
+#if defined(PRINTF_DEBUGINFO)
+		printf("processing %lx (%i, %d)\n", bp, p->invflag, i);
+#endif
+		if(!p->save[i]) break;
+		if(bp != p->save[i]) { 
+		  SUICIDE(handle, 0, "bp", filename, line);
+		};
+		if(!bp) break;
+#if defined(PRINTF_DEBUGINFO)
+		printf("restoring ip %lx : %x \n", p->saveip[i], *((unsigned*)bp + 1));
+#endif
+		if(p->saveip[i] != *((unsigned*)bp+1)) { 
+		  SUICIDE(handle, i, "ip", filename, line);
+		};
+		bp = *(unsigned*)bp;
+	};
 	return;
 };
 

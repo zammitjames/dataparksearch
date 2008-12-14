@@ -1651,10 +1651,23 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	char *stored_host = NULL, *cached_host = NULL;
 	struct hostent *hp;
 	int nport;
+#ifdef WITH_PARANOIA
+	void * paran = DpsViolationEnter(paran);
+#endif
 	
-	if (!dbaddr) return DPS_ERROR;
+	if (!dbaddr) {
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
+	  return DPS_ERROR;
+	}
 
-	if(DpsURLParse(&db->addr,dbaddr))return DPS_ERROR;
+	if(DpsURLParse(&db->addr,dbaddr)) {
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
+	  return DPS_ERROR;
+	}
 	DPS_FREE(db->DBADDR);
 	DPS_FREE(db->DBName);
 	DPS_FREE(db->DBUser);
@@ -1669,7 +1682,12 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	db->DBMode = DPS_DBMODE_CACHE;
 	db->DBADDR = (char*)DpsStrdup(dbaddr);
 
-	if (db->addr.schema == NULL) return DPS_ERROR;
+	if (db->addr.schema == NULL){
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
+	  return DPS_ERROR;
+	}
 	if(!strcasecmp(db->addr.schema,"cached")){
 		db->DBType = DPS_DB_CACHED;
 	}
@@ -1806,7 +1824,10 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 	else {
-		return DPS_ERROR;
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
+	  return DPS_ERROR;
 	}
 	
 	db->DBDriver=db->DBType;
@@ -1840,6 +1861,9 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 				}else
 				if(!strcasecmp(tok,"dbmode")&&val[0]){
 				  if ((db->DBMode=DpsStr2DBMode(val)) < 0) {
+#ifdef WITH_PARANOIA
+				    DpsViolationExit(-1, paran);
+#endif
 				    return DPS_ERROR;
 				  }
 				}else
@@ -1912,6 +1936,9 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	  if ((hp = gethostbyname(stored_host)) == 0 ) {
 	    DPS_FREE(stored_host); DPS_FREE(cached_host);
 /*	    fprintf(stderr, "StoreD ERR gethostbyname: %s", hstrerror(h_errno));*/
+#ifdef WITH_PARANOIA
+	    DpsViolationExit(-1, paran);
+#endif
 	    return DPS_ERROR;
 	  }
 	  dps_memmove(&db->stored_addr.sin_addr, hp->h_addr, (size_t)hp->h_length);
@@ -1931,6 +1958,9 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	  if ((hp = gethostbyname(cached_host)) == 0 ) {
 	    DPS_FREE(stored_host); DPS_FREE(cached_host);
 /*	    fprintf(stderr, "CachedOpen ERR gethostbyname: %s", hstrerror(h_errno));*/
+#ifdef WITH_PARANOIA
+	    DpsViolationExit(-1, paran);
+#endif
 	    return DPS_ERROR;
 	  }
 	  dps_memmove(&db->cached_addr.sin_addr, hp->h_addr, (size_t)hp->h_length);
@@ -1940,6 +1970,9 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 
 	DPS_FREE(stored_host); 
 	DPS_FREE(cached_host);
+#ifdef WITH_PARANOIA
+	DpsViolationExit(-1, paran);
+#endif
 	return DPS_OK;
 }
 
@@ -2200,12 +2233,23 @@ DPS_DBLIST * DpsDBListInit(DPS_DBLIST * List){
 size_t DpsDBListAdd(DPS_DBLIST *List, const char * addr, int mode) {
 	DPS_DB	*db;
 	int res;
+#ifdef WITH_PARANOIA
+	void * paran = DpsViolationEnter(paran);
+#endif
 	for (res = 0; res < List->nitems; res++) {
-	  if (strcasecmp(List->db[res].DBADDR, addr) == 0) return DPS_OK;
+	  if (strcasecmp(List->db[res].DBADDR, addr) == 0) {
+#ifdef WITH_PARANOIA
+	    DpsViolationExit(-1, paran);
+#endif
+	    return DPS_OK;
+	  }
 	}
 	db=List->db=(DPS_DB*)DpsRealloc(List->db,(List->nitems+1)*sizeof(DPS_DB));
 	if (db == NULL) {
 	  List->nitems = 0;
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
 	  return DPS_ERROR;
 	}
 	db+=List->nitems;
@@ -2215,6 +2259,9 @@ size_t DpsDBListAdd(DPS_DBLIST *List, const char * addr, int mode) {
 	  db->dbnum = List->nitems;
 	  List->nitems++;
 	}
+#ifdef WITH_PARANOIA
+	DpsViolationExit(-1, paran);
+#endif
 	return res;
 }
 

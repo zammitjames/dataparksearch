@@ -48,6 +48,7 @@ extern int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *I
 
 extern const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t);
 extern int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc);
-extern int DpsHTMLTOKInit(DPS_HTMLTOK *t);
+extern void DpsHTMLTOKInit(DPS_HTMLTOK *t);
+extern void DpsHTMLTOKFree(DPS_HTMLTOK *t);
 
 #endif
