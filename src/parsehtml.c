@@ -884,7 +884,7 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	DPS_TEXTITEM Item;
 	DPS_VAR	*Sec;
-	int opening, visible;
+	int opening, visible = 0;
 	char name[128];
 	register char * n;
 	char *metaname = NULL;
@@ -944,7 +944,6 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  if (tag->level) { tag->level--; tag->section[tag->level] = 0; }
 		} while ((strcmp(e + 1, name) != 0) && tag->trailend > tag->trail);
 	}else{
-	  if ((!strcasecmp(name, "font")) && (!strcasecmp(name, "img"))) {
 	        size_t name_len = dps_strlen(name);
 		Sec = DpsVarListFind(&Doc->Sections, name);
 		opening = 1;
@@ -957,14 +956,15 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  return 0;
 		}
 		tag->level++;
-		if (tag->trailend > tag->trail) {
-		  tag->trailend[0] = '.';
-		  tag->trailend++;
+		if ((!strcasecmp(name, "font")) && (!strcasecmp(name, "img"))) {
+		  if (tag->trailend > tag->trail) {
+		    tag->trailend[0] = '.';
+		    tag->trailend++;
+		  }
+		  dps_memmove(tag->trailend, name, name_len);
+		  tag->trailend += name_len;
+		  tag->trailend[0] = '\0';
 		}
-		dps_memmove(tag->trailend, name, name_len);
-		tag->trailend += name_len;
-		tag->trailend[0] = '\0';
-	  }
 	}
 
 	tag->follow = Doc->Spider.follow;
