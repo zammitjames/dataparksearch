@@ -1513,6 +1513,12 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        }
        DPS_FREE(mapstat);
      }
+     if (*DPS_NULL2EMPTY(charset) == '\0') {
+       DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = "iso8859-1");
+     }
+     if (*DPS_NULL2EMPTY(lang) == '\0') {
+       DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = "en");
+     }
      
 #ifdef DEBUG_GUESSER
      if (DpsNeedLog(DPS_LOG_EXTRA))
@@ -1521,6 +1527,8 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        fprintf(stderr, "Guesser start0: server_lang: %s, server_charset: %s\n", DPS_NULL2EMPTY(server_lang), DPS_NULL2EMPTY(server_charset));
      if (DpsNeedLog(DPS_LOG_EXTRA))
        fprintf(stderr, "Guesser start0: lang0: %s, charset0: %s\n", DPS_NULL2EMPTY(lang0), DPS_NULL2EMPTY(charset0));
+     if (DpsNeedLog(DPS_LOG_EXTRA))
+       fprintf(stderr, "Guesser start0: lang: %s, charset: %s\n", DPS_NULL2EMPTY(lang), DPS_NULL2EMPTY(charset));
 #endif
 
     u = Indexer->Flags.update_lm;
