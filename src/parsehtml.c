@@ -944,18 +944,19 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  if (tag->level) { tag->level--; tag->section[tag->level] = 0; }
 		} while ((strcmp(e + 1, name) != 0) && tag->trailend > tag->trail);
 	}else{
+	  if ((!strcasecmp(name, "font")) && (!strcasecmp(name, "img"))) {
 	        size_t name_len = dps_strlen(name);
 		Sec = DpsVarListFind(&Doc->Sections, name);
 		opening = 1;
-		if (tag->level < sizeof(tag->visible)) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
+		if (tag->level < sizeof(tag->visible) - 1) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
 		tag->section[tag->level] = (Sec) ? Sec->section : 0;
 		tag->strict[tag->level] = (Sec) ? Sec->strict : 0;
 		tag->section_name[tag->level] = (Sec) ? Sec->name : NULL;
-		tag->level++;
-		if ((tag->level >= sizeof(tag->visible)) && ((tag->trailend - tag->trail + name_len + 1) > sizeof(tag->trail)) ) {
+		if ((tag->level >= sizeof(tag->visible)) || ((tag->trailend - tag->trail + name_len + 1) > sizeof(tag->trail)) ) {
 		  DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML");
 		  return 0;
 		}
+		tag->level++;
 		if (tag->trailend > tag->trail) {
 		  tag->trailend[0] = '.';
 		  tag->trailend++;
@@ -963,6 +964,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		dps_memmove(tag->trailend, name, name_len);
 		tag->trailend += name_len;
 		tag->trailend[0] = '\0';
+	  }
 	}
 
 	tag->follow = Doc->Spider.follow;
