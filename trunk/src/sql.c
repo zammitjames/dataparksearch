@@ -2824,7 +2824,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   !strcasecmp(Sec->name, "Z") ||
 		   !strcasecmp(Sec->name, "Content-Length")
 		   ) continue;
-		if( ((Sec->section == 0 && Sec->maxlen == 0) || u) && 
+		if( ((/*Sec->section == 0 &&*/ Sec->maxlen == 0) || u) && 
 		   strcasecmp(Sec->name, "Title") &&
 		   strcasecmp(Sec->name, "Charset") &&
 		   strcasecmp(Sec->name, "Content-Type") &&
@@ -2836,7 +2836,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
 		sprintf(qbuf, "INSERT INTO urlinfo (url_id,sname,sval) VALUES (%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
-/*		fprintf(stderr, " +u: %d, Section: %d, qbuf: %s\n", u, Sec->section, qbuf);*/
+/*		fprintf(stderr, " +u: %d, Section[%d,%d]: %d, qbuf: %s\n", u, Sec->section, Sec->maxlen, Sec->section, qbuf);*/
 	    }
 	}
 	if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
@@ -4622,7 +4622,7 @@ static int DpsStoredRehash(DPS_AGENT *A, DPS_DB *db) {
       DpsUnStoreDoc(A, &Res->Doc[i], NULL);
       DpsBaseDelete(&P);
       DpsVarListReplaceInt(&Res->Doc[i].Sections, "URL_ID", rec_id);
-      DpsStoreDoc(A, &Res->Doc[i]);
+      DpsStoreDoc(A, &Res->Doc[i], NULL);
 
     }
 
