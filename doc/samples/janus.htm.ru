@@ -101,8 +101,8 @@ ReplaceVarLcs qwords.lng "Слова запроса"
 MinWordLength 1
 MaxWordLength 64
 DetectClones no
-ExcerptSize 312
-ExcerptPadding 60
+ExcerptSize 156
+ExcerptPadding 36
 HlBeg <span class="rhl">
 HlEnd </span>
 GrBeg <div class="group">
@@ -116,7 +116,7 @@ sy 0
 <!--top-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-<HTML lang="ru">
+<HTML lang="ru"><!IF NAME="c" CONTENT="01"><!IF NAME="label" CONTENT=""><!SET NAME="label" CONTENT="sochi"><!ENDIF><!ENDIF>
   <HEAD>
     <TITLE>$(43N39E.lng): $&(q)</TITLE>
     <link href="http://sochi.org.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
@@ -194,7 +194,7 @@ function myCopyContent3(domDoc, uri) {
     <link href="/css/therm2.css" rel="stylesheet" type="text/css">
  </HEAD>
 <!-- BrowserCharset: $(BrowserCharset) -->
-<BODY onload="showBooksAndVideo()">
+<body>
 
 <div id="form">
 <center>
@@ -346,6 +346,22 @@ dp_init();
 <a href="http://search.live.com/results.aspx?q=$%(q:UTF-8)">Live.com</a>
 </small>
 <!ENDIF>
+<script type="text/javascript">
+function showBooksAndVideo() {
+var CommerceLoader = new HTMLHttpRequest('CommerceLoader', myCopyContent);
+var SimilarLoader = new HTMLHttpRequest('SimilarLoader', myCopyContent2);
+<!IF NAME="c" CONTENT="01">
+SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=5&tmplt=qsimilar8.htm.ru&label=qsimilar&s_label=$&(label)');
+var RutubeLoader = new HTMLHttpRequest('RutubeLoader', myCopyContent3);
+RutubeLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&&ps=3&tmplt=rutube8.htm.ru&label=rutube');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(auxs)&link=$&(link)&ps=5&tmplt=phones8.htm.ru&label=phones');
+<!ELSE>
+SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=7&tmplt=qsimilar8.htm.ru&label=qsimilar');
+//CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(auxs)&link=$&(link)&ps=7&tmplt=duo8.htm.ru');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&ps=5&tmplt=rutube8.htm.ru&label=rutube');
+<!ENDIF>
+}
+</script>
 <table border="0" width="100%">
 <tr>
 <td align="center" valign="top">
@@ -359,6 +375,7 @@ dp_init();
 </table>
 </div>
 <script type="text/javascript" src="/js/htmlhttprequest_commented.js"></script>
+<script type="text/javascript">showBooksAndVideo();</script>
 </body>
 </html>
 <!--/bottom-->
@@ -401,7 +418,10 @@ dp_init();
 
 <!--res-->
 <!-- m -->
-<div class="serp1"><!-- $(DP_ID), site_id: $(Site_ID), ST: $(ST) --><!IF NAME="Content-Type" CONTENT="application/msword"><b class="mimetype">[DOC]</b>&nbsp;
+<div style="width: 40em;">
+<div class="serp1"><i class="serp1" style="background-image:url(http://favicon.yandex.ru/favicon/$(url.host))"></i>
+<span style="margin-left:20px;">&#8203;</span>
+<!-- $(DP_ID), site_id: $(Site_ID), ST: $(ST) --><!IF NAME="Content-Type" CONTENT="application/msword"><b class="mimetype">[DOC]</b>&nbsp;
 <!ELIKE NAME="Content-Type" CONTENT="audio/*"><b class="mimetype">[MP3]</b>&nbsp;
 <!ELIF NAME="Content-Type" CONTENT="application/pdf"><b class="mimetype">[PDF]</b>&nbsp;
 <!ELIF NAME="Content-Type" CONTENT="application/vnd.ms-excel"><b class="mimetype">[XLS]</b>&nbsp;
@@ -409,19 +429,19 @@ dp_init();
 <!ELIF NAME="Content-Type" CONTENT="text/rtf"><b class="mimetype">[RTF]</b>&nbsp;
 <!ELIKE NAME="Content-Type" CONTENT="image/*"><b class="mimetype">[IMG]</b>&nbsp;
 <!ELIF NAME="Content-Type" CONTENT="application/x-shockwave-flash"><b class="mimetype">[SWF]</b>&nbsp;
-<!ENDIF><!IF NAME="url.host" CONTENT="www.books.ru"><a onClick="return clk('$(DP_ID)','$(Order)');" class="restop" href="$(URL)?partner=datapark">
-<!ELIF NAME="url.host" CONTENT="www.bolero.ru"><a onClick="return clk('$(DP_ID)','$(Order)');" class="restop" href="http://www.bolero.ru//cgi-bin/superptr.cgi?partner=datapark&amp;new=1&amp;uri=$(URL.path)$(URL.file)">
-<!ELIF NAME="url.host" CONTENT="www.ozon.ru"><a onClick="return clk('$(DP_ID)','$(Order)');" class="restop" href="$(URL)?partner=datapark">
-<!ELSE><a id="link$(Order)" onClick="return clk('$(DP_ID)','$(Order)');" class="restop" href="$(URL)"><!ENDIF><!--
+<!ENDIF><!IF NAME="url.host" CONTENT="www.books.ru"><a onmousedown="return clk('$(DP_ID)','$(Order)');" class="restop" href="$(URL)?partner=datapark">
+<!ELIF NAME="url.host" CONTENT="www.bolero.ru"><a onmousedown="return clk('$(DP_ID)','$(Order)');" class="restop" href="http://www.bolero.ru//cgi-bin/superptr.cgi?partner=datapark&amp;new=1&amp;uri=$(URL.path)$(URL.file)">
+<!ELIF NAME="url.host" CONTENT="www.ozon.ru"><a onmousedown="return clk('$(DP_ID)','$(Order)');" class="restop" href="$(URL)?partner=datapark">
+<!ELSE><a id="link$(Order)" onmousedown="return clk('$(DP_ID)','$(Order)');" class="restop" href="$(URL)"><!ENDIF><!--
  --><!IF NAME="Title" CONTENT="[no title]">
 	 <!IF NAME="MP3.Artist" CONTENT="">$(notitle.lng)<!ELSE>$(artist.lng): $&(MP3.Artist)<!ENDIF>
 	 <!ELIKE NAME="Title" CONTENT="/tmp/ind*">$(notitle.lng)
-    <!ELSE>$&(Title)<!ENDIF><!--
+    <!ELSE>$&(Title:72)<!ENDIF><!--
 --></a></div>
-<div class="serp2">
+<div class="serp2" style="margin-left:20px;">
 <!IF NAME="url.host" CONTENT="www.books.ru">
 <table border="0" cellpadding="0" cellspacing="0"><tr><td align="center" valign="middle">
-<a onClick="return clk('$(DP_ID)','$(Order)');" href="$(URL)?partner=datapark"><img src="http://www.books.ru/img/$(url.file)s.jpg" border="0"></a>
+<a onmousedown="return clk('$(DP_ID)','$(Order)');" href="$(URL)?partner=datapark"><img src="http://www.books.ru/img/$(url.file)s.jpg" border="0"></a>
 </td><td align="left" valign="top" style="padding-left: 0.5em;"><!ENDIF>
 <!IF NAME="MP3.Album" CONTENT=""> <!ELSE><span class="result">$(album.lng): </span> 
 $&(MP3.Album)<br><!ENDIF>
@@ -429,13 +449,13 @@ $&(MP3.Album)<br><!ENDIF>
 $&(MP3.Song)<br><!ENDIF>
 <!IF NAME="MP3.Year" CONTENT=""> <!ELSE><span class="result">$(year.lng): </span>
 $&(MP3.Year)<br><!ENDIF>
-<!IF NAME="Body" CONTENT=""><!IFNOT NAME="sea" CONTENT=""><div class="serp3"><small class="restop">$(summary.lng):</small> <small>$&(sea:600)</small></div><!ENDIF><!ELSE><small>$&(Body)</small><br><!ENDIF></div>
+<!IF NAME="Body" CONTENT=""><!IFNOT NAME="sea" CONTENT=""><div class="serp3"><small class="restop">$(summary.lng):</small> <small>$&(sea:600)</small></div><!ENDIF><!ELSE><small>$&(Body:350)</small><br><!ENDIF></div>
 <div class="serp2"><small class="result">$&(URL:40)<br>$(Last-Modified) - $(FancySize) $(bytes.lng) - $(Content-Language)<!-- - $(Charset)--></small>
 <small class="result">- $(score.lng): $(Score) [$(Pop_Rank)]
 <!IFNOT NAME="Price" CONTENT=""><span class="result"> - $(price.lng): </span>$(Price) $(rur.lng)<!ENDIF>
 <!IFNOT NAME="Phone" CONTENT=""><span class="result"> - $(phone.lng): </span>$(Phone)<!ENDIF>
 <br>
-	      <!IFNOT NAME="stored_href" CONTENT=""><a onClick="return clk('$(DP_ID)','$(Order)');" href="$(stored_href)">$(stcopy.lng)</a><!ENDIF>
+	      <!IFNOT NAME="stored_href" CONTENT=""><a onmousedown="return clk('$(DP_ID)','$(Order)');" href="$(stored_href)">$(stcopy.lng)</a><!ENDIF>
 	      <!IFNOT NAME="sitelimit_href" CONTENT=""> &nbsp;&nbsp;<a href="$(self)$(sitelimit_href)">$(allresfrom.lng) $(url.host)
 				<!IFNOT NAME="PerSite" CONTENT="0">($(PerSite))<!ENDIF><!--
 --></a>
@@ -446,7 +466,7 @@ $&(MP3.Year)<br><!ENDIF>
 <!IF NAME="url.host" CONTENT="www.books.ru">
 </td></tr></table><!ENDIF>
 </div>
-$(CL)
+$(CL)</div>
 <!-- n -->
 <!--/res-->
 
@@ -485,45 +505,23 @@ $(CL)
 <td width="160" valign="top" align="right" style="border-left: 1px solid #f4f4f4">
 <br><br>
 <!-- ads here -->
- <SCRIPT type="text/javascript">
-   var begun_utf8 = 1;
-   var begun_auto_colors = new Array();
-   var begun_auto_fonts_size = new Array();
-<!IFLIKE NAME="ENV.SERVER_NAME" CONTENT="*sochi.org.ru">   begun_auto_pad = 90069626; // pad id<!ELSE>   begun_auto_pad = 90026481; // pad id<!ENDIF>
-   begun_auto_limit = 5; // number of ads shown
-   begun_auto_width = 160; // width of ads block.
-   begun_auto_colors[0] = '#0055AA'; // link color
-   begun_auto_colors[1] = '#333333'; // text color
-   begun_auto_colors[2] = '#1F8101'; // domain color
-   begun_auto_colors[3] = '#FFFFFF'; // background color
-   begun_auto_fonts_size[0] = '9pt'; // link font size
-   begun_auto_fonts_size[1] = '9pt'; // text font size
-   begun_auto_fonts_size[2] = '9pt'; // domain font size
-   begun_auto_fonts_size[3] = '8pt'; // plug font size
-   begun_block_type = 'Vertical'; // block type
-</SCRIPT>
-<SCRIPT src="http://autocontext.begun.ru/autocontext.js" type="text/javascript">
-</SCRIPT>
+<!IFLIKE NAME="ENV.SERVER_NAME" CONTENT="*sochi.org.ru"> <script type="text/javascript">
+   var begun_auto_pad = 90069626; // pad id
+   var begun_block_id = 112889598;
+</script>
+<script src="http://autocontext.begun.ru/autocontext2.js" type="text/javascript">
+</script>
+<!ELSE>  <script type="text/javascript">
+   var begun_auto_pad = 90026481; // pad id
+   var begun_block_id = 112888603;
+</script>
+<script src="http://autocontext.begun.ru/autocontext2.js" type="text/javascript">
+</script>
+<!ENDIF>
 </td>
 </tr>
 <tr><td width="160" align="center" valign="bottom">
 <script type="text/javascript" src="/install.js"></script>
-<script type="text/javascript">
-function showBooksAndVideo() {
-var CommerceLoader = new HTMLHttpRequest('CommerceLoader', myCopyContent);
-var SimilarLoader = new HTMLHttpRequest('SimilarLoader', myCopyContent2);
-<!IF NAME="c" CONTENT="01">
-SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=5&tmplt=qsimilar8.htm.ru&label=qsimilar&s_label=$&(label)');
-var RutubeLoader = new HTMLHttpRequest('RutubeLoader', myCopyContent3);
-RutubeLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&&ps=3&tmplt=rutube8.htm.ru&label=rutube');
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(auxs)&link=$&(link)&ps=5&tmplt=phones8.htm.ru&label=phones');
-<!ELSE>
-SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=7&tmplt=qsimilar8.htm.ru&label=qsimilar');
-//CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(auxs)&link=$&(link)&ps=7&tmplt=duo8.htm.ru');
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&ps=5&tmplt=rutube8.htm.ru&label=rutube');
-<!ENDIF>
-}
-</script>
 <a class="bottom" href="javascript:add_dpSearch()"><small>$(instplugin.lng)</small></a>
 <br>
 <a class="bottom" href="http://sochi.org.ru/makereport.html">$(mkreport.lng)</a>
@@ -614,6 +612,13 @@ $(sortedby.lng):&nbsp;
 <b>$(notfound.lng)</b>
 $(try.lng)
 </div>
+<br><br>
+<table border="0" cellspacing="0" cellpadding="10"><tr>
+<td><div id="similarArea" style="width: 14em;">&nbsp;</div></td>
+<td><div id="resultArea" style="width="14em;">&nbsp;</div></td>
+<!IF NAME="c" CONTENT="01"><td><div id="rutubeArea" style="width: 14em; float:right;">&nbsp;</div></td><!ENDIF>
+</tr></table>
+<br>
 <!--/notfound-->
 
 <!--noquery-->

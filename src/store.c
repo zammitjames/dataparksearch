@@ -228,7 +228,7 @@ static int DpsStoreDeleteRec(DPS_AGENT *Agent, int sd, urlid_t rec_id, char *Cli
     \return DPS_OK if successful, DPS_ERROR on error
  */
 
-__C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
+__C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const char *origurl) {
 
 #ifdef HAVE_ZLIB
   const char *hello = "S\0";
@@ -236,9 +236,10 @@ __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
   int s, r;
 /*  size_t content_size = Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf);*/
   size_t content_size = Doc->Buf.size;
-  urlid_t rec_id = DpsURL_ID(Doc, NULL);
+  urlid_t rec_id = DpsURL_ID(Doc, origurl);
   size_t dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
 
+  fprintf(stderr, " -- Store  origurl: %s\n", origurl);
   if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
 /*    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, Doc->Buf.content, content_size, "") : DPS_OK;*/
     return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, Doc->Buf.buf, content_size, "") : DPS_OK;
@@ -282,6 +283,7 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
   ssize_t nread = 0;
   
 /*  rec_id = (origurl) ? DpsStrHash32(origurl) :  DpsVarListFindInt(&Doc->Sections, "URL_ID", 0);*/
+  fprintf(stderr, " -- UnStore  origurl: %s\n", origurl);
   rec_id = DpsURL_ID(Doc, origurl);
   Doc->Buf.size=0;
   dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
@@ -705,7 +707,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
     if (not_have_doc) {*/
 	DpsConvInit(&dc_uni, bcs, sys_int, query->Conf->CharsToEscape, DPS_RECODE_HTML);
 	Source = SourceToFree = (char*)DpsStrdup(DpsVarListFindStr(&Doc->Sections, "body", ""));
-	DpsVarListReplaceStr(&Doc->Sections, "Z", "");
+	DpsVarListReplaceStr(&Doc->Sections, "Z", "Z");
       } 
 #ifdef HAVE_ZLIB
     else {
@@ -1311,6 +1313,7 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
   urlid_t url_id = DpsVarListFindInt(&Doc->Sections, "URL_ID", 0);
   const char     *accept_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", NULL);
   
+  fprintf(stderr, " -- URL_ID: %d\n", url_id);
   if (url_id != 0) return url_id;
   if (url == NULL) url = DpsVarListFindStr(&Doc->Sections, "URL", NULL);
   if (url != NULL) {
@@ -1320,6 +1323,7 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
     if (accept_lang != NULL && *accept_lang == '\0') accept_lang = NULL;
 /*    if (accept_lang == NULL) accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);*/
     dps_snprintf(str, str_len, "%s%s%s", (accept_lang == NULL) ? "" : accept_lang, (accept_lang == NULL) ? "" : ".", url);
+    fprintf(stderr, " -- URL_IDstr: %s\n", str);
     url_id = DpsStrHash32(str);
     DPS_FREE(str);
     DpsVarListAddInt(&Doc->Sections, "URL_ID", url_id);
