@@ -46,7 +46,7 @@
   <a href="http://site/test1.html" TARGET="_blank">
     Test 1 title
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -88,7 +88,7 @@
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -131,7 +131,7 @@
   <a href="http://site/test2.html" TARGET="_blank">
     Test 2 title
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -174,7 +174,7 @@
   <a href="http://site/test3.html" TARGET="_blank">
     Test 3 title
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -217,7 +217,7 @@
   <a href="http://site/test4.html" TARGET="_blank">
     Test 4 title
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.17000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.17000</b>]</small>
   <DD>
   <table width=60%>
     <tr>

@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<META NAME="Content-Type" Content="text/html; charset=koi8-r">
+<META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
 <TITLE>mnoGoSearch: t</TITLE>
 </HEAD>
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -46,12 +46,12 @@
   <a href="http://site/test1.html" TARGET="_blank">
     Test 1 title
   </a>
-  <small>[<b>0.015%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.007%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>This is the first test page. Here is the second one. 1 22 333 4444 55555 666666 7777777 88888888 999999999 AAAAAAAAAA BBBBBBBBBBB CCCCCCCCCCCC DDDDDDDDDDDDD EEEEEEEEEEEEEE FFFFFFFFFFFFFFF GGGGGGGGGGGGGGGG HHHHHHHHHHHHHHHHH IIIIIIIIIIIIIIIIII JJJJJJJJJJJJJJ...</small>
+        <small>This is the first test page. Here is the second one. 1 22 333 4444 55555 666666 7777777 88888888 999999999 AAAAAAAAAA BBBBBBBBBBB CCCCCCCCCCCC DDDDDDDDDDDDD EEEEEEEEEEEEEE FFFFFFFFFFFFFFF GGGGGGGGGGGGGGGG HHHHHHHHHHHHHHHHH IIIIIIIIIIIIIIIIII JJJJJJJJJJJJJJJ...</small>
       </td>
     </tr>
     <tr>
@@ -88,12 +88,12 @@
   <a href="http://site/test2.html" TARGET="_blank">
     Test 2 title
   </a>
-  <small>[<b>0.015%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.007%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>This is the second test page. Here is the third one. &#207;&#194;&#221;&#197;&#211;&#212;&#215;&#197;&#206;&#206;&#217;&#197;...</small>
+        <small>This is the second test page. Here is the third one. общественные...</small>
       </td>
     </tr>
     <tr>
@@ -131,7 +131,7 @@
   <a href="http://site/test3.html" TARGET="_blank">
     Test 3 title
   </a>
-  <small>[<b>0.015%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.007%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -174,12 +174,12 @@
   <a href="http://site/test4.html" TARGET="_blank">
     Test 4 title
   </a>
-  <small>[<b>0.015%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.007%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>This is the 4th test page. Here is the third one. &#239;&#240;&#238;&#226;&#229;&#240;&#234;&#224; &#226;&#232;&#237;&#228;&#238;&#226;&#238;&#233; &#234;&#238;&#228;&#232;&#240;&#238;&#234;&#232; &#238;&#225;&#249;&#229;&#241;&#242;&#226;&#229;&#237;&#237;&#251;&#229;...</small>
+        <small>This is the 4th test page. Here is the third one. &#1087;&#1088;&#1086;&#1074;&#1077;&#1088;&#1082;&#1072; &#1074;&#1080;&#1085;&#1076;&#1086;&#1074;&#1086;&#1081; &#1082;&#1086;&#1076;&#1080;&#1088;&#1086;&#1082;&#1080; &#1086;&#1073;&#1097;&#1077;&#1089;&#1090;&#1074;&#1077;&#1085;&#1085;&#1099;&#1077;...</small>
       </td>
     </tr>
     <tr>
@@ -217,7 +217,7 @@
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt
   </a>
-  <small>[<b>0.009%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.004%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>

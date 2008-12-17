@@ -2199,12 +2199,10 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight,valid) VALUES (%s%i%s,%s%i%s,%s%s%s,'t')",
 			       qu, rec_id, qu,  qu, rec_id, qu,  qu, weight, qu);
-		} else {
-		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
-			       qu, rec_id, qu,  qu, rec_id, qu);
-		}
-		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+
+		  if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
+		    DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  }
 		}
 	      }
 #endif
@@ -2333,12 +2331,9 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		if (rc == 0) {
 		  dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO links (ot,k,weight) VALUES (%s%i%s,%s%i%s,%s%s%s)",
 			       qu, k, qu,  qu, k, qu,  qu, weight, qu);
-		} else {
-		  dps_snprintf(qbuf, 4 * len + 512, "UPDATE links SET valid='t' WHERE ot=%s%i%s AND k=%s%i%s",
-			       qu, k, qu,  qu, k, qu);
-		}
-		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
+		    DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  }
 		}
 	    }
 #endif
@@ -2495,10 +2490,10 @@ static int DpsDeleteLinks(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 
 	dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE ot=%s%i%s AND ot!=k AND valid='f'", qu, url_id, qu);
 	rc = DpsSQLAsyncQuery(db, NULL, qbuf);
-	if (db->DBSQL_SUBSELECT) {
+/*	if (db->DBSQL_SUBSELECT) {
 	  dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE (k,ot) IN (SELECT k,ot FROM links l, url u1, url u2 WHERE l.k=%s%i%s AND l.ot=u1.rec_id AND u2.rec_id=%s%i%s AND u1.site_id=u2.site_id AND l.k!=l.ot)", qu, url_id, qu, qu, url_id, qu);
 	  rc = DpsSQLAsyncQuery(db, NULL, qbuf);
-	}
+	}*/
 	return rc;
 }
 
@@ -2927,7 +2922,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 /*	size_t          rec_id = (size_t)DpsVarListFindUnsigned(&Indexer->Conf->Vars, "PopRank_rec_id", 0);*/
 	size_t          rec_id;
 	dps_uint4       nit = (dps_uint4)DpsVarListFindUnsigned(&Indexer->Conf->Vars, "PopRank_nit", 0);
-	DPS_SQLRES 	SQLRes;
+	DPS_SQLRES 	SQLRes, sr;
 	char		smallbuf[128];
 	int		rc=DPS_OK;
 	const char	*where;
@@ -2943,6 +2938,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	TRACE_IN(Indexer, "DpsTargetsSQL");
 
 	DpsSQLResInit(&SQLRes);
+	if (Indexer->flags & DPS_FLAG_FROM_STORED) DpsSQLResInit(&sr);
 
 	start_target = Indexer->Conf->Targets.num_rows;
 	url_num = dps_min(Indexer->Conf->url_number, 
@@ -3005,17 +3001,6 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	smallbuf[0] = '\0';
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {
 	  sprintf(sortstr, " ORDER BY url.next_index_time");
-/*	  sprintf(sortstr, " ORDER BY url.rec_id");*/
-/*	  if (rec_id == 0) {
-	    dps_snprintf(qbuf, qbuflen, "SELECT MIN(rec_id) FROM url");
-	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
-	    if(!(nrows = DpsSQLNumRows(&SQLRes))) {
-	      DpsSQLFree(&SQLRes);
-	      goto unlock;
-	    }
-	    rec_id = DPS_ATOI(DpsSQLValue(&SQLRes,0,0)) - 1;
-	    DpsSQLFree(&SQLRes);
-	  }*/
 	} else if ( (Indexer->flags & (DPS_FLAG_SORT_HOPS | DPS_FLAG_SORT_EXPIRED | DPS_FLAG_SORT_POPRANK)) 
 	     || (Indexer->flags & DPS_FLAG_DONTSORT_SEED)  ) {
 	  int notfirst = 0;
@@ -3076,7 +3061,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	}
 	
 	for(i = 0; i < nrows; i++){
-		char		buf[64]="";
+		char		buf[96]="";
 		time_t		last_mod_time, len;
 		DPS_DOCUMENT	*Doc = &Indexer->Conf->Targets.Doc[start_target + i];
 		const char *url;
@@ -3117,10 +3102,20 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		DpsVarListReplaceStr(&Doc->Sections, "Since", DpsSQLValue(&SQLRes, i, 7));
 		DpsVarListReplaceStr(&Doc->Sections, "Pop_Rank", DpsSQLValue(&SQLRes, i, 8));
 		if (Indexer->Flags.provide_referer) DpsVarListReplaceStr(&Doc->Sections, "Referrer-ID", DpsSQLValue(&SQLRes, i, 12));
+		if (Indexer->flags & DPS_FLAG_FROM_STORED) {
+		  dps_snprintf(buf, sizeof(buf), "SELECT sval FROM urlinfo WHERE url_id=%d AND sname='Content-Language'", rec_id);
+		  if(DPS_OK != (rc = DpsSQLQuery(db, &sr, buf))) {
+		    DpsSQLFree(&SQLRes);
+		    DpsLog(Indexer, DPS_LOG_ERROR, "Error SQL execution at %s:%d", __FILE__, __LINE__);
+		    goto unlock;
+		  }
+		  if (DpsSQLNumRows(&sr)) DpsVarListReplaceStr(&Doc->Sections, "Content-Language", DpsSQLValue(&sr, 0, 0));
+		}
 	}
 	if ((Indexer->Flags.cmd & DPS_IND_POPRANK) && (nrows != 0)) 
 	  nit = DPS_ATOI(DpsSQLValue(&SQLRes, nrows - 1, (Indexer->Flags.provide_referer) ? 13 : 12));
 	DpsSQLFree(&SQLRes);
+	if (Indexer->flags & DPS_FLAG_FROM_STORED) DpsSQLFree(&sr);
 	
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {
 /*	  DpsVarListReplaceUnsigned(&Indexer->Conf->Vars, "PopRank_rec_id", (unsigned)rec_id);*/

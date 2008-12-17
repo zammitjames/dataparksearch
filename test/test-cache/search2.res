@@ -46,7 +46,7 @@
   <a href="http://site/testpage9.html" TARGET="_blank">
     TestPage9 title1 foo2 foo3 foo4 foo5 foo6 foo7 foo8 foo9 foo10 foo11 foo12 foo13 foo14 foo15 foo16 foo17 foo18 foo19 foo20 title
   </a>
-  <small>[<b>0.006%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.003%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -88,7 +88,7 @@
   <a href="http://site/testpage8.html" TARGET="_blank">
     TestPage8 300 Word Body
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -131,7 +131,7 @@
   <a href="http://site/testpage7.html" TARGET="_blank">
     TestPage7 Search Body Content only
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -174,7 +174,7 @@
   <a href="http://site/testpage6.html" TARGET="_blank">
     TestPage6 title1 title2 title3 title4 title5 title6 title7 title8 title9 title10 title11 title12 title13 title14 title15 title16
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -217,7 +217,7 @@
   <a href="http://site/testpage5.html" TARGET="_blank">
     TestPage5 Phrase searching
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -260,7 +260,7 @@
   <a href="http://site/testpage4.html" TARGET="_blank">
     Testpage4 Stopwords and Phrase Search Check
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -303,7 +303,7 @@
   <a href="http://site/testpage3.html" TARGET="_blank">
     TestPage3 Even Number of BODY's until 30
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -346,7 +346,7 @@
   <a href="http://site/testpage2.html" TARGET="_blank">
     TestPage2 Odd Number of BODY's until 30
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -389,7 +389,7 @@
   <a href="http://site/testpage13.html" TARGET="_blank">
     TestPage13 Within 6 months
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -432,7 +432,7 @@
   <a href="http://site/testpage12.html" TARGET="_blank">
     TestPage12 Within Three Months
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.38123</b>]</small>
   <DD>
   <table width=60%>
     <tr>
