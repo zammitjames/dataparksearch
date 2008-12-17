@@ -37,5 +37,6 @@ fail !0 exec rm -f $(DPS_TEST_DIR)/search2.rej
 
 fail !0 exec  $(INDEXER) -Edrop $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 
-pass 0 exec kill -9 `cat $(DPS_TEST_DIR)/var/cached.pid` >> $(DPS_TEST_LOG) 2>&1
+fail !0 exec kill -9 `cat $(DPS_TEST_DIR)/var/cached.pid` >> $(DPS_TEST_LOG) 2>&1
 
+pass 0 exec rm -rf $(DPS_TEST_DIR)/var/

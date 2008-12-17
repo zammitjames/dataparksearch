@@ -46,7 +46,7 @@
   <a href="http://site/test2.html" TARGET="_blank">
     Test2
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -88,12 +88,12 @@
   <a href="http://site/test.xml" TARGET="_blank">
     http://site/test.xml
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>1.0 UTF-8 25638033 0 RAW_CONTENT watermark 20040101000791 footnote...</small>
+        <small>1.0 UTF-8 25638033 RAW_CONTENT watermark 20040101000791 DJ CHINA PRESS: Netcom Wants IPO Shr Price Set Around Jan 15 Thu Jan 1, 2004 23:41:00 footnote 25638033 RAW_CONTENT DJ CHINA PRESS: Netcom Wants IPO Shr Price Set Around Jan 15 DOWJONES Dow Jones none none none 2004-01-01_BT_000791.story.xml...</small>
       </td>
     </tr>
     <tr>

@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<META NAME="Content-Type" Content="text/html; charset=koi8-r">
+<META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
 <TITLE>mnoGoSearch: abcdefghijklmnopqrstuvwxyz</TITLE>
 </HEAD>
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -46,7 +46,7 @@
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt
   </a>
-  <small>[<b>0.002%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>

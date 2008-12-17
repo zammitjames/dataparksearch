@@ -1220,7 +1220,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  char reason[PATH_MAX+1];
 	  int m =  DpsStoreFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->StoreFilters, Doc, reason);
 	  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
-	  if (m == DPS_METHOD_STORE && !(Indexer->flags & DPS_FLAG_FROM_STORED)) DpsStoreDoc(Indexer, Doc);
+	  if (m == DPS_METHOD_STORE && !(Indexer->flags & DPS_FLAG_FROM_STORED)) DpsStoreDoc(Indexer, Doc, DpsVarListFindStr(&Doc->Sections, "ORIG_URL", NULL));
 	}
 	
 #endif
@@ -1377,6 +1377,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	if (lang != NULL) {
 	  Doc->fetched = 1;
 	  DpsVarListReplaceStr(&Doc->RequestHeaders, "Accept-Language", lang);
+	  DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang);
 	}
 	DpsLog(Indexer, (Indexer->Flags.cmd != DPS_IND_POPRANK) ? DPS_LOG_INFO : DPS_LOG_DEBUG, "[%s] Subdoc level:%d, URL: %s", 
 	       DPS_NULL2EMPTY(lang), Doc->subdoc, newhref);
@@ -1816,8 +1817,6 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 #endif
 	return result;
 }
-
-
 
 
 __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){

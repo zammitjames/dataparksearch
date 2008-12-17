@@ -239,7 +239,6 @@ __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const ch
   urlid_t rec_id = DpsURL_ID(Doc, origurl);
   size_t dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
 
-  fprintf(stderr, " -- Store  origurl: %s\n", origurl);
   if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
 /*    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, Doc->Buf.content, content_size, "") : DPS_OK;*/
     return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, Doc->Buf.buf, content_size, "") : DPS_OK;
@@ -283,7 +282,6 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
   ssize_t nread = 0;
   
 /*  rec_id = (origurl) ? DpsStrHash32(origurl) :  DpsVarListFindInt(&Doc->Sections, "URL_ID", 0);*/
-  fprintf(stderr, " -- UnStore  origurl: %s\n", origurl);
   rec_id = DpsURL_ID(Doc, origurl);
   Doc->Buf.size=0;
   dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
@@ -1313,7 +1311,6 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
   urlid_t url_id = DpsVarListFindInt(&Doc->Sections, "URL_ID", 0);
   const char     *accept_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", NULL);
   
-  fprintf(stderr, " -- URL_ID: %d\n", url_id);
   if (url_id != 0) return url_id;
   if (url == NULL) url = DpsVarListFindStr(&Doc->Sections, "URL", NULL);
   if (url != NULL) {
@@ -1323,7 +1320,6 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
     if (accept_lang != NULL && *accept_lang == '\0') accept_lang = NULL;
 /*    if (accept_lang == NULL) accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);*/
     dps_snprintf(str, str_len, "%s%s%s", (accept_lang == NULL) ? "" : accept_lang, (accept_lang == NULL) ? "" : ".", url);
-    fprintf(stderr, " -- URL_IDstr: %s\n", str);
     url_id = DpsStrHash32(str);
     DPS_FREE(str);
     DpsVarListAddInt(&Doc->Sections, "URL_ID", url_id);

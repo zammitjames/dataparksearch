@@ -85,7 +85,7 @@ typedef struct {
 } DPS_CACHE_LINK;
 
 
-extern __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *A, DPS_DOCUMENT *Doc);
+extern __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *A, DPS_DOCUMENT *Doc, const char *origurl);
 extern __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *A, DPS_DOCUMENT *Doc, const char *origurl);
 extern __C_LINK int __DPSCALL DpsStoreDeleteDoc(DPS_AGENT *A, DPS_DOCUMENT *Doc);
 extern __C_LINK int __DPSCALL DpsStoreCheckUp(DPS_AGENT *Agent, int level);
