@@ -21,7 +21,7 @@
 
 extern __C_LINK DPS_DOCUMENT * __DPSCALL DpsDocInit(DPS_DOCUMENT*);
 extern __C_LINK void __DPSCALL DpsDocFree(DPS_DOCUMENT*);
-extern char * DpsDocToTextBuf(DPS_DOCUMENT * Doc);
+extern char * DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag);
 extern __C_LINK int __DPSCALL DpsDocFromTextBuf(DPS_DOCUMENT * Doc, const char *d);
 extern int DpsDocLookupConn(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc);
 extern int DpsDocAddDocExtraHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc);

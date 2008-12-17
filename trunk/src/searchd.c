@@ -414,7 +414,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					for (nsec = 0; nsec < D->Sections.Root[r].nvars; nsec++)
 						D->Sections.Root[r].Var[nsec].section = 1;
 */					
-					textbuf = DpsDocToTextBuf(D);
+					textbuf = DpsDocToTextBuf(D, 1);
 					if (textbuf == NULL) break;
 /*					
 					fprintf(stderr, "%s\n\n", textbuf);
@@ -488,7 +488,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					for (nsec = 0; nsec < D->Sections.Root[r].nvars; nsec++)
 						D->Sections.Root[r].Var[nsec].section = 1;
 					
-					textbuf = DpsDocToTextBuf(D);
+					textbuf = DpsDocToTextBuf(D, 1);
 					if (textbuf == NULL) break;
 					
 					ulen=dps_strlen(textbuf)+2;

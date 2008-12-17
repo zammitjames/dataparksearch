@@ -239,7 +239,7 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	  if (D->dbnum != cl->dbnum) continue;
 #endif		  
 
-	  textbuf = DpsDocToTextBuf(D);
+	  textbuf = DpsDocToTextBuf(D, 1);
 	  if (textbuf == NULL) {TRACE_OUT(query); return DPS_ERROR;}
 					
 	  ulen = dps_strlen(textbuf)+2;
