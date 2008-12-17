@@ -120,7 +120,7 @@ void DpsURLCRDListListFree(DPS_URLCRDLISTLIST *Lst){
 
 #define nonul(x)	((x)?(x):"")
 
-char *DpsDocToTextBuf(DPS_DOCUMENT * Doc) {
+char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag) {
 	size_t	i, r, l, len;
 	char	*end, *textbuf;
 	int u;
@@ -145,7 +145,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc) {
 
 		if(!S->name || !S->val || (!S->val[0] && strcmp(S->name, "Z")) ) continue;
 /*		fprintf(stderr, "-Sec.name: %s  .section:%d  .maxlen: %d\n", S->name, S->section, S->maxlen);*/
-		if(!((S->section != 0 || S->maxlen) && u) && 
+		if(!(((numsection_flag && S->section != 0) || S->maxlen) && u) && 
 		   strcasecmp(S->name, "DP_ID") &&
 		   strcasecmp(S->name, "URL") &&
 		   strcasecmp(S->name, "Title") &&
@@ -181,7 +181,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc) {
 		
 		if(!S->name || !S->val || (!S->val[0] && strcmp(S->name, "Z")) ) continue;
 /*		fprintf(stderr, "u:%d section: %d  name: %s  value: %s\n", u, S->section, S->name, S->val);*/
-		if(!((S->section != 0 || S->maxlen) && u) && 
+		if(!(((numsection_flag && S->section != 0) || S->maxlen) && u) && 
 		   strcasecmp(S->name,"DP_ID") &&
 		   strcasecmp(S->name,"URL") &&
 		   strcasecmp(S->name,"Title") &&
