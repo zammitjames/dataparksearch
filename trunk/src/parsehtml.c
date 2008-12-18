@@ -935,28 +935,30 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		size_t glen, slen;
 		opening = 0;
 		dps_memcpy(name, name + 1, (slen = dps_strlen(name+1)) + 1); /* was: dps_memmove */
-		do {
-		  /* Find previous '.' or beginning */
-		  for(e = tag->trailend; (e > tag->trail) && (e[0] != '.'); e--);
-		  glen = (e[0] == '.') ? (tag->trailend - e - 1) : tag->trailend - e;
-		  *e = '\0';
-		  tag->trailend = e;
-		  if (tag->level) { tag->level--; tag->section[tag->level] = 0; }
-		} while ((strcmp(e + 1, name) != 0) && tag->trailend > tag->trail);
+		if ((!strcasecmp(name, "img")) && (!strcasecmp(name, "p")) && (!strcasecmp(name, "option"))) {
+		  do {
+		    /* Find previous '.' or beginning */
+		    for(e = tag->trailend; (e > tag->trail) && (e[0] != '.'); e--);
+		    glen = (e[0] == '.') ? (tag->trailend - e - 1) : tag->trailend - e;
+		    *e = '\0';
+		    tag->trailend = e;
+		    if (tag->level) { tag->level--; tag->section[tag->level] = 0; }
+		  } while ((strcmp(e + 1, name) != 0) && tag->trailend > tag->trail);
+		}
 	}else{
 	        size_t name_len = dps_strlen(name);
-		Sec = DpsVarListFind(&Doc->Sections, name);
 		opening = 1;
-		if (tag->level < sizeof(tag->visible) - 1) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
-		tag->section[tag->level] = (Sec) ? Sec->section : 0;
-		tag->strict[tag->level] = (Sec) ? Sec->strict : 0;
-		tag->section_name[tag->level] = (Sec) ? Sec->name : NULL;
-		if ((tag->level >= sizeof(tag->visible)) || ((tag->trailend - tag->trail + name_len + 1) > sizeof(tag->trail)) ) {
-		  DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML");
-		  return 0;
-		}
-		tag->level++;
-		if ((!strcasecmp(name, "font")) && (!strcasecmp(name, "img"))) {
+		if ((!strcasecmp(name, "img")) && (!strcasecmp(name, "p")) && (!strcasecmp(name, "option"))) {
+		  Sec = DpsVarListFind(&Doc->Sections, name);
+		  if (tag->level < sizeof(tag->visible) - 1) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
+		  tag->section[tag->level] = (Sec) ? Sec->section : 0;
+		  tag->strict[tag->level] = (Sec) ? Sec->strict : 0;
+		  tag->section_name[tag->level] = (Sec) ? Sec->name : NULL;
+		  if ((tag->level + 2 >= sizeof(tag->visible)) || (((tag->trailend - tag->trail) + name_len + 2) > sizeof(tag->trail)) ) {
+		    DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML, level:%d, trailsize:%d", tag->level, (tag->trailend - tag->trail) + name_len);
+		    return 0;
+		  }
+		  tag->level++;
 		  if (tag->trailend > tag->trail) {
 		    tag->trailend[0] = '.';
 		    tag->trailend++;
