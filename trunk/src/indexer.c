@@ -977,17 +977,17 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   if (buf == NULL) return DPS_OK;
 
   {
-    char qbuf[16384], cbuf[16384];
+    char qbuf[16384]/*, cbuf[16384]*/;
     DPS_TEMPLATE t;
     DPS_DBLIST      dbl;
     DPS_DB *db;
-    const char	*doccset;
+/*    const char	*doccset;
     DPS_CHARSET	*doccs, *loccs;
-    DPS_CONV	dc_lc;
+    DPS_CONV	dc_lc;*/
     bzero(&t, sizeof(t));
     t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = NULL;
     t.Env_Vars = &Doc->Sections;
-
+/*
     doccset=DpsVarListFindStr(&Doc->Sections,"Charset",NULL);
     if(!doccset||!*doccset)doccset=DpsVarListFindStr(&Doc->Sections,"RemoteCharset","iso-8859-1");
     doccs=DpsGetCharSet(doccset);
@@ -996,7 +996,7 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     if (!loccs) loccs = Indexer->Conf->lcs;
     if (!loccs) loccs = DpsGetCharSet("iso-8859-1");
     DpsConvInit(&dc_lc, doccs, loccs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
-
+*/
     for (i = 0; i < Indexer->Conf->ActionSQLMatch.nmatches; i++) {
       DPS_TEXTLIST	*tlist = &Doc->TextList;
       Alias = &Indexer->Conf->ActionSQLMatch.Match[i];
@@ -1015,13 +1015,9 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	if (Item->section != Sec->section) continue;
 	if (strcasecmp(Item->section_name, Alias->section)) continue;
 	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) continue;
-/*	fprintf(stderr, " -- SQLAction:%s, before match apply: %s\n", Alias->section, Alias->arg);*/
 	DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
-/*	fprintf(stderr, " -- SQLAction:%s, after match apply: %s\n", Alias->section, buf);*/
-	DpsConv(&dc_lc, cbuf, sizeof(cbuf), buf, buf_len);
-/*	fprintf(stderr, " -- SQLAction:%s, after dc_lc conv: %s\n", Alias->section, cbuf);*/
-	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, cbuf);
-/*	fprintf(stderr, " -- SQLAction:%s, after template patch: %s\n", Alias->section, qbuf);*/
+/*	DpsConv(&dc_lc, cbuf, sizeof(cbuf), buf, buf_len);*/
+	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
 	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
       }
       if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
@@ -1032,6 +1028,7 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_FREE(buf);
   return DPS_OK;
 }
+
 
 static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
@@ -1224,6 +1221,42 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	}
 	
 #endif
+	/* converting stuff */
+	{
+	  const char	*doccset, *loc_str;
+	  DPS_CHARSET	*doccs, *loccs;
+	  DPS_CONV	dc_lc;
+	  DPS_TEXTLIST	*tlist = &Doc->TextList;
+	  DPS_TEXTITEM  *Item;
+	  size_t z, dst_len;
+	  doccset=DpsVarListFindStr(&Doc->Sections,"Charset",NULL);
+	  if(!doccset||!*doccset)doccset=DpsVarListFindStr(&Doc->Sections,"RemoteCharset","iso-8859-1");
+	  doccs=DpsGetCharSet(doccset);
+	  if(!doccs)doccs=DpsGetCharSet("iso-8859-1");
+	  loccs = Doc->lcs;
+	  if (!loccs) loccs = Indexer->Conf->lcs;
+	  if (!loccs) loccs = DpsGetCharSet("iso-8859-1");
+	  if (loccs != doccs) {
+	    DpsConvInit(&dc_lc, doccs, loccs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
+	    for(z = 0; z < tlist->nitems; z++) {
+	      Item = &tlist->Items[z];
+	      if ((loc_str = DpsMalloc((dst_len = 24 * Item->len + 1) * sizeof(char))) == NULL) {
+		DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc %d bytes at %s:%d", dst_len, __FILE__, __LINE__);
+		result = DPS_ERROR;
+		break;
+	      }
+	      DpsConv(&dc_lc, loc_str, dst_len, Item->str, Item->len);
+	      DPS_FREE(Item->str);
+	      if ((Item->str = DpsRealloc(loc_str, (Item->len = dc_lc.obytes) + 1)) == NULL) {
+		DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc %d bytes at %s:%d", dst_len, __FILE__, __LINE__);
+		result = DPS_ERROR;
+		break;
+	      }
+	    }
+	  }
+	}
+
+
 	return result;
 }
 

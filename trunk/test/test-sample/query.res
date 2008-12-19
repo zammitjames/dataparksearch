@@ -140,15 +140,15 @@ SQL>'SELECT u1.docsize,u2.docsize,u1.url,u2.url FROM url u1,url u2, links l WHER
 122	122	http://site/test3.html	http://site/test3.html
 158	122	http://site/z-clone2.html	http://site/test3.html
 158	122	http://site/test2.html	http://site/test3.html
-158	158	http://site/z-clone2.html	http://site/z-clone2.html
 158	158	http://site/test2.html	http://site/test2.html
+158	158	http://site/z-clone2.html	http://site/z-clone2.html
 168	158	http://site/test1.html	http://site/test2.html
 168	168	http://site/test1.html	http://site/test1.html
 214	41	http://site/	http://site/test1.txt
 214	41	http://site/	http://site/z-clone1.txt
 214	122	http://site/	http://site/test3.html
-214	158	http://site/	http://site/test2.html
 214	158	http://site/	http://site/z-clone2.html
+214	158	http://site/	http://site/test2.html
 214	168	http://site/	http://site/test1.html
 214	214	http://site/	http://site/
 214	225	http://site/	http://site/test4.html
