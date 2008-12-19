@@ -385,7 +385,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   if (!loccs) loccs = DpsGetCharSet("iso-8859-1");
   sys_int=DpsGetCharSet("sys-int");
 
-  DpsConvInit(&dc_uni, doccs, sys_int, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
+  DpsConvInit(&dc_uni, loccs /*doccs*/, sys_int, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
 
   max_word_len = Indexer->WordParam.max_word_len;
   min_word_len = Indexer->WordParam.min_word_len;
@@ -935,7 +935,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		size_t glen, slen;
 		opening = 0;
 		dps_memcpy(name, name + 1, (slen = dps_strlen(name+1)) + 1); /* was: dps_memmove */
-		if ((!strcasecmp(name, "img")) && (!strcasecmp(name, "p")) && (!strcasecmp(name, "option"))) {
+		if ((strcasecmp(name, "p")) && (strcasecmp(name, "option"))) {
 		  do {
 		    /* Find previous '.' or beginning */
 		    for(e = tag->trailend; (e > tag->trail) && (e[0] != '.'); e--);
@@ -948,7 +948,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	}else{
 	        size_t name_len = dps_strlen(name);
 		opening = 1;
-		if ((!strcasecmp(name, "img")) && (!strcasecmp(name, "p")) && (!strcasecmp(name, "option"))) {
+		if ((strcasecmp(name, "p")) && (strcasecmp(name, "option"))) {
 		  Sec = DpsVarListFind(&Doc->Sections, name);
 		  if (tag->level < sizeof(tag->visible) - 1) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
 		  tag->section[tag->level] = (Sec) ? Sec->section : 0;
