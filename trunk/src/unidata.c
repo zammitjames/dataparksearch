@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -331,7 +331,9 @@ int dps_isApostropheBreak(dpsunicode_t c, dpsunicode_t n) {
     dpsunicode_t dec = (uni_decomp_plane[plane])[character].decomp[0];
     if (dec == 0) dec = (dpsunicode_t) character;
     if (dec == 'h' && (n != 0)) {
-      plane = (n >> 8) & 0xFF; character = n & 0xFF;
+      plane = (n >> 8) & 0xFF;
+      if (uni_decomp_plane[plane] == NULL) return 0;
+      character = n & 0xFF;
       dec = (uni_decomp_plane[plane])[character].decomp[0];
       if (dec == 0) dec = (dpsunicode_t) character;
     }
