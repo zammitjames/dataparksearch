@@ -1630,7 +1630,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						, double *D_y
 #endif
 						) {
-  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : (4 * x)/*DPS_PHRASE_FACTOR*/;
+  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : x /*DPS_PHRASE_FACTOR*/;
+  if (D[DPS_N_EXACT] == 0) y += x;
 
 #ifdef WITH_REL_WRDCOUNT
   if (D[DPS_N_WRDCOUNT] > R[DPS_N_WRDCOUNT]) {
@@ -1878,7 +1879,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   DPS_URLTRACK *Track;
 #endif
   size_t nsections = DpsVarListFindInt(&query->Vars, "NumSections", 256);
-  size_t cur_order, cur_sec; /*Res->max_order;*/
+  size_t cur_order, cur_exact, cur_sec;
   int wf[256];
 /*  int cnt_pas;*/
   double Rbc;
@@ -1942,7 +1943,8 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   wordorder = Res->WWList.Word[wordnum].order_inquery;
   if (wordorder == 0) {
     cur_order = 0; cur_sec = wordsec;
-  } else cur_order = -1; 
+    if (Res->WWList.Word[wordnum].origin == DPS_WORD_ORIGIN_QUERY) cur_exact = 1; else cur_exact = 0;
+  } else { cur_order = -1; cur_exact = 0; }
 
   xy_o = DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON);
 /*  fprintf(stderr, " *** R.xy_o: %d\n", xy_o);*/
@@ -1991,7 +1993,8 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 
     if(Crd[j].url_id == Crd[i].url_id) {
       /* Same document */
-      register int a = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin);
+      register int w_origin = Res->WWList.Word[wordnum].origin;
+      register int a = DpsOriginWeightFull(w_origin);
       xy += a;
       xy_wf += wf[wordsec];
       xy_o |= a;
@@ -2012,15 +2015,18 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       count[wordorder]++;
       if ((wordorder == cur_order + 1) && ((cur_order == -1) || ((wordpos == prev_wordpos + 1) && (wordsec == cur_sec)))) {
 	cur_order++;
-	if (cur_order == 0) cur_sec = wordsec;
+	if (cur_order == 0) { cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY); }
+	else cur_exact *= (w_origin == DPS_WORD_ORIGIN_QUERY);
       	if (cur_order == Res->max_order_inquery) {
 		D[DPS_N_PHRASE] = 1; cur_order = (wordorder == 0) ? 0 : -1;
+		if (cur_exact) D[DPS_N_EXACT] = 1;
+		cur_exact = (wordorder == 0) ? (w_origin == DPS_WORD_ORIGIN_QUERY) : 0;
 	}
       } else if ((cur_order != wordorder) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) {
 	    if (wordorder == 0) {
-	      cur_order = 0; cur_sec = wordsec;
+	      cur_order = 0; cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY);
 	    } else cur_order = -1; 
-	  }
+      }
 
     } else {
       /* Next document */
@@ -2083,10 +2089,12 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
       prev_wordpos = wordpos;
       count[wordorder] = 1;
-      if (wordorder == 0) {
-	cur_order = 0; cur_sec = wordsec;
-      } else cur_order = -1; 
-      xy = (xy_o = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin));
+      { register int w_origin = Res->WWList.Word[wordnum].origin;
+	if (wordorder == 0) {
+	  cur_order = 0; cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY);
+	} else cur_order = -1; 
+	xy = (xy_o = DpsOriginWeightFull(w_origin));
+      }
       xy_wf = wf[wordsec];
       nsec = D[DPS_N_ADD + wordsec] = 1;
     }

@@ -2817,6 +2817,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 /*		   !strcasecmp(Sec->name, "Tag") ||*/
 /*		   !strcasecmp(Sec->name, "Category") || */
 		   !strcasecmp(Sec->name, "Z") ||
+		   !strcasecmp(Sec->name, "Pop_Rank") ||
 		   !strcasecmp(Sec->name, "Content-Length")
 		   ) continue;
 		if( ((/*Sec->section == 0 &&*/ Sec->maxlen == 0) || u) && 
