@@ -213,12 +213,13 @@ typedef struct {
 #define DPS_N_DISTANCE 0
 #define DPS_N_COUNT    1
 #define DPS_N_PHRASE   2
+#define DPS_N_EXACT    3
 #ifdef WITH_REL_DISTANCE
-#define DPS_N_POSITION 3
-#define DPS_N_FIRSTPOS 4
+#define DPS_N_POSITION 4
+#define DPS_N_FIRSTPOS 5
 #else
-#define DPS_N_POSITION 2
-#define DPS_N_FIRSTPOS 2
+#define DPS_N_POSITION 3
+#define DPS_N_FIRSTPOS 3
 #endif
 
 #ifdef WITH_REL_POSITION

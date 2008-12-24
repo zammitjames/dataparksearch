@@ -808,7 +808,7 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 
 	  if (last_mod_time > 0) {
 	    if ((int)(now - last_mod_time) > older) {
-	      DpsLog(Indexer, DPS_LOG_WARN, "Too old document (%d > %d)", now - last_mod_time, older);
+	      DpsLog(Indexer, DPS_LOG_EXTRA, "Too old document (%d > %d)", now - last_mod_time, older);
 	      Doc->method = DPS_METHOD_DISALLOW;
 	      TRACE_OUT(Indexer);
 	      return DPS_OK;
@@ -816,7 +816,7 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 	  } else {
 	    time_t since = (time_t)DpsVarListFindInt(&Doc->Sections, "Since", 0);
 	    if ((int)(now - since) > older) {
-	      DpsLog(Indexer, DPS_LOG_WARN, "Too old document (%d > %d)", now - since, older);
+	      DpsLog(Indexer, DPS_LOG_EXTRA, "Too old document (%d > %d)", now - since, older);
 	      Doc->method = DPS_METHOD_DISALLOW;
 	      TRACE_OUT(Indexer);
 	      return DPS_OK;
