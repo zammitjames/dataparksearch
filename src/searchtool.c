@@ -1968,7 +1968,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 #endif
   count[wordorder]++;
-  phr_n = 1;
+  phr_n = 3;
   j = 0;
 
 /*  fprintf(stderr, "wordnum:%d  wordsec:%d  wordpos:%d  WeightFul:%x  xy_o:%x\n", wordnum, wordsec, wordpos,
@@ -2044,10 +2044,10 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 #endif
 #ifdef WITH_REL_WRDCOUNT
-      D[DPS_N_WRDCOUNT] = phr_n;
+      D[DPS_N_WRDCOUNT] = phr_n - 2;
 
       { register size_t tt, sum = 0;
-	register size_t median = phr_n / (Res->max_order_inquery + 1);
+	register size_t median = (phr_n - 2) / (Res->max_order_inquery + 1);
 	for (tt = 0; tt <= Res->max_order_inquery; tt++) {
 	  if (count[tt])
 	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
@@ -2056,13 +2056,13 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	D[DPS_N_COUNT] = (dps_uint4)sum;
       }
 #ifdef WITH_REL_TRACK
-      Track[j].D_wrdcount = phr_n;
+      Track[j].D_wrdcount = phr_n - 2;
       Track[j].D_n_count = D[DPS_N_COUNT];
 #endif
 #endif
 /*	    fprintf(stderr, "** URL_ID: %d [phr_n:%d]\n", Crd[j].url_id, phr_n);*/
 /* fprintf(stderr, " +++ xy: %f  xy_o: %d[x%x]  phr_n: %d  origin: %d\n", xy, xy_o, xy_o, phr_n, DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON));*/
-      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n + 1) ) * xy_wf * nsec / (phr_n + 1), D
+      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n ) ) * xy_wf * nsec / (phr_n ), D
 #ifdef WITH_REL_TRACK
 					     , &Track[j].y
 #endif
@@ -2077,7 +2077,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       dps_memcpy(D, (char*)D + D_size, D_size);
       dps_memcpy(count, (char*)count + count_size, count_size);
 
-      phr_n = 1;
+      phr_n = 3;
 #ifdef WITH_REL_DISTANCE
       D[DPS_N_DISTANCE] = DPS_DISTANCE_INIT;
 #endif
@@ -2114,10 +2114,10 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 #endif
 #ifdef WITH_REL_WRDCOUNT
-  D[DPS_N_WRDCOUNT] = phr_n;
+  D[DPS_N_WRDCOUNT] = phr_n - 2;
 
   { register size_t tt, sum = 0;
-    register size_t median = phr_n / (Res->max_order_inquery + 1);
+    register size_t median = (phr_n - 2) / (Res->max_order_inquery + 1);
     for (tt = 0; tt <= Res->max_order_inquery; tt++) {
       if (count[tt])
 	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
@@ -2126,14 +2126,14 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     D[DPS_N_COUNT] = (dps_uint4)(sum /* * cnt_pas */);
   }
 #ifdef WITH_REL_TRACK
-  Track[j].D_wrdcount = phr_n;
+  Track[j].D_wrdcount = phr_n - 2;
   Track[j].D_n_count = D[DPS_N_COUNT];
 #endif
 #endif
 	
   Res->CoordList.ncoords = j + 1;
 	
-  Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n + 1)) * xy_wf * nsec / (phr_n + 1), D
+  Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n )) * xy_wf * nsec / (phr_n ), D
 #ifdef WITH_REL_TRACK
 					 , &Track[j].y
 #endif
