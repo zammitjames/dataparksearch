@@ -1,0 +1,70 @@
+<sect1 id="categories">
+	<title>Категории
+<indexterm><primary>Категории</primary></indexterm>
+</title>
+	<para>Существует редактор категорий, написаный на <application>perl</application>.
+Вы можете взять его в директории <filename>perl/cat_ed/</filename>.</para>
+
+	<para>Категории похожи на тэги, но обладают свойство вложенности.
+Т.е. вы можете иметь некоторую категорию внутри другой категории.</para>
+	<para>Основные моменты:</para>
+	<itemizedlist>
+		<listitem>
+			<para>Поддерживается до 6 уровней вложенности;</para>
+		</listitem>
+		<listitem>
+			<para>Каждому уровню соответсвует 2 шестнадцати- или 36-ричные цифры;</para>
+		</listitem>
+		<listitem>
+			<para>параметром категории является <parameter>path</parameter>,
+который может быть пустым (что обозначает корневую категорию) или иметь длину до 10 символов (для остальных категорий,
+вложенных отностительно корневой).</para>
+		</listitem>
+	</itemizedlist>
+	<para>Также можно установить ссылку, т.е категорию, ссылающуюся на другую категорию.
+Для этого предназначено поле <literal>link</literal> в базе данных. В ссылке последние два символа должны быть
+@@. В примере выше Moto-&gt;BMW - ссылка на Auto-&gt;BMW.</para>
+
+	<!-- para>First notice that category in the url table is set to be
+11 characters long. This means you can use a valid character to keep
+track of categories. If you are going to keep a category tree of any
+size, then I would suggest using the category editor from <ulink
+								 url="http://mnogosearch.org/download.html">mnoGoSearch downloads page</ulink>. But anyways, here's how it works.</para>
+	<para>You can use either the tag column or the category column
+in the url for the same thing. Or you can categorize a site in two
+different ways. For example you could keep track of sites that are
+owned by a certain company and then categorize them as well. You could
+use the tag option to keep of ownership and use the category option
+for categories. When I explain the category option, it goes the same
+for the tag option. </para -->
+
+	<para>Категории могут разделяться на подкатегории произвольным образом, но для того, чтобы
+с ними можно было работать редактором категорий, необходимо использовать по два символа на каждый уровень.
+Если вы используете редактор категорий, вы можете выбрать для использования 16-ричные цифры 0-F или 36-ричные
+0-Z. Поэтому категория верхнего уровня 'Auto' будет обозначена 01. Если она будет иметь подкатегорию 'Ford', то мы получим
+01 для верхней категории и 01 мы присвоим для 'Ford', сложим вместе и получим 0101. Если 'Auto' имеет еще одну подкатегорию, например,
+'VW', её мы обозначили бы 02, т.к. 01 уже присвоено подкатегории 'Ford', т.е. в результате получим 0102. Если 'VW' имеет
+подкатегорию 'Engine', опять начнем с кода 01, а в результате получим 010201:  01 - 'Auto', 02 - 'VW', 01 - 'Engine'
+</para>
+
+	<para>Если вы хотите искать только среди сайтов этой категории, неободимо передать
+эту категорию в качестве параметра <literal>cat=010201</literal> в URL...т.е. создайте раскладушку такого типа:
+	<programlisting>
+&lt;OPTION value="01"&gt;AUTO
+&lt;OPTION value="0101"&gt;Ford
+</programlisting>
+	</para>
+	<para>и т.д....</para>
+
+
+<note><para>Для способа хранения cache вам нужно указать секцию category в вашем файле <filename>sections.conf</filename> с ненулевой
+максимальной длиной:
+<programlisting>
+Section category 0 64
+</programlisting>
+</para>
+</note>
+
+
+
+</sect1>
