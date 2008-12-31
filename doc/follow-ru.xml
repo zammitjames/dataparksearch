@@ -358,10 +358,7 @@ Realm  CheckOnly *
 
 	<sect2 id="follow-subnet">
 		<title>Команда <command>Subnet</command>
-			<indexterm>
-				<primary>Команда</primary>
-				<secondary>Subnet</secondary>
-			</indexterm>
+			<indexterm><primary>Команда</primary><secondary>Subnet</secondary></indexterm>
 		</title>
 		<para>
 			Команда <command>Subnet</command> предоставляет другой способ задания веб-пространства для индексирования.

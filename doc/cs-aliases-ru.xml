@@ -60,6 +60,10 @@ gb-18030, gb18030</entry></row>
 chinese, cn-gb, csgb2312, csiso58gb231280, euc-cn, euc_cn, euccn, gb2312, gb_2312-80, iso-ir-58</entry></row>
 <row><entry>GBK</entry><entry>
 cp936, gbk, windows-936</entry></row>
+<row><entry>georgian-academy</entry><entry>
+georgian-academy</entry></row>
+<row><entry>georgian-ps</entry><entry>
+georgian-ps</entry></row>
 <row><entry>geostd8</entry><entry>
 geo8-gov, geostd8</entry></row>
 <row><entry>IBM037</entry><entry>
@@ -67,45 +71,47 @@ geo8-gov, geostd8</entry></row>
 <row><entry>ISIRI3342</entry><entry>
 isiri-3342, isiri3342</entry></row>
 <row><entry>ISO-2022-JP</entry><entry>
-csiso2022jp, iso-2022-jp</entry></row>
+csiso2022jp, iso 2022-jp, iso-2022-jp</entry></row>
 <row><entry>ISO-8859-1</entry><entry>
-cp819, csisolatin1, ibm819, iso-8859-1, iso-ir-100, iso8859-1, iso_8859-1, iso_8859-1:1987, l1, latin1</entry></row>
+cp819, csisolatin1, ibm819, iso 8859-1, iso-8859-1, iso-ir-100, iso8859-1, iso_8859-1, iso_8859-1:1987, l1, latin-1, latin1</entry></row>
 <row><entry>ISO-8859-10</entry><entry>
-csisolatin6, iso-8859-10, iso-ir-157, iso8859-10, iso_8859-10, iso_8859-10:1992, l6, latin6</entry></row>
+csisolatin6, iso 8859-10, iso-8859-10, iso-ir-157, iso8859-10, iso_8859-10, iso_8859-10:1992, l6, latin-6, latin6</entry></row>
 <row><entry>ISO-8859-11</entry><entry>
-iso-8859-11, iso8859-11, iso_8859-11, iso_8859-11:1992, tactis, thai, tis-620, tis620</entry></row>
+iso 8859-11, iso-8859-11, iso8859-11, iso_8859-11, iso_8859-11:1992, tactis, thai, tis-620, tis620</entry></row>
 <row><entry>ISO-8859-13</entry><entry>
-iso-8859-13, iso-ir-179, iso8859-13, iso_8859-13, l7, latin7</entry></row>
+iso 8859-13, iso-8859-13, iso-ir-179, iso8859-13, iso_8859-13, l7, latin-7, latin7</entry></row>
 <row><entry>ISO-8859-14</entry><entry>
-iso-8859-14, iso-ir-199, iso8859-14, iso_8859-14, iso_8859-14:1998, l8, latin8</entry></row>
+iso 8859-14, iso-8859-14, iso-ir-199, iso8859-14, iso_8859-14, iso_8859-14:1998, l8, latin-8, latin8</entry></row>
 <row><entry>ISO-8859-15</entry><entry>
-iso-8859-15, iso-ir-203, iso8859-15, iso_8859-15, iso_8859-15:1998, l9, latin0, latin9</entry></row>
+iso 8859-15, iso-8859-15, iso-ir-203, iso8859-15, iso_8859-15, iso_8859-15:1998, l9, latin-0, latin-9, latin0, latin9</entry></row>
 <row><entry>ISO-8859-16</entry><entry>
-iso-8859-16, iso-ir-226, iso8859-16, iso_8859-16, iso_8859-16:2000</entry></row>
+iso 8859-16, iso-8859-16, iso-ir-226, iso8859-16, iso_8859-16, iso_8859-16:2000</entry></row>
 <row><entry>ISO-8859-2</entry><entry>
-csisolatin2, iso-8859-2, iso-ir-101, iso8859-2, iso_8859-2, iso_8859-2:1987, l2, latin2</entry></row>
+csisolatin2, iso 8859-2, iso-8859-2, iso-ir-101, iso8859-2, iso_8859-2, iso_8859-2:1987, l2, latin-2, latin2</entry></row>
 <row><entry>ISO-8859-3</entry><entry>
-csisolatin3, iso-8859-3, iso-ir-109, iso8859-3, iso_8859-3, iso_8859-3:1988, l3, latin3</entry></row>
+csisolatin3, iso 8859-3, iso-8859-3, iso-ir-109, iso8859-3, iso_8859-3, iso_8859-3:1988, l3, latin-3, latin3</entry></row>
 <row><entry>ISO-8859-4</entry><entry>
-csisolatin4, iso-8859-4, iso-ir-110, iso8859-4, iso_8859-4, iso_8859-4:1988, l4, latin4</entry></row>
+csisolatin4, iso 8859-4, iso-8859-4, iso-ir-110, iso8859-4, iso_8859-4, iso_8859-4:1988, l4, latin-4, latin4</entry></row>
 <row><entry>ISO-8859-5</entry><entry>
-csisolatincyrillic, cyrillic, iso-8859-5, iso-ir-144, iso8859-5, iso_8859-5, iso_8859-5:1988</entry></row>
+csisolatincyrillic, cyrillic, iso 8859-5, iso-8859-5, iso-ir-144, iso8859-5, iso_8859-5, iso_8859-5:1988</entry></row>
 <row><entry>ISO-8859-6</entry><entry>
-arabic, asmo-708, csisolatinarabic, ecma-114, iso-8859-6, iso-ir-127, iso8859-6, iso_8859-6, iso_8859-6:1987</entry></row>
+arabic, asmo-708, csisolatinarabic, ecma-114, iso 8859-6, iso-8859-6, iso-ir-127, iso8859-6, iso_8859-6, iso_8859-6:1987</entry></row>
 <row><entry>ISO-8859-7</entry><entry>
-csisolatingreek, ecma-118, elot_928, greek, greek8, iso-8859-7, iso-ir-126, iso8859-7, iso_8859-7, iso_8859-7:1987</entry></row>
+csisolatingreek, ecma-118, elot_928, greek, greek8, iso 8859-7, iso-8859-7, iso-ir-126, iso8859-7, iso_8859-7, iso_8859-7:1987</entry></row>
 <row><entry>ISO-8859-8</entry><entry>
-csisolatinhebrew, hebrew, iso-8859-8, iso-ir-138, iso8859-8, iso_8859-8, iso_8859-8:1988</entry></row>
+csisolatinhebrew, hebrew, iso 8859-8, iso-8859-8, iso-ir-138, iso8859-8, iso_8859-8, iso_8859-8:1988</entry></row>
 <row><entry>ISO-8859-9</entry><entry>
-csisolatin5, iso-8859-9, iso-ir-148, iso8859-9, iso_8859-9, iso_8859-9:1989, l5, latin5</entry></row>
+csisolatin5, iso 8859-9, iso-8859-9, iso-ir-148, iso8859-9, iso_8859-9, iso_8859-9:1989, l5, latin-5, latin5</entry></row>
 <row><entry>KOI-7</entry><entry>
 iso-ir-37, koi-7, koi7</entry></row>
+<row><entry>KOI8-C</entry><entry>
+cskoi8Ó, koi8-c, koi8c</entry></row>
 <row><entry>KOI8-R</entry><entry>
 cskoi8r, koi8-r, koi8r</entry></row>
 <row><entry>KOI8-T</entry><entry>
-koi8-t, koi8t</entry></row>
+cskoi8t, koi8-t, koi8t</entry></row>
 <row><entry>KOI8-U</entry><entry>
-koi8-u, koi8u</entry></row>
+cskoi8u, koi8-u, koi8u</entry></row>
 <row><entry>MacArabic</entry><entry>
 macarabic</entry></row>
 <row><entry>MacCE</entry><entry>

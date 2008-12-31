@@ -21,9 +21,9 @@ GB2312, GBK</entry></row>
 <row><entry>Chinese Traditional</entry><entry>
 Big5, Big5-HKSCS, cp950, GB-18030</entry></row>
 <row><entry>Cyrillic</entry><entry>
-cp855, cp866, cp866u, ISO-8859-5, KOI-7, KOI8-R, KOI8-U, MacCyrillic, windows-1251</entry></row>
+cp855, cp866, cp866u, ISO-8859-5, KOI-7, KOI8-C, KOI8-R, KOI8-U, MacCyrillic, windows-1251</entry></row>
 <row><entry>Georgian</entry><entry>
-geostd8</entry></row>
+georgian-academy, georgian-ps, geostd8</entry></row>
 <row><entry>Greek</entry><entry>
 cp869, cp875, ISO-8859-7, MacGreek, windows-1253</entry></row>
 <row><entry>Hebrew</entry><entry>

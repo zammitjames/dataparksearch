@@ -1,6 +1,7 @@
 <sect2 id="aspell">
-	<title>Aspell</title>
+<title>Aspell
 <indexterm><primary>Aspell</primary></indexterm>
+</title>
 
 <para>With <application>Aspell</application> support compiled, it's possible automatically extend search query by spelling
 suggestions for query words. To enable this feature, you need to install <ulink url="http://aspell.net/">Aspell</ulink> at your system

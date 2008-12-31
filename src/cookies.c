@@ -208,11 +208,11 @@ void DpsCookiesFind(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *hostinfo)
 	  DpsDSTRAppend(&cookie, "=", 1);
 	  DpsDSTRAppendStr(&cookie, DpsSQLValue(&Res, i, 1));
 	}
-	DpsSQLFree(&Res);
 	if (rows == 0) {
 	  DpsCookiesAdd(Indexer, hostinfo, "/", "", "", 'n', 0, 0);
 	}
       }
+      DpsSQLFree(&Res);
       if (Indexer->flags & DPS_FLAG_UNOCON) {
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
       }	  

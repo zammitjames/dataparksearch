@@ -1,5 +1,5 @@
 <sect1 id="indexcmd">
-	<title>Other commands uses in <filename>indexer.conf</filename></title>
+	<title>Other commands are used in <filename>indexer.conf</filename></title>
 
 <sect2 id="include_cmd">
 <title><command>Include</command> command</title>
@@ -891,6 +891,14 @@ HrefSection	link
 HrefSection     NewLink "&lt;newlink&gt;([^&lt;]*)&lt;/newlink&gt;" "$1"
 </programlisting>
 </para>
+</sect2>
+
+
+<sect2 id="FastHrefCheck">
+<title><command>FastHrefCheck</command> command</title>
+<indexterm><primary>Command</primary><secondary>FastHrefCheck</secondary></indexterm>
+<para>The "<command>FastHrefCheck yes</command>" command is useful to speed-up the indexing when you have a huge list of <command>Server/Realm/Subnet</command> commands as 
+it disables the href checking against server list during parsing.</para>
 </sect2>
 
 

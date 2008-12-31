@@ -197,9 +197,6 @@ static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int
 		       cmd, robot->nrules, A->now, robot->hostinfo, path_esc);
 	  DpsSQLAsyncQuery(db, NULL, buf);
 
-/*	  if (A->flags & DPS_FLAG_UNOCON) {
-	  }*/
-
 	}
 #ifdef WITH_PARANOIA
 	DpsViolationExit(A->handle, paran);
@@ -285,10 +282,8 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 		  AddRobotRule(Indexer, robot, cmd, DpsSQLValue(&Res,i,1), 0);
 	      }
 	    }
-	    DpsSQLFree(&Res);
 	  }
-/*	  if (Indexer->flags & DPS_FLAG_UNOCON) {
-	  }*/
+	  DpsSQLFree(&Res);
 	}
 
 	if (robot == NULL) {

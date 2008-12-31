@@ -2,7 +2,7 @@
 History
 -------
 
-Latest snapshot:
+31 Dec 2008: 4.51
 	* Exact as in query string matching has been added for relevance calculation.
 	* CAS based synchronization has been implemented for i386/x86_64 platform.
 	* The ActionSQL command has been added. Use it to execute SQL-queries with document related data while indexing.

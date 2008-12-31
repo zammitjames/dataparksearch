@@ -624,6 +624,7 @@ static int DpsURLDB(DPS_AGENT *Indexer, DPS_SERVER *S, DPS_DB *db) {
 
   if(DPS_OK != (res = DpsSQLQuery(db, &SQLRes, qbuf))) {
     DpsLog(Indexer, DPS_LOG_INFO, "URLDB: db.err: %s", db->errstr);
+    DpsSQLFree(&SQLRes);
     return res;
   }
 
@@ -673,6 +674,7 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
       dps_snprintf(Indexer->Conf->errstr, sizeof(Indexer->Conf->errstr) - 1, "%s", s_err);
       DPS_FREE(s_err);
       DPS_FREE(Srv->Match.pattern);
+      DpsSQLFree(&SQLRes);
       return DPS_ERROR;
     }
     if((Srv->Match.match_type == DPS_MATCH_BEGIN) && (Srv->Match.pattern[0])) {
@@ -693,6 +695,7 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
     }
     DPS_FREE(Srv->Match.pattern);
   }
+  DpsSQLFree(&SQLRes);
   return DPS_OK;
 }
 
@@ -992,6 +995,7 @@ WHERE rec_id=%s%d%s",
 	}
 
 ex:
+	DpsSQLFree(&SQLRes);
 	DPS_FREE(buf);
 	DPS_FREE(arg);
 	DPS_FREE(arg_insert);
