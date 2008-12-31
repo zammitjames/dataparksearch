@@ -48,10 +48,11 @@
         <!ENTITY groups SYSTEM "groups.xml">
         <!ENTITY acronym SYSTEM "acronym.xml">
         <!ENTITY misc SYSTEM "misc.xml">
+        <!ENTITY data SYSTEM "data.xml">
 ]>
 <book>
 	<bookinfo>
-		<title>DataparkSearch Engine 4.50</title>
+		<title>DataparkSearch Engine 4.51</title>
 		<!--subtitle>The Web searching software</subtitle-->
                 <subtitle>Reference manual</subtitle>
 		<copyright>
@@ -87,6 +88,7 @@
 &htdb;
 &exec;
 &mirror;
+&data;
 </sect1>
 &syslog;
 &stored;

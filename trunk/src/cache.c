@@ -495,7 +495,6 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	cmd.nwords = Doc->Words.nwords;
 	if (Indexer->Flags.use_crosswords) {
 	  char buf[128];
-	  bzero(&SQLres, sizeof(SQLres));
 	  DpsSQLResInit(&SQLres);
 	  dps_snprintf(buf, sizeof(buf), "SELECT word_id,intag FROM ncrossdict WHERE url_id=%d", url_id);
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
@@ -522,6 +521,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	if (wrd == NULL) {
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc memory for %d words (%d bytes) [%s:%d]", 
 		 cmd.nwords, cmd.nwords * sizeof(DPS_LOGD_WRD), __FILE__, __LINE__);
+	  if (Indexer->Flags.use_crosswords) DpsSQLFree(&SQLres);
 	  TRACE_OUT(Indexer);
 	  return DPS_ERROR;
 	}
@@ -529,6 +529,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	lcslen = 12 * Indexer->WordParam.max_word_len;
 	if ((lcsword = (char*)DpsMalloc(lcslen + 1)) == NULL) { 
 	  DPS_FREE(wrd);
+	  if (Indexer->Flags.use_crosswords) DpsSQLFree(&SQLres);
 	  TRACE_OUT(Indexer);
 	  return DPS_ERROR;
 	}
@@ -2617,9 +2618,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 
 #ifdef HAVE_SQL
 
-	bzero(&SQLres, sizeof(SQLres));
 	DpsSQLResInit(&SQLres);
-	bzero(&Res, sizeof(Res));
 	DpsSQLResInit(&Res);
 
 	recs = DpsVarListFindInt(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
@@ -2684,31 +2683,6 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	      Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 4));
 	    }
 
-/*	    if (DpsSQLValue(&SQLres, i, 6)[1] > 0) {
-
-	      if (use_showcnt) {
-		dps_snprintf(str, sizeof(str), 
-   "SELECT COUNT(*),MAX(u.pop_rank*log(u.shows+1)/log(%d)*(s.weight-(%d))/%d) FROM url u, server s WHERE u.status>2000 AND u.crc32=%s AND s.rec_id=u.site_id", max_shows, min_weight, scale_weight, DpsSQLValue(&SQLres, i, 6));
-	      } else {
-		dps_snprintf(str, sizeof(str), 
-    "SELECT COUNT(*),MAX(u.pop_rank*(s.weight-(%d))/%d) FROM url u,server s WHERE u.status>2000 AND u.crc32=%s AND s.rec_id=u.site_id",
-			     min_weight, scale_weight, DpsSQLValue(&SQLres, i, 6));
-	      }
-
-	      if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
-	      rc = DpsSQLQuery(db, &Res, str);
-	      if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
-	      if (rc != DPS_OK) {
-		goto URLDataWrite_exit;
-	      }
-	      if ( (DpsSQLNumRows(&Res) > 0) && (DPS_ATOI(DpsSQLValue(&Res, 0, 0)) > 0) ) {
-		pr = DPS_ATOF(DpsSQLValue(&Res, 0, 1));
-		if (pr > Item.pop_rank) Item.pop_rank = pr;
-	      }
-	      DpsSQLFree(&Res);
-	    }
-*/
-
 	    filenum = DPS_FILENO(Item.url_id, NFiles);
 	    if (filenum != prevfilenum) {
 	      if (fd > 0) DpsClose(fd);
@@ -2735,6 +2709,8 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 /*	  if (u) DPSSLEEP(0);*/
 	}
  URLDataWrite_exit:
+	DpsSQLFree(&SQLres);
+	DpsSQLFree(&Res);
 	if (fd > 0) DpsClose(fd);
 	if (rc == DPS_OK) for(i = 0; i < (size_t)NFiles; i++) {
 	  if (FF[i]) continue;

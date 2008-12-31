@@ -110,7 +110,7 @@ Although, everything is OK on this system when <application>NFS v3</application>
 		<itemizedlist>
 			<listitem>
 				<para>
-<ulink url="http://www.gnu.org/software/gzip/gzip.html">GNU zip</ulink> to uncompress the distribution.</para>
+<ulink url="http://www.bzip.org/">Bzip2</ulink> to uncompress the distribution.</para>
 
 			</listitem>
 			<listitem>
@@ -153,7 +153,7 @@ change directory into the top-level directory of the unpacked
 distribution.</para>
 
 				<para>
-					<userinput>tar -zxf dpsearch-x.x.tar.gz</userinput>
+					<userinput>tar -xyf dpsearch-x.x.tar.bz2</userinput>
 				</para>
 			</listitem>
 			<listitem>

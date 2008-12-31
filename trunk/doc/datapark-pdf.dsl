@@ -88,7 +88,7 @@
 
 (define html-index-filename
   ;; Name of HTML index file
-  "HTML.index")
+  "PDF.index")
 
 (define html-manifest
   ;; REFENTRY html-manifest

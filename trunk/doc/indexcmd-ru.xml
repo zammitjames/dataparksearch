@@ -950,6 +950,15 @@ HrefSection     NewLink "&lt;newlink&gt;([^&lt;]*)&lt;/newlink&gt;" "$1"
 </sect2>
 
 
+<sect2 id="FastHrefCheck">
+<title>Команда <command>FastHrefCheck</command></title>
+<indexterm><primary>Команда</primary><secondary>FastHrefCheck</secondary></indexterm>
+<para>Команда "<command>FastHrefCheck yes</command>" полезна для ускорения индексирования, если ваш список команд <command>Server/Realm/Subnet</command> огромен, 
+т.к. она выключает проверку ссылок по списку серверов на этапе парсинга страницы.
+</para>
+</sect2>
+
+
 <sect2 id="index_cmd">
 <title>Команда <command>Index</command></title>
 <indexterm><primary>Команда</primary><secondary>Index</secondary></indexterm>

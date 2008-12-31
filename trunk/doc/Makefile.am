@@ -50,7 +50,8 @@ vary.xml \
 indexcmd.xml \
 accent.xml \
 acronym.xml \
-misc.xml
+misc.xml \
+data.xml
 
 XML_SRC_RU = aliases-ru.xml \
 book-ru.xml \
@@ -101,7 +102,8 @@ mod_dpsearch-ru.xml \
 cs-aliases-ru.xml \
 groups-ru.xml \
 acronym-ru.xml \
-misc-ru.xml
+misc-ru.xml \
+data-ru.xml
 
 XML_SRC = $(XML_SRC_EN) $(XML_SRC_RU)
 
@@ -199,13 +201,13 @@ index.ru.html: $(@doc_FILES_RU@)
 		 book-ru.xml
 
 book.tex: $(@doc_FILES_EN@)
-	perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
-	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -t sgml \
+	LANG=C LC_ALL=C perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
+	LANG=C LC_ALL=C $(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl -t sgml \
 		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
 		 book.xml
-	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
 	rm index.en.html
-	$(JADE) -v -wno-valid -c ./catalog -d ./datapark-pdf.dsl -t tex \
+	LANG=C LC_ALL=C perl $(COLLATEINDEX) -i index -o index.xml HTML.index
+	LANG=C LC_ALL=C $(JADE) -v -wno-valid -c ./catalog -d ./datapark-pdf.dsl -t tex \
 		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
 		 book.xml
 

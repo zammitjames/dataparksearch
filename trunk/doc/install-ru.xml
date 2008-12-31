@@ -112,8 +112,7 @@
 		<itemizedlist>
 			<listitem>
 				<para>
-					<ulink url="http://www.gnu.org/software/gzip/gzip.html"><literal>GNU zip</literal></ulink>
-для распаковки дисрибутива.</para>
+					<ulink url="http://www.bzip.org/"><literal>Bzip2</literal></ulink> для распаковки дисрибутива.</para>
 
 			</listitem>
 			<listitem>
@@ -156,7 +155,7 @@
 				<para>Разархивируйте дистрибутив и перейдите а корневую директорию распакованного дерева исходников.</para>
 
 				<para>
-					<userinput>tar -zxf dpsearch-x.x.tar.gz</userinput>
+					<userinput>tar -xyf dpsearch-x.x.tar.bz2</userinput>
 				</para>
 			</listitem>
 			<listitem>
