@@ -603,7 +603,7 @@ static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsu
 
 __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding) {
   char *HDoc,*HEnd;
-  const char *htok, *last;
+  const char *htok, *last = NULL;
   const char *lcharset;
   const char *doclang;
   DPS_CHARSET *bcs = NULL, *dcs = NULL, *sys_int;
