@@ -708,10 +708,10 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 
 	if(!*t->s) return NULL;
 	
-	if(!strncmp(t->s,"<!--",4))t->type=DPS_HTML_COM;
+	if(!strncmp(t->s,"<!--",4)) t->type = DPS_HTML_COM;
 	else	
-	if(*t->s=='<')t->type=DPS_HTML_TAG;
-	else	t->type=DPS_HTML_TXT;
+	if(*t->s=='<' && t->s[1] != ' ' && t->s[1] != '<' && t->s[1] != '>') t->type = DPS_HTML_TAG;
+	else	t->type = DPS_HTML_TXT;
 
 	switch(t->type){
 		case DPS_HTML_TAG:
@@ -869,6 +869,7 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 							break;
 						}
 					}else{
+					  if (t->e == t->s) continue;
 						break;
 					}
 				}
