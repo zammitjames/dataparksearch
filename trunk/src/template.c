@@ -226,7 +226,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 			      dps_strcpy(newvalue + 3 + cnv->obytes, "\3");
 			    }
 			  } else { /* DPS_VAR_ALIGN_LEFT by default */
-			    DpsNConv(cnv, maxlen, newvalue, 23 * maxlen + 1, value, curlen);
+			    DpsNConv(cnv, maxlen, newvalue, 23 * maxlen + 1, value, charlen);
 			    newvalue[cnv->obytes] = '\0';
 			    c2 = strrchr(newvalue, '\2');
 			    c3 = strrchr(newvalue, '\3');
