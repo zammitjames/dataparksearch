@@ -196,7 +196,7 @@ HTMLHttpRequest.prototype.xmlhttpSend = function(uri, formStr) { with (this)
    // If you are getting an error where 'doc' is null in your own code, try changing
    // the MIME type returned by the server: setting it to text/xml usually works well!
 //   if (callback) callback(doc, loadingURI);
-   if (callback) callback(xmlhttp.responseText, loadingURI);
+   if (callback && (xmlhttp.status == 200)) callback(xmlhttp.responseText, loadingURI);
    loadingURI = '';
   }
  };

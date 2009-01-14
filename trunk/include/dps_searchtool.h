@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ extern void DpsGroupBySite(DPS_AGENT *Agent, DPS_RESULT *Res);
 extern int  DpsPrepare(DPS_AGENT *query, DPS_RESULT *res);
 extern int  DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string);
 
-extern char *DpsHlConvert(DPS_WIDEWORDLIST *L,const char * src, DPS_CONV *lc_uni, DPS_CONV *uni_bc);
+extern char *DpsHlConvert(DPS_WIDEWORDLIST *L,const char * src, DPS_CONV *lc_uni, DPS_CONV *uni_bc, int NOprefixHL);
 extern int  DpsConvert(DPS_ENV *Conf, DPS_VARLIST *Env_Vars, DPS_RESULT *Res, DPS_CHARSET *lcs, DPS_CHARSET *bcs);
 extern char* DpsRemoveHiLightDup(const char *s);
 

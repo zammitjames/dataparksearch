@@ -1186,6 +1186,7 @@ int main(int argc, char **argv, char **envp) {
 		
 		DpsSetLogLevel(Agent, debug_level);
 		Agent->flags = Conf->flags = flags;
+		Agent->Flags = Conf->Flags;
 
 		if(res!=DPS_OK){
 			DpsLog(Agent,verb,"%s",DpsEnvErrMsg(Conf));

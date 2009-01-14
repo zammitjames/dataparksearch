@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -630,8 +630,8 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
 
   lcharset = DpsVarListFindStr(&query->Vars, "LocalCharset", "iso-8859-1");
   doclang = DpsVarListFindStr(&Doc->Sections, "Content-Language", "xx");
-  if (strncasecmp(doclang, "zh", 2) && strncasecmp(doclang, "th", 2) 
-      && strncasecmp(doclang, "ja", 2) && strncasecmp(doclang, "ko", 2) ) NOprefixHL = 1;
+  if ((!query->Flags.make_prefixes) && strncasecmp(doclang, "zh", 2) && strncasecmp(doclang, "th", 2) 
+	   && strncasecmp(doclang, "ja", 2) && strncasecmp(doclang, "ko", 2) ) NOprefixHL = 1;
 
   bcs = DpsGetCharSet(lcharset);
   dcs = DpsGetCharSet(DpsVarListFindStr(&Doc->Sections,"Charset","iso-8859-1"));

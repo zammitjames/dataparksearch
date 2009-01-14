@@ -119,6 +119,8 @@ sy 0
     <TITLE>$(43N39E.lng): $&(q)</TITLE>
     <link href="http://sochi.org.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="$(self)?q=$%(q)&amp;c=$&(c)&amp;site=$&(site)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;&amp;s=$&(s)&amp;label=$&(label)&amp;tmplt=rss8.htm.fr">
+    <script type="text/javascript" src="/js/htmlhttprequest_commented.js"></script>
+    <script type="text/javascript" src="/js/suggest.js"></script>
     <script type="text/javascript"><!--
       var dpstate = 'h';
       var ext1Content = null;
@@ -233,8 +235,9 @@ function myCopyContent2(domDoc, uri) {
 <td width="100%">
 			<table width="100%" border="0" cellpadding="2" cellspacing="0">
 			    <tr>
-			      <td width="99%" style="vertical-align: middle;">
-				  <input class="inputsearch" type="text" name="q" size="60" value="$&(q)" style="width:100%;">
+			      <td width="99%" style="vertical-align: middle;" align="left">
+				  <input class="inputsearch" type="text" name="q" id="q" size="60" value="$&(q)" style="width:100%;" onkeyup="searchSuggest();" autocomplete="off">
+					<div id="search_suggest" style="width:100%; display:none">&nbsp;</div>
 			      </td><td>
 				  <input class="inputsearch" type="submit" value="Search">
 			      </td>
@@ -335,9 +338,8 @@ function showBooksAndVideo() {
 var CommerceLoader = new HTMLHttpRequest('CommerceLoader', myCopyContent);
 var SimilarLoader = new HTMLHttpRequest('SimilarLoader', myCopyContent2);
 <!IF NAME="c" CONTENT="01">
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(auxs)&link=$&(link)&ps=7&tmplt=phones8.htm.fr&label=phones');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&link=$&(link)&ps=7&tmplt=phones8.htm.fr&label=phones');
 <!ELSE>
-//CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(auxs)&link=$&(link)&ps=7&tmplt=duo8.htm.fr');
 CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&&ps=5&tmplt=rutube8.htm.fr&label=rutube');
 <!ENDIF>
 SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=7&tmplt=qsimilar8.htm.fr&label=qsimilar&s_label=$&(label)');
@@ -396,7 +398,7 @@ SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy
 
 
 <!--res-->
-<div style="width: 36em;">
+<div style="width: 40em;">
 <div class="serp1"><i class="serp1" style="background-image:url(http://favicon.yandex.ru/favicon/$(url.host))"></i>
 <span style="margin-left:20px;">&#8203;</span>
 <!-- $(DP_ID), site_id: $(Site_ID), ST: $(ST) --><!IF NAME="Content-Type" CONTENT="application/msword"><b class="mimetype">[DOC]</b>&nbsp;
