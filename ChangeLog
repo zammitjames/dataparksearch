@@ -2,6 +2,9 @@
 History
 -------
 
+Latest snapshot:
+	* MakePrefixes command has been added. Use it to produce all prefixes for words in a document. This is suitable for making suggestions.
+	
 31 Dec 2008: 4.51
 	* Exact as in query string matching has been added for relevance calculation.
 	* CAS based synchronization has been implemented for i386/x86_64 platform.

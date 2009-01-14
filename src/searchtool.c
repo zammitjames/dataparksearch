@@ -1630,8 +1630,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						, double *D_y
 #endif
 						) {
-  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : x /*DPS_PHRASE_FACTOR*/;
-  if (D[DPS_N_EXACT] == 0) y += x;
+  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : 2 * x /*DPS_PHRASE_FACTOR*/;
+  if (D[DPS_N_EXACT] == 0) y += 2 * x;
 
 #ifdef WITH_REL_WRDCOUNT
   if (D[DPS_N_WRDCOUNT] > R[DPS_N_WRDCOUNT]) {
@@ -2895,7 +2895,7 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 }
 
 
-char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, DPS_CONV *uni_bc) {
+char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, DPS_CONV *uni_bc, int NOprefixHL) {
 	dpsunicode_t	*tok, *lt, *uni;
 	int             ctype, have_bukva_forte;
 	char		*hpart, *htxt, *zend;
@@ -2953,7 +2953,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 		        if (List->Word[uw].origin & DPS_WORD_ORIGIN_STOP) continue;
 			slen = List->Word[uw].ulen;
 			if (slen > flen) continue;
-			if ((DpsUniCType(tok[slen]) <= DPS_UNI_BUKVA) && (tok[slen] != 0) && (tok[slen] >= 0x30 )) continue;
+			if (NOprefixHL && (DpsUniCType(tok[slen]) <= DPS_UNI_BUKVA) && (tok[slen] != 0) && (tok[slen] >= 0x30 )) continue;
 			if (!DpsUniStrNCaseCmp(tok, List->Word[uw].uword, slen)) {
 			  found = 1;
 			  break;
@@ -2989,7 +2989,7 @@ int DpsConvert(DPS_ENV *Conf, DPS_VARLIST *Env_Vars, DPS_RESULT *Res, DPS_CHARSE
 	DPS_CHARSET	*sys_int;
 	DPS_CONV	lc_uni, uni_bc;
 	DPS_CONV	lc_uni_text, uni_bc_text;
-	
+
 	sys_int=DpsGetCharSet("sys-int");
 	DpsConvInit(&lc_bc, lcs, bcs, Conf->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&lc_bc_text, lcs, bcs, Conf->CharsToEscape, DPS_RECODE_TEXT);
@@ -3029,13 +3029,18 @@ int DpsConvert(DPS_ENV *Conf, DPS_VARLIST *Env_Vars, DPS_RESULT *Res, DPS_CHARSE
 	for(i=0;i<Res->num_rows;i++){
 		DPS_DOCUMENT	*D=&Res->Doc[i];
 		size_t		sec;
+		int             NOprefixHL = 0;
+		const char      *doclang = DpsVarListFindStr(&D->Sections, "Content-Language", "xx");
+	
+		if ((!Conf->Flags.make_prefixes) && strncasecmp(doclang, "zh", 2) && strncasecmp(doclang, "th", 2) 
+		    && strncasecmp(doclang, "ja", 2) && strncasecmp(doclang, "ko", 2) ) NOprefixHL = 1;
 		
 		for (r = 0; r < 256; r++)
 		for (sec = 0; sec < D->Sections.Root[r].nvars; sec++) {
 			Var = &D->Sections.Root[r].Var[sec];
 
-			newval = DpsHlConvert(&Res->WWList, Var->val, &lc_uni, &uni_bc);
-			newtxt = DpsHlConvert(&Res->WWList, Var->txt_val, &lc_uni_text, &uni_bc_text);
+			newval = DpsHlConvert(&Res->WWList, Var->val, &lc_uni, &uni_bc, NOprefixHL);
+			newtxt = DpsHlConvert(&Res->WWList, Var->txt_val, &lc_uni_text, &uni_bc_text, NOprefixHL);
 			DPS_FREE(Var->val);
 			DPS_FREE(Var->txt_val);
 			Var->val = newval;

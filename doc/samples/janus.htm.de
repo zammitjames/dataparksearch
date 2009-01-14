@@ -118,6 +118,8 @@ sy 0
     <TITLE>$(43N39E.lng): $&(q)</TITLE>
     <link href="http://sochi.org.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="$(self)?q=$%(q)&amp;c=$&(c)&amp;site=$&(site)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;&amp;s=$&(s)&amp;label=$&(label)&amp;tmplt=rss8.htm.en">
+    <script type="text/javascript" src="/js/htmlhttprequest_commented.js"></script>
+    <script type="text/javascript" src="/js/suggest.js"></script>
     <script type="text/javascript"><!--
       var dpstate = 'h';
       var ext1Content = null;
@@ -159,7 +161,6 @@ sy 0
 		BODY { margin-left: 1em; margin-right: 1em; }
 		SELECT { width: 15em; }
 	</style>
-    <script type="text/javascript" src="/js/htmlhttprequest_commented.js"></script>
     <script type="text/javascript">
 function myCopyContent(domDoc, uri) {
  var destId = 'resultArea';
@@ -225,8 +226,9 @@ function myCopyContent(domDoc, uri) {
 <td width="100%">
 			<table width="100%" border="0" cellpadding="2" cellspacing="0">
 			    <tr>
-			      <td width="99%" style="vertical-align: middle;">
-				  <input class="inputsearch" type="text" name="q" size="60" value="$&(q)" style="width:100%;">
+			      <td width="99%" style="vertical-align: middle;" align="left">
+				  <input class="inputsearch" type="text" name="q" id="q" size="60" value="$&(q)" style="width:100%;" onkeyup="searchSuggest();" autocomplete="off">
+					<div id="search_suggest" style="width:100%; display:none">&nbsp;</div>
 			      </td><td>
 				  <input class="inputsearch" type="submit" value="Search">
 			      </td>
@@ -326,9 +328,9 @@ dp_init();
 function showBooksAndVideo() {
 var CommerceLoader = new HTMLHttpRequest('CommerceLoader', myCopyContent);
 <!IF NAME="c" CONTENT="01">
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(auxs)&link=$&(link)&ps=7&tmplt=phones8.htm.en&label=phones');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&link=$&(link)&ps=7&tmplt=phones8.htm.en&label=phones');
 <!ELSE>
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(auxs)&link=$&(link)&ps=7&tmplt=duo8.htm.en');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(s)&link=$&(link)&ps=7&tmplt=duo8.htm.en');
 <!ENDIF>
 }
 </script>

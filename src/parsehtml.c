@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -246,7 +246,19 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	    delete_aspell_string_enumeration(elements);
 	  }
 	}
-#endif				
+#endif	
+
+	if (Indexer->Flags.make_prefixes) {
+	  size_t ml;
+	  Word.uword = uword;
+	  for (ml = tlen - 1; ml >= min_word_len; ml--) {
+	    Word.uword[ml] = 0;
+	    Word.ulen = ml;
+	    res = DpsWordListAddFantom(Doc, &Word, Item->section);
+	    if (res != DPS_OK) break;
+	  }
+	}
+			
       }
     }
 

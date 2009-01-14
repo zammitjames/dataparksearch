@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2009 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -339,9 +339,9 @@ static int dpstoredoc_handler(request_rec *r) {
 		case DPS_HTML_TXT:
 		        ch = *last; *last = '\0';
 			if (tag.title || tag.script) {
-			  sprintf(HEnd, "%s", DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text));
+			  sprintf(HEnd, "%s", DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text, 0)); /* FIXME: add check for Content-Language */
 			} else {
-			  sprintf(HEnd, "%s", DpsHlConvert(&Res->WWList, htok, &lc_uni, &uni_bc));
+			  sprintf(HEnd, "%s", DpsHlConvert(&Res->WWList, htok, &lc_uni, &uni_bc, 0)); /* FIXME: add check for Content-Language */
 			}
 			HEnd=DPS_STREND(HEnd);
 			*last = ch;

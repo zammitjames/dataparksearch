@@ -846,7 +846,12 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
 			if (arg) DpsVarListReplaceInt(vars, tok, atoi(arg));
 		}else
-		if(!strncasecmp(str, "m", 1)) {
+		if(!strncasecmp(str, "my", 2)) {
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+			if (arg) DpsVarListReplaceStr(vars, tok, arg);
+		}else
+		  if((str[0] == 'm' || str[0] == 'M') && (str[1] == ' ' || str[1] == '\t')) {
 			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
 			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
 			if (arg) DpsVarListReplaceStr(vars, tok, arg);

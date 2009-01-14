@@ -140,7 +140,7 @@ outaway:
 int __DPSCALL DpsNConv(DPS_CONV *c, size_t n, char *d, size_t dlen, const char *s, size_t slen) {
   size_t	i, codes, nw = 0;
   int           res;
-  dpsunicode_t  wc[32]; /* Are 32 is enough? */
+  dpsunicode_t  wc[32]; /* Is 32 enough? */
   dpsunicode_t  zero = 0;
   char		*d_o = d;
   const char	*s_e = s + slen;

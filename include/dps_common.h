@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -882,6 +882,7 @@ typedef struct {
         int             use_meta;
         int             update_lm;
         int             provide_referer;
+        int             make_prefixes;    /**< Make woord prefixes for cache mode */
         int             OptimizeAtUpdate;
         int             PreloadURLData;
         int             cold_var;         /**< Do not use file locking for read-only operations */

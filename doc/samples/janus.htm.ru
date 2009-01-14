@@ -121,6 +121,8 @@ sy 0
     <TITLE>$(43N39E.lng): $&(q)</TITLE>
     <link href="http://sochi.org.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="$(self)?q=$%(q)&amp;c=$&(c)&amp;site=$&(site)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;&amp;s=$&(s)&amp;label=$&(label)&amp;tmplt=rss8.htm.ru">
+    <script type="text/javascript" src="/js/htmlhttprequest_commented.js"></script>
+    <script type="text/javascript" src="/js/suggest.js"></script>
     <script type="text/javascript"><!--
       var dpstate = 'h';
       var ext1Content = null;
@@ -159,7 +161,7 @@ sy 0
       function clk(id,pos){
 	var u = new Date().getTime();
         var i = new Image();
-	i.src="http://s.sochi.org.ru/cgi-bin/c.pl?id="+id+"&pos="+pos+'&u='+u;return true;
+	i.src="/cgi-bin/c.pl?id="+id+"&pos="+pos+'&u='+u;return true;
       }
       //--></script>
 	<style type="text/css">
@@ -249,8 +251,9 @@ function myCopyContent3(domDoc, uri) {
 <td width="100%">
 			<table width="100%" border="0" cellpadding="2" cellspacing="0">
 			    <tr>
-			      <td width="99%" style="vertical-align: middle;">
-				  <input class="inputsearch" type="text" name="q" size="60" value="$&(q)" style="width:100%;">
+			      <td width="99%" style="vertical-align: middle;" align="left">
+				  <input class="inputsearch" type="text" name="q" id="q" size="60" value="$&(q)" style="width:100%;" onkeyup="searchSuggest();" autocomplete="off">
+					<div id="search_suggest" style="width:100%; display:none">&nbsp;</div>
 			      </td><td>
 				  <input class="inputsearch" type="submit" value="$(ToFind.lng)">
 			      </td>
@@ -354,10 +357,9 @@ var SimilarLoader = new HTMLHttpRequest('SimilarLoader', myCopyContent2);
 SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=5&tmplt=qsimilar8.htm.ru&label=qsimilar&s_label=$&(label)');
 var RutubeLoader = new HTMLHttpRequest('RutubeLoader', myCopyContent3);
 RutubeLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&&ps=3&tmplt=rutube8.htm.ru&label=rutube');
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(auxs)&link=$&(link)&ps=5&tmplt=phones8.htm.ru&label=phones');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&link=$&(link)&ps=5&tmplt=phones8.htm.ru&label=phones');
 <!ELSE>
 SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=7&tmplt=qsimilar8.htm.ru&label=qsimilar');
-//CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&c=$&(c)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=$&(GroupBySite)&s=$&(auxs)&link=$&(link)&ps=7&tmplt=duo8.htm.ru');
 CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&ps=5&tmplt=rutube8.htm.ru&label=rutube');
 <!ENDIF>
 }
@@ -374,7 +376,6 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)
 </td></tr>
 </table>
 </div>
-<script type="text/javascript" src="/js/htmlhttprequest_commented.js"></script>
 <script type="text/javascript">showBooksAndVideo();</script>
 </body>
 </html>
@@ -436,7 +437,7 @@ CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)
  --><!IF NAME="Title" CONTENT="[no title]">
 	 <!IF NAME="MP3.Artist" CONTENT="">$(notitle.lng)<!ELSE>$(artist.lng): $&(MP3.Artist)<!ENDIF>
 	 <!ELIKE NAME="Title" CONTENT="/tmp/ind*">$(notitle.lng)
-    <!ELSE>$&(Title:72)<!ENDIF><!--
+    <!ELSE>$&(Title:72)<!ENDIF><!-- $&(Title:70)
 --></a></div>
 <div class="serp2" style="margin-left:20px;">
 <!IF NAME="url.host" CONTENT="www.books.ru">
