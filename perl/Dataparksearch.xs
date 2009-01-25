@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2009 Datapark corp. All rights reserved.
  
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -846,6 +846,7 @@ _GetSEA( ... )
 	 }
 	 EXTEND(SP,1);
 	 PUSHs(newSVpv(SEA, strlen(SEA)));
+	 DPS_FREE(SEA);
 
 
 SV*
@@ -874,9 +875,7 @@ _GetSEAbyId( ... )
 		Res->Doc = (DPS_DOCUMENT*)DpsMalloc(sizeof(DPS_DOCUMENT) * (Res->num_rows));
 		if (Res->Doc != NULL) {
 			DpsDocInit(Res->Doc);
-/*			DpsVarListAddStr(&Res->Doc->Sections, "URL", url);*/
 			DpsVarListAddStr(&Res->Doc->Sections, "DP_ID", DP_ID);
-/*			if (DPS_OK == (rc = DpsURLAction(Agent, Res->Doc, DPS_URL_ACTION_FINDBYURL))) {*/
 				for (i = dbfrom; i < dbto; i++) {
 				  db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[i] : &Agent->dbl.db[i];
 				  switch(db->DBDriver){
@@ -893,7 +892,6 @@ _GetSEAbyId( ... )
 #endif
 				  }
 				}
-/*			}*/
 			if (rc == DPS_OK) {
 				SEA = DpsStrdup(DpsVarListFindStr(&Res->Doc->Sections, "SEA", ""));
 			}
@@ -903,6 +901,7 @@ _GetSEAbyId( ... )
 	 }
 	 EXTEND(SP,1);
 	 PUSHs(newSVpv(SEA, strlen(SEA)));
+	 DPS_FREE(SEA);
 
 SV*
 _WordNormalize( ... )
@@ -918,7 +917,7 @@ _WordNormalize( ... )
 	 DPS_CHARSET *browser_cs, *sys_int;
 	 size_t WRDlen, NORMlen;
 	 STRLEN n_a;
-	 char *WRD, *NORM;
+	 char *WRD, *NORM = NULL;
 	 dpsunicode_t *uwrd = NULL;
         PPCODE:
          self = ST(0);
@@ -937,7 +936,7 @@ _WordNormalize( ... )
 
 	 WRDlen = dps_strlen(WRD);
 	 if ((uwrd = (dpsunicode_t*)DpsMalloc(sizeof(dpsunicode_t) * (28 * WRDlen + 64))) == NULL) {
-		NORM = WRD;
+/*		NORM = WRD;*/
 		goto Norm_exit;
          }
 	 DpsConv(&bc_uni, (char*)uwrd, sizeof(dpsunicode_t) * (WRDlen + 1), WRD, WRDlen + 1);
@@ -958,26 +957,31 @@ _WordNormalize( ... )
 	 if (cur != NULL) {
 	   NORMlen = DpsUniLen((*cur)->word);
 	   if ((NORM = (char*)DpsMalloc(sizeof(char*) * (14 * NORMlen + 1))) == NULL) {
-		NORM = WRD;
+/*		NORM = WRD;*/
 		goto Norm_exit;
            }
      	   DpsUniStrRCpy(uwrd, (*cur)->word); 
 	   DpsConv(&uni_bc, NORM, 14 * NORMlen + 1, (char*)uwrd, sizeof(dpsunicode_t) * (NORMlen + 1));
-	 } else if (/*FZ.nspell > 0 && */FZ.nspell > Agent->WordParam.min_word_len) {
+	 } else if (FZ.nspell > Agent->WordParam.min_word_len) {
 	   NORMlen = DpsUniLen(s_p.word);
 	   if ((NORM = (char*)DpsMalloc(sizeof(char*) * (14 * NORMlen + 1))) == NULL) {
-		NORM = WRD;
+/*		NORM = WRD;*/
 		goto Norm_exit;
            }
      	   DpsUniStrRCpy(uwrd, s_p.word); 
 	   DpsConv(&uni_bc, NORM, 14 * NORMlen + 1, (char*)uwrd, sizeof(dpsunicode_t) * (NORMlen + 1));
 	 } else {
-	   NORM = WRD;
+/*	   NORM = WRD;*/
 	 }
  Norm_exit:
 	 DPS_FREE(uwrd);
          DPS_FREE(norm);
 	 DPS_FREE(s_p.word);
 	 EXTEND(SP,1);
-	 PUSHs(newSVpv(NORM, dps_strlen(NORM)));
+	 if (NORM == NULL) {
+		 PUSHs(newSVpv(WRD, dps_strlen(WRD)));
+	 } else {
+		 PUSHs(newSVpv(NORM, dps_strlen(NORM)));
+	         DPS_FREE(NORM);
+	 }
 

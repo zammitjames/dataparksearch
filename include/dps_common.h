@@ -120,7 +120,7 @@
 #define DPS_MAXNETERRORS			16
 #define DPS_DEFAULT_NET_ERROR_DELAY_TIME	86400
 #define DPS_DEFAULT_BAD_SINCE_TIME              15*24*60*60     /**< 15 days */
-#define DPS_FINDURL_CACHE_SIZE                  64
+#define DPS_FINDURL_CACHE_SIZE                  256
 #define DPS_SERVERID_CACHE_SIZE                 64
 #define	DPS_NET_BUF_SIZE		        65536
 #define DPS_MAX_HOST_ADDR                       16

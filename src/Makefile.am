@@ -22,7 +22,7 @@ bin_PROGRAMS = search.cgi storedoc.cgi filler.cgi
 sbin_PROGRAMS = @db_PROGS@
 noinst_PROGRAMS = @APACHE_MODULE@ @PHP_MODULE@
 EXTRA_PROGRAMS= indexer searchd splitter stored dpguesser cached dpconv mod_dpsearch.so dpsearch.so
-EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php.c commands.lst commands.inc
+EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php.c commands.lst commands.inc timezones.lst timezones.inc
 
 splitter_SOURCES = splitter.c
 splitter_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
@@ -104,6 +104,11 @@ conf.c: commands.inc
 
 commands.inc: commands.lst
 	cat commands.lst | sort -fk 1 > commands.inc
+
+utils.c: timezones.inc
+
+timezones.inc: timezones.lst
+	cat timezones.lst | sort -fk 1 > timezones.inc
 
 
 if THREADSLESS

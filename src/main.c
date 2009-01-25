@@ -992,6 +992,7 @@ static void * thread_main(void *arg){
           float M = 0.0, K = 0.0;
 
           DpsURLAction(Indexer, NULL, DPS_URL_ACTION_FLUSH); /* flush DocCache */
+	  DpsStoreHrefs(Indexer);    /**< store hrefs if any */
 
           time(&now);
           sec = now - Indexer->start_time - Indexer->nsleepsecs / 1000;

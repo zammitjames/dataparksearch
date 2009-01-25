@@ -938,10 +938,7 @@ command, parent, ordre, weight, url, pop_weight \
 	    fprintf(stderr, "    Cat: %s - %s|\n", DpsVarListFindStr(&Server->Vars, "Category", ""), DpsSQLValue(&SQLRes, 0, 3));
 */
 	    if (Server->weight != 1.0) 
-	      dps_snprintf(buf, len, "\
-UPDATE server SET enabled=1, tag='%s', category=%s, \
-command='%c', parent=%s%i%s, ordre=%d%, weight=%f \
-WHERE rec_id=%s%d%s",
+	      dps_snprintf(buf, len, "UPDATE server SET enabled=1, tag='%s', category=%s, command='%c', parent=%s%i%s, ordre=%d%, weight=%f WHERE rec_id=%s%d%s",
 			   DpsVarListFindStr(&Server->Vars, "Tag", ""),
 			   DpsVarListFindStr(&Server->Vars, "Category", "0"),
 			   Server->command,
@@ -951,10 +948,7 @@ WHERE rec_id=%s%d%s",
 			   qu, rec_id, qu
 			   );
 	    else 
-	      dps_snprintf(buf, len, "\
-UPDATE server SET enabled=1, tag='%s', category=%s, \
-command='%c', parent=%s%i%s, ordre=%d% \
-WHERE rec_id=%s%d%s",
+	      dps_snprintf(buf, len, "UPDATE server SET enabled=1, tag='%s', category=%s, command='%c', parent=%s%i%s, ordre=%d% WHERE rec_id=%s%d%s",
 			 DpsVarListFindStr(&Server->Vars, "Tag", ""),
 			 DpsVarListFindStr(&Server->Vars, "Category", "0"),
 			 Server->command,
@@ -1166,7 +1160,13 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		for(i = 0; i < DPS_FINDURL_CACHE_SIZE; i++) {
 		  if (Indexer->DpsFindURLCache[i])
 		    if (!strcmp(e_url, Indexer->DpsFindURLCache[i])) {
+		      char *tp = Indexer->DpsFindURLCache[i];
 		      id = Indexer->DpsFindURLCacheId[i];
+		      Indexer->DpsFindURLCache[i] = Indexer->DpsFindURLCache[Indexer->pURLCache]; 
+		      Indexer->DpsFindURLCacheId[i] = Indexer->DpsFindURLCacheId[Indexer->pURLCache]; 
+		      Indexer->DpsFindURLCache[Indexer->pURLCache] = tp;
+		      Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
+		      Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 		      break;
 		    }
 		}

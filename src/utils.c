@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -57,6 +57,7 @@
 #include <chasen.h>
 #endif
 
+#include "dps_common.h"
 #include "dps_unicode.h"
 #include "dps_utils.h"
 #include "dps_charsetutils.h"
@@ -543,6 +544,38 @@ char * DpsRemove2Dot(char *path){
 
 #define BAD_DATE 0
 
+typedef struct time_zone_st {
+  const char *name;
+  int        sign;
+  time_t     offset;
+} DPS_TZ_OFFSET;
+
+static int dps_tz_cmp(DPS_TZ_OFFSET *z1, DPS_TZ_OFFSET *z2) {
+  return strcasecmp(z1->name, z2->name);
+}
+
+static DPS_TZ_OFFSET time_zones[] = {
+
+#include "timezones.inc"
+
+/* END Marker */
+	{NULL, 0, 0}
+};
+
+static time_t dps_tz_adjust(time_t timevalue, const char *tz_name) {
+  DPS_TZ_OFFSET key, *tz;
+
+  if (tz_name == NULL) return timevalue;
+  key.name = tz_name;
+  tz = bsearch(&key, time_zones, sizeof(time_zones) / sizeof(time_zones[0]), sizeof(time_zones[0]), (qsort_cmp)dps_tz_cmp);
+  if (tz == NULL) {
+    return timevalue;
+  }
+  if (tz->sign == 1) return timevalue + tz->offset;
+  return timevalue - tz->offset;
+}
+
+
 /*****
  *  BEGIN: Below is taken from Apache's util_date.c
  */
@@ -789,7 +822,7 @@ static time_t ap_tm2sec(const struct tm * t)
 time_t DpsHttpDate2Time_t(const char *date){
     struct tm ds;
     int mint, mon;
-    const char *monstr, *timstr;
+    const char *monstr, *timstr, *tz_str = NULL;
     static const int months[12] =
     {
 	('J' << 16) | ('a' << 8) | 'n', ('F' << 16) | ('e' << 8) | 'b',
@@ -825,6 +858,7 @@ time_t DpsHttpDate2Time_t(const char *date){
 
 	monstr = date + 3;
 	timstr = date + 12;
+	tz_str = date + 21;
     }
     else if (ap_checkmask(date, "##-@$$-## ##:##:## *")) {		/* RFC 850 format  */
 	ds.tm_year = ((date[7] - '0') * 10) + (date[8] - '0');
@@ -835,6 +869,7 @@ time_t DpsHttpDate2Time_t(const char *date){
 
 	monstr = date + 3;
 	timstr = date + 10;
+	tz_str = date + 19;
     }
     else if (ap_checkmask(date, "##-@$$-#### ##:##:## *")) {		/* RFC 850 "fixed" format (HTTP Cookie format ?)  */
         ds.tm_year = (date[7] - '0') * 1000 + (date[8] - '0') * 100 + (date[9] - '0') * 10 + (date[10] - '0');
@@ -844,6 +879,7 @@ time_t DpsHttpDate2Time_t(const char *date){
 
 	monstr = date + 3;
 	timstr = date + 12;
+	tz_str = date + 21;
     }
     else if (ap_checkmask(date, "@$$ ~# ##:##:## ####*")) {	/* asctime format  */
 	ds.tm_year = ((date[16] - '0') * 10 + (date[17] - '0') - 19) * 100;
@@ -897,9 +933,9 @@ time_t DpsHttpDate2Time_t(const char *date){
 
     ds.tm_mon = mon;
 
-/*    fprintf(stderr, " -- parseHTTPdate: %s is %lu\n", date, ap_tm2sec(&ds));*/
+/*    fprintf(stderr, " -- parseHTTPdate: %s is %lu adjusted to %lu\n", date, ap_tm2sec(&ds), dps_tz_adjust(ap_tm2sec(&ds), tz_str));*/
 
-    return ap_tm2sec(&ds);
+    return dps_tz_adjust(ap_tm2sec(&ds), tz_str);
 }
 
 /********
