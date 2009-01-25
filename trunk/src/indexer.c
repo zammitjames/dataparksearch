@@ -249,6 +249,7 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	  }
 	
 	  DpsLog(Indexer, DPS_LOG_DEBUG, " Server applied: site_id: %d URL: %s", Srv->site_id, Srv->Match.pattern);
+	  Href->server_id = Srv->site_id;
 	
 	  method = DpsVarListFindStr(&Srv->Vars, "Method", "Allow");
 	  if((Href->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {
@@ -266,13 +267,13 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	    DpsLog(Indexer, DPS_LOG_DEBUG, "Visit later by Server/Realm/Skip command, skip it");
 	    goto check_ret;
 	  }
-
+/*
 	  if (Href->hops > Srv->MaxHops) {
 	    DpsLog(Indexer, DPS_LOG_DEBUG, "too many hops (%d, max: %d), skip it", Href->hops, Srv->MaxHops);
 	    Href->method = DPS_METHOD_DISALLOW;
 	    goto check_ret;
 	  }
-
+*/
 	  depth = 0;
 	  for(s = strchr(newURL->path, (int)'/'); s != NULL; s = strchr(++s, (int)'/')) depth++;
 	  if (depth > Srv->MaxDepth) {
@@ -291,7 +292,6 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	      }
 	    }
 	  }
-	  Href->server_id = Srv->site_id;
 	}
  check_ret:
 	DpsURLFree(newURL);
@@ -335,19 +335,23 @@ __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT * Indexer) {
 	  H = &Indexer->Hrefs.Href[i];
 	  if(H->stored == 0) {
 	    if (!H->checked) DpsHrefCheck(Indexer, H, H->url);
-	    if( H->method != DPS_METHOD_DISALLOW 
-		&& H->method != DPS_METHOD_VISITLATER
+	    DpsVarListReplaceInt(&Doc.Sections, "Referrer-ID", H->referrer);
+	    DpsVarListReplaceUnsigned(&Doc.Sections,"Hops", H->hops);
+	    DpsVarListReplaceStr(&Doc.Sections,"URL",H->url?H->url:"");
+	    DpsVarListReplaceInt(&Doc.Sections,"Site_id", H->site_id);
+	    DpsVarListReplaceInt(&Doc.Sections,"Server_id", H->server_id);
+	    DpsVarListReplaceDouble(&Doc.Sections, "weight", (double)H->weight);
+	    DpsVarListDel(&Doc.Sections, "E_URL");
+	    DpsVarListDel(&Doc.Sections, "URL_ID");
+	    Doc.charset_id = H->charset_id;
+	    if( H->method != DPS_METHOD_DISALLOW && H->method != DPS_METHOD_VISITLATER
 		/*dps_strlen(H->url) <= DPS_URLSIZE*/) { /* FIXME: replace this by config parameter chacking */
-				DpsVarListReplaceInt(&Doc.Sections, "Referrer-ID", H->referrer);
-				DpsVarListReplaceUnsigned(&Doc.Sections,"Hops", H->hops);
-				DpsVarListReplaceStr(&Doc.Sections,"URL",H->url?H->url:"");
-				DpsVarListReplaceInt(&Doc.Sections,"Site_id", H->site_id);
-				DpsVarListReplaceInt(&Doc.Sections,"Server_id", H->server_id);
-				DpsVarListReplaceDouble(&Doc.Sections, "weight", (double)H->weight);
-				DpsVarListDel(&Doc.Sections, "E_URL");
-				DpsVarListDel(&Doc.Sections, "URL_ID");
-				Doc.charset_id = H->charset_id;
 				if(DPS_OK != (res = DpsURLAction(Indexer, &Doc, DPS_URL_ACTION_ADD))){
+				        DpsDocFree(&Doc);
+					return(res);
+				}
+	    } else {
+				if(DPS_OK != (res = DpsURLAction(Indexer, &Doc, DPS_URL_ACTION_ADD_LINK))){
 				        DpsDocFree(&Doc);
 					return(res);
 				}

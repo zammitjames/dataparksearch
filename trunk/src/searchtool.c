@@ -1630,8 +1630,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						, double *D_y
 #endif
 						) {
-  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : 2 * x /*DPS_PHRASE_FACTOR*/;
-  if (D[DPS_N_EXACT] == 0) y += 2 * x;
+  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : x /*DPS_PHRASE_FACTOR*/;
+  if (D[DPS_N_EXACT] == 0) y += x;
 
 #ifdef WITH_REL_WRDCOUNT
   if (D[DPS_N_WRDCOUNT] > R[DPS_N_WRDCOUNT]) {
@@ -2053,7 +2053,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
 	  else sum += 2000;
 	}
-	D[DPS_N_COUNT] = (dps_uint4)sum;
+	D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / phr_n;
       }
 #ifdef WITH_REL_TRACK
       Track[j].D_wrdcount = phr_n - 2;
@@ -2123,7 +2123,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
       else sum += 2000;
     }
-    D[DPS_N_COUNT] = (dps_uint4)(sum /* * cnt_pas */);
+    D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / phr_n;
   }
 #ifdef WITH_REL_TRACK
   Track[j].D_wrdcount = phr_n - 2;

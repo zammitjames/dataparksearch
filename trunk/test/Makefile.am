@@ -115,7 +115,8 @@ test-sections/search.res \
 test-sections/htdocs/test1.html \
 test-sections/htdocs/test2.html \
 test-sections/htdocs/test.xml \
-test-sections/htdocs/directory/test.html
+test-sections/htdocs/directory/test.html \
+test-sections/htdocs/directory/test-tz.html
 
 
 test_sample_FILES = \
