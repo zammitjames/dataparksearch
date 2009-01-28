@@ -1018,9 +1018,19 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 
 	for (i = 0; i < DPS_SERVERID_CACHE_SIZE; i++) {
 	  if (Indexer->ServerIdCacheCommand[i] == Server->command)
-	    if (!strcmp(Indexer->ServerIdCache[i], Server->Match.pattern)) {
+	    if (!strcmp(DPS_NULL2EMPTY(Indexer->ServerIdCache[i]), Server->Match.pattern)) {
+	      char *tp = Indexer->ServerIdCache[i];
 	      Server->site_id = id = Indexer->ServerIdCacheId[i];
 	      Server->weight = Indexer->ServerIdCacheWeight[i];
+
+	      Indexer->ServerIdCacheId[i] = Indexer->ServerIdCacheId[Indexer->pServerIdCache];
+	      Indexer->ServerIdCacheWeight[i] = Indexer->ServerIdCacheWeight[Indexer->pServerIdCache];
+	      Indexer->ServerIdCache[i] = Indexer->ServerIdCache[Indexer->pServerIdCache];
+
+	      Indexer->ServerIdCacheId[Indexer->pServerIdCache] = id;
+	      Indexer->ServerIdCacheWeight[Indexer->pServerIdCache] = Server->weight;
+	      Indexer->ServerIdCache[Indexer->pServerIdCache] = tp;
+	      Indexer->pServerIdCache = (Indexer->pServerIdCache + 1) % DPS_SERVERID_CACHE_SIZE;
 	      break;
 	    }
 	}
@@ -1104,6 +1114,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	DPS_SQLRES	SQLRes;
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
 	dpshash32_t	id = 0;
+	int             hops;
 	int		rc = DPS_OK;
 	
 	DpsSQLResInit(&SQLRes);
@@ -1161,18 +1172,21 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		  if (Indexer->DpsFindURLCache[i])
 		    if (!strcmp(e_url, Indexer->DpsFindURLCache[i])) {
 		      char *tp = Indexer->DpsFindURLCache[i];
+		      int th = Indexer->DpsFindURLCacheHops[i];
 		      id = Indexer->DpsFindURLCacheId[i];
 		      Indexer->DpsFindURLCache[i] = Indexer->DpsFindURLCache[Indexer->pURLCache]; 
-		      Indexer->DpsFindURLCacheId[i] = Indexer->DpsFindURLCacheId[Indexer->pURLCache]; 
+		      Indexer->DpsFindURLCacheId[i] = Indexer->DpsFindURLCacheId[Indexer->pURLCache];
+		      Indexer->DpsFindURLCacheHops[i] = Indexer->DpsFindURLCacheHops[Indexer->pURLCache];
 		      Indexer->DpsFindURLCache[Indexer->pURLCache] = tp;
 		      Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
+		      Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = th;
 		      Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 		      break;
 		    }
 		}
 
-		if (id == 0) {
-		  dps_snprintf(qbuf, l + 100, "SELECT rec_id FROM url WHERE url='%s'",e_url);
+		if (i == DPS_FINDURL_CACHE_SIZE) {
+		  dps_snprintf(qbuf, l + 100, "SELECT rec_id,hops FROM url WHERE url='%s'",e_url);
 		  if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes,qbuf))){
 		    if (need_free_e_url) { 
 		      DPS_FREE(e_url);
@@ -1186,11 +1200,16 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 				id=atoi(o);
 				break;
 			}
+			if((o = DpsSQLValue(&SQLRes, i, 1))) {
+				hops = atoi(o);
+				break;
+			}
 		  }
 		  DpsSQLFree(&SQLRes);
 		  DPS_FREE(Indexer->DpsFindURLCache[Indexer->pURLCache]);
 		  Indexer->DpsFindURLCache[Indexer->pURLCache] = (char*)DpsStrdup(e_url);
 		  Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
+		  Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
 		  Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 		}
 		if(need_free_e_url) {
@@ -1200,6 +1219,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		DPS_FREE(qbuf);
 	}
 	DpsVarListReplaceInt(&Doc->Sections, "DP_ID", id);
+	DpsVarListReplaceInt(&Doc->Sections, "hops", hops);
 	return	rc;
 }
 
@@ -1944,12 +1964,12 @@ unlock_DpsStoreCrossWords:
 
 
 static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
-	char		*e_url, *lc_url = NULL, *qbuf;
+	char		*e_url, *qbuf;
 	urlid_t		next_url_id = 0, rec_id = 0, crc32_rec_id;
 	DPS_SQLRES	SQLRes;
 	const char	*url;
 	int		url_seed, updated = 1, hops, old_hops;
-	int		rc = DPS_OK, need_free_e_url = 0;
+	int		rc = DPS_OK;
 	size_t          len;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	DPS_CHARSET	*doccs;
@@ -1967,37 +1987,12 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 
 	if (e_url == NULL) {
 
-	  doccs = DpsGetCharSetByID(Doc->charset_id);
-	  if (!doccs) doccs = DpsGetCharSet("iso-8859-1");
-	  loccs = Indexer->Conf->lcs;
-	  if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
-	
-	  e_url = (char*)DpsMalloc(24 * len + 1);
-	  if (e_url == NULL) { DPS_FREE(qbuf); return DPS_ERROR; }
-	  lc_url = (char*)DpsMalloc(24 * len + 1);
-	  if (lc_url == NULL) { DPS_FREE(qbuf); DPS_FREE(e_url); return DPS_ERROR; }
-	  need_free_e_url = 1;
-	  DpsConvInit(&dc_lc, doccs, loccs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
-	  /* Convert URL to LocalCharset */
-	  DpsConv(&dc_lc, lc_url, 24 * len,  url, len + 1);
-	  /* Escape URL string */
-	  DpsDBEscStr(db->DBType, e_url, lc_url, dps_strlen(lc_url));
-	  DpsVarListAddStr(&Doc->Sections, "E_URL", e_url);
-	}
+	  DpsFindURL(Indexer, Doc, db);
+	  e_url = DpsVarListFindStr(&Doc->Sections, "E_URL", NULL);
 
-
-	if (Indexer->Flags.CheckInsertSQL) {
-	  dps_snprintf(qbuf, 4 * len + 512, "SELECT rec_id, hops FROM url WHERE url='%s'", e_url);
-	  if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-	    DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
-	  }
-	  rc = DpsSQLNumRows(&SQLRes);
-	  if (rc > 0) { 
-	    rec_id = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
-	    old_hops = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 1));
-	  }
-	  DpsSQLFree(&SQLRes);
 	}
+	rec_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
+	old_hops = (urlid_t)DpsVarListFindInt(&Doc->Sections, "hops", 0);
 
 
 	if (rec_id == 0) {
@@ -2024,7 +2019,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			 );
 	    /* Exec INSERT now */
 	    if(DPS_OK!=(rc=DpsSQLAsyncQuery(db, NULL, qbuf))) {
-	      DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+	      DPS_FREE(qbuf); return rc;
 	    }
 	  } else {
 	    /* Use dabatase generated rec_id */
@@ -2126,12 +2121,12 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 
 	    /* Exec INSERT now */
 	    if(DPS_OK!=(rc=DpsSQLAsyncQuery(db, NULL, qbuf))) {
-	      DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+	      DPS_FREE(qbuf); return rc;
 	    }
 	    if (/*(!Indexer->Flags.use_crc32_url_id) &&*/ Indexer->Flags.collect_links) {
 	      dps_snprintf(qbuf, 4 * len + 512, "SELECT rec_id FROM url WHERE url='%s'", e_url);
 	      if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		DPS_FREE(qbuf); return rc;
 	      }
 	      rc = DpsSQLNumRows(&SQLRes);
 	      if (rc > 0) rec_id = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
@@ -2151,7 +2146,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		       qu, qu
 		       );
 	  if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
-	    DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+	    DPS_FREE(qbuf); return rc;
 	  }
 	}
 
@@ -2172,7 +2167,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, rec_id, qu);
 
 		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  DPS_FREE(qbuf); return rc;
 		}
 		if (DpsSQLNumRows(&SQLRes)) site_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 		DpsSQLFree(&SQLRes);
@@ -2181,7 +2176,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, ot, qu);
 
 		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  DPS_FREE(qbuf); return rc;
 		}
 		if (DpsSQLNumRows(&SQLRes)) ot_site_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 		DpsSQLFree(&SQLRes);
@@ -2195,7 +2190,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			     qu, rec_id, qu, qu, rec_id, qu);
 
 		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  DPS_FREE(qbuf); return rc;
 		}
 		rc = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 		DpsSQLFree(&SQLRes);
@@ -2205,7 +2200,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			       qu, rec_id, qu,  qu, rec_id, qu,  qu, weight, qu);
 
 		  if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
-		    DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		    DPS_FREE(qbuf); return rc;
 		  }
 		}
 	      }
@@ -2216,7 +2211,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			     qu, ot, qu, qu, rec_id, qu);
 
 		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  DPS_FREE(qbuf); return rc;
 		}
 		rc = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 		DpsSQLFree(&SQLRes);
@@ -2229,14 +2224,14 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			       qu, ot, qu,  qu, rec_id, qu);
 		}
 		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
+		  DPS_FREE(qbuf); return rc;
 		}
 	    } else {
 /*	      DpsLog(Indexer, DPS_LOG_ERROR, "AddURL: URL not found: %s", e_url);*/
 	    }
 	  }
 	}
-	DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url);
+	DPS_FREE(qbuf);
 	return DPS_OK;
 }
 
