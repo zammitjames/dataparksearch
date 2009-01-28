@@ -85,6 +85,7 @@ static int write_url_data = 0, flush_buffers = 0;
 static size_t Total_ndocs = 0, Total_poprank_docs = 0;
 static size_t Total_nbytes = 0, Total_poprank_pas = 0;
 
+
 #ifdef DEBUG_MEM
 DPS_AGENT GAP2[4096];
 #endif
@@ -1275,6 +1276,10 @@ int main(int argc, char **argv, char **envp) {
      int       pid_fd, cfg_res, cache_opened = 0;
      char      pidbuf[1024];
      
+#ifdef __FreeBSD__
+     _malloc_options = "ax3N10fR";
+#endif
+
      DpsInit(argc, argv, envp); /* Initialize library */
      DpsGetSemLimit();
      
