@@ -635,7 +635,7 @@ static int DpsURLDB(DPS_AGENT *Indexer, DPS_SERVER *S, DPS_DB *db) {
     url = (char*)DpsSQLValue(&SQLRes, i, 0);
     Href.url = url;
     Href.method = DPS_METHOD_GET;
-    DpsLog(Indexer, DPS_LOG_EXTRA, "URLDB: %s", url);
+    DpsLog(Indexer, DPS_LOG_DEBUG, "URLDB: %s", url);
 
     DpsHrefCheck(Indexer, &Href, Href.url);
     if( Href.method != DPS_METHOD_DISALLOW && Href.method != DPS_METHOD_VISITLATER) {
@@ -2390,12 +2390,14 @@ static int DpsDeleteBadHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) 
 	fprintf(Indexer->TR, "[%d] DpsDeleteBadHrefs\n", Indexer->handle);
 	fflush(Indexer->TR);
 #endif
+	if (hold_period == 0) return rc;
+
 	DpsSQLResInit(&SQLRes);
 
 	loccs = Indexer->Conf->lcs;
 	if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
 
-	dps_snprintf(q, sizeof(q), "SELECT rec_id,url,charset_id FROM url WHERE status > 300 AND status<>304 AND status < 2000 AND referrer=%s%i%s AND bad_since_time<%s%d%s",
+	dps_snprintf(q, sizeof(q), "SELECT rec_id,url,charset_id FROM url WHERE status > 300 AND status<>304 AND status < 2000 AND (referrer=%s%i%s OR referrer=-1) AND bad_since_time<%s%d%s",
 		     qu, url_id, qu, qu, (int)Indexer->now - hold_period, qu);
 	if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes,q)))return rc;
 	
