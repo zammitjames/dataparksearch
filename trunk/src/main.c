@@ -1271,15 +1271,22 @@ static int DpsIndex(DPS_AGENT *A) {
 }
 
 
+#ifdef __FreeBSD__
+#if __FreeBSD__ >= 7
+     extern const char *_malloc_options = "ax3N10f";
+#elif __FreeBSD__ >= 5
+     extern const char *_malloc_options = "axH>>R";
+#else
+     extern char *malloc_options;
+     malloc_options = "axH>>>R";
+#endif
+#endif
+
 int main(int argc, char **argv, char **envp) {
      char      *language=NULL,*affix=NULL,*dictionary=NULL, *env;
      int       pid_fd, cfg_res, cache_opened = 0;
      char      pidbuf[1024];
      
-#ifdef __FreeBSD__
-     _malloc_options = "ax3N10fR";
-#endif
-
      DpsInit(argc, argv, envp); /* Initialize library */
      DpsGetSemLimit();
      
