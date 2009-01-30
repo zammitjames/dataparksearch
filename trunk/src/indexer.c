@@ -1330,6 +1330,7 @@ int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server) {
 	S->use_clones		= DpsVarListFindInt(V, "DetectClones",	1);
 	S->use_cookies		= DpsVarListFindInt(V, "Cookies",	0);
 	S->Server               = Server;
+	DpsVarListReplaceStr(&Doc->Sections, "HoldBadHrefs", DpsVarListFindStr(V, "HoldBadHrefs", 0));
 /*
 	for (i = 0; i < DPS_DEFAULT_MAX_HOPS; i++) {
 	  dps_snprintf(str, sizeof(str), "Period%u", i);
