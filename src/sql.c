@@ -1114,7 +1114,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	DPS_SQLRES	SQLRes;
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
 	dpshash32_t	id = 0;
-	int             hops;
+	int             hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0) + 1;
 	int		rc = DPS_OK;
 	
 	DpsSQLResInit(&SQLRes);
@@ -1172,14 +1172,14 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		  if (Indexer->DpsFindURLCache[i])
 		    if (!strcmp(e_url, Indexer->DpsFindURLCache[i])) {
 		      char *tp = Indexer->DpsFindURLCache[i];
-		      int th = Indexer->DpsFindURLCacheHops[i];
+		      hops = Indexer->DpsFindURLCacheHops[i];
 		      id = Indexer->DpsFindURLCacheId[i];
 		      Indexer->DpsFindURLCache[i] = Indexer->DpsFindURLCache[Indexer->pURLCache]; 
 		      Indexer->DpsFindURLCacheId[i] = Indexer->DpsFindURLCacheId[Indexer->pURLCache];
 		      Indexer->DpsFindURLCacheHops[i] = Indexer->DpsFindURLCacheHops[Indexer->pURLCache];
 		      Indexer->DpsFindURLCache[Indexer->pURLCache] = tp;
 		      Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
-		      Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = th;
+		      Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
 		      Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 		      break;
 		    }
