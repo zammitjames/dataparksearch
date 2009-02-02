@@ -72,6 +72,184 @@ static void DpsUniDesegment(dpsunicode_t *s) {
   *d = *s;
 }
 
+
+static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, size_t min_word_len, int crossec, int have_bukva_forte, 
+			      dpsunicode_t *uword, int make_prefixes, int strict
+#ifdef HAVE_ASPELL
+		   , int have_speller, AspellSpeller *speller
+#endif
+			      ) {
+  DPS_WORD Word;
+  dpsunicode_t    *af_uword; /* Word in UNICODE with accents striped */
+  dpsunicode_t    *de_uword; /* Word in UNICODE with german replaces */
+  size_t  uwlen;
+  int res = DPS_OK;
+
+  TRACE_IN(Indexer, "DpsProcessFantoms");
+
+  if (Indexer->Flags.use_accentext) {
+    af_uword = DpsUniAccentStrip(uword);
+    if (DpsUniStrCmp(af_uword, uword) != 0) {
+
+      Word.uword = af_uword;
+      Word.ulen = (uwlen = DpsUniLen(af_uword));
+
+      res = DpsWordListAddFantom(Doc, &Word, Item->section);
+      if (res != DPS_OK) { TRACE_OUT(Indexer); return; }
+      if(Item->href && crossec){
+	DPS_CROSSWORD cw;
+	cw.url = Item->href;
+	cw.weight = crossec;
+	cw.pos = Doc->CrossWords.wordpos;
+	cw.uword = af_uword;
+	cw.ulen = uwlen;
+	DpsCrossListAddFantom(Doc, &cw);
+      }
+    }
+    DPS_FREE(af_uword);
+    TRACE_LINE(Indexer);
+    de_uword = DpsUniGermanReplace(uword);
+    if (DpsUniStrCmp(de_uword, uword) != 0) {
+
+      Word.uword = de_uword;
+      Word.ulen = DpsUniLen(de_uword);
+
+      res = DpsWordListAddFantom(Doc, &Word, Item->section);
+      if (res != DPS_OK) { TRACE_OUT(Indexer); return; }
+      if(Item->href && crossec){
+	DPS_CROSSWORD cw;
+	cw.url = Item->href;
+	cw.weight = crossec;
+	cw.pos = Doc->CrossWords.wordpos;
+	cw.uword = de_uword;
+	cw.ulen = Word.ulen;
+	DpsCrossListAddFantom(Doc, &cw);
+      }
+    }
+    DPS_FREE(de_uword);
+  }
+
+#ifdef HAVE_ASPELL
+  if (have_speller && have_bukva_forte && Indexer->Flags.use_aspellext && ((uwlen = DpsUniLen(uword)) > 2)
+      && (DpsUniStrChr(uword, (dpsunicode_t) '&') == NULL) /* aspell trap workaround */
+      ) {
+    register int ii;
+    char          *utf_str = NULL, *asug = NULL;
+    dpsunicode_t  *aword = NULL;
+    AspellWordList *suggestions;
+    AspellStringEnumeration *elements;
+    size_t tlen;
+
+    TRACE_LINE(Indexer);
+    if ((utf_str = (char*)DpsRealloc(utf_str, 16 * uwlen + 1)) == NULL) {
+      TRACE_OUT(Indexer);
+      return; 
+    }
+    if ((aword = (dpsunicode_t*)DpsMalloc((2 * uwlen + 1) * sizeof(dpsunicode_t))) == NULL) {
+      DPS_FREE(utf_str); TRACE_OUT(Indexer);
+      return; 
+    }
+    DpsConv(&Indexer->uni_utf, utf_str, 16 * uwlen, (char*)uword, (int)(sizeof(dpsunicode_t) * (uwlen + 1)));
+    ii = aspell_speller_check(speller, (const char *)utf_str, (int)(tlen = dps_strlen(utf_str)));
+    if ( ii == 0) {
+      suggestions = aspell_speller_suggest(speller, (const char *)utf_str, (int)tlen);
+      elements = aspell_word_list_elements(suggestions);
+      for (ii = 0; 
+	   (ii < 2) && ((asug = (char*)aspell_string_enumeration_next(elements)) != NULL);
+	   ii++ ) { 
+
+	TRACE_LINE(Indexer);
+	DpsConv(&Indexer->utf_uni, (char*)aword, (2 * uwlen + 1) * sizeof(*aword), (char*)(asug), sizeof(asug[0])*(tlen + 1));
+      
+	Word.uword = aword;
+	Word.ulen = DpsUniLen(aword);
+
+	res = DpsWordListAddFantom(Doc, &Word, Item->section);
+	if (res != DPS_OK) break;
+	if(Item->href && crossec){
+	  DPS_CROSSWORD cw;
+	  cw.url = Item->href;
+	  cw.weight = crossec;
+	  cw.pos = Doc->CrossWords.wordpos;
+	  cw.uword = aword;
+	  cw.ulen = Word.ulen;
+	  DpsCrossListAddFantom(Doc, &cw);
+	}
+      }
+      delete_aspell_string_enumeration(elements);
+    }
+    DPS_FREE(utf_str); DPS_FREE(aword);
+  }
+#endif	
+
+  if (!strict) {
+    dpsunicode_t *dword = DpsUniDup(uword);
+    dpsunicode_t *nword = NULL;
+    dpsunicode_t *lt, *tok;
+    size_t	tlen, nlen = 0;
+    int dw_have_bukva_forte, n;
+
+    tok = DpsUniGetToken(dword, &lt, &dw_have_bukva_forte, !strict); 
+    if (tok) {
+      tlen = lt - tok;
+      if (tlen + 1 > nlen) {
+	nword = (dpsunicode_t*)DpsRealloc(nword, (tlen + 1) * sizeof(dpsunicode_t));
+	nlen = tlen;
+      }
+      dps_memcpy(nword, tok, tlen * sizeof(dpsunicode_t)); /* was: dps_memmove */
+      nword[tlen] = 0;
+      if (DpsUniStrCmp(uword, nword)) {
+	for(n = 0 ;
+	    tok ; 
+	    tok = DpsUniGetToken(NULL, &lt, &dw_have_bukva_forte, !strict), n++ ) {
+
+	  tlen = lt - tok;
+	  if (tlen + 1 > nlen) {
+	    nword = (dpsunicode_t*)DpsRealloc(nword, (tlen + 1) * sizeof(dpsunicode_t));
+	    nlen = tlen;
+	  }
+	  dps_memcpy(nword, tok, tlen * sizeof(dpsunicode_t)); /* was: dps_memmove */
+	  nword[tlen] = 0;
+
+	  Word.uword = nword;
+	  Word.ulen = DpsUniLen(nword);
+
+	  res = DpsWordListAddFantom(Doc, &Word, Item->section);
+	  if (res != DPS_OK) break;
+	  if(Item->href && crossec){
+	    DPS_CROSSWORD cw;
+	    cw.url = Item->href;
+	    cw.weight = crossec;
+	    cw.pos = Doc->CrossWords.wordpos;
+	    cw.uword = nword;
+	    cw.ulen = Word.ulen;
+	    DpsCrossListAddFantom(Doc, &cw);
+	  }
+
+	  DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, dw_have_bukva_forte, nword, (n) ? Indexer->Flags.make_prefixes : 0, !strict
+#ifdef HAVE_ASPELL
+			    , have_speller, speller
+#endif
+			    );
+	}
+      }
+    }
+    DPS_FREE(dword); DPS_FREE(nword);
+  }
+
+  if (make_prefixes) {
+    size_t ml;
+    Word.uword = uword;
+    for (ml = DpsUniLen(uword) - 1; ml >= min_word_len; ml--) {
+      Word.uword[ml] = 0;
+      Word.ulen = ml;
+      res = DpsWordListAddFantom(Doc, &Word, Item->section);
+      if (res != DPS_OK) break;
+    }
+  }
+}
+
+
 int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dpsunicode_t *ustr, dpsunicode_t *UStr, 
 		   const char *content_lang, size_t *indexed_size, size_t *indexed_limit, 
 		   size_t max_word_len, size_t min_word_len, int crossec
@@ -84,18 +262,11 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
   dpsunicode_t *nfc;
   dpsunicode_t *lt, *tok;
   int have_bukva_forte, res = DPS_OK;
-  dpsunicode_t    *af_uword; /* Word in UNICODE with accents striped */
-  dpsunicode_t    *de_uword; /* Word in UNICODE with german replaces */
   dpsunicode_t    *uword = NULL;    /* Word in UNICODE      */
   size_t uwordlen = 0/*DPS_MAXWORDSIZE*/;
   size_t	srclen;
   size_t	dstlen;
   char		*src;
-#ifdef HAVE_ASPELL
-  char          *utf_str = NULL, *asug = NULL;
-  AspellWordList *suggestions;
-  AspellStringEnumeration *elements;
-#endif
 
   TRACE_IN(Indexer, "DpsPrepareItem");
 
@@ -120,7 +291,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	tok = DpsUniGetToken(NULL, &lt, &have_bukva_forte, Item->strict) ) {
 
       size_t	tlen;				/* Word length          */ 
-      int	ures;
       DPS_WORD Word;
 				
       tlen=lt-tok;
@@ -135,13 +305,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	    TRACE_OUT(Indexer);
 	    return DPS_ERROR;
 	  }
-#ifdef HAVE_ASPELL
-	  if ((utf_str = (char*)DpsRealloc(utf_str, 16 * uwordlen + 1)) == NULL) {
-	    DPS_FREE(uword);
-	    TRACE_OUT(Indexer);
-	    return DPS_ERROR; 
-	  }
-#endif
 	}
 
 	TRACE_LINE(Indexer);
@@ -167,97 +330,11 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	}
 
 	TRACE_LINE(Indexer);
-	if (Indexer->Flags.use_accentext) {
-	  af_uword = DpsUniAccentStrip(uword);
-	  if (DpsUniStrCmp(af_uword, uword) != 0) {
-
-	    Word.uword = af_uword;
-	    Word.ulen = tlen;
-
-	    res = DpsWordListAddFantom(Doc, &Word, Item->section);
-	    if (res != DPS_OK) break;
-	    if(Item->href && crossec){
-	      DPS_CROSSWORD cw;
-	      cw.url = Item->href;
-	      cw.weight = crossec;
-	      cw.pos = Doc->CrossWords.wordpos;
-	      cw.uword = af_uword;
-	      cw.ulen = tlen;
-	      DpsCrossListAddFantom(Doc, &cw);
-	    }
-	  }
-	  DPS_FREE(af_uword);
-	  TRACE_LINE(Indexer);
-	  de_uword = DpsUniGermanReplace(uword);
-	  if (DpsUniStrCmp(de_uword, uword) != 0) {
-
-	    Word.uword = de_uword;
-	    Word.ulen = DpsUniLen(de_uword);
-
-	    res = DpsWordListAddFantom(Doc, &Word, Item->section);
-	    if (res != DPS_OK) break;
-	    if(Item->href && crossec){
-	      DPS_CROSSWORD cw;
-	      cw.url = Item->href;
-	      cw.weight = crossec;
-	      cw.pos = Doc->CrossWords.wordpos;
-	      cw.uword = de_uword;
-	      cw.ulen = Word.ulen;
-	      DpsCrossListAddFantom(Doc, &cw);
-	    }
-	  }
-	  DPS_FREE(de_uword);
-	}
-
+	DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, have_bukva_forte, uword, Indexer->Flags.make_prefixes, Item->strict
 #ifdef HAVE_ASPELL
-	if (have_speller && have_bukva_forte && Indexer->Flags.use_aspellext && (tlen > 2)
-	    && (DpsUniStrChr(uword, (dpsunicode_t) '&') == NULL) /* aspell trap workaround */
-	    ) {
-	  register int ii;
-
-	  TRACE_LINE(Indexer);
-	  DpsConv(&Indexer->uni_utf, utf_str, 16 * uwordlen, (char*)uword, (int)(sizeof(dpsunicode_t) * (tlen + 1)));
-	  ii = aspell_speller_check(speller, (const char *)utf_str, (int)(tlen = dps_strlen(utf_str)));
-	  if ( ii == 0) {
-	    suggestions = aspell_speller_suggest(speller, (const char *)utf_str, (int)tlen);
-	    elements = aspell_word_list_elements(suggestions);
-	    for (ii = 0; 
-		 (ii < 2) && ((asug = (char*)aspell_string_enumeration_next(elements)) != NULL);
-		 ii++ ) { 
-
-	      TRACE_LINE(Indexer);
-	      DpsConv(&Indexer->utf_uni, (char*)uword, 2 * uwordlen * (sizeof(*uword) + 1), (char*)(asug), sizeof(asug[0])*(tlen + 1));
-      
-	      Word.uword = uword;
-	      Word.ulen = (tlen = DpsUniLen(uword));
-
-	      res = DpsWordListAddFantom(Doc, &Word, Item->section);
-	      if (res != DPS_OK) break;
-	      if(Item->href && crossec){
-		DPS_CROSSWORD cw;
-		cw.url = Item->href;
-		cw.weight = crossec;
-		cw.pos = Doc->CrossWords.wordpos;
-		cw.uword = uword;
-		cw.ulen = tlen;
-		DpsCrossListAddFantom(Doc, &cw);
-	      }
-	    }
-	    delete_aspell_string_enumeration(elements);
-	  }
-	}
-#endif	
-
-	if (Indexer->Flags.make_prefixes) {
-	  size_t ml;
-	  Word.uword = uword;
-	  for (ml = tlen - 1; ml >= min_word_len; ml--) {
-	    Word.uword[ml] = 0;
-	    Word.ulen = ml;
-	    res = DpsWordListAddFantom(Doc, &Word, Item->section);
-	    if (res != DPS_OK) break;
-	  }
-	}
+			  , have_speller, speller
+#endif
+			  );
 			
       }
     }
@@ -280,9 +357,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  if (Sec->val == NULL) {
 	    Sec->curlen = 0;
 	    DPS_FREE(uword);
-#ifdef HAVE_ASPELL
-	    DPS_FREE(utf_str);
-#endif
 	    TRACE_OUT(Indexer);
 	    return DPS_ERROR;
 	  }
@@ -293,9 +367,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  if ((Sec->val = DpsRealloc(Sec->val, Sec->curlen + dstlen + 32)) == NULL) {
 	      Sec->curlen = 0;
 	      DPS_FREE(uword);
-#ifdef HAVE_ASPELL
-	      DPS_FREE(utf_str);
-#endif
 	      TRACE_OUT(Indexer);
 	      return DPS_ERROR;
 	  }
@@ -315,12 +386,10 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
     }
     DPS_FREE(ustr);
     DPS_FREE(uword);
-#ifdef HAVE_ASPELL
-    DPS_FREE(utf_str);
-#endif
     TRACE_OUT(Indexer);
     return DPS_OK;
 }
+
 
 static int dps_itemptr_cmp(DPS_TEXTITEM **p1, DPS_TEXTITEM **p2) {
   if ((*p1)->len > (*p2)->len) return -1;
