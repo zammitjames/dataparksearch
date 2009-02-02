@@ -2397,7 +2397,8 @@ static int DpsDeleteBadHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) 
 	loccs = Indexer->Conf->lcs;
 	if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
 
-	dps_snprintf(q, sizeof(q), "SELECT rec_id,url,charset_id FROM url WHERE status > 300 AND status<>304 AND status < 2000 AND (referrer=%s%i%s OR referrer=-1) AND bad_since_time<%s%d%s",
+	dps_snprintf(q, sizeof(q), 
+		  "SELECT o.rec_id,o.url,o.charset_id FROM url o, links l WHERE o.status > 399 AND o.status < 2000 AND l.k=%s%i%s AND l.ot=o.rec_id AND o.bad_since_time<%s%d%s",
 		     qu, url_id, qu, qu, (int)Indexer->now - hold_period, qu);
 	if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes,q)))return rc;
 	
