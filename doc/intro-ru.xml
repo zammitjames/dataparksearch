@@ -136,7 +136,7 @@ ODBC-ODBC bridge, <!--Virtuoso,--> InterBase, Oracle (см. <xref linkend="oracle"
 <ulink url="http://code.google.com/p/dataparksearch/">http://code.google.com/p/dataparksearch/</ulink>.</para>
 
 <!-- para>Зеркало в Германии: <ulink url="http://dataparksearch.h0t.de/">http://dataparksearch.h0t.de/</ulink>.</para-->
-<para>Зеркало в Москве, Россия: <ulink url="http://dataparksearch.newsa.ru/">http://dataparksearch.newsa.ru/</ulink>.</para>
+<!-- para>Зеркало в Москве, Россия: <ulink url="http://dataparksearch.newsa.ru/">http://dataparksearch.newsa.ru/</ulink>.</para-->
 
 <para><application>DataparkSearch</application> также доступен в коллекции портов FreeBSD, 
 см. <ulink url="http://www.freshports.org/www/dpsearch">www.freshports.org/www/dpsearch</ulink> и в репозитории 

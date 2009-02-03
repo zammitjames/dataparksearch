@@ -227,6 +227,22 @@ AC_TRY_LINK([#include <signal.h>],
     AC_MSG_RESULT(yes),
     AC_MSG_RESULT(no))
 
+	
+debug=no
+AC_MSG_CHECKING(for debug info)
+AC_ARG_WITH(debug,
+    [  --with-debug            Build with debugging info],
+    [debug=$withval],
+    [debug=no])
+if test "$debug" = "yes"
+then
+  CFLAGS="$CFLAGS -O0 -g"
+  AC_MSG_RESULT(yes)
+else
+  # Optimized version. No debug
+  AC_MSG_RESULT(no)
+fi
+
 
 dnl check for paranoia support
 paranoia=no

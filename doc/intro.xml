@@ -146,7 +146,7 @@ same database. Multi-threaded indexing support.</para>
 <ulink url="http://code.google.com/p/dataparksearch/">http://code.google.com/p/dataparksearch/</ulink>.</para>
 
 <!-- para>A mirror in Germany: <ulink url="http://dataparksearch.h0t.de/">http://dataparksearch.h0t.de/</ulink>.</para-->
-<para>A mirror in Moscow, Russia: <ulink url="http://dataparksearch.newsa.ru/">http://dataparksearch.newsa.ru/</ulink>.</para>
+<!-- para>A mirror in Moscow, Russia: <ulink url="http://dataparksearch.newsa.ru/">http://dataparksearch.newsa.ru/</ulink>.</para-->
 
 <para><application>DataparkSearch</application> is also available in FreeBSD ports collection, 
 see <ulink url="http://www.freshports.org/www/dpsearch">www.freshports.org/www/dpsearch</ulink> and 

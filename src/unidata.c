@@ -130,6 +130,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 		  }else{
 		    ctype_1 = dps_uni_plane[plane_1].ctype;
 		  }
+/*		  fprintf(stderr," -- TOK %04X %d\n",*(s+1), ctype_1 > DPS_UNI_BUKVA);*/
 		  if (ctype_1 > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*(s+1)))) {
 		    *last = s;
 		    return beg;
@@ -137,6 +138,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 		  s++; continue;
 		}
 		
+/*		fprintf(stderr," -- TOK %04X %d  loose:%d\n",*(s), ctype > DPS_UNI_BUKVA, loose);*/
 		if (ctype > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*s))) {
 		  *last = s;
 		  return beg;

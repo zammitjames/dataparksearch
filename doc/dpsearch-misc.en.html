@@ -124,7 +124,7 @@ NAME="bugs"
 >
 	
 <A
-NAME="AEN5506"
+NAME="AEN5504"
 ></A
 >
 	<P
@@ -153,7 +153,26 @@ TARGET="_top"
 Please do not send reports to mailing list or to personal authors addresses!</P
 >
 
-	
+	<DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="bugs-current"
+>9.1.1. Currently known bugs</A
+></H2
+>
+		
+		<P
+>Use DataparSearch <A
+HREF="http://code.google.com/p/dataparksearch/issues/list"
+TARGET="_top"
+>Bug Reporting System</A
+> to view active and fixed bug statistics. 
+As well, you can use this system to submit new bug-reports and proposals for new feature or improvements</P
+>
+	</DIV
+>
 
 	<DIV
 CLASS="sect2"
@@ -161,7 +180,7 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="bugs-core"
->9.1.1. Core dump reports</A
+>9.1.2. Core dump reports</A
 ></H2
 >
 		
@@ -172,7 +191,15 @@ CLASS="filename"
 >
 die during their work and produce core, it would be very helpful to
 send us gdb (The GNU Debugger) output. To do this, please make the
-following steps. E.g. your binary is "indexer" and core file name is
+following steps. Make sure you have <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> built with <CODE
+CLASS="option"
+>--with-debug</CODE
+> option for configure. 
+If not, please rebuild it with this option and repeat the command leads to core dump.
+Then, e.g. your binary is "indexer" and core file name is
 <TT
 CLASS="filename"
 >indexer.core</TT
