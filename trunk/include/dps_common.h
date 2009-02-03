@@ -420,6 +420,7 @@ typedef struct {
         time_t          *last_crawled;
         int             need_free;      /**< =1, if need to free last_crawled */
         int             use_robots;
+        int             bad_urls_checked;
 	char            command;        /**< 'S' - server,realm, 'F' - disallow,allow */
 } DPS_SERVER;
 

@@ -101,7 +101,7 @@ CLASS="literal"
 >libdpsearch</TT
 >
 <A
-NAME="AEN5761"
+NAME="AEN5766"
 ></A
 ></A
 ></DT
@@ -125,7 +125,7 @@ NAME="bugs"
 >
 	
 <A
-NAME="AEN5731"
+NAME="AEN5729"
 ></A
 >
 	<P
@@ -155,7 +155,27 @@ TARGET="_top"
 Пожалуйста, не шлите сообщения об ошибках в списки рассылки или на почтовые адреса разработчиков! </P
 >
 
-	
+	<DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="bugs-current"
+>9.1.1. Известные ошибки и баги</A
+></H2
+>
+		
+		<P
+>Используйте <A
+HREF="http://code.google.com/p/dataparksearch/issues/list"
+TARGET="_top"
+>Систему учёта ошибок DataparkSearch</A
+>
+для простомтра текущих и исправленых ошибок. Вы можете использовать эту систему для сообщения о замеченых вами ошибках или предложения новых функций или улучшений.
+</P
+>
+	</DIV
+>
 
 	<DIV
 CLASS="sect2"
@@ -163,7 +183,7 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="bugs-core"
->9.1.1. Посмертные дампы</A
+>9.1.2. Посмертные дампы</A
 ></H2
 >
 		
@@ -180,7 +200,18 @@ CLASS="filename"
 CLASS="filename"
 >gdb</TT
 > (The GNU Debugger). Чтобы получить этот вывод, пожалуйста,
-выполните следующие шаги. Например, пусть умершей программой будет <TT
+выполните следующие шаги. Убедитесь, что <SPAN
+CLASS="application"
+>DataparkSearch</SPAN
+> собран с опцией <CODE
+CLASS="option"
+>--with-debug</CODE
+> для <B
+CLASS="command"
+>configure</B
+>. 
+Если нет, пересоберите его с этой опцией и попытайтесь повторить ситуацию, приведшую к трапу. 
+Затем, пусть, например, умершей программой будет <TT
 CLASS="filename"
 >indexer</TT
 >,
@@ -309,7 +340,7 @@ CLASS="literal"
 >libdpsearch</TT
 >
 <A
-NAME="AEN5761"
+NAME="AEN5766"
 ></A
 ></TD
 ></TR

@@ -36,6 +36,8 @@
 #include "dps_http.h"
 #include "dps_charsetutils.h"
 #include "dps_url.h"
+#include "dps_result.h"
+#include "dps_db.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -934,9 +936,11 @@ int DpsStoredOptimize(DPS_AGENT *Agent, int ns, char *Client) {
 int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 
 #if defined HAVE_SQL && defined HAVE_ZLIB
+  DPS_BASE_PARAM P;
+  DPS_DOCUMENT *Doc;
+  DPS_RESULT  *Res;
   DPS_ENV *Conf = Agent->Conf;
   size_t DocSize = 0;
-  DPS_BASE_PARAM P;
   unsigned int i, NFiles = DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
   urlid_t *todel = (int*)DpsMalloc(128 * sizeof(urlid_t));
   size_t ndel = 0, mdel = 128, totaldel = 0;
@@ -971,16 +975,23 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
   for (z = dbfrom; z < dbto; z++) {
     db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[z] : &Agent->dbl.db[z];
     
-    if(DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, "DELETE FROM storedchk")))
-      return res;
+    if(DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, "DELETE FROM storedchk"))) {
+      DpsDocFree(Doc); return res;
+    }
 
     ndel = 0, mdel = 128, totaldel = 0;
 
     while (u) {
       dps_snprintf(req, sizeof(req), "SELECT rec_id,url,charset_id FROM url ORDER BY rec_id LIMIT %d OFFSET %ld", recs, offset);
-      if(DPS_OK != (res = DpsSQLQuery(db, &SQLRes, req)))
-	return res;
+      if(DPS_OK != (res = DpsSQLQuery(db, &SQLRes, req))) {
+	DpsDocFree(Doc); return res;
+      }
+
       nitems = DpsSQLNumRows(&SQLRes);
+      Doc = DpsDocInit(NULL);
+      Res = DpsResultInit(NULL);
+      if (Res == NULL) { DpsDocFree(Doc); return DPS_ERROR; }
+
       for( i = 0; i < nitems; i++) {
 	
 	charset_id = DPS_ATOI(DpsSQLValue(&SQLRes, i, 2));
@@ -996,8 +1007,18 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 	/* Convert URL from LocalCharset */
 	DpsConv(&lc_dc, dc_url, (size_t)24 * len,  url, (size_t)(len + 1));
 
+	Res->Doc = Doc;
+	Res->num_rows = 1;
+	Res->Doc[0].method = DPS_METHOD_GET;
+	DpsVarListReplaceStr(&Doc->Sections, "DP_ID", DpsSQLValue(&SQLRes, i, 0));
+	DpsVarListDel(&Doc->Sections, "URL_ID");
+	if(DPS_OK != DpsResAction(Agent, Res, DPS_RES_ACTION_DOCINFO)){
+	  DpsResultFree(Res); return DPS_ERROR;
+	}
+
 	dps_snprintf(req, sizeof(req), "INSERT INTO storedchk (rec_id, url_id) VALUES (%s, %d)", 
-		     DpsSQLValue(&SQLRes, i, 0), DpsStrHash32(dc_url) );
+		     DpsSQLValue(&SQLRes, i, 0), DpsURL_ID(Doc, dc_url) );
+
 	DPS_FREE(dc_url);
 
 	if(DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, req))) {
@@ -1005,13 +1026,17 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 	  return res;
 	}
       }
+      DpsDocFree(Doc);
+      Res->Doc = NULL;
+      DpsResultFree(Res);
       DpsSQLFree(&SQLRes);
       offset += nitems;
       u = (nitems == (size_t)recs);
       dps_setproctitle("[%d] storedchk: %ld records processed", Agent->handle, offset);
-      DpsLog(Agent, DPS_LOG_EXTRA, "%ld records for storedchk written", offset);
+      DpsLog(Agent, DPS_LOG_EXTRA, "%ld records for storedchk were written", offset);
       if (u) DPSSLEEP(0);
     }
+
   
     bzero(&P, sizeof(P));
     P.subdir = "store";
@@ -1073,12 +1098,12 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
      }
     }
     dps_setproctitle("Store %03X, %d lost records deleted", i, ndel);
-    DpsLog(Agent, DPS_LOG_EXTRA, "Store %03X, %d lost records deleted", i, ndel);
+    DpsLog(Agent, DPS_LOG_EXTRA, "Store %03X, %d lost records were deleted", i, ndel);
     totaldel += ndel;
     ndel = 0;
   }
   dps_setproctitle("Total lost record(s) deleted: %d\n", totaldel);
-  DpsLog(Agent, DPS_LOG_EXTRA, "Total lost record(s) deleted: %d\n", totaldel);
+  DpsLog(Agent, DPS_LOG_EXTRA, "Total lost record(s) were deleted: %d\n", totaldel);
 /*  for (z = dbfrom; z < dbto; z++) {
     db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[z] : &Agent->dbl.db[z];
 */

@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* A bug in stored check-up has been fixed.
 	* Time zone processing has been added for Last-Modified header and meta.
 	* MakePrefixes command has been added. Use it to produce all prefixes for words in a document. This is suitable for making suggestions.
 	
