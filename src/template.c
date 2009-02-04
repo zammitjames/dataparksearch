@@ -1006,6 +1006,10 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 				
 				if(s[0]=='/'){
 					if(!strcasecmp(s+1,cursection) && cursection[0]){
+					  if (cur) {
+					    size_t seclen = dps_strlen(cur);
+					    if (cur[seclen - 1] == '\n') cur[seclen - 1] = '\0';
+					  }
 						DpsVarListReplaceStr(tmpl, cursection, cur ? cur : "");
 						cursection[0]='\0';
 						DPS_FREE(cur);

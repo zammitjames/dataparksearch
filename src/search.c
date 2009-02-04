@@ -828,7 +828,7 @@ int main(int argc, char **argv, char **envp) {
 #ifdef WITH_GOOGLEGRP
 		  if (site_id == prev_site_id) {
 		    DpsVarListAddStr(&Agent->Vars, "grouped", "yes");
-		    fprintf(stdout, "%s\n", Agent->tmpl.GrBeg);
+		    fprintf(stdout, "%s", Agent->tmpl.GrBeg);
 		  }
 #endif
 		}
@@ -837,7 +837,7 @@ int main(int argc, char **argv, char **envp) {
 #ifdef WITH_GOOGLEGRP
 		if ((sc == 0) && (site_id == prev_site_id)) {
 		  DpsVarListDel(&Agent->Vars, "grouped");
-		  fprintf(stdout, "%s\n", Agent->tmpl.GrEnd);
+		  fprintf(stdout, "%s", Agent->tmpl.GrEnd);
 		}
 		prev_site_id = site_id;
 #endif
