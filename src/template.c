@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -606,37 +606,37 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 	tok=GetHtmlTok(template,&lt);
 	while(tok){
 		if(!(strncasecmp(tok,"<!SET",5))){
-			TemplateSet(Agent,vars,tok,&is);
+		        TemplateSet(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok,"<!COPY",6))){
-			TemplateCopy(Agent,vars,tok,&is);
+			TemplateCopy(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok,"<!IF",4))){
-			TemplateIf(Agent,vars,tok,&is);
+			TemplateIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok,"<!IFLIKE", 8))) {
-			TemplateIf(Agent,vars,tok,&is);
+			TemplateIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok, "<!ELSEIF", 8))) {
-			TemplateElseIf(Agent, vars, tok, &is);
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok,"<!ELIF",6))){
-			TemplateElseIf(Agent,vars,tok,&is);
+			TemplateElseIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok, "<!ELIKE", 7))) {
-			TemplateElseIf(Agent, vars, tok, &is);
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok, "<!ELSELIKE", 10))) {
-			TemplateElseIf(Agent, vars, tok, &is);
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok,"<!ELSE",6))){
-			TemplateElse(Agent,vars,tok,&is);
+			TemplateElse(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok,"<!ENDIF",7))){
-			TemplateEndIf(Agent,vars,tok,&is);
+			TemplateEndIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(!(strncasecmp(tok,"<!/IF",5))){
-			TemplateEndIf(Agent,vars,tok,&is);
+			TemplateEndIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
 		}else
 		if(is.Items[is.pos].condition){
 			if(!(strncasecmp(tok,"<OPTION",7))){
@@ -936,7 +936,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 
 		s = DpsTrim(str," \t\r\n");
 
-		if (*s == '\0') goto loop_continue;
+		if (*s == '\0') goto pre_loop_continue;
 		
 		if(!strcasecmp(s,"<!--variables")){
 			variables=1;
@@ -1024,6 +1024,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 			}
 		}
 		
+	pre_loop_continue:
 		if(!cursection[0])
 			goto loop_continue;
 		
