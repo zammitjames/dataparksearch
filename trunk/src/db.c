@@ -140,6 +140,7 @@ void DpsDBFree(void *vdb){
 	DPS_FREE(db->where);
 	DPS_FREE(db->from);
 	DPS_FREE(db->label);
+	DPS_FREE(db->vardir);
 
 	/*if (db->searchd[0] || db->searchd[1])*/ DpsSearchdClose(db);
 	
@@ -1256,8 +1257,8 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	  }
 
 	  if(strcasecmp(cache_mode,"yes") == 0) {
-			fflush(stdout);
-			fflush(stderr);
+/*			fflush(stdout);
+			fflush(stderr);*/
 			DpsSearchCacheStore(A, Res);
 	  }
 	}
