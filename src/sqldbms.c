@@ -305,8 +305,9 @@ static int DpsPgSQLQuery(DPS_DB *db, DPS_SQLRES *res, const char *q){
 		if(strcasestr(db->errstr, "duplicate") /* en */
 		   || strcasestr(db->errstr, "") /* ru */
 		   || strcasestr(db->errstr, "duplizierter") /* de */
-		   || strcasestr(db->errstr, "llave duplicada") /* es */
-		   || strcasestr(db->errstr, "Une cl duplique") /* fr */
+		   || strcasestr(db->errstr, "doppelter") /* de */
+		   || strcasestr(db->errstr, "duplicada") /* es */
+		   || strcasestr(db->errstr, "duplique") /* fr */
 		   || strcasestr(db->errstr, "duplicirani") /* hr */
 		   || strcasestr(db->errstr, "una chiave duplicata") /* it */
 		   || strcasestr(db->errstr, "chave duplicada") /* pt-BR */
