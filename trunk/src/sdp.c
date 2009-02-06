@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -265,6 +265,9 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	hdr.len = dps_strlen(dinfo);
 	
 	nsent = DpsSearchdSendPacket(cl->searchd[1], &hdr, dinfo);
+#ifdef DEBUG_SDP
+	DpsLog(query, DPS_LOG_ERROR, "Sent DOCINFO size=%d buf=%s\n", hdr.len, dinfo);
+#endif				
 	
 	while(!done){
 		char * tok, * lt;

@@ -3792,7 +3792,7 @@ int DpsResAddDocInfoCache(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t 
 
     if (P.Item.rec_id != url_id) { DPS_FREE(docinfo); continue; }
 
-/*    fprintf(stderr, "DocInfoCache: %s\n", docinfo);*/
+/*    fprintf(stderr, " -- DocInfoCache: %s\n", docinfo);*/
     DpsDocFromTextBuf(D, docinfo);
     DPS_FREE(docinfo);
     if ((url = DpsVarListFindStr(&D->Sections, "URL", NULL)) != NULL) {

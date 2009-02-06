@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <dirent.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -62,7 +63,7 @@ static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RE
 	const char *vardir = DpsVarListFindStr(Conf_Vars, "VarDir", DPS_VAR_DIR);
 	size_t bytes;
 	
-	bytes = dps_snprintf(param, sizeof(param)-1, "%s.%s.%d.%s.%s.%s.%s.%s.%s.%s.%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s-%s-%s-%d@%s",
+	bytes = dps_snprintf(param, sizeof(param)-1, "%s.%s.%d.%s.%s.%s.%s.%s.%s.%s.%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s-%s-%s-%s-%d",
 			     DpsVarListFindStr(Conf_Vars, "m", ""),
 			     DpsVarListFindStr(Conf_Vars, "wm", ""),
 			     DpsVarListFindInt(Conf_Vars, "o", 0),
@@ -94,20 +95,42 @@ static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RE
 					       "3"
 #endif
 					       ),
-			     Res->orig_nitems,
-			     DpsVarListFindStr(Conf_Vars, "label", "")
+			     DpsVarListFindStr(Conf_Vars, "link", ""),
+			     Res->orig_nitems
 			     );
 
 #ifdef DEBUG_CACHE
 	fprintf(stderr, "param: |%s|\n", param);
 #endif
 	
-	dps_snprintf(dst, len, "%s%s%s%s%08X.%08X",
+	dps_snprintf(dst, len, "%s%s%s%s%s%08X.%08X",
 		     vardir, DPSSLASHSTR,
-		     "cache",DPSSLASHSTR,
+		     "cache",DPSSLASHSTR, DpsVarListFindStr(Conf_Vars, "label", ""),
 		     DpsStrHash32(param),
 		     DpsStrHash32(DpsVarListFindStr(Conf_Vars, "q", ""))
 		     );
+}
+
+
+int DpsSearchCacheClean(DPS_AGENT *query) {
+	char param[PATH_MAX];
+	char filen[PATH_MAX];
+	const char *vardir = DpsVarListFindStr(&query->Conf->Vars, "VarDir", DPS_VAR_DIR);
+	DIR * dir;
+	struct dirent * item;
+
+	dps_snprintf(param, sizeof(param), "%s%scache%s", vardir, DPSSLASHSTR, DPSSLASHSTR);
+	dir = opendir(param);
+	if (!dir) return DPS_ERROR;
+	while((item = readdir(dir))){
+	  if (item->d_type != DT_REG) continue;
+	  dps_snprintf(filen, sizeof(filen), "%s%s", param, item->d_name);
+	  unlink(filen);
+	}
+	closedir(dir);
+
+	return DPS_OK;
+
 }
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -843,28 +843,16 @@ __C_LINK int __DPSCALL DpsTargets(DPS_AGENT *A) {
 __C_LINK int __DPSCALL DpsResAction(DPS_AGENT *A, DPS_RESULT *R, int cmd){
 	int	res=DPS_ERROR;
 	DPS_DB	*db;
-	size_t i, dbfrom = 0, dbto;
+	size_t i, dbfrom = 0, dbto =  (A->flags & DPS_FLAG_UNOCON) ? A->Conf->dbl.nitems : A->dbl.nitems;
+	const char      *label = DpsVarListFindStr(&A->Vars, "label", NULL);
 
 	TRACE_IN(A, "DpsResAction");
-	
-	if (A->flags & DPS_FLAG_UNOCON){
-	  DPS_GETLOCK(A, DPS_LOCK_CONF);
-	  if (A->Conf->dbl.cnt_db) {
-	    dbfrom = A->Conf->dbl.dbfrom; dbto = A->Conf->dbl.dbto;
-	  } else {
-	    dbto =  A->Conf->dbl.nitems;
-	  }
-	  DPS_RELEASELOCK(A, DPS_LOCK_CONF);
-	} else {
-	  if (A->dbl.cnt_db) {
-	    dbfrom = A->dbl.dbfrom; dbto = A->dbl.dbto;
-	  } else {
-	    dbto = A->dbl.nitems;
-	  }
-	}
 
 	for (i = dbfrom; i < dbto; i++) {
 	  db = (A->flags & DPS_FLAG_UNOCON) ? &A->Conf->dbl.db[i] : &A->dbl.db[i];
+	  if (label != NULL && db->label == NULL) continue;
+	  if (label == NULL && db->label != NULL) continue;
+	  if (label != NULL && db->label != NULL && strcasecmp(db->label, label)) continue;
 	  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
 
 	  if (db->DBMode == DPS_DBMODE_CACHE)
@@ -882,6 +870,7 @@ __C_LINK int __DPSCALL DpsResAction(DPS_AGENT *A, DPS_RESULT *R, int cmd){
 	TRACE_OUT(A);
 	return res;
 }
+
 
 __C_LINK int __DPSCALL DpsCatAction(DPS_AGENT *A, DPS_CATEGORY *C, int cmd){
 	DPS_DB	*db;

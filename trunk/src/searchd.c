@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -345,6 +345,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					DpsDocInit(&Res->Doc[ndocs]);
 					DpsVarListReplaceLst(&Res->Doc[ndocs].Sections, &Agent->Conf->Sections, NULL, "*");
 					Res->Doc[ndocs].method = DPS_METHOD_GET;
+					DpsDocFromTextBuf(&Res->Doc[ndocs], tok);
 #ifdef WITH_MULTIDBADDR
 					{
 					  char *dbstr = DpsVarListFindStr(&Res->Doc[ndocs].Sections, "dbnum", NULL);
@@ -353,7 +354,6 @@ static int do_client(DPS_AGENT *Agent, int client){
 					  }
 					}
 #endif
-					DpsDocFromTextBuf(&Res->Doc[ndocs], tok);
 					
 					tok = dps_strtok_r(NULL, "\r\n", &lt);
 					ndocs++;
@@ -1310,6 +1310,15 @@ int main(int argc, char **argv, char **envp) {
 		for (i = 0; i < DPS_CHILDREN_LIMIT; i++) {
 		  if (Children[i].pid) kill(Children[i].pid, SIGTERM);
 		  Children[i].pid = 0;
+		}
+
+		if(DpsSearchCacheClean(Agent) != DPS_OK) {
+			DpsLog(Agent, DPS_LOG_ERROR, "Error in search cache cleaning");
+			DpsAgentFree(Agent);
+			DpsEnvFree(Conf);
+			unlink(dps_pid_name);
+			DpsDestroyMutexes();
+			exit(1);
 		}
 
 		for (i = 0; i < MaxClients; i++) {
