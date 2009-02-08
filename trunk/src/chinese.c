@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -513,19 +513,22 @@ dpsunicode_t *DpsSegmentByFreq(DPS_CHINALIST *List, dpsunicode_t *line) {
       if (*out) DpsUniStrCat(out, space);
       DpsUniStrCat(out, sentence);
     } else {
-      segmented_sentence = DpsSegmentProcess(List, sentence);
-      a = 2 * (DpsUniLen(segmented_sentence) + 1);
-      j = DpsUniLen(out);
-      if (j + a >= l) {
-	l = j + a + 1;
-	out = (dpsunicode_t*)DpsRealloc(out, l * sizeof(dpsunicode_t));
-	if (out == NULL) {
-	  DPS_FREE(mid); return NULL;
+      if ((segmented_sentence = DpsSegmentProcess(List, sentence)) != NULL) {
+	a = 2 * (DpsUniLen(segmented_sentence) + 1);
+	j = DpsUniLen(out);
+	if (j + a >= l) {
+	  l = j + a + 1;
+	  out = (dpsunicode_t*)DpsRealloc(out, l * sizeof(dpsunicode_t));
+	  if (out == NULL) {
+	    DPS_FREE(mid); return NULL;
+	  }
 	}
+	if (*out) DpsUniStrCat(out, space);
+	DpsUniStrCat(out, segmented_sentence);
+	DPS_FREE(segmented_sentence);
+      } else {
+	  DPS_FREE(mid); return NULL;
       }
-      if (*out) DpsUniStrCat(out, space);
-      DpsUniStrCat(out, segmented_sentence);
-      DPS_FREE(segmented_sentence);
     }
     *last = part;
   }
