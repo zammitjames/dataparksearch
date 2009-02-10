@@ -841,6 +841,10 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 		dps_snprintf(buf, sizeof(buf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 		DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",buf);
 		Doc->method = DPS_METHOD_VISITLATER;
+		if (nerrors == Doc->Spider.max_net_errors) {
+		  DpsVarListReplaceInt(&Doc->Sections, "Site_id", DpsServerGetSiteId(Indexer, CurSrv, Doc));
+		  DpsURLAction(Indexer, Doc, DPS_URL_ACTION_POSTPONE_ON_ERR);
+		}
 		TRACE_OUT(Indexer);
 		return DPS_OK;
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -4640,6 +4640,14 @@ static int DpsStoredRehash(DPS_AGENT *A, DPS_DB *db) {
 }
 
 
+static int DpsDocPostponeSite(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
+  char qbuf[512];
+  int site_id = DpsVarListFindInt(&Doc->Sections, "site_id", 0);
+  dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET next_index_time=next_index_time+%lu WHERE site_id=%d", Doc->Spider.net_error_delay_time, site_id);
+  return DpsSQLAsyncQuery(db, NULL, qbuf);
+}
+
+
 static int DpsRefererGet(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
   char	qbuf[128];
   DPS_SQLRES Res;
@@ -6329,6 +6337,9 @@ int DpsURLActionSQL(DPS_AGENT * A, DPS_DOCUMENT * D, int cmd,DPS_DB *db){
 	        case DPS_URL_ACTION_REHASHSTORED:
 		  res = DpsStoredRehash(A, db);
 			break;
+	        case DPS_URL_ACTION_POSTPONE_ON_ERR:
+		  res = DpsDocPostponeSite(A, D, db);
+		        break;
 		default:
   		        DpsLog(A, DPS_LOG_ERROR, "Unsupported URL Action SQL");
 			res=DPS_ERROR;

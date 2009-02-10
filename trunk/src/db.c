@@ -683,6 +683,8 @@ static const char *DpsURLActionStr(int cmd) {
   case DPS_URL_ACTION_PASNEO: return "URL Action Pas Neo";
   case DPS_URL_ACTION_REFERER: return "URL Action Referer";
   case DPS_URL_ACTION_RESORT: return "URL Action Resort Cached";
+  case DPS_URL_ACTION_REHASHSTORED: return "URL Action Rehash Stored DB";
+  case DPS_URL_ACTION_POSTPONE_ON_ERR: return "URL Action Postpone On Errors";
 
   }
   return "<unknown URLAction>";

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -72,6 +72,7 @@
 #define DPS_URL_ACTION_REFERER          27
 #define DPS_URL_ACTION_RESORT		28
 #define DPS_URL_ACTION_REHASHSTORED	29
+#define DPS_URL_ACTION_POSTPONE_ON_ERR  30
 
 #define DPS_RES_ACTION_DOCINFO		1
 
