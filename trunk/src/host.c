@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -237,6 +237,7 @@ static int DpsGetHostByName(DPS_AGENT *Indexer, DPS_CONN *connp, const char *hos
       } else {
 	DpsLog(Indexer, DPS_LOG_WARN, "%s: no adresses", hostname);
       }
+      if (res != NULL) freeaddrinfo(res);
       return -6;
     }
 #if defined(WITH_TRACE) && defined(DEBUG)
