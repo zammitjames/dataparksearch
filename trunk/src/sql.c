@@ -3096,7 +3096,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		DpsVarListReplaceInt(&Doc->Sections, "Hops", DPS_ATOI(DpsSQLValue(&SQLRes,i,4)));
 		DpsVarListReplaceInt(&Doc->Sections, "crc32", DPS_ATOI(DpsSQLValue(&SQLRes,i,5)));
 		DpsVarListReplaceInt(&Doc->Sections, "Site_id", DPS_ATOI(DpsSQLValue(&SQLRes, i, 10)));
-		DpsVarListReplaceInt(&Doc->Sections, "Server_id", DPS_ATOI(DpsSQLValue(&SQLRes, i, 11)));
+		DpsVarListReplaceInt(&Doc->Sections, "Server_id", 0 /*DPS_ATOI(DpsSQLValue(&SQLRes, i, 11))*/);
 		last_mod_time = (time_t) atol(DpsSQLValue(&SQLRes,i,6));
 		DpsTime_t2HttpStr(last_mod_time, buf);
 		if (last_mod_time != 0 && *buf != '\0') {
