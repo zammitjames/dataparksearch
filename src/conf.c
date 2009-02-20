@@ -800,6 +800,21 @@ static int do_include(void *Cfg, size_t ac,char **av){
 	return DPS_OK;
 }
 
+static int add_quffix(void *Cfg, size_t ac,char **av) {
+	DPS_CFG	*C = (DPS_CFG*)Cfg;
+	DPS_ENV	*Conf = C->Indexer->Conf;
+	
+	if(C->flags & DPS_FLAG_SPELL) {
+		char	fname[PATH_MAX];
+		DpsRelEtcName(Conf,fname,sizeof(fname)-1,av[3]);
+		if(DpsImportQuffixes(Conf,av[1],av[2],fname)){
+		  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Can't load quffix file :%s", fname);
+		  return DPS_ERROR;
+		}
+	}
+	return DPS_OK;
+}
+
 static int add_affix(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
@@ -1849,6 +1864,7 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
 		if(Indexer->Conf->Spells.nspell) {
 			DpsSortDictionary(&Indexer->Conf->Spells);
 			DpsSortAffixes(&Indexer->Conf->Affixes, &Indexer->Conf->Spells);
+			DpsSortQuffixes(&Indexer->Conf->Quffixes, &Indexer->Conf->Spells);
 		}
 		/* Sort synonyms */
 		DpsSynonymListSort(&Indexer->Conf->Synonyms);

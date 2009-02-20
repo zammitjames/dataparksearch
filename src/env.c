@@ -127,6 +127,7 @@ void DpsEnvFree(DPS_ENV * Env){
 	for (filenum = DPS_MATCH_min; filenum < DPS_MATCH_max; filenum++) DpsServerListFree(&Env->Servers[filenum]);
 	DpsSpellListFree(&Env->Spells);
 	DpsAffixListFree(&Env->Affixes);
+	DpsQuffixListFree(&Env->Quffixes);
 	DpsVarListFree(&Env->Vars);
 	DpsChineseListFree(&Env->Chi);
 	DpsChineseListFree(&Env->Thai);

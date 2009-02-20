@@ -630,6 +630,7 @@ typedef struct aff_struct {
         char		compile;
 } DPS_AFFIX;
 
+
 typedef struct Tree_struct {
 	int		Left[256];
 	int		Right[256];
@@ -653,6 +654,27 @@ typedef struct {
 } DPS_SPELLLIST;
 
 /* Ispell END */
+
+typedef struct qreg_struct {
+  DPS_UNIREG_EXP reg;
+  dpsunicode_t	 mask[41];
+  dpsunicode_t	 find[16];
+  dpsunicode_t	 repl[16];
+  size_t	 replen;
+  size_t	 findlen;
+  char		 flag[3]; /**< 2 bytes for japanese extension */
+  char		 lang[6];
+  char           compile;
+} DPS_QUFFIX;
+
+typedef struct {
+	size_t		nrecs;
+	size_t		mrecs;
+	DPS_QUFFIX	*Quffix;
+	Tree_struct	PrefixTree[DPS_LANGPERDOC];
+	Tree_struct	SuffixTree[DPS_LANGPERDOC];
+} DPS_QUFFIXLIST;
+
 
 
 typedef struct{
@@ -951,9 +973,10 @@ typedef struct dps_config_struct {
         DPS_ACRONYMLIST	Acronyms;	/**< Acronyms list              */
 	DPS_STOPLIST	StopWords;	/**< Stopwords list             */
 	DPS_PARSERLIST	Parsers;	/**< External  parsers          */
-	DPS_DBLIST	dbl;		/**< DB addresses	      */
+	DPS_DBLIST	dbl;		/**< DB addresses	        */
 	DPS_SPELLLIST	Spells;		/**< For ispell dictionaries    */
 	DPS_AFFIXLIST	Affixes;	/**< For ispell affixes         */
+        DPS_QUFFIXLIST	Quffixes;	        /**< For query regular expressions */
 	DPS_WORDPARAM	WordParam;	/**< Word limits                */
         DPS_CHINALIST   Chi;            /**< Chinese words list         */
         DPS_CHINALIST   Thai;           /**< Thai words list            */
