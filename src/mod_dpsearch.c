@@ -310,6 +310,8 @@ static int dpstoredoc_handler(request_rec *r) {
 	  DpsVarListAddStr(&Agent->Vars, "document", Doc->Buf.content);
 	} else {
 
+	  register char *tp = NULL;
+
 	  HEnd = HDoc = (char*)DpsMalloc(DPS_MAXDOCSIZE + 32);
 	  if (HDoc == NULL) goto fin;
 	  *HEnd = '\0';
@@ -339,10 +341,11 @@ static int dpstoredoc_handler(request_rec *r) {
 		case DPS_HTML_TXT:
 		        ch = *last; *last = '\0';
 			if (tag.title || tag.script) {
-			  sprintf(HEnd, "%s", DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text, 0)); /* FIXME: add check for Content-Language */
+			  sprintf(HEnd, "%s", tp = DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text, 0)); /* FIXME: add check for Content-Language */
 			} else {
-			  sprintf(HEnd, "%s", DpsHlConvert(&Res->WWList, htok, &lc_uni, &uni_bc, 0)); /* FIXME: add check for Content-Language */
+			  sprintf(HEnd, "%s", tp = DpsHlConvert(&Res->WWList, htok, &lc_uni, &uni_bc, 0)); /* FIXME: add check for Content-Language */
 			}
+			DPS_FREE(tp);
 			HEnd=DPS_STREND(HEnd);
 			*last = ch;
 			break;

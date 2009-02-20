@@ -322,6 +322,8 @@ int main(int argc, char **argv, char **envp) {
 	  DpsVarListAddStr(&Env->Vars, "document", Doc->Buf.content);
 	} else {
 	  	
+	  register char *tp = NULL;
+
 	  HEnd = HDoc = (char*)DpsMalloc(DPS_MAXDOCSIZE + 32);
 	  if (HDoc == NULL) goto fin;
 	  *HEnd = '\0';
@@ -352,10 +354,11 @@ int main(int argc, char **argv, char **envp) {
 		case DPS_HTML_TXT:
 		        ch = *last; *last = '\0';
 			if (tag.title || tag.script) {
-			  sprintf(HEnd, "%s", DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text, 0)); /* FIXME: add check for Content-Language */
+			  sprintf(HEnd, "%s", tp = DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text, 0)); /* FIXME: add check for Content-Language */
 			} else {
-			  sprintf(HEnd, "%s", DpsHlConvert(&Res->WWList, htok, &lc_uni, &uni_bc, 0)); /* FIXME: add check for Content-Language */
+			  sprintf(HEnd, "%s", tp = DpsHlConvert(&Res->WWList, htok, &lc_uni, &uni_bc, 0)); /* FIXME: add check for Content-Language */
 			}
+			DPS_FREE(tp);
 			HEnd=DPS_STREND(HEnd);
 			*last = ch;
 			break;
@@ -383,6 +386,15 @@ fin:
 	DpsEnvFree(Env);
 	DPS_FREE(query_string);
 	DPS_FREE(HDoc);
+
+#ifdef EFENCE
+	fprintf(stderr, "Memory leaks checking\n");
+	DpsEfenceCheckLeaks();
+#endif
+#ifdef FILENCE
+	fprintf(stderr, "FD leaks checking\n");
+	DpsFilenceCheckLeaks(NULL);
+#endif
 
 	return(0);
 }
