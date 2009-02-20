@@ -1579,13 +1579,12 @@ static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLI
 
 static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPELL *norm, DPS_WIDEWORD *wword) {
   DPS_WIDEWORD w;
-  size_t i, nrecs = Indexer->Conf->Quffixes.nrecs;
+  size_t i, nrecs = Indexer->Conf->Quffixes.nrecs, len;
   DPS_QUFFIX *Quffix = (DPS_QUFFIX*)Indexer->Conf->Quffixes.Quffix;
   int err;
   DPS_CHARSET *local_charset;
   DPS_CHARSET *sys_int;
   DPS_CONV fromuni;
-  dpsunicode_t *r_word;
   
   local_charset = Indexer->Conf->lcs;
   if (local_charset == NULL) return;
@@ -1595,7 +1594,7 @@ static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPEL
   w.word = NULL;
   w.uword = NULL;
 
-  r_word = DpsUniRDup(wword->uword);
+  len = DpsUniLen(wword->uword);
 
   for (i = 0; i < nrecs; i++) {
     if ( ((norm->flag != NULL) && (strcmp(norm->lang, Quffix[i].lang) == 0 ) && (strstr(norm->flag, Quffix[i].flag) != NULL))
@@ -1611,7 +1610,7 @@ static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPEL
       }
       err = DpsUniRegExec(&(Quffix[i].reg), wword->uword);
       if (err) {
-	w.len = DpsUniLen(wword->uword) - Quffix[i].findlen + Quffix[i].replen;
+	w.len = len - Quffix[i].findlen + Quffix[i].replen;
 	if ( ( (w.word = DpsRealloc(w.word, 14 * w.len + 1)) == NULL) ||
 	     ( (w.uword = DpsRealloc(w.uword, (w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
 	  DPS_FREE(w.word); DPS_FREE(w.uword);
@@ -1620,7 +1619,7 @@ static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPEL
 	  
 	bzero((void*)w.uword, (w.len + 1) * sizeof(dpsunicode_t));
 
-	DpsUniStrNCpy(w.uword, r_word, DpsUniLen(r_word) - Quffix[i].findlen);
+	DpsUniStrNCpy(w.uword, wword->uword, len - Quffix[i].findlen);
 	DpsUniStrCat(w.uword, Quffix[i].repl);
 
 	DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(dpsunicode_t) * (w.len + 1));
