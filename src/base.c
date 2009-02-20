@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2003 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -76,8 +76,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
   if (
       ((P->Ifilename = (char *)DpsMalloc(filenamelen)) == NULL) ||
       ((P->Sfilename = (char *)DpsMalloc(filenamelen)) == NULL)            ) {
-    DPS_FREE(P->Ifilename);
-    DPS_FREE(P->Sfilename);
+    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
     DpsLog(P->A, DPS_LOG_ERROR, "Memory alloc error 2x%d bytes %s:%d", filenamelen, __FILE__, __LINE__);
     TRACE_OUT(P->A);
     return DPS_ERROR;
@@ -94,6 +93,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 						   S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH
 						   )) < 0)) {
       DpsLog(P->A, DPS_LOG_ERROR, "Can't open/create file %s [%s:%d] -- %d (%s)", P->Ifilename, __FILE__, __LINE__, errno, strerror(errno));
+      DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
       TRACE_OUT(P->A);
       return DPS_ERROR;
     }
@@ -107,6 +107,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 #if 1
       DPS_RELEASELOCK(P->A, DPS_LOCK_BASE_N(P->FileNo));
 #endif
+      DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
       TRACE_OUT(P->A);
       return DPS_ERROR;
     }
@@ -118,6 +119,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 #if 1
       DPS_RELEASELOCK(P->A, DPS_LOCK_BASE_N(P->FileNo));
 #endif
+      DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
       TRACE_OUT(P->A);
       return DPS_ERROR;
     }
@@ -128,6 +130,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
     DPS_FREE(hTable);
     if (lseek(P->Ifd, (off_t)0, SEEK_SET) == (off_t)-1) {
       DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s", P->Ifilename);
+      DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
       TRACE_OUT(P->A);
       return DPS_ERROR;
     }
@@ -159,6 +162,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 						   S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH
 						   )) < 0)) {
       DpsLog(P->A, DPS_LOG_ERROR, "Can't open/create file %s", P->Sfilename);
+      DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
       TRACE_OUT(P->A);
       return DPS_ERROR;
     }
@@ -181,12 +185,14 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
   /* search rec_id */
     if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)hash * sizeof(DPS_BASEITEM), SEEK_SET)) == (dps_uint8)-1) {
     DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s", P->Ifilename);
+    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
     TRACE_OUT(P->A);
     return DPS_ERROR;
   }
   if (read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) != sizeof(DPS_BASEITEM)) {
     DpsLog(P->A, DPS_LOG_ERROR, "{%s:%d} Can't read index for file %s seek:%ld hash: %u (%d)", 
 	   __FILE__, __LINE__, P->Ifilename, P->CurrentItemPos, hash, hash);
+    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
     TRACE_OUT(P->A);
     return DPS_ERROR;
   }
@@ -206,6 +212,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
       P->CurrentItemPos = P->Item.next;
       if (lseek(P->Ifd, (off_t)P->CurrentItemPos, SEEK_SET) == (off_t)-1) {
 	DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s", P->Ifilename);
+	DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	TRACE_OUT(P->A);
 	return DPS_ERROR;
       }
@@ -215,22 +222,26 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 		 P->Ifilename, __FILE__, __LINE__);
 	  if (lseek(P->Ifd, (off_t)P->PreviousItemPos, SEEK_SET) == (off_t)-1) {
 	    DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	    TRACE_OUT(P->A);
 	    return DPS_ERROR;
 	  }
 	  if ((wr = read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
 	    DpsLog(P->A, DPS_LOG_ERROR, "Can't read previous pos for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	    TRACE_OUT(P->A);
 	    return DPS_ERROR;
 	  }
 	  P->Item.next = 0;
 	  if (lseek(P->Ifd, (off_t)P->PreviousItemPos, SEEK_SET) == (off_t)-1) {
 	    DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	    TRACE_OUT(P->A);
 	  return DPS_ERROR;
 	  }
 	  if ((wr = write(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
 	    DpsLog(P->A, DPS_LOG_ERROR, "Can't write previous pos for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	    TRACE_OUT(P->A);
 	    return DPS_ERROR;
 	  }
@@ -238,6 +249,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 	} else {
 	  DpsLog(P->A, DPS_LOG_ERROR, "Can't read hash chain for file %s %d of %d bytes (%s:%d)", 
 		 P->Ifilename, wr, sizeof(DPS_BASEITEM), __FILE__, __LINE__);
+	  DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	  TRACE_OUT(P->A);
 	  return DPS_ERROR;
 	}
