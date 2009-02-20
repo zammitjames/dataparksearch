@@ -131,6 +131,7 @@
 	{"ProvideReferer",	1,1,	env_rpl_bool_var},
 	{"Proxy",		0,1,	srv_rpl_var},
 	{"ProxyAuthBasic",	1,1,	srv_rpl_auth},
+	{"Quffix",              3,3,    add_quffix},
 	{"ReadTimeOut",		1,1,	srv_rpl_time_var},
 	{"Realm",		1,100,	add_srv},
 	{"RealmDB",             1,100,  add_srv_db},

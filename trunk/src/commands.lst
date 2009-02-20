@@ -163,6 +163,7 @@
 	{"ActionSQL",	        3,4,    add_actionsql},
 	{"Affix",		3,3,	add_affix},
 	{"Spell",		3,3,	add_spell},
+	{"Quffix",              3,3,    add_quffix},
 	{"StopwordFile",	1,1,	add_stoplist},
 	{"LangMapFile",		1,1,	add_langmap},
 	{"LangMapUpdate",	1,1,	env_rpl_bool_var},

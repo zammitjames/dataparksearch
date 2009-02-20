@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -228,6 +228,11 @@ void DpsUniRegCompileAll(DPS_ENV *Conf) {
 	    Conf->Affixes.Affix[i].compile = 0;
 	  }
 	}
+	for(i = 0; i < Conf->Quffixes.nrecs; i++) {
+	  if(!DpsUniRegComp(&Conf->Quffixes.Quffix[i].reg, Conf->Quffixes.Quffix[i].mask)) {
+	    Conf->Quffixes.Quffix[i].compile = 0;
+	  }
+	}
 }
 
 static int cmpspellword(dpsunicode_t *w1, const dpsunicode_t *w2) {
@@ -277,6 +282,30 @@ static int cmpaffix(const void *s1,const void *s2){
 	u1[((const DPS_AFFIX*)s1)->replen - 1] &= 255; u2[((const DPS_AFFIX*)s2)->replen -1] &= 255;
 	return DpsUniStrBCmp(u1, u2);
       }
+    }
+  }
+  return lc;
+}
+
+static int cmpquffix(const void *s1,const void *s2){
+  int lc;
+  lc = strcmp(((const DPS_QUFFIX*)s1)->lang,((const DPS_QUFFIX*)s2)->lang);
+  if (lc == 0) {
+    if ( (((const DPS_QUFFIX*)s1)->findlen == 0) && (((const DPS_QUFFIX*)s2)->findlen == 0) ) {
+      return 0;
+    }
+    if (((const DPS_QUFFIX*)s1)->findlen == 0) {
+      return -1;
+    }
+    if (((const DPS_QUFFIX*)s2)->findlen == 0) {
+      return 1;
+    }
+    {
+      dpsunicode_t u1[BUFSIZ], u2[BUFSIZ];
+      DpsUniStrCpy(u1,((const DPS_QUFFIX*)s1)->find); 
+      DpsUniStrCpy(u2,((const DPS_QUFFIX*)s2)->find); 
+      *u1 &= 255; *u2 &= 255;
+      return DpsUniStrBCmp(u1, u2);
     }
   }
   return lc;
@@ -625,6 +654,33 @@ int DpsAffixAdd(DPS_AFFIXLIST *List, const char *flag, const char * lang, const 
 	return DPS_OK;
 }
 
+
+int DpsQuffixAdd(DPS_QUFFIXLIST *List, const char *flag, const char * lang, const dpsunicode_t *mask, const dpsunicode_t *find, const dpsunicode_t *repl) {
+
+	if(List->nrecs >= List->mrecs) {
+		List->mrecs += 16;
+		List->Quffix = (DPS_QUFFIX*)DpsXrealloc(List->Quffix, List->mrecs * sizeof(DPS_QUFFIX));
+		if (List->Quffix == NULL) return DPS_ERROR;
+	}
+
+	List->Quffix[List->nrecs].compile = 1;
+	List->Quffix[List->nrecs].flag[0] = flag[0];
+	List->Quffix[List->nrecs].flag[1] = flag[1];
+	List->Quffix[List->nrecs].flag[2] = '\0';
+	dps_strncpy(List->Quffix[List->nrecs].lang, lang, 5);
+	List->Quffix[List->nrecs].lang[5] = 0;
+	
+	DpsUniStrNCpy(List->Quffix[List->nrecs].mask, mask, 40);
+	DpsUniStrNCpy(List->Quffix[List->nrecs].find,find, 15);
+	DpsUniStrNCpy(List->Quffix[List->nrecs].repl,repl, 15);
+	
+	List->Quffix[List->nrecs].replen  = DpsUniLen(repl);
+	List->Quffix[List->nrecs].findlen = DpsUniLen(find);
+	List->nrecs++;
+	return DPS_OK;
+}
+
+
 static char * remove_spaces(char *dist,char *src){
 char *d,*s;
 	d=dist;
@@ -673,14 +729,14 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
 #endif
 
   if (stat(filename, &sb)) {
-    fprintf(stderr, "Unable to stat synonyms file '%s': %s", filename, strerror(errno));
+    fprintf(stderr, "Unable to stat affixes file '%s': %s", filename, strerror(errno));
 #ifdef WITH_PARANOIA
     DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
   if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
-    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to open synonyms file '%s': %s", filename, strerror(errno));
+    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to open affixes file '%s': %s", filename, strerror(errno));
 #ifdef WITH_PARANOIA
     DpsViolationExit(-1, paran);
 #endif
@@ -695,7 +751,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
     return 1;
   }
   if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
-    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to read synonym file '%s': %s", filename, strerror(errno));
+    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to read affixes file '%s': %s", filename, strerror(errno));
     DPS_FREE(data);
     DpsClose(fd);
 #ifdef WITH_PARANOIA
@@ -866,6 +922,215 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
   return 0;
 }
 
+
+
+__C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const char*charset, const char *filename) {
+  struct stat     sb;
+  char      *str, *data = NULL, *cur_n = NULL;
+  char flag[2]="";
+  char mstr[14*BUFSIZ]="";
+  char mask[14*BUFSIZ]="";
+  char find[14*BUFSIZ]="";
+  char repl[14*BUFSIZ]="";
+  char *s;
+  int i;
+  FILE *qregex;
+  DPS_CHARSET *qreg_charset = NULL;
+  dpsunicode_t unimask[BUFSIZ];
+  dpsunicode_t ufind[BUFSIZ];
+  dpsunicode_t urepl[BUFSIZ];
+  size_t len;
+  DPS_CHARSET *sys_int;
+  DPS_CONV touni;
+  int             fd;
+  char            savebyte;
+#ifdef DEBUG_UNIREG
+  DPS_CONV fromuni;
+#endif
+#ifdef WITH_PARANOIA
+  void *paran = DpsViolationEnter(paran);
+#endif
+
+  if (stat(filename, &sb)) {
+    fprintf(stderr, "Unable to stat query regs file '%s': %s", filename, strerror(errno));
+#ifdef WITH_PARANOIA
+    DpsViolationExit(-1, paran);
+#endif
+    return 1;
+  }
+  if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
+    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to open query regs file '%s': %s", filename, strerror(errno));
+#ifdef WITH_PARANOIA
+    DpsViolationExit(-1, paran);
+#endif
+    return 1;
+  }
+  if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to alloc %d bytes", sb.st_size);
+    DpsClose(fd);
+#ifdef WITH_PARANOIA
+    DpsViolationExit(-1, paran);
+#endif
+    return 1;
+  }
+  if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to read query regs file '%s': %s", filename, strerror(errno));
+    DPS_FREE(data);
+    DpsClose(fd);
+#ifdef WITH_PARANOIA
+    DpsViolationExit(-1, paran);
+#endif
+    return 1;
+  }
+  data[sb.st_size] = '\0';
+  str = data;
+  cur_n = strchr(str, '\n');
+  if (cur_n != NULL) {
+    cur_n++;
+    savebyte = *cur_n;
+    *cur_n = '\0';
+  }
+  DpsClose(fd);
+
+  qreg_charset = DpsGetCharSet(charset);
+  if (qreg_charset == NULL) {
+#ifdef WITH_PARANOIA
+    DpsViolationExit(-1, paran);
+#endif
+    return 1;
+  }
+  sys_int = DpsGetCharSet("sys-int");
+  if (sys_int == NULL) {
+#ifdef WITH_PARANOIA
+    DpsViolationExit(-1, paran);
+#endif
+    return 1;
+  }
+	    
+  DpsConvInit(&touni, qreg_charset, sys_int, Conf->CharsToEscape, 0);
+#ifdef DEBUG_UNIREG
+  DpsConvInit(&fromuni, sys_int, affix_charset, Conf->CharsToEscape, 0);
+#endif
+
+  while(str != NULL) {
+    str = DpsTrim(str, "\t ");
+    if(!strncasecmp(str,"flag ",5)){
+      s=str+5;
+      while(strchr("* ",*s))s++;
+      flag[0] = s[0];
+      flag[1] = (s[1] >= 'A') ? s[1] : '\0';
+      goto loop2_continue;
+    }
+		
+    if((s=strchr(str,'#')))*s=0;
+    if(!*str) goto loop2_continue;
+
+    dps_strcpy(mask,"");
+    dps_strcpy(repl,"");
+
+    i=sscanf(str,"%[^>\n]>%[^,\n],%[^\n]",mask,find,repl);
+/*    i=sscanf(str,"%[^>\n]>%[^\n]",mask,repl);*/
+
+    remove_spaces(mstr, repl); dps_strcpy(repl, mstr);
+    remove_spaces(mstr, find); dps_strcpy(find, mstr);
+    remove_spaces(mstr, mask); dps_strcpy(mask, mstr);
+
+    switch(i){
+    case 3:break;
+    case 2:
+      if(*find != '\0'){
+	dps_strcpy(repl,find);
+	dps_strcpy(find,"");
+      }
+      break;
+    default:
+      goto loop2_continue;
+    }
+
+    len=DpsConv(&touni,(char*)urepl,sizeof(urepl),repl, dps_strlen(repl)+1);
+    DpsUniStrToLower(urepl);
+#ifdef DEBUG_UNIREG
+    DpsConv(&fromuni,repl,sizeof(repl),(char *)urepl,len);
+#endif
+		    
+    len=DpsConv(&touni,(char*)ufind,sizeof(ufind),find, dps_strlen(find)+1);
+    DpsUniStrToLower(ufind);
+#ifdef DEBUG_UNIREG
+    DpsConv(&fromuni,find,sizeof(find),(char*)ufind,len);
+#endif
+
+    sprintf(mstr, "%s", mask);
+
+    len = DpsConv(&touni, (char*)unimask, sizeof(unimask), mstr, dps_strlen(mstr) + 1);
+    DpsUniStrToLower(unimask);
+#ifdef DEBUG_UNIREG
+    DpsConv(&fromuni, mask, sizeof(mask), (char*)unimask, len);
+#endif
+
+/*    fprintf(stderr, "-- %s | %c | %s : %s > %s\n", flag, suffixes ? 's' : 'p', mask, find, repl);*/
+
+    DpsQuffixAdd(&Conf->Quffixes, flag, lang, unimask, ufind, urepl);
+    if (Conf->Flags.use_accentext) {
+      dpsunicode_t *af_unimask = DpsUniAccentStrip(unimask);
+      dpsunicode_t *af_ufind = DpsUniAccentStrip(ufind);
+      dpsunicode_t *af_urepl = DpsUniAccentStrip(urepl);
+      size_t zz;
+      for (zz = 0; zz < 2; zz++) {
+	if (DpsUniStrCmp(af_unimask, unimask)  || DpsUniStrCmp(af_ufind, ufind) || DpsUniStrCmp(af_urepl, urepl)) {
+	  size_t w_len = DpsUniLen(af_unimask);
+	  dpsunicode_t *new_wrd = DpsMalloc(2 * sizeof(dpsunicode_t) * w_len);
+	  if (new_wrd == NULL) {
+	    DpsQuffixAdd(&Conf->Quffixes, flag, lang, af_unimask, af_ufind, af_urepl);
+	  } else {
+	    size_t ii, pnew = 0;
+	    int in_pattern = 0;
+	    for (ii = 0; ii < w_len; ii++) {
+	      if ((af_unimask[ii] == (dpsunicode_t)'[') && (af_unimask[ii + 1] == (dpsunicode_t)'^') ) {
+		in_pattern = 1;
+	      } else if (in_pattern && (af_unimask[ii] == (dpsunicode_t)']')) {
+		in_pattern = 0;
+	      } else if (in_pattern && (af_unimask[ii] != unimask[ii])) {
+		new_wrd[pnew++] = unimask[ii];
+	      }
+	      new_wrd[pnew++] = af_unimask[ii];
+	    }
+	    new_wrd[pnew] = 0;
+	    DpsQuffixAdd(&Conf->Quffixes, flag, lang, new_wrd, af_ufind, af_urepl);
+	    DPS_FREE(new_wrd);
+	  }
+	}
+	DPS_FREE(af_unimask); DPS_FREE(af_ufind); DPS_FREE(af_urepl);
+	if ((zz == 0) && (strncasecmp(lang, "de", 2) == 0)) {
+	  af_unimask = DpsUniGermanReplace(unimask);
+	  af_ufind = DpsUniGermanReplace(ufind);
+	  af_urepl = DpsUniGermanReplace(urepl);
+	} else zz = 2;
+      }
+    }
+  loop2_continue:
+    str = cur_n;
+    if (str != NULL) {
+      *str = savebyte;
+      cur_n = strchr(str, '\n');
+      if (cur_n != NULL) {
+	cur_n++;
+	savebyte = *cur_n;
+	*cur_n = '\0';
+      }
+    }
+  }
+  DPS_FREE(data);
+	    
+#ifdef WITH_PARANOIA
+  DpsViolationExit(-1, paran);
+#endif
+  return 0;
+}
+
+
+
+
+
 __C_LINK void __DPSCALL DpsSortDictionary(DPS_SPELLLIST * List){
   int  j, CurLet = -1, Let;size_t i;
   char *CurLang = NULL;
@@ -952,6 +1217,46 @@ __C_LINK void __DPSCALL DpsSortAffixes(DPS_AFFIXLIST *List, DPS_SPELLLIST *SL) {
     }
   }
 }
+
+
+void DpsSortQuffixes(DPS_QUFFIXLIST *List, DPS_SPELLLIST *SL) {
+  int  CurLetP = -1, CurLetS = -1, Let, cl = -1;
+  char *CurLangP = NULL, *CurLangS = NULL;
+  DPS_QUFFIX *Qreg; size_t i, j;
+
+  if (List->nrecs > 1)
+    DpsSort((void*)List->Quffix, List->nrecs, sizeof(DPS_QUFFIX), cmpquffix);
+
+  for(i = 0; i < SL->nLang; i++)
+    for(j = 0; j < 256; j++) {
+      List->PrefixTree[i].Left[j] = List->PrefixTree[i].Right[j] = -1;
+      List->SuffixTree[i].Left[j] = List->SuffixTree[i].Right[j] = -1;
+    }
+
+  for(i = 0; i < List->nrecs; i++) {
+    Qreg = &(((DPS_QUFFIX*)List->Quffix)[i]);
+    if (CurLangP == NULL || strcmp(CurLangP, Qreg->lang) != 0) {
+      cl = -1;
+      for (j = 0; j < SL->nLang; j++) {
+	if (strncmp(SL->SpellTree[j].lang, Qreg->lang, 2) == 0) {
+	  cl = j;
+	  break;
+	}
+      }
+      CurLangP = Qreg->lang;
+      dps_strcpy(List->PrefixTree[cl].lang, CurLangP);
+      CurLetP = -1;
+    }
+    if (cl < 0) continue; /* we have affixes without spell for this lang */
+    Let = (int)(*(Qreg->repl)) & 255;
+    if (CurLetP != Let) {
+      List->PrefixTree[cl].Left[Let] = i;
+      CurLetP = Let;
+    }
+    List->PrefixTree[cl].Right[Let] = i;
+  }
+}
+
 
 static void CheckSuffix(const dpsunicode_t *word, size_t len, DPS_AFFIX *Affix, int *res, DPS_AGENT *Indexer, 
 			DPS_PSPELL *PS, DPS_PSPELL * FZ) {
@@ -1182,6 +1487,17 @@ void DpsAffixListFree (DPS_AFFIXLIST *List) {
 	List->naffixes = 0;
 }
 
+void DpsQuffixListFree (DPS_QUFFIXLIST *List) {
+	size_t i;
+
+	for (i = 0; i < List->nrecs; i++)
+		if (List->Quffix[i].compile == 0)
+			DpsUniRegFree(&(List->Quffix[i].reg));
+
+	DPS_FREE(List->Quffix);
+	List->nrecs = 0;
+}
+
 
 static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLIST *result, size_t order) {
   DPS_WIDEWORD w;
@@ -1261,6 +1577,65 @@ static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLI
 }
 
 
+static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPELL *norm, DPS_WIDEWORD *wword) {
+  DPS_WIDEWORD w;
+  size_t i, nrecs = Indexer->Conf->Quffixes.nrecs;
+  DPS_QUFFIX *Quffix = (DPS_QUFFIX*)Indexer->Conf->Quffixes.Quffix;
+  int err;
+  DPS_CHARSET *local_charset;
+  DPS_CHARSET *sys_int;
+  DPS_CONV fromuni;
+  dpsunicode_t *r_word;
+  
+  local_charset = Indexer->Conf->lcs;
+  if (local_charset == NULL) return;
+  if (NULL==(sys_int=DpsGetCharSet("sys-int"))) return;
+  DpsConvInit(&fromuni, sys_int, local_charset, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
+
+  w.word = NULL;
+  w.uword = NULL;
+
+  r_word = DpsUniRDup(wword->uword);
+
+  for (i = 0; i < nrecs; i++) {
+    if ( ((norm->flag != NULL) && (strcmp(norm->lang, Quffix[i].lang) == 0 ) && (strstr(norm->flag, Quffix[i].flag) != NULL))
+	 || ((norm->flag == NULL) && (strcmp(norm->lang, Quffix[i].lang) == 0 ) && (strchr(Quffix[i].flag, (int)'.') != NULL))
+	 ) {
+      if (Quffix[i].compile) {
+	err = DpsUniRegComp(&(Quffix[i].reg), Quffix[i].mask);
+	if(err){
+	  DpsUniRegFree(&(Quffix[i].reg));
+	  return;
+	}
+	Quffix[i].compile = 0;
+      }
+      err = DpsUniRegExec(&(Quffix[i].reg), wword->uword);
+      if (err) {
+	w.len = DpsUniLen(wword->uword) - Quffix[i].findlen + Quffix[i].replen;
+	if ( ( (w.word = DpsRealloc(w.word, 14 * w.len + 1)) == NULL) ||
+	     ( (w.uword = DpsRealloc(w.uword, (w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
+	  DPS_FREE(w.word); DPS_FREE(w.uword);
+	  return;
+	}
+	  
+	bzero((void*)w.uword, (w.len + 1) * sizeof(dpsunicode_t));
+
+	DpsUniStrNCpy(w.uword, r_word, DpsUniLen(r_word) - Quffix[i].findlen);
+	DpsUniStrCat(w.uword, Quffix[i].repl);
+
+	DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(dpsunicode_t) * (w.len + 1));
+	w.crcword = DpsStrHash32(w.word);
+	w.order = wword->order;
+	w.count = 0;
+	w.origin = DPS_WORD_ORIGIN_SPELL;
+	DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
+      }
+    }
+  }
+  DPS_FREE(w.word); DPS_FREE(w.uword);
+}
+
+
 __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEWORD *wword) {
   DPS_SPELL **norm, **cur;
   DPS_WIDEWORDLIST *result, *syn = NULL;
@@ -1321,7 +1696,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	  DpsWideWordListAdd(result, &(syn->Word[i]), DPS_WWL_LOOSE);
 	}
     
-      if (sp) { DpsAllFormsWord(Indexer, *cur, result, wword->order); }
+      if (sp) { DpsAllFormsWord(Indexer, *cur, result, wword->order); 
+	if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, *cur, wword);
+      }
       if (syn != NULL) {
 	for(i = 0; i < syn->nwords; i++) {
 	  PS.nspell = 0;
@@ -1342,7 +1719,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    w.origin = DPS_WORD_ORIGIN_ACCENT;
 	    DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
 	    asp.word = aw;
-	    if (sp) DpsAllFormsWord(Indexer, &asp, result, wword->order);
+	    if (sp) { DpsAllFormsWord(Indexer, &asp, result, wword->order);
+	      if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, &asp, wword);
+	    }
 	  }
 	  DPS_FREE(aw);
 	  if (zz == 0) {
@@ -1375,7 +1754,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	  DpsWideWordListAdd(result, &(syn->Word[i]), DPS_WWL_LOOSE);
 	}
     
-      if (sp) { DpsAllFormsWord(Indexer, p_sp, result, wword->order); }
+      if (sp) { DpsAllFormsWord(Indexer, p_sp, result, wword->order); 
+	if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, p_sp, wword);
+      }
       if (syn != NULL) {
 	for(i = 0; i < syn->nwords; i++) {
 	  PS.nspell = 0;
@@ -1396,7 +1777,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    w.origin = DPS_WORD_ORIGIN_ACCENT; 
 	    DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
 	    asp.word = aw;
-	    if (sp) DpsAllFormsWord(Indexer, &asp, result, wword->order);
+	    if (sp) { DpsAllFormsWord(Indexer, &asp, result, wword->order);
+	      if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, p_sp, wword);
+	    }
 	  }
 	  DPS_FREE(aw);
 	  if (zz == 0) {

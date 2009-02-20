@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2004 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -31,19 +31,23 @@ extern __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms(DPS_AGENT *Indexer, DPS
 extern __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV *Conf, const char *lang, const char *charset, const char *filename);
 extern __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, const char *charset, 
 						  const char *filename, int skip_noflag, const char *first_letters);
+extern __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV *Conf, const char *lang, const char *charset, const char *filename);
 
 extern __C_LINK void __DPSCALL DpsSortDictionary(DPS_SPELLLIST *);
 extern __C_LINK void __DPSCALL DpsSortAffixes(DPS_AFFIXLIST *, DPS_SPELLLIST *);
+extern __C_LINK void __DPSCALL DpsSortQuffixes(DPS_QUFFIXLIST *, DPS_SPELLLIST *);
 
 extern int  DpsSpellAdd(DPS_SPELLLIST *, const dpsunicode_t *word, const char *flag, const char *lang);
 extern int  DpsAffixAdd(DPS_AFFIXLIST *, const char *flag, const char * lang, const dpsunicode_t *mask, 
 			const dpsunicode_t *find, const dpsunicode_t *repl, int type);
+extern int  DpsQuffixAdd(DPS_QUFFIXLIST *, const char *flag, const char * lang, const dpsunicode_t *mask, const dpsunicode_t *find, const dpsunicode_t *repl);
 
 extern int  DpsSelectSpellLang(DPS_ENV *Conf, char *lang);
 extern void DpsSelectLang(DPS_AGENT *Indexer, char *lang);
 
 extern void DpsSpellListFree(DPS_SPELLLIST *);
 extern void DpsAffixListFree(DPS_AFFIXLIST *);
+extern void DpsQuffixListFree(DPS_QUFFIXLIST *);
 
 extern void DpsUniRegCompileAll(DPS_ENV *Conf);
 

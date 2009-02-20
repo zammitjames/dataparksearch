@@ -306,6 +306,9 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	  for (s = (s == NULL) ? url->hostinfo : s + 1; *s; s++) *s = dps_tolower(*s);
 	}
 	if (url->schema != NULL) for (s = url->schema; *s; s++) *s = dps_tolower(*s);
+
+/*	fprintf(stderr, "url: .path: %s port:%d\n", url->path, url->port);*/
+
 #ifdef WITH_PARANOIA
 	DpsViolationExit(-1, paran);
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -170,7 +170,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			break;
 		case DPS_MATCH_BEGIN:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
-			slen=dps_strlen(Match->pattern);
+			slen = dps_strlen(DPS_NULL2EMPTY(Match->pattern));
 			if(Match->case_sense){
 				res=strncasecmp(Match->pattern,string,slen);
 			}else{

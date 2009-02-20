@@ -1061,6 +1061,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	if(Env->Spells.nspell) {
 		DpsSortDictionary(&Env->Spells);
 		DpsSortAffixes(&Env->Affixes, &Env->Spells);
+		DpsSortQuffixes(&Env->Quffixes, &Env->Spells);
 	}
 	DpsSynonymListSort(&Env->Synonyms);
 	DpsAcronymListSort(&Env->Acronyms);
