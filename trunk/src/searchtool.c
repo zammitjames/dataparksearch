@@ -3187,6 +3187,7 @@ static size_t DpsUniSpaceCnt(dpsunicode_t *s) {
 
 
 dpsunicode_t *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *ustr, const char *lang) {
+        DPS_DSTR        S;
 	DPS_CHARSET     *tis_cs;
 	DPS_CONV        uni_tis, tis_uni;
 #if defined(CHASEN) || defined(MECAB)
@@ -3198,7 +3199,9 @@ dpsunicode_t *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *ustr, const char *
 	DPS_CHARSET	*sys_int;
 	size_t          dstlen = DpsUniLen(ustr);
 	size_t          bestparts = dstlen, curparts;
-	dpsunicode_t    *ja_seg = NULL, *zh_seg = NULL, *ko_seg = NULL, *th_seg = NULL;
+	dpsunicode_t    *ja_seg = NULL, *zh_seg = NULL, *ko_seg = NULL, *th_seg = NULL, *best_seg, *toseg;
+	dpsunicode_t    *lt, *tok;
+	int             have_bukva_forte;
 
 	if (dstlen < 2) return ustr;
 
@@ -3215,91 +3218,103 @@ dpsunicode_t *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *ustr, const char *
 	DpsConvInit(&eucjp_uni, eucjp_cs, sys_int, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
 #endif
 
+	DpsDSTRInit(&S, 4096);
+
+	for(tok = DpsUniGetToken(ustr, &lt, &have_bukva_forte, 1); 
+	    tok ; 
+	    tok = DpsUniGetToken(NULL, &lt, &have_bukva_forte, 1) ) {
+
+	  dstlen = lt - tok;
+	  toseg = DpsUniNDup(tok, dstlen);
 
 #if defined(CHASEN) || defined(MECAB)
 
-	if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "ja", 2)) {
-	  eucstr = (char*)DpsMalloc(14 * dstlen + 1);
-	  if (eucstr == NULL) return NULL;
-	  DpsConv(&uni_eucjp, eucstr, 14 * dstlen + 1, (char*)ustr, (dstlen + 1) * sizeof(dpsunicode_t));
+	  if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "ja", 2)) {
+	    eucstr = (char*)DpsMalloc(14 * dstlen + 1);
+	    if (eucstr == NULL) { DpsDSTRFree(&S); return NULL; }
+	    DpsConv(&uni_eucjp, eucstr, 14 * dstlen + 1, (char*)toseg, (dstlen) * sizeof(dpsunicode_t));
 
 #ifdef CHASEN
-	  DPS_GETLOCK(Indexer, DPS_LOCK_SEGMENTER);
-	  eucstr_seg = chasen_sparse_tostr(eucstr);
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_SEGMENTER);
+	    DPS_GETLOCK(Indexer, DPS_LOCK_SEGMENTER);
+	    eucstr_seg = chasen_sparse_tostr(eucstr);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_SEGMENTER);
 #else
-	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 #ifdef HAVE_PTHREADS
-	  mecab_lock(Indexer->Conf->mecab);
+	    mecab_lock(Indexer->Conf->mecab);
 #endif
-	  eucstr_seg = mecab_sparse_tostr(Indexer->Conf->mecab, eucstr);
+	    eucstr_seg = mecab_sparse_tostr(Indexer->Conf->mecab, eucstr);
 #ifdef HAVE_PTHREADS
-	  mecab_unlock(Indexer->Conf->mecab);
+	    mecab_unlock(Indexer->Conf->mecab);
 #endif
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 #endif
 
-	  reslen = dps_strlen(eucstr_seg) + 1;
-	  ja_seg = (dpsunicode_t*)DpsMalloc(reslen * sizeof(dpsunicode_t));
-	  if (ja_seg == NULL) {
+	    reslen = dps_strlen(eucstr_seg) + 1;
+	    ja_seg = (dpsunicode_t*)DpsMalloc(reslen * sizeof(dpsunicode_t));
+	    if (ja_seg == NULL) {
+	      DPS_FREE(eucstr);DpsDSTRFree(&S);
+	      return NULL;
+	    }
+	    DpsConv(&eucjp_uni, (char*)ja_seg, reslen * sizeof(dpsunicode_t), eucstr_seg, reslen);
 	    DPS_FREE(eucstr);
-	    return NULL;
 	  }
-	  DpsConv(&eucjp_uni, (char*)ja_seg, reslen * sizeof(dpsunicode_t), eucstr_seg, reslen);
-	  DPS_FREE(eucstr);
-	}
 #endif
-	if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "zh", 2)) {
-	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-	  zh_seg = DpsSegmentByFreq(&Indexer->Conf->Chi, ustr);
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	}
+	  if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "zh", 2)) {
+	    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	    zh_seg = DpsSegmentByFreq(&Indexer->Conf->Chi, toseg);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	  }
 	
-	if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "th", 2)) {
-	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-	  th_seg = DpsSegmentByFreq(&Indexer->Conf->Thai, ustr);
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	}
+	  if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "th", 2)) {
+	    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	    th_seg = DpsSegmentByFreq(&Indexer->Conf->Thai, toseg);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	  }
 
-	if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "ko", 2)) {
-	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-	  ko_seg = DpsSegmentByFreq(&Indexer->Conf->Korean, ustr);
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	}
+	  if (lang == NULL || *lang == '\0' || !strncasecmp(lang, "ko", 2)) {
+	    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	    ko_seg = DpsSegmentByFreq(&Indexer->Conf->Korean, toseg);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	  }
 
-	if (ja_seg != NULL) {
-	  curparts = DpsUniSpaceCnt(ja_seg);
-	  if (curparts && (curparts < bestparts)) {
-	    DPS_FREE(ustr); ustr = ja_seg; bestparts = curparts;
-	  } else {
-	    DPS_FREE(ja_seg);
+	  if (ja_seg != NULL) {
+	    curparts = DpsUniSpaceCnt(ja_seg);
+	    if (curparts && (curparts < bestparts)) {
+	      DPS_FREE(toseg); toseg = ja_seg; bestparts = curparts;
+	    } else {
+	      DPS_FREE(ja_seg);
+	    }
 	  }
-	}
-	if (zh_seg != NULL) {
-	  curparts = DpsUniSpaceCnt(zh_seg);
-	  if (curparts && (curparts < bestparts)) {
-	    DPS_FREE(ustr); ustr = zh_seg; bestparts = curparts;
-	  } else {
-	    DPS_FREE(zh_seg);
+	  if (zh_seg != NULL) {
+	    curparts = DpsUniSpaceCnt(zh_seg);
+	    if (curparts && (curparts < bestparts)) {
+	      DPS_FREE(toseg); toseg = zh_seg; bestparts = curparts;
+	    } else {
+	      DPS_FREE(zh_seg);
+	    }
 	  }
-	}
-	if (ko_seg != NULL) {
-	  curparts = DpsUniSpaceCnt(ko_seg);
-	  if (curparts && (curparts < bestparts)) {
-	    DPS_FREE(ustr); ustr = ko_seg; bestparts = curparts;
-	  } else {
-	    DPS_FREE(ko_seg);
+	  if (ko_seg != NULL) {
+	    curparts = DpsUniSpaceCnt(ko_seg);
+	    if (curparts && (curparts < bestparts)) {
+	      DPS_FREE(toseg); toseg = ko_seg; bestparts = curparts;
+	    } else {
+	      DPS_FREE(ko_seg);
+	    }
 	  }
-	}
-	if (th_seg != NULL) {
-	  curparts = DpsUniSpaceCnt(th_seg);
-	  if (curparts && (curparts < bestparts)) {
-	    DPS_FREE(ustr); ustr = th_seg; bestparts = curparts;
-	  } else {
-	    DPS_FREE(th_seg);
+	  if (th_seg != NULL) {
+	    curparts = DpsUniSpaceCnt(th_seg);
+	    if (curparts && (curparts < bestparts)) {
+	      DPS_FREE(toseg); toseg = th_seg; bestparts = curparts;
+	    } else {
+	      DPS_FREE(th_seg);
+	    }
 	  }
+	  DpsDSTRAppendUniWithSpace(&S, toseg);
+	  DPS_FREE(toseg)
 	}
-	return ustr;
+	DPS_FREE(ustr);
+	return (dpsunicode_t *)S.data;
 }
 
 
