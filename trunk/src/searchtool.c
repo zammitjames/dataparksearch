@@ -1885,7 +1885,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 /*  int cnt_pas;*/
   double Rbc;
   dps_uint4 *R, *D;
-  register double xy, xy_wf;
+  register double xy_wf;
   register int xy_o, nsec;
 
   TRACE_IN(query, "DpsGroupByURLFull");
@@ -1949,12 +1949,9 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 
   xy_o = DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON);
   for(xy_wf = 0, i = 0; i < nsections; i++) xy_wf += wf[i];
-/*  fprintf(stderr, " *** R.xy_o: %d\n", xy_o);*/
-  Rbc = DpsOriginWeightFull(DPS_WORD_ORIGIN_QUERY) * (double)xy_o * xy_wf;
-/*  fprintf(stderr, " *** Rbc: %f\n", Rbc);*/
-/*  cnt_pas = Rbc / 1000 + 1;*/
+  Rbc = /*DpsOriginWeightFull(DPS_WORD_ORIGIN_QUERY) **/ (double)xy_o * xy_wf;
 
-  xy = (xy_o = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin));
+  xy_o = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin);
   nsec = wf[wordsec]; D[DPS_N_ADD + wordsec] = 1;
 
 /**********************************************/
@@ -1996,7 +1993,6 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       /* Same document */
       register int w_origin = Res->WWList.Word[wordnum].origin;
       register int a = DpsOriginWeightFull(w_origin);
-      xy += a;
       xy_o |= a;
       if (D[DPS_N_ADD + wordsec] == 0) nsec += wf[wordsec];
       D[DPS_N_ADD + wordsec]++;
@@ -2062,14 +2058,14 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 /*	    fprintf(stderr, "** URL_ID: %d [phr_n:%d]\n", Crd[j].url_id, phr_n);*/
 /* fprintf(stderr, " +++ xy: %f  xy_o: %d[x%x]  phr_n: %d  origin: %d\n", xy, xy_o, xy_o, phr_n, DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON));*/
-      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n ) ) *  nsec , D
+      Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, xy_o *  nsec , D
 #ifdef WITH_REL_TRACK
 					     , &Track[j].y
 #endif
 					     );
 #ifdef WITH_REL_TRACK
       Track[j].x = Rbc;
-      Track[j].xy = ((xy * xy_o) / phr_n) * nsec;
+      Track[j].xy = xy_o * nsec;
 #endif
       j++;
 
@@ -2093,7 +2089,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	if (wordorder == 0) {
 	  cur_order = 0; cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY);
 	} else cur_order = -1; 
-	xy = (xy_o = DpsOriginWeightFull(w_origin));
+	xy_o = DpsOriginWeightFull(w_origin);
       }
       nsec = wf[wordsec]; D[DPS_N_ADD + wordsec] = 1;
     }
@@ -2132,14 +2128,14 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	
   Res->CoordList.ncoords = j + 1;
 	
-  Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, ((xy * xy_o) / (phr_n )) * nsec, D
+  Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, xy_o * nsec, D
 #ifdef WITH_REL_TRACK
 					 , &Track[j].y
 #endif
 					 );
 #ifdef WITH_REL_TRACK
   Track[j].x = Rbc;
-  Track[j].xy = ((xy * xy_o) / phr_n) * nsec;
+  Track[j].xy = xy_o * nsec;
   Res->CoordList.Track = (DPS_URLTRACK*)DpsRealloc(Res->CoordList.Track, Res->CoordList.ncoords * sizeof(*Res->CoordList.Track));
 #endif
 

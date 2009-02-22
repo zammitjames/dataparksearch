@@ -43,7 +43,7 @@ wordless/P
 specify <command>Affix</command> and <command>Spell</command> commands in <filename>search.htm</filename>
 file. The format of commands:
 		<programlisting>
-Affix [lang] [charset] [ispell affixes file name]
+Affix [lang] [charset] [ispell affix file name]
 Spell [lang] [charset] [ispell dictionary filename]
 </programlisting>
 </para>
@@ -115,9 +115,8 @@ line:</para>
 new words will be considered as words with correct spelling. The only
 really incorrect words will remain.</para>
 
-
-
 	</sect3>
+
 
 <sect3 id="where-to-get-ispell">
 <title>Where to get Ispell files</title>
@@ -134,5 +133,19 @@ See <xref linkend="get"/>.
 
 </sect3>
 
+
+<sect3 id="quffix">
+<title>Query words modification</title>
+<indexterm><primary>Command</primary><secondary>Quffix</secondary></indexterm>
+	<para><programlisting>
+Quffix [lang] [charset] [ispell-like suffix file name]
+</programlisting>
+The <command>Quffix</command> command is similar to <command>Affix</command> command described above, except that these rules apply to the query words, bot not to the normal word forms
+as it is done for <command>Affix</command> command. The file loaded with this command must contain only suffix rules (in terms of ispell affix files).
+</para>
+<para>This command is suitable, for example, to specify the rules to switch from one part of speech to an another for the Russian language when it is appropriate.
+</para>
+
+</sect3>
 
 </sect2>

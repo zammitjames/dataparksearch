@@ -128,4 +128,17 @@ http
 
 </sect3>
 
+<sect3 id="quffix">
+<title>Модификация слов поисковых запросов</title>
+<indexterm><primary>Команда</primary><secondary>Quffix</secondary></indexterm>
+	<para><programlisting>
+Quffix [lang] [charset] [ispell-like suffix file name]
+</programlisting>
+Команда <command>Quffix</command> похожа на команду <command>Affix</command>, описанную выше, за исключением того, что эти правила применяются к словам, указанным в запросе, а не к их
+нормальным формам, как это происходит для команды <command>Affix</command>. Загружаемый файл должен содержать только суффиксные правила (в терминах афиксных файлов ispell).
+</para>
+<para>Эта команда предназначена, например, для указания правил перехода от одной части речи к другой в русском языке, когда это необходимо.
+</para>
+</sect3>
+
 </sect2>

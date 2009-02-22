@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* Quffix command has been added.
 	* Searchd cleans-up now the search cache on config loading/reloading.
 	* A bug in stored check-up has been fixed.
 	* Time zone processing has been added for Last-Modified header and meta.

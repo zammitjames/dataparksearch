@@ -57,7 +57,7 @@
 
 __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
   unsigned int hash;
-  size_t filenamelen;
+  size_t filenamelen, z;
   ssize_t wr;
   DPS_BASEITEM  *hTable;
 #ifdef DEBUG_SEARCH
@@ -182,83 +182,89 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
     DpsLog(P->A, DPS_LOG_EXTRA, "OpenBase1 %03X in %.5f sec.", P->FileNo, (float)total_ticks / 1000);
 #endif
 
-  /* search rec_id */
-    if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)hash * sizeof(DPS_BASEITEM), SEEK_SET)) == (dps_uint8)-1) {
-    DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s", P->Ifilename);
-    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
-    TRACE_OUT(P->A);
-    return DPS_ERROR;
-  }
-  if (read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) != sizeof(DPS_BASEITEM)) {
-    DpsLog(P->A, DPS_LOG_ERROR, "{%s:%d} Can't read index for file %s seek:%ld hash: %u (%d)", 
-	   __FILE__, __LINE__, P->Ifilename, P->CurrentItemPos, hash, hash);
-    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
-    TRACE_OUT(P->A);
-    return DPS_ERROR;
-  }
+    for (z = 0; z < 3; z++) {
 
-#ifdef DEBUG_SEARCH
-    stop_ticks = DpsStartTimer();
-    total_ticks = stop_ticks - start_ticks;
-    DpsLog(P->A, DPS_LOG_EXTRA, "OpenBase2 %03X in %.5f sec.", P->FileNo, (float)total_ticks / 1000);
-#endif
-
-  if (P->Item.rec_id == P->rec_id || P->Item.rec_id == 0) P->mishash = 0;
-  else P->mishash = 1;
-  P->PreviousItemPos = P->CurrentItemPos;
-  if (P->mishash)
-    while((P->Item.next != 0) && (P->Item.rec_id != P->rec_id)) {
-      P->PreviousItemPos = P->CurrentItemPos;
-      P->CurrentItemPos = P->Item.next;
-      if (lseek(P->Ifd, (off_t)P->CurrentItemPos, SEEK_SET) == (off_t)-1) {
-	DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s", P->Ifilename);
+      /* search rec_id */
+      if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)hash * sizeof(DPS_BASEITEM), SEEK_SET)) == (dps_uint8)-1) {
+	DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s", P->Ifilename);
 	DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	TRACE_OUT(P->A);
 	return DPS_ERROR;
       }
-      if ((wr = read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
-	if (wr == 0) {
-	  DpsLog(P->A, DPS_LOG_ERROR, "Possible corrupted hash chain for file %s, trying to restore (%s:%d)", 
-		 P->Ifilename, __FILE__, __LINE__);
-	  if (lseek(P->Ifd, (off_t)P->PreviousItemPos, SEEK_SET) == (off_t)-1) {
-	    DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+      if (read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) != sizeof(DPS_BASEITEM)) {
+	DpsLog(P->A, DPS_LOG_ERROR, "{%s:%d} Can't read index for file %s seek:%ld hash: %u (%d)", 
+	       __FILE__, __LINE__, P->Ifilename, P->CurrentItemPos, hash, hash);
+	DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+	TRACE_OUT(P->A);
+	return DPS_ERROR;
+      }
+
+#ifdef DEBUG_SEARCH
+      stop_ticks = DpsStartTimer();
+      total_ticks = stop_ticks - start_ticks;
+      DpsLog(P->A, DPS_LOG_EXTRA, "OpenBase2 %03X in %.5f sec.", P->FileNo, (float)total_ticks / 1000);
+#endif
+
+      if (P->Item.rec_id == P->rec_id || P->Item.rec_id == 0) P->mishash = 0;
+      else P->mishash = 1;
+      P->PreviousItemPos = P->CurrentItemPos;
+      if (P->mishash)
+	while((P->Item.next != 0) && (P->Item.rec_id != P->rec_id)) {
+	  P->PreviousItemPos = P->CurrentItemPos;
+	  P->CurrentItemPos = P->Item.next;
+	  if (lseek(P->Ifd, (off_t)P->CurrentItemPos, SEEK_SET) == (off_t)-1) {
+	    DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s", P->Ifilename);
 	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	    TRACE_OUT(P->A);
 	    return DPS_ERROR;
 	  }
 	  if ((wr = read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
-	    DpsLog(P->A, DPS_LOG_ERROR, "Can't read previous pos for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
-	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
-	    TRACE_OUT(P->A);
-	    return DPS_ERROR;
-	  }
-	  P->Item.next = 0;
-	  if (lseek(P->Ifd, (off_t)P->PreviousItemPos, SEEK_SET) == (off_t)-1) {
-	    DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
-	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
-	    TRACE_OUT(P->A);
-	  return DPS_ERROR;
-	  }
-	  if ((wr = write(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
-	    DpsLog(P->A, DPS_LOG_ERROR, "Can't write previous pos for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
-	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
-	    TRACE_OUT(P->A);
-	    return DPS_ERROR;
-	  }
+	    if (wr == 0) {
+	      DpsLog(P->A, DPS_LOG_ERROR, "Possible corrupted hash chain for file %s, trying to restore (%s:%d)", 
+		     P->Ifilename, __FILE__, __LINE__);
+	      if (lseek(P->Ifd, (off_t)P->PreviousItemPos, SEEK_SET) == (off_t)-1) {
+		DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+		DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+		TRACE_OUT(P->A);
+		return DPS_ERROR;
+	      }
+	      if ((wr = read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
+		DpsLog(P->A, DPS_LOG_ERROR, "Can't read previous pos for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+		DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+		TRACE_OUT(P->A);
+		return DPS_ERROR;
+	      }
+	      P->Item.next = 0;
+	      if (lseek(P->Ifd, (off_t)P->PreviousItemPos, SEEK_SET) == (off_t)-1) {
+		DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+		DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+		TRACE_OUT(P->A);
+		return DPS_ERROR;
+	      }
+	      if ((wr = write(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
+		DpsLog(P->A, DPS_LOG_ERROR, "Can't write previous pos for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+		DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+		TRACE_OUT(P->A);
+		return DPS_ERROR;
+	      }
+	      goto search_again;
 	
-	} else {
-	  DpsLog(P->A, DPS_LOG_ERROR, "Can't read hash chain for file %s %d of %d bytes (%s:%d)", 
-		 P->Ifilename, wr, sizeof(DPS_BASEITEM), __FILE__, __LINE__);
-	  DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
-	  TRACE_OUT(P->A);
-	  return DPS_ERROR;
-	}
-      }
+	    } else {
+	      DpsLog(P->A, DPS_LOG_ERROR, "Can't read hash chain for file %s %d of %d bytes (%s:%d)", 
+		     P->Ifilename, wr, sizeof(DPS_BASEITEM), __FILE__, __LINE__);
+	      DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+	      TRACE_OUT(P->A);
+	      return DPS_ERROR;
+	    }
+	  }
 #ifdef DEBUG_SEARCH
-      stop_ticks = DpsStartTimer();
-      total_ticks = stop_ticks - start_ticks;
-      DpsLog(A, DPS_LOG_EXTRA, "OpenBase3 %03X in %.5f sec.", P->FileNo, (float)total_ticks / 1000);
+	  stop_ticks = DpsStartTimer();
+	  total_ticks = stop_ticks - start_ticks;
+	  DpsLog(A, DPS_LOG_EXTRA, "OpenBase3 %03X in %.5f sec.", P->FileNo, (float)total_ticks / 1000);
 #endif
+	}
+      break;
+    search_again:;
     }
   P->opened = 1;
   P->mode = mode;
