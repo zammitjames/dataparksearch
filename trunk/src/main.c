@@ -897,11 +897,12 @@ static void * thread_main(void *arg){
           }
 
           if(res == DPS_OK || res == DPS_NOTARGET) {  /* Possible after bad startup */
-               res=DpsIndexNextURL(Indexer);
+               res = DpsIndexNextURL(Indexer);
 	  }
 	  DpsAgentSetAction(Indexer, res);
 
           switch(res){
+	       case DPS_RELOADCONFIG:
                case DPS_OK:
                     if(i_sleep){
                          DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
@@ -988,7 +989,7 @@ static void * thread_main(void *arg){
           }
      }
 
-     if(res!=DPS_ERROR){
+     if(res != DPS_ERROR){
           time_t sec;
           float M = 0.0, K = 0.0;
 
