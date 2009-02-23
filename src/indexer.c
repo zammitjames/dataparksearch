@@ -1784,58 +1784,58 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		}
 /*		DpsExecActions(Indexer, Doc);*/
 		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
-	}
+	
 
-	if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {
-	  if ((DPS_OK == (result = DpsStoreHrefs(Indexer))) && Indexer->Flags.collect_links  
-	      && (status == 200 || status == 206 || status == 302) )
-	    result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_DELETE);
-	}
+		if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {
+		  if ((DPS_OK == (result = DpsStoreHrefs(Indexer))) && Indexer->Flags.collect_links  
+		      && (status == 200 || status == 206 || status == 302) )
+		    result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_DELETE);
+		}
 
-	if(result!=DPS_OK){
-	        DPS_FREE(origurl); DPS_FREE(aliasurl);
-		DpsDocFree(Doc);
-		if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
-		TRACE_OUT(Indexer);
+		if(result!=DPS_OK){
+		  DPS_FREE(origurl); DPS_FREE(aliasurl);
+		  DpsDocFree(Doc);
+		  if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
+		  TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(Indexer->handle, paran);
+		  DpsViolationExit(Indexer->handle, paran);
 #endif
-		return result;
-	}
+		  return result;
+		}
 
-	{
-	  DPS_CHARSET *parent_cs = DpsGetCharSetByID(Parent->charset_id), *doc_cs = DpsGetCharSetByID(Doc->charset_id);
-	  DPS_CONV     dc_parent;
-	  DPS_TEXTLIST *tlist = &Doc->TextList;
-	  char *src, *dst = NULL;
-	  size_t srclen = (size_t)DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
-	  size_t dstlen = (size_t)DpsVarListFindInt(&Parent->Sections, "Content-Length", 0);
+		{
+		  DPS_CHARSET *parent_cs = DpsGetCharSetByID(Parent->charset_id), *doc_cs = DpsGetCharSetByID(Doc->charset_id);
+		  DPS_CONV     dc_parent;
+		  DPS_TEXTLIST *tlist = &Doc->TextList;
+		  char *src, *dst = NULL;
+		  size_t srclen = (size_t)DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
+		  size_t dstlen = (size_t)DpsVarListFindInt(&Parent->Sections, "Content-Length", 0);
 
-	  DpsVarListReplaceInt(&Parent->Sections, "Content-Length", (int)(srclen + dstlen));
-	  DpsConvInit(&dc_parent, parent_cs, doc_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
-	  for(i = 0; i < tlist->nitems; i++) {
-	    DPS_TEXTITEM *Item = &tlist->Items[i];
-	    srclen = ((Item->len) ? Item->len : (dps_strlen(Item->str)) + 1);	/* with '\0' */
-	    dstlen = (16 * (srclen + 1)) * sizeof(char);	/* with '\0' */
-	    if ((dst = (char*)DpsRealloc(dst, dstlen + 1)) == NULL) {
-	      DPS_FREE(origurl); DPS_FREE(aliasurl);
-	      DpsDocFree(Doc);
-	      if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
-	      TRACE_OUT(Indexer);
+		  DpsVarListReplaceInt(&Parent->Sections, "Content-Length", (int)(srclen + dstlen));
+		  DpsConvInit(&dc_parent, parent_cs, doc_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
+		  for(i = 0; i < tlist->nitems; i++) {
+		    DPS_TEXTITEM *Item = &tlist->Items[i];
+		    srclen = ((Item->len) ? Item->len : (dps_strlen(Item->str)) + 1);	/* with '\0' */
+		    dstlen = (16 * (srclen + 1)) * sizeof(char);	/* with '\0' */
+		    if ((dst = (char*)DpsRealloc(dst, dstlen + 1)) == NULL) {
+		      DPS_FREE(origurl); DPS_FREE(aliasurl);
+		      DpsDocFree(Doc);
+		      if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
+		      TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(Indexer->handle, paran);
+		      DpsViolationExit(Indexer->handle, paran);
 #endif
-	      return DPS_ERROR;
-	    }
-	    src = Item->str;
-	    DpsConv(&dc_parent, dst, dstlen, src, srclen);
-	    Item->str = dst;
+		      return DPS_ERROR;
+		    }
+		    src = Item->str;
+		    DpsConv(&dc_parent, dst, dstlen, src, srclen);
+		    Item->str = dst;
 /*	    fprintf(stderr, "Section: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
-	    DpsTextListAdd(&Parent->TextList, Item);
-	    Item->str = src;
-	  }
-	  DPS_FREE(dst);
-	  
+		    DpsTextListAdd(&Parent->TextList, Item);
+		    Item->str = src;
+		  }
+		  DPS_FREE(dst);
+		} 
 	}
 	Parent->sd_cnt += 1 + Doc->sd_cnt;
 /*
