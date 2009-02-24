@@ -573,7 +573,6 @@ static time_t dps_tz_adjust(time_t timevalue, const char *tz_name) {
   } else if (strncasecmp(tz_name, "AM ", 3) == 0) {
     key.name = tz_name + 3;
   } else  key.name = tz_name;
-  fprintf(stderr, " -- TZ name: %s\n", key.name);
   tz = bsearch(&key, time_zones, sizeof(time_zones) / sizeof(time_zones[0]), sizeof(time_zones[0]), (qsort_cmp)dps_tz_cmp);
   if (tz == NULL) {
     return timevalue + add;
