@@ -71,7 +71,6 @@
        int sleep_threads  = 0; /* Number of sleepping threads      */
        int max_index_time = -1;
        int max_index_size = -1;
-       int cur_url_number = 0;
        int cfg_url_number = 0x7FFFFFFF;
 static char cname[1024] = "";
 static dps_uint8 add_servers = DPS_FLAG_ADD_SERV;
@@ -886,7 +885,7 @@ static void * thread_main(void *arg){
 #endif
 	    DpsVarListFree(&Indexer->Vars);
 	    DpsVarListAddLst(&Indexer->Vars, &Indexer->Conf->Vars, NULL, "*");
-	    /*if (Indexer->action != DPS_NOTARGET)*/ Indexer->action = DPS_OK;
+	    res = Indexer->action = DPS_OK;
 	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	  }
           
@@ -910,9 +909,6 @@ static void * thread_main(void *arg){
                          DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
                          i_sleep=0;
                     }
-		    DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
-		    cur_url_number++;
-		    DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
                     break;
 
                
@@ -922,10 +918,12 @@ static void * thread_main(void *arg){
 		 DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
 		 if(pop_rank && notarget == 0 && (Indexer->Conf->Flags.poprank_method == DPS_POPRANK_NEO)) {
 		   size_t z;
-		   Indexer->Flags.cmd = Indexer->Conf->Flags.cmd = DPS_IND_POPRANK;
-		   for (z = 0 ; z < maxthreads; z++) {
-		     if (ThreadIndexers[z]) {
-		       DpsAgentSetAction(ThreadIndexers[z], DPS_RELOADCONFIG);
+		   if (Indexer->Flags.cmd != DPS_IND_POPRANK) {
+		     Indexer->Flags.cmd = Indexer->Conf->Flags.cmd = DPS_IND_POPRANK;
+		     for (z = 0 ; z < maxthreads; z++) {
+		       if (ThreadIndexers[z]) {
+			 DpsAgentSetAction(ThreadIndexers[z], DPS_RELOADCONFIG);
+		       }
 		     }
 		   }
 		   notarget++;
