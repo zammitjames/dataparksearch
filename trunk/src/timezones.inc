@@ -1,6 +1,9 @@
 
 
 
+
+
+
 	{"A", -1, 3600}, 		/* 	Alpha Time Zone	Military	UTC + 1 hour*/
 	{"ACDT", -1, 10 * 3600 + 1800},	/*	Australian Central Daylight Time	Australia	UTC + 10:30 hours*/
 	{"ACST", -1, 9 *3600 + 1800}, 	/*	Australian Central Standard Time	Australia	UTC + 9:30 hours*/
@@ -160,7 +163,33 @@
 	{"WST", -1, 8 * 3600},		/*	Western Standard Time	Australia	UTC + 8 hours*/
 	{"X", 1, 11 * 3600},		/*	X-ray Time Zone	Military	UTC - 11 hours*/
 	{"Y", 1, 12 * 3600},		/*	Yankee Time Zone	Military	UTC - 12 hours*/
+	{"YDT", 1, 8 * 3600},
+	{"YST", 1, 9 * 3600},
+	{"YW1", 1, 0},
+	{"YW2", 1, 1 * 3600},
 	{"Z", 1, 0},			/*	Zulu Time Zone	Military	UTC*/
+	{"ZE10", -1, 10 * 3600},
+	{"ZE11", -1, 11 * 3600},
+	{"ZE12", -1, 12 * 3600},
+	{"ZE13", -1, 13 * 3600},
+	{"ZE2", -1, 2 * 3600},
+	{"ZE3", -1, 3 * 3600},
+	{"ZE3B", -1, 3 * 3600 + 1800},
+	{"ZE4", -1, 4 * 3600},
+	{"ZE4B", -1, 4 * 3600 + 1800},
+	{"ZE5", -1, 5 * 3600},
+	{"ZE5B", -1, 5 * 3600 + 1800},
+	{"ZE5C", -1, 5 * 3600 + 1800 + 900},
+	{"ZE6", -1, 6 * 3600},
+	{"ZE6B", -1, 6 * 3600 + 1800},
+	{"ZE7", -1, 7 * 3600},
+	{"ZE8", -1, 8 * 3600},
+	{"ZE9", -1, 9 * 3600},
+	{"ZE9B", -1, 9 * 3600 + 1800},
+	{"ZW1", 1, 1 * 3600},
+	{"ZW12", 1, 12 * 3600},
+	{"ZW2", 1, 2 * 3600},
+	{"ZW3", 1, 3 * 3600},
 /*	{"CDT", -1, 10 * 3600 + 1800}*/	/*	Central Daylight Time	Australia	UTC + 10:30 hours*/
 /*	{"CST", -1, 10 * 3600 + 1800},*/	/*	Central Summer Time	Australia	UTC + 10:30 hours*/
 /*	{"CST", -1, 9 * 3600 + 1800},*/		/*	Central Standard Time	Australia	UTC + 9:30 hours*/
