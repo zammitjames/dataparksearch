@@ -559,20 +559,27 @@ static DPS_TZ_OFFSET time_zones[] = {
 #include "timezones.inc"
 
 /* END Marker */
-	{NULL, 0, 0}
+/*	{NULL, 0, 0}*/
 };
 
 static time_t dps_tz_adjust(time_t timevalue, const char *tz_name) {
   DPS_TZ_OFFSET key, *tz;
+  time_t add = 0;
 
   if (tz_name == NULL) return timevalue;
-  key.name = tz_name;
+  if (strncasecmp(tz_name, "PM ", 3) == 0) {
+    add = 12 * 3600;
+    key.name = tz_name + 3;
+  } else if (strncasecmp(tz_name, "AM ", 3) == 0) {
+    key.name = tz_name + 3;
+  } else  key.name = tz_name;
+  fprintf(stderr, " -- TZ name: %s\n", key.name);
   tz = bsearch(&key, time_zones, sizeof(time_zones) / sizeof(time_zones[0]), sizeof(time_zones[0]), (qsort_cmp)dps_tz_cmp);
   if (tz == NULL) {
-    return timevalue;
+    return timevalue + add;
   }
-  if (tz->sign == 1) return timevalue + tz->offset;
-  return timevalue - tz->offset;
+  if (tz->sign == 1) return timevalue + tz->offset + add;
+  return timevalue - tz->offset + add;
 }
 
 
