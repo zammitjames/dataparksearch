@@ -360,7 +360,7 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 
     dps_snprintf(del_log_name, PATH_MAX, "%s%s", db->log_dir, "del-split.log");
 
-    if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
+    if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
       time_t t = time(NULL);
       struct tm *tim = localtime(&t);
       char time_pid[128];
