@@ -1622,7 +1622,7 @@ static DPS_CONFCMD commands[] =
 #include "commands.inc"
 	
 /* END Marker */
-	{NULL, 0, 0, 0}
+/*	{NULL, 0, 0, 0}*/
 };
 
 __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
