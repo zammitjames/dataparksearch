@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -608,7 +608,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 		char *end;
 		if(!str1[0])continue;
 		end=str1+dps_strlen(str1)-1;
-		while((end>=str1)&&(*end=='\r'||*end=='\n')){
+		while((end>=str1)&&(*end==CR_CHAR||*end==NL_CHAR)){
 			*end=0;if(end>str1)end--;
 		}
 		if(!str1[0])continue;
@@ -1089,6 +1089,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		DpsLog(Indexer,DPS_LOG_ERROR,"Unsupported Content-Encoding");
 /*		DpsVarListReplaceInt(&Doc->Sections,"Status",DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);*/
 	  }
+
+	  DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "before");
 	
 #ifdef WITH_PARSER
 	  /* Let's try to start external parser for this Content-Type */
@@ -1177,6 +1179,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	     || !strncasecmp(real_content_type, "application/xhtml+xml", 21)
 	     || !strncasecmp(real_content_type, "text/vnd.wap.wml", 16)
 	     ){
+			DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "bf_html");
 			DpsHTMLParse(Indexer,Doc);
 			DpsParseSections(Indexer, Doc);
 	  }else
@@ -1198,6 +1201,9 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 			DpsVarListReplaceInt(&Doc->Sections,"Status",DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);
 	  }
 	}
+
+	DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "after");
+
 	/* Guesser stuff */	
 	if(Indexer->Flags.nmaps && Doc->method != DPS_METHOD_DISALLOW) {
 	  register size_t t;
@@ -1548,7 +1554,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	      /* Check whether URL is disallowed by robots.txt */
 	      rule = DpsRobotRuleFind(Indexer, Server, Doc, &Doc->CurURL, 1, (alias) ? 1 : 0);
 	      if(rule) {
-		DpsLog(Indexer,DPS_LOG_WARN,"SubDoc.robots.txt: '%s %s'",(rule->cmd==DPS_METHOD_DISALLOW)?"Disallow":"Allow",rule->path);
+		DpsLog(Indexer,DPS_LOG_WARN,"SubDoc.robots.txt: '%s %s'",((rule->cmd==DPS_METHOD_DISALLOW)||(rule->cmd==DPS_METHOD_VISITLATER))?"Disallow":"Allow",rule->path);
 		if((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) )
 		  Doc->method = rule->cmd;
 	      }
@@ -2005,6 +2011,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		}
 		DPS_FREE(alstr);
 	}
+	DpsVarListReplaceInt(&Doc->Sections, "DomainLevel", Doc->CurURL.domain_level);
 /*	DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);*/
 	
 	
@@ -2173,9 +2180,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
-			const char *lang = NULL;
 			int skip_too_small;
-			char reason[PATH_MAX+1];
 		   	
 			min_size = (size_t)DpsVarListFindUnsigned(&Indexer->Vars, "MinDocSize", 0);
 			skip_too_small = (cont_len < min_size);
@@ -2197,66 +2202,72 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 #endif
 				return result;
 			}
-			/* Guesser was here */			
-			lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
-			
-			DpsParseURLText(Indexer, Doc);
-/*			DpsParseHeaders(Indexer, Doc);*/
-			{
-			  int m;
-			  if ((m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason)) != DPS_METHOD_NOINDEX) {
-			    char *subsection;
-			    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
-			    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
-			    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
-			    case DPS_METHOD_TAG:
-			      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
-			    case DPS_METHOD_CATEGORY:
-			      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
-			    }
-			    if (Doc->method != DPS_METHOD_HREFONLY) DpsPrepareWords(Indexer, Doc);
-			  } else Doc->method = m;
-			  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
-			}
-			
-			/* Remove StopWords */
-			DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
-			for(wordnum = 0; wordnum < Doc->Words.nwords; wordnum++) {
-				const dpsunicode_t	*w = Doc->Words.Word[wordnum].uword;
-				size_t		wlen = Doc->Words.Word[wordnum].ulen;
-				
-				if(wlen > Indexer->WordParam.max_word_len ||
-				   wlen < Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords, w, lang ) != NULL)
-				{
-					Doc->Words.Word[wordnum].coord=0;
-				}	
-			}
-			for(wordnum = 0; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
-				const dpsunicode_t	*w = Doc->CrossWords.CrossWord[wordnum].uword;
-				size_t		wlen = Doc->CrossWords.CrossWord[wordnum].ulen;
-				
-				if(wlen>Indexer->WordParam.max_word_len ||
-				   wlen<Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords,w, lang) != NULL)
-				{
-					Doc->CrossWords.CrossWord[wordnum].weight=0;
-				}	
-			}
-			DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
-			if (Indexer->Flags.collect_links && (status == 200 || status == 206 || status == 302) )
-			  if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_MARKTODEL))) {
-			    DpsDocFree(Doc);
-			    TRACE_OUT(Indexer);
-#ifdef WITH_PARANOIA
-			    DpsViolationExit(Indexer->handle, paran);
-#endif
-			    return result;
-			  }
 		}
-		DpsExecActions(Indexer, Doc);
-		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	}
+
+	/* Guesser was here */			
+			
+	DpsParseURLText(Indexer, Doc);
+	{
+	  char reason[PATH_MAX+1];
+	  int m;
+	  if ((m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason)) != DPS_METHOD_NOINDEX) {
+	    char *subsection;
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
+	    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
+	    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
+	    case DPS_METHOD_TAG:
+	      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
+	    case DPS_METHOD_CATEGORY:
+	      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
+	    }
+	    if (Doc->method != DPS_METHOD_HREFONLY) DpsPrepareWords(Indexer, Doc);
+	  } else Doc->method = m;
+	  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
+	}
+	
+	{
+	  size_t wordnum;
+	  const char *lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
+	  /* Remove StopWords */
+	  DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
+	  for(wordnum = 0; wordnum < Doc->Words.nwords; wordnum++) {
+	    const dpsunicode_t	*w = Doc->Words.Word[wordnum].uword;
+	    size_t		wlen = Doc->Words.Word[wordnum].ulen;
+				
+	    if(wlen > Indexer->WordParam.max_word_len ||
+	       wlen < Indexer->WordParam.min_word_len ||
+	       DpsStopListFind(&Indexer->Conf->StopWords, w, lang ) != NULL)
+	      {
+		Doc->Words.Word[wordnum].coord=0;
+	      }	
+	  }
+	  for(wordnum = 0; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
+	    const dpsunicode_t	*w = Doc->CrossWords.CrossWord[wordnum].uword;
+	    size_t		wlen = Doc->CrossWords.CrossWord[wordnum].ulen;
+	    
+	    if(wlen>Indexer->WordParam.max_word_len ||
+	       wlen<Indexer->WordParam.min_word_len ||
+	       DpsStopListFind(&Indexer->Conf->StopWords,w, lang) != NULL)
+	      {
+		Doc->CrossWords.CrossWord[wordnum].weight=0;
+	      }	
+	  }
+	  DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+	  if (Indexer->Flags.collect_links && (status == 200 || status == 206 || status == 302) )
+	    if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_MARKTODEL))) {
+	      DpsDocFree(Doc);
+	      TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+	      DpsViolationExit(Indexer->handle, paran);
+#endif
+	      return result;
+	    }
+	}
+
+	DpsExecActions(Indexer, Doc);
+	DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
+	
 
 	if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {
 	  if ((DPS_OK == (result = DpsStoreHrefs(Indexer))) && Indexer->Flags.collect_links  

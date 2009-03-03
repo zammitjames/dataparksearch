@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -653,7 +653,7 @@ static ssize_t fdgets(char *str, size_t size, int fd) {
 		if (!recv(fd, str + nbytes, 1, 0)) {
 			break;
 		} else {
-			if(str[nbytes]=='\n'){
+			if(str[nbytes]==NL_CHAR){
 				done=1;
 			}
 			nbytes++;
@@ -675,7 +675,7 @@ static ssize_t NNTPRecv(char *str, size_t sz, int fd) {
 #ifdef DEBUG_NNTP
 	{
 		char * s, ch;
-		for(s=str; *s && *s!='\r' && *s!='\n' && (s-str<sz) ; s++);
+		for(s=str; *s && *s!=CR_CHAR && *s!=NL_CHAR && (s-str<sz) ; s++);
 		ch=*s;*s='\0';
 		fprintf(stderr,"NNTPGet : NNTPRecv: '%s'\n",str);
 		*s=ch;
@@ -690,7 +690,7 @@ static ssize_t NNTPSend(char * str,size_t sz, int fd){
 #ifdef DEBUG_NNTP
 	{
 		char * s, ch;
-		for(s=str; *s && *s!='\r' && *s!='\n' && (s-str<sz) ; s++);
+		for(s=str; *s && *s!=CR_CHAR && *s!=NL_CHAR && (s-str<sz) ; s++);
 		ch=*s;*s='\0';
 		fprintf(stderr,"NNTPGet : NNTPSend: '%s'\n",str);
 		*s=ch;
@@ -1660,7 +1660,7 @@ int DpsGetURL(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc, const char *origurl) {
 	}
 	/* Put into mirror if required */
 	if ((mirror_period >= 0) && (!found_in_mirror)){
-		if(DpsMirrorPUT(Indexer, Doc, &Doc->CurURL)){
+	  if(DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, NULL)){
 			return DPS_ERROR;
 		}
 	}

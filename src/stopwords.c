@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -163,7 +163,7 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 	}
 	data[sb.st_size] = '\0';
 	str = data;
-	cur_n = strchr(str, '\n');
+	cur_n = strchr(str, NL_INT);
 	if (cur_n != NULL) {
 	  cur_n++;
 	  savebyte = *cur_n;
@@ -227,7 +227,7 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 		str = cur_n;
 		if (str != NULL) {
 		  *str = savebyte;
-		  cur_n = strchr(str, '\n');
+		  cur_n = strchr(str, NL_INT);
 		  if (cur_n != NULL) {
 		    cur_n++;
 		    savebyte = *cur_n;

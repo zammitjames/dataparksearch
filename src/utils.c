@@ -424,9 +424,9 @@ char * DpsGetStrToken(char * s,char ** last){
 				}
 				break;
 			case ' ':
-			case '\r':
-			case '\n':
-			case '\t':
+			case CR_CHAR:
+			case NL_CHAR:
+			case HT_CHAR:
 				if(lch==' '){
 					*s='\0';
 					*last=s+1;
@@ -1929,9 +1929,9 @@ void DpsUniRemoveDoubleSpaces(dpsunicode_t *ustr) {
 	for(u = e = ustr; *u; u++){
 		switch(*u){
 			case ' ':
-			case '\t':
-			case '\r':
-			case '\n':
+			case HT_INT:
+			case CR_INT:
+			case NL_INT:
 			case 0xA0: /* nbsp */
 				addspace = 1;
 				break;

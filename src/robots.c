@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -418,7 +418,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 }
 
 
-static DPS_ROBOT_RULE dps_host_disallow = {DPS_METHOD_DISALLOW, "No Host: directive found", 23};
+static DPS_ROBOT_RULE dps_host_disallow = {DPS_METHOD_VISITLATER, "No Host: directive found", 23};
 
 DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOCUMENT *Doc, DPS_URL *pURL, int make_pause, int aliased) {
         char l_rurl[PATH_MAX];
@@ -526,22 +526,13 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 			if(!strncmp(rurl /*DPS_NULL2EMPTY(URL->path)*/, robot->Rule[j].path, robot->Rule[j].len)) {
 			  DpsLog(Indexer, DPS_LOG_DEBUG, "ROBOTS path: %s, pathlen:%d URL: %s  cmd: %s", 
 				 robot->Rule[j].path, robot->Rule[j].len, rurl, DpsMethodStr(robot->Rule[j].cmd));
-			  if(robot->Rule[j].cmd!=DPS_METHOD_DISALLOW) {
-			    if (rurlen > PATH_MAX) DPS_FREE(rurl);
-			    DpsDocFree(&HostDoc);
+			  r = &robot->Rule[j];
+			  if (rurlen > PATH_MAX) DPS_FREE(rurl);
+			  DpsDocFree(&HostDoc);
 #ifdef WITH_PARANOIA
-			    DpsViolationExit(Indexer->handle, paran);
+			  DpsViolationExit(Indexer->handle, paran);
 #endif
-			    return NULL;
-			  } else {
-			    r = &robot->Rule[j];
-			    if (rurlen > PATH_MAX) DPS_FREE(rurl);
-			    DpsDocFree(&HostDoc);
-#ifdef WITH_PARANOIA
-			    DpsViolationExit(Indexer->handle, paran);
-#endif
-			    return r;
-			  }
+			  return r;
 			} else if (robot->Rule[j].cmd == DPS_METHOD_HOST) {
 			  char robohost[512];
 			  dps_snprintf(robohost, sizeof(robohost), "http://%s/", robot->Rule[j].path);
@@ -630,10 +621,10 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 	fprintf(stderr, "ROBOTS CONTENT: %s\n", content);
 */
 	s = content;
-	while (*s && (*s == '\n' || *s == '\r')) s++;
+	while (*s && (*s == NL_CHAR || *s == CR_CHAR)) s++;
 	lt = s;
-	while(*lt && (*lt != '\n') && (*lt != '\r')) lt++;
-	if (*lt == '\r') *lt++ = '\0';
+	while(*lt && (*lt != NL_CHAR) && (*lt != CR_CHAR)) lt++;
+	if (*lt == CR_CHAR) *lt++ = '\0';
 	if (*lt) *lt++ = '\0';
 
 
@@ -682,7 +673,7 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			e=s+9;DPS_SKIP(e," \t");s=e;
 			DPS_SKIPN(e," \t");*e=0;
 			if(s && *s) {
-			  if(AddRobotRule(Indexer, robot,DPS_METHOD_DISALLOW, s, 1)) {
+			  if(AddRobotRule(Indexer, robot, DPS_METHOD_VISITLATER, s, 1)) {
 				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
 					return(DPS_ERROR);
 			  }
@@ -725,8 +716,8 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 		  }
 		}
 		s = lt;
-		while(*lt && (*lt != '\n') && (*lt != '\r')) lt++;
-		if (*lt == '\r') *lt++ = '\0';
+		while(*lt && (*lt != NL_CHAR) && (*lt != CR_CHAR)) lt++;
+		if (*lt == CR_CHAR) *lt++ = '\0';
 		if (*lt) *lt++ = '\0';
 
 	}

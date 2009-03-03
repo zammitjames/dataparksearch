@@ -227,7 +227,7 @@ int DpsChineseListLoad(DPS_AGENT *Agent, DPS_CHINALIST *List, const char *charse
      }
      data[sb.st_size] = '\0';
      str = data;
-     cur_n = strchr(str, '\n');
+     cur_n = strchr(str, NL_INT);
      if (cur_n != NULL) {
        cur_n++;
        savebyte = *cur_n;
@@ -247,7 +247,7 @@ int DpsChineseListLoad(DPS_AGENT *Agent, DPS_CHINALIST *List, const char *charse
 	  str = cur_n;
 	  if (str != NULL) {
 	    *str = savebyte;
-	    cur_n = strchr(str, '\n');
+	    cur_n = strchr(str, NL_INT);
 	    if (cur_n != NULL) {
 	      cur_n++;
 	      savebyte = *cur_n;

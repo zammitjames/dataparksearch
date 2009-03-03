@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -147,7 +147,7 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	/* Bad response, return */
 	if(!Doc->Buf.content) {
 	  if (token < Doc->Buf.buf + Doc->Buf.size - 4) {
-	    if (token[2] == '\r') Doc->Buf.content = token + 4;
+	    if (token[2] == CR_CHAR) Doc->Buf.content = token + 4;
 	    else Doc->Buf.content = token + 2;
 	  } else {
 	    return;

@@ -290,8 +290,10 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	DPS_FREE(s);
 	if (url->hostname != NULL) {
 	  DpsRTrim(url->hostname, ".");
+	  url->domain_level = 1;
 	  for (s = url->hostname; *s; s++) {
 	    *s = dps_tolower(*s);
+	    if (*s == '.') url->domain_level++;
 	    if (strchr(",'\";", (int)*s)) {
 #ifdef WITH_PARANOIA
 	      DpsViolationExit(-1, paran);

@@ -2616,7 +2616,7 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 
 	if(DPS_OK!=(res=DpsSQLAsyncQuery(db,NULL,qbuf)))return res;
 	
-	if ((status >= 200 && status < 400) || (status >= 2200 && status <= 2304)) {
+	if ((status >= 200 && status < 400) || (status >= 2200 && status <= 2304) || (status == 0)) {
 	  const char *method = DpsVarListFindStr(&Indexer->Vars, "PopRankMethod", "Goo");
 	  if ((Indexer->Flags.poprank_postpone == 0) && (Indexer->Flags.collect_links) && (strcasecmp(method, "Neo") == 0)) {
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
@@ -2725,7 +2725,7 @@ WHERE rec_id=%s%s%s",
 	  return rc;
 	}
 	
-	if ((status >= 200 && status < 400) || (status >= 2200 && status <= 2304)) {
+	if ((status >= 200 && status < 400) || (status >= 2200 && status <= 2304) || (status == 0)) {
 	  const char *method = DpsVarListFindStr(&Indexer->Vars, "PopRankMethod", "Goo");
 	  if ((Indexer->Flags.poprank_postpone == 0) && (Indexer->Flags.collect_links) && (strcasecmp(method, "Neo") == 0)) {
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");

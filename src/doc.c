@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -506,7 +506,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	      *p = '\0';
 	      DpsRTrim((char*)cs, ";\t\"");
 	    }
-	    if ((p = strchr(cs, '\t'))) {
+	    if ((p = strchr(cs, HT_INT))) {
 	      *p = '\0';
 	      DpsRTrim((char*)cs, ";\"");
 	    }
@@ -517,7 +517,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	    *p = '\0';
 	    DpsRTrim((char*)content_type, ";\t");
 	  }
-	  if ((p = strchr(content_type, '\t'))) {
+	  if ((p = strchr(content_type, HT_INT))) {
 	    *p = '\0';
 	    DpsRTrim((char*)content_type, "; ");
 	  }

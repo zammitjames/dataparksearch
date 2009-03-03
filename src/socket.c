@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -212,7 +212,7 @@ int socket_read_line( DPS_CONN *connp ){
 		
 		if(read(connp->conn_fd, &(connp->buf[num_read_total]), 1) <= 0)
 			return -1;
-		if (connp->buf[num_read_total] == '\n')
+		if (connp->buf[num_read_total] == NL_CHAR)
 			break;
 		else if (connp->buf[num_read_total] == 0)
 			break;
