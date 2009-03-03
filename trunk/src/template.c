@@ -606,37 +606,37 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 	tok=GetHtmlTok(template,&lt);
 	while(tok){
 		if(!(strncasecmp(tok,"<!SET",5))){
-		        TemplateSet(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+		        TemplateSet(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!COPY",6))){
-			TemplateCopy(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+			TemplateCopy(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!IF",4))){
-			TemplateIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+			TemplateIf(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!IFLIKE", 8))) {
-			TemplateIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+			TemplateIf(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok, "<!ELSEIF", 8))) {
-			TemplateElseIf(Agent, vars, tok, &is); if (*lt == '\n') lt++;
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!ELIF",6))){
-			TemplateElseIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+			TemplateElseIf(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok, "<!ELIKE", 7))) {
-			TemplateElseIf(Agent, vars, tok, &is); if (*lt == '\n') lt++;
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok, "<!ELSELIKE", 10))) {
-			TemplateElseIf(Agent, vars, tok, &is); if (*lt == '\n') lt++;
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!ELSE",6))){
-			TemplateElse(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+			TemplateElse(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!ENDIF",7))){
-			TemplateEndIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+			TemplateEndIf(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!/IF",5))){
-			TemplateEndIf(Agent,vars,tok,&is); if (*lt == '\n') lt++;
+			TemplateEndIf(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(is.Items[is.pos].condition){
 			if(!(strncasecmp(tok,"<OPTION",7))){
@@ -851,7 +851,7 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
 			if (arg) DpsVarListReplaceStr(vars, tok, arg);
 		}else
-		  if((str[0] == 'm' || str[0] == 'M') && (str[1] == ' ' || str[1] == '\t')) {
+		  if((str[0] == 'm' || str[0] == 'M') && (str[1] == ' ' || str[1] == HT_CHAR)) {
 			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
 			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
 			if (arg) DpsVarListReplaceStr(vars, tok, arg);
@@ -924,7 +924,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	}
 	data[sb.st_size] = '\0';
 	str = data;
-	cur_n = strchr(str, '\n');
+	cur_n = strchr(str, NL_INT);
 	if (cur_n != NULL) {
 	  cur_n++;
 	  savebyte = *cur_n;
@@ -1008,7 +1008,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 					if(!strcasecmp(s+1,cursection) && cursection[0]){
 					  if (cur) {
 					    size_t seclen = dps_strlen(cur);
-					    if (cur[seclen - 1] == '\n') cur[seclen - 1] = '\0';
+					    if (cur[seclen - 1] == NL_CHAR) cur[seclen - 1] = '\0';
 					  }
 						DpsVarListReplaceStr(tmpl, cursection, cur ? cur : "");
 						cursection[0]='\0';
@@ -1045,7 +1045,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 		str = cur_n;
 		if (str != NULL) {
 		  *str = savebyte;
-		  cur_n = strchr(str, '\n');
+		  cur_n = strchr(str, NL_INT);
 		  if (cur_n != NULL) {
 		    cur_n++;
 		    savebyte = *cur_n;

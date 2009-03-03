@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1057,7 +1057,7 @@ static int DpsOracle8DisplayError(DPS_DB *db)
 			errbuf, (ub4) sizeof(errbuf), OCI_HTYPE_ERROR);
 		ptr=errbuf;
 		while(*ptr) {
-			if(*ptr=='\n')
+			if(*ptr==NL_CHAR)
 				*ptr='!';
 			++ptr;
 		}

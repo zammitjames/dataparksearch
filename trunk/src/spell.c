@@ -386,7 +386,7 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	}
 	data[sb.st_size] = '\0';
 	str = data;
-	cur_n = strchr(str, '\n');
+	cur_n = strchr(str, NL_INT);
 	if (cur_n != NULL) {
 	  cur_n++;
 	  savebyte = *cur_n;
@@ -402,8 +402,8 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	        flag = NULL;
 		s = str;
 		while(*s){
-			if(*s == '\r') *s = '\0';
-			if(*s == '\n') *s = '\0';
+			if(*s == CR_CHAR) *s = '\0';
+			if(*s == NL_CHAR) *s = '\0';
 			s++;
 		}
 		if((s=strchr(str,'/'))){
@@ -465,7 +465,7 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 		str = cur_n;
 		if (str != NULL) {
 		  *str = savebyte;
-		  cur_n = strchr(str, '\n');
+		  cur_n = strchr(str, NL_INT);
 		  if (cur_n != NULL) {
 		    cur_n++;
 		    savebyte = *cur_n;
@@ -686,7 +686,7 @@ char *d,*s;
 	d=dist;
 	s=src;
 	while(*s){
-		if((*s != ' ')&& (*s != '-') && (*s != '\t')){
+		if((*s != ' ')&& (*s != '-') && (*s != HT_CHAR)){
 			*d=*s;
 			d++;
 		}
@@ -761,7 +761,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
   }
   data[sb.st_size] = '\0';
   str = data;
-  cur_n = strchr(str, '\n');
+  cur_n = strchr(str, NL_INT);
   if (cur_n != NULL) {
     cur_n++;
     savebyte = *cur_n;
@@ -906,7 +906,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
     str = cur_n;
     if (str != NULL) {
       *str = savebyte;
-      cur_n = strchr(str, '\n');
+      cur_n = strchr(str, NL_INT);
       if (cur_n != NULL) {
 	cur_n++;
 	savebyte = *cur_n;
@@ -984,7 +984,7 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
   }
   data[sb.st_size] = '\0';
   str = data;
-  cur_n = strchr(str, '\n');
+  cur_n = strchr(str, NL_INT);
   if (cur_n != NULL) {
     cur_n++;
     savebyte = *cur_n;
@@ -1111,7 +1111,7 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
     str = cur_n;
     if (str != NULL) {
       *str = savebyte;
-      cur_n = strchr(str, '\n');
+      cur_n = strchr(str, NL_INT);
       if (cur_n != NULL) {
 	cur_n++;
 	savebyte = *cur_n;

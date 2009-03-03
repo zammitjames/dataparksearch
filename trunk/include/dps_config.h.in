@@ -589,6 +589,15 @@ typedef unsigned int dps_word;
 typedef unsigned int dps_uintptr_t;
 
 
+#define HT_CHAR (char)9
+#define NL_CHAR (char)10
+#define CR_CHAR	(char)13
+#define HT_INT 	(int)9
+#define NL_INT 	(int)10
+#define CR_INT 	(int)13
+
+
+
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif

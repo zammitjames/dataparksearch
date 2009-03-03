@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -269,7 +269,7 @@ static size_t DpsXMLErrorPos (DPS_XML_PARSER *p) {
   const char *beg = p->beg;
   const char *s;
   for (s = p->beg; s < p->cur; s++) {
-    if (s[0] == '\n')
+    if (s[0] == NL_CHAR)
       beg=s;
   }
   return(p->cur-beg);
@@ -279,7 +279,7 @@ static size_t DpsXMLErrorLineno (DPS_XML_PARSER *p) {
   size_t res = 0;
   const char *s;
   for (s=p->beg; s<p->cur; s++) {
-    if (s[0]=='\n')
+    if (s[0]==NL_CHAR)
       res++;
   }
   return(res);

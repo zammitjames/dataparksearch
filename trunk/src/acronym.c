@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2008 Datapark corp. All right reserved.
+/* Copyright (C) 2005-2009 Datapark corp. All right reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      }
      data[sb.st_size] = '\0';
      str = data;
-     cur_n = strchr(str, '\n');
+     cur_n = strchr(str, NL_INT);
      if (cur_n != NULL) {
        cur_n++;
        savebyte = *cur_n;
@@ -82,7 +82,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      DpsConvInit(&uni_lc, sys_int, Env->lcs, Env->CharsToEscape, DPS_RECODE_HTML);
 
      while(str != NULL) {
-          if(str[0]=='#'||str[0]==' '||str[0]=='\t'||str[0]=='\r'||str[0]=='\n') goto loop_continue;
+          if(str[0]=='#'||str[0]==' '||str[0]==HT_CHAR||str[0]==CR_CHAR||str[0]==NL_CHAR) goto loop_continue;
           
           if(!strncmp(str,"Charset:",8)){
                char * lasttok;
@@ -166,7 +166,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
 	  str = cur_n;
 	  if (str != NULL) {
 	    *str = savebyte;
-	    cur_n = strchr(str, '\n');
+	    cur_n = strchr(str, NL_INT);
 	    if (cur_n != NULL) {
 	      cur_n++;
 	      savebyte = *cur_n;

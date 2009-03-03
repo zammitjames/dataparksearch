@@ -1760,7 +1760,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	}
 	data[sb.st_size] = '\0';
 	str1 = data;
-	cur_n = strchr(str1, '\n');
+	cur_n = strchr(str1, NL_INT);
 	if (cur_n != NULL) {
 	  cur_n++;
 	  savebyte = *cur_n;
@@ -1774,7 +1774,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 		line++;
 		
 		if(str1[0]=='#') goto loop_continue;
-		for (end = str1 + (str1len = dps_strlen(str1)) - 1 ; (end>=str1) && (*end=='\r'||*end=='\n'||*end==' ') ; *end--='\0');
+		for (end = str1 + (str1len = dps_strlen(str1)) - 1 ; (end>=str1) && (*end==CR_CHAR||*end==NL_CHAR||*end==' ') ; *end--='\0');
 		if(!str1[0]) goto loop_continue;
 		
 		if(*end=='\\'){
@@ -1813,7 +1813,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 		str1 = cur_n;
 		if (str1 != NULL) {
 		  *str1 = savebyte;
-		  cur_n = strchr(str1, '\n');
+		  cur_n = strchr(str1, NL_INT);
 		  if (cur_n != NULL) {
 		    cur_n++;
 		    savebyte = *cur_n;

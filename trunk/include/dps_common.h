@@ -533,6 +533,7 @@ typedef struct dps_url {
 	int	default_port;
         int     charset_id;
         int     freeme;
+        int     domain_level;
         size_t  len;
 } DPS_URL;
 

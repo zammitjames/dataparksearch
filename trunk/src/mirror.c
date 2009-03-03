@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -150,14 +150,15 @@ __C_LINK int __DPSCALL DpsMirrorGET(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
      return DPS_OK;
 }
 
-__C_LINK int __DPSCALL DpsMirrorPUT(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_URL *url) {
+
+__C_LINK int __DPSCALL DpsMirrorPUT(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_URL *url, const char *suffix) {
      int       fd,size;
      char      *str, *estr;
      size_t         str_len, estr_len;
      const char     *mirror_data = DpsVarListFindStr(&Doc->Sections, "MirrorRoot", NULL);
      const char     *mirror_hdrs = DpsVarListFindStr(&Doc->Sections, "MirrorHeadersRoot", NULL);
      const char     *accept_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", NULL);
-     char            *token, savechar;
+     char            *token, savechar = CR_CHAR;
 
      if (accept_lang == NULL) {
        accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);
@@ -168,26 +169,31 @@ __C_LINK int __DPSCALL DpsMirrorPUT(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
           if(!strncmp(token, "\r\n\r\n", 4)){
                *token = '\0';
                Doc->Buf.content = token + 4;
-               savechar = '\r';
+               savechar = CR_CHAR;
                break;
           }else
           if(!strncmp(token, "\n\n", 2)){
                *token = '\0';
                Doc->Buf.content = token + 2;
-               savechar = '\n';
+               savechar = NL_CHAR;
                break;
           }
      }
 
      estr_len = 64 + 3 * dps_strlen(DPS_NULL2EMPTY(url->filename)) + 3 * dps_strlen(DPS_NULL2EMPTY(accept_lang));
      estr_len += 3 * dps_strlen(DPS_NULL2EMPTY(url->query_string));
+     if (suffix != NULL) estr_len += dps_strlen(suffix);
      
      str_len = 128 + dps_strlen(DPS_NULL2EMPTY(mirror_data)) + dps_strlen(DPS_NULL2EMPTY(mirror_hdrs)) + dps_strlen(DPS_NULL2EMPTY(url->schema)) +
        dps_strlen(DPS_NULL2EMPTY(url->hostname)) + dps_strlen(DPS_NULL2EMPTY(url->path)) + estr_len;
 
-     if ((str = (char*)DpsMalloc(str_len + 1)) == NULL) return DPS_MIRROR_CANT_BUILD;
+     if ((str = (char*)DpsMalloc(str_len + 1)) == NULL) {
+       *token = savechar;
+       return DPS_MIRROR_CANT_BUILD;
+     }
      if ((estr = (char*)DpsMalloc(estr_len + 1)) == NULL) {
        DPS_FREE(str);
+       *token = savechar;
        return DPS_MIRROR_CANT_BUILD;
      }
 
@@ -209,6 +215,10 @@ __C_LINK int __DPSCALL DpsMirrorPUT(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
 
        dps_strcat(str, DPSSLASHSTR);
        dps_strcat(str, estr);
+       if (suffix != NULL) {
+	 dps_strcat(str, ".");
+	 dps_strcat(str, suffix);
+       }
        dps_strcat(str, ".body");
 
        if ((fd = DpsOpen3(str, O_CREAT | O_WRONLY | DPS_BINARY, DPS_IWRITE)) == -1) {
@@ -222,7 +232,7 @@ __C_LINK int __DPSCALL DpsMirrorPUT(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
      }
 
      /* Put Headers if MirrorHeadersRoot is specified */
-     if (mirror_hdrs) {
+     if (mirror_hdrs && (suffix == NULL)) {
        dps_snprintf(str, str_len, "%s"DPSSLASHSTR"%s"DPSSLASHSTR"%s%s", mirror_hdrs, DPS_NULL2EMPTY(url->schema),
                     DPS_NULL2EMPTY(url->hostname), DPS_NULL2EMPTY(url->path));
 

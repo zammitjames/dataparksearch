@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@
 __C_LINK int __DPSCALL DpsInflate(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 
   z_stream zstream;
-  size_t csize, gap;
+  size_t csize, gap, allocated_size, xlen;
   Byte *pfree;
   int rc;
   
@@ -48,9 +48,8 @@ __C_LINK int __DPSCALL DpsInflate(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   zstream.zfree = Z_NULL;
   zstream.opaque = Z_NULL;
 
-  inflateInit2(&zstream, -MAX_WBITS);
-
-  if ((pfree = zstream.next_out = (Byte*)DpsMalloc((size_t)Doc->Buf.allocated_size + 1)) == NULL) {
+  allocated_size = (size_t)Doc->Buf.allocated_size;
+  if ((pfree = zstream.next_out = (Byte*)DpsMalloc(allocated_size + 1)) == NULL) {
     inflateEnd(&zstream);
     return -1;
   }
@@ -67,23 +66,26 @@ __C_LINK int __DPSCALL DpsInflate(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 
   zstream.next_out += gap;
 
-  zstream.avail_out = (uLong)(Doc->Buf.allocated_size - gap);
+  zstream.avail_out = (uLong)(allocated_size - gap);
+
+  inflateInit2(&zstream, -MAX_WBITS);
 
   while(1) {
     rc = inflate(&zstream, Z_NO_FLUSH);
     if (rc == Z_OK) {
-      if (Doc->Buf.allocated_size > Doc->Buf.max_size) {
+      if (allocated_size > Doc->Buf.max_size) {
 	DpsLog(query, DPS_LOG_EXTRA, "Inflate: too large content");
 	DpsVarListReplaceInt(&Doc->Sections, "Status", DPS_HTTP_STATUS_PARTIAL_OK);
 	break;
       }
-      Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
-      if ((pfree = (Byte*)DpsRealloc(pfree, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
+      allocated_size += Doc->Buf.size;
+      xlen = zstream.next_out - pfree;
+      if ((pfree = (Byte*)DpsRealloc(pfree, allocated_size + 1)) == NULL) {
 	inflateEnd(&zstream);
 	return -1;
       }
-      zstream.next_out = pfree + zstream.total_out;
-      zstream.avail_out = (uLong)(Doc->Buf.allocated_size - zstream.total_out);
+      zstream.next_out = pfree + xlen;
+      zstream.avail_out = (uLong)(allocated_size - xlen);
     } else break;
   }
   inflateEnd(&zstream);
@@ -110,8 +112,8 @@ __C_LINK int __DPSCALL DpsInflate(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 
 
 struct gztrailer {
-    int crc32;
-    int zlen;
+    dps_int4 crc32;
+    dps_int4 zlen;
 };
 
 
@@ -121,7 +123,7 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   Byte *cpData;
   z_stream zstream;
   Byte *buf;
-  size_t csize, xlen, gap;
+  size_t csize, xlen, gap, allocated_size;
   int rc;
   
   if( (Doc->Buf.size) <= (Doc->Buf.content - Doc->Buf.buf + sizeof(gzheader)) )
@@ -137,9 +139,8 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   zstream.zfree = Z_NULL;
   zstream.opaque = Z_NULL;
 
-  inflateInit2(&zstream, -MAX_WBITS);
-
-  buf = zstream.next_out = (Byte*)DpsMalloc((size_t)Doc->Buf.allocated_size + 1);
+  allocated_size = 4 * (size_t)Doc->Buf.size;
+  buf = zstream.next_out = (Byte*)DpsMalloc(allocated_size + 1);
   if (buf == NULL) {
     inflateEnd(&zstream);
     return -1;
@@ -174,23 +175,26 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 
   zstream.next_in = cpData;
   zstream.avail_in = csize - sizeof(struct gztrailer);
-  zstream.avail_out = (uLong)(Doc->Buf.allocated_size - gap);
+  zstream.avail_out = (uLong)(4 * Doc->Buf.size - gap);
+
+  inflateInit2(&zstream, -MAX_WBITS);
 
   while(1) {
     rc = inflate(&zstream, Z_NO_FLUSH);
     if (rc == Z_OK) {
-      if (Doc->Buf.allocated_size > Doc->Buf.max_size) {
+      if (allocated_size > Doc->Buf.max_size) {
 	DpsLog(query, DPS_LOG_EXTRA, "Gzip: too large content");
 	DpsVarListReplaceInt(&Doc->Sections, "Status", DPS_HTTP_STATUS_PARTIAL_OK);
 	break;
       }
-      Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
-      if ((buf = (Byte*)DpsRealloc(buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
+      allocated_size += Doc->Buf.size;
+      xlen = zstream.next_out - buf;
+      if ((buf = (Byte*)DpsRealloc(buf, allocated_size + 1)) == NULL) {
 	inflateEnd(&zstream);
 	return -1;
       }
-      zstream.next_out = buf + zstream.total_out;
-      zstream.avail_out = (uLong)(Doc->Buf.allocated_size - zstream.total_out);
+      zstream.next_out = buf + xlen;
+      zstream.avail_out = (uLong)(allocated_size - xlen);
     } else break;
   }
   inflateEnd(&zstream);
@@ -214,10 +218,11 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   return 0;
 }
 
+
 __C_LINK int __DPSCALL DpsUncompress(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   Byte *buf;
   uLong   Len;
-  size_t csize, gap;
+  size_t csize, gap, allocated_size;
   int res;
   
   if( (Doc->Buf.size) <= (size_t)(Doc->Buf.content - Doc->Buf.buf) )
@@ -225,23 +230,23 @@ __C_LINK int __DPSCALL DpsUncompress(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   gap = (Doc->Buf.content - Doc->Buf.buf)/* + 1*/;
   csize = Doc->Buf.size - gap;
 
-  Doc->Buf.allocated_size *= 6;
-  buf = (Byte*)DpsMalloc((size_t)Doc->Buf.allocated_size + 1);
+  allocated_size = 6 * (size_t)Doc->Buf.allocated_size;
+  buf = (Byte*)DpsMalloc(allocated_size + 1);
   if (buf == NULL) return -1;
 /*  memcpy(buf, Doc->Buf.content, csize);*/
   dps_memmove(buf, Doc->Buf.buf, gap);
   
   while(1) {
-    Len = (uLong)(Doc->Buf.allocated_size - gap);
+    Len = (uLong)(allocated_size - gap);
     res = uncompress(buf + gap, &Len, (Byte*)Doc->Buf.content, csize);
     if (res == Z_BUF_ERROR) {
-      if (Doc->Buf.allocated_size > Doc->Buf.max_size) {
+      if (allocated_size > Doc->Buf.max_size) {
 	DpsLog(query, DPS_LOG_EXTRA, "Compress: too large content");
 	DpsVarListReplaceInt(&Doc->Sections, "Status", DPS_HTTP_STATUS_PARTIAL_OK);
 	break;
       }
-      Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
-      if ((buf = (Byte*)DpsRealloc(buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
+      allocated_size += Doc->Buf.size;
+      if ((buf = (Byte*)DpsRealloc(buf, allocated_size + 1)) == NULL) {
 	return -1;
       }
     } else break;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -930,7 +930,7 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
      }
      data[sb.st_size] = '\0';
      str = data;
-     cur_n = strchr(str, '\n');
+     cur_n = strchr(str, NL_INT);
      if (cur_n != NULL) {
        cur_n++;
        savebyte = *cur_n;
@@ -938,7 +938,7 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
      }
 
      while(str != NULL) {
-          if(str[0]=='#'||str[0]==' '||str[0]=='\t') goto loop_continue;
+          if(str[0]=='#'||str[0]==' '||str[0]==HT_CHAR) goto loop_continue;
 
           if(!strncmp(str,"Charset:",8)){
                
@@ -970,7 +970,7 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
                char *s;
                int count;
                
-               if(!(s=strchr(str,'\t'))) goto loop_continue;
+               if(!(s = strchr(str, HT_INT))) goto loop_continue;
                if(Clanguage == NULL) {
                  fprintf(stderr, "No language definition in LangMapFile '%s'\n", filename);
                  return DPS_ERROR;
@@ -1010,7 +1010,7 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
 	  str = cur_n;
 	  if (str != NULL) {
 	    *str = savebyte;
-	    cur_n = strchr(str, '\n');
+	    cur_n = strchr(str, NL_INT);
 	    if (cur_n != NULL) {
 	      cur_n++;
 	      savebyte = *cur_n;
