@@ -132,16 +132,19 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
 	/* Cut HTTP response header first        */
 	for(token=Doc->Buf.buf;*token;token++){
-		if(!strncmp(token,"\r\n\r\n",4)){
+	  if(!strncmp(token,"\r\n\r\n",4)){
+	    if (token < Doc->Buf.buf + Doc->Buf.size - 4) {
 			*token='\0';
 			Doc->Buf.content = token + 4;
-			break;
-		}else
-		if(!strncmp(token,"\n\n",2)){
+	    }
+	    break;
+	  } else if(!strncmp(token,"\n\n",2)){
+	    if (token < Doc->Buf.buf + Doc->Buf.size - 2) {
 			*token='\0';
 			Doc->Buf.content = token + 2;
-			break;
-		}
+	    }
+	    break;
+	  }
 	}
 	
 	/* Bad response, return */
@@ -149,8 +152,6 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	  if (token < Doc->Buf.buf + Doc->Buf.size - 4) {
 	    if (token[2] == CR_CHAR) Doc->Buf.content = token + 4;
 	    else Doc->Buf.content = token + 2;
-	  } else {
-	    return;
 	  }
 	}
 	
@@ -194,5 +195,9 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	DpsDSTRFree(&header);
 	DPS_FREE(headers);
 	
+	/* Bad response, return */
+	if(!Doc->Buf.content) {
+	    return;
+	}
 	DpsVarListInsInt(&Doc->Sections,"Content-Length",Doc->Buf.buf-Doc->Buf.content+(int)Doc->Buf.size);
 }
