@@ -496,6 +496,9 @@ int DpsConvertHref(DPS_AGENT *Indexer, DPS_URL *CurURL, DPS_HREF *Href){
 	void *paran = DpsViolationEnter(paran);
 #endif
 	if ((newURL = DpsURLInit(NULL)) == NULL) {
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(Indexer->handle, paran);
+#endif
 	  return DPS_ERROR;
 	}
 	
@@ -589,6 +592,9 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 #endif
 
 	if ((myurl = DpsURLInit(NULL)) == NULL) {
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(Indexer->handle, paran);
+#endif
 	  return DPS_ERROR;
 	}
 	
@@ -1370,6 +1376,9 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	
 	if ((Doc = DpsDocInit(NULL)) == NULL) {
 	  TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(Indexer->handle, paran);
+#endif
 	  return DPS_ERROR;
 	}
 	Doc->subdoc = Parent->subdoc + 1;
@@ -1378,6 +1387,9 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	if ((newURL = DpsURLInit(NULL)) == NULL) {
 	  DpsDocFree(Doc);
 	  TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(Indexer->handle, paran);
+#endif
 	  return DPS_ERROR;
 	}
 
@@ -1397,6 +1409,9 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	    DpsURLFree(newURL);
 	    DpsDocFree(Doc);
 	    TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+	    DpsViolationExit(Indexer->handle, paran);
+#endif
 	    return DPS_ERROR;
 	  }
 	  if((parse_res = DpsURLParse(baseURL, base))) {

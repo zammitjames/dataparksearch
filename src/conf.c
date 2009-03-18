@@ -1737,6 +1737,9 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	if ((fd = open(cname, O_RDONLY)) <= 0) {
 	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to open config file '%s': %s", cname, strerror(errno));
 	  DPS_FREE(str0);
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
 	  return DPS_ERROR;
 	}
 	if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {

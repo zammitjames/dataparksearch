@@ -1983,8 +1983,6 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	qbuf = (char*)DpsMalloc(24 * len + 512);
 	if (qbuf == NULL) return DPS_ERROR;
 	
-	url_seed = (crc32_rec_id = (urlid_t)DpsStrHash32(url)) & 0x7FFF /*& 0xFF*/;
-
 	if (e_url == NULL) {
 
 	  DpsFindURL(Indexer, Doc, db);
@@ -1993,6 +1991,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	}
 	rec_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	old_hops = (urlid_t)DpsVarListFindInt(&Doc->Sections, "hops", 0);
+	url_seed = (crc32_rec_id = (urlid_t)DpsStrHash32(e_url)) & 0x7FFF /*& 0xFF*/;
 
 
 	if (rec_id == 0) {
