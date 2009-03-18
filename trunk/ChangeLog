@@ -3,6 +3,9 @@ History
 -------
 
 Latest snapshot:
+	* A possible trap on an empty document has been fixed.
+	* A Disallow command in robots.txt doesn't lead to document removal from database anymore.
+	* An error has been fixed in uncompression of big files.
 	* Quffix command has been added.
 	* Searchd cleans-up now the search cache on config loading/reloading.
 	* A bug in stored check-up has been fixed.

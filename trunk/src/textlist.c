@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -59,6 +59,9 @@ __C_LINK void __DPSCALL DpsTextListAdd(DPS_TEXTLIST * tlist,const DPS_TEXTITEM *
        tlist->Items = (DPS_TEXTITEM*)DpsRealloc(tlist->Items, (tlist->mitems) * sizeof(DPS_TEXTITEM) + 4096);
        if (tlist->Items == NULL) {
 	 tlist->nitems = tlist->mitems = 0;
+#ifdef WITH_PARANOIA
+	 DpsViolationExit(-1, paran);
+#endif
 	 return;
        }
      }

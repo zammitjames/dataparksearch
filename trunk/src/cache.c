@@ -2450,7 +2450,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	int fd;
 	size_t NWrdFiles = (db->WrdFiles) ? db->WrdFiles : (size_t)DpsVarListFindInt(&Env->Vars, "WrdFiles", 0x300);
 	size_t CacheLogWords = (size_t)DpsVarListFindInt(&Env->Vars, "CacheLogWords", 1024);
-	size_t CacheLogDels = (size_t)DpsVarListFindInt(&Env->Vars, "CacheLogDels", 1024);
+	size_t CacheLogDels = (size_t)DpsVarListFindInt(&Env->Vars, "CacheLogDels", 10240);
 
 	size_t WrdBufSize = NWrdFiles * (sizeof(dps_wrd_buf) + CacheLogWords * sizeof(DPS_LOGWORD) + CacheLogDels * sizeof(DPS_LOGDEL));
 
@@ -2943,7 +2943,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	logdel.stamp = cmd.stamp;
 	logdel.url_id = cmd.url_id;
 	NWrdFiles = (db->WrdFiles) ? db->WrdFiles : (size_t)DpsVarListFindInt(&Agent->Vars, "WrdFiles", 0x300);
-	CacheLogDels = (size_t)DpsVarListFindInt(&Agent->Vars, "CacheLogDels", 1024);
+	CacheLogDels = (size_t)DpsVarListFindInt(&Agent->Vars, "CacheLogDels", 10240);
 	CacheLogWords = (size_t)DpsVarListFindInt(&Agent->Vars, "CacheLogWords", 1024);
 
 	if (Env->logs_only) {
@@ -2980,7 +2980,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	  for (i = 0; i < NWrdFiles; i++) {
 	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
 	    nrec = logd->wrd_buf[i].ndel;
-	    if (nrec == CacheLogDels || ( (nrec > CacheLogDels - DPS_INF_DEL) && (nrec + (rand() % DPS_INF_DEL) > CacheLogDels)) ) {
+	    if (nrec == CacheLogDels /*|| ( (nrec > CacheLogDels - DPS_INF_DEL) && (nrec + (rand() % DPS_INF_DEL) > CacheLogDels))*/ ) {
 	      DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
 		     i, logd->wrd_buf[i].nrec, logd->wrd_buf[i].ndel);
 	      if(DPS_OK != DpsLogdSaveBuf(Agent, Env, i)) {

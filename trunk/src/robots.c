@@ -52,9 +52,6 @@ static int DpsRobotCmp(DPS_ROBOT *r1, DPS_ROBOT *r2) {
 
 DPS_ROBOT* DpsRobotFind(DPS_ROBOTS *Robots,const char *hostinfo){
 	DPS_ROBOT *r, key;
-#ifdef WITH_PARANOIA
-	void *paran = DpsViolationEnter(paran);
-#endif
 
 	if (Robots->nrobots == 0) return NULL;
 	if (Robots->nrobots == 1) return (strcasecmp(Robots->Robot->hostinfo, hostinfo) == 0) ? Robots->Robot : NULL;
@@ -62,9 +59,6 @@ DPS_ROBOT* DpsRobotFind(DPS_ROBOTS *Robots,const char *hostinfo){
 	key.hostinfo = hostinfo;
 	r = bsearch(&key, Robots->Robot, Robots->nrobots, sizeof(DPS_ROBOT), (qsort_cmp)DpsRobotCmp);
 
-#ifdef WITH_PARANOIA
-	DpsViolationExit(-1, paran);
-#endif
 	return r;
 }
 
