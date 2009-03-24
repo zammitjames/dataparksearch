@@ -4642,7 +4642,7 @@ static int DpsStoredRehash(DPS_AGENT *A, DPS_DB *db) {
 static int DpsDocPostponeSite(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
   char qbuf[512];
   int site_id = DpsVarListFindInt(&Doc->Sections, "site_id", 0);
-  dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET next_index_time=next_index_time+%lu WHERE site_id=%d", Doc->Spider.net_error_delay_time, site_id);
+  dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET next_index_time=%lu WHERE site_id=%d", A->now + Doc->Spider.net_error_delay_time, site_id);
   return DpsSQLAsyncQuery(db, NULL, qbuf);
 }
 
