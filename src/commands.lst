@@ -71,6 +71,7 @@
 	{"MaxSiteLevel",        1,1,    env_rpl_num_var},
 	{"SEASentences",        1,1,    env_rpl_num_var},
 	{"SEASentenceMinLength",1,1,    env_rpl_num_var},
+	{"SEASections",		1,1,	env_rpl_var},
 	{"PagesInGroup",        1,1,    env_rpl_num_var},
 	{"LongestTextItems",    1,1,    env_rpl_num_var},
 	{"GuesserUseMeta",	1,1,	env_rpl_bool_var},

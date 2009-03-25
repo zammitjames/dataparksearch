@@ -239,6 +239,13 @@ Section sea x y
 Значение по умолчанию: 64. В виду нелинейной сложности алгоритма SEA, вы можете установить значение этого параметра исходя из желаемой
 производительности индексирования.
 </para>
+<para id="seasections-cmd"><indexterm><primary>Команда</primary><secondary>SEASections</secondary></indexterm>
+При помощи команды <command>SEASections</command> вы можете указать список секций документов, по которым будут строиться рефераты.
+По умолчанию, для построения рефератов используется только секция "body".
+<programlisting>
+SEASections "body, title"
+</programlisting>
+</para>
 
 </sect2>
 

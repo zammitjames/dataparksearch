@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2009 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -158,15 +158,19 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	DpsCheckLangMap6(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, 4 * DPS_LM_TOPCNT + 2);
 /*	links[i * List.nitems + j] =  (double)(DPS_LM_TOPCNT - MapStat.miss) / (double)(MapStat.hits + MapStat.miss + 1);*/
 /*	links[j * List.nitems + i] = links[i * List.nitems + j] = List.nitems / ((double)MapStat.hits + 1.0);*/
+
+/*	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0) ? ((MapStat.hits == 0) ? 0.0 : 1.0) :
+	  ((double)List.nitems / (double)(DPS_LM_TOPCNT * MapStat.miss + MapStat.hits));*/
+
 	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0) ? ((MapStat.hits == 0) ? 0.0 : 1.0) :
-	  (1.0 / (double)MapStat.miss);
+	  (DPS_LM_TOPCNT - (double)MapStat.miss) / (DPS_LM_TOPCNT + (double)MapStat.hits/DPS_LM_TOPCNT) / (List.nitems + 1);
 #ifdef DEBUG
 	DpsLog(Indexer, DPS_LOG_INFO, "Link %u->%u: %f [hits:%d miss:%d]", i, j, links[i * List.nitems + j], MapStat.hits, MapStat.miss);
 #endif
       }
     }
 
-    for (it = 0; it < Indexer->Flags.PopRankNeoIterations; it++)
+    for (it = 0; it < 10 * Indexer->Flags.PopRankNeoIterations; it++)
       for (l = 0; l < List.nitems; l++) {
 	w = 0.0;
 	for (i = 0; i < List.nitems; i++) { 
@@ -185,8 +189,8 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	List.Sent[l].Oi = w;
       }
 
-#if 1
-    for (it = 0; it < Indexer->Flags.PopRankNeoIterations; it++) {
+#if 0
+    for (it = 0; it < 10 * Indexer->Flags.PopRankNeoIterations; it++) {
 
       for (l = 0; l < List.nitems; l++) {
 
@@ -256,6 +260,10 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
     fprintf(stderr, "Sent.1: %f %f -- %s\n", List.Sent[1].di, List.Sent[1].Oi, lcstr);
     DpsConv(&Indexer->uni_lc, lcstr, sizeof(lcstr), (char*)List.Sent[2].sentence, sizeof(dpsunicode_t) * (DpsUniLen(List.Sent[2].sentence) + 1));
     fprintf(stderr, "Sent.2: %f %f -- %s\n", List.Sent[2].di, List.Sent[2].Oi, lcstr);
+    DpsConv(&Indexer->uni_lc, lcstr, sizeof(lcstr), (char*)List.Sent[3].sentence, sizeof(dpsunicode_t) * (DpsUniLen(List.Sent[3].sentence) + 1));
+    fprintf(stderr, "Sent.3: %f %f -- %s\n", List.Sent[3].di, List.Sent[3].Oi, lcstr);
+    DpsConv(&Indexer->uni_lc, lcstr, sizeof(lcstr), (char*)List.Sent[4].sentence, sizeof(dpsunicode_t) * (DpsUniLen(List.Sent[4].sentence) + 1));
+    fprintf(stderr, "Sent.4: %f %f -- %s\n", List.Sent[4].di, List.Sent[4].Oi, lcstr);
 #endif
     Item.section = seasec;
     Item.href = NULL;
