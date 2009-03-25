@@ -1158,22 +1158,22 @@ void DpsBuildLangMap(DPS_LANGMAP * map, const char * text, size_t textlen, size_
 }
 
 void DpsBuildLangMap6(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
-  unsigned char buf2[2 * DPS_LM_MAXGRAM2 + 1];
+  unsigned char buf2[2 * DPS_LM_MAXGRAM1 + 1];
   const char * end = text + textlen;
   unsigned char code, prevb = 32;
   unsigned int hindex;
   size_t pat_s2 = 0;
 
-  memset(buf2, 32, 2 * DPS_LM_MAXGRAM2 + 1);
+  memset(buf2, 32, 2 * DPS_LM_MAXGRAM1 + 1);
   
   for (; text <= end; text++) {
     code = (unsigned char)(*text);
     if ((code <= 32) && (code >= 8) && (prevb <= 32) && (prevb >= 8)) continue;
-    buf2[pat_s2] = buf2[pat_s2 + DPS_LM_MAXGRAM2] = prevb = code;
-    hindex = DpsHash32(buf2 + pat_s2 + 1, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
-    map->memb6[hindex].count++;
+    buf2[pat_s2] = buf2[pat_s2 + DPS_LM_MAXGRAM1] = prevb = code;
+    hindex = DpsHash32(buf2 + pat_s2 + 1, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
+    map->memb3[hindex].count++;
     pat_s2++;
-    if (pat_s2 == DPS_LM_MAXGRAM2) pat_s2 = 0;
+    if (pat_s2 == DPS_LM_MAXGRAM1) pat_s2 = 0;
     map->nbytes++;
     if (max_nbytes > 0 && map->nbytes >= max_nbytes) break;
   }
@@ -1231,9 +1231,9 @@ void DpsPrepareLangMap(DPS_LANGMAP * map){
 
 void DpsPrepareLangMap6(DPS_LANGMAP * map){
   register int i;
-  for (i = 0; i < DPS_LM_HASHMASK + 1; i++) map->memb6[i].index = i;
-  DpsPreSort(map->memb6, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpCount);
-  DpsPreSort(map->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
+  for (i = 0; i < DPS_LM_HASHMASK + 1; i++) map->memb3[i].index = i;
+  DpsPreSort(map->memb3, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpCount);
+  DpsPreSort(map->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
 }
 
 
@@ -1274,16 +1274,16 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
 
      Stat->hits = Stat->miss = 0;
      for (i = 0; i < DPS_LM_TOPCNT; i++) {
-       if ( (HIT = bsearch(&map1->memb6[i], map0->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+       if ( (HIT = bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss++;
        } else {
-	 register int p = (HIT - map0->memb6);
+	 register int p = (HIT - map0->memb3);
 	 Stat->hits += (i >= p) ? (i - p) : (p - i);
        }
-       if ( (HIT = bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+       if ( (HIT = bsearch(&map0->memb3[i], map1->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss++;
        } else {
-	 register int p = (HIT - map1->memb6);
+	 register int p = (HIT - map1->memb3);
 	 Stat->hits += (i >= p) ? (i - p) : (p - i);
        }
 /*       if (Stat->miss > InfMiss) break;*/

@@ -295,6 +295,15 @@ specified by the <command>SEASentenceMinLength</command> command, which are used
 Since the summary construction using SEA is nonlinear expensive (affects only indexing), 
 you may adjust this value according to desired indexing performance.
 </para>
+<para id="seasections-cmd"><indexterm><primary>Command</primary><secondary>SEASections</secondary></indexterm>
+With <command>SEASections</command> command you can specify the list of document sections which are used to construct SEA summary.
+By default, only the "body" section is used for SEA summary construction.
+<programlisting>
+SEASections "body, title"
+</programlisting>
+</para>
+
+
 
 <para>This algorithm of automatic summary construction is based on ideas of Rada Mihalcea described in the paper 
 <ulink url="http://www.cs.unt.edu/~rada/papers/mihalcea.ijcnlp05.pdf">Rada Mihalcea and Paul Tarau, 
@@ -308,7 +317,7 @@ in Proceedings of the International Joint Conference on Natural Language Process
 3-gram distributions of corresponding sentences.</para>
 </listitem>
 <listitem>
-<para>All initial values for graph vertexes are equal to some initial value ( 1 / (number of sentences + 1) in current implementtion).</para>
+<para>Initial value for all graph vertexes is equal to the value of 1 / (number of sentences + 1) in the current implementation.</para>
 </listitem>
 <listitem><para>The Neo PopRank algorithm is used as ranking algorithm to iterate values assigned to vertexes.</para>
 </listitem>

@@ -115,6 +115,9 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 		case DPS_MATCH_REGEX:
 		        if (!Match->compiled) if (DPS_OK != (res = DpsMatchComp(Match, regerrstr, sizeof(regerrstr) - 1))) {
 /*			  fprintf(stderr, "reg.errstr: %s\n", regerrstr);*/
+#ifdef WITH_PARANOIA
+			  DpsViolationExit(-1, paran);
+#endif
 			  return res;
 			}
 			if(nparts>DPS_NSUBS)nparts=DPS_NSUBS;

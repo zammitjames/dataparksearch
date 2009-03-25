@@ -415,6 +415,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   size_t          max_word_len, min_word_len, uwordlen = DPS_MAXWORDSIZE;
   size_t          indexed_size = 0, indexed_limit = (size_t)DpsVarListFindInt(&Doc->Sections, "IndexDocSizeLimit", 0);
   const char      *content_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", "");
+  const char      *SEASections = DpsVarListFindStr(&Indexer->Vars, "SEASections", "body");
   DPS_DSTR        exrpt;
 #ifdef HAVE_ASPELL
   AspellCanHaveError *ret;
@@ -561,7 +562,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
     if(Item->section && ((Indexer->Flags.LongestTextItems == 0) || (Item->marked)) ) {
 
-      if (seasec) {
+      if (seasec && strstr(SEASections, Item->section_name)) {
 	DpsDSTRAppendUniWithSpace(&exrpt, UStr);
       }
 

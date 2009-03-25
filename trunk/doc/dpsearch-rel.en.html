@@ -1021,6 +1021,25 @@ Since the summary construction using SEA is nonlinear expensive (affects only in
 you may adjust this value according to desired indexing performance.
 </P
 >
+<P
+><A
+NAME="AEN5258"
+></A
+>
+With <B
+CLASS="command"
+>SEASections</B
+> command you can specify the list of document sections which are used to construct SEA summary.
+By default, only the "body" section is used for SEA summary construction.
+<PRE
+CLASS="programlisting"
+>&#13;SEASections "body, title"
+</PRE
+>
+</P
+>
+
+
 
 <P
 >This algorithm of automatic summary construction is based on ideas of Rada Mihalcea described in the paper 
@@ -1048,7 +1067,7 @@ in Proceedings of the International Joint Conference on Natural Language Process
 </LI
 ><LI
 >&#13;<P
->All initial values for graph vertexes are equal to some initial value ( 1 / (number of sentences + 1) in current implementtion).</P
+>Initial value for all graph vertexes is equal to the value of 1 / (number of sentences + 1) in the current implementation.</P
 >
 </LI
 ><LI

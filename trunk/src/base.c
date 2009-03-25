@@ -92,7 +92,8 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 						   ,
 						   S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH
 						   )) < 0)) {
-      DpsLog(P->A, DPS_LOG_ERROR, "Can't open/create file %s [%s:%d] -- %d (%s)", P->Ifilename, __FILE__, __LINE__, errno, strerror(errno));
+      DpsLog(P->A, (mode == DPS_READ_LOCK && errno == ENOENT) ? DPS_LOG_DEBUG : DPS_LOG_ERROR, "Can't open/create file %s for %s [%s:%d] -- %d (%s)", 
+	     P->Ifilename, (mode == DPS_READ_LOCK) ? "read" : "write", __FILE__, __LINE__, errno, strerror(errno));
       DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
       TRACE_OUT(P->A);
       return DPS_ERROR;
