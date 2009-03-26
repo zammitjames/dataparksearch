@@ -558,7 +558,7 @@ __C_LINK int __DPSCALL DpsBaseRead(DPS_BASE_PARAM *P, void *buf, size_t len) {
       zstream.zfree = Z_NULL;
       zstream.opaque = Z_NULL;
       if (read(P->Sfd, CDoc, P->Item.size) != (ssize_t)P->Item.size) {
-	DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x",  P->subdir, P->basename, P->Item.size, P->rec_id);
+	DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x -- %d",  P->subdir, P->basename, P->Item.size, P->rec_id, __LINE__);
 	DPS_FREE(CDoc);
 	return DPS_ERROR;
       }
@@ -570,7 +570,7 @@ __C_LINK int __DPSCALL DpsBaseRead(DPS_BASE_PARAM *P, void *buf, size_t len) {
   
 #endif
     if (read(P->Sfd, buf, P->Item.size) != (ssize_t)P->Item.size) {
-      DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x",  P->subdir, P->basename, P->Item.size, P->rec_id);
+      DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x -- %d",  P->subdir, P->basename, P->Item.size, P->rec_id, __LINE__);
       return DPS_ERROR;
     }
 
@@ -621,7 +621,7 @@ __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len) {
       zstream.zfree = Z_NULL;
       zstream.opaque = Z_NULL;
       if (read(P->Sfd, CDoc, P->Item.size) != (ssize_t)P->Item.size) {
-	DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x",  P->subdir, P->basename, P->Item.size, P->rec_id);
+	DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x -- %d",  P->subdir, P->basename, P->Item.size, P->rec_id, __LINE__);
 	DPS_FREE(CDoc);
 	return NULL;
       }
