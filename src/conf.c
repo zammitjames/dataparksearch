@@ -296,7 +296,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 		s_err = (char*)DpsStrdup(Conf->errstr);
 		dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "%s [%s:%d]", s_err, __FILE__, __LINE__);
 		DPS_FREE(s_err);
-		DPS_FREE(C->Srv->Match.pattern);
+		DpsMatchFree(&C->Srv->Match);
 #ifdef WITH_PARANOIA
 		DpsViolationExit(-1, paran);
 #endif
@@ -324,7 +324,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 		DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
 		if (Indexer->Hrefs.nhrefs > 1024) DpsStoreHrefs(Indexer);
 	}
-	DPS_FREE(C->Srv->Match.pattern);
+	DpsMatchFree(&C->Srv->Match);
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 #ifdef WITH_PARANOIA
@@ -1039,7 +1039,7 @@ static int add_srv_db(void *Cfg, size_t ac, char **av) {
 	}
 
 	DpsDBListFree(&dbl);
-	DPS_FREE(C->Srv->Match.pattern);
+	DpsMatchFree(&C->Srv->Match);
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 	return DPS_OK;
