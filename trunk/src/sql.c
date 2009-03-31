@@ -666,14 +666,15 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
 
   rows = DpsSQLNumRows(&SQLRes);
   for(i = 0; i < rows; i++) {
-
+    
+    DpsMatchFree(&Srv->Match);
     Srv->Match.pattern	= strdupnull(DpsSQLValue(&SQLRes,i,0));
     if(DPS_OK != DpsServerAdd(Indexer, Srv)) {
       char * s_err;
       s_err = (char*)DpsStrdup(Indexer->Conf->errstr);
       dps_snprintf(Indexer->Conf->errstr, sizeof(Indexer->Conf->errstr) - 1, "%s", s_err);
       DPS_FREE(s_err);
-      DPS_FREE(Srv->Match.pattern);
+      DpsMatchFree(&Srv->Match);
       DpsSQLFree(&SQLRes);
       return DPS_ERROR;
     }
@@ -693,8 +694,8 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
       DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
       if (Indexer->Hrefs.nhrefs > 1024) DpsStoreHrefs(Indexer);
     }
-    DPS_FREE(Srv->Match.pattern);
   }
+  DpsMatchFree(&Srv->Match);
   DpsSQLFree(&SQLRes);
   return DPS_OK;
 }
@@ -728,7 +729,7 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 		DPS_SERVER	*Server = Indexer->Conf->Cfg_Srv;
 		
 		Server->site_id		= DPS_ATOI(DpsSQLValue(&SQLRes, i, 0));
-		DPS_FREE(Server->Match.pattern);
+		DpsMatchFree(&Server->Match);
 		Server->Match.pattern	= strdupnull(DpsSQLValue(&SQLRes,i,1));
 		Server->ordre		= DPS_ATOI(DpsSQLValue(&SQLRes, i, 6));
 		Server->command		= *DpsSQLValue(&SQLRes, i, 4);
