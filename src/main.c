@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1284,7 +1284,7 @@ int main(int argc, char **argv, char **envp) {
      char      *language=NULL,*affix=NULL,*dictionary=NULL, *env;
      int       pid_fd, cfg_res, cache_opened = 0;
      char      pidbuf[1024];
-#if __FreeBSD__ < 5
+#if defined(__FreeBSD__) && (__FreeBSD__ < 5)
      malloc_options = "axH>>>R";
 #endif
 
