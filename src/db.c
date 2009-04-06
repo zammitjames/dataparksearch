@@ -1361,7 +1361,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	size_t          ExcerptPadding = (size_t)DpsVarListFindInt(&A->Vars, "ExcerptPadding", 40);
 	const char      *label = DpsVarListFindStr(&A->Vars, "label", NULL);
 	char            *Excerpt = NULL;
-	char		str[128];
+	char		str[256];
 /*	struct timeval stime, etime;*/
 	
 	TRACE_IN(A, "DpsFind");
@@ -1423,12 +1423,12 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  double  pr = Res->CoordList.Data[i + Res->first * Res->offset].pop_rank;
 	  DpsDocInit(&Res->Doc[i]);
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "DP_ID", Res->CoordList.Coords[i + Res->first * Res->offset].url_id);
-	  dps_snprintf(str, 128, "%.3f%%", ((double)(score /*>> 8*/)) / 1000);
+	  dps_snprintf(str, sizeof(str), "%.3f%%", ((double)(score /*>> 8*/)) / 1000);
 	  DpsVarListReplaceStr(&Res->Doc[i].Sections, "Score", str);
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Order", (int)(i + Res->first + 1));
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Pos", (int)(i + 1));
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "sdnum", (int)(score & 0xFF));
-	  dps_snprintf(str, 128, "%.5f", pr);
+	  dps_snprintf(str, sizeof(str), "%.5f", pr);
 	  DpsVarListReplaceStr(&Res->Doc[i].Sections, "Pop_Rank", str);
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Site_id", Res->CoordList.Data[i + Res->first * Res->offset].site_id);
 #ifdef WITH_MULTIDBADDR
@@ -1542,7 +1542,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 
 		DpsVarListReplaceInt(&Res->Doc[i].Sections,"Order",(int)(Res->first+i));
 		if (last_mod_time > 0) {
-		  if (strftime(str, 128, format, localtime(&last_mod_time)) == 0) {
+		  if (strftime(str, sizeof(str), format, localtime(&last_mod_time)) == 0) {
 		    DpsTime_t2HttpStr(last_mod_time, str);
 		  }
 		  DpsVarListReplaceStr(&Res->Doc[i].Sections, "Last-Modified", str);
@@ -1555,9 +1555,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 /******************************/
 
 	Res->work_time=ticks=DpsStartTimer()-ticks;
-/*	gettimeofday(&etime, NULL);
-	dps_snprintf(str, 128, "%.3f [%.5f]", ((double)Res->work_time)/1000.0, DpsTimeDiff(&stime, &etime));*/
-	dps_snprintf(str, 128, "%.3f", ((double)Res->work_time)/1000.0);
+	dps_snprintf(str, sizeof(str), "%.3f", ((double)Res->work_time)/1000.0);
 	DpsVarListReplaceStr(&A->Vars, "SearchTime", str);
 	WordInfo(&A->Vars, Res);
 
