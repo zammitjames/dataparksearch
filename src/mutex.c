@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -213,7 +213,7 @@ void DpsInitMutexes(void) {
 
 	MuMu = (DPS_MUTEX*)DpsMalloc((DpsNsems + 1) * sizeof(DPS_MUTEX));
 	if (MuMu == NULL) {
-	  fprintf(stderr, "DataparkSearch: Can't alloc for %d mutexes\n", DpsNsems);
+	  fprintf(stderr, "DataparkSearch: Can't alloc for %u mutexes\n", DpsNsems);
 	  exit(1);
 	}
 
@@ -235,11 +235,11 @@ void DpsDestroyMutexes(void) {
 }
 
 
-void DpsCAS_lock(DPS_AGENT *A, dps_mutex_t *mut) {
+static void DpsCAS_lock(DPS_AGENT *A, dps_mutex_t *mut) {
   while(!CAS(mut, A, NULL)) DPSSLEEP(0);
 }
 
-void DpsCAS_unlock(DPS_AGENT *A, dps_mutex_t *mut) {
+static void DpsCAS_unlock(DPS_AGENT *A, dps_mutex_t *mut) {
   while(!CAS(mut, NULL, A));
 }
 
@@ -649,7 +649,7 @@ void DpsAcceptMutexInit(char *var_dir) {
     unlock_it.l_pid = 0;		/* pid not actually interesting */
 #if 1
     dps_snprintf(lock_fname, sizeof(lock_fname), "%s.lock", var_dir);
-    lock_fd = open(lock_fname, O_CREAT | O_WRONLY | O_EXCL, 0644, 1);
+    lock_fd = open(lock_fname, O_CREAT | O_WRONLY | O_EXCL, 0644);
     if (lock_fd == -1) {
 	fprintf(stderr, "Cannot open lock file: %s\n", lock_fname);
 	exit(DPS_ERROR);
