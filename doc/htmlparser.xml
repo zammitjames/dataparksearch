@@ -110,6 +110,12 @@ compose relative links.</para>
 				</para>
 			</listitem>
 		</itemizedlist>
+<para><indexterm><primary>Command</primary><secondary>SkipHrefIn</secondary></indexterm>
+However, you can specify the list of HTML which would be omitted in new href lookup with <command>SkipHrefIn</command> command.
+<programlisting>
+HrefSkipIn "img, link, script"
+</programlisting>
+</para>
 	</sect1>
 	<sect1 id="htmlparser-comments">
 		<title>Comments</title>

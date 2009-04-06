@@ -929,6 +929,7 @@ typedef struct {
         int             LongestTextItems; /**< Number of longest text items to index */
         int             SubDocLevel;      /**< Maximum nested level for sub-documents */
         int             SubDocCnt;        /**< Maximum number of subdocuments to be indexed */
+        dps_uint4       SkipHrefIn;       /**< Flag to skip some HTML tags from new href lookup */
    enum dps_prmethod    poprank_method;
    enum dps_indcmd      cmd;
 } DPS_FLAGS;
@@ -1385,6 +1386,19 @@ enum {
   DPS_RESEGMENT_JAPANESE = 2,
   DPS_RESEGMENT_KOREAN   = 4,
   DPS_RESEGMENT_THAI     = 8
+};
+
+enum dps_href_from {
+  DPS_HREF_FROM_UNKNOWN = 0,
+  DPS_HREF_FROM_A       = 1,
+  DPS_HREF_FROM_AREA    = 2,
+  DPS_HREF_FROM_BASE    = 4,
+  DPS_HREF_FROM_FRAME   = 8,
+  DPS_HREF_FROM_IFRAME  = 16,
+  DPS_HREF_FROM_INPUT   = 32,
+  DPS_HREF_FROM_IMG     = 64,
+  DPS_HREF_FROM_LINK    = 128,
+  DPS_HREF_FROM_SCRIPT  = 256
 };
 
 

@@ -154,6 +154,7 @@
 	{"ServerDB",            1,100,  add_srv_db},
 	{"ServerTable",		1,1,	add_srv_table},
 	{"ServerWeight",	1,1,	srv_rpl_num_var},
+	{"SkipHrefIn",          1,1,    env_rpl_var},
 	{"SkipUnreferred",      1,1,    env_rpl_var},
 	{"Spell",		3,3,	add_spell},
 	{"StopwordFile",	1,1,	add_stoplist},

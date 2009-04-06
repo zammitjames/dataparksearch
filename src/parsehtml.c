@@ -1326,7 +1326,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		DPS_FREE(href);
 	}
 
-	if((href) && visible && (tag->follow != DPS_FOLLOW_NO)) {
+	if((href) && visible && (tag->follow != DPS_FOLLOW_NO) && !(Indexer->Flags.SkipHrefIn & DpsHrefFrom(name)) ) {
 		DPS_HREF	Href;
 
 		
