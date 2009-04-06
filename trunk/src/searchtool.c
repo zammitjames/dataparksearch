@@ -1949,7 +1949,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   } else { cur_order = -1; cur_exact = 0; }
 
   for(xy_wf = 0, i = 0; i < nsections; i++) xy_wf += wf[i];
-  Rbc = /*DpsOriginWeightFull(DPS_WORD_ORIGIN_QUERY) **/ (double)DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON) * xy_wf;
+  Rbc = /*DpsOriginWeightFull(DPS_WORD_ORIGIN_QUERY) **/ (double)DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON) * (Res->max_order_inquery + 1) * xy_wf;
 
   xy_o[wordorder] = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin);
   nsec = wf[wordsec]; D[DPS_N_ADD + wordsec] = 1;
@@ -2054,7 +2054,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	  else sum += 2000;
 #endif
 	}
-	xy /= Res->max_order_inquery + 1;
+/*	xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
 	D[DPS_N_WRDCOUNT] = phr_n - 2;
 	D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / phr_n;
@@ -2132,7 +2132,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       else sum += 2000;
 #endif
     }
-    xy /= Res->max_order_inquery + 1;
+/*    xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
     D[DPS_N_WRDCOUNT] = phr_n - 2;
     D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / phr_n;
