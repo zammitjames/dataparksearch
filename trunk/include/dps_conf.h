@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2005 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@ extern int  DpsFollowType(const char * follow);
 extern int  DpsMethod(const char * method);
 extern enum dps_prmethod DpsPRMethod(const char *);
 extern int  DpsWeightFactorsInit(const char *wf, int *res);
+extern dps_uint4 DpsHrefFrom(const char *);
 
 extern const char	*DpsMethodStr(int method);
 extern __C_LINK const char * __DPSCALL DpsFollowStr(int follow);

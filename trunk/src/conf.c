@@ -150,6 +150,28 @@ enum dps_prmethod DpsPRMethod(const char *s) {
   return DPS_POPRANK_GOO;
 }
 
+dps_uint4 DpsHrefFrom(const char *str) {
+  char	*lt;
+  char	*tok;
+  dps_uint4 result = 0;
+
+  tok = DpsGetStrToken(str, &lt);
+	
+  while (tok) {
+    if (!strncasecmp(tok, "area", 4)) result |= DPS_HREF_FROM_AREA;
+    else if (!strncasecmp(tok, "a", 1)) result |= DPS_HREF_FROM_A;
+    else if (!strncasecmp(tok, "base", 4)) result |= DPS_HREF_FROM_BASE;
+    else if (!strncasecmp(tok, "link", 4)) result |= DPS_HREF_FROM_LINK;
+    else if (!strncasecmp(tok, "script", 6)) result |= DPS_HREF_FROM_SCRIPT;
+    else if (!strncasecmp(tok, "input", 5)) result |= DPS_HREF_FROM_INPUT;
+    else if (!strncasecmp(tok, "frame", 5)) result |= DPS_HREF_FROM_FRAME;
+    else if (!strncasecmp(tok, "iframe", 6)) result |= DPS_HREF_FROM_IFRAME;
+    else if (!strncasecmp(tok, "img", 3)) result |= DPS_HREF_FROM_IMG;
+    tok = DpsGetStrToken(NULL, &lt);
+  }
+  return result;
+}
+
 
 int DpsWeightFactorsInit(const char *wf, int *res){
 	size_t len;
@@ -1355,6 +1377,8 @@ static int env_rpl_var(void *Cfg, size_t ac,char **av){
 	  if (!strcasecmp(av[1], "yes")) res = DPS_METHOD_VISITLATER;
 	  else if (!strncasecmp(av[1], "del", 3)) res = DPS_METHOD_DISALLOW;
 	  Conf->Flags.skip_unreferred = res;
+	} else if(!strcasecmp(av[0], "SkipHrefIn")) {
+	  Conf->Flags.SkipHrefIn = DpsHrefFrom(av[1]);
 	}else if (!strcasecmp(av[0], "PopRankMethod")) {
 	  Conf->Flags.poprank_method = DpsPRMethod(av[1]);
 	}

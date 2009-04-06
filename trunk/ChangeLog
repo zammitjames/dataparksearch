@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* SkipHrefIn command has been added. Use it to skip some HTML tags from new href lookup.
 	* SEASections command has been added. Use it to specify the list of sections which are used to construct SEA summary.
 	* A possible trap on an empty document has been fixed.
 	* A Disallow command in robots.txt doesn't lead to document removal from database anymore.

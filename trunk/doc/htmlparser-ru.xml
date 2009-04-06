@@ -116,6 +116,12 @@ NAME="Robots" Content="xxx"&gt;</literal>, где Content содержит
 				</para>
 			</listitem>
 		</itemizedlist>
+<para><indexterm><primary>Команда</primary><secondary>SkipHrefIn</secondary></indexterm>
+Однако вы можете указать список HTML тэгов, которые будут пропущены при поиске новых ссылок, при помощи команды <command>SkipHrefIn</command>.
+<programlisting>
+HrefSkipIn "img, link, script"
+</programlisting>
+</para>
 	</sect1>
 	<sect1 id="htmlparser-comments">
 		<title>Комментарии</title>
