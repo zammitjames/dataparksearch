@@ -1579,16 +1579,19 @@ static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLI
 
 static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPELL *norm, DPS_WIDEWORD *wword) {
   DPS_WIDEWORD w;
-  size_t i, nrecs = Indexer->Conf->Quffixes.nrecs, len;
+  size_t i, j, nrecs = Indexer->Conf->Quffixes.nrecs, len;
   DPS_QUFFIX *Quffix = (DPS_QUFFIX*)Indexer->Conf->Quffixes.Quffix;
   int err;
   DPS_CHARSET *local_charset;
   DPS_CHARSET *sys_int;
   DPS_CONV fromuni;
+  DPS_PSPELL PS;
   
   local_charset = Indexer->Conf->lcs;
   if (local_charset == NULL) return;
   if (NULL==(sys_int=DpsGetCharSet("sys-int"))) return;
+  if ((PS.cur = (DPS_SPELL **) DpsXmalloc(MAX_NORM*sizeof(DPS_SPELL *))) == NULL) return;
+  PS.nspell = 0;
   DpsConvInit(&fromuni, sys_int, local_charset, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
 
   w.word = NULL;
@@ -1628,9 +1631,14 @@ static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPEL
 	w.count = 0;
 	w.origin = DPS_WORD_ORIGIN_SPELL;
 	DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
+
+	PS.nspell = 0;
+	DpsFindWord(Indexer, w.uword, 0, &PS, NULL);
+	for (j = 0; PS.cur[j] != NULL; j++) DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order);
       }
     }
   }
+  DPS_FREE(PS.cur);
   DPS_FREE(w.word); DPS_FREE(w.uword);
 }
 
