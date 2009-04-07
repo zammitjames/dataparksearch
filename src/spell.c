@@ -1059,7 +1059,7 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
     DpsConv(&fromuni,find,sizeof(find),(char*)ufind,len);
 #endif
 
-    sprintf(mstr, "%s", mask);
+    dps_snprintf(mstr, sizeof(mstr), "%s$", mask);
 
     len = DpsConv(&touni, (char*)unimask, sizeof(unimask), mstr, dps_strlen(mstr) + 1);
     DpsUniStrToLower(unimask);
