@@ -2,7 +2,7 @@
 
     This is default template file for DataparkSearch 4
     (C) 1999-2001, mnoGoSearch developers team <devel@mnogosearch.org>
-    (C) 2003-2005, Datapark corp.
+    (C) 2003-2009, Datapark corp.
 
     Please rename to search.htm and edit as desired.
     See doc/dpearch-templates.html for detailed information.
@@ -107,17 +107,18 @@ HlEnd	</b>
 -->
 
 <!--top-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
 <HEAD>
-<META NAME="Content-Type" Content="text/html; charset=$(BrowserCharset)">
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=$(BrowserCharset)">
 <TITLE>Query: $*(q)</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
 
 <!IF NAME="form" CONTENT="extended">
-<FORM METHOD=GET ACTION="$(Self)">
-<table bgcolor=#EEEEEE border=0>
+<FORM METHOD="GET" ACTION="$(Self)">
+<table bgcolor="#EEEEEE" border="0">
   <TR>
     <TD>Search for:</TD>
     <TD COLSPAN=5>
@@ -240,7 +241,7 @@ HlEnd	</b>
 
 <center>
 <FORM METHOD=GET ACTION="$(Self)">
-<table bgcolor=#EEEEEE width=100%>
+<table bgcolor="#EEEEEE" width="100%">
   <tr>
     <td>
       <BR> Search for:
@@ -260,7 +261,7 @@ HlEnd	</b>
 
 
 <!--restop-->
-<table bgcolor=#EEEEEE width=100% border=0>
+<table bgcolor="#EEEEEE" width="100%" border="0">
   <tr>
     <td>
       <small>Search for <b>$*(q)</b>.</small>
@@ -278,8 +279,8 @@ HlEnd	</b>
   <tr><td colspan="2">
       Sort by:
       <!IF NAME="s" CONTENT="DRP">
-      <a href="$(FirstPage)&s=RPD">relevancy</a>&nbsp;|&nbsp;<b>last modified date</b><!ELSE>
-      <b>relevancy</b>&nbsp;|&nbsp;<a href="$(FirstPage)&s=DRP">last modified date</a>
+      <a href="$(FirstPage)&amp;s=RPD">relevancy</a>&nbsp;|&nbsp;<b>last modified date</b><!ELSE>
+      <b>relevancy</b>&nbsp;|&nbsp;<a href="$(FirstPage)&amp;s=DRP">last modified date</a>
       <!ENDIF>
   </td></tr>
 </table>
@@ -305,15 +306,8 @@ HlEnd	</b>
     <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title)<!ENDIF>
   </a>
   <small>[<b>$(Score)</b> Popularity: <b>$(Pop_Rank)</b>]</small>
+  <DD><small>$&(Body)...</small><!IFNOT NAME="sea" CONTENT=""><br><b>Summary:</b> $&(sea:312)<!ENDIF></DD>
   <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small>$&(Body)...</small><!IFNOT NAME="sea" CONTENT=""><br><b>Summary:</b> $&(sea:312)<!ENDIF>
-      </td>
-    </tr>
-    <tr>
-      <td>
         <UL>
          <li>
            <small>
@@ -322,12 +316,11 @@ HlEnd	</b>
               - $(Content-Length) bytes [$(Content-Type)] 
               - $(Last-Modified) 
 	      <!IFNOT NAME="stored_href" CONTENT="">
-	      <DD><small>[<a href="$(stored_href)">Cached copy</a>]</small></DD>
+	      [<a href="$(stored_href)">Cached copy</a>]
 	      <!ENDIF>
 	      <!IFNOT NAME="sitelimit_href" CONTENT="">
-	      <DD><small>[<a href="$(self)$(sitelimit_href)">All results from this site
-		    <!IFNOT NAME="PerSite" CONTENT="0"> ($(PerSite) total)<!ENDIF>
-	        </a>]</small></DD>
+	      [<a href="$(self)$(sitelimit_href)">All results from this site
+		    <!IFNOT NAME="PerSite" CONTENT="0"> ($(PerSite) total)<!ENDIF></a>]
 	      <!ENDIF>
              </font>
            </small>
@@ -335,33 +328,29 @@ HlEnd	</b>
            $(CL)
         </UL>
         $(STORED)
-	
-      </td>
-    </tr>
-  </table>
-  
+  <DD>
 <!ENDIF>
 </DL>
 <!--/res-->
 
 
 <!--resbot-->
-<table width=100% bgcolor=#FFFFFF>
+<table width="100%" bgcolor="#FFFFFF">
   <tr>
    <td align="left">
 	<small>Search &laquo;$*(q)&raquo; at: 
-<a href="http://www.google.com/search?ie=UTF-8&amp;hl=ru&amp;q=$%(q:UTF-8)">Google</a> &#150;
-<a href="http://search.yahoo.com/bin/query?p=$%(q:UTF-8)&amp;ei=UTF-8">Yahoo!</a> &#150;
-<a href="http://search.msn.com/results.aspx?q=$%(q:UTF-8)">MSN</a> &#150;
-<a href="http://www.yandex.ru/yandsearch?text=$%(q:cp1251)&amp;stype=www">Yandex</a> &#150;
-<a href="http://search.rambler.ru/cgi-bin/rambler_search?english=0&and=1&words=$%(q:cp1251)">Rambler</a>
+<a href="http://www.google.com/search?ie=UTF-8&amp;hl=ru&amp;q=$%(q:UTF-8)">Google</a> &#8211;
+<a href="http://search.yahoo.com/bin/query?p=$%(q:UTF-8)&amp;ei=UTF-8">Yahoo!</a> &#8211;
+<a href="http://search.msn.com/results.aspx?q=$%(q:UTF-8)">MSN</a> &#8211;
+<a href="http://www.yandex.ru/yandsearch?text=$%(q:cp1251)&amp;stype=www">Yandex</a> &#8211;
+<a href="http://search.rambler.ru/cgi-bin/rambler_search?english=0&amp;and=1&amp;words=$%(q:cp1251)">Rambler</a>
 </small>
    </td>
   </tr>
   <tr>
     <td align=center>
       <TABLE BORDER=0>
-        <TR><TD><small>Result pages: <TD>&nbsp;</TD></TD>$(NL)$(NB)$(NR)</TD></TR>
+        <TR><TD><small>Result pages: </small><TD>&nbsp;</TD>$(NL)$(NB)$(NR)</TR>
       </TABLE>
     </td>
   </tr>
@@ -409,7 +398,7 @@ HlEnd	</b>
 
 
 <!--notfound-->
-<table bgcolor=#EEEEEE width=100%>
+<table bgcolor="#EEEEEE" width="100%">
   <tr>
     <td>
       <small>Search for <b>$*(q)</b>.</small>
@@ -454,11 +443,11 @@ You haven't typed any word(s) to search for.
 
 
 <!--bottom-->
-<table bgcolor=#EEEEEE width=100%>
+<table bgcolor="#EEEEEE" width="100%">
   <tr><td>&nbsp;</td></tr>
 </table>
 
-<table width=100% bgcolor=#FFFFFF>
+<table width="100%" bgcolor="#FFFFFF">
 <tr>
   <td align=left>
     <font size="1"><a href="http://www.dataparksearch.org/">Powered by DataparkSearch Engine</a></font>
