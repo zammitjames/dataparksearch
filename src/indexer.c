@@ -1070,7 +1070,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		  return result;
 		}
 		DpsUnGzip(Indexer, Doc);
-		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
 	  }else
 	  if(!strcasecmp(ce,"deflate")){
 		DPS_THREADINFO(Indexer,"Inflate",url);
@@ -1079,7 +1080,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		  return result;
 		}
 		DpsInflate(Indexer, Doc);
-		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
 	  }else
 	    if((!strcasecmp(ce, "compress")) || (!strcasecmp(ce, "x-compress"))) {
 		DPS_THREADINFO(Indexer,"Uncompress",url);
@@ -1088,7 +1090,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		  return result;
 		}
 		DpsUncompress(Indexer, Doc);
-		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
 	  }else
 #endif	
 	      if((!strcasecmp(ce,"identity")) || (!strcasecmp(ce,""))) {
@@ -1835,7 +1838,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		  size_t dstlen = (size_t)DpsVarListFindInt(&Parent->Sections, "Content-Length", 0);
 
 		  DpsVarListReplaceInt(&Parent->Sections, "Content-Length", (int)(srclen + dstlen));
-		  DpsConvInit(&dc_parent, parent_cs, doc_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
+		  DpsConvInit(&dc_parent, doc_cs, parent_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
 		  for(i = 0; i < tlist->nitems; i++) {
 		    DPS_TEXTITEM *Item = &tlist->Items[i];
 		    srclen = ((Item->len) ? Item->len : (dps_strlen(Item->str)) + 1);	/* with '\0' */
