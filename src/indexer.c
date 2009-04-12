@@ -1206,7 +1206,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  }else
 	  if(!strncasecmp(real_content_type, "image/gif", 9)) {
 			DpsGIFParse(Indexer, Doc);
-	  }else {
+	  }else if (status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
 			/* Unknown Content-Type  */
 			DpsLog(Indexer,DPS_LOG_ERROR,"Unsupported Content-Type '%s'",real_content_type);
 			DpsVarListReplaceInt(&Doc->Sections,"Status",DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);
@@ -1830,12 +1830,15 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		}
 
 		{
-		  DPS_CHARSET *parent_cs = DpsGetCharSetByID(Parent->charset_id), *doc_cs = DpsGetCharSetByID(Doc->charset_id);
+		  DPS_CHARSET *parent_cs = DpsGetCharSetByID(Parent->charset_id), *doc_cs = Doc->lcs; /*DpsGetCharSetByID(Doc->charset_id);*/
 		  DPS_CONV     dc_parent;
 		  DPS_TEXTLIST *tlist = &Doc->TextList;
 		  char *src, *dst = NULL;
 		  size_t srclen = (size_t)DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
 		  size_t dstlen = (size_t)DpsVarListFindInt(&Parent->Sections, "Content-Length", 0);
+
+		  if (!doc_cs) doc_cs = Indexer->Conf->lcs;
+		  if (!doc_cs) doc_cs = DpsGetCharSet("iso-8859-1");
 
 		  DpsVarListReplaceInt(&Parent->Sections, "Content-Length", (int)(srclen + dstlen));
 		  DpsConvInit(&dc_parent, doc_cs, parent_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
@@ -1856,6 +1859,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		    src = Item->str;
 		    DpsConv(&dc_parent, dst, dstlen, src, srclen);
 		    Item->str = dst;
+		    Item->len = dc_parent.obytes;
 /*	    fprintf(stderr, "Section: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
 		    DpsTextListAdd(&Parent->TextList, Item);
 		    Item->str = src;
