@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -222,16 +222,16 @@ typedef struct {
 
 /* Input string in xxx2uni                  */
 /* convertion  has bad multi-byte sequence  */
-#define DPS_CHARSET_ILSEQ     0
-#define DPS_CHARSET_ILSEQ2      -1
-#define DPS_CHARSET_ILSEQ3      -2
-#define DPS_CHARSET_ILSEQ4      -3
-#define DPS_CHARSET_ILSEQ5      -4
-#define DPS_CHARSET_ILSEQ6      -5
+#define DPS_CHARSET_ILSEQ     -1
+#define DPS_CHARSET_ILSEQ2      -2
+#define DPS_CHARSET_ILSEQ3      -3
+#define DPS_CHARSET_ILSEQ4      -4
+#define DPS_CHARSET_ILSEQ5      -5
+#define DPS_CHARSET_ILSEQ6      -6
 
 /* Input buffer in xxx2uni was terminated   */
 /* in the middle of multi-byte sequence     */
-#define DPS_CHARSET_TOOFEW(n) (-6-(n))
+#define DPS_CHARSET_TOOFEW(n) (-7-(n))
 
 /* Can't convert unicode into given charset */
 #define DPS_CHARSET_ILUNI     0
