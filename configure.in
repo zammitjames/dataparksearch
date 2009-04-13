@@ -442,10 +442,10 @@ fi
 
 
 dnl Relevance related
-rel_distance_factor=0.2
-rel_position_factor=0.5
-rel_wrd_cnt_factor=0.4
-rel_unicnt_factor=1.5
+rel_distance_factor=25
+rel_position_factor=1.5
+rel_wrd_cnt_factor=3.5
+rel_unicnt_factor=2000
 pophops_factor=0.1
 
 
@@ -533,11 +533,11 @@ else
 fi
 
 
-relposition=4
+relposition=13
 AC_MSG_CHECKING(for best first word position in relevance)
 AC_ARG_WITH(bestpos,
 [  --with-bestpos=NUM      Define NUM as best first word position for relevance calculation. 
-                          Default value is 4.],
+                          Default value is 13.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		relposition="$withval"
@@ -549,11 +549,11 @@ AC_ARG_WITH(bestpos,
 AC_DEFINE_UNQUOTED(DPS_BEST_POSITION, $relposition)
 
 
-rel_avgpos=324
+rel_avgpos=390
 AC_MSG_CHECKING(for best average word position in relevance)
 AC_ARG_WITH(avgpos,
 [  --with-avgpos=NUM       Define NUM as best average word position for relevance calculation. 
-                          Default value is 324.],
+                          Default value is 390.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_avgpos="$withval"
@@ -565,11 +565,11 @@ AC_ARG_WITH(avgpos,
 AC_DEFINE_UNQUOTED(DPS_AVG_POSITION, $rel_avgpos)
 
 
-rel_wrd_cnt=11
+rel_wrd_cnt=30
 AC_MSG_CHECKING(for best words count in relevance)
 AC_ARG_WITH(bestwrdcnt,
 [  --with-bestwrdcnt=NUM   Define NUM as best words count for relevance calculation. 
-                          Default value is 11.],
+                          Default value is 30.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_wrd_cnt="$withval"
@@ -581,11 +581,11 @@ AC_ARG_WITH(bestwrdcnt,
 AC_DEFINE_UNQUOTED(DPS_BEST_WRD_CNT, $rel_wrd_cnt)
 
 
-rel_best_dist=464
+rel_best_dist=20
 AC_MSG_CHECKING(for best average distance between words in relevance)
 AC_ARG_WITH(avgdist,
 [  --with-avgdist=NUM   Define NUM as best words count for relevance calculation. 
-                          Default value is 464.],
+                          Default value is 20.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_best_dist="$withval"
@@ -600,7 +600,7 @@ AC_DEFINE_UNQUOTED(DPS_AVG_DISTANCE, $rel_best_dist)
 AC_MSG_CHECKING(for word distance factor in relevance)
 AC_ARG_WITH(distfactor,
 [  --with-distfactor=NUM   Define NUM as factor of word distance in relevance calculation. 
-                          Default value is 0.2.],
+                          Default value is 25.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_distance_factor="$withval"
@@ -611,11 +611,11 @@ AC_ARG_WITH(distfactor,
 ])
 AC_DEFINE_UNQUOTED(DPS_DISTANCE_FACTOR, $rel_distance_factor)
 
-rel_less_distance_factor="(2.0 * DPS_DISTANCE_FACTOR)"
+rel_less_distance_factor="1.0"
 AC_MSG_CHECKING(for word less distance factor in relevance)
 AC_ARG_WITH(lessdistfactor,
 [  --with-lessdistfactor=NUM   Define NUM as factor of word distance in relevance calculation. 
-                          Default value is --with-distancefactor multiply by 2.],
+                          Default value is 1.0.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_less_distance_factor="$withval"
@@ -630,7 +630,7 @@ AC_DEFINE_UNQUOTED(DPS_LESS_DISTANCE_FACTOR, $rel_less_distance_factor)
 AC_MSG_CHECKING(for first word position factor in relevance)
 AC_ARG_WITH(posfactor,
 [  --with-posfactor=NUM    Define NUM as factor of first word position in relevance calculation. 
-                          Default value is 0.5.],
+                          Default value is 1.5.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_position_factor="$withval"
@@ -642,11 +642,11 @@ AC_ARG_WITH(posfactor,
 AC_DEFINE_UNQUOTED(DPS_POSITION_FACTOR, $rel_position_factor)
 
 
-rel_less_position_factor="(4.0 * DPS_POSITION_FACTOR)"
+rel_less_position_factor="0.31"
 AC_MSG_CHECKING(for first word less position factor in relevance)
 AC_ARG_WITH(lessposfactor,
 [  --with-lessposfactor=NUM    Define NUM as factor of first word position in relevance calculation. 
-                          Default value is --with-posfactor multyply by 4.],
+                          Default value is 0.31.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_less_position_factor="$withval"
@@ -661,7 +661,7 @@ AC_DEFINE_UNQUOTED(DPS_LESS_POSITION_FACTOR, $rel_less_position_factor)
 AC_MSG_CHECKING(for word count factor in relevance)
 AC_ARG_WITH(wrdcntfactor,
 [  --with-wrdcntfactor=NUM Define NUM as factor of word count in relevance calculation. 
-                          Default value is 0.4.],
+                          Default value is 3.5.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_wrd_cnt_factor="$withval"
@@ -673,11 +673,11 @@ AC_ARG_WITH(wrdcntfactor,
 AC_DEFINE_UNQUOTED(DPS_WRD_CNT_FACTOR, $rel_wrd_cnt_factor)
 
 
-rel_less_wrd_cnt_factor="(10.0 * DPS_WRD_CNT_FACTOR)"
+rel_less_wrd_cnt_factor="70.5"
 AC_MSG_CHECKING(for word less count factor in relevance)
 AC_ARG_WITH(lesswrdcntfactor,
 [  --with-lesswrdcntfactor=NUM Define NUM as factor of word count in relevance calculation. 
-                          Default value is --with-wrdcntfactor multiply by 10.],
+                          Default value is 70.5.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_less_wrd_cnt_factor="$withval"
@@ -692,7 +692,7 @@ AC_DEFINE_UNQUOTED(DPS_LESS_WRD_CNT_FACTOR, $rel_less_wrd_cnt_factor)
 AC_MSG_CHECKING(for non-uniform words count factor in relevance)
 AC_ARG_WITH(wrdunifactor,
 [  --with-wrdunifactor=NUM Define NUM as factor of non-uniform words count distribution in relevance calculation. 
-                          Default value is 1.5.],
+                          Default value is 2000.],
 [
 	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
 		rel_unicnt_factor="$withval"
