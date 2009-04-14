@@ -80,8 +80,9 @@ int dps_mb_wc_utf8 (DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const un
     return conv->icodes = 3;
   } else if (c < 0xf8 && sizeof(dpsunicode_t)*8 >= 32) {
     if (n < 4)return DPS_CHARSET_TOOFEW(0);
-    if (!((s[1] ^ 0x80) < 0x40 && (s[2] ^ 0x80) < 0x40 && (s[3] ^ 0x80) < 0x40 && (c >= 0xf1 || s[1] >= 0x90)))
+    if (!((s[1] ^ 0x80) < 0x40 && (s[2] ^ 0x80) < 0x40 && (s[3] ^ 0x80) < 0x40 && (c >= 0xf1 || s[1] >= 0x90))) {
       return DPS_CHARSET_ILSEQ4;
+    }
     *pwc = ((dpsunicode_t) (c & 0x07) << 18) | ((dpsunicode_t) (s[1] ^ 0x80) << 12) | ((dpsunicode_t) (s[2] ^ 0x80) << 6) | (dpsunicode_t) (s[3] ^ 0x80);
     return conv->icodes = 4;
   } else if (c < 0xfc && sizeof(dpsunicode_t)*8 >= 32) {

@@ -199,5 +199,5 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	if(!Doc->Buf.content) {
 	    return;
 	}
-	DpsVarListInsInt(&Doc->Sections,"Content-Length",Doc->Buf.buf-Doc->Buf.content+(int)Doc->Buf.size);
+	DpsVarListReplaceInt(&Doc->Sections,"Content-Length", Doc->Buf.buf-Doc->Buf.content+(int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections,"Content-Length", 0));
 }

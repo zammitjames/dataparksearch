@@ -1625,7 +1625,7 @@ static inline int DpsBitsCount(dps_uint4 x) {
 }
 
 
-static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double xy, dps_uint4 *D
+static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double xy, dps_uint4 *D, size_t phr_n
 #ifdef WITH_REL_TRACK
 						, double *D_y
 #endif
@@ -1684,6 +1684,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 
 /*  fprintf(stderr, "2. x:%lf  xy:%lf  y:%lf {xy /(x + y):%lf}\n\n", 
 	  x, xy, y, xy / (x + y) );*/
+  y /= phr_n--;
+  y *= phr_n;
 #ifdef WITH_REL_TRACK
   *D_y = y;
 #endif
@@ -2066,7 +2068,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 /*	    fprintf(stderr, "** URL_ID: %d [phr_n:%d]\n", Crd[j].url_id, phr_n);*/
 /* fprintf(stderr, " +++ xy: %f  xy_o: %d[x%x]  phr_n: %d  origin: %d\n", xy, xy_o, xy_o, phr_n, DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON));*/
-	Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, xy *  nsec , D
+	Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, xy *  nsec , D, phr_n
 #ifdef WITH_REL_TRACK
 					       , &Track[j].y
 #endif
@@ -2145,7 +2147,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	
     Res->CoordList.ncoords = j + 1;
 	
-    Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, xy * nsec, D
+    Crd[j].coord = DpsCalcCosineWeightFull(R, Rbc, xy * nsec, D, phr_n
 #ifdef WITH_REL_TRACK
 					   , &Track[j].y
 #endif
