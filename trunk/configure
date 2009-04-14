@@ -1792,27 +1792,27 @@ Optional Packages:
   --with-pophopsfactor=NUM   Define NUM as factor of hops in the Neo Popularity Rank calculation.
                           Default value is 0.1.
   --with-bestpos=NUM      Define NUM as best first word position for relevance calculation.
-                          Default value is 4.
+                          Default value is 13.
   --with-avgpos=NUM       Define NUM as best average word position for relevance calculation.
-                          Default value is 324.
+                          Default value is 390.
   --with-bestwrdcnt=NUM   Define NUM as best words count for relevance calculation.
-                          Default value is 11.
+                          Default value is 30.
   --with-avgdist=NUM   Define NUM as best words count for relevance calculation.
-                          Default value is 464.
+                          Default value is 20.
   --with-distfactor=NUM   Define NUM as factor of word distance in relevance calculation.
-                          Default value is 0.2.
+                          Default value is 25.
   --with-lessdistfactor=NUM   Define NUM as factor of word distance in relevance calculation.
-                          Default value is --with-distancefactor multiply by 2.
+                          Default value is 1.0.
   --with-posfactor=NUM    Define NUM as factor of first word position in relevance calculation.
-                          Default value is 0.5.
-  --with-lessposfactor=NUM    Define NUM as factor of first word position in relevance calculation.
-                          Default value is --with-posfactor multyply by 4.
-  --with-wrdcntfactor=NUM Define NUM as factor of word count in relevance calculation.
-                          Default value is 0.4.
-  --with-lesswrdcntfactor=NUM Define NUM as factor of word count in relevance calculation.
-                          Default value is --with-wrdcntfactor multiply by 10.
-  --with-wrdunifactor=NUM Define NUM as factor of non-uniform words count distribution in relevance calculation.
                           Default value is 1.5.
+  --with-lessposfactor=NUM    Define NUM as factor of first word position in relevance calculation.
+                          Default value is 0.31.
+  --with-wrdcntfactor=NUM Define NUM as factor of word count in relevance calculation.
+                          Default value is 3.5.
+  --with-lesswrdcntfactor=NUM Define NUM as factor of word count in relevance calculation.
+                          Default value is 70.5.
+  --with-wrdunifactor=NUM Define NUM as factor of non-uniform words count distribution in relevance calculation.
+                          Default value is 2000.
   --with-openssl=DIR    Include Openssl support.  DIR is the Openssl
                           base install directory, defaults to /usr/local/ssl.
   --without-zlib          disable HTTP Content-Encoding support
@@ -26789,7 +26789,7 @@ fi
 
 if test "$debug" = "yes"
 then
-  CFLAGS="$CFLAGS -g"
+  CFLAGS="$CFLAGS -O0 -g"
   { $as_echo "$as_me:$LINENO: result: yes" >&5
 $as_echo "yes" >&6; }
 else
@@ -27381,10 +27381,10 @@ fi
 
 
 
-rel_distance_factor=0.2
-rel_position_factor=0.5
-rel_wrd_cnt_factor=0.4
-rel_unicnt_factor=1.5
+rel_distance_factor=25
+rel_position_factor=1.5
+rel_wrd_cnt_factor=3.5
+rel_unicnt_factor=2000
 pophops_factor=0.1
 
 
@@ -27531,7 +27531,7 @@ $as_echo "disabled" >&6; }
 fi
 
 
-relposition=4
+relposition=13
 { $as_echo "$as_me:$LINENO: checking for best first word position in relevance" >&5
 $as_echo_n "checking for best first word position in relevance... " >&6; }
 
@@ -27557,7 +27557,7 @@ _ACEOF
 
 
 
-rel_avgpos=324
+rel_avgpos=390
 { $as_echo "$as_me:$LINENO: checking for best average word position in relevance" >&5
 $as_echo_n "checking for best average word position in relevance... " >&6; }
 
@@ -27583,7 +27583,7 @@ _ACEOF
 
 
 
-rel_wrd_cnt=11
+rel_wrd_cnt=30
 { $as_echo "$as_me:$LINENO: checking for best words count in relevance" >&5
 $as_echo_n "checking for best words count in relevance... " >&6; }
 
@@ -27609,7 +27609,7 @@ _ACEOF
 
 
 
-rel_best_dist=464
+rel_best_dist=20
 { $as_echo "$as_me:$LINENO: checking for best average distance between words in relevance" >&5
 $as_echo_n "checking for best average distance between words in relevance... " >&6; }
 
@@ -27659,7 +27659,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-rel_less_distance_factor="(2.0 * DPS_DISTANCE_FACTOR)"
+rel_less_distance_factor="1.0"
 { $as_echo "$as_me:$LINENO: checking for word less distance factor in relevance" >&5
 $as_echo_n "checking for word less distance factor in relevance... " >&6; }
 
@@ -27710,7 +27710,7 @@ _ACEOF
 
 
 
-rel_less_position_factor="(4.0 * DPS_POSITION_FACTOR)"
+rel_less_position_factor="0.31"
 { $as_echo "$as_me:$LINENO: checking for first word less position factor in relevance" >&5
 $as_echo_n "checking for first word less position factor in relevance... " >&6; }
 
@@ -27761,7 +27761,7 @@ _ACEOF
 
 
 
-rel_less_wrd_cnt_factor="(10.0 * DPS_WRD_CNT_FACTOR)"
+rel_less_wrd_cnt_factor="70.5"
 { $as_echo "$as_me:$LINENO: checking for word less count factor in relevance" >&5
 $as_echo_n "checking for word less count factor in relevance... " >&6; }
 
