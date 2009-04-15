@@ -1135,7 +1135,7 @@ int main(int argc,char **argv, char **envp) {
 #ifdef HAVE_PTHREAD
 		      0
 #else
-		      1
+		      0 /*1*/
 #endif
 		      ,0 );
 	DpsAgentFree(Agent);
@@ -1162,7 +1162,7 @@ err2:
 #ifdef HAVE_PTHREAD
 				 0
 #else
-				 1
+				 0 /*1*/
 #endif
 				 , 0);
 	DpsAgentFree(Agent);

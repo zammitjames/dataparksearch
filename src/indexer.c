@@ -533,7 +533,7 @@ int DpsConvertHref(DPS_AGENT *Indexer, DPS_URL *CurURL, DPS_HREF *Href){
 
 static int DpsDocConvertHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 	size_t		i;
-	int		hops=DpsVarListFindInt(&Doc->Sections,"Hops",0);
+	int		hops = DpsVarListFindInt(&Doc->Sections, "Hops", -1);
 	urlid_t		url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	dps_uint4           maxhops = DpsVarListFindUnsigned(&Doc->Sections, "MaxHops", 255);
 	urlid_t         server_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0);
@@ -966,7 +966,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
     DpsHrefInit(&Href);
     Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-    Href.hops = 1 + DpsVarListFindInt(&Doc->Sections,"Hops",0);
+    Href.hops = 1 + DpsVarListFindInt(&Doc->Sections,"Hops", -1);
     Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
     Href.url = buf;
     Href.method = DPS_METHOD_GET;

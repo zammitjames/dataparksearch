@@ -1115,7 +1115,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	DPS_SQLRES	SQLRes;
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
 	dpshash32_t	id = 0;
-	int             hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0) + 1;
+	int             hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 	int		rc = DPS_OK;
 	
 	DpsSQLResInit(&SQLRes);
@@ -1993,7 +1993,6 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	rec_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	old_hops = (urlid_t)DpsVarListFindInt(&Doc->Sections, "hops", 0);
 	url_seed = (crc32_rec_id = (urlid_t)DpsStrHash32(e_url)) & 0x7FFF /*& 0xFF*/;
-
 
 	if (rec_id == 0) {
 	  updated = 0;

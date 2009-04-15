@@ -561,7 +561,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 						DPS_HREF Href;
 						DpsHrefInit(&Href);
 						Href.url=var->val;
-						Href.hops=DpsVarListFindInt(&Doc->Sections,"Hops",0)+1;
+						Href.hops = DpsVarListFindInt(&Doc->Sections,"Hops", -1) + 1;
 						Href.referrer=DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0);
 						Href.method=DPS_METHOD_GET;
 						Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
