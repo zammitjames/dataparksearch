@@ -5191,14 +5191,17 @@ int DpsLimit8SQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L,const char *field, int type
 	while (u) {
 	  dps_snprintf(qbuf, qbuflen, "%s u.rec_id>%d ORDER BY u.rec_id LIMIT %d", limit_query, rec_id, url_num);
 	
-	  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-	  rc = DpsSQLQuery(db, &SQLres, qbuf);
-	  if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
-	  if(DPS_OK != rc) {
+	  for (i = 0; i < 3; i ++) {
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+	    rc = DpsSQLQuery(db, &SQLres, qbuf);
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+	    if(DPS_OK != rc) {
+	      if (i < 2) { DPSSLEEP(120); continue; }
 /*	        DpsSQLEnd(db);*/
 	        DPS_FREE(limit_query);
 	        DPS_FREE(qbuf);
 		return rc;
+	    } else break;
 	  }
 
 	  nrows = DpsSQLNumRows(&SQLres);
@@ -5267,12 +5270,15 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 	DpsSQLResInit(&SQLres);
 	DpsSQLResInit(&CatRes);
 
-	if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-	rc = DpsSQLQuery(db, &CatRes, cat_query);
-	if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
-	if(DPS_OK != rc) {
+	for (i = 0; i < 3; i++) {
+	  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+	  rc = DpsSQLQuery(db, &CatRes, cat_query);
+	  if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+	  if(DPS_OK != rc) {
+	    if (i < 2) { DPSSLEEP(120); continue; }
 	        DPS_FREE(qbuf);
 		return rc;
+	  } else break;
 	}
 	ncats = DpsSQLNumRows(&CatRes);
 	for (c = 0; c < ncats; c++) {
@@ -5407,12 +5413,15 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 
 	dps_snprintf(qbuf, qbuflen, "SELECT k, ot FROM links");
 
-	if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-	rc = DpsSQLQuery(db, &SQLres, qbuf);
-	if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
-	if(DPS_OK != rc) {
-	  DPS_FREE(qbuf);
-	  return rc;
+	for (i = 0; i < 3; i++) {
+	  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+	  rc = DpsSQLQuery(db, &SQLres, qbuf);
+	  if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+	  if(DPS_OK != rc) {
+	    if (i < 2) { DPSSLEEP(120); continue; }
+	    DPS_FREE(qbuf);
+	    return rc;
+	  } else break;
 	}
 
 	nrows = DpsSQLNumRows(&SQLres);
@@ -5492,14 +5501,17 @@ int DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type
 	while (u) {
 	  dps_snprintf(qbuf, qbuflen, "%s u.rec_id>%d ORDER BY u.rec_id LIMIT %d", limit_query, rec_id, url_num);
 	
-	  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-	  rc = DpsSQLQuery(db, &SQLres, qbuf);
-	  if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
-	  if(DPS_OK != rc) {
+	  for (i = 0; i < 3; i++) {
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+	    rc = DpsSQLQuery(db, &SQLres, qbuf);
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+	    if(DPS_OK != rc) {
+	      if (i < 2) { DPSSLEEP(120); continue; }
 /*	        DpsSQLEnd(db);*/
 	        DPS_FREE(limit_query);
 	        DPS_FREE(qbuf);
 		return rc;
+	    } else break;
 	  }
 	
 	  nrows = DpsSQLNumRows(&SQLres);
