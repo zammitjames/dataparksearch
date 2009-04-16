@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -212,13 +212,13 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 		  }
 		}
 
-/*		fprintf(stderr, "ctype0: %02d  ctype:%02d  *s: %02x (%03d) -- ctype_1:%02d *(s+1): %02x (%03d)\n", 
-			*ctype0, ctype, *s, *s, ctype_1, *(s+1), *(s+1));*/
+/*		fprintf(stderr, " -- ct0:%02d ct:%02d *s:%02x(%03d)%d - ct1:%02d *(s+1):%02x(%03d) ct1>:%d\n", 
+			*ctype0, ctype, *s, *s, dps_isPatternSyntax(*s), ctype_1, *(s+1), *(s+1), (ctype_1 > DPS_UNI_BUKVA));*/
 
 /*		if(*ctype0!=ctype)*/
 		if ((*ctype0 > DPS_UNI_BUKVA && ctype <= DPS_UNI_BUKVA) 
 		    || (*ctype0 <= DPS_UNI_BUKVA && ctype > DPS_UNI_BUKVA && !dps_isPatternSyntax(*s))) {
-		  if (!cmd_mode || *(s+1) == 0 || ((*s != 0x2e) || (ctype_1 > DPS_UNI_BUKVA)))
+		  if (!cmd_mode || *(s+1) == 0 || (((*s != 0x2e) && (*s != 0x5f)) || (ctype_1 > DPS_UNI_BUKVA)))
 			break;
 		}
 
