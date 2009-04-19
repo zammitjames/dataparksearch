@@ -204,6 +204,9 @@ abasements	1376512	-40882603	http://site/body-not-near.txt
 http	1444096	-40882603	http://site/body-not-near.txt
 site	1509376	-40882603	http://site/body-not-near.txt
 body-not-near	1574400	-40882603	http://site/body-not-near.txt
+body	1574400	-40882603	http://site/body-not-near.txt
+not	1574400	-40882603	http://site/body-not-near.txt
+near	1574400	-40882603	http://site/body-not-near.txt
 txt	1639936	-40882603	http://site/body-not-near.txt
 http	67840	0	http://site/
 site	133120	0	http://site/
