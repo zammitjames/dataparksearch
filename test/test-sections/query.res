@@ -1,8 +1,20 @@
 SQL>'FIELDS=OFF'
 SQL>'SELECT dict.word,dict.intag,url.crc32,last_mod_time,url.url FROM dict, url WHERE url.rec_id=dict.url_id ORDER BY url.crc32,dict.intag'
+test	66048	-1223784188	21612564	http://site/directory/test-tz.html
+timezone	131584	-1223784188	21612564	http://site/directory/test-tz.html
+tz	196864	-1223784188	21612564	http://site/directory/test-tz.html
+http	264448	-1223784188	21612564	http://site/directory/test-tz.html
+site	329728	-1223784188	21612564	http://site/directory/test-tz.html
+directory	395008	-1223784188	21612564	http://site/directory/test-tz.html
+directory	462336	-1223784188	21612564	http://site/directory/test-tz.html
+test	525824	-1223784188	21612564	http://site/directory/test-tz.html
+tz	591360	-1223784188	21612564	http://site/directory/test-tz.html
+html	656896	-1223784188	21612564	http://site/directory/test-tz.html
 1	65792	-259856678	1190615189	http://site/test.xml
 0	131328	-259856678	1190615189	http://site/test.xml
 utf-8	196864	-259856678	1190615189	http://site/test.xml
+8	196864	-259856678	1190615189	http://site/test.xml
+utf	196864	-259856678	1190615189	http://site/test.xml
 25638033	262400	-259856678	1190615189	http://site/test.xml
 raw	327936	-259856678	1190615189	http://site/test.xml
 content	393472	-259856678	1190615189	http://site/test.xml
@@ -70,7 +82,9 @@ the	4394240	-259856678	1190615189	http://site/test.xml
 country's	4459776	-259856678	1190615189	http://site/test.xml
 second	4525312	-259856678	1190615189	http://site/test.xml
 largest	4590848	-259856678	1190615189	http://site/test.xml
+line	4656384	-259856678	1190615189	http://site/test.xml
 fixed-line	4656384	-259856678	1190615189	http://site/test.xml
+fixed	4656384	-259856678	1190615189	http://site/test.xml
 operator	4721920	-259856678	1190615189	http://site/test.xml
 is	4787456	-259856678	1190615189	http://site/test.xml
 likely	4852992	-259856678	1190615189	http://site/test.xml
@@ -124,13 +138,17 @@ china's	7933184	-259856678	1190615189	http://site/test.xml
 four	7998720	-259856678	1190615189	http://site/test.xml
 large	8064256	-259856678	1190615189	http://site/test.xml
 state-run	8129792	-259856678	1190615189	http://site/test.xml
+state	8129792	-259856678	1190615189	http://site/test.xml
+run	8129792	-259856678	1190615189	http://site/test.xml
 telecom	8195328	-259856678	1190615189	http://site/test.xml
 companies	8260864	-259856678	1190615189	http://site/test.xml
 that	8326400	-259856678	1190615189	http://site/test.xml
 remains	8391936	-259856678	1190615189	http://site/test.xml
 unlisted	8457472	-259856678	1190615189	http://site/test.xml
 dominant	8523008	-259856678	1190615189	http://site/test.xml
+fixed	8588544	-259856678	1190615189	http://site/test.xml
 fixed-line	8588544	-259856678	1190615189	http://site/test.xml
+line	8588544	-259856678	1190615189	http://site/test.xml
 operator	8654080	-259856678	1190615189	http://site/test.xml
 china	8719616	-259856678	1190615189	http://site/test.xml
 telecom	8785152	-259856678	1190615189	http://site/test.xml
@@ -191,7 +209,9 @@ dow	12324096	-259856678	1190615189	http://site/test.xml
 jones	12389632	-259856678	1190615189	http://site/test.xml
 newswires	12455168	-259856678	1190615189	http://site/test.xml
 8610	12520704	-259856678	1190615189	http://site/test.xml
+6588	12586240	-259856678	1190615189	http://site/test.xml
 6588-5848	12586240	-259856678	1190615189	http://site/test.xml
+5848	12586240	-259856678	1190615189	http://site/test.xml
 djnews	12651776	-259856678	1190615189	http://site/test.xml
 beijing	12717312	-259856678	1190615189	http://site/test.xml
 dowjones	12782848	-259856678	1190615189	http://site/test.xml
@@ -200,18 +220,27 @@ end	12913920	-259856678	1190615189	http://site/test.xml
 dow	12979456	-259856678	1190615189	http://site/test.xml
 jones	13044992	-259856678	1190615189	http://site/test.xml
 newswires	13110528	-259856678	1190615189	http://site/test.xml
+01	13176064	-259856678	1190615189	http://site/test.xml
 01-01-04	13176064	-259856678	1190615189	http://site/test.xml
+01	13176064	-259856678	1190615189	http://site/test.xml
+04	13176064	-259856678	1190615189	http://site/test.xml
+2341et	13241600	-259856678	1190615189	http://site/test.xml
 2341et-	13241600	-259856678	1190615189	http://site/test.xml
 11	13307136	-259856678	1190615189	http://site/test.xml
 41	13372672	-259856678	1190615189	http://site/test.xml
 pm	13438208	-259856678	1190615189	http://site/test.xml
 est	13503744	-259856678	1190615189	http://site/test.xml
 01-01-04	13569280	-259856678	1190615189	http://site/test.xml
+04	13569280	-259856678	1190615189	http://site/test.xml
+01	13569280	-259856678	1190615189	http://site/test.xml
+01	13569280	-259856678	1190615189	http://site/test.xml
 footnote	13631744	-259856678	1190615189	http://site/test.xml
 this	13700352	-259856678	1190615189	http://site/test.xml
 is	13765888	-259856678	1190615189	http://site/test.xml
 a	13831424	-259856678	1190615189	http://site/test.xml
 real-time	13896960	-259856678	1190615189	http://site/test.xml
+time	13896960	-259856678	1190615189	http://site/test.xml
+real	13896960	-259856678	1190615189	http://site/test.xml
 news	13962496	-259856678	1190615189	http://site/test.xml
 story	14028032	-259856678	1190615189	http://site/test.xml
 and	14093568	-259856678	1190615189	http://site/test.xml
@@ -248,11 +277,17 @@ newswires	16059392	-259856678	1190615189	http://site/test.xml
 none	16122112	-259856678	1190615189	http://site/test.xml
 none	16187648	-259856678	1190615189	http://site/test.xml
 2004-01-01	16253184	-259856678	1190615189	http://site/test.xml
+2004	16253184	-259856678	1190615189	http://site/test.xml
+01	16253184	-259856678	1190615189	http://site/test.xml
+01	16253184	-259856678	1190615189	http://site/test.xml
 bt	16318720	-259856678	1190615189	http://site/test.xml
 000791	16384256	-259856678	1190615189	http://site/test.xml
 story	16449792	-259856678	1190615189	http://site/test.xml
 xml	16515328	-259856678	1190615189	http://site/test.xml
+2004	16583424	-259856678	1190615189	http://site/test.xml
+01	16583424	-259856678	1190615189	http://site/test.xml
 2004-01-01	16583424	-259856678	1190615189	http://site/test.xml
+01	16583424	-259856678	1190615189	http://site/test.xml
 23	16648960	-259856678	1190615189	http://site/test.xml
 41	16714496	-259856678	1190615189	http://site/test.xml
 00	16780032	-259856678	1190615189	http://site/test.xml
@@ -270,6 +305,9 @@ test2	66048	405234232	21623364	http://site/test2.html
 phone	131328	405234232	21623364	http://site/test2.html
 8622	196864	405234232	21623364	http://site/test2.html
 62-12-12	262400	405234232	21623364	http://site/test2.html
+12	262400	405234232	21623364	http://site/test2.html
+12	262400	405234232	21623364	http://site/test2.html
+62	262400	405234232	21623364	http://site/test2.html
 http	329984	405234232	21623364	http://site/test2.html
 site	395264	405234232	21623364	http://site/test2.html
 test2	460288	405234232	21623364	http://site/test2.html
@@ -313,14 +351,20 @@ html	1771008	954484151	1187948785	http://site/test1.html
 SQL>'SELECT dict.word,dict.intag,url.crc32,url.url FROM crossdict dict, url WHERE url.rec_id=dict.url_id ORDER BY url.crc32,dict.intag'
 second	68096	405234232	http://site/test2.html
 SQL>'SELECT status, docsize, hops, crc32, last_mod_time, url FROM url ORDER BY status, crc32'
+200	151	2	-1223784188	21612564	http://site/directory/test-tz.html
 200	2893	1	-259856678	1190615189	http://site/test.xml
-200	77	1	0	0	http://site/directory/
 200	142	0	0	0	http://site/
+200	101	1	0	0	http://site/directory/
 200	170	1	405234232	21623364	http://site/test2.html
 200	159	2	795241664	21623364	http://site/directory/test.html
 200	460	1	954484151	1187948785	http://site/test1.html
 404	0	2	0	0	http://site/img/djlogobluesm.gif
 SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,urlinfo WHERE url.rec_id=urlinfo.url_id ORDER BY url.status,url.crc32,lower(urlinfo.sname)'
+200	-1223784188	http://site/directory/test-tz.html	body	TZ
+200	-1223784188	http://site/directory/test-tz.html	Charset	ISO-8859-1
+200	-1223784188	http://site/directory/test-tz.html	Content-Language	en
+200	-1223784188	http://site/directory/test-tz.html	Content-Type	text/html
+200	-1223784188	http://site/directory/test-tz.html	title	Test Timezone
 200	-259856678	http://site/test.xml	body	1.0 UTF-8 25638033 RAW_CONTENT watermark 20040101000791 DJ CHINA PRESS: Netcom Wants IPO Shr Price Set Around Jan 15 Thu Jan 1, 2004 23:41:00 footnote 25638033 RAW_CONTENT DJ CHINA PRESS: Netcom Wants IPO Shr Price Set Around Jan 15 DOWJONES Dow Jones none none none 2004-01-01_BT_000791.story.xml
 200	-259856678	http://site/test.xml	Charset	ISO-8859-1
 200	-259856678	http://site/test.xml	Content-Language	en
@@ -329,10 +373,10 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	-259856678	http://site/test.xml	publication-date	2004-01-01 23:41:00
 200	0	http://site/	Charset	ISO-8859-1
 200	0	http://site/directory/	Charset	ISO-8859-1
-200	0	http://site/directory/	Content-Language	en
 200	0	http://site/	Content-Language	en
-200	0	http://site/	Content-type	text/html
+200	0	http://site/directory/	Content-Language	en
 200	0	http://site/directory/	Content-type	text/html
+200	0	http://site/	Content-type	text/html
 200	405234232	http://site/test2.html	body	Phone: (8622) 62-12-12
 200	405234232	http://site/test2.html	Charset	ISO-8859-1
 200	405234232	http://site/test2.html	Content-Language	en

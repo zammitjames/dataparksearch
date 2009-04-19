@@ -3,7 +3,9 @@
 <META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
 <TITLE>mnoGoSearch: second</TITLE>
 </HEAD>
+
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
+
 
 <center>
 <FORM METHOD=GET ACTION="">
@@ -34,19 +36,13 @@
   </tr>
   <tr><td colspan="2">
       Sort by:
-      
-      <b>relevancy</b>&nbsp;|&nbsp;<a href="?np=0&amp;q=second&amp;wf=1000000000&s=DRP">last modified date</a>
-      
-  </td></tr>
-</table>
-<DL>
-
-
+            <b>relevancy</b>&nbsp;|&nbsp;<a href="?np=0&amp;q=second&amp;wf=1000000000&s=DRP">last modified date</a>
+        </td></tr>
+</table><DL>
   <DT>1.
   <a href="http://site/test2.html" TARGET="_blank">
-    Test2
-  </a>
-  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
+    Test2  </a>
+  <small>[<b>0.091%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -63,32 +59,24 @@
              <font color="#008800">
               - 170 bytes [text/html]
               - 
-	      
-	      
-	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=388628276&amp;wf=1000000000">More result from this site
-		    
-	        </a>]</small></DD>
-	      
-             </font>
+	      	      	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=388628276&amp;wf=1000000000">More result from this site
+		    	        </a>]</small></DD>
+	                   </font>
            </small>
            <BR>
            
         </UL>
         
+
       </td>
     </tr>
   </table>
 
-</DL>
-
-<DL>
-
-
+</DL><DL>
   <DT>2.
   <a href="http://site/test.xml" TARGET="_blank">
-    http://site/test.xml
-  </a>
-  <small>[<b>0.001%</b> Popularity: <b>0.25000</b>]</small>
+    http://site/test.xml  </a>
+  <small>[<b>0.091%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -105,39 +93,31 @@
              <font color="#008800">
               - 2893 bytes [text/xml]
               - 
-	      
-	      
-	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=388628276&amp;wf=1000000000">More result from this site
-		    
-	        </a>]</small></DD>
-	      
-             </font>
+	      	      	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=388628276&amp;wf=1000000000">More result from this site
+		    	        </a>]</small></DD>
+	                   </font>
            </small>
            <BR>
            
         </UL>
         
+
       </td>
     </tr>
   </table>
 
-</DL>
-
-<table width=100% bgcolor=#FFFFFF>
+</DL><table width=100% bgcolor=#FFFFFF>
   <tr>
     <td align=center>
       <TABLE BORDER=0>
-        <TR><TD><small>Result pages: <TD>&nbsp;</TD></TD><TD><small><FONT COLOR=gray>&lt;&lt; Prev</FONT></TD>
-<TD><small>1</TD>
-<TD><small><FONT COLOR=gray>Next &gt;&gt;</FONT></TD>
-</TD></TR>
+        <TR><TD><small>Result pages: <TD>&nbsp;</TD></TD><TD><small><FONT COLOR=gray>&lt;&lt; Prev</FONT></TD><TD><small>1</TD><TD><small><FONT COLOR=gray>Next &gt;&gt;</FONT></TD></TD></TR>
       </TABLE>
     </td>
   </tr>
-</table>
-<table bgcolor=#EEEEEE width=100%>
+</table><table bgcolor=#EEEEEE width=100%>
   <tr><td>&nbsp;</td></tr>
 </table>
+
 <table width=100% bgcolor=#FFFFFF>
 <tr>
   <td align=left>

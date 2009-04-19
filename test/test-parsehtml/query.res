@@ -26,30 +26,19 @@ html	1507584	-1592461605	http://site/html40-frameset.html
 gerald	1573120	-1592461605	http://site/html40-frameset.html
 oskoboiny	1638656	-1592461605	http://site/html40-frameset.html
 $date	1704192	-1592461605	http://site/html40-frameset.html
+17	1769728	-1592461605	http://site/html40-frameset.html
 1999/09/17	1769728	-1592461605	http://site/html40-frameset.html
+1999	1769728	-1592461605	http://site/html40-frameset.html
+09	1769728	-1592461605	http://site/html40-frameset.html
 08	1835264	-1592461605	http://site/html40-frameset.html
 45	1900800	-1592461605	http://site/html40-frameset.html
 42	1966336	-1592461605	http://site/html40-frameset.html
 $	2031872	-1592461605	http://site/html40-frameset.html
 http	2099456	-1592461605	http://site/html40-frameset.html
 site	2164736	-1592461605	http://site/html40-frameset.html
-html40-frameset	2229760	-1592461605	http://site/html40-frameset.html
-html	2295296	-1592461605	http://site/html40-frameset.html
-0	2361856	-1592461605	http://site/html40-frameset.html
-frameset	2427392	-1592461605	http://site/html40-frameset.html
-document	2492928	-1592461605	http://site/html40-frameset.html
-test	2558464	-1592461605	http://site/html40-frameset.html
-html	2624000	-1592461605	http://site/html40-frameset.html
-4	2689536	-1592461605	http://site/html40-frameset.html
-0	2755072	-1592461605	http://site/html40-frameset.html
-frameset	2820608	-1592461605	http://site/html40-frameset.html
-document	2886144	-1592461605	http://site/html40-frameset.html
-this	2951680	-1592461605	http://site/html40-frameset.html
-is	3017216	-1592461605	http://site/html40-frameset.html
-a	3082752	-1592461605	http://site/html40-frameset.html
-test	3148288	-1592461605	http://site/html40-frameset.html
-html	3213824	-1592461605	http://site/html40-frameset.html
-4	3279360	-1592461605	http://site/html40-frameset.html
+html40	2229760	-1592461605	http://site/html40-frameset.html
+frameset	2295296	-1592461605	http://site/html40-frameset.html
+html	2360832	-1592461605	http://site/html40-frameset.html
 test	66048	-1092050819	http://site/html40-transitional.html
 html	131584	-1092050819	http://site/html40-transitional.html
 4	197120	-1092050819	http://site/html40-transitional.html
@@ -76,68 +65,79 @@ html	1507584	-1092050819	http://site/html40-transitional.html
 gerald	1573120	-1092050819	http://site/html40-transitional.html
 oskoboiny	1638656	-1092050819	http://site/html40-transitional.html
 $date	1704192	-1092050819	http://site/html40-transitional.html
+09	1769728	-1092050819	http://site/html40-transitional.html
+17	1769728	-1092050819	http://site/html40-transitional.html
 1999/09/17	1769728	-1092050819	http://site/html40-transitional.html
+1999	1769728	-1092050819	http://site/html40-transitional.html
 08	1835264	-1092050819	http://site/html40-transitional.html
 49	1900800	-1092050819	http://site/html40-transitional.html
 22	1966336	-1092050819	http://site/html40-transitional.html
 $	2031872	-1092050819	http://site/html40-transitional.html
 http	2099456	-1092050819	http://site/html40-transitional.html
 site	2164736	-1092050819	http://site/html40-transitional.html
-html40-transitional	2229760	-1092050819	http://site/html40-transitional.html
-html	2295296	-1092050819	http://site/html40-transitional.html
-0	2361856	-1092050819	http://site/html40-transitional.html
-transitional	2427392	-1092050819	http://site/html40-transitional.html
-document	2492928	-1092050819	http://site/html40-transitional.html
-0	2558464	-1092050819	http://site/html40-transitional.html
-transitional	2624000	-1092050819	http://site/html40-transitional.html
-document	2689536	-1092050819	http://site/html40-transitional.html
-this	2755072	-1092050819	http://site/html40-transitional.html
-is	2820608	-1092050819	http://site/html40-transitional.html
-a	2886144	-1092050819	http://site/html40-transitional.html
-test	2951680	-1092050819	http://site/html40-transitional.html
-html	3017216	-1092050819	http://site/html40-transitional.html
-4	3082752	-1092050819	http://site/html40-transitional.html
-test	3148288	-1092050819	http://site/html40-transitional.html
-html	3213824	-1092050819	http://site/html40-transitional.html
-4	3279360	-1092050819	http://site/html40-transitional.html
+html40	2229760	-1092050819	http://site/html40-transitional.html
+transitional	2295296	-1092050819	http://site/html40-transitional.html
+html	2360832	-1092050819	http://site/html40-transitional.html
+&#60;	66048	-917460509	http://site/meta-ua.html
+1	131584	-917460509	http://site/meta-ua.html
+body	196864	-917460509	http://site/meta-ua.html
+komins	262400	-917460509	http://site/meta-ua.html
+meta	262400	-917460509	http://site/meta-ua.html
+meta-komins	262400	-917460509	http://site/meta-ua.html
+http	329984	-917460509	http://site/meta-ua.html
+site	395264	-917460509	http://site/meta-ua.html
+meta	460288	-917460509	http://site/meta-ua.html
+ua	525824	-917460509	http://site/meta-ua.html
+html	591360	-917460509	http://site/meta-ua.html
 virtual	66048	-910729714	http://site/xhtml1-strict-minimal.xhtml
 virtual	66048	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
-library	131584	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 library	131584	-910729714	http://site/xhtml1-strict-minimal.xhtml
+library	131584	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 this	196864	-910729714	http://site/xhtml1-strict-minimal.xhtml
 this	196864	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
-is	262400	-910729714	http://site/xhtml1-strict-minimal.xhtml
 is	262400	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
-a	327936	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+is	262400	-910729714	http://site/xhtml1-strict-minimal.xhtml
 a	327936	-910729714	http://site/xhtml1-strict-minimal.xhtml
+a	327936	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 minimal	393472	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 minimal	393472	-910729714	http://site/xhtml1-strict-minimal.xhtml
-xhtml	459008	-910729714	http://site/xhtml1-strict-minimal.xhtml
 xhtml	459008	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+xhtml	459008	-910729714	http://site/xhtml1-strict-minimal.xhtml
 document	524544	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 document	524544	-910729714	http://site/xhtml1-strict-minimal.xhtml
-copied	590080	-910729714	http://site/xhtml1-strict-minimal.xhtml
 copied	590080	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
-here	655616	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+copied	590080	-910729714	http://site/xhtml1-strict-minimal.xhtml
 here	655616	-910729714	http://site/xhtml1-strict-minimal.xhtml
-more	721152	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+here	655616	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 more	721152	-910729714	http://site/xhtml1-strict-minimal.xhtml
-or	786688	-910729714	http://site/xhtml1-strict-minimal.xhtml
+more	721152	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 or	786688	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
-less	852224	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+or	786688	-910729714	http://site/xhtml1-strict-minimal.xhtml
 less	852224	-910729714	http://site/xhtml1-strict-minimal.xhtml
+less	852224	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 from	917760	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 from	917760	-910729714	http://site/xhtml1-strict-minimal.xhtml
-pr-xhtml1-19991210	983296	-910729714	http://site/xhtml1-strict-minimal.xhtml
+xhtml1	983296	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+pr	983296	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 pr-xhtml1-19991210	983296	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+19991210	983296	-910729714	http://site/xhtml1-strict-minimal.xhtml
+19991210	983296	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+pr	983296	-910729714	http://site/xhtml1-strict-minimal.xhtml
+xhtml1	983296	-910729714	http://site/xhtml1-strict-minimal.xhtml
+pr-xhtml1-19991210	983296	-910729714	http://site/xhtml1-strict-minimal.xhtml
 http	1050880	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 http	1050880	-910729714	http://site/xhtml1-strict-minimal.xhtml
-site	1116160	-910729714	http://site/xhtml1-strict-minimal.xhtml
 site	1116160	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
-xhtml1-strict-missing-xmlns	1181184	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
-xhtml1-strict-minimal	1181184	-910729714	http://site/xhtml1-strict-minimal.xhtml
-xhtml	1246720	-910729714	http://site/xhtml1-strict-minimal.xhtml
-xhtml	1246720	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+site	1116160	-910729714	http://site/xhtml1-strict-minimal.xhtml
+xhtml1	1181184	-910729714	http://site/xhtml1-strict-minimal.xhtml
+xhtml1	1181184	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+strict	1246720	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+strict	1246720	-910729714	http://site/xhtml1-strict-minimal.xhtml
+minimal	1312256	-910729714	http://site/xhtml1-strict-minimal.xhtml
+missing	1312256	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+xhtml	1377792	-910729714	http://site/xhtml1-strict-minimal.xhtml
+xmlns	1377792	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
+xhtml	1443328	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 http	67840	0	http://site/
 site	133120	0	http://site/
 test	66048	321328345	http://site/bogus-fpi.html
@@ -166,15 +166,19 @@ html	1507584	321328345	http://site/bogus-fpi.html
 gerald	1573120	321328345	http://site/bogus-fpi.html
 oskoboiny	1638656	321328345	http://site/bogus-fpi.html
 $date	1704192	321328345	http://site/bogus-fpi.html
+1999	1769728	321328345	http://site/bogus-fpi.html
 1999/09/27	1769728	321328345	http://site/bogus-fpi.html
+09	1769728	321328345	http://site/bogus-fpi.html
+27	1769728	321328345	http://site/bogus-fpi.html
 10	1835264	321328345	http://site/bogus-fpi.html
 04	1900800	321328345	http://site/bogus-fpi.html
 58	1966336	321328345	http://site/bogus-fpi.html
 $	2031872	321328345	http://site/bogus-fpi.html
 http	2099456	321328345	http://site/bogus-fpi.html
 site	2164736	321328345	http://site/bogus-fpi.html
-bogus-fpi	2229760	321328345	http://site/bogus-fpi.html
-html	2295296	321328345	http://site/bogus-fpi.html
+bogus	2229760	321328345	http://site/bogus-fpi.html
+fpi	2295296	321328345	http://site/bogus-fpi.html
+html	2360832	321328345	http://site/bogus-fpi.html
 accept	66048	420898845	http://site/accept.html
 probb	131328	420898845	http://site/accept.html
 http	198912	420898845	http://site/accept.html
@@ -197,8 +201,9 @@ blah	524544	509992599	http://site/no-newlines.html
 blah	590080	509992599	http://site/no-newlines.html
 http	657664	509992599	http://site/no-newlines.html
 site	722944	509992599	http://site/no-newlines.html
-no-newlines	787968	509992599	http://site/no-newlines.html
-html	853504	509992599	http://site/no-newlines.html
+no	787968	509992599	http://site/no-newlines.html
+newlines	853504	509992599	http://site/no-newlines.html
+html	919040	509992599	http://site/no-newlines.html
 test	66048	1000806340	http://site/html40-strict.html
 html	131584	1000806340	http://site/html40-strict.html
 4	197120	1000806340	http://site/html40-strict.html
@@ -225,31 +230,25 @@ html	1507584	1000806340	http://site/html40-strict.html
 gerald	1573120	1000806340	http://site/html40-strict.html
 oskoboiny	1638656	1000806340	http://site/html40-strict.html
 $date	1704192	1000806340	http://site/html40-strict.html
+17	1769728	1000806340	http://site/html40-strict.html
 1999/09/17	1769728	1000806340	http://site/html40-strict.html
+1999	1769728	1000806340	http://site/html40-strict.html
+09	1769728	1000806340	http://site/html40-strict.html
 08	1835264	1000806340	http://site/html40-strict.html
 49	1900800	1000806340	http://site/html40-strict.html
 22	1966336	1000806340	http://site/html40-strict.html
 $	2031872	1000806340	http://site/html40-strict.html
 http	2099456	1000806340	http://site/html40-strict.html
 site	2164736	1000806340	http://site/html40-strict.html
-html40-strict	2229760	1000806340	http://site/html40-strict.html
-html	2295296	1000806340	http://site/html40-strict.html
-0	2361856	1000806340	http://site/html40-strict.html
-strict	2427392	1000806340	http://site/html40-strict.html
-document	2492928	1000806340	http://site/html40-strict.html
-test	2558464	1000806340	http://site/html40-strict.html
-html	2624000	1000806340	http://site/html40-strict.html
-4	2689536	1000806340	http://site/html40-strict.html
-0	2755072	1000806340	http://site/html40-strict.html
-strict	2820608	1000806340	http://site/html40-strict.html
-document	2886144	1000806340	http://site/html40-strict.html
-this	2951680	1000806340	http://site/html40-strict.html
-is	3017216	1000806340	http://site/html40-strict.html
-a	3082752	1000806340	http://site/html40-strict.html
-test	3148288	1000806340	http://site/html40-strict.html
-html	3213824	1000806340	http://site/html40-strict.html
-4	3279360	1000806340	http://site/html40-strict.html
+html40	2229760	1000806340	http://site/html40-strict.html
+strict	2295296	1000806340	http://site/html40-strict.html
+html	2360832	1000806340	http://site/html40-strict.html
 xhtml1-missing-doctype-and-xmlns	66048	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+doctype	66048	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+missing	66048	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+xhtml1	66048	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+xmlns	66048	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+and	66048	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
 html	131584	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
 this	196864	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
 is	262400	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
@@ -272,8 +271,12 @@ root	1310976	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
 element	1376512	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
 http	1444096	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
 site	1509376	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
-xhtml1-missing-doctype-and-xmlns	1574400	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
-xhtml	1639936	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+xhtml1	1574400	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+missing	1639936	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+doctype	1705472	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+and	1771008	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+xmlns	1836544	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
+xhtml	1902080	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml
 virtual	66048	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 library	131584	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 this	196864	1264059688	http://site/xhtml1-blank-1st-line.xhtml
@@ -288,6 +291,9 @@ more	721152	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 or	786688	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 less	852224	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 from	917760	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+19991210	983296	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+xhtml1	983296	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+pr	983296	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 pr-xhtml1-19991210	983296	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 with	1048832	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 an	1114368	1264059688	http://site/xhtml1-blank-1st-line.xhtml
@@ -304,8 +310,11 @@ this	1769728	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 case	1835264	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 http	1902848	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 site	1968128	1264059688	http://site/xhtml1-blank-1st-line.xhtml
-xhtml1-blank-1st-line	2033152	1264059688	http://site/xhtml1-blank-1st-line.xhtml
-xhtml	2098688	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+xhtml1	2033152	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+blank	2098688	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+1st	2164224	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+line	2229760	1264059688	http://site/xhtml1-blank-1st-line.xhtml
+xhtml	2295296	1264059688	http://site/xhtml1-blank-1st-line.xhtml
 this	66048	1370978571	http://site/index.html
 is	131584	1370978571	http://site/index.html
 a	197120	1370978571	http://site/index.html
@@ -327,37 +336,20 @@ five	1179904	1370978571	http://site/index.html
 six	1245440	1370978571	http://site/index.html
 nine	1310976	1370978571	http://site/index.html
 ten	1376512	1370978571	http://site/index.html
-ÐÑÔÅÒËÁ	1442048	1370978571	http://site/index.html
-ÐÑÔ£ÒËÁ	1442048	1370978571	http://site/index.html
+Ð¿ÑÑ‚Ñ‘Ñ€ÐºÐ°	1442048	1370978571	http://site/index.html
+Ð¿ÑÑ‚ÐµÑ€ÐºÐ°	1442048	1370978571	http://site/index.html
 c++	1507584	1370978571	http://site/index.html
+c	1573120	1370978571	http://site/index.html
 c--	1573120	1370978571	http://site/index.html
 c#	1638656	1370978571	http://site/index.html
+c	1638656	1370978571	http://site/index.html
+l	1704192	1370978571	http://site/index.html
 l'	1704192	1370978571	http://site/index.html
 espoire	1769728	1370978571	http://site/index.html
 http	1837312	1370978571	http://site/index.html
 site	1902592	1370978571	http://site/index.html
 index	1967616	1370978571	http://site/index.html
 html	2033152	1370978571	http://site/index.html
-l'	2099712	1370978571	http://site/index.html
-espoire	2165248	1370978571	http://site/index.html
-http	2230784	1370978571	http://site/index.html
-site	2296320	1370978571	http://site/index.html
-index	2361856	1370978571	http://site/index.html
-this	2427392	1370978571	http://site/index.html
-is	2492928	1370978571	http://site/index.html
-a	2558464	1370978571	http://site/index.html
-title	2624000	1370978571	http://site/index.html
-in	2689536	1370978571	http://site/index.html
-the	2755072	1370978571	http://site/index.html
-middle	2820608	1370978571	http://site/index.html
-i'm	2886144	1370978571	http://site/index.html
-wondering	2951680	1370978571	http://site/index.html
-if	3017216	1370978571	http://site/index.html
-this	3082752	1370978571	http://site/index.html
-is	3148288	1370978571	http://site/index.html
-working	3213824	1370978571	http://site/index.html
-as	3279360	1370978571	http://site/index.html
-expected	3344896	1370978571	http://site/index.html
 test	66048	1901639714	http://site/xhtml1-strict.xhtml
 xhtml	131584	1901639714	http://site/xhtml1-strict.xhtml
 1	197120	1901639714	http://site/xhtml1-strict.xhtml
@@ -384,6 +376,9 @@ html	1507584	1901639714	http://site/xhtml1-strict.xhtml
 gerald	1573120	1901639714	http://site/xhtml1-strict.xhtml
 oskoboiny	1638656	1901639714	http://site/xhtml1-strict.xhtml
 $date	1704192	1901639714	http://site/xhtml1-strict.xhtml
+06	1769728	1901639714	http://site/xhtml1-strict.xhtml
+12	1769728	1901639714	http://site/xhtml1-strict.xhtml
+1999	1769728	1901639714	http://site/xhtml1-strict.xhtml
 1999/12/06	1769728	1901639714	http://site/xhtml1-strict.xhtml
 05	1835264	1901639714	http://site/xhtml1-strict.xhtml
 52	1900800	1901639714	http://site/xhtml1-strict.xhtml
@@ -391,29 +386,16 @@ $date	1704192	1901639714	http://site/xhtml1-strict.xhtml
 $	2031872	1901639714	http://site/xhtml1-strict.xhtml
 http	2099456	1901639714	http://site/xhtml1-strict.xhtml
 site	2164736	1901639714	http://site/xhtml1-strict.xhtml
-xhtml1-strict	2229760	1901639714	http://site/xhtml1-strict.xhtml
-xhtml	2295296	1901639714	http://site/xhtml1-strict.xhtml
-0	2361856	1901639714	http://site/xhtml1-strict.xhtml
-strict	2427392	1901639714	http://site/xhtml1-strict.xhtml
-document	2492928	1901639714	http://site/xhtml1-strict.xhtml
-test	2558464	1901639714	http://site/xhtml1-strict.xhtml
-xhtml	2624000	1901639714	http://site/xhtml1-strict.xhtml
-1	2689536	1901639714	http://site/xhtml1-strict.xhtml
-0	2755072	1901639714	http://site/xhtml1-strict.xhtml
-strict	2820608	1901639714	http://site/xhtml1-strict.xhtml
-document	2886144	1901639714	http://site/xhtml1-strict.xhtml
-this	2951680	1901639714	http://site/xhtml1-strict.xhtml
-is	3017216	1901639714	http://site/xhtml1-strict.xhtml
-a	3082752	1901639714	http://site/xhtml1-strict.xhtml
-test	3148288	1901639714	http://site/xhtml1-strict.xhtml
-xhtml	3213824	1901639714	http://site/xhtml1-strict.xhtml
-1	3279360	1901639714	http://site/xhtml1-strict.xhtml
+xhtml1	2229760	1901639714	http://site/xhtml1-strict.xhtml
+strict	2295296	1901639714	http://site/xhtml1-strict.xhtml
+xhtml	2360832	1901639714	http://site/xhtml1-strict.xhtml
 SQL>'SELECT status, docsize, hops, crc32, url FROM url ORDER BY status, crc32'
 200	680	1	-1592461605	http://site/html40-frameset.html
 200	629	1	-1092050819	http://site/html40-transitional.html
+200	1294	1	-917460509	http://site/meta-ua.html
 200	441	1	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml
 200	502	1	-910729714	http://site/xhtml1-strict-minimal.xhtml
-200	481	0	0	http://site/
+200	505	0	0	http://site/
 200	609	1	321328345	http://site/bogus-fpi.html
 200	72	1	420898845	http://site/accept.html
 200	118	1	508317862	http://site/refresh.html
@@ -424,21 +406,25 @@ SQL>'SELECT status, docsize, hops, crc32, url FROM url ORDER BY status, crc32'
 200	701	1	1370978571	http://site/index.html
 200	814	1	1901639714	http://site/xhtml1-strict.xhtml
 404	0	2	0	http://site/feedback.html
+404	0	2	0	http://site/favicon.ico
 SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,urlinfo WHERE url.rec_id=urlinfo.url_id ORDER BY url.status,url.crc32,lower(urlinfo.sname)'
 200	-1592461605	http://site/html40-frameset.html	body	This is a test HTML 4.0 Frameset document. See: W3C HTML Validation Service: Tests valid HTML Gerald Oskoboiny $Date: 1999/09/17 08:45:42 $
 200	-1592461605	http://site/html40-frameset.html	Charset	UTF-8
 200	-1592461605	http://site/html40-frameset.html	Content-Language	en
 200	-1592461605	http://site/html40-frameset.html	Content-Type	text/html
-200	-1592461605	http://site/html40-frameset.html	sea	0 Frameset document. test HTML 4. 0 Frameset document This is a test HTML 4.
 200	-1592461605	http://site/html40-frameset.html	title	test HTML 4.0 Frameset document
 200	-1092050819	http://site/html40-transitional.html	body	This is a test HTML 4.0 Transitional document. See: W3C HTML Validation Service: Tests valid HTML Gerald Oskoboiny $Date: 1999/09/17 08:49:22 $
 200	-1092050819	http://site/html40-transitional.html	Charset	ISO-8859-1
 200	-1092050819	http://site/html40-transitional.html	Content-Language	en
 200	-1092050819	http://site/html40-transitional.html	Content-Type	text/html
-200	-1092050819	http://site/html40-transitional.html	sea	0 Transitional document. 0 Transitional document This is a test HTML 4. test HTML 4.
 200	-1092050819	http://site/html40-transitional.html	title	test HTML 4.0 Transitional document
-200	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml	body	This is a &#34;minimal XHTML document&#34;, copied here more or less from PR-xhtml1-19991210
+200	-917460509	http://site/meta-ua.html	body	body meta-komins
+200	-917460509	http://site/meta-ua.html	Charset	ISO-8859-1
+200	-917460509	http://site/meta-ua.html	Content-Language	en
+200	-917460509	http://site/meta-ua.html	Content-Type	text/html
+200	-917460509	http://site/meta-ua.html	title	: : &#60; : . 1
 200	-910729714	http://site/xhtml1-strict-minimal.xhtml	body	This is a &#34;minimal XHTML document&#34;, copied here more or less from PR-xhtml1-19991210
+200	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml	body	This is a &#34;minimal XHTML document&#34;, copied here more or less from PR-xhtml1-19991210
 200	-910729714	http://site/xhtml1-strict-missing-xmlns.xhtml	Charset	UTF-8
 200	-910729714	http://site/xhtml1-strict-minimal.xhtml	Charset	UTF-8
 200	-910729714	http://site/xhtml1-strict-minimal.xhtml	Content-Language	en
@@ -451,7 +437,7 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	0	http://site/	Content-Language	ru
 200	0	http://site/	Content-type	text/html
 200	321328345	http://site/bogus-fpi.html	body	This is a test document with a bogus FPI. See: W3C HTML Validation Service: Tests valid HTML Gerald Oskoboiny $Date: 1999/09/27 10:04:58 $
-200	321328345	http://site/bogus-fpi.html	Charset	ISO-8859-1
+200	321328345	http://site/bogus-fpi.html	Charset	UTF-8
 200	321328345	http://site/bogus-fpi.html	Content-Language	en
 200	321328345	http://site/bogus-fpi.html	Content-Type	text/html
 200	321328345	http://site/bogus-fpi.html	title	test document with a bogus FPI
@@ -460,20 +446,19 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	420898845	http://site/accept.html	Content-Language	ru
 200	420898845	http://site/accept.html	Content-Type	text/html
 200	420898845	http://site/accept.html	title	Accept
-200	508317862	http://site/refresh.html	Charset	KOI8-R
-200	508317862	http://site/refresh.html	Content-Language	ru
+200	508317862	http://site/refresh.html	Charset	ISO-8859-1
+200	508317862	http://site/refresh.html	Content-Language	en
 200	508317862	http://site/refresh.html	Content-Type	text/html
 200	508317862	http://site/refresh.html	title	Redirect
 200	509992599	http://site/no-newlines.html	body	blah blah. blah blah blah blah blah blah
-200	509992599	http://site/no-newlines.html	Charset	KOI8-R
-200	509992599	http://site/no-newlines.html	Content-Language	ru
+200	509992599	http://site/no-newlines.html	Charset	ISO-8859-1
+200	509992599	http://site/no-newlines.html	Content-Language	en
 200	509992599	http://site/no-newlines.html	Content-Type	text/html
 200	509992599	http://site/no-newlines.html	title	Jesse
 200	1000806340	http://site/html40-strict.html	body	This is a test HTML 4.0 Strict document. See: W3C HTML Validation Service: Tests valid HTML Gerald Oskoboiny $Date: 1999/09/17 08:49:22 $
 200	1000806340	http://site/html40-strict.html	Charset	UTF-8
 200	1000806340	http://site/html40-strict.html	Content-Language	en
 200	1000806340	http://site/html40-strict.html	Content-Type	text/html
-200	1000806340	http://site/html40-strict.html	sea	0 Strict document. test HTML 4. 0 Strict document This is a test HTML 4.
 200	1000806340	http://site/html40-strict.html	title	test HTML 4.0 Strict document
 200	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml	body	This is a simple bogus HTML doc with neither a doctype nor an xmlns attribute on its root element.
 200	1112541906	http://site/xhtml1-missing-doctype-and-xmlns.xhtml	Charset	ISO-8859-1
@@ -485,17 +470,15 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	1264059688	http://site/xhtml1-blank-1st-line.xhtml	Content-Language	en
 200	1264059688	http://site/xhtml1-blank-1st-line.xhtml	Content-Type	application/xhtml+xml
 200	1264059688	http://site/xhtml1-blank-1st-line.xhtml	title	Virtual Library
-200	1370978571	http://site/index.html	body	One two Five Six Nine Ten ÐÑÔ£ÒËÁ c++, c--, c#. l'espoire
+200	1370978571	http://site/index.html	body	One two Five Six Nine Ten Ð¿ÑÑ‚Ñ‘Ñ€ÐºÐ° c++, c--, c#. l'espoire
 200	1370978571	http://site/index.html	Charset	KOI8-R
 200	1370978571	http://site/index.html	Content-Language	ru
 200	1370978571	http://site/index.html	Content-Type	text/html
-200	1370978571	http://site/index.html	sea	 l'espoire http site / index. This is a title in the middle .  I'm wondering if this is working as expected.
 200	1370978571	http://site/index.html	title	This is a title in the middle . I'm wondering if this is working as expected.
 200	1901639714	http://site/xhtml1-strict.xhtml	body	This is a test XHTML 1.0 Strict document. See: W3C HTML Validation Service: Tests valid HTML Gerald Oskoboiny $Date: 1999/12/06 05:52:07 $
 200	1901639714	http://site/xhtml1-strict.xhtml	Charset	UTF-8
 200	1901639714	http://site/xhtml1-strict.xhtml	Content-Language	en
 200	1901639714	http://site/xhtml1-strict.xhtml	Content-Type	application/xhtml+xml
-200	1901639714	http://site/xhtml1-strict.xhtml	sea	0 Strict document. test XHTML 1. 0 Strict document This is a test XHTML 1.
 200	1901639714	http://site/xhtml1-strict.xhtml	title	test XHTML 1.0 Strict document
 SQL>SQL>'SELECT url FROM url WHERE url='http://site/''
 http://site/
