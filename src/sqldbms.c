@@ -2360,6 +2360,7 @@ static int DpsSQLiteInitDB(DPS_DB *db) {
     db->errcode=1;
     return DPS_ERROR;
   }
+  sqlite_busy_timeout(db->sqlt, 1000000000);
   db->connected=1;
   return DPS_OK;
 }
@@ -2432,6 +2433,13 @@ static int DpsSQLite3InitDB(DPS_DB *db) {
     e[-1]='\0';
   
   if ( SQLITE_OK != sqlite3_open(dbname, &db->sqlt3)) {
+    const char *errmsg = sqlite3_errmsg(db->sqlt3);
+    dps_snprintf(db->errstr, sizeof(db->errstr), "sqlite3 driver: %s", errmsg ? errmsg : "<NOERROR>");
+    sqlite3_close(db->sqlt3);
+    db->errcode = 1;
+    return DPS_ERROR;
+  }
+  if ( SQLITE_OK != sqlite3_busy_timeout(db->sqlt3, 1000000000)) {
     const char *errmsg = sqlite3_errmsg(db->sqlt3);
     dps_snprintf(db->errstr, sizeof(db->errstr), "sqlite3 driver: %s", errmsg ? errmsg : "<NOERROR>");
     sqlite3_close(db->sqlt3);
