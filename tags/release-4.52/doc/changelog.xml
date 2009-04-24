@@ -1,0 +1,131 @@
+<chapter id="changelog">
+  <title>Version history</title>
+  <sect1 id="todo-now">
+    <title>Features not yet implemented in 3.2 version.</title>
+    <sect2 id="todo-unicode">
+      <title>Unicode-related</title>
+      <itemizedlist>
+        <listitem>
+          <para>Ispell support</para>
+        </listitem>
+        <listitem>
+          <para>Fix <command>MaxWordLen</command>: in UTF words use more space.</para>
+        </listitem>
+        <listitem>
+          <para>Extend tables structure for "multi" mode: separate tables for each word length.</para>
+        </listitem>
+        <listitem>
+          <para>Add a support for <literal>&#1029;</literal> style displaying when recoding to <command>BrowserCharset</command> from <command>LocalCharset</command> is not possible, for example Greek letters on a Russian page. Currently '?' signs are displayed instead.</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+    <sect2 id="todo-other">
+      <title>Other</title>
+      <itemizedlist>
+        <listitem>
+          <para>Boolean search: &amp;|~() characters processing.</para>
+        </listitem>
+        <listitem>
+          <para>Includes in search templates.</para>
+        </listitem>
+        <listitem>
+          <para>Date limits</para>
+        </listitem>
+        <listitem>
+          <para>Words highlighting in search results.</para>
+        </listitem>
+        <listitem>
+          <para>Implement a possibility to choose weights of different sections (title, body, etc.) at a search time.</para>
+        </listitem>
+        <listitem>
+          <para>Fix that <varname>$(DR)</varname> now displays internal number instead if rating.</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+  </sect1>
+  <sect1 id="changes-320b3">
+    <title>Changes in version 3.2.0.b3</title>
+    <itemizedlist>
+      <listitem>
+        <para>
+          <command>Alias</command> command has been extended. Now it can optionally use powerful URL mapping using regular expressions like in <command>Realm</command> command.</para>
+      </listitem>
+      <listitem>
+        <para>New <command>ReverseAlias</command>
+          <filename>indexer.conf</filename> command. This command has the same format with <command>Alias</command> command. However, URL mapping is executed just after the moment when new link has been found. URL is stored into database after ReverseAliases applying. Among other things it allows for example to index PHP driven sites which add a unique session ID in the form <literal>PHPSESSION=344646342345df</literal>. <command>ReverseAlias</command> is able to remove such substrings from URLs.</para>
+      </listitem>
+      <listitem>
+        <para>New <command>Subnet xxx.xxx.xxx.xxx</command>
+          <filename>indexer.conf</filename> command. It works like <command>Realm</command> but checks an IP address matching instead of URL. For example, <literal>Subnet 195.239.38.*</literal> or <literal>Subnet NoMatch 192.*.*.*</literal>.</para>
+      </listitem>
+      <listitem>
+        <para>Search results highlighting (<command>HlBeg</command> and <command>HlEnd</command>
+          <filename>search.htm</filename> commands) now works in 3.2 branch.</para>
+      </listitem>
+      <listitem>
+        <para>New <command>VarDir</command> command in <filename>search.htm</filename>. It works like the same <filename>indexer.conf</filename> command but at search time.</para>
+      </listitem>
+      <listitem>
+        <para>Added support for external includes in search template. Format differs from 3.1.x version. Take a look into Templates section for usage information.</para>
+      </listitem>
+      <listitem>
+        <para>Extended number of query parameters stored in <literal>qtrack</literal> table</para>
+      </listitem>
+      <listitem>
+        <para>Added url.charset field. Charset is now stored separately from <literal>content_type</literal> field. Please recreate or ALTER "url" table structure.</para>
+      </listitem>
+      <listitem>
+        <para>CT-Lib support has been added. Now one can use mnoGoSearch together with SyBase and MS SQL natively, without ODCB drivers. Both original SyBase CT-Lib and FreeTDS CT-Lib are supported. However Ct-Lib driver is still in beta.</para>
+      </listitem>
+      <listitem>
+        <para>libudmsearch compilation with pthreads fix. It fixes Apaches with PHP mnoGoSearch extension module crashes when mnoGoSearch was compiled with pthreads support.</para>
+      </listitem>
+      <listitem>
+        <para>Deflate and compress content encodings support added.</para>
+      </listitem>
+      <listitem>
+        <para>New "Alias" command in search.htm. It works like "Alias" in indexer.conf but at a search time.</para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+  <sect1 id="changes-320b2">
+    <title>Changes in version 3.2.0.b2</title>
+    <subtitle>08 August 2001</subtitle>
+    <itemizedlist>
+      <listitem>
+        <para>Content encoding support added (currently gzip only). Requires libz to compile. Use <option role="configure">--with-libz</option> to activate.</para>
+      </listitem>
+      <listitem>
+        <para>Fixed that <varname>$(DE)</varname> was not working</para>
+      </listitem>
+      <listitem>
+        <para>Fixed that the correct charset was forgotten after <filename>robots.txt</filename> processing.
+</para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+  <sect1 id="todo-general">
+    <title>General development directions</title>
+    <itemizedlist>
+      <listitem>
+        <para>Various types of fuzzy search (synonyms, regex match).</para>
+      </listitem>
+      <listitem>
+        <para>More different databases support.</para>
+      </listitem>
+      <listitem>
+        <para>More various transport protocols support.</para>
+      </listitem>
+      <listitem>
+        <para>Support for huge databases with hundred or thousand millions documents.</para>
+      </listitem>
+      <listitem>
+        <para>Make it possible to distribute database between several machines.</para>
+      </listitem>
+      <listitem>
+        <para>Make it more manageable, i.e. administration tools, etc.</para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
