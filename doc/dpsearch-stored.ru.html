@@ -2,9 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Хранение сжатых копий документов
-
-</TITLE
+>Хранение сжатых копий документов&#13;</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -18,8 +16,7 @@ REL="PREVIOUS"
 TITLE="Использование syslog"
 HREF="dpsearch-syslog.ru.html"><LINK
 REL="NEXT"
-TITLE="HTML-парсер в DataparkSearch
-"
+TITLE="HTML-парсер в DataparkSearch"
 HREF="dpsearch-htmlparser.ru.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -29,7 +26,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -79,609 +76,538 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="stored"
+NAME="STORED"
 >3.13. Хранение сжатых копий документов
 <A
-NAME="AEN2537"
+NAME="AEN2568"
 ></A
 ></A
 ></H1
->
-	
-	<P
+><P
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > имеет возможность хранения сжатых копий проиндексированных документов.
 Копии сжимаются и хранятся при помощи нового демона -
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, который устанавливается в поддиректорию
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >sbin</TT
 > корневой директории установки
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > (по умолчанию:
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/sbin</TT
 >).</P
->
-
-<P
+><P
 ><A
-NAME="AEN2546"
+NAME="AEN2577"
 ></A
 >
 <A
-NAME="AEN2549"
+NAME="AEN2580"
 ></A
 >
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >
 может быть использован для создания цитат документов на основе слов из запроса.
 <A
-NAME="AEN2553"
+NAME="AEN2584"
 ></A
 >
 Для задания приблизительного размера цитаты в байтах, используйте в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 (в секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >variables</TT
 >) команду
 <B
-CLASS="command"
+CLASS="COMMAND"
 >ExcerptSize</B
 >. Значение, используемое по умолчанию, равно 256.
 Вы можете выключить создание цитат (но сохранив возможность показа сохраненных копий) документов указав команду <B
-CLASS="command"
+CLASS="COMMAND"
 >DoExcerpt no</B
-> в вашем поисковом шаблоне.
-</P
->
-
-<P
+> в вашем поисковом шаблоне.</P
+><P
 ><A
-NAME="AEN2561"
+NAME="AEN2592"
 ></A
 >
 В <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > можно хранить сжатые копии документов без
 использования демона <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >. Для этого вместо настройки параметров <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >
 в файле конфигурации <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > необходимо указать команду <B
-CLASS="command"
+CLASS="COMMAND"
 >DoStore yes</B
->.
-</P
->
-
-	<P
+>.</P
+><P
 >Сохраненные копии документов отображаются отдельной CGI-программой
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >. Эта программа получает сохранённую копию от
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > и отображает содержимое этого документа в окне броузера предварительно
-выделив слова из поискового запроса.
-</P
->
-
-<P
+выделив слова из поискового запроса.</P
+><P
 > Для использования возможностей <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, 
 скомпилируйте <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > с поддержкой <TT
-CLASS="literal"
+CLASS="LITERAL"
 >zlib</TT
 >:
 	<PRE
-CLASS="programlisting"
->&#13;./configure --with-zlib &#60;other arguments&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>./configure --with-zlib &lt;other arguments&gt;</PRE
 >
 	</P
->
-
-<P
->&#13;<A
-NAME="AEN2578"
+><P
+><A
+NAME="AEN2609"
 ></A
 >
 <A
-NAME="AEN2581"
+NAME="AEN2612"
 ></A
 >
 Вы можете использовать команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Store</B
 > и <B
-CLASS="command"
+CLASS="COMMAND"
 >NoStore</B
 > для разрешения или запрещения сохранения
 некоторых фалов по шаблону. Аргументы у этих команд точно такиеже, как и у команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 > 
-(см. ). Все документы сохраняются по умолчанию, если включена поддержка stored.
-</P
->
-
-	<DIV
-CLASS="sect2"
+(см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;). Все документы сохраняются по умолчанию, если включена поддержка stored.</P
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="stored-start"
+NAME="STORED-START"
 >3.13.1. Конфигурирование stored</A
 ></H2
->
-		
-		<P
+><P
 >Перед использованием <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, пожалуйста, проделпйте следующее:</P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;<P
+><P
 >Скопируйте <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/etc/stored.conf-dist</TT
 > в
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >.</P
->
-				<P
+><P
 >Отредактируйте <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >
 				</P
->
-				<P
+><P
 >Следующие команды используются для конфигурирования <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >: </P
->
-				<P
+><P
 ></P
 ><UL
 ><LI
->&#13;						<P
->&#13;<B
-CLASS="command"
+><P
+><B
+CLASS="COMMAND"
 ><A
-NAME="AEN2605"
+NAME="AEN2636"
 ></A
 >Listen</B
 >
 говорит <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > к какому адресу и/или порту привязаться.
 По умолчанию, <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > привязывается к порту 7004 и каждому адресу.
 Возможно указывать только порт:</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >Listen 7004 </KBD
 >
 						</P
->
-						<P
+><P
 >Или только адрес:</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >Listen 127.0.0.2</KBD
 >
 						</P
->
-						<P
+><P
 >Или оба, алрес и порт:</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >Listen 127.0.0.2:7004</KBD
 >
 						</P
->
-					</LI
+></LI
 ><LI
->&#13;						<P
->&#13;<B
-CLASS="command"
+><P
+><B
+CLASS="COMMAND"
 ><A
-NAME="AEN2621"
+NAME="AEN2652"
 ></A
 >VarDir</B
 >
 задаёт альтернативную рабочую директорию <TT
-CLASS="filename"
+CLASS="FILENAME"
 >var/</TT
 >, например:</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >VarDir /mnt/d/dpsearch/var/ </KBD
 >
 						</P
->
-					</LI
+></LI
 ><LI
->&#13;<P
+><P
 ><B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2630"
+NAME="AEN2661"
 ></A
 >StoredFiles</B
 >
 указывает число файлов-хранилищ, создаваемых в директории <TT
-CLASS="filename"
+CLASS="FILENAME"
 >var/stored/</TT
 >, например:</P
->
-<P
->&#13;<KBD
-CLASS="userinput"
+><P
+><KBD
+CLASS="USERINPUT"
 >StoredFiles 256</KBD
->
-</P
->
-</LI
+></P
+></LI
 ><LI
->&#13;<P
+><P
 ><B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2639"
+NAME="AEN2670"
 ></A
 >OptimizeInterval</B
 >
 задаёт интервал в секундах между попытками оптимизировать очередной файл-хранилище, например:</P
->
-<P
->&#13;<KBD
-CLASS="userinput"
+><P
+><KBD
+CLASS="USERINPUT"
 >OptimizeInterval 300</KBD
->
-</P
->
-</LI
+></P
+></LI
 ><LI
->&#13;<P
+><P
 ><B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2647"
+NAME="AEN2678"
 ></A
 >OptimizeRatio</B
 >
-задаёт уровень дефрагментации в процентах, по достижении которого файл-хранилище оптимизируется, например:.  
-</P
->
-<P
->&#13;<KBD
-CLASS="userinput"
+задаёт уровень дефрагментации в процентах, по достижении которого файл-хранилище оптимизируется, например:.  </P
+><P
+><KBD
+CLASS="USERINPUT"
 >OptimizeRatio 3</KBD
->
-</P
->
-</LI
+></P
+></LI
 ></UL
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Запустите <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
->/usr/local/dpsearch/sbin/stored &#38; </KBD
+><P
+>					<KBD
+CLASS="USERINPUT"
+>/usr/local/dpsearch/sbin/stored &amp; </KBD
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Отредактиируйте <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > и <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 (или <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >, если используется <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 >). Укажите адрес и порт, кроторые
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >indexer</TT
 > будет использовать для связи с <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >.
 Используйте параметр <TT
-CLASS="literal"
+CLASS="LITERAL"
 >stored</TT
 > команды <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 >,
 например:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
->DBAddr mysql://localhost/search/?dbmode=cache&#38;stored=localhost:7004</KBD
+><P
+>					<KBD
+CLASS="USERINPUT"
+>DBAddr mysql://localhost/search/?dbmode=cache&amp;stored=localhost:7004</KBD
 >
 				</P
->
-			</LI
+></LI
 ></UL
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="stored-how"
+NAME="STORED-HOW"
 >3.13.2. Как работает stored</A
 ></H2
->
-		
-		<P
+><P
 >После того, как вы сконфигурируете и запустите
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer</TT
 > будет передавать ему проиндексированные документы.
 А <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > будет сжимать полученные документы и сохранять их на диске.</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="stored-search"
+NAME="STORED-SEARCH"
 >3.13.3. Использование stored при поиске</A
 ></H2
->
-		
-		<P
+><P
 >Для включения отображения сохраненных документов при поиске, проделайте следующее: </P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Отредактируйте
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.htm</TT
 > (шаблон для <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >), если необходимо.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Добавьте в секцию <TT
-CLASS="literal"
->&#60;!--res--&#62;</TT
+CLASS="LITERAL"
+>&lt;!--res--&gt;</TT
 > шаблона
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > ссылку на <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >, например:
  <TT
-CLASS="literal"
->&#60;A HREF="$(stored_href)"&#62;Cached copy&#60;/A&#62; </TT
+CLASS="LITERAL"
+>&lt;A HREF="$(stored_href)"&gt;Cached copy&lt;/A&gt; </TT
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Укажите URL CGI-программы
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > в
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > (по умолчанию
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(stored_href)</TT
 > будет возвращать
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/cgi-bin/storedoc.cgi</TT
 >). Если вам необходимо указать другой URL,
 добавьте в раздел переменных шаблона <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 					следующую строку:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+><P
+>					<KBD
+CLASS="USERINPUT"
 >StoredocURL /path/to/storedoc.cgi</KBD
 >
 				</P
->
-				<P
+><P
 >Или для абсолютной ссылки:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+><P
+>					<KBD
+CLASS="USERINPUT"
 >StoredocURL http://servername/path/to/storedoc.cgi</KBD
 >
 				</P
->
-			</LI
+></LI
 ></UL
->
-
-		<P
+><P
 >Если все сконфигурировано правильно, при поиске <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > работает следующим образом:</P
->
-		<P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;				<P
->&#13;					<TT
-CLASS="filename"
+><P
+>					<TT
+CLASS="FILENAME"
 >search.htm</TT
 > показывает ссылку на <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >;</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Когда пользователь кликает по ссылке,
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > посылает запрос к демону
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > по адресу, указанному в
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.htm</TT
 > при помощи параметра <TT
-CLASS="literal"
+CLASS="LITERAL"
 >stored</TT
 > команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 >;</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >По этому запросу, <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > находит и разжимает запрошенную копию и отправляет ее <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >;</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
->&#13;					<TT
-CLASS="filename"
+><P
+>					<TT
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > разбирает полученный документ и выделяет все слова из поискового запроса. Способ выделения указывается в шаблоне <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.htm</TT
 > командами
 					<B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2724"
+NAME="AEN2755"
 ></A
 >HlBeg</B
 > and <B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2728"
+NAME="AEN2759"
 ></A
 >HlEnd</B
 >;</P
->
-			</LI
+></LI
 ></OL
->
-	</DIV
->
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -741,7 +667,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 >HTML-парсер в <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 ></TD
 ></TR

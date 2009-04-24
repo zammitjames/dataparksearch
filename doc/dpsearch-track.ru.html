@@ -16,7 +16,6 @@ TITLE="Поиск документов"
 HREF="dpsearch-doingsearch.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Релевантность
-
 "
 HREF="dpsearch-rel.ru.html"><LINK
 REL="NEXT"
@@ -32,7 +31,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -82,121 +81,106 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="track"
+NAME="TRACK"
 >8.6. Регистрация поисковых запросов
 <A
-NAME="AEN5500"
+NAME="AEN5537"
 ></A
 ></A
 ></H1
->
-	
-	<P
+><P
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > поддерживает регистрацию поисковых запросов.</P
->
-
-	<P
+><P
 >При выполнении поисковых запросов, <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 использует таблицу <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qtrack</TT
 > для записи поискового запроса, IP адреса клиента, числа найденных документов и
 текущего времени в <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >UNIX</SPAN
 > фомате, а также таблицу <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qinfo</TT
-> для записи всех параметров запроса.
-</P
->
-
-
-	<P
+> для записи всех параметров запроса.</P
+><P
 >Для того, чтобы включить регистрацию запросов, добавьте параметер <TT
-CLASS="literal"
+CLASS="LITERAL"
 >trackquery</TT
 >
 для соответсвующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
-> (см. ) вашего шаблона поиска
+> (см. <A
+HREF="dpsearch-indexcmd.ru.html#DBADDR_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.2</A
+>&#62;) вашего шаблона поиска
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >. Например:
 <PRE
-CLASS="programlisting"
->&#13;DBAddr pgsql://user:pass@localhost/search/?dbmode=cache&#38;trackquery
-</PRE
->
-</P
->
-<DIV
-CLASS="note"
+CLASS="PROGRAMLISTING"
+>DBAddr pgsql://user:pass@localhost/search/?dbmode=cache&amp;trackquery</PRE
+></P
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13; <P
+CLASS="NOTE"
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
->
- Если используется <B
-CLASS="command"
+> Если используется <B
+CLASS="COMMAND"
 >searchd</B
 >, этот параметр необходимо добавить только в команду<B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 >
 из файла <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >.
  </P
->
- <P
+><P
 ><A
-NAME="AEN5521"
+NAME="AEN5558"
 ></A
 >
 Вы можете использовать команду <B
-CLASS="command"
+CLASS="COMMAND"
 >TrackDBAddr</B
 > для указания другой SQL-базы для сохранения параметров поисковых запросов.
 Эта SQL-база должна содержать теже таблицы <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qtrack</TT
 > и <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qinfo</TT
 >, что и база DataparkSearch.
  </P
->
-</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-
-	<P
+><P
 >Регистрация запросов поиска полезна для получения статистики
 использования вашего поискового сервера. Для составления отчёта, вы можете, например, использовать
 следующий SQL-запрос:
 	<PRE
-CLASS="programlisting"
->&#13;SELECT qwords,count(*),sum(found),avg(found) FROM qtrack GROUP BY qwords;
-</PRE
+CLASS="PROGRAMLISTING"
+>SELECT qwords,count(*),sum(found),avg(found) FROM qtrack GROUP BY qwords;</PRE
 >
 	</P
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -243,7 +227,7 @@ ALIGN="left"
 VALIGN="top"
 >Релевантность
 <A
-NAME="AEN5259"
+NAME="AEN5296"
 ></A
 ></TD
 ><TD
@@ -261,7 +245,7 @@ ALIGN="right"
 VALIGN="top"
 >Кэш результатов поиска
 <A
-NAME="AEN5531"
+NAME="AEN5568"
 ></A
 ></TD
 ></TR

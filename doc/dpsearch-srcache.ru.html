@@ -30,7 +30,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -80,105 +80,93 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="srcache"
+NAME="SRCACHE"
 >8.7. Кэш результатов поиска
 <A
-NAME="AEN5531"
+NAME="AEN5568"
 ></A
 ></A
 ></H1
->
-	
-
-	<P
+><P
 >Кэш результатов поиска обеспечивает быстрый ответ 
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > на недавно повторенные запросы, а также
 при навигации от страницы к странице результатов того же поиска.</P
->
-
-	<P
+><P
 >Кэш результатов поиска выключен поумолчанию.
 Вам необходимо использовать команду "Cache yes" в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > для
 вкючения кэширования результатов поиска. Если используется <TT
-CLASS="literal"
+CLASS="LITERAL"
 >searchd</TT
 >, 
 команду "Cache yes" необходимо добавить в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >.</P
->
-
-	<P
->&#13;Кэш результатов поиска располагается в поддиректории
+><P
+>Кэш результатов поиска располагается в поддиректории
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$PREFIX/var/cache/</TT
 >, где
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$PREFIX</TT
 > - корневая директория установки <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >.
 Результат каждого поиска хранится в виде отдельного файла.</P
->
-
-	<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
+CLASS="NOTE"
 ><A
-NAME="AEN5544"
+NAME="AEN5581"
 ></A
->
-		<P
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >По умолчанию, кэш результатов поиска не очищается автоматически.
 Вам необходимо удалять его каждый раз после запуска <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 >
 для избежания отображения необновленных данных. 
 Или вы можете указать период обшовления кэша результатов поиска при помощи команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >HoldCache</B
 >:
 <PRE
-CLASS="programlisting"
->&#13;HoldCache &#60;time&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>HoldCache &lt;time&gt;</PRE
 >
-См. формат &#60;time&#62; в описании команды <B
-CLASS="command"
+См. формат &lt;time&gt; в описании команды <B
+CLASS="COMMAND"
 >Period</B
-> из .
+> из <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
 <PRE
-CLASS="programlisting"
->&#13;HoldCache 3h
-</PRE
+CLASS="PROGRAMLISTING"
+>HoldCache 3h</PRE
 >
-
 
 		</P
->
-	</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -225,7 +213,7 @@ ALIGN="left"
 VALIGN="top"
 >Регистрация поисковых запросов
 <A
-NAME="AEN5500"
+NAME="AEN5537"
 ></A
 ></TD
 ><TD

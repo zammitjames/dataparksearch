@@ -339,18 +339,22 @@
 				<para>
 					<userinput>sh$ createdb search</userinput>
 				</para>
-				<para>Для других баз данных см. документацию на соответсвующую базу данных.</para>
+				<para>Для других баз данных см. документацию на соответствующую базу данных.</para>
 			</listitem>
+<listitem><para>Создайте файлы конфигурации.</para>
+<para>Для этого в директории конфигурационных файлов ( по умолчанию это <filename>/usr/local/dpsearch/etc/</filename>) скопируйте <filename>indexer.conf-dist</filename> 
+в <filename>indexer.conf</filename> и <filename>search.htm-dist</filename> в <filename>search.htm</filename>. Затем отредактируйте <filename>indexer.conf</filename> и <filename>search.htm</filename>
+согласно вашим потребностям. В основном вам только необходимо отредактировать команду <command>DBAddr</command> в обоих файлах указав соединение с SQL-сервером и необходимый dbmode.</para>
+</listitem>
 			<listitem>
 				<para>Создайте sql-таблицы</para>
-<para>Отредактируйте файл <filename>indexer.conf</filename> указав в команде <command>DBAddr</command> используемый SQL-сервер и
-желаемый dbmode. После этого запустите:
+<para>Выполните команду:
 </para>
 <para>
 <userinput>sh$ indexer -Ecreate</userinput>
 </para>
 <para>
-<command>indexer</command> автоматически создаст все нужные таблицы по этим параметрам.
+<command>indexer</command> автоматически создаст все нужные таблицы согласно dbmode, указанному в <filename>indexer.conf</filename>.
 </para>
 
 
@@ -406,7 +410,7 @@
 </listitem>
 		</itemizedlist>
 		<para>Если информация выше не помогла вам, пожалуйста, отправьте описание вашей проблемы на список рассылки
-<email>dataparksearch@yahoogroups.com</email> (пажалуйста, пишите только на английском).
+<email>dataparksearch@yahoogroups.com</email> (пажалуйста, при возможности пишите на английском).
 </para>
 	</sect1>
 
@@ -420,6 +424,21 @@
 (пожалуйста, пишите только на русском).</para>
 
 	</sect1-->
+
+<sect1 id="quick-usage">
+<title>Простая рутина использования</title>
+<para>Перед первым запуском <command>indexer</command>, вам необходимо указать пространство индексирования (см. <xref linkend="follow" />). 
+В простом случае, когда вам необходимо индексировать один сайт, необходимов добавить команду <command>Server</command>, 
+аналогичную указанной ниже в ваш файл конфигурации <filename>indexer.conf</filename>:
+<programlisting>
+Server http://www.server.ext/
+</programlisting>
+</para>
+
+<para>Запустите <command>indexer</command> для индексирвоания ваших данных и записи информации об URL:</para>
+<para><userinput>sh$ /usr/local/dpsearch/sbin/indexer -W</userinput></para>
+
+</sect1>
 
 <sect1 id="register">
 <title>Регистрация установки</title>

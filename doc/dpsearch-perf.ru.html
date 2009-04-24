@@ -2,9 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->К вопросу производительности DataparkSearch
-
-</TITLE
+>К вопросу производительности DataparkSearch</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -21,7 +19,6 @@ TITLE="Способ хранения Cache
 HREF="dpsearch-cachemode.ru.html"><LINK
 REL="NEXT"
 TITLE="Поддержка SearchD
-
 "
 HREF="dpsearch-searchd.ru.html"><LINK
 REL="STYLESHEET"
@@ -32,7 +29,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -82,349 +79,285 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="perf"
+NAME="PERF"
 >5.3. К вопросу производительности <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
->
-<A
-NAME="AEN3157"
-></A
 ></A
 ></H1
->
-	
-
-<P
+><A
+NAME="AEN3186"
+></A
+><P
 >Способ хранения cache - самый быстрый в <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >.
-Используйте его, если хотите получить максимальную скорость поиска.
-</P
->
-<P
+Используйте его, если хотите получить максимальную скорость поиска.</P
+><P
 ><A
-NAME="AEN3162"
+NAME="AEN3193"
 ></A
 >
 Если после окончания индексирования содержимое вашей директории <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/var</TT
 > не изменяется, вы можете
 выключить блокировку файлов при открытиии используя команду <B
-CLASS="command"
+CLASS="COMMAND"
 >"ColdVar yes"</B
 > в файле <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 (или в файле <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >, если используется <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 >). Это позволит вам сэкономить некоторое время,
-затрачиваемое на блокировку файлов.
-</P
->
-
-
-<DIV
-CLASS="sect2"
+затрачиваемое на блокировку файлов.</P
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="searchd-rec"
+NAME="SEARCHD-REC"
 >5.3.1. Рекомендация использовать <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 ></A
 ></H2
->
-
-<P
+><P
 >Если вы планируете использовать синонимы, стоп-слова или данные ispell,
 рекомендуется воспользоваться демоном <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
-> (См. ).
+> (См. <A
+HREF="dpsearch-searchd.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 5.4</A
+>&#62;).
 Демон <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > при запуске загружает эти данные и держит их в памяти.
-Это позволяет сократить среднее время выполнения запросов на поиск.
-</P
->
-<P
+Это позволяет сократить среднее время выполнения запросов на поиск.</P
+><P
 >Таже <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > может загружать предварительно в память некоторые данные об URL 
 (по 20 байт на каждую проиндекированую страницу) и лимиты cache mode (4 или 8 байт на каждый URL в зависимости от
-типа лимита). Это позволяет сократить среднее время обработки запроса.
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+типа лимита). Это позволяет сократить среднее время обработки запроса.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="mfs-rec"
+NAME="MFS-REC"
 >5.3.2. Рекомендация использовать файловую систему в памяти (mfs)</A
 ></H2
->
-
-<P
+><P
 >Если вы планируете использовать cache mode и имеете достаточно оперативной памяти на вашем компьютере, 
 вы можете разместить директорию <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var</TT
 >
-на файловой системе в памяти компьютера (mfs). Это ускорит как индексирование, так и поиск.
-</P
->
-<P
+на файловой системе в памяти компьютера (mfs). Это ускорит как индексирование, так и поиск.</P
+><P
 >Если памяти недостаточно, что поместить в ней <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var</TT
 > целиком, 
 вы можете разместить на mfs любую из директорий <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var/tree</TT
 >,
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var/url</TT
 > или <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var/store</TT
->.
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="urlinfo-cmd"
+NAME="URLINFO-CMD"
 >5.3.3. Команда URLInfoSQL</A
 ></H2
->
-
-<A
-NAME="AEN3190"
+><A
+NAME="AEN3221"
 ></A
->
-<P
+><P
 >Для способа хранения cache вы можете использовать команду <B
-CLASS="command"
+CLASS="COMMAND"
 >URLInfoSQL no</B
 > для выключения сохранения
-информации об URL в SQL-базе. Однако использовав эту команду, вы потеряете возможность использовать лимиты по языку и типу документов.
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+информации об URL в SQL-базе. Однако использовав эту команду, вы потеряете возможность использовать лимиты по языку и типу документов.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="markforindex-cmd"
+NAME="MARKFORINDEX-CMD"
 >5.3.4. Команда MarkForIndex</A
 ></H2
->
-
-<A
-NAME="AEN3197"
+><A
+NAME="AEN3228"
 ></A
->
-<P
+><P
 >По умолчанию, <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > помечает все URL, отбираемые к индексированию, как ожидающие индексирования
 через 4 часа. 
 Это позволяет избежать возможного одновременного индексирования одно и того же URL двумя параллельно запущеными копиями indexer.
 Однако для больших поисковых баз эта операция пометки может занять некоторое время. Вы можете выключить такую пометку используя команду
 <B
-CLASS="command"
+CLASS="COMMAND"
 >"MarkForIndex no"</B
 > в вашем файле конфигурации <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
->.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="checkinsertsql-cmd"
+NAME="CHECKINSERTSQL-CMD"
 >5.3.5. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckInsertSQL</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN3207"
+><A
+NAME="AEN3238"
 ></A
->
-<P
+><P
 >По умолчанию, <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > пытается добавлять данные в SQL-базу вне зависимости, 
 есть она уже там или нет. На некоторых системах, это может вызывать к дополнительной обработке сообщений об ошибках.
 Чтобы избежать таких ошибок, Вы можете добавить команду <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckInsertSQL yes</B
 > в ваш файл конфигурации
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
->.
-</P
->
-</DIV
->
-
-
-	<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="perf-mysql"
+NAME="PERF-MYSQL"
 >5.3.6. Производительность <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 ></A
 ></H2
->
-		
-
-		<P
+><P
 >Пользователи <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 > могут задать
 опцию <CODE
-CLASS="option"
+CLASS="OPTION"
 >DELAY_KEY_WRITE=1</CODE
 > для таблиц <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >.
 Это позволит быстрее обновлять индексы, т.к.они не будут записываться на диск пока файл не будет закрыт.
 <CODE
-CLASS="option"
+CLASS="OPTION"
 >DELAY_KEY_WRITE</CODE
 > целиком исключает обновление индексов на диске. </P
->
-
-		<P
+><P
 >С этой опцией индексы хранятся только в памяти и записываются на диск
 в последнюю очередь, по команду  <B
-CLASS="command"
+CLASS="COMMAND"
 >FLUSH TABLES</B
 > или по завершению <B
-CLASS="command"
+CLASS="COMMAND"
 >mysqld</B
 >.
 Запись одновлённых индексов на диск может занимать минуты и нетерпеливые пользователи могут прибить сервер
 командой <TT
-CLASS="literal"
+CLASS="LITERAL"
 >kill -9</TT
 > и этим разрушить индексные файлы.
 Другим неудобством является необходимость запуска <TT
-CLASS="literal"
+CLASS="LITERAL"
 >myisamchk</TT
 > для этих таблиц перед стартом
 <B
-CLASS="command"
+CLASS="COMMAND"
 >mysqld</B
 > для проверки, на случай, если <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mysqld</TT
-> был убит до этого.
-</P
->
-
-		<P
+> был убит до этого.</P
+><P
 >По этим причинам мы не включили эту опцию в структуру наших таблиц по умолчанию.
 Т.к. вся информация в индексах может быть восстановлена из данных, находящихся в таблицах, вы не потеряете данные,
 используя опцию <CODE
-CLASS="option"
+CLASS="OPTION"
 >DELAY_KEY_WRITE</CODE
->. Но используйте её на свой страх и риск.
-</P
->
-
-	</DIV
->
-	<DIV
-CLASS="sect2"
+>. Но используйте её на свой страх и риск.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="perf-optimization"
+NAME="PERF-OPTIMIZATION"
 >5.3.7. Оптимизация после индексирования</A
 ></H2
->
-		
-
-		<P
+><P
 >Этот раздел был добавлен Randy Winch <CODE
-CLASS="email"
+CLASS="EMAIL"
 >&#60;<A
 HREF="mailto:gumby@cafes.net"
 >gumby@cafes.net</A
 >&#62;</CODE
 >
 		</P
->
-
-		<P
+><P
 >У меня есть мысля о производителности, которая может заинтересовать некоторых из вас.
 Я использую <TT
-CLASS="literal"
+CLASS="LITERAL"
 >RH 6.2</TT
 > с обновлением ядра <TT
-CLASS="literal"
+CLASS="LITERAL"
 >2.2.14-6.1.1</TT
 > (поддерживает файлы свыше 2 гигабайт)
 и <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mysql 2.23.18-alpha</TT
 >. Я проиндексировал весь наш сайт используя <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >mnoGoSearch 3.0.18</SPAN
 >:
 		<PRE
-CLASS="programlisting"
->&#13;
-          mnoGoSearch statistics
+CLASS="PROGRAMLISTING"
+>&#13;          mnoGoSearch statistics
 
     Status    Expired      Total
    -----------------------------
@@ -438,20 +371,15 @@ CLASS="programlisting"
        500          0          1 Internal Server Error
        503          0          1 Service Unavailable
    -----------------------------
-     Total     852668    2182703
-
-</PRE
->
-</P
->
-
-		<P
+     Total     852668    2182703&#13;</PRE
+></P
+><P
 >Я оптимизировал данные, выгрузив их в файл используя <CODE
-CLASS="option"
+CLASS="OPTION"
 >SELECT * INTO OUTFILE</CODE
 >,
 отсортировал их при помощи системной процедуры сортировки по полю <TT
-CLASS="literal"
+CLASS="LITERAL"
 >word (CRC)</TT
 >
 и затем загрузил их обратно в базу данных, используя процедуру, описанную в 
@@ -460,49 +388,32 @@ HREF="http://www.mysql.com/documentation/mysql/commented/manual.php?section=Inse
 TARGET="_top"
 >mysql online manual</A
 >.</P
->
-
-		<P
+><P
 >Производительность великолепна. Мой любимый тест - поиск "John Smith".
 Оптимизированная база показала результат в 13 секунд. База до оптимизации показывала примерно 73 секунды.</P
->
-
-		<PRE
-CLASS="programlisting"
->&#13;Search results: john : 620241 smith : 177096
-Displaying documents 1-20 of total 128656 found
-</PRE
->
-
-		
-
-	</DIV
->
-
-<DIV
-CLASS="sect2"
+><PRE
+CLASS="PROGRAMLISTING"
+>Search results: john : 620241 smith : 177096
+Displaying documents 1-20 of total 128656 found</PRE
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="ares"
+NAME="ARES"
 >5.3.8. Библиотека асинхронного резолвера</A
 ></H2
->
-
-<P
+><P
 >Использование <A
 HREF="ftp://athena-dist.mit.edu/pub/ATHENA/ares/"
 TARGET="_top"
 >ares</A
 >, 
 библиотеки асинхронного резолвера (dns/ares в коллекции портов FreeBSD), позволяет для каждой индексирующей нити выполнять 
-запросы к DNS без блокировки. Пожалуйста учтите, это также повышает число одновременных запросов к вашему DNS серверу.
-</P
->
-</DIV
->
-
-</DIV
+запросы к DNS без блокировки. Пожалуйста учтите, это также повышает число одновременных запросов к вашему DNS серверу.</P
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -549,7 +460,7 @@ ALIGN="left"
 VALIGN="top"
 >Способ хранения Cache
 <A
-NAME="AEN2926"
+NAME="AEN2957"
 ></A
 ></TD
 ><TD
@@ -567,7 +478,7 @@ ALIGN="right"
 VALIGN="top"
 >Поддержка SearchD
 <A
-NAME="AEN3253"
+NAME="AEN3284"
 ></A
 ></TD
 ></TR

@@ -1,11 +1,11 @@
 <sect1 id="perf">
-	<title>К вопросу производительности <application>DataparkSearch</application>
 <indexterm><primary>К вопросу производительности</primary></indexterm>
-</title>
+	<title>К вопросу производительности <application>DataparkSearch</application></title>
 
 <para>Способ хранения cache - самый быстрый в <application>DataparkSearch</application>.
 Используйте его, если хотите получить максимальную скорость поиска.
 </para>
+
 <para><indexterm><primary>Команда</primary><secondary>ColdVar</secondary></indexterm>
 Если после окончания индексирования содержимое вашей директории <filename>/var</filename> не изменяется, вы можете
 выключить блокировку файлов при открытиии используя команду <command>"ColdVar yes"</command> в файле <filename>search.htm</filename>

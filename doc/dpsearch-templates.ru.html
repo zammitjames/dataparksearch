@@ -2,9 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Как создавать шаблоны результатов поиска
-
-</TITLE
+>Как создавать шаблоны результатов поиска&#13;</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -16,7 +14,6 @@ TITLE="Поиск документов"
 HREF="dpsearch-doingsearch.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Модуль mod_dpsearch для Apache httpd
-
 
 
 
@@ -33,7 +30,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -83,1299 +80,1160 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="templates"
+NAME="TEMPLATES"
 >8.3. Как создавать шаблоны результатов поиска
 <A
-NAME="AEN4698"
+NAME="AEN4729"
 ></A
 ></A
 ></H1
->
-	
-	<P
+><P
 >Пользователи <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > имеют возможность настраивать вывод результатов поиска
 (вывод <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > ).
 Эта настройка находится в файле <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >, располагаемым в поддиректории <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/etc/</TT
 >
 относительно корневой директории установки <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >.</P
->
-
-	<P
+><P
 >Файл шаблона это обычный HTML файл, разделённый на секции.</P
->
-
-<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;<P
+CLASS="NOTE"
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Каждая строка шаблона не должна превышать 1024 байт.</P
->
-</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-
-	<P
->Каждая секци начинается с разделителя &#60;!--sectionname--&#62; и заканчивается разделителем &#60;!--/sectionname--&#62;,
+><P
+>Каждая секци начинается с разделителя &lt;!--sectionname--&gt; и заканчивается разделителем &lt;!--/sectionname--&gt;,
 оба разделителя должны находится на отдельной строке, в её начале.</P
->
-
-	<P
+><P
 >Каждая секция состоит из HTML-кода, содержащего специальные метасимволы (переменные шаблона).
-Каждый метасимвол заменяется соответсвующей ему строкой во время заполнения шаблона при выдаче результатов поиска.
-</P
->
-
-	<P
+Каждый метасимвол заменяется соответсвующей ему строкой во время заполнения шаблона при выдаче результатов поиска.</P
+><P
 >Формат переменных шаблона следующий:
 	<PRE
-CLASS="programlisting"
->&#13;$(x) - значение
-$&#38;(x) - значение с HTML-кодировкой недопустимых символов и выделением слов из запроса.
+CLASS="PROGRAMLISTING"
+>$(x) - значение
+$&amp;(x) - значение с HTML-кодировкой недопустимых символов и выделением слов из запроса.
 $*(x) - значение с HTML-кодировкой недопустимых символов.
 $%(x) - значение с URL-кодированием запрещенных символов.
 $^(x) - значение с выделением слов из поискового запроса.
 $(x:128) - значение усекается до 128 байт, если оно длиннее.
 $(x:UTF-8) - значение записывается в кодировке UTF-8. Можно указывать любую поддерживаемую кодировку.
-$(x:128:right) - значение усекается слева до 128 байт, если оно длиннее.
-</PRE
->
-</P
->
-
-	<DIV
-CLASS="sect2"
+$(x:128:right) - значение усекается слева до 128 байт, если оно длиннее.</PRE
+></P
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="templates-sect"
+NAME="TEMPLATES-SECT"
 >8.3.1. Секции шаблона
 <A
-NAME="AEN4715"
+NAME="AEN4746"
 ></A
 ></A
 ></H2
->
-		
-		<P
+><P
 >Определены следующие секции шаблонов:
-,
-,
-,
-,
-,
-,
-,
-,
-,
-,
-,
-,
-,
-.
-</P
->
-
-
-<DIV
-CLASS="sect3"
+<A
+HREF="dpsearch-templates.ru.html#TOP-SECTION"
+><I
+>TOP</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#BOTTOM-SECTION"
+><I
+>BOTTOM</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#RESTOP-SECTION"
+><I
+>RESTOP</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#RES-SECTION"
+><I
+>RES</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#CLONE-SECTION"
+><I
+>CLONE</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#RESBOT-SECTION"
+><I
+>RESBOT</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NAVLEFT-SECTION"
+><I
+>navleft, navleft_nop</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NAVBAR0-SECTION"
+><I
+>navbar0</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NAVRIGHT-SECTION"
+><I
+>navright, navright_nop</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NAVBAR1-SECTION"
+><I
+>navbar1</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NOTFOUND-SECTION"
+><I
+>notfound</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NOQUERY-SECTION"
+><I
+>noquery</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#ERROR-SECTION"
+><I
+>error</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#TEMPLATES-VAR"
+><I
+>variables</I
+></A
+>&#62;.</P
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="top-section"
+NAME="TOP-SECTION"
 >8.3.1.1. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >TOP</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN4737"
+><A
+NAME="AEN4768"
 ></A
->
-		<P
->&#13;Эта секция всегда вставляется первой на каждой странице ответов. Вы должны начинать эту секцию с &#60;HTML&#62;&#60;HEAD&#62; и т.д.
+><P
+>Эта секция всегда вставляется первой на каждой странице ответов. Вы должны начинать эту секцию с &lt;HTML&gt;&lt;HEAD&gt; и т.д.
 Также это подходящее место для размещения формы поиска.
 В этой секции вы можете использовать некоторые метасимволы (переменные шаблона):
 		<PRE
-CLASS="programlisting"
->&#13;$(self)     - аргумент атрибута ACTION тэга FORM
+CLASS="PROGRAMLISTING"
+>$(self)     - аргумент атрибута ACTION тэга FORM
 $(q)        - запрос на поиск
 $(cat)      - текущее значение категории
 $(tag)      - текущее значение тэга
-$(rN)       - случайное число (здесь N - число)
-</PRE
->
-</P
->
-		<P
+$(rN)       - случайное число (здесь N - число)</PRE
+></P
+><P
 >Если вы хотите разместить на ваших страницах некоторые банеры случайным образом,
 используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >$(rN)</CODE
 >. Вы также должны поместить строчку типа <TT
-CLASS="literal"
+CLASS="LITERAL"
 >RN xxxx</TT
 >
-в секции 'variables' (см. ), что даст вам для $(rN) значение из диапазона 0..xxxx.
+в секции 'variables' (см. <A
+HREF="dpsearch-templates.ru.html#TEMPLATES-VAR"
+>&#1056;&#1072;&#1079;&#1076;. 8.3.2</A
+>&#62;), что даст вам для $(rN) значение из диапазона 0..xxxx.
 Вы можете использовать столько случайных переменных, сколько вам нужно.</P
->
-
-		<P
+><P
 >Например: <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(r0), $(r1), $(r45)</TT
 > и т.д.</P
->
-		<P
+><P
 >Простая секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >top</I
 ></SPAN
 > может быть примерно такой:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--top--&#62;
-&#60;HTML&#62;
-&#60;HEAD&#62;
- &#60;TITLE&#62;Search query: $(q)&#60;/TITLE&#62;
-&#60;/HEAD&#62;
-&#60;BODY&#62;
+CLASS="PROGRAMLISTING"
+>&lt;!--top--&gt;
+&lt;HTML&gt;
+&lt;HEAD&gt;
+ &lt;TITLE&gt;Search query: $(q)&lt;/TITLE&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
 
-&#60;FORM METHOD=GET ACTION="$(self)"&#62;
- &#60;INPUT TYPE="hidden" NAME="ul" VALUE=""&#62;
- &#60;INPUT TYPE="hidden" NAME="ps" VALUE="20"&#62;
- Search for: &#60;INPUT TYPE="text" NAME="q" SIZE=30 
- VALUE="$&#38;(q)"&#62;
- &#60;INPUT TYPE="submit" VALUE="Search!"&#62;&#60;BR&#62;
-&#60;/FORM&#62;
-&#60;!--/top--&#62;
-</PRE
->
-</P
->
-		<P
+&lt;FORM METHOD=GET ACTION="$(self)"&gt;
+ &lt;INPUT TYPE="hidden" NAME="ul" VALUE=""&gt;
+ &lt;INPUT TYPE="hidden" NAME="ps" VALUE="20"&gt;
+ Search for: &lt;INPUT TYPE="text" NAME="q" SIZE=30 
+ VALUE="$&amp;(q)"&gt;
+ &lt;INPUT TYPE="submit" VALUE="Search!"&gt;&lt;BR&gt;
+&lt;/FORM&gt;
+&lt;!--/top--&gt;</PRE
+></P
+><P
 >Существует несколько переменных, указываемых в форме для установки различных параметров поиска.
-См. также .</P
->
-		<P
->&#13;			<CODE
-CLASS="option"
+См. также <A
+HREF="dpsearch-doingsearch.ru.html#SEARCH_PARAMS"
+>&#1056;&#1072;&#1079;&#1076;. 8.1.2</A
+>&#62;.</P
+><P
+>			<CODE
+CLASS="OPTION"
 >lang</CODE
 > Ограничение результатов поиска по языку. Значением является стандартный двубуквенный ISO код
 языка.
 			<PRE
-CLASS="programlisting"
->&#13;&#60;SELECT NAME="lang"&#62;
-&#60;OPTION VALUE="en" SELECTED="$(lang)"&#62;English
+CLASS="PROGRAMLISTING"
+>&lt;SELECT NAME="lang"&gt;
+&lt;OPTION VALUE="en" SELECTED="$(lang)"&gt;English
 .....
-&#60;/SELECT&#62;
+&lt;/SELECT&gt;
     </PRE
->
-</P
->
-		<P
->&#13;			<CODE
-CLASS="option"
+></P
+><P
+>			<CODE
+CLASS="OPTION"
 >ul</CODE
 > задаёт фильтр по URL. Позволяет вам ограничить поиск одним сайтом или какой-то его части,
 и т.д. Например, вы можете добавить следующий код в вашу форму
 			<PRE
-CLASS="programlisting"
->&#13;Search through:
-&#60;SELECT NAME="ul"&#62;
-&#60;OPTION VALUE=""            SELECTED="$(ul)"&#62;Entire site
-&#60;OPTION VALUE="/manual/"    SELECTED="$(ul)"&#62;Manual
-&#60;OPTION VALUE="/products/"  SELECTED="$(ul)"&#62;Products
-&#60;OPTION VALUE="/support/"   SELECTED="$(ul)"&#62;Support
-&#60;/SELECT&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>Search through:
+&lt;SELECT NAME="ul"&gt;
+&lt;OPTION VALUE=""            SELECTED="$(ul)"&gt;Entire site
+&lt;OPTION VALUE="/manual/"    SELECTED="$(ul)"&gt;Manual
+&lt;OPTION VALUE="/products/"  SELECTED="$(ul)"&gt;Products
+&lt;OPTION VALUE="/support/"   SELECTED="$(ul)"&gt;Support
+&lt;/SELECT&gt;</PRE
 >
 		для организации поиска по некоторым частям вашего сайта. Для способа хранения cache это ограничение работает только
 на уровне имени сайта из URL.</P
->
-		<P
+><P
 >Выражение <TT
-CLASS="literal"
+CLASS="LITERAL"
 >SELECTED="$(ul)"</TT
 > в примере выше (и во всехпримерах ниже)
 позволяет сохранять выбранным значение той или иной опции поиска на следующих страницах результатов.
 Если поисковый фронтэнд находит такое выражение, он выводит строку <TT
-CLASS="literal"
+CLASS="LITERAL"
 >SELECTED</TT
 > только для того
 варианта <TT
-CLASS="literal"
+CLASS="LITERAL"
 >OPTION</TT
 >, значение которого равно значению соответсвующей переменной.</P
->
-
-		<P
->&#13;			<CODE
-CLASS="option"
+><P
+>			<CODE
+CLASS="OPTION"
 >pn</CODE
 > равно ps*np. Эта переменная не используется <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >,
-но может быть полезна, например, в директиве &#60;!INCLUDE CONTENT="..."&#62; если вы хотите включить результаты поиска другой 
+но может быть полезна, например, в директиве &lt;!INCLUDE CONTENT="..."&gt; если вы хотите включить результаты поиска другой 
 поисковой системы.</P
->
-
-				<P
+><P
 >В этом примере формы помогается выбрать различные ограничения по времени.
 					<PRE
-CLASS="programlisting"
->&#13;&#60;!-- 'search with time limits' options --&#62;
-&#60;TR&#62;&#60;TD&#62;
-&#60;TABLE CELLPADDING=2 CELLSPACING=0 BORDER=0&#62;
-&#60;CAPTION&#62; 
+CLASS="PROGRAMLISTING"
+>&lt;!-- 'search with time limits' options --&gt;
+&lt;TR&gt;&lt;TD&gt;
+&lt;TABLE CELLPADDING=2 CELLSPACING=0 BORDER=0&gt;
+&lt;CAPTION&gt; 
 Limit results to pages published within
-a specified period of time.&#60;BR&#62;
-&#60;FONT SIZE=-1&#62;&#60;I&#62;(Please select only one option)
-&#60;/I&#62;&#60;/FONT&#62;
-&#60;/CAPTION&#62;
-&#60;TR&#62;
-&#60;TD VALIGN=center&#62;&#60;INPUT TYPE=radio NAME="dt" 
-VALUE="back" CHECKED&#62;&#60;/TD&#62;
-&#60;TD&#62;&#60;SELECT NAME="dp"&#62;
-&#60;OPTION VALUE="0" SELECTED="$(dp)"&#62;anytime
-&#60;OPTION VALUE="10M" SELECTED="$(dp)"&#62;in the last ten minutes
-&#60;OPTION VALUE="1h" SELECTED="$(dp)"&#62;in the last hour
-&#60;OPTION VALUE="7d" SELECTED="$(dp)"&#62;in the last week
-&#60;OPTION VALUE="14d" SELECTED="$(dp)"&#62;in the last 2 weeks
-&#60;OPTION VALUE="1m" SELECTED="$(dp)"&#62;in the last month
-&#60;OPTION VALUE="3m" SELECTED="$(dp)"&#62;in the last 3 months
-&#60;OPTION VALUE="6m" SELECTED="$(dp)"&#62;in the last 6 months
-&#60;OPTION VALUE="1y" SELECTED="$(dp)"&#62;in the last year
-&#60;OPTION VALUE="2y" SELECTED="$(dp)"&#62;in the last 2 years
-&#60;/SELECT&#62;
-&#60;/TD&#62;
-&#60;/TR&#62;
-&#60;TR&#62;
-&#60;TD VALIGN=center&#62;&#60;INPUT type=radio NAME="dt" VALUE="er"&#62;
-&#60;/TD&#62;
-&#60;TD&#62;&#60;SELECT NAME="dx"&#62;
-&#60;OPTION VALUE="1" SELECTED="$(dx)"&#62;After
-&#60;OPTION VALUE="-1" SELECTED="$(dx)"&#62;Before
-&#60;/SELECT&#62;
-</PRE
->
-</P
->
-				<P
+a specified period of time.&lt;BR&gt;
+&lt;FONT SIZE=-1&gt;&lt;I&gt;(Please select only one option)
+&lt;/I&gt;&lt;/FONT&gt;
+&lt;/CAPTION&gt;
+&lt;TR&gt;
+&lt;TD VALIGN=center&gt;&lt;INPUT TYPE=radio NAME="dt" 
+VALUE="back" CHECKED&gt;&lt;/TD&gt;
+&lt;TD&gt;&lt;SELECT NAME="dp"&gt;
+&lt;OPTION VALUE="0" SELECTED="$(dp)"&gt;anytime
+&lt;OPTION VALUE="10M" SELECTED="$(dp)"&gt;in the last ten minutes
+&lt;OPTION VALUE="1h" SELECTED="$(dp)"&gt;in the last hour
+&lt;OPTION VALUE="7d" SELECTED="$(dp)"&gt;in the last week
+&lt;OPTION VALUE="14d" SELECTED="$(dp)"&gt;in the last 2 weeks
+&lt;OPTION VALUE="1m" SELECTED="$(dp)"&gt;in the last month
+&lt;OPTION VALUE="3m" SELECTED="$(dp)"&gt;in the last 3 months
+&lt;OPTION VALUE="6m" SELECTED="$(dp)"&gt;in the last 6 months
+&lt;OPTION VALUE="1y" SELECTED="$(dp)"&gt;in the last year
+&lt;OPTION VALUE="2y" SELECTED="$(dp)"&gt;in the last 2 years
+&lt;/SELECT&gt;
+&lt;/TD&gt;
+&lt;/TR&gt;
+&lt;TR&gt;
+&lt;TD VALIGN=center&gt;&lt;INPUT type=radio NAME="dt" VALUE="er"&gt;
+&lt;/TD&gt;
+&lt;TD&gt;&lt;SELECT NAME="dx"&gt;
+&lt;OPTION VALUE="1" SELECTED="$(dx)"&gt;After
+&lt;OPTION VALUE="-1" SELECTED="$(dx)"&gt;Before
+&lt;/SELECT&gt;</PRE
+></P
+><P
 >или так
 					<PRE
-CLASS="programlisting"
->&#13;&#60;SELECT NAME="dm"&#62;
-&#60;OPTION VALUE="0" SELECTED="$(dm)"&#62;January
-&#60;OPTION VALUE="1" SELECTED="$(dm)"&#62;February
-&#60;OPTION VALUE="2" SELECTED="$(dm)"&#62;March
-&#60;OPTION VALUE="3" SELECTED="$(dm)"&#62;April
-&#60;OPTION VALUE="4" SELECTED="$(dm)"&#62;May
-&#60;OPTION VALUE="5" SELECTED="$(dm)"&#62;June
-&#60;OPTION VALUE="6" SELECTED="$(dm)"&#62;July
-&#60;OPTION VALUE="7" SELECTED="$(dm)"&#62;August
-&#60;OPTION VALUE="8" SELECTED="$(dm)"&#62;September
-&#60;OPTION VALUE="9" SELECTED="$(dm)"&#62;October
-&#60;OPTION VALUE="10" SELECTED="$(dm)"&#62;November
-&#60;OPTION VALUE="11" SELECTED="$(dm)"&#62;December
-&#60;/SELECT&#62;
-&#60;INPUT TYPE=text NAME="dd" VALUE="$(dd)" SIZE=2 maxlength=2&#62;
+CLASS="PROGRAMLISTING"
+>&lt;SELECT NAME="dm"&gt;
+&lt;OPTION VALUE="0" SELECTED="$(dm)"&gt;January
+&lt;OPTION VALUE="1" SELECTED="$(dm)"&gt;February
+&lt;OPTION VALUE="2" SELECTED="$(dm)"&gt;March
+&lt;OPTION VALUE="3" SELECTED="$(dm)"&gt;April
+&lt;OPTION VALUE="4" SELECTED="$(dm)"&gt;May
+&lt;OPTION VALUE="5" SELECTED="$(dm)"&gt;June
+&lt;OPTION VALUE="6" SELECTED="$(dm)"&gt;July
+&lt;OPTION VALUE="7" SELECTED="$(dm)"&gt;August
+&lt;OPTION VALUE="8" SELECTED="$(dm)"&gt;September
+&lt;OPTION VALUE="9" SELECTED="$(dm)"&gt;October
+&lt;OPTION VALUE="10" SELECTED="$(dm)"&gt;November
+&lt;OPTION VALUE="11" SELECTED="$(dm)"&gt;December
+&lt;/SELECT&gt;
+&lt;INPUT TYPE=text NAME="dd" VALUE="$(dd)" SIZE=2 maxlength=2&gt;
 ,
-&#60;SELECT NAME="dy" &#62;
-&#60;OPTION VALUE="1990" SELECTED="$(dy)"&#62;1990
-&#60;OPTION VALUE="1991" SELECTED="$(dy)"&#62;1991
-&#60;OPTION VALUE="1992" SELECTED="$(dy)"&#62;1992
-&#60;OPTION VALUE="1993" SELECTED="$(dy)"&#62;1993
-&#60;OPTION VALUE="1994" SELECTED="$(dy)"&#62;1994
-&#60;OPTION VALUE="1995" SELECTED="$(dy)"&#62;1995
-&#60;OPTION VALUE="1996" SELECTED="$(dy)"&#62;1996
-&#60;OPTION VALUE="1997" SELECTED="$(dy)"&#62;1997
-&#60;OPTION VALUE="1998" SELECTED="$(dy)"&#62;1998
-&#60;OPTION VALUE="1999" SELECTED="$(dy)"&#62;1999
-&#60;OPTION VALUE="2000" SELECTED="$(dy)"&#62;2000
-&#60;OPTION VALUE="2001" SELECTED="$(dy)"&#62;2001
-&#60;/SELECT&#62;
-&#60;/TD&#62;
-&#60;/TR&#62;
-&#60;/TR&#62;
-&#60;TD VALIGN=center&#62;&#60;INPUT TYPE=radio NAME="dt" VALUE="range"&#62;
-&#60;/TD&#62;
-&#60;TD&#62;
+&lt;SELECT NAME="dy" &gt;
+&lt;OPTION VALUE="1990" SELECTED="$(dy)"&gt;1990
+&lt;OPTION VALUE="1991" SELECTED="$(dy)"&gt;1991
+&lt;OPTION VALUE="1992" SELECTED="$(dy)"&gt;1992
+&lt;OPTION VALUE="1993" SELECTED="$(dy)"&gt;1993
+&lt;OPTION VALUE="1994" SELECTED="$(dy)"&gt;1994
+&lt;OPTION VALUE="1995" SELECTED="$(dy)"&gt;1995
+&lt;OPTION VALUE="1996" SELECTED="$(dy)"&gt;1996
+&lt;OPTION VALUE="1997" SELECTED="$(dy)"&gt;1997
+&lt;OPTION VALUE="1998" SELECTED="$(dy)"&gt;1998
+&lt;OPTION VALUE="1999" SELECTED="$(dy)"&gt;1999
+&lt;OPTION VALUE="2000" SELECTED="$(dy)"&gt;2000
+&lt;OPTION VALUE="2001" SELECTED="$(dy)"&gt;2001
+&lt;/SELECT&gt;
+&lt;/TD&gt;
+&lt;/TR&gt;
+&lt;/TR&gt;
+&lt;TD VALIGN=center&gt;&lt;INPUT TYPE=radio NAME="dt" VALUE="range"&gt;
+&lt;/TD&gt;
+&lt;TD&gt;
 Between
-&#60;INPUT TYPE=text NAME="db" VALUE="$(db)" SIZE=11 MAXLENGTH=11&#62;
+&lt;INPUT TYPE=text NAME="db" VALUE="$(db)" SIZE=11 MAXLENGTH=11&gt;
 and
-&#60;INPUT TYPE=text NAME="de" VALUE="$(de)" SIZE=11 MAXLENGTH=11&#62;
-&#60;/TD&#62;
-&#60;/TR&#62;
-&#60;/TABLE&#62;
-&#60;/TD&#62;&#60;/TR&#62;
-&#60;!-- end of stl options --&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect3"
+&lt;INPUT TYPE=text NAME="de" VALUE="$(de)" SIZE=11 MAXLENGTH=11&gt;
+&lt;/TD&gt;
+&lt;/TR&gt;
+&lt;/TABLE&gt;
+&lt;/TD&gt;&lt;/TR&gt;
+&lt;!-- end of stl options --&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="bottom-section"
+NAME="BOTTOM-SECTION"
 >8.3.1.2. <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Секция BOTTOM</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN4774"
+><A
+NAME="AEN4805"
 ></A
->
-		<P
->&#13;Эта секция всегда выводится последней на каждой странице результатов поиска. Таким образом вы должны разместить здесь все
+><P
+>Эта секция всегда выводится последней на каждой странице результатов поиска. Таким образом вы должны разместить здесь все
 закрывающие тэги для соответсвующих открывающих тэгов из секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >top</TT
 >.
 Но совершенно необязательно размещать эту секцию в конце файла шаблона, что позволяет вам организовать ваш файл шаблон
 пости как обычный html файл, чтобы иметь возможность просматривать его в окне броузера для представления о том, как он будет выглядеть
 при выдаче пользователю.</P
->
-
-		<P
+><P
 >Ниже дан пример секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >bottom</TT
 >:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--bottom--&#62;
-&#60;P&#62;
-&#60;HR&#62;
-&#60;DIV ALIGN=right&#62;
-&#60;A HREF="http://www.maxime.net.ru/"&#62;
-&#60;IMG SRC="dpsearch.gif" BORDER=0 
-ALT="[Powered by DataparkSearch search engine software]"&#62;
-&#60;/A&#62;
-&#60;/BODY&#62;
-&#60;/HTML&#62;
-&#60;!--/bottom--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect3"
+CLASS="PROGRAMLISTING"
+>&lt;!--bottom--&gt;
+&lt;P&gt;
+&lt;HR&gt;
+&lt;DIV ALIGN=right&gt;
+&lt;A HREF="http://www.maxime.net.ru/"&gt;
+&lt;IMG SRC="dpsearch.gif" BORDER=0 
+ALT="[Powered by DataparkSearch search engine software]"&gt;
+&lt;/A&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+&lt;!--/bottom--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="restop-section"
+NAME="RESTOP-SECTION"
 >8.3.1.3. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >RESTOP</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN4786"
+><A
+NAME="AEN4817"
 ></A
->
-		<P
->&#13;Эта секция вставляется непосредственно перед результатами поиска. Служит местом указания общих параметров результата поиска.
+><P
+>Эта секция вставляется непосредственно перед результатами поиска. Служит местом указания общих параметров результата поиска.
 Вы можете использовать для этого слудующие метасимволы (переменные):</P
->
-
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
->&#13;<A
-NAME="AEN4793"
+><P
+><A
+NAME="AEN4824"
 ></A
 >
 					<TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(first)</TT
 > - номер первого документа, отображаемого на этой странице</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
->&#13;<A
-NAME="AEN4799"
+><P
+><A
+NAME="AEN4830"
 ></A
 >
 					<TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(last)</TT
 >  - номер последнего документа, отображаемого на этой странице</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
->&#13;<A
-NAME="AEN4805"
+><P
+><A
+NAME="AEN4836"
 ></A
 >
 					<TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(total)</TT
 > - общее число документов найденых документов</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
->&#13;<A
-NAME="AEN4811"
+><P
+><A
+NAME="AEN4842"
 ></A
 >
 					<TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(WE)</TT
 > - результат поиска со всей статистикой по каждой словоформе 
 поискового запроса</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
->&#13;<A
-NAME="AEN4817"
+><P
+><A
+NAME="AEN4848"
 ></A
 >
 					<TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(W)</TT
 > -
 результат поиска со статистикой по словам запроса, указывается двумя числами, разделёнными знаком '/'.
 Первое число указывает число найденых вхождений слова из запроса, второе - число всех найденых словоформ этого слова.
 Например, <TT
-CLASS="literal"
+CLASS="LITERAL"
 >test: 25/73</TT
 > обозначает, что слово "test" найдено 25 раз, а число всех его словоформ
 ("test", "tests", "testing", и т.д..) - 73.
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
->&#13;<A
-NAME="AEN4824"
+><P
+><A
+NAME="AEN4855"
 ></A
 >
 			<TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(WS)</TT
 > - результат поиска в короткой форме с отображением числа всех словоформ каждого 
 слова запроса.</P
->
-			</LI
+></LI
 ><LI
->&#13;<P
->&#13;<A
-NAME="AEN4830"
+><P
+><A
+NAME="AEN4861"
 ></A
 >
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(SearchTime)</TT
-> - время выполения поискового запроса.
-</P
->
-</LI
+> - время выполения поискового запроса.</P
+></LI
 ><LI
->&#13;<P
->&#13;<A
-NAME="AEN4836"
+><P
+><A
+NAME="AEN4867"
 ></A
 >
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(ndocs)</TT
-> - число документов в базе. Внимание: для больших баз данных это потребует больших ресурсов.
-</P
->
-</LI
+> - число документов в базе. Внимание: для больших баз данных это потребует больших ресурсов.</P
+></LI
 ></UL
->
-		<P
+><P
 >Ниже дан пример секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >restop</TT
 >:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--restop--&#62;
-&#60;TABLE BORDER=0 WIDTH=100%&#62;
-&#60;TR&#62;
-&#60;TD&#62;Search&#60;BR&#62;results:&#60;/TD&#62;
-&#60;TD&#62;&#60;small&#62;$(WE)&#60;/small&#62;&#60;/TD&#62;
-&#60;TD&#62;&#60;small&#62;$(W)&#60;/small&#62;&#60;/TD&#62;
-&#60;/TR&#62;
-&#60;/TABLE&#62;
-&#60;HR&#62;
-&#60;CENTER&#62;
-Displaying documents $(first)-$(last) of total &#60;B&#62;$(total)&#60;/B&#62; found.
-&#60;/CENTER&#62;
-&#60;!--/restop--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect3"
+CLASS="PROGRAMLISTING"
+>&lt;!--restop--&gt;
+&lt;TABLE BORDER=0 WIDTH=100%&gt;
+&lt;TR&gt;
+&lt;TD&gt;Search&lt;BR&gt;results:&lt;/TD&gt;
+&lt;TD&gt;&lt;small&gt;$(WE)&lt;/small&gt;&lt;/TD&gt;
+&lt;TD&gt;&lt;small&gt;$(W)&lt;/small&gt;&lt;/TD&gt;
+&lt;/TR&gt;
+&lt;/TABLE&gt;
+&lt;HR&gt;
+&lt;CENTER&gt;
+Displaying documents $(first)-$(last) of total &lt;B&gt;$(total)&lt;/B&gt; found.
+&lt;/CENTER&gt;
+&lt;!--/restop--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="res-section"
+NAME="RES-SECTION"
 >8.3.1.4. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >RES</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN4847"
+><A
+NAME="AEN4878"
 ></A
->
-		<P
->&#13;Эта секция используется для вывода разнообразной информации о каждом найденном документе. Могут использоваться
+><P
+>Эта секция используется для вывода разнообразной информации о каждом найденном документе. Могут использоваться
 слудующие метасимволы (переменные):</P
->
-
-		<P
+><P
 ></P
 ><UL
 ><LI
 ><P
->&#13;<A
-NAME="AEN4854"
+><A
+NAME="AEN4885"
 ></A
 >
 				$(URL)  URL документа</P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4859"
+><A
+NAME="AEN4890"
 ></A
 >
 				$(Title)  Заголовок документа</P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4864"
+><A
+NAME="AEN4895"
 ></A
 >
 				$(Score)  Рейтинг документа (как он вычислен <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 ></P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4870"
+><A
+NAME="AEN4901"
 ></A
 >
 				$(Body)  Текст документа, первые несколько строк, или цитаты из документа по словам запроса,
 если используется <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, чтобы дать представление о содержимом документа.</P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4876"
+><A
+NAME="AEN4907"
 ></A
 >
 				$(Content-Type)  Content-type документа (например, text/html)</P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4881"
+><A
+NAME="AEN4912"
 ></A
 >
 				$(Last-Modified)  Дата последней модификации документа</P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4886"
+><A
+NAME="AEN4917"
 ></A
 >
 				$(Content-Length)  Размер документа в байтах</P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4891"
-></A
->
-				$(FancySize)  Размер документа в байтах, килобайтах или мегабайтах, что больше подходит</P
->
-			</LI
-><LI
-><P
->&#13;<A
-NAME="AEN4896"
-></A
->
-				$(Order) Общий номер документа (в порядке показа результатов поиска), т.е. от 1 до $(total).</P
->
-			</LI
-><LI
-><P
->&#13;<A
-NAME="AEN4901"
-></A
->
-				$(Pos) Новер документа на странице (в порядке показа результатов поиска), т.е. от 1 до $(ps).</P
->
-			</LI
-><LI
-><P
->&#13;<A
-NAME="AEN4906"
-></A
->
-				$(meta.description)  Описание документа (из тэга META DESCRIPTION)</P
->
-			</LI
-><LI
-><P
->&#13;<A
-NAME="AEN4911"
-></A
->
-				$(meta.keywords)  Ключевые слова документа (из тэга META KEYWORDS)</P
->
-			</LI
-><LI
-><P
->&#13;<A
-NAME="AEN4916"
-></A
->
-				$(DY)  Категория документа с путём, т.е. <TT
-CLASS="filename"
->/home/computers/software/www/</TT
->
-				</P
->
-			</LI
-><LI
-><P
->&#13;<A
+><A
 NAME="AEN4922"
 ></A
 >
-				$(CL)  Лист клонов (см. подробности в )</P
->
-			</LI
+				$(FancySize)  Размер документа в байтах, килобайтах или мегабайтах, что больше подходит</P
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4928"
+><A
+NAME="AEN4927"
+></A
+>
+				$(Order) Общий номер документа (в порядке показа результатов поиска), т.е. от 1 до $(total).</P
+></LI
+><LI
+><P
+><A
+NAME="AEN4932"
+></A
+>
+				$(Pos) Новер документа на странице (в порядке показа результатов поиска), т.е. от 1 до $(ps).</P
+></LI
+><LI
+><P
+><A
+NAME="AEN4937"
+></A
+>
+				$(meta.description)  Описание документа (из тэга META DESCRIPTION)</P
+></LI
+><LI
+><P
+><A
+NAME="AEN4942"
+></A
+>
+				$(meta.keywords)  Ключевые слова документа (из тэга META KEYWORDS)</P
+></LI
+><LI
+><P
+><A
+NAME="AEN4947"
+></A
+>
+				$(DY)  Категория документа с путём, т.е. <TT
+CLASS="FILENAME"
+>/home/computers/software/www/</TT
+>
+				</P
+></LI
+><LI
+><P
+><A
+NAME="AEN4953"
+></A
+>
+				$(CL)  Лист клонов (см. подробности в <A
+HREF="dpsearch-templates.ru.html#CLONE-SECTION"
+>&#1056;&#1072;&#1079;&#1076;. 8.3.1.5</A
+>&#62;)</P
+></LI
+><LI
+><P
+><A
+NAME="AEN4959"
 ></A
 >
 $(BrowserCharset)  Кодировка, используемая для вывода результатов поиска</P
->
-</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN4933"
+><A
+NAME="AEN4964"
 ></A
 >
 $(PerSite)  При использовании группировки по сайту, число суммарное число документов с сайта найденного документа. Иначе,
 значение равно 0.</P
->
-</LI
+></LI
 ></UL
->
-		<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;			<P
+CLASS="NOTE"
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
->
-    Возможно указывать максимальное сичло символов, возвращаемых любой из описаных выше переменной.
+>    Возможно указывать максимальное сичло символов, возвращаемых любой из описаных выше переменной.
 Например,  <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >$(URL)</CODE
 > может возвращать длинный URL, который может разрушать табличный вывод результатов.
 Для указания максимального числа выводимых символов в отображаемом URL, используйте 
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(URL:xx)</TT
 >, где <TT
-CLASS="literal"
+CLASS="LITERAL"
 >xx</TT
 > - максимальное число символов:
 				<KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >$(URL:40)</KBD
 >
 			вернёт URL, и если он окажется длиннее 40 символов, только превые 40 символов будут показаны на странице
 результатов поиска:
 				<KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >http://very.long.url/path/veery/long/...</KBD
 >
 			</P
->
-		</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-		<P
+><P
 >Ниже пример секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >res</TT
 >:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--res--&#62;
-&#60;DL&#62;&#60;DT&#62;
-&#60;b&#62;$(Order).&#60;/b&#62;&#60;a href="$(URL)" TARGET="_blank"&#62;
-&#60;b&#62;$(Title)&#60;/b&#62;&#60;/a&#62; [&#60;b&#62;$(Score)&#60;/b&#62;]&#60;DD&#62;
-$(Body)...&#60;BR&#62;
-&#60;b&#62;URL: &#60;/b&#62;
-&#60;A HREF="$(URL)" TARGET="_blank"&#62;$(URL)&#60;/A&#62;($(Content-Type))&#60;BR&#62;
-$(Last-Modified), $(Content-Length) bytes&#60;BR&#62;
-&#60;b&#62;Description: &#60;/b&#62;$(meta.description)&#60;br&#62;
-&#60;b&#62;Keywords: &#60;/b&#62;$(meta.keywords)&#60;br&#62;
-&#60;/DL&#62;
-&#60;UL&#62;
+CLASS="PROGRAMLISTING"
+>&lt;!--res--&gt;
+&lt;DL&gt;&lt;DT&gt;
+&lt;b&gt;$(Order).&lt;/b&gt;&lt;a href="$(URL)" TARGET="_blank"&gt;
+&lt;b&gt;$(Title)&lt;/b&gt;&lt;/a&gt; [&lt;b&gt;$(Score)&lt;/b&gt;]&lt;DD&gt;
+$(Body)...&lt;BR&gt;
+&lt;b&gt;URL: &lt;/b&gt;
+&lt;A HREF="$(URL)" TARGET="_blank"&gt;$(URL)&lt;/A&gt;($(Content-Type))&lt;BR&gt;
+$(Last-Modified), $(Content-Length) bytes&lt;BR&gt;
+&lt;b&gt;Description: &lt;/b&gt;$(meta.description)&lt;br&gt;
+&lt;b&gt;Keywords: &lt;/b&gt;$(meta.keywords)&lt;br&gt;
+&lt;/DL&gt;
+&lt;UL&gt;
 $(CL)
-&#60;/UL&#62;
-&#60;!--/res--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect3"
+&lt;/UL&gt;
+&lt;!--/res--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="clone-section"
+NAME="CLONE-SECTION"
 >8.3.1.5. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >CLONE</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN4950"
+><A
+NAME="AEN4981"
 ></A
->
-		<P
->&#13;Содержимое этой секции включается в результат поиска вместо метасимвола $(CL) для каждого найденного клона документа.
+><P
+>Содержимое этой секции включается в результат поиска вместо метасимвола $(CL) для каждого найденного клона документа.
 Служит для указания всех URL с одним и тем же содержимым (как зеркала и т.п.).
 Вы можете использовать те же мета символы, что и в секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >res</TT
 >.</P
->
-
-		<P
+><P
 >Ниже пример секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >clone</TT
 >.
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--clone--&#62;
-&#60;li&#62;&#60;A HREF="$(DU)" TARGET="_blank"&#62;$(DU)&#60;/A&#62; ($(DC)) $(DM)
-&#60;!--/clone--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect3"
+CLASS="PROGRAMLISTING"
+>&lt;!--clone--&gt;
+&lt;li&gt;&lt;A HREF="$(DU)" TARGET="_blank"&gt;$(DU)&lt;/A&gt; ($(DC)) $(DM)
+&lt;!--/clone--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="resbot-section"
+NAME="RESBOT-SECTION"
 >8.3.1.6. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >RESBOT</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN4962"
+><A
+NAME="AEN4993"
 ></A
->
-<P
->&#13;та секция выводится непосредственно после результатов поиска. Обычно здесь размещается навигация по страницам поиска.</P
->
-
-		<P
+><P
+>та секция выводится непосредственно после результатов поиска. Обычно здесь размещается навигация по страницам поиска.</P
+><P
 >Вот пример секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >resbot</TT
 >:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--resbot--&#62;
-&#60;HR&#62;
-&#60;CENTER&#62;
+CLASS="PROGRAMLISTING"
+>&lt;!--resbot--&gt;
+&lt;HR&gt;
+&lt;CENTER&gt;
 Result pages: $(NL)$(NB)$(NR)
-&#60;/CENTER&#62;
-&#60;!--/resbot--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-		<P
+&lt;/CENTER&gt;
+&lt;!--/resbot--&gt;</PRE
+></P
+></DIV
+><P
 >Навигация - сложная штука, создаваемая из следующих секций шаблона:
-,
-,
-,
-.
-</P
-> 
-
-<DIV
-CLASS="sect3"
+<A
+HREF="dpsearch-templates.ru.html#NAVLEFT-SECTION"
+><I
+>navleft, navleft_nop</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NAVBAR0-SECTION"
+><I
+>navbar0</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NAVRIGHT-SECTION"
+><I
+>navright, navright_nop</I
+></A
+>&#62;,
+<A
+HREF="dpsearch-templates.ru.html#NAVBAR1-SECTION"
+><I
+>navbar1</I
+></A
+>&#62;.</P
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="navleft-section"
+NAME="NAVLEFT-SECTION"
 >8.3.1.7. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >navleft, navleft_nop</I
 ></SPAN
 ></A
 ></H3
->
-
-
-
-<P
+><P
 >Используются для образования ссылки на предыдущую страницу. Если предыдущая страница существует,
-исаользуется  &#60;!--navleft--&#62;, если нет (на первой странице) - используется &#60;!--navleft_nop--&#62;.
+исаользуется  &lt;!--navleft--&gt;, если нет (на первой странице) - используется &lt;!--navleft_nop--&gt;.
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--navleft--&#62;
-&#60;TD&#62;&#60;A HREF="$(NH)"&#62;&#60;IMG...&#62;&#60;/A&#62;&#60;BR&#62;
-&#60;A HREF="$(NH)"&#62;Prev&#60;/A&#62;&#60;/TD&#62;
-&#60;!--/navleft--&#62;
+CLASS="PROGRAMLISTING"
+>&lt;!--navleft--&gt;
+&lt;TD&gt;&lt;A HREF="$(NH)"&gt;&lt;IMG...&gt;&lt;/A&gt;&lt;BR&gt;
+&lt;A HREF="$(NH)"&gt;Prev&lt;/A&gt;&lt;/TD&gt;
+&lt;!--/navleft--&gt;
 
-&#60;!--navleft_nop--&#62;
-&#60;TD&#62;&#60;IMG...&#62;&#60;BR&#62;
-&#60;FONT COLOR=gray&#62;Prev&#60;/FONT&#62;&#60;/TD&#62;
-&#60;!--/navleft_nop--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect3"
+&lt;!--navleft_nop--&gt;
+&lt;TD&gt;&lt;IMG...&gt;&lt;BR&gt;
+&lt;FONT COLOR=gray&gt;Prev&lt;/FONT&gt;&lt;/TD&gt;
+&lt;!--/navleft_nop--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="navbar0-section"
+NAME="NAVBAR0-SECTION"
 >8.3.1.8. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >navbar0</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN4984"
-></A
->
-		<P
->&#13;Используется для печати текущей страницы в списе страниц.
-			<PRE
-CLASS="programlisting"
->&#13;&#60;!--navbar0--&#62;
-&#60;TD&#62;&#60;IMG...&#62;&#60;BR&#62;$(NP)&#60;/TD&#62;
-&#60;!--navbar0--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect3"
-><H3
-CLASS="sect3"
 ><A
-NAME="navright-section"
+NAME="AEN5015"
+></A
+><P
+>Используется для печати текущей страницы в списе страниц.
+			<PRE
+CLASS="PROGRAMLISTING"
+>&lt;!--navbar0--&gt;
+&lt;TD&gt;&lt;IMG...&gt;&lt;BR&gt;$(NP)&lt;/TD&gt;
+&lt;!--navbar0--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="NAVRIGHT-SECTION"
 >8.3.1.9. Секции <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >navright, navright_nop</I
 ></SPAN
 > section</A
 ></H3
->
-
-
-<A
-NAME="AEN4993"
-></A
->
-		<P
->&#13;Эти секции используются для печати ссылки на следующую страницу. Если следующая страница существует,
-используется секция &#60;!--navright--&#62;, на последней странице используется &#60;!--navright_nop--&#62;.
-			<PRE
-CLASS="programlisting"
->&#13;&#60;!--navright--&#62;
-&#60;TD&#62;
-&#60;A HREF="$(NH)"&#62;&#60;IMG...&#62;&#60;/A&#62;
-&#60;BR&#62;
-&#60;A HREF="$(NH)"&#62;Next&#60;/A&#62;&#60;/TD&#62;
-&#60;!--/navright--&#62;
-
-&#60;!--navright_nop--&#62;
-&#60;TD&#62;
-&#60;IMG...&#62;
-&#60;BR&#62;
-&#60;FONT COLOR=gray&#62;Next&#60;/FONT&#62;&#60;/TD&#62;
-&#60;!--/navright_nop--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect3"
-><H3
-CLASS="sect3"
 ><A
-NAME="navbar1-section"
+NAME="AEN5024"
+></A
+><P
+>Эти секции используются для печати ссылки на следующую страницу. Если следующая страница существует,
+используется секция &lt;!--navright--&gt;, на последней странице используется &lt;!--navright_nop--&gt;.
+			<PRE
+CLASS="PROGRAMLISTING"
+>&lt;!--navright--&gt;
+&lt;TD&gt;
+&lt;A HREF="$(NH)"&gt;&lt;IMG...&gt;&lt;/A&gt;
+&lt;BR&gt;
+&lt;A HREF="$(NH)"&gt;Next&lt;/A&gt;&lt;/TD&gt;
+&lt;!--/navright--&gt;
+
+&lt;!--navright_nop--&gt;
+&lt;TD&gt;
+&lt;IMG...&gt;
+&lt;BR&gt;
+&lt;FONT COLOR=gray&gt;Next&lt;/FONT&gt;&lt;/TD&gt;
+&lt;!--/navright_nop--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="NAVBAR1-SECTION"
 >8.3.1.10. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >navbar1</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN5002"
-></A
->
-		<P
->&#13;Используется для печати ссылок на другие страницы списка страниц результата поиска.
-			<PRE
-CLASS="programlisting"
->&#13;&#60;!--navbar1--&#62;
-&#60;TD&#62;
-&#60;A HREF="$(HR)"&#62;
-&#60;IMG...&#62;&#60;/A&#62;&#60;BR&#62;
-&#60;A HREF="$(NH)"&#62;$(NP)&#60;/A&#62;
-&#60;/TD&#62;
-&#60;!--/navbar1--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect3"
-><H3
-CLASS="sect3"
 ><A
-NAME="notfound-section"
+NAME="AEN5033"
+></A
+><P
+>Используется для печати ссылок на другие страницы списка страниц результата поиска.
+			<PRE
+CLASS="PROGRAMLISTING"
+>&lt;!--navbar1--&gt;
+&lt;TD&gt;
+&lt;A HREF="$(HR)"&gt;
+&lt;IMG...&gt;&lt;/A&gt;&lt;BR&gt;
+&lt;A HREF="$(NH)"&gt;$(NP)&lt;/A&gt;
+&lt;/TD&gt;
+&lt;!--/navbar1--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="NOTFOUND-SECTION"
 >8.3.1.11. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >notfound</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN5011"
+><A
+NAME="AEN5042"
 ></A
->
-		<P
->&#13;Как говорит имя этой секции, она выводится только в случае, если по запросу не найдено ни одного документа.
+><P
+>Как говорит имя этой секции, она выводится только в случае, если по запросу не найдено ни одного документа.
 Вы можете дать сдесь небольшие советы по изменению запроса, либо по ослаблению ограничений поиска.</P
->
-
-		<P
+><P
 >Ниже пример секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >notfound</TT
 >:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--notfound--&#62;
-&#60;CENTER&#62;
-Sorry, but search hasn't returned results.&#60;P&#62;
-&#60;I&#62;Try to compose less restrictive search query or check spelling.&#60;/I&#62;
-&#60;/CENTER&#62;
-&#60;HR&#62;
-&#60;!--/notfound--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect3"
+CLASS="PROGRAMLISTING"
+>&lt;!--notfound--&gt;
+&lt;CENTER&gt;
+Sorry, but search hasn't returned results.&lt;P&gt;
+&lt;I&gt;Try to compose less restrictive search query or check spelling.&lt;/I&gt;
+&lt;/CENTER&gt;
+&lt;HR&gt;
+&lt;!--/notfound--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
 ><H3
-CLASS="sect3"
+CLASS="SECT3"
 ><A
-NAME="noquery-section"
+NAME="NOQUERY-SECTION"
 >8.3.1.12. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >noquery</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN5022"
-></A
->
-		<P
->&#13;Эта секция выводится если пользователь выдал пустой запрос на поиск.. Ниже приводится пример этой секции:
-			<PRE
-CLASS="programlisting"
->&#13;&#60;!--noquery--&#62;
-&#60;CENTER&#62;
-You haven't typed any word(s) to search for.
-&#60;/CENTER&#62;
-&#60;HR&#62;
-&#60;!--/noquery--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect3"
-><H3
-CLASS="sect3"
 ><A
-NAME="error-section"
+NAME="AEN5053"
+></A
+><P
+>Эта секция выводится если пользователь выдал пустой запрос на поиск.. Ниже приводится пример этой секции:
+			<PRE
+CLASS="PROGRAMLISTING"
+>&lt;!--noquery--&gt;
+&lt;CENTER&gt;
+You haven't typed any word(s) to search for.
+&lt;/CENTER&gt;
+&lt;HR&gt;
+&lt;!--/noquery--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="ERROR-SECTION"
 >8.3.1.13. Секция <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >error</I
 ></SPAN
 ></A
 ></H3
->
-
-
-<A
-NAME="AEN5031"
+><A
+NAME="AEN5062"
 ></A
->
-		<P
->&#13;Эта секция выводится только при обнаружении ошибок во время поиска. Например, если не запущен SQL сервер и т.п.
+><P
+>Эта секция выводится только при обнаружении ошибок во время поиска. Например, если не запущен SQL сервер и т.п.
 Вы можете использовать следующий метасимвол (переменную):
 <A
-NAME="AEN5035"
+NAME="AEN5066"
 ></A
 >
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(E)</TT
-> - текст сообщения об ошибке.
-</P
->
-
-		<P
+> - текст сообщения об ошибке.</P
+><P
 >Пример секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >error</TT
 >:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--error--&#62;
-&#60;CENTER&#62;
-&#60;FONT COLOR="#FF0000"&#62;An error occured!&#60;/FONT&#62;
-&#60;P&#62;
-&#60;B&#62;$(E)&#60;/B&#62;
-&#60;/CENTER&#62;
-&#60;!--/error--&#62;
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-	</DIV
->
-
-
-
-
-	<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>&lt;!--error--&gt;
+&lt;CENTER&gt;
+&lt;FONT COLOR="#FF0000"&gt;An error occured!&lt;/FONT&gt;
+&lt;P&gt;
+&lt;B&gt;$(E)&lt;/B&gt;
+&lt;/CENTER&gt;
+&lt;!--/error--&gt;</PRE
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="templates-var"
+NAME="TEMPLATES-VAR"
 >8.3.2. Секция Variables
 <A
-NAME="AEN5044"
+NAME="AEN5075"
 ></A
 ></A
 ></H2
->
-		
-
-		<P
+><P
 >В специальной секции <TT
-CLASS="literal"
+CLASS="LITERAL"
 >variables</TT
 > вы можеде задать значения некоторых переменных и параметров
 поиска. </P
->
-		<P
+><P
 >Секция <TT
-CLASS="literal"
+CLASS="LITERAL"
 >variables</TT
 > обычно выглядит примерно так:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--variables
+CLASS="PROGRAMLISTING"
+>&lt;!--variables
 DBAddr		  mysql://foo:bar@localhost/search/?dbmode=single
 VarDir            /usr/local/dpsearch/var/
 LocalCharset	  iso-8859-1
@@ -1383,475 +1241,414 @@ BrowserCharset    iso-8859-1
 TrackQuery	  no
 Cache		  no
 DetectClones	  yes
-HlBeg		  &#60;font color="blue"&#62;&#60;b&#62;&#60;i&#62;
-HlEnd		  &#60;/i&#62;&#60;/b&#62;
+HlBeg		  &lt;font color="blue"&gt;&lt;b&gt;&lt;i&gt;
+HlEnd		  &lt;/i&gt;&lt;/b&gt;
 R1		  100
 R2		  256
 Synonym		  synonym/english.syn
 ResultContentType text/xml
 Locale            ru_Ru.KOI8-R
---&#62;
-</PRE
->
-</P
->
-		<DIV
-CLASS="note"
+--&gt;</PRE
+></P
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;			<P
+CLASS="NOTE"
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 > Так же как и в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >,
 имя хоста в DBAddr имеет значение только для поддерживаемых баз данных и не играет никакой роли при 
 использовании ODBC баз данных. В случае ODBC, используйте имя базы в DBAddr для указания ODBC DSN.</P
->
-		</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-		<P
->&#13;<A
-NAME="AEN5057"
+><P
+><A
+NAME="AEN5088"
 ></A
 >
 			Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >VarDir</B
 > задаёт альтернвтивный путь рабочей директории 
 при использовании способа хранения cache. По умолчанию используется поддиректория
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/var</TT
 > относительно корневой директории установки <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >.</P
->
-
-		<P
->&#13;<A
-NAME="AEN5064"
+><P
+><A
+NAME="AEN5095"
 ></A
 >
 			Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >LocalCharset</B
 > указывает кодировку локальной базы данных.
 Должна совпадать с кодировкой, заданной этой же командой в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >. </P
->
-
-		<P
->&#13;<A
-NAME="AEN5070"
+><P
+><A
+NAME="AEN5101"
 ></A
 >
 			Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >BrowserCharset</B
 > указывает, какая кодировка используется для
 вывода результатов поиска. Она может отличаться от значения, указанного в <B
-CLASS="command"
+CLASS="COMMAND"
 >LocalCharset</B
 >.
 Значения всех метасимволов (переменных) при выводе будут перекодированы в эту кодировку, однако сам
 шаблон не перекодируется, он уже должен быть в этой кодировке. </P
->
-
-		<P
->&#13;<A
-NAME="AEN5076"
+><P
+><A
+NAME="AEN5107"
 ></A
 >
 Используйте "<B
-CLASS="command"
+CLASS="COMMAND"
 >Cache</B
 > yes/no" для включения/выключения кэширования результатов поиска.</P
->
-
-		<P
->&#13;<A
-NAME="AEN5081"
+><P
+><A
+NAME="AEN5112"
 ></A
 >
 Используйте "<B
-CLASS="command"
+CLASS="COMMAND"
 >DetectClones</B
 > yes/no" для включения/выключения определения клонов.</P
->
-
-		<P
+><P
 ><A
-NAME="AEN5086"
+NAME="AEN5117"
 ></A
 >
 Используйте "<B
-CLASS="command"
+CLASS="COMMAND"
 >GroupBySite</B
 > yes/no" для включения/выключения группировки результатов по url.site_id.</P
->
-<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;<P
+CLASS="NOTE"
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Если используется <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd</TT
 >, вы должны указывать <B
-CLASS="command"
+CLASS="COMMAND"
 >GroupBySite</B
 > в вашем файле 
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
->, или передавать его как CGI параметр.
-</P
->
-<P
->Если используется способ хранения cache, необходимо также создать лимит по сайту (см. ).
-</P
->
-<P
+>, или передавать его как CGI параметр.</P
+><P
+>Если используется способ хранения cache, необходимо также создать лимит по сайту (см. <A
+HREF="dpsearch-cachemode.ru.html#LIMITS"
+>&#1056;&#1072;&#1079;&#1076;. 5.2.8</A
+>&#62;).</P
+><P
 ><A
-NAME="AEN5098"
+NAME="AEN5129"
 ></A
 >
 Используйте команду <B
-CLASS="command"
+CLASS="COMMAND"
 >PagesInGroup</B
 > для указания числа дополнительных результатов с одного сайта при
 группировке результатов а-ля Google.</P
->
-
-<P
+><P
 ><A
-NAME="AEN5103"
+NAME="AEN5134"
 ></A
 >
 Вы можете использовать команду <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxSiteLevel</B
 > для задания максимального уровня доменного имени, используемого для
 расчёта site_id. Значение по умолчанию: 2. Одно исключение: трёх и менее буквенные домены второго уровня считаются доменами первого уровня.
 Например: domain.ext - уровень 2, www.domain.ext - уровень 3, domain.com.ext - уровень 2. Отрицательное значение для 
 <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxSiteLevel</B
 > означает группировку на уровне поддиректорий, т.е. при уровне -1 www.site.ru/dir1/ и
-www.site.ru/dir2/ группируются как разные сайты.
-</P
->
-</BLOCKQUOTE
+www.site.ru/dir2/ группируются как разные сайты.</P
+></BLOCKQUOTE
 ></DIV
->
-		<P
->&#13;<A
-NAME="AEN5109"
+><P
+><A
+NAME="AEN5140"
 ></A
 >
 <A
-NAME="AEN5112"
+NAME="AEN5143"
 ></A
 >
 			Команды <B
-CLASS="command"
+CLASS="COMMAND"
 >HlBeg</B
 > и <B
-CLASS="command"
+CLASS="COMMAND"
 >HlEnd</B
 > используются для задания способа
 выделения подсвечиваемых слов. Найденные слова окружаются этими тэгами.</P
->
-
-		<P
->&#13;<A
-NAME="AEN5118"
+><P
+><A
+NAME="AEN5149"
 ></A
 >
 Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Alias</B
 > в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > похожа на одноимённую команду в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >,
 но имеет действие на отображение результатов поиска, а не при индексировании.
-См. детали в .</P
->
-
-		<P
->&#13;<A
-NAME="AEN5126"
-></A
->
-			Команды <B
-CLASS="command"
->R1</B
-> и <B
-CLASS="command"
->R2</B
-> задают диапазон значений для переменных шаблона
-$(R1) и $(R2).</P
->
-
-		<P
+См. детали в <A
+HREF="dpsearch-aliases.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 3.7</A
+>&#62;.</P
+><P
 ><A
-NAME="AEN5132"
-></A
->
-Команда <B
-CLASS="command"
->Synonym</B
->  используется для загрузки указанного списка синонимов.
-Имя файла синонимов может быть и абсолютным и относительно поддиректории <TT
-CLASS="filename"
->/etc</TT
->
-коренвой директории установки <SPAN
-CLASS="application"
->DataparkSearch</SPAN
->.</P
->
-
-		<P
-><A
-NAME="AEN5139"
-></A
->
-Команда <B
-CLASS="command"
->DateFormat</B
-> служит для изменения формата вывода даты последней модификации файла.
-При задании своего формата, используйте метапеременные функции <TT
-CLASS="literal"
->strftime</TT
->.
-</P
->
-<DIV
-CLASS="note"
-><BLOCKQUOTE
-CLASS="note"
->&#13;<P
-><B
->&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
->Если используется <TT
-CLASS="filename"
->searchd</TT
->, вы можете указывать <B
-CLASS="command"
->DateFormat</B
-> в вашем файле 
-<TT
-CLASS="filename"
->searchd.conf</TT
-> (отличие состоит в необходимости заключать строку фомата в кавычки <TT
-CLASS="literal"
->"</TT
->),
-или передавать как CGI параметр.
-</P
->
-</BLOCKQUOTE
-></DIV
->
-		<P
-><A
-NAME="AEN5151"
-></A
->
-Команда "<B
-CLASS="command"
->Log2stderr</B
-> yes/no" предписывает выводить все сообщения об ошибках на <TT
-CLASS="literal"
->stderr</TT
->.
-</P
->
-
-<P
->&#13;<A
 NAME="AEN5157"
 ></A
 >
-Команда <B
-CLASS="command"
->ResultsLimit</B
-> может быть использована для ограничения максимального числа
-выводимых результатов поиска. При использовании <SPAN
-CLASS="application"
->searchd</SPAN
->,
-эта команда может быть указана в файле конфигурации <TT
-CLASS="filename"
->searchd.conf</TT
->.
-</P
->
-<P
->&#13;<A
-NAME="AEN5164"
+			Команды <B
+CLASS="COMMAND"
+>R1</B
+> и <B
+CLASS="COMMAND"
+>R2</B
+> задают диапазон значений для переменных шаблона
+$(R1) и $(R2).</P
+><P
+><A
+NAME="AEN5163"
 ></A
 >
 Команда <B
-CLASS="command"
->ResultContentType</B
-> используется для указания заголовка Content-Type страницы с результатами. 
-Значение по умолчанию: <TT
-CLASS="literal"
->text/html</TT
->.
-</P
+CLASS="COMMAND"
+>Synonym</B
+>  используется для загрузки указанного списка синонимов.
+Имя файла синонимов может быть и абсолютным и относительно поддиректории <TT
+CLASS="FILENAME"
+>/etc</TT
 >
-<P
->&#13;<A
+коренвой директории установки <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+>.</P
+><P
+><A
 NAME="AEN5170"
 ></A
 >
 Команда <B
-CLASS="command"
+CLASS="COMMAND"
+>DateFormat</B
+> служит для изменения формата вывода даты последней модификации файла.
+При задании своего формата, используйте метапеременные функции <TT
+CLASS="LITERAL"
+>strftime</TT
+>.</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
+>Если используется <TT
+CLASS="FILENAME"
+>searchd</TT
+>, вы можете указывать <B
+CLASS="COMMAND"
+>DateFormat</B
+> в вашем файле 
+<TT
+CLASS="FILENAME"
+>searchd.conf</TT
+> (отличие состоит в необходимости заключать строку фомата в кавычки <TT
+CLASS="LITERAL"
+>&quot;</TT
+>),
+или передавать как CGI параметр.</P
+></BLOCKQUOTE
+></DIV
+><P
+><A
+NAME="AEN5182"
+></A
+>
+Команда &quot;<B
+CLASS="COMMAND"
+>Log2stderr</B
+> yes/no&quot; предписывает выводить все сообщения об ошибках на <TT
+CLASS="LITERAL"
+>stderr</TT
+>.</P
+><P
+><A
+NAME="AEN5188"
+></A
+>
+Команда <B
+CLASS="COMMAND"
+>ResultsLimit</B
+> может быть использована для ограничения максимального числа
+выводимых результатов поиска. При использовании <SPAN
+CLASS="APPLICATION"
+>searchd</SPAN
+>,
+эта команда может быть указана в файле конфигурации <TT
+CLASS="FILENAME"
+>searchd.conf</TT
+>.</P
+><P
+><A
+NAME="AEN5195"
+></A
+>
+Команда <B
+CLASS="COMMAND"
+>ResultContentType</B
+> используется для указания заголовка Content-Type страницы с результатами. 
+Значение по умолчанию: <TT
+CLASS="LITERAL"
+>text/html</TT
+>.</P
+><P
+><A
+NAME="AEN5201"
+></A
+>
+Команда <B
+CLASS="COMMAND"
 >Locale</B
 > используется для указания заголовка для задания LC_ALL локали при выдаче результатов
 поиска. 
 Значение по умолчанию: <TT
-CLASS="literal"
+CLASS="LITERAL"
 >не определено</TT
-> (используется установленное ранее значение).
-</P
->
-
-
-	</DIV
->
-
-
-	<DIV
-CLASS="sect2"
-><H2
-CLASS="sect2"
+> (используется установленное ранее значение).</P
+><P
 ><A
-NAME="templates-incl"
+NAME="AEN5207"
+></A
+>
+При помощи команды <B
+CLASS="COMMAND"
+>MakePrefixes yes</B
+> вы можете автоматически расширять поисковый запрос префиксами слов запроса.
+В частности, это можно использовать при организации подсказок при поиске. (См. также <A
+HREF="dpsearch-indexcmd.ru.html#MKPREFIX-CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.59</A
+>&#62;)</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TEMPLATES-INCL"
 >8.3.3. Включения в шаблонах</A
 ></H2
->
-		
-		<P
->Вы можете использовать &#60;!INCLUDE Content="http://hostname/path"&#62; дял включения внешних
+><P
+>Вы можете использовать &lt;!INCLUDE Content="http://hostname/path"&gt; дял включения внешних
 URLs в страницу результатов поиска.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
->ВНИМАНИЕ: Вы можете использовать &#60;!INCLUDE&#62; ТОЛЬКО в следующих секциях шаблона:</I
+CLASS="EMPHASIS"
+>ВНИМАНИЕ: Вы можете использовать &lt;!INCLUDE&gt; ТОЛЬКО в следующих секциях шаблона:</I
 ></SPAN
 >
 		<P
-CLASS="literallayout"
-><br>
-&#60;!--top--&#62;<br>
-&#60;!--bottom--&#62;<br>
-&#60;!--restop--&#62;<br>
-&#60;!--resbot--&#62;<br>
-&#60;!--notfound--&#62;<br>
-&#60;!--error--&#62;<br>
-</P
->
-</P
->
-		<P
+CLASS="LITERALLAYOUT"
+>&lt;!--top--&gt;<br>
+&lt;!--bottom--&gt;<br>
+&lt;!--restop--&gt;<br>
+&lt;!--resbot--&gt;<br>
+&lt;!--notfound--&gt;<br>
+&lt;!--error--&gt;</P
+></P
+><P
 >Это пример использования включения:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;!--top--&#62;
+CLASS="PROGRAMLISTING"
+>&lt;!--top--&gt;
 ....
-&#60;!INCLUDE CONTENT="http://hostname/banner?query=$&#38;(q)"&#62;
+&lt;!INCLUDE CONTENT="http://hostname/banner?query=$&amp;(q)"&gt;
 ...
-&#60;!--/top--&#62;
-</PRE
->
-</P
->
-	</DIV
->
-
-<DIV
-CLASS="sect2"
+&lt;!--/top--&gt;</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="templates-if"
+NAME="TEMPLATES-IF"
 >8.3.4. Условные операторы в шаблонах</A
 ></H2
->
-
-<P
+><P
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > поддерживет в шаблонах условные операторы:
 <PRE
-CLASS="programlisting"
->&#13;&#60;!IF   NAME="Content-Type" Content="application/pdf"&#62;
-&#60;img src="pdf.png"&#62;
-&#60;!ELIF NAME="Content-Type" Content="text/plain"&#62;
-&#60;img src="text.png"&#62;
-&#60;!ENDIF&#62;
-</PRE
->
-</P
->
-
-<P
+CLASS="PROGRAMLISTING"
+>&lt;!IF   NAME="Content-Type" Content="application/pdf"&gt;
+&lt;img src="pdf.png"&gt;
+&lt;!ELIF NAME="Content-Type" Content="text/plain"&gt;
+&lt;img src="text.png"&gt;
+&lt;!ENDIF&gt;</PRE
+></P
+><P
 >Возможно использовать вложенные конструкции условных операторов. Это обеспечивает большую гибкость при написании
 шаблонов результатов поиска. Смотрите примеры использования в файле <TT
-CLASS="filename"
+CLASS="FILENAME"
 >etc/search.htm-dist</TT
->.
-</P
->
-</DIV
->
-
-
-	<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="templates-sec"
+NAME="TEMPLATES-SEC"
 >8.3.5. О безопасности</A
 ></H2
->
-		
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >ВНИМАНИЕ</I
 ></SPAN
 >: Так как файл шаблона содержит такую информацию как пароль,
 во избежание утечки этого пароля, рекомендуется проверить права доступа к нему, чтобы обеспечить право чтения только для программы поиска.
  </P
->
-
-	</DIV
->
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -1897,23 +1694,23 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 >Модуль <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN4640"
+NAME="AEN4671"
 ></A
 >
 <A
-NAME="AEN4642"
+NAME="AEN4673"
 ></A
 >
 <A
-NAME="AEN4645"
+NAME="AEN4676"
 ></A
 >
 <A
-NAME="AEN4648"
+NAME="AEN4679"
 ></A
 ></TD
 ><TD

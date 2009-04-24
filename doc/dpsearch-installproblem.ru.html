@@ -2,9 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Возможные проблемы установки
-
-</TITLE
+>Возможные проблемы установки&#13;</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -18,12 +16,11 @@ TITLE="Установка
 HREF="dpsearch-install.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Инсталяция DataparkSearch
-
 "
 HREF="dpsearch-installing.ru.html"><LINK
 REL="NEXT"
-TITLE="Регистрация установки"
-HREF="dpsearch-register.ru.html"><LINK
+TITLE="Простая рутина использования"
+HREF="dpsearch-quick-usage.ru.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="datapark.css"><META
@@ -32,7 +29,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,7 +73,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-register.ru.html"
+HREF="dpsearch-quick-usage.ru.html"
 ACCESSKEY="N"
 >&#1057;&#1083;&#1077;&#1076;.</A
 ></TD
@@ -86,65 +83,57 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="installproblem"
+NAME="INSTALLPROBLEM"
 >2.5. Возможные проблемы установки
 <A
-NAME="AEN479"
+NAME="AEN489"
 ></A
 ></A
 ></H1
->
-		
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Каждый раз, когда вы запускаете <TT
-CLASS="literal"
+CLASS="LITERAL"
 >configure</TT
 >,
 вы должны опять запустить <TT
-CLASS="literal"
+CLASS="LITERAL"
 >make</TT
 > для перекомпиляции.</P
->
-
-				<P
+><P
 >Во избежание использования информации о предыдущей конфигурации или устаревших объектных файлов,
 выполните эти команды перед повторным запуском <TT
-CLASS="literal"
+CLASS="LITERAL"
 >configure</TT
->:
-</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+>:</P
+><P
+>					<KBD
+CLASS="USERINPUT"
 >sh$ rm config.cache</KBD
 >
 				</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+><P
+>					<KBD
+CLASS="USERINPUT"
 >sh$ make clean</KBD
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Завершение компиляции с ошибками иногда может быть связана с некорректной версией 
 <B
-CLASS="command"
+CLASS="COMMAND"
 >make</B
 >. Работа стандартной команды <B
-CLASS="command"
+CLASS="COMMAND"
 >make</B
 > под Solaris, FreeBSD, OpenBSD
 немного отличается от <A
@@ -158,61 +147,52 @@ TARGET="_top"
 >GNU make</A
 > вместо стандартной версии,
 часто она называется <B
-CLASS="command"
+CLASS="COMMAND"
 >gmake</B
->.
-</P
->
-				<P
+>.</P
+><P
 >GNU <TT
-CLASS="filename"
+CLASS="FILENAME"
 >make</TT
 > версии 3.77 проверена и работает.</P
->
-			</LI
+></LI
 ><LI
->&#13;<P
+><P
 >Если при запуске <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Apache</SPAN
 > c модулем <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >mod_dpsearch</SPAN
 > вы получаете такое
 сообщение об ошибке:  <KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >Undefined symbol "pthread_join"</KBD
 > (или что-то подобное относящееся к pthreads),
 попробуйте добавить следующую команду в файл конфигурации <TT
-CLASS="filename"
+CLASS="FILENAME"
 >httpd.conf</TT
 > до загрузки <TT
-CLASS="filename"
+CLASS="FILENAME"
 >mod_dpsearch.so</TT
->:
-</P
->
-<P
+>:</P
+><P
 ><KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >LoadFile /usr/lib/libpthread.so</KBD
 ></P
->
-</LI
+></LI
 ></UL
->
-		<P
+><P
 >Если информация выше не помогла вам, пожалуйста, отправьте описание вашей проблемы на список рассылки
 <CODE
-CLASS="email"
+CLASS="EMAIL"
 >&#60;<A
 HREF="mailto:dataparksearch@yahoogroups.com"
 >dataparksearch@yahoogroups.com</A
 >&#62;</CODE
-> (пажалуйста, пишите только на английском).
-</P
->
-	</DIV
+> (пажалуйста, при возможности пишите на английском).</P
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -247,7 +227,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="dpsearch-register.ru.html"
+HREF="dpsearch-quick-usage.ru.html"
 ACCESSKEY="N"
 >&#1057;&#1083;&#1077;&#1076;.</A
 ></TD
@@ -258,7 +238,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 >Инсталяция <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 <A
@@ -278,7 +258,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Регистрация установки</TD
+>Простая рутина использования</TD
 ></TR
 ></TABLE
 ></DIV

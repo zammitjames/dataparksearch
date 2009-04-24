@@ -10,8 +10,7 @@ REL="HOME"
 TITLE="DataparkSearch Engine 4.52"
 HREF="index.ru.html"><LINK
 REL="UP"
-TITLE="HTML-парсер в DataparkSearch
-"
+TITLE="HTML-парсер в DataparkSearch"
 HREF="dpsearch-htmlparser.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Комментарии"
@@ -27,7 +26,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -62,7 +61,7 @@ WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
 >&#1043;&#1083;&#1072;&#1074;&#1072; 4. HTML-парсер в <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 ></TD
 ><TD
@@ -80,46 +79,38 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="htmlparser-bodypatterns"
+NAME="HTMLPARSER-BODYPATTERNS"
 >4.6. Шаблоны для индексирования</A
 ></H1
->
-<A
-NAME="AEN2844"
+><A
+NAME="AEN2875"
 ></A
->
-
-<P
+><P
 >Если вам нужно индексировать не всю страницу целиком, например, чтобы исключить навигацию, рекламу и т.п., 
 вы можете использовать команду <B
-CLASS="command"
+CLASS="COMMAND"
 >BodyPattern</B
 > чтобы указать шаблон для извлечения контента для индексирования.
 Например:
 <PRE
-CLASS="programlisting"
->&#13;BodyPattern "&#60;!--content--&#62;(.*)&#60;!--/content--&#62;" "$1"
-</PRE
+CLASS="PROGRAMLISTING"
+>BodyPattern "&lt;!--content--&gt;(.*)&lt;!--/content--&gt;" "$1"</PRE
 >
 этот шаблон будут извлекать контент между двумя специальными комментариями, и только этот контен будет проиндексирован
-для этой страницы.
-</P
->
-<P
+для этой страницы.</P
+><P
 >Вы можете задать несколько команд <B
-CLASS="command"
+CLASS="COMMAND"
 >BodyPattern</B
 >, но только первая по порядку подходящая будет применена к
 странице.
 Эти команды пытаются примениться к каждой индексируемой странице. 
-Осторожно, большое число таких команд может замедлить скорость индексирования.
-</P
->
-</DIV
+Осторожно, большое число таких команд может замедлить скорость индексирования.</P
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

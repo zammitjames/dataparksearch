@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Поддержка Content-Encoding&#13;</TITLE
+>Простая рутина использования</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -10,14 +10,17 @@ REL="HOME"
 TITLE="DataparkSearch Engine 4.52"
 HREF="index.ru.html"><LINK
 REL="UP"
-TITLE="Индексирование"
-HREF="dpsearch-indexing.ru.html"><LINK
+TITLE="Установка
+
+        "
+HREF="dpsearch-install.ru.html"><LINK
 REL="PREVIOUS"
-TITLE="Реакция на коды HTTP-ответа"
-HREF="dpsearch-http-codes.ru.html"><LINK
+TITLE="Возможные проблемы установки
+"
+HREF="dpsearch-installproblem.ru.html"><LINK
 REL="NEXT"
-TITLE="Стопслова"
-HREF="dpsearch-stopwords.ru.html"><LINK
+TITLE="Регистрация установки"
+HREF="dpsearch-register.ru.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="datapark.css"><META
@@ -52,7 +55,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-http-codes.ru.html"
+HREF="dpsearch-installproblem.ru.html"
 ACCESSKEY="P"
 >&#1055;&#1088;&#1077;&#1076;.</A
 ></TD
@@ -60,13 +63,17 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->&#1043;&#1083;&#1072;&#1074;&#1072; 3. Индексирование</TD
+>&#1043;&#1083;&#1072;&#1074;&#1072; 2. Установка
+<A
+NAME="AEN177"
+></A
+></TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-stopwords.ru.html"
+HREF="dpsearch-register.ru.html"
 ACCESSKEY="N"
 >&#1057;&#1083;&#1077;&#1076;.</A
 ></TD
@@ -80,72 +87,39 @@ CLASS="SECT1"
 ><H1
 CLASS="SECT1"
 ><A
-NAME="CONTENT-ENC"
->3.3. Поддержка Content-Encoding
-<A
-NAME="AEN781"
-></A
-></A
+NAME="QUICK-USAGE"
+>2.6. Простая рутина использования</A
 ></H1
 ><P
->		Поисковый движок <SPAN
-CLASS="APPLICATION"
->DataparkSearch</SPAN
-> поддерживает сжатие HTTP
-запросов и ответов (Content encoding). Сжатие запросов и ответов http-сервера позволяет значительно
-улучшить производительность обработки http-запросов за счет уменьшения объёма передаваемых данных.</P
-><P
->Использование сжатия http-запросов позволяет уменьшить трафик в два и более раз.</P
-><P
->В <A
-HREF="ftp://ftp.isi.edu/in-notes/rfc2616.txt"
-TARGET="_top"
->спецификации HTTP 1.1 (RFC 2616)</A
->
-определены четыре метода кодирования содержимого ответов сервера:
-<TT
-CLASS="LITERAL"
->gzip, deflate, compress</TT
->, и <TT
-CLASS="LITERAL"
->identity</TT
->.</P
-><P
->Если включена поддержка Content-encoding, <B
+>Перед первым запуском <B
 CLASS="COMMAND"
 >indexer</B
->
-шлёт http-серверу заголовок
-<TT
-CLASS="LITERAL"
->Accept-Encoding: gzip,deflate,compress</TT
->. </P
+>, вам необходимо указать пространство индексирования (см. <A
+HREF="dpsearch-follow.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 3.6</A
+>&#62;). 
+В простом случае, когда вам необходимо индексировать один сайт, необходимов добавить команду <B
+CLASS="COMMAND"
+>Server</B
+>, 
+аналогичную указанной ниже в ваш файл конфигурации <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+>:
+<PRE
+CLASS="PROGRAMLISTING"
+>Server http://www.server.ext/</PRE
+></P
 ><P
->Если http-сервер поддерживает любой из методов кодирования gzip, deflate or compress
-он шлёт ответ, закодированый этим методом.</P
+>Запустите <B
+CLASS="COMMAND"
+>indexer</B
+> для индексирвоания ваших данных и записи информации об URL:</P
 ><P
->Для сборки <SPAN
-CLASS="APPLICATION"
->DataparkSearch</SPAN
-> с поддержкой сжатия
-HTTP-запросов, необходимо наличие библиотеки <TT
-CLASS="LITERAL"
->zlib</TT
->, установленной на вашем компьютере.</P
-><P
->Чтобы включить поддержку Content encoding, сконфигурируйте
-<SPAN
-CLASS="APPLICATION"
->DataparkSearch</SPAN
-> с указанием следующего ключа:</P
-><P
->		<KBD
+><KBD
 CLASS="USERINPUT"
->./configure --with-zlib</KBD
->
-	</P
-><P
->Используете этот ключ совместно с другими нужными вам ключами.</P
+>sh$ /usr/local/dpsearch/sbin/indexer -W</KBD
+></P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -163,7 +137,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="dpsearch-http-codes.ru.html"
+HREF="dpsearch-installproblem.ru.html"
 ACCESSKEY="P"
 >&#1055;&#1088;&#1077;&#1076;.</A
 ></TD
@@ -181,7 +155,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="dpsearch-stopwords.ru.html"
+HREF="dpsearch-register.ru.html"
 ACCESSKEY="N"
 >&#1057;&#1083;&#1077;&#1076;.</A
 ></TD
@@ -191,13 +165,17 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Реакция на коды HTTP-ответа</TD
+>Возможные проблемы установки
+<A
+NAME="AEN489"
+></A
+></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="dpsearch-indexing.ru.html"
+HREF="dpsearch-install.ru.html"
 ACCESSKEY="U"
 >&#1059;&#1088;&#1086;&#1074;&#1077;&#1085;&#1100; &#1074;&#1099;&#1096;&#1077;</A
 ></TD
@@ -205,7 +183,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Стопслова</TD
+>Регистрация установки</TD
 ></TR
 ></TABLE
 ></DIV

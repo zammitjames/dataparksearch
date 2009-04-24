@@ -1121,5 +1121,10 @@ LongestTextItems 4
 </para>
 </sect2>
 
+<sect2 id="mkprefix-cmd"><indexterm><primary>Команда</primary><secondary>MakePrefixes</secondary></indexterm><title>Команда <command>MakePrefixes</command></title>
+<para>При помощи команды <command>MakePrefixes yes</command> вы можете указать <command>indexer</command> автоматически создавать префиксы для всех индексируемых слов.
+В частности, это можно использовать при создании поисковых подсказок.
+</para>
+</sect2>
 
 </sect1>

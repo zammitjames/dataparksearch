@@ -1,7 +1,6 @@
 <sect2 id="aspell">
-	<title>Aspell
 <indexterm><primary>Aspell</primary></indexterm>
-</title>
+	<title>Aspell</title>
 	<para>Когда <application>DataparkSearch</application> используется с поддержкой <application>aspell</application>,
 возможно автоматическое расширение поискового запроса вариантами слов с исправленым правописанием. Чтобы включить эту возможность,
 необходимо установить <ulink url="http://aspell.net/">Aspell</ulink> на вашу систему до сборки <application>DataparkSearch</application>.

@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,136 +76,121 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="multilang"
+NAME="MULTILANG"
 >7.2. Making multi-language search pages</A
 ></H1
->
-	
-<A
-NAME="AEN3783"
+><A
+NAME="AEN3814"
 ></A
->
-
-	<P
+><P
 >Original idea instructions by Craig Small
 <CODE
-CLASS="email"
+CLASS="EMAIL"
 >&#60;<A
 HREF="mailto:csmall@eye-net.com.au"
 >csmall@eye-net.com.au</A
 >&#62;</CODE
 >.  Some minor changes by Alex
 Barkov <CODE
-CLASS="email"
+CLASS="EMAIL"
 >&#60;<A
 HREF="mailto:bar@mnogosearch.org"
 >bar@mnogosearch.org</A
 >&#62;</CODE
 >.</P
->
-
-	<P
+><P
 >It is often required to allow for different languages
 which means different search.htm files depending on what language
 users have set in their browser. </P
->
-
-	
-	<P
+><P
 >Further installation should be done in three steps.</P
->
-	<P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;			<P
+><P
 >Installing several templates.</P
->
-			<P
+><P
 >The general idea is to have one
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.php</TT
 > or <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 >
 file and then many <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.[language].htm</TT
 > files.
 You also have a <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > file (usually a
 symlink to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.en.htm</TT
 >) for the default.</P
->
-			<P
+><P
 >If the name of the script is
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.en.php</TT
 > (or
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.en.cgi</TT
 >) then both CGI and PHP front-ends
 will be looking for <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/somewhere/etc/search.en.htm</TT
 >
 assuming that <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/somewhere/etc/</TT
 > is
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/etc/</TT
 > directory of <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 installation.</P
->
-			<P
+><P
 >You would then populate
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/somewhere/etc/</TT
 > with all the
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > files so
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/somewhere/etc</TT
 > has:</P
->
-			<DIV
-CLASS="informaltable"
+><DIV
+CLASS="INFORMALTABLE"
 ><P
 ></P
 ><A
-NAME="AEN3810"
+NAME="AEN3841"
 ></A
->
-				<TABLE
+><TABLE
 BORDER="1"
 CLASS="CALSTABLE"
 ><COL><COL><TBODY
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.en.htm</TT
 >
 							</TD
@@ -214,8 +199,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.pl.htm</TT
 >
 							</TD
@@ -224,8 +209,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.ru.htm</TT
 >
 							</TD
@@ -234,8 +219,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.htm</TT
 >
 							</TD
@@ -244,47 +229,41 @@ CLASS="filename"
 ></TR
 ></TBODY
 ></TABLE
->
-			<P
+><P
 ></P
 ></DIV
->
-		</LI
+></LI
 ><LI
->&#13;			<P
+><P
 >Installing front-ends</P
->
-			<P
+><P
 >Create a directory and put
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > or <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.php</TT
 >
 there (along with the include files if you want, but I fiddle with the
 php include_path and put them elsewhere).</P
->
-			<P
+><P
 >Then setup the symlinks:</P
->
-			<DIV
-CLASS="informaltable"
+><DIV
+CLASS="INFORMALTABLE"
 ><P
 ></P
 ><A
-NAME="AEN3835"
+NAME="AEN3866"
 ></A
->
-				<TABLE
+><TABLE
 BORDER="1"
 CLASS="CALSTABLE"
 ><COL><COL><TBODY
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.cgi</TT
 >
 							</TD
@@ -293,8 +272,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.en.cgi</TT
 >
 							</TD
@@ -303,8 +282,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.pl.cgi</TT
 >
 							</TD
@@ -313,8 +292,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.ru.cgi</TT
 >
 							</TD
@@ -323,30 +302,26 @@ CLASS="filename"
 ></TR
 ></TBODY
 ></TABLE
->
-			<P
+><P
 ></P
 ></DIV
->
-			<P
+><P
 >Or in the case of PHP front-end:</P
->
-			<DIV
-CLASS="informaltable"
+><DIV
+CLASS="INFORMALTABLE"
 ><P
 ></P
 ><A
-NAME="AEN3855"
+NAME="AEN3886"
 ></A
->
-				<TABLE
+><TABLE
 BORDER="1"
 CLASS="CALSTABLE"
 ><COL><COL><TBODY
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.php</TT
 >
 							</TD
@@ -355,8 +330,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.en.php</TT
 >
 							</TD
@@ -365,8 +340,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.pl.php</TT
 >
 							</TD
@@ -375,8 +350,8 @@ CLASS="filename"
 ></TR
 ><TR
 ><TD
->&#13;								<TT
-CLASS="filename"
+>								<TT
+CLASS="FILENAME"
 >search.ru.php</TT
 >
 							</TD
@@ -385,218 +360,190 @@ CLASS="filename"
 ></TR
 ></TBODY
 ></TABLE
->
-			<P
+><P
 ></P
 ></DIV
->
-		</LI
+></LI
 ><LI
->&#13;			<P
+><P
 >Configuring Apache</P
->
-			<P
+><P
 >Then you need to make apache understand
 what weirdness you are doing here. So you need to get negotiation
 happening and some magic with the indexes. I used
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >.htaccess</TT
 > file but you could stick it in the
 apache config proper.
 			<PRE
-CLASS="programlisting"
->&#13;AddLanguage en .en
+CLASS="PROGRAMLISTING"
+>AddLanguage en .en
 AddLanguage pl .pl
 AddLanguage ru .ru
 
 DirectoryIndex search search.cgi  (or search.php)
-Options FollowSymlinks MultiViews
-</PRE
+Options FollowSymlinks MultiViews</PRE
 >
 			</P
->
-		</LI
+></LI
 ></OL
->
-	<DIV
-CLASS="sect2"
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="multilang-how"
+NAME="MULTILANG-HOW"
 >7.2.1. How does it work?</A
 ></H2
->
-		
-		<P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;				<P
+><P
 >You type url <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://myhost/mydir/search</TT
 >
 					<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >no slash at end !!</I
 ></SPAN
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Your browser says <TT
-CLASS="literal"
+CLASS="LITERAL"
 >"I like english (well language negotiation en) "</TT
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Apache finds
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.en.cgi</TT
 > (DirectoryIndex gives
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >search</TT
 >, MultiViews gives the
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >en.cgi</TT
 >)</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >The
 <B
-CLASS="command"
+CLASS="COMMAND"
 >SCRIPT_FILENAME</B
 > which is used in both
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > and <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.php</TT
 > is
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >somepath/search.en.cgi</TT
 >
 				</P
->
-				<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;					<P
+CLASS="NOTE"
+><P
 ><B
 >Note: </B
 >Most other variables
 will give the wrong result, either <TT
-CLASS="literal"
+CLASS="LITERAL"
 >search</TT
 > or
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >search.cgi</TT
 >)</P
->
-				</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Your hack in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >config.inc</TT
 > means you will use
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.en.htm</TT
 >.</P
->
-			</LI
+></LI
 ></OL
->
-		<P
+><P
 >So what happens if the user wants, say, German?
 Well there is no <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.de.cgi</TT
 >
 (<TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.de.php</TT
 >) so the first bit of
 DirectoryIndex fails, so it tries the second one,
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.php</TT
 >  OK, they get the page in English, but
 it's better than a 404.</P
->
-		<P
+><P
 >This does work, you may need some more apache
 fiddling to get negotiation to work because I am testing this on a
 server that already has it setup, so I may have missed
 something.</P
->
-	</DIV
->
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="multilang-problem"
+NAME="MULTILANG-PROBLEM"
 >7.2.2. Possible troubles</A
 ></H2
->
-		
-		<P
+><P
 >You may get some language negotiation problems caused by:</P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Dumb caches that don't follow standards</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Dumb versions of browsers that don't follow standards</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Dumb users fiddling with language settings and putting weird stuff in.</P
->
-			</LI
+></LI
 ></UL
->
-		<P
+><P
 >The apache team is working on some workarounds
 for most of these, if possible.  For a reasonably heavily used web site
 you can expect an email about it once a week or so.</P
->
-	</DIV
->
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

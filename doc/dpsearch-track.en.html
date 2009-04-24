@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,109 +76,95 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="track"
+NAME="TRACK"
 >8.6. Search queries tracking</A
 ></H1
->
-	
-<A
-NAME="AEN5282"
+><A
+NAME="AEN5319"
 ></A
->
-
-	<P
+><P
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > supports query tracking.</P
->
-	<P
+><P
 >When doing a search,
 front-end uses table <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qtrack</TT
 > to store query words, client IP address, a number of found
 documents and current <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >UNIX</SPAN
 > timestamp in seconds and table <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qinfo</TT
 > to store
 all search parameters.</P
->
-
-	<P
+><P
 >To enable tracking, add the <TT
-CLASS="literal"
+CLASS="LITERAL"
 >trackquery</TT
 > parameter to <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 > command
-(see ) in your search template. For example:
+(see <A
+HREF="dpsearch-indexcmd.en.html#DBADDR_CMD"
+>Section 3.10.2</A
+>&#62;) in your search template. For example:
 <PRE
-CLASS="programlisting"
->&#13;DBAddr pgsql://user:pass@localhost/search/?dbmode=cache&#38;trackquery
-</PRE
->
-</P
->
-<DIV
-CLASS="note"
+CLASS="PROGRAMLISTING"
+>DBAddr pgsql://user:pass@localhost/search/?dbmode=cache&amp;trackquery</PRE
+></P
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13; <P
+CLASS="NOTE"
+><P
 ><B
 >Note: </B
->
- If you use <TT
-CLASS="filename"
+> If you use <TT
+CLASS="FILENAME"
 >searchd</TT
 >, you should add this parameter only in your <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 > file.
  </P
->
- <P
+><P
 ><A
-NAME="AEN5300"
+NAME="AEN5337"
 ></A
 >
  You may use <B
-CLASS="command"
+CLASS="COMMAND"
 >TrackDBAddr</B
 > command to specify different database to store query tracking data. This database should
 have the same <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qtrack</TT
 > and <TT
-CLASS="literal"
+CLASS="LITERAL"
 >qinfo</TT
 > tables as in DataparkSearch's database.
  </P
->
-</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-
-	<P
+><P
 >Query tracking is useful to have a statistics of your
 search engine usage. To make a search queries summary, you may
 execute, for example, this SQL expression:
 	<PRE
-CLASS="programlisting"
->&#13;SELECT qwords,count(*),sum(found),avg(found) FROM qtrack GROUP BY qwords;
-</PRE
+CLASS="PROGRAMLISTING"
+>SELECT qwords,count(*),sum(found),avg(found) FROM qtrack GROUP BY qwords;</PRE
 >
 	</P
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

@@ -1,5 +1,5 @@
 <sect1 id="follow">
-	<title>Указание веб-пространства для индексирования</title>
+	<title id="follow.title">Указание веб-пространства для индексирования</title>
 
 	<para>Каждый раз когда <command>indexer</command> добавляет новую ссылку или выбирает очередную ссылку для
 индексирования, он сначала проверяет, задана ли в <filename>indexer.conf</filename> для этой ссылки команда
@@ -12,7 +12,7 @@
 <para>Эти команды имеют один обязательный параметр <option>pattern</option> и шесть необязательных:
 <option>method</option>, <option>subsection</option>, <option>CaseType</option>, <option>MatchType</option>,
 <option>CmpType</option> и <option>Alias</option>. Формат этих команд:
-<programlisting>[Server | Realm | Subnet] [method] [subsection] [CaseType] [MatchType] [CmpType] pattern [alias]</programlisting>
+<programlisting>&lt;команда&gt; [method] [subsection] [CaseType] [MatchType] [CmpType] pattern [alias]</programlisting>
 </para>
 
 <para>Обязательный параметр <option>pattern</option> задаёт либо URL, либо его фргамент, или шаблон для сравнения.

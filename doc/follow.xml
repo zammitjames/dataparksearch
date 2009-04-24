@@ -1,5 +1,5 @@
 <sect1 id="follow">
-	<title>Specifying WEB space to be indexed </title>
+	<title id="follow.title">Specifying WEB space to be indexed</title>
 	<para>When indexer tries to insert a new URL into database or
 is trying to index an existing one, it first of all checks whether
 this URL has corresponding <command>Server</command>, <command>Realm</command> or <command>Subnet</command> command given in
@@ -11,13 +11,11 @@ Server/Realm/Subnet commands from <filename>indexer.conf</filename>.</para>
 
 
 <para>These commands have following format:
-<programlisting>[Server | Realm | Subnet] [method] [subsection] [CaseType] [MatchType] [CmpType] pattern [alias]</programlisting>
+<synopsis>&lt;command&gt; [method] [subsection] [CaseType] [MatchType] [CmpType] pattern [alias]</synopsis>
 </para>
 
 <para>Mandatory parameter <option>pattern</option> specify an URL, or it part, or pattern to compare.
 </para>
-
-
 
 
 		<para>

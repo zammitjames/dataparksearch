@@ -14,7 +14,6 @@ TITLE="Индексирование"
 HREF="dpsearch-indexing.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Внешние парсеры
-
 "
 HREF="dpsearch-pars.ru.html"><LINK
 REL="NEXT"
@@ -28,7 +27,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -78,930 +77,751 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="indexcmd"
+NAME="INDEXCMD"
 >3.10. Остальные команды, используемые в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 ></A
 ></H1
->
-	
-
-
-<DIV
-CLASS="sect2"
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="AEN1476"
+NAME="AEN1498"
 >3.10.1. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Include</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1479"
+><A
+NAME="AEN1501"
 ></A
->
-
-<P
+><P
 >Вы можете включить другой конфигурационный файл в любом месте файла <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >
 при помощи команды <KBD
-CLASS="userinput"
->Include &#60;filename&#62;</KBD
+CLASS="USERINPUT"
+>Include &lt;filename&gt;</KBD
 >.
-Путь считается абсолютным, если &#60;<TT
-CLASS="filename"
+Путь считается абсолютным, если &lt;<TT
+CLASS="FILENAME"
 >filename</TT
->&#62; начинается с "/":
+>&gt; начинается с "/":
 <PRE
-CLASS="programlisting"
->&#13;Include /usr/local/dpsearch/etc/inc1.conf
-</PRE
+CLASS="PROGRAMLISTING"
+>Include /usr/local/dpsearch/etc/inc1.conf</PRE
 ></P
->
-
-<P
+><P
 >В противном случае пусть считается относительным:
 
 <PRE
-CLASS="programlisting"
->&#13;Include inc1.conf
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>Include inc1.conf</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="dbaddr_cmd"
+NAME="DBADDR_CMD"
 >3.10.2. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1492"
+><A
+NAME="AEN1514"
 ></A
->
-
-<P
+><P
 >Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 > является описание хранилища данных в URL-подобном стиле.
 Она определяет параметры (тип, хост, имя базы данных, порт, имя пользователя и пароль и т.д.)
 для соединения с <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >SQL</SPAN
 >-сервером или другим хранилищем данных.
 Может быть задано несколько хранилищ данных. Но все команды <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 > должны быть указаны
 первыми в файле конфигурации, до любой другой команды.
 Формат команды:
 <PRE
-CLASS="programlisting"
->&#13;DBAddr &#60;DBType&#62;:[//[DBUser[:DBPass]@]DBHost[:DBPort]]/DBName/[?[dbmode=mode]{&#38;&#60;имя параметра&#62;=&#60;значение параметра&#62;}]
-</PRE
->
-</P
->
-
-<DIV
-CLASS="note"
+CLASS="PROGRAMLISTING"
+>DBAddr &lt;DBType&gt;:[//[DBUser[:DBPass]@]DBHost[:DBPort]]/DBName/[?[dbmode=mode]{&amp;&lt;имя параметра&gt;=&lt;значение параметра&gt;}]</PRE
+></P
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;<P
+CLASS="NOTE"
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >об <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >ODBC</SPAN
 >.
        Используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBName</CODE
 > для задания имени источника данных (DSN) <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >ODBC</SPAN
 >.
        <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBHost</CODE
 > не имеет значения, используйте <TT
-CLASS="literal"
+CLASS="LITERAL"
 >localhost</TT
->.
-</P
->
-</BLOCKQUOTE
+>.</P
+></BLOCKQUOTE
 ></DIV
->
-<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;<P
+CLASS="NOTE"
+><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >о <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Solid</SPAN
 >.
        Используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBHost</CODE
 > для указания сервера <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Solid</SPAN
 >.
        <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBName</CODE
 > не имеет значения для <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Solid</SPAN
->.
-</P
->
-</BLOCKQUOTE
+>.</P
+></BLOCKQUOTE
 ></DIV
->
-
-<P
+><P
 >Вы можете использовать URL-кодирование для  <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBUser</CODE
 > и <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBPass</CODE
 >, если вам необходимо использовать
 специальные символы в пароле или имени пользователя. Например, если у вас пароль <KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >ABC@DEF</KBD
 >, его необходимо
 указывать в виде <KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >ABC%40DEF</KBD
->.
-</P
->
-
-<P
+>.</P
+><P
 > На данный момент поддерживаются следующие значения <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBType</CODE
 >:
 mysql, pgsql, msql, solid, mssql, oracle, ibase, sqlite.
 Actually, it does not matter for native libraries support.
 But ODBC users should specify one of supported values.
-If your database type is not supported, you may use "unknown" instead.
-</P
->
-
-<P
+If your database type is not supported, you may use "unknown" instead.</P
+><P
 >Пользователи <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 > и <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
 > могут указывать путь до
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Unix</SPAN
 >-сокета при соединении с <TT
-CLASS="literal"
+CLASS="LITERAL"
 >localhost</TT
 >:
 <KBD
-CLASS="userinput"
->&#13;mysql://foo:bar@localhost/dpsearch/?socket=/tmp/mysql.sock
-</KBD
->
-</P
->
-
-<P
+CLASS="USERINPUT"
+>mysql://foo:bar@localhost/dpsearch/?socket=/tmp/mysql.sock</KBD
+></P
+><P
 >Если вы используете <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
 > и не указываете имя хоста,
        т.е. <KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >pgsql://user:password@/dbname/</KBD
 >
 в этом случае <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
 > не будет работать по <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >TCP</SPAN
 >,
 а будет использовать стандартный <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Unix</SPAN
->-сокет.
-</P
->
-
-
-<P
+>-сокет.</P
+><P
 ><TT
-CLASS="literal"
+CLASS="LITERAL"
 >Параметр dbmode</TT
 >.
 Вы также можете указать способ хранения слов.
 Если указан "<CODE
-CLASS="option"
+CLASS="OPTION"
 >single</CODE
 >", все слова сохраняются в одной таблице (файле).
 Если указан"<CODE
-CLASS="option"
+CLASS="OPTION"
 >multi</CODE
 >", слова будут храниться в разных таблицах (файлах) в зависимости от длины этих слов.
 Режим "<CODE
-CLASS="option"
+CLASS="OPTION"
 >multi</CODE
 >" обычно быстрее, но требует больше таблиц (файлов).
 Если выбран режим "<CODE
-CLASS="option"
+CLASS="OPTION"
 >crc</CODE
 >", <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > будет сохранять вместо слов их 32-битное целые
 идентификаторы, вычисленные при помощи CRC32 алгоритма. Этот режим требует меньше дискового пространства и быстрее по
 сравнению с режимами "<CODE
-CLASS="option"
+CLASS="OPTION"
 >single</CODE
 >" и "<CODE
-CLASS="option"
+CLASS="OPTION"
 >multi</CODE
 >",
 однако он не поддерживает поиск подстрок.
 Режим "<CODE
-CLASS="option"
+CLASS="OPTION"
 >crc-multi</CODE
 >" использует туже самую структуру, как и режим "<CODE
-CLASS="option"
+CLASS="OPTION"
 >crc</CODE
 >", но еще сохраняет
 идетификаторы слов в различных таблицах (файлах) в зависимости от длины этих слов, аналогично режиму 
 "<CODE
-CLASS="option"
+CLASS="OPTION"
 >multi</CODE
 >". По умолчанию используется режим "<CODE
-CLASS="option"
+CLASS="OPTION"
 >single</CODE
->".
-</P
->
-
-<P
+>".</P
+><P
 ><TT
-CLASS="literal"
+CLASS="LITERAL"
 >Параметр stored</TT
 >. Формат:<KBD
-CLASS="userinput"
->&#13;stored=StoredHost[:StoredPort]</KBD
+CLASS="USERINPUT"
+>stored=StoredHost[:StoredPort]</KBD
 >.
 Этот параметр служит для указания адреса хоста, на котором запущен демон <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, хранящий
-копии документов, относящихся к этому хранилищу.
-</P
->
-
-<P
+копии документов, относящихся к этому хранилищу.</P
+><P
 ><TT
-CLASS="literal"
+CLASS="LITERAL"
 >Параметр cached</TT
 >. Формат:<KBD
-CLASS="userinput"
->&#13;cached=CachedHost[:CachedPort]</KBD
+CLASS="USERINPUT"
+>cached=CachedHost[:CachedPort]</KBD
 >.
 Этот параметр служит для указания адреса хоста, на котором запущен демон <B
-CLASS="command"
+CLASS="COMMAND"
 >cached</B
 >.
 Используется только для способа хранения <TT
-CLASS="literal"
+CLASS="LITERAL"
 >cache</TT
-> (см.).
+> (см.<A
+HREF="dpsearch-cachemode.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 5.2</A
+>&#62;).
 Каждый раз <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 > будет при старте соединятся с <TT
-CLASS="filename"
+CLASS="FILENAME"
 >cached</TT
-> по заданному адресу.
-</P
->
-
-<P
+> по заданному адресу.</P
+><P
 ><TT
-CLASS="literal"
+CLASS="LITERAL"
 >Параметр charset</TT
 >. Формат:<KBD
-CLASS="userinput"
->&#13;charset=DBCharacterSet</KBD
+CLASS="USERINPUT"
+>charset=DBCharacterSet</KBD
 >.
 Этот параметр может быть использован для задания кодировки соединения с базой данных. Кодровка, задаваемая в этом параметре должна
 совпадать с кодирокой, заданой командой <B
-CLASS="command"
+CLASS="COMMAND"
 >LocalCharset</B
->.
-</P
->
-
-<P
+>.</P
+><P
 ><TT
-CLASS="literal"
+CLASS="LITERAL"
 >Параметр label</TT
 >. Format: <KBD
-CLASS="userinput"
->&#13;label=DBAlabel</KBD
+CLASS="USERINPUT"
+>label=DBAlabel</KBD
 >.
 Этот параметр может быть использован для назначения метки команде <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 >. Таким образом, если вы передадите
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > CGI-переменную <CODE
-CLASS="option"
+CLASS="OPTION"
 >label</CODE
 >, тогда только <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 >, помеченная
 значением параметра <CODE
-CLASS="option"
+CLASS="OPTION"
 >label</CODE
 > будет использоваться при выполнении поиска.
 Следовательно, вы можете использовать одного демона <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > для ответа на поисковые запросы по нескольким поисковым
 база, выбираемым по значению параметра <CODE
-CLASS="option"
+CLASS="OPTION"
 >label</CODE
->.
-</P
->
-<DIV
-CLASS="note"
+>.</P
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
+CLASS="NOTE"
 ><P
 ><B
 >&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
 >Если не передано CGI-параметра <CODE
-CLASS="option"
+CLASS="OPTION"
 >label</CODE
 >, в этом случае только DBAddr без пометки <CODE
-CLASS="option"
+CLASS="OPTION"
 >label</CODE
 >
 будет использоваться для выполнения поискового запроса.</P
->
-</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-
-<P
+><P
 >Пример:
 <PRE
-CLASS="programlisting"
->&#13;DBAddr          mysql://foo:bar@localhost/search/?dbmode=single
-</PRE
->
-</P
->
-
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>DBAddr          mysql://foo:bar@localhost/search/?dbmode=single</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="vardir_cmd"
+NAME="VARDIR_CMD"
 >3.10.3. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >VarDir</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1581"
+><A
+NAME="AEN1603"
 ></A
->
-<P
+><P
 >Вы можете задать альтернативную директорию для данных способа хранения <TT
-CLASS="literal"
+CLASS="LITERAL"
 >cache</TT
 > и данных
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >stored</TT
 >:
 <PRE
-CLASS="programlisting"
->&#13;VarDir /usr/local/dpsearch/var
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>VarDir /usr/local/dpsearch/var</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="newsextensions_cmd"
+NAME="NEWSEXTENSIONS_CMD"
 >3.10.4. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >NewsExtensions</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1591"
+><A
+NAME="AEN1613"
 ></A
->
-<P
+><P
 >Включает расширенную поддержку групп новостей. Значение по умолчанию <KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >no</KBD
 >.
 <PRE
-CLASS="programlisting"
->&#13;NewsExtensions yes
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>NewsExtensions yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="syslogfacility_cmd"
+NAME="SYSLOGFACILITY_CMD"
 >3.10.5. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >SyslogFacility</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1600"
+><A
+NAME="AEN1622"
 ></A
->
-<P
+><P
 > Может быть использована, если <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Datapark</SPAN
 > был скомпилировал
 с поддержкой <TT
-CLASS="literal"
+CLASS="LITERAL"
 >syslog</TT
 > и вы хотите изменить значение по умолчанию.
 Задаваемое значение должно быть одним из описаных в файле <TT
-CLASS="filename"
+CLASS="FILENAME"
 >syslog.conf</TT
 >. 
 См. syslog.conf(5).
 <PRE
-CLASS="programlisting"
->&#13;SyslogFacility local7
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>SyslogFacility local7</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="wordlengths_cmd"
+NAME="WORDLENGTHS_CMD"
 >3.10.6. Команды указания длины слова</A
 ></H2
->
-
-<A
-NAME="AEN1610"
+><A
+NAME="AEN1632"
 ></A
->
-<A
-NAME="AEN1613"
+><A
+NAME="AEN1635"
 ></A
->
-<P
+><P
 >Вы можете указать диапазон длин слов, сохраняемых в базе. По умолчанию, сохраняются слова длиной от 1 до 32 символов.
 <PRE
-CLASS="programlisting"
->&#13;MinWordLength 1
-MaxWordLength 32
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>MinWordLength 1
+MaxWordLength 32</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="maxdocsize_cmd"
+NAME="MAXDOCSIZE_CMD"
 >3.10.7. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxDocSize</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1621"
+><A
+NAME="AEN1643"
 ></A
->
-<P
+><P
 >Эта команда служит для указания максимального размера документа.
 Значение по умалчанию: 1048576 (1 Mb). Имеет глобальный эффект.
 <PRE
-CLASS="programlisting"
->&#13;MaxDocSize 1048576
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>MaxDocSize 1048576</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="mindocsize_cmd"
+NAME="MINDOCSIZE_CMD"
 >3.10.8. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >MinDocSize</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1629"
+><A
+NAME="AEN1651"
 ></A
->
-<P
+><P
 >Данная команда включает режим только проверки наличия (CheckOnly) для документов размером менее указанного.
 Значение по умолчанию: 0. Имеет глобальный эффект.
 <PRE
-CLASS="programlisting"
->&#13;MinDocSize 1024
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>MinDocSize 1024</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="indexdocsizelimit_cmd"
+NAME="INDEXDOCSIZELIMIT_CMD"
 >3.10.9. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >IndexDocSizeLimit</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1637"
+><A
+NAME="AEN1659"
 ></A
->
-<P
+><P
 >Используйте эту команду для задания максимального размера данных, записываемых в индекс для одного документа.
 Значение по умолчанию: 0. Это обозначает без ограничений. Команда действует до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >IndexDocSizeLimit</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;IndexDocSizeLimit 65536
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>IndexDocSizeLimit 65536</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="urlselectcachesize_cmd"
+NAME="URLSELECTCACHESIZE_CMD"
 >3.10.10. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >URLSelectCacheSize</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1646"
+><A
+NAME="AEN1668"
 ></A
->
-<P
+><P
 >Задаёт число документов отбираемых для индексации за раз. Значение по умолчанию: 1024.
 <PRE
-CLASS="programlisting"
->&#13;URLSelectCacheSize 10240
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>URLSelectCacheSize 10240</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="urldumpcachesize_cmd"
+NAME="URLDUMPCACHESIZE_CMD"
 >3.10.11. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >URLDumpCacheSize</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1654"
+><A
+NAME="AEN1676"
 ></A
->
-<P
+><P
 >Задаёт число документов отбираемых за раз для записи индексов cache mode, загрузки данных в <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > или
 для расчёта индекса популярности. 
 Значение по умолчанию: 100000.
 <PRE
-CLASS="programlisting"
->&#13;URLDumpCacheSize 10240
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>URLDumpCacheSize 10240</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="usecrc32urlid_cmd"
+NAME="USECRC32URLID_CMD"
 >3.10.12. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >UseCRC32URLId</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1663"
+><A
+NAME="AEN1685"
 ></A
->
-<P
+><P
 >Включает или выключает генерацию ID для URL используя алгоритм HASH32.
 Значение по умолчанию: "no".
 <PRE
-CLASS="programlisting"
->&#13;UseCRC32URLId yes
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>UseCRC32URLId yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="httpheader_cmd"
+NAME="HTTPHEADER_CMD"
 >3.10.13. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >HTTPHeader</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1671"
+><A
+NAME="AEN1693"
 ></A
->
-<P
+><P
 >Вы можете добавить свои собсвенные заголовки в запрос HTTP на получение документов к индексации.
 Вы не можете вказывать таким образом заголовки "If-Modified-Since" или "Accept-Charset",
 эти заголовки формируются indexerом самостоятельно.
 Заголовок "User-Agent: DataparkSearch/version" также формируется самостоятельно, но вы можете заменить его.
 Command has global effect for all configuration file.
 <PRE
-CLASS="programlisting"
->&#13;HTTPHeader "User-Agent: My_Own_Agent"
+CLASS="PROGRAMLISTING"
+>HTTPHeader "User-Agent: My_Own_Agent"
 HTTPHeader "Accept-Language: ru, en"
-HTTPHeader "From: webmaster@mysite.com"
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+HTTPHeader "From: webmaster@mysite.com"</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="allow_cmd"
+NAME="ALLOW_CMD"
 >3.10.14. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1679"
+><A
+NAME="AEN1701"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Allow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
+><PRE
+CLASS="PROGRAMLISTING"
+>Allow [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
 >Данная команда разрешает к индексирования URL, подпадающие под указаный шаблон.
 Первые три необязательных параметра задают тип сравнения.
 Значения по умолчанию: Match, NoCase, String.
 Используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >NoCase</CODE
 > или <CODE
-CLASS="option"
+CLASS="OPTION"
 >Case</CODE
 > чтобы указать чувтсвительное или нечувствительное к регистру сравнение.
 Используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >Regex</CODE
 > чтобы выбрать сравнение на основе регулярного выражения. 
 Используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >String</CODE
 > чтобы задать сравнение по текстовому шаблону с использование спецсимволов.
 Возможные спецсимволы: '*' - для обозначения любого числа символов и '?' - для обозначения одного символа.
 Обратите внимание, что символы '?' и '*' имеют специальное значение при указатии тпа сравнения <CODE
-CLASS="option"
+CLASS="OPTION"
 >String</CODE
 >. 
 Вы можете использовать <CODE
-CLASS="option"
+CLASS="OPTION"
 >Regex</CODE
 > для описания документов, содержащих символы '?' и/или '*' в URL.
 <CODE
-CLASS="option"
+CLASS="OPTION"
 >String</CODE
 > намного быстрее <CODE
-CLASS="option"
+CLASS="OPTION"
 >Regex</CODE
 >. Используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >String</CODE
 > где это возможно.
 Вы можете задавать несколько аргументов для одной команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 >.
 Вы можете использовать эту команду в любом месте файла конфигурации.
 Имеет глобальный эффект.
 Имейте ввиду, что <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > автоматически добавляет команду <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Allow regex .*</TT
 >
-после чтения файла конфигурации. Это означает, что разрешено всё, что не зыпрещено явно.
-</P
->
-<P
+после чтения файла конфигурации. Это означает, что разрешено всё, что не зыпрещено явно.</P
+><P
 >Примеры
 <PRE
-CLASS="programlisting"
->&#13;#  Разрешить всё:
+CLASS="PROGRAMLISTING"
+>#  Разрешить всё:
 Allow *
 #  Разрешить всё, исключая расширения .php .cgi .pl не учитывая регист и используя регулярные выражения:
 Allow NoMatch Regex \.php$|\.cgi$|\.pl$
 #  Разрешить расширение .HTM учитывая регистр:
-Allow NoCase *.HTM
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+Allow NoCase *.HTM</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="disallow_cmd"
+NAME="DISALLOW_CMD"
 >3.10.15. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Disallow</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1701"
+><A
+NAME="AEN1723"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Disallow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Данная команда запрещает к индексирования URL, подпадающие под указаный шаблон.
+><PRE
+CLASS="PROGRAMLISTING"
+>Disallow [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Данная команда запрещает к индексирования URL, подпадающие под указаный шаблон.
 Значение первых трёх необязательных параметров такое же как и у команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 >
 Вы можете указывать несколько аргументов для одной команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Disallow</B
 >.
 Имеет глобальный эффект.
 Примеры:
 <PRE
-CLASS="programlisting"
->&#13;# Disalow URLs that are not in udm.net domains using "string" match:
+CLASS="PROGRAMLISTING"
+># Disalow URLs that are not in udm.net domains using "string" match:
 Disallow NoMatch *.udm.net/*
 # Disallow any except known extensions and directory index using "regex" match:
 Disallow NoMatch Regex \/$|\.htm$|\.html$|\.shtml$|\.phtml$|\.php$|\.txt$
@@ -1009,93 +829,73 @@ Disallow NoMatch Regex \/$|\.htm$|\.html$|\.shtml$|\.phtml$|\.php$|\.txt$
 Disallow */cgi-bin/* *.cgi */nph-*
 # Exclude anything with '?' sign in URL. Note that '?' sign has a 
 # special meaning in "string" match, so we have to use "regex" match here:
-Disallow Regex  \?
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+Disallow Regex  \?</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="checkonly_cmd"
+NAME="CHECKONLY_CMD"
 >3.10.16. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckOnly</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1712"
+><A
+NAME="AEN1734"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;CheckOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Значение первый трёх необязательных параметров такое же, как и у команды
+><PRE
+CLASS="PROGRAMLISTING"
+>CheckOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Значение первый трёх необязательных параметров такое же, как и у команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 >.
 Для URL, подпадающих под эту команду, вместо HTTP метода GET <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 > будет использовать метод HEAD.
 Это означает, что будет проверятся только наличие документа, сам же документ скачиваться и индексироваться не будет.
 Это полезно для zip,exe,arj и других двоичных файлов, например, для организации поиска по имени файла (что-то наподобии ftp-поиска).
 Вы можете задавать несколько аргументов для одной команды <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckOnly</B
 >.
 Имеет глобальный эффект.
 Примеры:
 <PRE
-CLASS="programlisting"
->&#13;# Check some known non-text extensions using "string" match:
+CLASS="PROGRAMLISTING"
+># Check some known non-text extensions using "string" match:
 CheckOnly *.b	  *.sh   *.md5
 # or check ANY except known text extensions using "regex" match:
-CheckOnly NoMatch Regex \/$|\.html$|\.shtml$|\.phtml$|\.php$|\.txt$
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CheckOnly NoMatch Regex \/$|\.html$|\.shtml$|\.phtml$|\.php$|\.txt$</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="hrefonly_cmd"
+NAME="HREFONLY_CMD"
 >3.10.17. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >HrefOnly</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1724"
+><A
+NAME="AEN1746"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;HrefOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Значение первый трёх необязательных параметров такое же, как и у команды
+><PRE
+CLASS="PROGRAMLISTING"
+>HrefOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Значение первый трёх необязательных параметров такое же, как и у команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 >.
 
@@ -1107,409 +907,318 @@ CLASS="command"
 (типа mail.10.html, thread.21.html, etc.) будут сканировать для поиска ссылок на страницы с письмами,
 но не будут индексироваться:
 <PRE
-CLASS="programlisting"
->&#13;HrefOnly */mail*.html */thread*.html
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>HrefOnly */mail*.html */thread*.html</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="checkmp3_cmd"
+NAME="CHECKMP3_CMD"
 >3.10.18. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckMp3</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1734"
+><A
+NAME="AEN1756"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;CheckMp3 [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]
-</PRE
->
-<P
->&#13;Значение первый трёх необязательных параметров такое же, как и у команды
+><PRE
+CLASS="PROGRAMLISTING"
+>CheckMp3 [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ...]</PRE
+><P
+>Значение первый трёх необязательных параметров такое же, как и у команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 >.
 Если URL подпадает под эту команду, то <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 > скачает небольшую порцию этого документа и попробует найти
 тэги MP3 в этом фрагменте. При обнаружении, тэги будут проиндексированы. В противном случае, документ будет скачен целиком и
 обработан в обычном порядке.
 Замечание: это работает только для серверов, поддерживающих HTTP/1.1, т.е. используется заголовок "Range: bytes".
 <PRE
-CLASS="programlisting"
->&#13;CheckMp3 *.bin *.mp3
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>CheckMp3 *.bin *.mp3</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="checkmp3only_cmd"
+NAME="CHECKMP3ONLY_CMD"
 >3.10.19. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckMp3Only</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1745"
+><A
+NAME="AEN1767"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;CheckMP3Only [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]
-</PRE
->
-<P
->&#13;Эта команда аналогична команде <B
-CLASS="command"
+><PRE
+CLASS="PROGRAMLISTING"
+>CheckMP3Only [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ...]</PRE
+><P
+>Эта команда аналогична команде <B
+CLASS="COMMAND"
 >CheckMP3</B
 >, за исключением: если тэги MP3 не будут обнаружены,
 документ не скачивается целиком и не обрабатывается.
 
 <PRE
-CLASS="programlisting"
->&#13;CheckMP3Only *.bin *.mp3
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>CheckMP3Only *.bin *.mp3</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="indexif_cmd"
+NAME="INDEXIF_CMD"
 >3.10.20. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >IndexIf</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1755"
+><A
+NAME="AEN1777"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;IndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Эта команда служит для разрешения индексирования при совпадении шаблона <CODE
-CLASS="option"
+><PRE
+CLASS="PROGRAMLISTING"
+>IndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Эта команда служит для разрешения индексирования при совпадении шаблона <CODE
+CLASS="OPTION"
 >arg</CODE
 > 
 по заданой секции <CODE
-CLASS="option"
+CLASS="OPTION"
 >section</CODE
 > документа.
 Значение первых трёх необязательных параметров такое же как и у команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 >
-(см. ).
-</P
->
-<P
+(см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;).</P
+><P
 >Пример
 <PRE
-CLASS="programlisting"
->&#13;IndexIf regex Title Manual
-IndexIf body "*important detail*"
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>IndexIf regex Title Manual
+IndexIf body "*important detail*"</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="noindexif_cmd"
+NAME="NOINDEXIF_CMD"
 >3.10.21. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >NoIndexIf</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1769"
+><A
+NAME="AEN1791"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;NoIndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Эта команда служит для запрещения индексирования при совпадении шаблона <CODE
-CLASS="option"
+><PRE
+CLASS="PROGRAMLISTING"
+>NoIndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Эта команда служит для запрещения индексирования при совпадении шаблона <CODE
+CLASS="OPTION"
 >arg</CODE
 > 
 по заданой секции <CODE
-CLASS="option"
+CLASS="OPTION"
 >section</CODE
 > документа.
 Значение первых трёх необязательных параметров такое же как и у команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
 >
-(см. ).
-</P
->
-<P
+(см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;).</P
+><P
 >Пример
 <PRE
-CLASS="programlisting"
->&#13;NoIndexIf regex Title Sex
-IndexIf body *xxx*
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>NoIndexIf regex Title Sex
+IndexIf body *xxx*</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="holdbadhrefs_cmd"
+NAME="HOLDBADHREFS_CMD"
 >3.10.22. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >HoldBadHrefs</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1783"
+><A
+NAME="AEN1805"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;HoldBadHrefs &#60;time&#62;
-</PRE
->
-<P
->&#13;Задаёт сколько времени хранить документы с ошибочными кодами статуса перед удалением их из базы.
+><PRE
+CLASS="PROGRAMLISTING"
+>HoldBadHrefs &lt;time&gt;</PRE
+><P
+>Задаёт сколько времени хранить документы с ошибочными кодами статуса перед удалением их из базы.
 Например, если какой-либо веб-сервер временно недоступен, <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 > не удалит страницы этого
 сервера сразу. Однако, если этот сайт будет недоступен продолжительное время, страницы с этого сайта будут удалены по истечении
 указаного интервала времени.
-Формат для параметра &#60;time&#62; см. в описании команды <B
-CLASS="command"
+Формат для параметра &lt;time&gt; см. в описании команды <B
+CLASS="COMMAND"
 >Period</B
-> в .
+> в <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
 <PRE
-CLASS="programlisting"
->&#13;HoldBadHrefs 30d
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>HoldBadHrefs 30d</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="deleteolder_cmd"
+NAME="DELETEOLDER_CMD"
 >3.10.23. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >DeleteOlder</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1795"
+><A
+NAME="AEN1817"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;DeleteOlder &#60;time&#62;
-</PRE
->
-<P
->&#13;Задаёт сколько времени хранить проиндексированные документы в базе.
+><PRE
+CLASS="PROGRAMLISTING"
+>DeleteOlder &lt;time&gt;</PRE
+><P
+>Задаёт сколько времени хранить проиндексированные документы в базе.
 Например, при индексировании новостных сайтов, вы можете задать период, по истечении которого устаревшие
 страницы новостей будут удалены из базы, независимо от статуса этих документов.
-Формат для параметра &#60;time&#62; см. в описании команды <B
-CLASS="command"
+Формат для параметра &lt;time&gt; см. в описании команды <B
+CLASS="COMMAND"
 >Period</B
-> в .
+> в <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
 Значение по умолчанию: 0, - означает "не проверять". Вы можете указать несколько команд <B
-CLASS="command"
+CLASS="COMMAND"
 >DeleteOlder</B
 >,
 например, по одной для каждой команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;DeleteOlder 7d
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>DeleteOlder 7d</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="useremotecontenttype_cmd"
+NAME="USEREMOTECONTENTTYPE_CMD"
 >3.10.24. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >UseRemoteContentType</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1808"
+><A
+NAME="AEN1830"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;UseRemoteContentType yes/no
-</PRE
->
-<P
->&#13;Данная команда указывает брать ли тип содержимого из заголовков ответа сервера (yes) или определять его на основании
+><PRE
+CLASS="PROGRAMLISTING"
+>UseRemoteContentType yes/no</PRE
+><P
+>Данная команда указывает брать ли тип содержимого из заголовков ответа сервера (yes) или определять его на основании
 комманд <B
-CLASS="command"
+CLASS="COMMAND"
 >AddType</B
 >, указанных в файле конфигурации (no).
 Если задано 'no' и по заданым командам <B
-CLASS="command"
+CLASS="COMMAND"
 >AddType</B
 > определить тип не удаётся, то используется тип
 из заголовков ответа сервера.
 Значение по умолчанию: yes.
 <PRE
-CLASS="programlisting"
->&#13;UseRemoteContentType yes
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>UseRemoteContentType yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="addtype_cmd"
+NAME="ADDTYPE_CMD"
 >3.10.25. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >AddType</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1819"
+><A
+NAME="AEN1841"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;AddType [String|Regex] [Case|NoCase] &#60;mime type&#62; &#60;arg&#62; [&#60;arg&#62;...]
-</PRE
->
-<P
->&#13;Эта команда ассоциирует MIME тип с указаным расширением файла.
+><PRE
+CLASS="PROGRAMLISTING"
+>AddType [String|Regex] [Case|NoCase] &lt;mime type&gt; &lt;arg&gt; [&lt;arg&gt;...]</PRE
+><P
+>Эта команда ассоциирует MIME тип с указаным расширением файла.
 Эти команды используются при индексировании ссылок со схемой file://.
 Первые два необязательных параметра используются для задания типа сравнения.
 По умолчанию используются "String" "NoCase" (нечувствительное к регистру стравнение строк с использованием
 символов-шаблонов '?' и '*').
 <PRE
-CLASS="programlisting"
->&#13;AddType image/x-xpixmap	*.xpm
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>AddType image/x-xpixmap	*.xpm</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="period_cmd"
+NAME="PERIOD_CMD"
 >3.10.26. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Period</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1828"
+><A
+NAME="AEN1850"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Period &#60;time&#62;
-</PRE
->
-<P
->&#13;Задаёт период переиндексирования.
-&#60;time&#62; указывается в формате 'xxxA[yyyB[zzzC]]'                                   
+><PRE
+CLASS="PROGRAMLISTING"
+>Period &lt;time&gt;</PRE
+><P
+>Задаёт период переиндексирования.
+&lt;time&gt; указывается в формате 'xxxA[yyyB[zzzC]]'                                   
  (пробелы допустимы между xxx и A и yyy и т.д)                     
    здесь xxx, yyy, zzz - числа (возможно отризательные!)                         
          A, B, C могут быть одним из следующего:                                 
@@ -1523,1438 +1232,1142 @@ CLASS="programlisting"
                                                                               
 Примеры:
 <PRE
-CLASS="programlisting"
->&#13; 15s - 15 секунд
+CLASS="PROGRAMLISTING"
+> 15s - 15 секунд
  4h30M - 4 часа и 30 минут
  1y6m-15d - 1 год и шесть месяцев минус 15 дней
- 1h-10M+1s - 1 час минус 10 минут плюс 1 секунда
-</PRE
->
-</P
->
-<P
->&#13; Если указано только число без какого-либо символа, то подразумевается, что время задано в секундах.
+ 1h-10M+1s - 1 час минус 10 минут плюс 1 секунда</PRE
+></P
+><P
+> Если указано только число без какого-либо символа, то подразумевается, что время задано в секундах.
 
  Можно задавать несоклько команд <B
-CLASS="command"
+CLASS="COMMAND"
 >Period</B
 >, например по одной на каждую команду
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;Period 7d
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>Period 7d</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="periodbyhops_cmd"
+NAME="PERIODBYHOPS_CMD"
 >3.10.27. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >PeriodByHops</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1841"
+><A
+NAME="AEN1863"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;PeriodByHops &#60;hops&#62; [ &#60;time&#62; ]
-</PRE
->
-<P
->Задаёт период переиндексирования для страниц зо значением глубины в "мышиных кликах" равным &#60;hops&#62;. 
-Формат для &#60;time&#62; такой же как и для команды <B
-CLASS="command"
+><PRE
+CLASS="PROGRAMLISTING"
+>PeriodByHops &lt;hops&gt; [ &lt;time&gt; ]</PRE
+><P
+>Задаёт период переиндексирования для страниц зо значением глубины в &quot;мышиных кликах&quot; равным &lt;hops&gt;. 
+Формат для &lt;time&gt; такой же как и для команды <B
+CLASS="COMMAND"
 >Period</B
->.
-</P
->
- <P
->&#13; Можно задавать несоклько команд <B
-CLASS="command"
+>.</P
+><P
+> Можно задавать несоклько команд <B
+CLASS="COMMAND"
 >PeriodByHops</B
 >, например по одной на каждую команду
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >. Если параметр
-&#60;time&#62; опущен, действие указаного ранее значения отменяется.
-</P
->
-<P
->Если для конретного значения &#60;hops&#62; не задан период переиндексирования командой <B
-CLASS="command"
+&lt;time&gt; опущен, действие указаного ранее значения отменяется.</P
+><P
+>Если для конретного значения &lt;hops&gt; не задан период переиндексирования командой <B
+CLASS="COMMAND"
 >PeriodByHops</B
 >,
 в этом случае используется значение, заданное командой <B
-CLASS="command"
+CLASS="COMMAND"
 >Period</B
->.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="expireat_cmd"
+NAME="EXPIREAT_CMD"
 >3.10.28. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >ExpireAt</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1856"
+><A
+NAME="AEN1878"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;ExpireAt [ A [ B [ C [ D [ E ]]]]]
-</PRE
->
-<P
+><PRE
+CLASS="PROGRAMLISTING"
+>ExpireAt [ A [ B [ C [ D [ E ]]]]]</PRE
+><P
 >Эта команда позволяет задать точное время устаревания документов. 
 Может задаваться для каждой команда Server/Realm в отдельности, действует до конца файла конфигурации или до следующей
 команды <B
-CLASS="command"
+CLASS="COMMAND"
 >ExpireAt</B
 >.
 <B
-CLASS="command"
+CLASS="COMMAND"
 >ExpireAt</B
 > указаная без аргументов означает отмену всех ранее указаных значений.
 A - обозначает минуту, может быть * или 0-59; B - обозначает час, может быть * или 0-23; C - обозначает день месяца, может быть * или 1-31;
 D - обозначает месяц, может быть * или 1-12; E - обозначает день недели, может быть * или 0-6, 0 - Воскресенье.
 Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >ExpireAt</B
 > имеет больший приоритет над командами <B
-CLASS="command"
+CLASS="COMMAND"
 >Period</B
 > или <B
-CLASS="command"
+CLASS="COMMAND"
 >PeriodByHops</B
->.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="usedateheader_cmd"
+NAME="USEDATEHEADER_CMD"
 >3.10.29. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >UseDateHeader</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1869"
-></A
->
-<PRE
-CLASS="programlisting"
->&#13;UseDateHeader yes|no
-</PRE
->
-<P
->Использовать ли заголовок ответа сервера Date если в ответе сервера не содержится заголовок Last-Modified. 
-Значение по-умолчанию: no.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
-><H2
-CLASS="sect2"
 ><A
-NAME="tag_cmd"
+NAME="AEN1891"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>UseDateHeader yes|no</PRE
+><P
+>Использовать ли заголовок ответа сервера Date если в ответе сервера не содержится заголовок Last-Modified. 
+Значение по-умолчанию: no.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TAG_CMD"
 >3.10.30. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Tag</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1877"
+><A
+NAME="AEN1899"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Tag &#60;string&#62;
-</PRE
->
-<P
->&#13;Используйте эту команду по своему усмотрению чтобы сгруппировать несколько сайтов,
+><PRE
+CLASS="PROGRAMLISTING"
+>Tag &lt;string&gt;</PRE
+><P
+>Используйте эту команду по своему усмотрению чтобы сгруппировать несколько сайтов,
 помечая их указаным тэгом. При индексировании или поиске, вы можете ограничиваться сайтами только указаного тэга.
 Можно указывать несколько команд <B
-CLASS="command"
+CLASS="COMMAND"
 >Tag</B
 >. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Tag</B
 > имеет значение до следующей
 команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Tag</B
 > или до конца файла конфигурации. 
-Значение по умолчанию: пустая строка.
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect2"
+Значение по умолчанию: пустая строка.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="tagif_cmd"
+NAME="TAGIF_CMD"
 >3.10.31. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >TagIf</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1888"
+><A
+NAME="AEN1910"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;TagIf &#60;tag&#62; [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Присвоить документу тэг &#60;tag&#62;, если значении секции <CODE
-CLASS="option"
+><PRE
+CLASS="PROGRAMLISTING"
+>TagIf &lt;tag&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Присвоить документу тэг &lt;tag&gt;, если значении секции <CODE
+CLASS="OPTION"
 >section</CODE
 > подпадает под указаный
 шаблон <CODE
-CLASS="option"
+CLASS="OPTION"
 >arg</CODE
 >.
 Значение первых трёх необязательных параметров такое же как для команды 
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
-> (см. ).
-</P
->
-<P
+> (см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;).</P
+><P
 >Пример
 <PRE
-CLASS="programlisting"
->&#13;TagIf Docs regex Title Manual
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>TagIf Docs regex Title Manual</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="category_cmd"
+NAME="CATEGORY_CMD"
 >3.10.32. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Category</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1902"
+><A
+NAME="AEN1924"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Category &#60;string&#62;
-</PRE
->
-<P
->&#13;Вы можете помечать документы при помощи вложеный категорий. Категория - строка шестнадцатиричных цмфр.
+><PRE
+CLASS="PROGRAMLISTING"
+>Category &lt;string&gt;</PRE
+><P
+>Вы можете помечать документы при помощи вложеный категорий. Категория - строка шестнадцатиричных цмфр.
 Вы можете иметь до 6 уровней вложенности по 256 элементов на каждом уровне. Пустая категоря означает корень
-дерева категорий. См.  для дальнейшего описания.
+дерева категорий. См. <A
+HREF="dpsearch-categories.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 6.2</A
+>&#62; для дальнейшего описания.
 <PRE
-CLASS="programlisting"
->&#13;# This command means a category on first level:
+CLASS="PROGRAMLISTING"
+># This command means a category on first level:
 Category AA
 # This command meand a category on 5th level:
-Category FFAABBCCDD
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+Category FFAABBCCDD</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="categoryif_cmd"
+NAME="CATEGORYIF_CMD"
 >3.10.33. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >CategoryIf</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1912"
+><A
+NAME="AEN1934"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;CategoryIf &#60;category&#62; [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Присвоить документу категорию &#60;category&#62;, если значение секции <CODE
-CLASS="option"
+><PRE
+CLASS="PROGRAMLISTING"
+>CategoryIf &lt;category&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Присвоить документу категорию &lt;category&gt;, если значение секции <CODE
+CLASS="OPTION"
 >section</CODE
 > подпадает под указаный 
 шаблон <CODE
-CLASS="option"
+CLASS="OPTION"
 >arg</CODE
 >.
 Значение первых трёх необязательных параметров такое же как для команды 
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
-> (см. ).
-</P
->
-<P
+> (см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;).</P
+><P
 >Пример
 <PRE
-CLASS="programlisting"
->&#13;CategoryIf 010F regex Title "JOB ID"
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>CategoryIf 010F regex Title "JOB ID"</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="maxhops_cmd"
+NAME="MAXHOPS_CMD"
 >3.10.34. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxHops</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1926"
+><A
+NAME="AEN1948"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;MaxHops &#60;number&#62;
-</PRE
->
-<P
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxHops &lt;number&gt;</PRE
+><P
 >Максимальная глубина пути в "мышиных кликах" от начального URL.
 Значение по умолчанию: 256. Может быть задано несколько команд <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxHops</B
 >, например,
 по одной на каждую команду <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >. Действует до конца файла конфигурации, либо до следующей команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxHops</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;MaxHops 256
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>MaxHops 256</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="trackhops_cmd"
+NAME="TRACKHOPS_CMD"
 >3.10.35. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >TrackHops</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1938"
+><A
+NAME="AEN1960"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;TrackHops yes|no
-</PRE
->
-<P
+><PRE
+CLASS="PROGRAMLISTING"
+>TrackHops yes|no</PRE
+><P
 >Включает или выключает ведение счётчика hops при переиндексировании.
 Значение по умолчанию: no (выключено).
 Если включено, то при переиндексировании значение hops для url вычисляется заново, иначе
 значение hops вычисляется один раз при помещении url в базу.
 <PRE
-CLASS="programlisting"
->&#13;TrackHops yes
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>TrackHops yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="maxdepth_cmd"
+NAME="MAXDEPTH_CMD"
 >3.10.36. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxDepth</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1947"
+><A
+NAME="AEN1969"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;MaxDepth &#60;number&#62;
-</PRE
->
-<P
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxDepth &lt;number&gt;</PRE
+><P
 >Максимальная глубина директории в url.
 Значение по умолчанию 16. Может быть задано несколько команд <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxDepth</B
 >, например,
 по одной на каждую команду <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >. Действует до конца файла конфигурации, либо до следующей команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxDepth</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;MaxDepth 2
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>MaxDepth 2</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="maxdocsperserver_cmd"
+NAME="MAXDOCSPERSERVER_CMD"
 >3.10.37. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxDocsPerServer</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1959"
+><A
+NAME="AEN1981"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;MaxDocsPerServer &#60;number&#62;
-</PRE
->
-<P
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxDocsPerServer &lt;number&gt;</PRE
+><P
 >Щграничивает число документов, выкачиваемых с одного Server.
-Значение по умолчанию: -1, что обозначает "без ограничений".
+Значение по умолчанию: -1, что обозначает &quot;без ограничений&quot;.
 Если задано неотрицательное значение, за один запуск <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 >
 будет проиндексировано не более указанного числа документов,
 относящихся к одной команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 > или <B
-CLASS="command"
+CLASS="COMMAND"
 >Realm</B
 >.
  Может быть задано несколько команд <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxDocsPerServer</B
 >, например,
 по одной на каждую команду <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >. Действует до конца файла конфигурации, либо до следующей команды
 <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxDocsPerServer</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;MaxDocsPerServer 100
-</PRE
->
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>MaxDocsPerServer 100</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="maxneterrors_cmd"
+NAME="MAXNETERRORS_CMD"
 >3.10.38. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxNetErrors</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1974"
+><A
+NAME="AEN1996"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;MaxNetErrors &#60;number&#62;
-</PRE
->
-<P
->&#13;Задаёт максимальное число сетевых ошибок для каждого сервера.
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxNetErrors &lt;number&gt;</PRE
+><P
+>Задаёт максимальное число сетевых ошибок для каждого сервера.
 Значение по умолчанию: 16. Используйте значение 0 для выключения проверки.
 Если число ошибок при обращении к какому-то серверу превысит заданое число (например, хост временно не доступен),
 <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 > больше небудет пытаться получить документы с этого сервера.
 Команда действует до конца файла конфигурации, или до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxNetErrors</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;MaxNetErrors 16
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>MaxNetErrors 16</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="readtimeout_cmd"
+NAME="READTIMEOUT_CMD"
 >3.10.39. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >ReadTimeOut</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1985"
+><A
+NAME="AEN2007"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;ReadTimeOut &#60;time&#62;
-</PRE
->
-<P
->&#13;Таймаут ожидания соединения или продолжения получения данных.
+><PRE
+CLASS="PROGRAMLISTING"
+>ReadTimeOut &lt;time&gt;</PRE
+><P
+>Таймаут ожидания соединения или продолжения получения данных.
 Формат <CODE
-CLASS="option"
->&#60;time&#62;</CODE
-> см. .
+CLASS="OPTION"
+>&lt;time&gt;</CODE
+> см. <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
 Значение по умолчанию: 30 секунд.
 Команда действует до конца файла, или до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >ReadTimeOut</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;ReadTimeOut 30s
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>ReadTimeOut 30s</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="doctimeout_cmd"
+NAME="DOCTIMEOUT_CMD"
 >3.10.40. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >DocTimeOut</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN1997"
+><A
+NAME="AEN2019"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;DocTimeOut &#60;time&#62;
-</PRE
->
-<P
->&#13;Указывает максимальное время ожидания получения всего документа.
+><PRE
+CLASS="PROGRAMLISTING"
+>DocTimeOut &lt;time&gt;</PRE
+><P
+>Указывает максимальное время ожидания получения всего документа.
 Формат <CODE
-CLASS="option"
->&#60;time&#62;</CODE
-> см. в .
+CLASS="OPTION"
+>&lt;time&gt;</CODE
+> см. в <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
 Значение по умолчанию: 90 секунд.
 Команда действует до конца файла, или до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >DocTimeOut</B
 >.
 <PRE
-CLASS="programlisting"
->&#13;DocTimeOut 1m30s
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>DocTimeOut 1m30s</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="neterrordelaytime_cmd"
+NAME="NETERRORDELAYTIME_CMD"
 >3.10.41. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >NetErrorDelayTime</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2009"
+><A
+NAME="AEN2031"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;NetErrorDelayTime &#60;time&#62;
-</PRE
->
-<P
->&#13;Указывает период, на который будет отложена обработка документа при возникновении сетевых ошибок при его получении.
+><PRE
+CLASS="PROGRAMLISTING"
+>NetErrorDelayTime &lt;time&gt;</PRE
+><P
+>Указывает период, на который будет отложена обработка документа при возникновении сетевых ошибок при его получении.
 Формат <CODE
-CLASS="option"
->&#60;time&#62;</CODE
-> см. в .
+CLASS="OPTION"
+>&lt;time&gt;</CODE
+> см. в <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
 Значение по умолчанию: один день.
 <PRE
-CLASS="programlisting"
->&#13;NetErrorDelayTime 1d
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>NetErrorDelayTime 1d</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="cookies_cmd"
+NAME="COOKIES_CMD"
 >3.10.42. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Cookies</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2020"
+><A
+NAME="AEN2042"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Cookies yes/no
-</PRE
->
-<P
->&#13;Включает поддерку ключиков HTTP (HTTP cookies).
+><PRE
+CLASS="PROGRAMLISTING"
+>Cookies yes/no</PRE
+><P
+>Включает поддерку ключиков HTTP (HTTP cookies).
 Команда действует до конца файла, или до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Cookies</B
 >.
 Значение по умолчанию: no.
 <PRE
-CLASS="programlisting"
->&#13;Cookies yes
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>Cookies yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="robots_cmd"
+NAME="ROBOTS_CMD"
 >3.10.43. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Robots</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2030"
+><A
+NAME="AEN2052"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Robots yes/no
-</PRE
->
-<P
->&#13;Разрешает или запрещает использование <TT
-CLASS="filename"
+><PRE
+CLASS="PROGRAMLISTING"
+>Robots yes/no</PRE
+><P
+>Разрешает или запрещает использование <TT
+CLASS="FILENAME"
 >robots.txt</TT
-> и &#60;META NAME="robots" ...&#62;
+> и &lt;META NAME="robots" ...&gt;
 для исключения страниц. Используйте <CODE
-CLASS="option"
+CLASS="OPTION"
 >no</CODE
 >, например, для проверки ссылок на вашем сайте или сайтах.
 Имейте в виду, что игнорирование чужих <TT
-CLASS="filename"
+CLASS="FILENAME"
 >robots.txt</TT
 > не приветсвуется сетевым этикетом.
 Команда действует до конца файла, или до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Robots</B
 >.
 Значение по умолчанию: yes.
 <PRE
-CLASS="programlisting"
->&#13;Robots yes
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>Robots yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="robotsperiod_cmd"
+NAME="ROBOTSPERIOD_CMD"
 >3.10.44. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >RobotsPeriod</B
 ></A
 ></H2
->
-
-<P
+><P
 ><A
-NAME="AEN2044"
+NAME="AEN2066"
 ></A
 >
 По умолчанию, данные из robots.txt хранятся в SQL-базе одну неделю. Вы можете изменить этот период используя команду
 <B
-CLASS="command"
+CLASS="COMMAND"
 >RobotsPeriod</B
 >:
 <PRE
-CLASS="programlisting"
->&#13;RobotsPeriod &#60;time&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>RobotsPeriod &lt;time&gt;</PRE
 >
-См. формат &#60;time&#62; в описании команды <B
-CLASS="command"
+См. формат &lt;time&gt; в описании команды <B
+CLASS="COMMAND"
 >Period</B
-> из .
+> из <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
 <PRE
-CLASS="programlisting"
->&#13;RobotsPeriod 30d
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>RobotsPeriod 30d</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="crawldelay_cmd"
+NAME="CRAWLDELAY_CMD"
 >3.10.45. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >CrawlDelay</B
 ></A
 ></H2
->
-
-<P
+><P
 ><A
-NAME="AEN2056"
+NAME="AEN2078"
 ></A
 >
 Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу.. 
 Аналогична команде crawl-delay в файле <TT
-CLASS="filename"
+CLASS="FILENAME"
 >robots.txt</TT
 >, но может быть заданав <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > 
 файле для каждого сервера в отдельности. Если не задано значение crawl-delay value в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >robots.txt</TT
 >, 
 bcgjkmpetncz значение, указаное в <B
-CLASS="command"
+CLASS="COMMAND"
 >CrawlDelay</B
 >. 
 Если значение crawl-delay указано в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >robots.txt</TT
 >, тогда используется максимальное значение из
 <B
-CLASS="command"
+CLASS="COMMAND"
 >CrawlDelay</B
-> и crawl-delay.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+> и crawl-delay.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="section_cmd"
+NAME="SECTION_CMD"
 >3.10.46. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Section</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2068"
+><A
+NAME="AEN2090"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [strict] [ &#60;pattern&#62; &#60;replacement&#62; ]
-</PRE
->
-<P
->&#13;где <CODE
-CLASS="option"
->&#60;string&#62;</CODE
+><PRE
+CLASS="PROGRAMLISTING"
+>Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [strict] [ &lt;pattern&gt; &lt;replacement&gt; ]</PRE
+><P
+>где <CODE
+CLASS="OPTION"
+>&lt;string&gt;</CODE
 > - имя секции и <CODE
-CLASS="option"
->&#60;number&#62;</CODE
+CLASS="OPTION"
+>&lt;number&gt;</CODE
 > - ID секции,
 от 0 до 255. Используйте 0 если вы не хотите индексировать какую-либо секцию.
 Лучше всего использовать различные ID для разных секций. В этом случае вы сможете во время поиска задавать различные веса
 конретным секциям, или же исключать их из результатов поиска.
 Параметр <CODE
-CLASS="option"
->&#60;maxlen&#62;</CODE
+CLASS="OPTION"
+>&lt;maxlen&gt;</CODE
 >  задаёт максимальный размер секции, который будет сохранён в базе 
 (хотя сама секция будет проиндексирована целиком). Используйте 0, если вы не хотите сохранять в базе значение секции.
 <CODE
-CLASS="option"
->&#60;pattern&#62;</CODE
+CLASS="OPTION"
+>&lt;pattern&gt;</CODE
 > и <CODE
-CLASS="option"
->&#60;replacement&#62;</CODE
+CLASS="OPTION"
+>&lt;replacement&gt;</CODE
 > - шаблон и замена, аналогичная используемым в regex,
 для извления значения секции из тела документа.</P
->
-<P
+><P
 >Вы можете указать параметр <CODE
-CLASS="option"
+CLASS="OPTION"
 >strict</CODE
 > для задания строгой токенизации секции, что означает разбиение на слова
 на любом знаке, не являющемся буквой, независимо от контекста. Например, полезно для индексирования URL.
 <PRE
-CLASS="programlisting"
->&#13;# Standard HTML sections: body, title
+CLASS="PROGRAMLISTING"
+># Standard HTML sections: body, title
 Section	body			1	256
 Section title			2	128
 # строгая токенизация для URL
 Section url                     3       0 strict
 # шаблон регулярного выражения для секции
-Section GoodName                3       128 "&#60;h1&#62;([^&#60;]*)&#60;/h1&#62;" "&#60;b&#62;GoodName:&#60;/b&#62; $1"
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+Section GoodName                3       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="hrefsection_cmd"
+NAME="HREFSECTION_CMD"
 >3.10.47. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >HrefSection</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2084"
+><A
+NAME="AEN2106"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;HrefSection &#60;string&#62; [ &#60;pattern&#62; &#60;replacement&#62; ]
-</PRE
->
-<P
->&#13;где <CODE
-CLASS="option"
->&#60;string&#62;</CODE
+><PRE
+CLASS="PROGRAMLISTING"
+>HrefSection &lt;string&gt; [ &lt;pattern&gt; &lt;replacement&gt; ]</PRE
+><P
+>где <CODE
+CLASS="OPTION"
+>&lt;string&gt;</CODE
 > - имя секции,
 <CODE
-CLASS="option"
->&#60;pattern&#62;</CODE
+CLASS="OPTION"
+>&lt;pattern&gt;</CODE
 > и <CODE
-CLASS="option"
->&#60;replacement&#62;</CODE
+CLASS="OPTION"
+>&lt;replacement&gt;</CODE
 > - шаблон и замена, аналогичная используемым в regex,
 для извления значения секции из тела документа.
 Используйте эту команду для извлечения ссылок из тела документа.
 <PRE
-CLASS="programlisting"
->&#13;# Standard HTML sections: body, title
+CLASS="PROGRAMLISTING"
+># Standard HTML sections: body, title
 HrefSection	link
-HrefSection     NewLink "&#60;newlink&#62;([^&#60;]*)&#60;/newlink&#62;" "$1"
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+HrefSection     NewLink "&lt;newlink&gt;([^&lt;]*)&lt;/newlink&gt;" "$1"</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="FastHrefCheck"
+NAME="FASTHREFCHECK"
 >3.10.48. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >FastHrefCheck</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2096"
+><A
+NAME="AEN2118"
 ></A
->
-<P
+><P
 >Команда "<B
-CLASS="command"
+CLASS="COMMAND"
 >FastHrefCheck yes</B
 >" полезна для ускорения индексирования, если ваш список команд <B
-CLASS="command"
+CLASS="COMMAND"
 >Server/Realm/Subnet</B
 > огромен, 
-т.к. она выключает проверку ссылок по списку серверов на этапе парсинга страницы.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+т.к. она выключает проверку ссылок по списку серверов на этапе парсинга страницы.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="index_cmd"
+NAME="INDEX_CMD"
 >3.10.49. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Index</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2105"
+><A
+NAME="AEN2127"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Index yes/no
-</PRE
->
-<P
->&#13;Разрешает или запрещает сохранения проиндексированных слов в базу.
+><PRE
+CLASS="PROGRAMLISTING"
+>Index yes/no</PRE
+><P
+>Разрешает или запрещает сохранения проиндексированных слов в базу.
 Применяется, например, при проверке ссылок на страницах сайта или сайтов.
 Команда действует до конца файла, или до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Index</B
 >.
 Значение по умолчанию: yes.
 Prevent indexer from storing words into database.
 <PRE
-CLASS="programlisting"
->&#13;Index no
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>Index no</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="proxyauthbasic_cmd"
+NAME="PROXYAUTHBASIC_CMD"
 >3.10.50. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >ProxyAuthBasic</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2115"
+><A
+NAME="AEN2137"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;ProxyAuthBasic login:passwd
-</PRE
->
-<P
->&#13;Задаёт http proxy basic authorization.
+><PRE
+CLASS="PROGRAMLISTING"
+>ProxyAuthBasic login:passwd</PRE
+><P
+>Задаёт http proxy basic authorization.
 Может быть указана перед каждой командой <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >, но действует только для этой команды!.
 Может также использовать перед командой <B
-CLASS="command"
+CLASS="COMMAND"
 >Proxy</B
 >.
 Примеры:
 <PRE
-CLASS="programlisting"
->&#13;ProxyAuthBasic somebody:something  
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>ProxyAuthBasic somebody:something  </PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="proxy_cmd"
+NAME="PROXY_CMD"
 >3.10.51. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Proxy</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2126"
+><A
+NAME="AEN2148"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Proxy your.proxy.host[:port]
-</PRE
->
-<P
->&#13;Вместо прямого соединения, использовать прокси-соединение.
+><PRE
+CLASS="PROGRAMLISTING"
+>Proxy your.proxy.host[:port]</PRE
+><P
+>Вместо прямого соединения, использовать прокси-соединение.
 Значение номера порта по умолчанию: 3128 (Squid).
 Команда действует до конца файла, или до следующей команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Proxy</B
 >.
 Если не указано ни одной команды <B
-CLASS="command"
+CLASS="COMMAND"
 >Proxy</B
 >, или для этой команды не указан хост - используется
 прямое соединение.
 Примеры:
 <PRE
-CLASS="programlisting"
->&#13;#           Proxy on atoll.anywhere.com, port 3128:
+CLASS="PROGRAMLISTING"
+>#           Proxy on atoll.anywhere.com, port 3128:
 Proxy atoll.anywhere.com
 #           Proxy on lota.anywhere.com, port 8090:
 Proxy lota.anywhere.com:8090
 #           Disable proxy (direct connect):
-Proxy
-</PRE
->
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+Proxy</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="authbasic_cmd"
+NAME="AUTHBASIC_CMD"
 >3.10.52. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >AuthBasic</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2137"
+><A
+NAME="AEN2159"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;AuthBasic login:passwd
-</PRE
->
-<P
->&#13;Включает использование basic http authorization.
+><PRE
+CLASS="PROGRAMLISTING"
+>AuthBasic login:passwd</PRE
+><P
+>Включает использование basic http authorization.
 Может быть указана перед каждой командой <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 >, но действует только для этой команды!.
 Примеры:
 <PRE
-CLASS="programlisting"
->&#13;AuthBasic somebody:something  
+CLASS="PROGRAMLISTING"
+>AuthBasic somebody:something  
 
 # If you have password protected directory(ies), but whole server is open,use:
 AuthBasic login1:passwd1
 Server http://my.server.com/my/secure/directory1/
 AuthBasic login2:passwd2
 Server http://my.server.com/my/secure/directory2/
-Server http://my.server.com/
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+Server http://my.server.com/</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="serverweight_cmd"
+NAME="SERVERWEIGHT_CMD"
 >3.10.53. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >ServerWeight</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2147"
+><A
+NAME="AEN2169"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;ServerWeight &#60;number&#62;
-</PRE
->
-<P
->&#13;Задаёт вес Server для расчёта Popularity Rank (см. ). 
+><PRE
+CLASS="PROGRAMLISTING"
+>ServerWeight &lt;number&gt;</PRE
+><P
+>Задаёт вес Server для расчёта Popularity Rank (см. <A
+HREF="dpsearch-rel.ru.html#POPRANK"
+>&#1056;&#1072;&#1079;&#1076;. 8.5.3</A
+>&#62;). 
 Значение по умолчанию: 1.
 <PRE
-CLASS="programlisting"
->&#13;ServerWeight 1
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+CLASS="PROGRAMLISTING"
+>ServerWeight 1</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="optimizeatupdate_cmd"
+NAME="OPTIMIZEATUPDATE_CMD"
 >3.10.54. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >OptimizeAtUpdate</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2157"
+><A
+NAME="AEN2179"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;OptimizeAtUpdate yes
-</PRE
->
-<P
->&#13;Задаёт стратегию оптимизации индекса слов.
+><PRE
+CLASS="PROGRAMLISTING"
+>OptimizeAtUpdate yes</PRE
+><P
+>Задаёт стратегию оптимизации индекса слов.
 Значение по умолчанию: no.
 Если включено, позволяет экономить дисковое пространство, однако замедляет процесс индексирования.
 Может указываться и в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > и в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >cached.conf</TT
->.
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="skipunreferred_cmd"
+NAME="SKIPUNREFERRED_CMD"
 >3.10.55. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >SkipUnreferred</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2167"
-></A
->
-<PRE
-CLASS="programlisting"
->&#13;SkipUnreferred yes|no|del
-</PRE
->
-<P
->&#13;Значение по умолчанию: no. Используйте эту команду для пропуска переиндексации или для удаления документов, на которые никто
-не ссылается. Для этой команды требуется включить сбор ссылок (см. ).
-</P
->
-</DIV
->
-
-
-
-<DIV
-CLASS="sect2"
-><H2
-CLASS="sect2"
 ><A
-NAME="bind_cmd"
+NAME="AEN2189"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>SkipUnreferred yes|no|del</PRE
+><P
+>Значение по умолчанию: no. Используйте эту команду для пропуска переиндексации или для удаления документов, на которые никто
+не ссылается. Для этой команды требуется включить сбор ссылок (см. <A
+HREF="dpsearch-rel.ru.html#POPRANK"
+>&#1056;&#1072;&#1079;&#1076;. 8.5.3</A
+>&#62;).</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="BIND_CMD"
 >3.10.56. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >Bind</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2176"
-></A
->
-<PRE
-CLASS="programlisting"
->&#13;Bind 127.0.0.1
-</PRE
->
-<P
->&#13;Если ваша система имеет несколько сетевых интерфейсов, вы можете используйте эту команду для задания локального ip адреса.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
-><H2
-CLASS="sect2"
 ><A
-NAME="provideref_cmd"
+NAME="AEN2198"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>Bind 127.0.0.1</PRE
+><P
+>Если ваша система имеет несколько сетевых интерфейсов, вы можете используйте эту команду для задания локального ip адреса.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PROVIDEREF_CMD"
 >3.10.57. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >ProvideReferer</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2184"
-></A
->
-<PRE
-CLASS="programlisting"
->&#13;ProvideReferer yes
-</PRE
->
-<P
->&#13;Используйте эту команду для передачи заголовка запроса <TT
-CLASS="literal"
->Referer:</TT
-> для HTTP и HTTPS соединений.
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
-><H2
-CLASS="sect2"
 ><A
-NAME="longesttextitems_cmd"
+NAME="AEN2206"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>ProvideReferer yes</PRE
+><P
+>Используйте эту команду для передачи заголовка запроса <TT
+CLASS="LITERAL"
+>Referer:</TT
+> для HTTP и HTTPS соединений.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="LONGESTTEXTITEMS_CMD"
 >3.10.58. Команда <B
-CLASS="command"
+CLASS="COMMAND"
 >LongestTextItems</B
 ></A
 ></H2
->
-
-<A
-NAME="AEN2193"
+><A
+NAME="AEN2215"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;LongestTextItems 4
-</PRE
->
-<P
->&#13;Используйте эту команду для указания числа самых длинных текстовых элементов к индексированию.
-</P
->
-</DIV
->
-
-
-</DIV
+><PRE
+CLASS="PROGRAMLISTING"
+>LongestTextItems 4</PRE
+><P
+>Используйте эту команду для указания числа самых длинных текстовых элементов к индексированию.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="MKPREFIX-CMD"
+>3.10.59. Команда <B
+CLASS="COMMAND"
+>MakePrefixes</B
+></A
+></H2
+><A
+NAME="AEN2221"
+></A
+><P
+>При помощи команды <B
+CLASS="COMMAND"
+>MakePrefixes yes</B
+> вы можете указать <B
+CLASS="COMMAND"
+>indexer</B
+> автоматически создавать префиксы для всех индексируемых слов.
+В частности, это можно использовать при создании поисковых подсказок.</P
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -3001,7 +2414,7 @@ ALIGN="left"
 VALIGN="top"
 >Внешние парсеры
 <A
-NAME="AEN1284"
+NAME="AEN1306"
 ></A
 ></TD
 ><TD

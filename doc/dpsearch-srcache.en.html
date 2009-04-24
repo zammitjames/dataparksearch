@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,68 +76,59 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="srcache"
+NAME="SRCACHE"
 >8.7. Search results cache</A
 ></H1
->
-	
-<A
-NAME="AEN5310"
+><A
+NAME="AEN5347"
 ></A
->
-	<P
+><P
 >Search results cache allows <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > to make very fast
 response on recently used queries as well as user's navigation though the pages of the same result.</P
->
-
-	<P
+><P
 >Search results cache is disabled by default. You may use
 <B
-CLASS="command"
+CLASS="COMMAND"
 >Cache yes</B
 > command in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > to enable results
 caching. If you use <TT
-CLASS="literal"
+CLASS="LITERAL"
 >searchd</TT
 >, add "<B
-CLASS="command"
+CLASS="COMMAND"
 >Cache yes</B
 >"
 command to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 > file.</P
->
-
-	<P
+><P
 >Search cache is located in
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$PREFIX/var/cache/</TT
 > subdirectory, where
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$PREFIX</TT
 > is <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > installation base
 directory. Each result is stored in a separate file.</P
->
-
-<P
+><P
 ><A
-NAME="AEN5325"
+NAME="AEN5362"
 ></A
 >
 By defaults, search results cache is not deleted
@@ -145,27 +136,26 @@ automatically. You have to delete it every time after indexer's work
 to avoid displaying non-recent cached results. 
 Or you may specify a refresh period for search results cache using
 <B
-CLASS="command"
+CLASS="COMMAND"
 >HoldCache</B
 > command:
 <PRE
-CLASS="programlisting"
->&#13;HoldCache &#60;time&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>HoldCache &lt;time&gt;</PRE
 >
-For &#60;time&#62; format see description of <B
-CLASS="command"
+For &lt;time&gt; format see description of <B
+CLASS="COMMAND"
 >Period</B
-> command in .
+> command in <A
+HREF="dpsearch-indexcmd.en.html#PERIOD_CMD"
+>Section 3.10.26</A
+>&#62;.
 <PRE
-CLASS="programlisting"
->&#13;HoldCache 3h
-</PRE
+CLASS="PROGRAMLISTING"
+>HoldCache 3h</PRE
 >
-
 		</P
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

@@ -16,8 +16,7 @@ REL="PREVIOUS"
 TITLE="Using syslog"
 HREF="dpsearch-syslog.en.html"><LINK
 REL="NEXT"
-TITLE="DataparkSearch HTML parser
-"
+TITLE="DataparkSearch HTML parser"
 HREF="dpsearch-htmlparser.en.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -27,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -77,612 +76,540 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="stored"
+NAME="STORED"
 >3.13. Storing compressed document copies</A
 ></H1
->
-	
-<A
-NAME="AEN2293"
+><A
+NAME="AEN2324"
 ></A
->
-
-	<P
+><P
 >In <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > it is possible to store compressed copies of indexed
 documents. Copies are stored and retrieved by the new daemon -
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, that is installed into
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >sbin</TT
 > directory of
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > installation (default:
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/sbin</TT
 >).</P
->
-
-<P
+><P
 ><A
-NAME="AEN2302"
+NAME="AEN2333"
 ></A
 >
 <A
-NAME="AEN2305"
+NAME="AEN2336"
 ></A
 >
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > is also used to make documents excerpts for search results.
 <A
-NAME="AEN2309"
+NAME="AEN2340"
 ></A
 >
 You may use <B
-CLASS="command"
+CLASS="COMMAND"
 >ExcerptSize</B
 > command in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > template to specify average excerpt size in bytes.
 Value by default: 256. You may switch off document excerpts (but retain ability to show stored copies) 
 using <B
-CLASS="command"
+CLASS="COMMAND"
 >DoExcerpt no</B
-> command in your search template.
-</P
->
-
-<P
+> command in your search template.</P
+><P
 ><A
-NAME="AEN2316"
+NAME="AEN2347"
 ></A
 >
 To enable documents copies archiving without <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > usage,
 place <B
-CLASS="command"
+CLASS="COMMAND"
 >DoStore yes</B
 > command in your
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > file instead of <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
-> daemon configuration.
-</P
->
-
-	<P
+> daemon configuration.</P
+><P
 >Stored document copies are retrieved by means of
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > CGI script. It requests a saved copy
 of a documents from <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, then a copy is
-displayed with user's web browser with search keywords highlighted.
-</P
->
-
-<P
+displayed with user's web browser with search keywords highlighted.</P
+><P
 > To enable <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > support, compile
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > with <TT
-CLASS="literal"
+CLASS="LITERAL"
 >zlib</TT
 >
 support:
 	<PRE
-CLASS="programlisting"
->&#13;./configure --with-zlib &#60;other arguments&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>./configure --with-zlib &lt;other arguments&gt;</PRE
 >
 	</P
->
-
-
-<P
->&#13;<A
-NAME="AEN2332"
+><P
+><A
+NAME="AEN2363"
 ></A
 >
 <A
-NAME="AEN2335"
+NAME="AEN2366"
 ></A
 >
 You may use the <B
-CLASS="command"
+CLASS="COMMAND"
 >Store</B
 > and <B
-CLASS="command"
+CLASS="COMMAND"
 >NoStore</B
 > commands to allow or disallow storing several files by pattern.
 For arguments of those commands are exactly the same 
 as for the <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
-> command (see ). All documents are stores by defaults, 
-if support for stored is enabled.
-</P
->
-
-
-	<DIV
-CLASS="sect2"
+> command (see <A
+HREF="dpsearch-indexcmd.en.html#ALLOW_CMD"
+>Section 3.10.14</A
+>&#62;). All documents are stores by defaults, 
+if support for stored is enabled.</P
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="stored-start"
+NAME="STORED-START"
 >3.13.1. Configure stored</A
 ></H2
->
-		
-		<P
+><P
 >To start using <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, please do the following:</P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;<P
+><P
 >Copy <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/etc/stored.conf-dist</TT
 > to
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >.</P
->
-				<P
+><P
 >Edit <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/etc/stored.conf</TT
 >
 				</P
->
-				<P
+><P
 >There are several commands available
 for using with <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >: </P
->
-				<P
+><P
 ></P
 ><UL
 ><LI
->&#13;						<P
->&#13;<B
-CLASS="command"
+><P
+><B
+CLASS="COMMAND"
 ><A
-NAME="AEN2359"
+NAME="AEN2390"
 ></A
 >Listen</B
 >
 tells <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > which address and/or port to bind
 to. By default <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > listens to port 7004 and any
 address. It is possible to specify port only:</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >Listen 7004 </KBD
 >
 						</P
->
-						<P
+><P
 >Or address only:</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >Listen 127.0.0.2</KBD
 >
 						</P
->
-						<P
+><P
 >Or both address and port:</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >Listen 127.0.0.2:7004</KBD
 >
 						</P
->
-					</LI
+></LI
 ><LI
->&#13;						<P
->&#13;<B
-CLASS="command"
+><P
+><B
+CLASS="COMMAND"
 ><A
-NAME="AEN2375"
+NAME="AEN2406"
 ></A
 >VarDir</B
 >
 command specifies an alternate <TT
-CLASS="filename"
+CLASS="FILENAME"
 >var/</TT
 > working
 directory, e.g.</P
->
-						<P
->&#13;							<KBD
-CLASS="userinput"
+><P
+>							<KBD
+CLASS="USERINPUT"
 >VarDir /mnt/d/dpsearch/var/ </KBD
 >
 						</P
->
-					</LI
+></LI
 ><LI
->&#13;<P
+><P
 ><B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2384"
+NAME="AEN2415"
 ></A
 >StoredFiles</B
 >
 command specifies number of stored data files created in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >var/stored/</TT
 > directory,
 e.g.</P
->
-<P
->&#13;<KBD
-CLASS="userinput"
+><P
+><KBD
+CLASS="USERINPUT"
 >StoredFiles 256</KBD
->
-</P
->
-</LI
+></P
+></LI
 ><LI
->&#13;<P
+><P
 ><B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2393"
+NAME="AEN2424"
 ></A
 >OptimizeInterval</B
 >
 command specifies interval in seconds between attempts to optimize a stored datafile, e.g.</P
->
-<P
->&#13;<KBD
-CLASS="userinput"
+><P
+><KBD
+CLASS="USERINPUT"
 >OptimizeInterval 300</KBD
->
-</P
->
-</LI
+></P
+></LI
 ><LI
->&#13;<P
+><P
 ><B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2401"
+NAME="AEN2432"
 ></A
 >OptimizeRatio</B
 >
-command  specifies defragmentation threshold for a stored datafile optimization.  
-</P
->
-<P
->&#13;<KBD
-CLASS="userinput"
+command  specifies defragmentation threshold for a stored datafile optimization.  </P
+><P
+><KBD
+CLASS="USERINPUT"
 >OptimizeRatio 3</KBD
->
-</P
->
-</LI
+></P
+></LI
 ></UL
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Run <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
->/usr/local/dpsearch/sbin/stored &#38; </KBD
+><P
+>					<KBD
+CLASS="USERINPUT"
+>/usr/local/dpsearch/sbin/stored &amp; </KBD
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Configure <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > and <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 (or <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >, if <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > is used). Specify address and port that <TT
-CLASS="literal"
+CLASS="LITERAL"
 >indexer</TT
 > will use to connect to <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >. 
 Use <TT
-CLASS="literal"
+CLASS="LITERAL"
 >stored</TT
 > parameter for <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 > command, e.g.:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
->DBAddr mysql://localhost/search/?dbmode=cache&#38;stored=localhost:7004</KBD
+><P
+>					<KBD
+CLASS="USERINPUT"
+>DBAddr mysql://localhost/search/?dbmode=cache&amp;stored=localhost:7004</KBD
 >
 				</P
->
-			</LI
+></LI
 ></UL
->
-	</DIV
->
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="stored-how"
+NAME="STORED-HOW"
 >3.13.2. How stored works</A
 ></H2
->
-		
-		<P
+><P
 >After you have successfully configured
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 >, the <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer</TT
 > pass
 downloaded documents to <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > daemon. After that,
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > will compress the received documents and
 save them.</P
->
-	</DIV
->
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="stored-search"
+NAME="STORED-SEARCH"
 >3.13.3. Using stored during search</A
 ></H2
->
-		
-		<P
+><P
 >To enable displaying stored documents during search, do the following: </P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Configure
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.htm</TT
 > (<TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >
 template)  if necessary.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Add a <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > link to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 					<TT
-CLASS="literal"
->&#60;!--res--&#62;</TT
+CLASS="LITERAL"
+>&lt;!--res--&gt;</TT
 > section: e.g. <TT
-CLASS="literal"
->&#60;A HREF="$(stored_href)"&#62;Cached copy&#60;/A&#62; </TT
+CLASS="LITERAL"
+>&lt;A HREF="$(stored_href)"&gt;Cached copy&lt;/A&gt; </TT
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Specify
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > CGI script URL in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > (by default
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >$(stored_href)</TT
 > will return
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/cgi-bin/storedoc.cgi</TT
 >). In case you have to
 specify other URL, add to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 					<TT
-CLASS="literal"
+CLASS="LITERAL"
 >variables</TT
 > section the following line:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+><P
+>					<KBD
+CLASS="USERINPUT"
 >StoredocURL /path/to/storedoc.cgi</KBD
 >
 				</P
->
-				<P
+><P
 >Or an absolute path:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+><P
+>					<KBD
+CLASS="USERINPUT"
 >StoredocURL http://servername/path/to/storedoc.cgi</KBD
 >
 				</P
->
-			</LI
+></LI
 ></UL
->
-		<P
+><P
 >This is how <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > works during search, if everything configured correctly:</P
->
-		<P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;				<P
->&#13;					<TT
-CLASS="filename"
+><P
+>					<TT
+CLASS="FILENAME"
 >search.htm</TT
 > displays a link to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >;</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >When user clicks the link,
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > sends a query to
 <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > daemon to the address, specified in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.htm</TT
 > with the
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Stored</TT
 > parameter of <B
-CLASS="command"
+CLASS="COMMAND"
 >DBAddr</B
 > command;</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >After the query, <B
-CLASS="command"
+CLASS="COMMAND"
 >stored</B
 > will decompress the requested saved copy and send it to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.cgi</TT
 >;</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
->&#13;					<TT
-CLASS="filename"
+><P
+>					<TT
+CLASS="FILENAME"
 >storedoc.cgi</TT
 > parses the received document and apply highlighting of search keywords. Highlighting method is specified with <TT
-CLASS="filename"
+CLASS="FILENAME"
 >storedoc.htm</TT
 >
 					<B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2480"
+NAME="AEN2511"
 ></A
 >HlBeg</B
 > and <B
-CLASS="command"
+CLASS="COMMAND"
 ><A
-NAME="AEN2484"
+NAME="AEN2515"
 ></A
 >HlEnd</B
 > commands;</P
->
-			</LI
+></LI
 ></OL
->
-	</DIV
->
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -742,7 +669,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > HTML parser</TD
 ></TR

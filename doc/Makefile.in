@@ -347,7 +347,7 @@ misc-ru.xml \
 data-ru.xml
 
 XML_SRC = $(XML_SRC_EN) $(XML_SRC_RU)
-HTML_OUT_RU = index.ru.html dpsearch-authors.ru.html \
+HTML_OUT_RU = index.ru.html dpsearch-authors.ru.html dpsearch-quick-usage.ru.html \
 dpsearch-cachemode.ru.html dpsearch-cjk.ru.html dpsearch-content-enc.ru.html \
 dpsearch-dbschema.ru.html dpsearch-disclaimer.ru.html \
 dpsearch-doingsearch.ru.html dpsearch-extended-indexing.ru.html \
@@ -368,7 +368,7 @@ dpsearch-stored.ru.html dpsearch-subsections.ru.html dpsearch-stopwords.ru.html 
 dpsearch-syslog.ru.html dpsearch-categories.ru.html dpsearch-templates.ru.html \
 dpsearch-toolsreq.ru.html dpsearch-track.ru.html dpsearch-vary.ru.html dpsearch-htmlparser-bodypatterns.ru.html
 
-HTML_OUT_EN = index.en.html dpsearch-authors.en.html \
+HTML_OUT_EN = index.en.html dpsearch-authors.en.html dpsearch-quick-usage.en.html \
 dpsearch-cachemode.en.html dpsearch-cjk.en.html dpsearch-content-enc.en.html \
 dpsearch-dbschema.en.html dpsearch-disclaimer.en.html dpsearch-clones.en.html dpsearch-stopwords.en.html \
 dpsearch-doingsearch.en.html dpsearch-extended-indexing.en.html \
@@ -585,58 +585,59 @@ uninstall-local:
 	done
 
 index.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
-	perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
-	$(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
+	$(JADE) -t sgml -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
-	$(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+	$(JADE) -t sgml -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 
 index.ru.html: $(@doc_FILES_RU@)
-	perl $(COLLATEINDEX) -N -i index-ru -o index-ru.xml HTML-ru.index
+	perl $(COLLATEINDEX) -x -N -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
-	perl $(COLLATEINDEX) -i index-ru -o index-ru.xml HTML-ru.index
+	perl $(COLLATEINDEX) -x -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
 
 book.tex: $(@doc_FILES_EN@)
 	LANG=C LC_ALL=C perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
 	LANG=C LC_ALL=C $(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 	rm index.en.html
 	LANG=C LC_ALL=C perl $(COLLATEINDEX) -i index -o index.xml HTML.index
 	LANG=C LC_ALL=C $(JADE) -v -wno-valid -c ./catalog -d ./datapark-pdf.dsl -t tex \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 
 book.pdf: book.tex
+	pdftex "&pdfjadetex" book
 	pdftex "&pdfjadetex" book
 	pdftex "&pdfjadetex" book
 
 single.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
 	perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 
 single.ru.html: $(@doc_FILES_RU@)
 	perl $(COLLATEINDEX) -N -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
 	perl $(COLLATEINDEX) -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/xml.dcl \
+		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -14,11 +14,10 @@ TITLE="Разное"
 HREF="dpsearch-misc.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Использование библиотеки libdpsearch
-
 "
 HREF="dpsearch-lib.ru.html"><LINK
 REL="NEXT"
-TITLE="&#1055;&#1088;&#1077;&#1076;&#1084;&#1077;&#1090;&#1085;&#1099;&#1081; &#1091;&#1082;&#1072;&#1079;&#1072;&#1090;&#1077;&#1083;&#1100;"
+TITLE="&#1048;&#1085;&#1076;&#1077;&#1082;&#1089; &#1087;&#1086;&#1076;&#1073;&#1086;&#1088;&#1082;&#1080;"
 HREF="dpsearch-index-ru.ru.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -28,7 +27,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -78,53 +77,47 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="dbschema"
+NAME="DBSCHEMA"
 >9.3. Структура таблиц базы данных</A
 ></H1
->
-
-<A
-NAME="AEN5831"
+><A
+NAME="AEN5868"
 ></A
->
-
-<P
+><P
 >Полная структура таблиц базы данных, используемых <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >,
 описана в sql-скрптах создания структуры базы данных, находящихся в соответстувующих директориях
 поддиректории <TT
-CLASS="filename"
+CLASS="FILENAME"
 >create</TT
 >.
 
 <DIV
-CLASS="table"
+CLASS="TABLE"
 ><A
-NAME="db-server"
+NAME="DB-SERVER"
 ></A
 ><P
 ><B
 >&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-1. Структура таблицы <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >server</CODE
 ></B
 ></P
->
-
-<TABLE
+><TABLE
 BORDER="1"
 CLASS="CALSTABLE"
 ><COL><COL><TBODY
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >rec_id</CODE
 ></TD
 ><TD
@@ -133,20 +126,19 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >enabled</CODE
 ></TD
 ><TD
 >Флаг включения записи для загрузки при старте <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
->.
-</TD
+>.</TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >url</CODE
 ></TD
 ><TD
@@ -155,7 +147,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >tag</CODE
 ></TD
 ><TD
@@ -164,12 +156,12 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >category</CODE
 ></TD
 ><TD
 >Ссылка на запись в наблице <TT
-CLASS="literal"
+CLASS="LITERAL"
 >categories</TT
 >,
 соответсвующей категории для данного ресурса.</TD
@@ -177,49 +169,48 @@ CLASS="literal"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >command</CODE
 ></TD
 ><TD
->&#13;<P
+><P
 >=S - тип записи <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >сервер</CODE
 ></P
 >
 <P
 >=F - типа записи <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >фильтр</CODE
 ></P
->
-</TD
+></TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >ordre</CODE
 ></TD
 ><TD
 >Ключ сортировки, задающий порядок загрузки записей таблицы <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >server</CODE
 >
 при запуске <B
-CLASS="command"
+CLASS="COMMAND"
 >indexer</B
 >.</TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >parent</CODE
 ></TD
 ><TD
 >Если значение не ноль, запись содержит в поле <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >url</CODE
 > имя
 сервера, добавленного автоматически при индексировании. Значение этого поля равно url_id записи этой таблицы, на основании которой
@@ -228,7 +219,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >weight</CODE
 ></TD
 ><TD
@@ -237,7 +228,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >pop_weight</CODE
 ></TD
 ><TD
@@ -246,49 +237,43 @@ CLASS="varname"
 ></TR
 ></TBODY
 ></TABLE
->
-</DIV
->
-</P
->
-
-<P
+></DIV
+></P
+><P
 >Остальные параметры серверов хранятся в таблице <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >srvinfo</CODE
 >, аналогичной по структуре таблице
 <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >urlinfo</CODE
 >. Значения некоторых параметров приведены в таблице ниже.
 
 <DIV
-CLASS="table"
+CLASS="TABLE"
 ><A
-NAME="db-srvinfo"
+NAME="DB-SRVINFO"
 ></A
 ><P
 ><B
 >&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 9-2. Значения некоторых параметров серверов в таблице <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >srvinfo</CODE
 ></B
 ></P
->
-
-<TABLE
+><TABLE
 BORDER="1"
 CLASS="CALSTABLE"
 ><COL><COL><THEAD
 ><TR
 ><TH
 >Значение <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >sname</CODE
 ></TH
 ><TH
 >Возможные значения <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >sval</CODE
 >.</TH
 ></TR
@@ -297,29 +282,28 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Alias</CODE
 ></TD
 ><TD
 >Алиас для указанного в поле <CODE
-CLASS="varname"
+CLASS="VARNAME"
 >server.url</CODE
 >.</TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Period</CODE
 ></TD
 ><TD
->Интервал между повторными индексированиями этого ресурса, задаваемый в секундах.
-</TD
+>Интервал между повторными индексированиями этого ресурса, задаваемый в секундах.</TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >DeleteOlder</CODE
 ></TD
 ><TD
@@ -328,7 +312,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >RemoteCharset</CODE
 ></TD
 ><TD
@@ -337,7 +321,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >DefaultLang</CODE
 ></TD
 ><TD
@@ -346,7 +330,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Request.Authorization</CODE
 ></TD
 ><TD
@@ -355,7 +339,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Request.Proxy</CODE
 ></TD
 ><TD
@@ -364,7 +348,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Request.Proxy-Authorization</CODE
 ></TD
 ><TD
@@ -373,7 +357,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >MaxHops</CODE
 ></TD
 ><TD
@@ -382,7 +366,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Index</CODE
 ></TD
 ><TD
@@ -391,7 +375,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Follow</CODE
 ></TD
 ><TD
@@ -406,18 +390,17 @@ CLASS="varname"
 >
 <P
 >=3, "world"</P
->
-</TD
+></TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Robots</CODE
 ></TD
 ><TD
 >Флаг указывающий использование <TT
-CLASS="filename"
+CLASS="FILENAME"
 >robots.txt</TT
 > для
 данного ресурса.</TD
@@ -425,32 +408,32 @@ CLASS="filename"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >DetectClones</CODE
 ></TD
 ><TD
->Флаг включения механизма определения "клонов".</TD
+>Флаг включения механизма определения &quot;клонов&quot;.</TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >MaxNetErrors</CODE
 ></TD
 ><TD
 >Максимальное число ошибок сети для этой записи.
 Аналог команды <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxNetError</B
 > в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >.</TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >NetDelayTime</CODE
 ></TD
 ><TD
@@ -460,7 +443,7 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >ReadTimeout</CODE
 ></TD
 ><TD
@@ -469,11 +452,11 @@ CLASS="varname"
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >match_type</CODE
 ></TD
 ><TD
->&#13;<P
+><P
 >=0, DPS_MATCH_FULL - полное совпадение.</P
 >
 <P
@@ -492,48 +475,45 @@ CLASS="varname"
 >=5, DPS_MATCH_WILD - используется шаблон файловой системы.</P
 >
 <P
->=6, DPS_MATCH_SUBNET - &#60; пока нереализовано &#62;.</P
->
-</TD
+>=6, DPS_MATCH_SUBNET - &lt; пока нереализовано &gt;.</P
+></TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >case_sense</CODE
 ></TD
 ><TD
->&#13;<P
+><P
 >=1, - сравнивать без учёта регистра.</P
 >
 <P
 >=0, - сравнивать с учётом регистра.</P
->
-</TD
+></TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >nomatch</CODE
 ></TD
 ><TD
->&#13;<P
+><P
 >=1, - соответствующими данной записи считаются URL, не совпадающие с указаным шаблоном.</P
 >
 <P
 >=0, - соответствующими данной записи считаются ссылки, совпадающие с шаблоном.</P
->
-</TD
+></TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Method</CODE
 ></TD
 ><TD
->&#13;<P
+><P
 >Задаёт действие, которое будет произведено с документами.</P
 >
 <P
@@ -548,7 +528,7 @@ CLASS="varname"
 <P
 >=CheckOnly, - документы будут запрашиваться методом HTTP HEAD, а не HTTP GET, т.е. будет запрошено
 не содержимое документа, а только краткая информация о нем: размер, дата модификации, <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Content-Type</TT
 >.</P
 >
@@ -557,25 +537,25 @@ CLASS="literal"
 >
 <P
 >=CheckMP3, - документы будут проверяться на наличие тэгов MP3 несмотря на наличие <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Content-Type</TT
 >,
 отличного от <TT
-CLASS="literal"
+CLASS="LITERAL"
 >audio/mpeg</TT
 >.</P
 >
 <P
 >=CheckMP3Only, - аналогично <TT
-CLASS="literal"
+CLASS="LITERAL"
 >CheckMP3</TT
 >, однако при
 отсутствии тэгов MP3 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >indexer</TT
 > не будет запускать внутренний или внешний 
 парсер, предусмотренный для полученного <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Content-Type</TT
 >.</P
 >
@@ -590,30 +570,24 @@ CLASS="literal"
 >
 <P
 >=NoIndexIf, - документы индексироваться и добавляться в базу не будут, если указаная секция подпадает под заданый шаблон.</P
->
-</TD
+></TD
 ></TR
 ><TR
 ><TD
 ><CODE
-CLASS="varname"
+CLASS="VARNAME"
 >Section</CODE
 ></TD
 ><TD
->&#13;<P
+><P
 >Имя секции, используемой для сравнения с шаблоном для методов IndexIf и NoIndexIf.</P
->
-</TD
+></TD
 ></TR
 ></TBODY
 ></TABLE
->
-</DIV
->
-</P
->
-
-</DIV
+></DIV
+></P
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -659,11 +633,11 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 >Использование библиотеки <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libdpsearch</TT
 >
 <A
-NAME="AEN5789"
+NAME="AEN5826"
 ></A
 ></TD
 ><TD
@@ -679,7 +653,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->&#1055;&#1088;&#1077;&#1076;&#1084;&#1077;&#1090;&#1085;&#1099;&#1081; &#1091;&#1082;&#1072;&#1079;&#1072;&#1090;&#1077;&#1083;&#1100;</TD
+>&#1048;&#1085;&#1076;&#1077;&#1082;&#1089; &#1087;&#1086;&#1076;&#1073;&#1086;&#1088;&#1082;&#1080;</TD
 ></TR
 ></TABLE
 ></DIV

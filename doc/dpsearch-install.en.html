@@ -23,7 +23,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="chapter"
+CLASS="CHAPTER"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -73,10 +73,10 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="chapter"
+CLASS="CHAPTER"
 ><H1
 ><A
-NAME="install"
+NAME="INSTALL"
 ></A
 >Chapter 2. Installation</H1
 ><DIV
@@ -88,7 +88,7 @@ CLASS="TOC"
 ></DT
 ><DT
 >2.1. <A
-HREF="dpsearch-install.en.html#sqlreq"
+HREF="dpsearch-install.en.html#SQLREQ"
 >SQL database requirements</A
 ></DT
 ><DT
@@ -105,7 +105,7 @@ HREF="dpsearch-toolsreq.en.html"
 >2.4. <A
 HREF="dpsearch-installing.en.html"
 >Installing <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 ></A
 ></DT
@@ -116,192 +116,159 @@ HREF="dpsearch-installproblem.en.html"
 ></DT
 ><DT
 >2.6. <A
+HREF="dpsearch-quick-usage.en.html"
+>Quick usage tour</A
+></DT
+><DT
+>2.7. <A
 HREF="dpsearch-register.en.html"
 >Installation registration</A
 ></DT
 ></DL
 ></DIV
->
-	
-<A
+><A
 NAME="AEN182"
 ></A
->
-
-	<DIV
-CLASS="sect1"
+><DIV
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="sqlreq"
+NAME="SQLREQ"
 >2.1. SQL database requirements</A
 ></H1
->
-                
-		<P
+><P
 >Note that if you want to compile <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 with one of supported SQL database you must have this database already
 installed before installing <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >.</P
->
-
-		<P
+><P
 >It is possible to use <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > with several SQL databases.</P
->
-		<P
+><P
 >You also should have enough permission to create new database or to write into already existing one.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >MySQL notes</I
 ></SPAN
 >: If you
 want to build <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > with <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 >, 4.1 or later release
 required. 
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >libz</SPAN
 > library must be installed from <B
-CLASS="command"
+CLASS="COMMAND"
 >zlib-devel</B
 > RPM to successfully compile
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > with <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 >.</P
->
-
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >PostgreSQL notes</I
 ></SPAN
 >: If you
 want to build <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > with <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
 >, 7.3.x or later release
 required. <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
 > 8.1 is recommended for better performance.</P
->
-
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >iODBC notes</I
 ></SPAN
 >: iodbc-2.50.22a is known to work.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >unixODBC notes</I
 ></SPAN
 >: unixODBC-1.7 is known to work.</P
->
-		
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >InterBase notes</I
 ></SPAN
 >:</P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Interbase 4.0 is known to work.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >InterBase CS 6.0 is known to work.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >FirebirdCS-0.9-4 is known to work.</P
->
-			</LI
+></LI
 ></UL
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >FreeTDS notes</I
 ></SPAN
 >: 0.52 version is known to work with MS SQL 7.0.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Oracle8 notes</I
 ></SPAN
 >: 8.0.5.X is known to work.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Oracle8i notes</I
 ></SPAN
 >: 8.1.6 R2 EE is known to work.</P
->
-		
-	</DIV
->
-	
-	
-	
-
-	
-
-	
-
-
-
-
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
