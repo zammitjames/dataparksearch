@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,202 +76,173 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="mod_dpsearch"
+NAME="MOD_DPSEARCH"
 >8.2. <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mod_dpsearch</TT
 > module for Apache httpd</A
 ></H1
->
-	
-<A
-NAME="AEN4357"
+><A
+NAME="AEN4388"
 ></A
->
-<A
-NAME="AEN4359"
+><A
+NAME="AEN4390"
 ></A
->
-<A
-NAME="AEN4362"
+><A
+NAME="AEN4393"
 ></A
->
-<A
-NAME="AEN4365"
+><A
+NAME="AEN4396"
 ></A
->
-
-	<P
+><P
 >Since version 4.19 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > also provide the <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mod_dpsearch.so</TT
 >
 module for <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Apache</SPAN
 > web server.</P
->
-
-	<DIV
-CLASS="sect2"
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="mod_dpsearch-why"
+NAME="MOD_DPSEARCH-WHY"
 >8.2.1. Why using <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mod_dpsearch</TT
 ></A
 ></H2
->
-		
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;<P
+><P
 >As for <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
-> (see ), <B
-CLASS="command"
+> (see <A
+HREF="dpsearch-searchd.en.html#SEARCHD-WHY"
+>Section 5.4.1</A
+>&#62;), <B
+CLASS="COMMAND"
 >mod_dpsearch</B
 > can hold preloaded in memory 
-some data to speed-up searches.
-</P
->
-</LI
+some data to speed-up searches.</P
+></LI
 ><LI
->&#13;<P
+><P
 >In additional, <B
-CLASS="command"
+CLASS="COMMAND"
 >mod_dpsearch</B
 > hold in memory last used search template. 
-This save time on template loading and parsing for every request since second.
-</P
->
-</LI
+This save time on template loading and parsing for every request since second.</P
+></LI
 ><LI
->&#13;<P
+><P
 >As a plus, the <B
-CLASS="command"
+CLASS="COMMAND"
 >mod_dpsearch</B
 > itself already loaded into memory when search request come from user, while
-search.cgi usualy loads from disk for every search request.
-</P
->
-</LI
+search.cgi usualy loads from disk for every search request.</P
+></LI
 ></UL
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="mod_dpsearch-cfg"
+NAME="MOD_DPSEARCH-CFG"
 >8.2.2. Configuring <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mod_dpsearch</TT
 ></A
 ></H2
->
-		
-
-<P
+><P
 >To enable this extension, add <CODE
-CLASS="option"
+CLASS="OPTION"
 >--enable-apache-module</CODE
 > switch to <B
-CLASS="command"
+CLASS="COMMAND"
 >configure</B
 >.
 In addition, the <TT
-CLASS="literal"
+CLASS="LITERAL"
 >mod_dpsearch.so</TT
 > shared library will be created and installed into 
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Apache</SPAN
 > tree. Then you need activate this module by adding following line into
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Apache</SPAN
 > configuration file:
 
 <PRE
-CLASS="programlisting"
->&#13;LoadModule dpsearch_module       libexec/mod_dpsearch.so
+CLASS="PROGRAMLISTING"
+>LoadModule dpsearch_module       libexec/mod_dpsearch.so
 AddModule mod_dpsearch.c
 
-&#60;Ifmodule mod_dpsearch.c&#62;
+&lt;Ifmodule mod_dpsearch.c&gt;
 DataparkSearchdConf /usr/local/dpsearch/etc/modsearchd.conf
-    &#60;Location /search&#62;
+    &lt;Location /search&gt;
         SetHandler dpsearch
         DataparkSearchTemplate /usr/local/dpsearch/etc/modsearch.htm
-    &#60;/Location&#62;
-    &#60;Location /storedoc&#62;
+    &lt;/Location&gt;
+    &lt;Location /storedoc&gt;
         SetHandler dpstoredoc
         DataparkStoredocTemplate /usr/local/dpsearch/etc/modstoredoc.htm
-    &#60;/Location&#62;
-&#60;/IfModule&#62;
-</PRE
->
-</P
->
-
-<P
+    &lt;/Location&gt;
+&lt;/IfModule&gt;</PRE
+></P
+><P
 >There are three configuration directives supported by this module: <CODE
-CLASS="option"
+CLASS="OPTION"
 >DataparkSearchdConf</CODE
 >,
 <CODE
-CLASS="option"
+CLASS="OPTION"
 >DataparkSearchTemplate</CODE
 > and <CODE
-CLASS="option"
+CLASS="OPTION"
 >DataparkStoredocTemplate</CODE
 > . 
 The <CODE
-CLASS="option"
+CLASS="OPTION"
 >DataparkSearchdConf</CODE
 > optional directive specify a <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 >
 related configuration file. It may be only one per server. 
 The <CODE
-CLASS="option"
+CLASS="OPTION"
 >DataparkSearchdTemplate</CODE
 > directive specify a search template file. 
 The <CODE
-CLASS="option"
+CLASS="OPTION"
 >DataparkStoredocTemplate</CODE
 > directive specify a storedoc template file. 
 There can be several templates specified per servers, by one per location. 
 If <CODE
-CLASS="option"
+CLASS="OPTION"
 >DataparkSearchdConf</CODE
 > directive specified, there no need specify <CODE
-CLASS="option"
+CLASS="OPTION"
 >DBAddr</CODE
-> command in templates.
-</P
->
-
-	</DIV
->
-
-</DIV
+> command in templates.</P
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

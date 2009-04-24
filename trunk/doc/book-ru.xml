@@ -1,4 +1,5 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+	<!ENTITY index SYSTEM "index-ru.xml">
 	<!ENTITY intro SYSTEM "intro-ru.xml">
 	<!ENTITY install SYSTEM "install-ru.xml">
 	<!ENTITY general SYSTEM "general-ru.xml">
@@ -37,13 +38,12 @@
 	<!ENTITY syn SYSTEM "syn-ru.xml">
 	<!ENTITY bugs SYSTEM "bugs-ru.xml">
 	<!ENTITY lib SYSTEM "lib-ru.xml">
-	<!ENTITY index SYSTEM "index-ru.xml">
 	<!ENTITY cjk SYSTEM "cjk-ru.xml">
         <!ENTITY dbschema SYSTEM "dbschema-ru.xml">
         <!ENTITY vary SYSTEM "vary-ru.xml">
         <!ENTITY indexcmd SYSTEM "indexcmd-ru.xml">
         <!ENTITY accent SYSTEM "accent-ru.xml">
-        <!ENTITY mod_dpsearch SYSTEM "mod_dpsearch-ru.xml">
+        <!ENTITY mod-dpsearch SYSTEM "mod_dpsearch-ru.xml">
         <!ENTITY csalias SYSTEM "cs-aliases-ru.xml">
         <!ENTITY groups SYSTEM "groups-ru.xml">
         <!ENTITY acronym SYSTEM "acronym-ru.xml">
@@ -118,7 +118,7 @@
 	<chapter id="doingsearch">
 		<title>Поиск документов</title>
 &search;
-&mod_dpsearch;
+&mod-dpsearch;
 &tmpl;
 &html-design;
 &relevancy;

@@ -346,21 +346,26 @@ use a comma separated list of charsets you want:</para>
 				</para>
 				<para>See database specific information if you use another database.</para>
 			</listitem>
+<listitem><para>Create configuration files.</para>
+<para>Copy <filename>indexer.conf-dist</filename> to <filename>indexer.conf</filename> and <filename>search.htm-dist</filename> to <filename>search.htm</filename> in the configuration directory 
+(by default this directory is <filename>/usr/local/dpsearch/etc/</filename>). Then edit <filename>indexer.conf</filename> and <filename>search.htm</filename> according your needs.
+Basically your only have to edit <command>DBAddr</command> command in both of these files specifying a connection to SQL-server and desired dbmode.</para>
+</listitem>
+
 			<listitem>
 				<para>Create sql-tables</para>
-<para>Edit <filename>indexer.conf</filename> config file and specify <command>DBAddr</command> command according SQL-database used and
-dbmode selected. Then run:
+<para>Run the command:
 </para>
 <para>
 <userinput>sh$ indexer -Ecreate</userinput>
 </para>
 <para>
-<command>indexer</command> will create all tables automatically.
+<command>indexer</command> creates all tables automatically according to the dbmode selected in your <filename>indexer.conf</filename> file.
 </para>
 
 			</listitem>
 			<listitem>
-				<para>Installing search scripts</para>
+				<para>Install search scripts</para>
 				<para>Copy
 <filename>search.cgi</filename> to your web-server
 <literal>cgi-bin</literal> directory or make Apache alias to
@@ -429,6 +434,19 @@ tar.gz somewhere on the net and post a letter to <email>general@mnogosearch.org<
 
 	</sect1-->
 
+<sect1 id="quick-usage">
+<title>Quick usage tour</title>
+<para>Before running <command>indexer</command> first time, you need specify web space to index (see <xref linkend="follow" />). 
+Basically, if you want index one site, you should put a <command>Server</command> command similar to the following into your <filename>indexer.conf</filename> file:
+<programlisting>
+Server http://www.server.ext/
+</programlisting>
+</para>
+
+<para>Run the <command>indexer</command> to index your data and write URL data:</para>
+<para><userinput>sh$ /usr/local/dpsearch/sbin/indexer -W</userinput></para>
+
+</sect1>
 
 <sect1 id="register">
 <title>Installation registration</title>

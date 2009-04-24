@@ -17,7 +17,6 @@ TITLE="Индексирование"
 HREF="dpsearch-indexing.ru.html"><LINK
 REL="NEXT"
 TITLE="Поддержка Content-Encoding
-
 "
 HREF="dpsearch-content-enc.ru.html"><LINK
 REL="STYLESHEET"
@@ -28,7 +27,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -78,142 +77,117 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="http-codes"
+NAME="HTTP-CODES"
 >3.2. Реакция на коды HTTP-ответа</A
 ></H1
->
-	
-	<P
+><P
 >В этом разделе описана реакция <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > на
 разные коды HTTP-ответа. Для описания использован псевдо-язык.</P
->
-	<P
+><P
 ></P
 ><UL
 ><LI
->&#13;			<P
+><P
 >200 OK</P
->
-			<P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;					<P
+><P
 >Если указан ключ -m ("force reindex"), то переход к 4.</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Сравнение новой и старой, сохраненной в БД, контрольных сумм документа</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Если контрольные суммы равны, то next_index_time=Now()+Period, переход к 7</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Разбор документа, создание списка слов, добавление в БД новых гипертекстовых ссылок</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Удаление старого списка слов и секций из БД</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Вставка нового списка слов и секций</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Конец</P
->
-				</LI
+></LI
 ></OL
->
-		</LI
+></LI
 ><LI
->&#13;			<P
+><P
 >304 Not Modified</P
->
-			<P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;					<P
->&#13;						<TT
-CLASS="literal"
+><P
+>						<TT
+CLASS="LITERAL"
 >next_index_time=now()</TT
 >+Period</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Конец</P
->
-				</LI
+></LI
 ></OL
->
-		</LI
+></LI
 ><LI
->&#13;			<P
-CLASS="literallayout"
-><br>
-301&nbsp;Moved&nbsp;Permanently<br>
+><P
+CLASS="LITERALLAYOUT"
+>301&nbsp;Moved&nbsp;Permanently<br>
 302&nbsp;Moved&nbsp;Temporarily<br>
-303&nbsp;See&nbsp;Other<br>
-</P
->
-			<P
+303&nbsp;See&nbsp;Other</P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;					<P
+><P
 >Удаление слов данного документа из БД</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 ><TT
-CLASS="literal"
+CLASS="LITERAL"
 >next_index_time=Now()</TT
 >+Period</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Добавление в БД URL из заголовка <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Location: </TT
 ></P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Конец</P
->
-				</LI
+></LI
 ></OL
->
-		</LI
+></LI
 ><LI
->&#13;			<P
-CLASS="literallayout"
-><br>
-300&nbsp;Multiple&nbsp;Choices<br>
+><P
+CLASS="LITERALLAYOUT"
+>300&nbsp;Multiple&nbsp;Choices<br>
 305&nbsp;Use&nbsp;Proxy&nbsp;(proxy&nbsp;redirect)<br>
 400&nbsp;Bad&nbsp;Request<br>
 401&nbsp;Unauthorized<br>
@@ -234,65 +208,52 @@ CLASS="literallayout"
 500&nbsp;Internal&nbsp;Server&nbsp;Error<br>
 501&nbsp;Not&nbsp;Implemented<br>
 502&nbsp;Bad&nbsp;Gateway<br>
-505&nbsp;Protocol&nbsp;Version&nbsp;Not&nbsp;Supported<br>
-</P
->
-			<P
+505&nbsp;Protocol&nbsp;Version&nbsp;Not&nbsp;Supported</P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;					<P
+><P
 >Удаление из БД слов документа</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 ><TT
-CLASS="literal"
+CLASS="LITERAL"
 >next_index_time=Now()</TT
 >+Period</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Конец</P
->
-				</LI
+></LI
 ></OL
->
-		</LI
+></LI
 ><LI
->&#13;			<P
-CLASS="literallayout"
-><br>
-503&nbsp;Service&nbsp;Unavailable<br>
-504&nbsp;Gateway&nbsp;Timeout<br>
-</P
->
-			<P
+><P
+CLASS="LITERALLAYOUT"
+>503&nbsp;Service&nbsp;Unavailable<br>
+504&nbsp;Gateway&nbsp;Timeout</P
+><P
 ></P
 ><OL
 TYPE="1"
 ><LI
->&#13;					<P
->&#13;						<TT
-CLASS="literal"
+><P
+>						<TT
+CLASS="LITERAL"
 >next_index_time=Now()</TT
 >+Period</P
->
-				</LI
+></LI
 ><LI
->&#13;					<P
+><P
 >Конец</P
->
-				</LI
+></LI
 ></OL
->
-		</LI
+></LI
 ></UL
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -353,7 +314,7 @@ ALIGN="right"
 VALIGN="top"
 >Поддержка Content-Encoding
 <A
-NAME="AEN759"
+NAME="AEN781"
 ></A
 ></TD
 ></TR

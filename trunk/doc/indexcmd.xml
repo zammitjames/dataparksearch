@@ -1069,4 +1069,11 @@ Use this command to specify the number of longest text items to index.
 </sect2>
 
 
+<sect2 id="mkprefix-cmd"><indexterm><primary>Command</primary><secondary>MakePrefixes</secondary></indexterm><title><command>MakePrefixes</command> command</title>
+<para>With <command>MakePrefixes yes</command> command you can instruct <command>indexer</command> to produce automatically all prefixes for words indexed.
+This is suitable, for example, for making search suggestions.
+</para>
+</sect2>
+
+
 </sect1>

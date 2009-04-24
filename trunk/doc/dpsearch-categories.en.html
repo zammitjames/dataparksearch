@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,82 +76,67 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="categories"
+NAME="CATEGORIES"
 >6.2. Categories</A
 ></H1
->
-	
-<A
-NAME="AEN3206"
+><A
+NAME="AEN3237"
 ></A
->
-
-	<P
+><P
 >There is a categories editor written in  Perl. You can
 get it in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >perl/cat_ed/</TT
 > subdirectory of <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 installation.</P
->
-	<P
+><P
 >Categories are similar to tag feature, but nested. So you can have one category inside another and so on.</P
->
-	<P
+><P
 >Basic points:
 	<P
 ></P
 ><UL
 ><LI
->&#13;			<P
+><P
 >there are up to 6 nested levels;</P
->
-		</LI
+></LI
 ><LI
->&#13;			<P
+><P
 >every level occupies 2 hex or 36 base digits;</P
->
-		</LI
+></LI
 ><LI
->&#13;			<P
+><P
 >parameter for setting category is
 <CODE
-CLASS="parameter"
+CLASS="PARAMETER"
 >path</CODE
 >, which can be empty (means root category)
 or up to 10 chars long (means deepest category).</P
->
-		</LI
+></LI
 ></UL
 >
         </P
->
-	<P
+><P
 >You can also set up symlinks, e.g. categories that are
 actually links to other categories. <TT
-CLASS="literal"
+CLASS="LITERAL"
 >link</TT
 > database
 field is used for that. In the symlink last two characters should be
-@@. In example above Moto-&#62;BMW is a link to Auto-&#62;BMW.</P
->
-
-	<P
+@@. In example above Moto-&gt;BMW is a link to Auto-&gt;BMW.</P
+><P
 >First notice that category in the server table is set to be
 11 characters long. This means you can use a valid character to keep
 track of categories. If you are going to keep a category tree of any
-size, then I would suggest using the category editor. But anyways, here's how it works.
-</P
->
-
-	<P
+size, then I would suggest using the category editor. But anyways, here's how it works.</P
+><P
 >You can use either the tag column or the category column
 in the server for the same thing. Or you can categorize a site in two
 different ways. For example you could keep track of sites that are
@@ -159,9 +144,7 @@ owned by a certain company and then categorize them as well. You could
 use the tag option to keep of ownership and use the category option
 for categories. When I explain the category option, it goes the same
 for the tag option. </P
->
-
-	<P
+><P
 >A category can be broken down any way you choose. But
 for it to work with the category editor, I believe for now, you have
 to use two characters for each level. If you use the category editor
@@ -175,143 +158,114 @@ category and then 02 because it's the next category. So its id would
 be 0102. If VW had a sub category called 'Engine' then it's id would
 start at 01 again and it would get the 'VW' id 02 and 'Auto' id of 01,
 making it 010201.</P
->
-
-	<P
+><P
 >If you want to search for sites under that category then
 you pass it <TT
-CLASS="literal"
+CLASS="LITERAL"
 >cat=010201</TT
 > in the url...so create a
 select box and give like that:
 	<PRE
-CLASS="programlisting"
->&#13;&#60;OPTION value="01"&#62;AUTO
-&#60;OPTION value="0101"&#62;Ford
-</PRE
+CLASS="PROGRAMLISTING"
+>&lt;OPTION value="01"&gt;AUTO
+&lt;OPTION value="0101"&gt;Ford</PRE
 >
 	</P
->
-	<P
+><P
 >and so on...</P
->
-
-<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
+CLASS="NOTE"
 ><P
 ><B
 >Note: </B
 >For dbmode cache you need to have the following section defined in your
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >sections.conf</TT
 > file:
 <PRE
-CLASS="programlisting"
->&#13;Section category 0 64
-</PRE
+CLASS="PROGRAMLISTING"
+>Section category 0 64</PRE
 >
-i.e. in overall you need to have the section 'category' defined with non-zero maximum length.
-</P
->
-</BLOCKQUOTE
+i.e. in overall you need to have the section 'category' defined with non-zero maximum length.</P
+></BLOCKQUOTE
 ></DIV
->
-
-
-<DIV
-CLASS="sect2"
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="category_cmd"
+NAME="CATEGORY_CMD"
 >6.2.1. <B
-CLASS="command"
+CLASS="COMMAND"
 >Category</B
 > command</A
 ></H2
->
-
-<A
-NAME="AEN3237"
+><A
+NAME="AEN3268"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;Category &#60;string&#62;
-</PRE
->
-<P
->&#13;You may distribute documents between nested categories. Category
+><PRE
+CLASS="PROGRAMLISTING"
+>Category &lt;string&gt;</PRE
+><P
+>You may distribute documents between nested categories. Category
 is a string in hex number notation. You may have up to 6 levels with
 256 members per level. Empty category means the root of category tree.
-Take a look into  for more information.
+Take a look into <A
+HREF="dpsearch-categories.en.html"
+>Section 6.2</A
+>&#62; for more information.
 <PRE
-CLASS="programlisting"
->&#13;# This command means a category on first level:
+CLASS="PROGRAMLISTING"
+># This command means a category on first level:
 Category AA
 # This command means a category on 5th level:
-Category FFAABBCCDD
-</PRE
->
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+Category FFAABBCCDD</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="categoryif_cmd"
+NAME="CATEGORYIF_CMD"
 >6.2.2. <B
-CLASS="command"
+CLASS="COMMAND"
 >CategoryIf</B
 > command</A
 ></H2
->
-
-<A
-NAME="AEN3247"
+><A
+NAME="AEN3278"
 ></A
->
-<PRE
-CLASS="programlisting"
->&#13;CategoryIf &#60;category&#62; [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]
-</PRE
->
-<P
->&#13;Mark document by &#60;category&#62; category, if the value of <CODE
-CLASS="option"
+><PRE
+CLASS="PROGRAMLISTING"
+>CategoryIf &lt;category&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Mark document by &lt;category&gt; category, if the value of <CODE
+CLASS="OPTION"
 >section</CODE
 > match <CODE
-CLASS="option"
+CLASS="OPTION"
 >arg</CODE
 > pattern given.
 The meaning of first three optional parameters is exactly the same 
 as for the <B
-CLASS="command"
+CLASS="COMMAND"
 >Allow</B
-> command (see ).
-</P
->
-<P
+> command (see <A
+HREF="dpsearch-indexcmd.en.html#ALLOW_CMD"
+>Section 3.10.14</A
+>&#62;).</P
+><P
 >Example
 <PRE
-CLASS="programlisting"
->&#13;CategoryIf 010F regex Title "JOB ID"
-</PRE
->
-</P
->
-</DIV
->
-
-</DIV
+CLASS="PROGRAMLISTING"
+>CategoryIf 010F regex Title "JOB ID"</PRE
+></P
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

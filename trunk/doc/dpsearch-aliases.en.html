@@ -13,7 +13,7 @@ REL="UP"
 TITLE="Indexing"
 HREF="dpsearch-indexing.en.html"><LINK
 REL="PREVIOUS"
-TITLE="Specifying WEB space to be indexed "
+TITLE="Specifying WEB space to be indexed"
 HREF="dpsearch-follow.en.html"><LINK
 REL="NEXT"
 TITLE="Servers Table"
@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,18 +76,16 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="aliases"
+NAME="ALIASES"
 >3.7. Aliases</A
 ></H1
->
-	
-	<P
+><P
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > has an alias support making it possible to
 index sites taking information from another location. For example, if
@@ -95,218 +93,178 @@ you index local web server, it is possible to take pages directly from
 disk without involving your web server in indexing process. Another
 example is building of search engine for primary site and using its
 mirror while indexing. There are several ways of using aliases.</P
->
-
-	<DIV
-CLASS="sect2"
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="alias-conf"
+NAME="ALIAS-CONF"
 >3.7.1. <B
-CLASS="command"
+CLASS="COMMAND"
 >Alias</B
 > <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > command</A
 ></H2
->
-		
-<A
-NAME="AEN1055"
+><A
+NAME="AEN1077"
 ></A
->
-
-		<P
+><P
 >Format of "Alias" <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > command:
 		<PRE
-CLASS="programlisting"
->&#13;Alias &#60;masterURL&#62; &#60;mirrorURL&#62;
-</PRE
->
-</P
->
-		
-		<P
+CLASS="PROGRAMLISTING"
+>Alias &lt;masterURL&gt; &lt;mirrorURL&gt;</PRE
+></P
+><P
 >E.g. you wish to index
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://search.mnogo.ru/</TT
 > using nearest German mirror
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://www.gstammw.de/mirrors/mnoGoSearch/</TT
 >. Add
 these lines in your indexer.conf:
 
 		<PRE
-CLASS="programlisting"
->&#13;Server http://search.mnogo.ru/
-Alias  http://search.mnogo.ru/  http://www.gstammw.de/mirrors/mnoGoSearch/
-</PRE
+CLASS="PROGRAMLISTING"
+>Server http://search.mnogo.ru/
+Alias  http://search.mnogo.ru/  http://www.gstammw.de/mirrors/mnoGoSearch/</PRE
 >
 		</P
->
-		<P
->&#13;			<TT
-CLASS="filename"
+><P
+>			<TT
+CLASS="FILENAME"
 >search.cgi</TT
 > will display
 URLs from master site <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://search.mnogo.ru/</TT
 > but
 indexer will take corresponding page from mirror site
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://www.gstammw.de/mirrors/mnoGoSearch/</TT
 >.</P
->
-
-		<P
+><P
 >Another example. If you want to index everything
 in udm.net domain and one of servers, for example
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://home.udm.net/</TT
 > is stored on local machine in
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >/home/httpd/htdocs/</TT
 > directory. These commands will
 be useful:
 		<PRE
-CLASS="programlisting"
->&#13;Realm http://*.udm.net/
-Alias http://home.udm.net/ file:/home/httpd/htdocs/
-</PRE
+CLASS="PROGRAMLISTING"
+>Realm http://*.udm.net/
+Alias http://home.udm.net/ file:/home/httpd/htdocs/</PRE
 >
 		</P
->
-		<P
+><P
 >Indexer will take <TT
-CLASS="literal"
+CLASS="LITERAL"
 >home.udm.net</TT
 > from local disk and index other sites using HTTP.</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="aliases-diff"
+NAME="ALIASES-DIFF"
 >3.7.2. Different aliases for server parts</A
 ></H2
->
-		
-		<P
+><P
 >Aliases are searched in the order of their
 appearance in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >. So, you can create
 different aliases for server and its parts:
 
 		<PRE
-CLASS="programlisting"
->&#13;# First, create alias for example for /stat/ directory which
+CLASS="PROGRAMLISTING"
+># First, create alias for example for /stat/ directory which
 # is not under common location:
 Alias http://home.udm.net/stat/  file:/usr/local/stat/htdocs/
 
 # Then create alias for the rest of the server:
-Alias http://home.udm.net/ file:/usr/local/apache/htdocs/
-</PRE
+Alias http://home.udm.net/ file:/usr/local/apache/htdocs/</PRE
 >
 		</P
->
-		<DIV
-CLASS="note"
+><DIV
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;			<P
+CLASS="NOTE"
+><P
 ><B
 >Note: </B
 >if you change the order of these
 commands, alias for <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/stat/</TT
 > directory will never
 be found.</P
->
-
-		</BLOCKQUOTE
+></BLOCKQUOTE
 ></DIV
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="alias-server"
+NAME="ALIAS-SERVER"
 >3.7.3. Using aliases in <B
-CLASS="command"
+CLASS="COMMAND"
 >Server</B
 > commands</A
 ></H2
->
-		
-		<P
+><P
 >You may specify location used by indexer as an optional argument for Server command:
 		<PRE
-CLASS="programlisting"
->&#13;Server  http://home.udm.net/  file:/home/httpd/htdocs/
-</PRE
+CLASS="PROGRAMLISTING"
+>Server  http://home.udm.net/  file:/home/httpd/htdocs/</PRE
 >
 		</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="alias-realm"
+NAME="ALIAS-REALM"
 >3.7.4. Using aliases in <B
-CLASS="command"
+CLASS="COMMAND"
 >Realm</B
 > commands</A
 ></H2
->
-		
-		<P
+><P
 >Aliases in Realm command is a very powerful
 feature based on regular expressions. The idea of aliases in Realm
 command implementation is similar to how PHP
 <CODE
-CLASS="function"
+CLASS="FUNCTION"
 >preg_replace()</CODE
 > function works. Aliases in Realm
 command work only if "regex" match type is used and does not work with
 "string" match type.</P
->
-
-		<P
+><P
 >Use this syntax for Realm aliases:
 		<PRE
-CLASS="programlisting"
->&#13;Realm regex &#60;URL_pattern&#62; &#60;alias_pattern&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>Realm regex &lt;URL_pattern&gt; &lt;alias_pattern&gt;</PRE
 >
 		</P
->
-		<P
+><P
 >Indexer searches URL for matches to URL_pattern
 and builds an URL alias using alias_pattern. alias_pattern may contain
 references of the form $n. Where n is a number in the range of
@@ -314,87 +272,67 @@ references of the form $n. Where n is a number in the range of
 n'th parenthesized pattern. $0 refers to text matched by the whole
 pattern. Opening parentheses are counted from left to right (starting
 from 1) to obtain the number of the capturing subpattern.</P
->
-
-		<P
+><P
 >Example: your company hosts several hundreds
 users with their domains in the form of
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >www.username.yourname.com</TT
 >. Every user's site is
 stored on disk in "htdocs" under user's home directory:
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >/home/username/htdocs/</TT
 >.</P
->
-
-		<P
+><P
 >You may write this command into indexer.conf
 (note that dot '.' character has a special meaning in regular
 expressions and must be escaped with '\' sign when dot is used in
 usual meaning):
 		<PRE
-CLASS="programlisting"
->&#13;Realm regex (http://www\.)(.*)(\.yourname\.com/)(.*)  file:/home/$2/htdocs/$4
-</PRE
+CLASS="PROGRAMLISTING"
+>Realm regex (http://www\.)(.*)(\.yourname\.com/)(.*)  file:/home/$2/htdocs/$4</PRE
 >
 		</P
->
-		<P
+><P
 >Imagine indexer process
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >http://www.john.yourname.com/news/index.html</TT
 >
 page. It will build patterns from $0 to $4:</P
->
-
-		<P
-CLASS="literallayout"
-><br>
-&nbsp;&nbsp;&nbsp;$0&nbsp;=&nbsp;'http://www.john.yourname.com/news/index.htm'&nbsp;(whole&nbsp;patter&nbsp;match)<br>
+><P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;&nbsp;$0&nbsp;=&nbsp;'http://www.john.yourname.com/news/index.htm'&nbsp;(whole&nbsp;patter&nbsp;match)<br>
 &nbsp;&nbsp;&nbsp;$1&nbsp;=&nbsp;'http://www.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subpattern&nbsp;matches&nbsp;'(http://www\.)'<br>
 &nbsp;&nbsp;&nbsp;$2&nbsp;=&nbsp;'john'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subpattern&nbsp;matches&nbsp;'(.*)'<br>
 &nbsp;&nbsp;&nbsp;$3&nbsp;=&nbsp;'.yourname.com/'&nbsp;&nbsp;&nbsp;subpattern&nbsp;matches&nbsp;'(\.yourname\.com/)'<br>
-&nbsp;&nbsp;&nbsp;$4&nbsp;=&nbsp;'/news/index.html'&nbsp;subpattern&nbsp;matches&nbsp;'(.*)'<br>
-</P
->
-		<P
+&nbsp;&nbsp;&nbsp;$4&nbsp;=&nbsp;'/news/index.html'&nbsp;subpattern&nbsp;matches&nbsp;'(.*)'</P
+><P
 >Then indexer will compose alias using $2 and $4 patterns:
 		<PRE
-CLASS="programlisting"
->&#13;file:/home/john/htdocs/news/index.html
-</PRE
+CLASS="PROGRAMLISTING"
+>file:/home/john/htdocs/news/index.html</PRE
 >
 		</P
->
-		<P
+><P
 >and will use the result as document location to fetch it.</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="alias-prog"
+NAME="ALIAS-PROG"
 >3.7.5. <B
-CLASS="command"
+CLASS="COMMAND"
 >AliasProg</B
 > command</A
 ></H2
->
-		
-<A
-NAME="AEN1110"
+><A
+NAME="AEN1132"
 ></A
->
-
-		<P
+><P
 >You may also specify "AliasProg" command for
 aliasing purposes. AliasProg is useful for major web hosting companies
 which want to index their web space taking documents directly from a
@@ -403,55 +341,44 @@ process. Documents layout may be very complex to describe it using
 alias in Realm command. AliasProg is an external program that can be
 called, that takes a URL and returns one string with the appropriate
 alias to stdout. Use $1 to pass URL to command line.</P
->
-
-		<P
+><P
 >For example this AliasProg command uses
 'replace' command from MySQL distribution and replaces URL substring
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://www.apache.org/</TT
 > to
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >file:/usr/local/apache/htdocs/</TT
 >:
 
 		<PRE
-CLASS="programlisting"
->&#13;AliasProg  "echo $1 | /usr/local/mysql/bin/mysql/replace http://www.apache.org/ file:/usr/local/apache/htdocs/"
-</PRE
+CLASS="PROGRAMLISTING"
+>AliasProg  "echo $1 | /usr/local/mysql/bin/mysql/replace http://www.apache.org/ file:/usr/local/apache/htdocs/"</PRE
 >
 		</P
->
-		<P
+><P
 >You may also write your own very complex program to process URLs.</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="alias-reverse"
+NAME="ALIAS-REVERSE"
 >3.7.6. <B
-CLASS="command"
+CLASS="COMMAND"
 >ReverseAlias</B
 > command</A
 ></H2
->
-		
-<A
-NAME="AEN1122"
+><A
+NAME="AEN1144"
 ></A
->
-
-		<P
+><P
 >The ReverseAlias
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 > command allows URL mapping before
 URL is inserted into database. Unlike Alias command, that triggers
@@ -459,179 +386,149 @@ mapping right before a document is downloaded, ReverseAlias command
 triggers mapping after the link is found. 
 
 		<PRE
-CLASS="programlisting"
->&#13;ReverseAlias http://name2/   http://name2.yourname.com/
-Server       http://name2.yourname.com/
-</PRE
+CLASS="PROGRAMLISTING"
+>ReverseAlias http://name2/   http://name2.yourname.com/
+Server       http://name2.yourname.com/</PRE
 >
 		</P
->
-		<P
+><P
 >All links with short server name will be mapped
 to links with full server name before they are inserted into
 database.</P
->
-
-		<P
+><P
 >One of the possible use is cutting various unnecessary strings like <TT
-CLASS="literal"
+CLASS="LITERAL"
 >PHPSESSION=XXXX</TT
 >
 		</P
->
-		<P
+><P
 >E.g. cutting from URL like
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://www/a.php?PHPSESSION=XXX</TT
 >, when PHPSESSION is
 the only parameter. The question sign is deleted as well:
 
 		<PRE
-CLASS="programlisting"
->&#13;ReverseAlias regex  (http://[^?]*)[?]PHPSESSION=[^&#38;]*$          $1$2
-</PRE
+CLASS="PROGRAMLISTING"
+>ReverseAlias regex  (http://[^?]*)[?]PHPSESSION=[^&amp;]*$          $1$2</PRE
 >
 		</P
->
-		<P
+><P
 >Cutting from URL like
 <TT
-CLASS="literal"
->w/a.php?PHPSESSION=xxx&#38;..</TT
+CLASS="LITERAL"
+>w/a.php?PHPSESSION=xxx&amp;..</TT
 >, i.e. when PHPSESSION
 is the first parameter, but there are other parameters following
-it. The '&#38;' sign after PHPSESSION is deleted as well. Question
+it. The '&amp;' sign after PHPSESSION is deleted as well. Question
 mark is not deleted:
 
 		<PRE
-CLASS="programlisting"
->&#13;ReverseAlias regex  (http://[^?]*[?])PHPSESSION=[^&#38;]*&#38;(.*)      $1$2
-</PRE
+CLASS="PROGRAMLISTING"
+>ReverseAlias regex  (http://[^?]*[?])PHPSESSION=[^&amp;]*&amp;(.*)      $1$2</PRE
 >
 		</P
->
-		<P
+><P
 >Cutting from URL like
 <TT
-CLASS="literal"
->http://www/a.php?a=b&#38;PHPSESSION=xxx</TT
+CLASS="LITERAL"
+>http://www/a.php?a=b&amp;PHPSESSION=xxx</TT
 > or
 <TT
-CLASS="literal"
->http://www/a.php?a=b&#38;PHPSESSION=xxx&#38;c=d</TT
+CLASS="LITERAL"
+>http://www/a.php?a=b&amp;PHPSESSION=xxx&amp;c=d</TT
 >,
-where PHPSESSION is not the first parameter. The '&#38;' sign before
+where PHPSESSION is not the first parameter. The '&amp;' sign before
 PHPSESSION is deleted:
 
 		<PRE
-CLASS="programlisting"
->&#13;ReverseAlias regex  (http://.*)&#38;PHPSESSION=[^&#38;]*(.*)         $1$2
-</PRE
+CLASS="PROGRAMLISTING"
+>ReverseAlias regex  (http://.*)&amp;PHPSESSION=[^&amp;]*(.*)         $1$2</PRE
 >
 		</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="alias-search"
+NAME="ALIAS-SEARCH"
 >3.7.7. <B
-CLASS="command"
+CLASS="COMMAND"
 >Alias</B
 > command in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > search template</A
 ></H2
->
-		
-<A
-NAME="AEN1145"
+><A
+NAME="AEN1167"
 ></A
->
-
-		<P
+><P
 >It is also possible to define aliases in search
 template (<TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >). The Alias command in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > is identical to the one in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >, however it is active during
 searching, not indexing.</P
->
-
-		<P
+><P
 >The syntax of the
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > Alias command is the same as in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
 >:
 
 		<PRE
-CLASS="programlisting"
->&#13;Alias &#60;find-prefix&#62; &#60;replace-prefix&#62;
-</PRE
+CLASS="PROGRAMLISTING"
+>Alias &lt;find-prefix&gt; &lt;replace-prefix&gt;</PRE
 >
 		</P
->
-		<P
+><P
 >For example, there is the following command in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >:
 		<PRE
-CLASS="programlisting"
->&#13;Alias http://localhost/ http://www.mnogo.ru/
-</PRE
+CLASS="PROGRAMLISTING"
+>Alias http://localhost/ http://www.mnogo.ru/</PRE
 >
 		</P
->
-		<P
+><P
 >Search returned a page with the following URL:
 		<PRE
-CLASS="programlisting"
->&#13;http://localhost/news/article10.html
-</PRE
+CLASS="PROGRAMLISTING"
+>http://localhost/news/article10.html</PRE
 >
 		</P
->
-		<P
+><P
 >As a result, the $(DU) variable will be replace NOT with this URL:
 		<PRE
-CLASS="programlisting"
->&#13;http://localhost/news/article10.html
-</PRE
+CLASS="PROGRAMLISTING"
+>http://localhost/news/article10.html</PRE
 >
 		</P
->
-		<P
+><P
 >but with the following URL (that results in processing with Alias):
 		<PRE
-CLASS="programlisting"
->&#13;http://www.mnogo.ru/news/article10.html
-</PRE
+CLASS="PROGRAMLISTING"
+>http://www.mnogo.ru/news/article10.html</PRE
 >
 		</P
->
-	</DIV
->
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

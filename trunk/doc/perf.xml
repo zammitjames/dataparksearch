@@ -1,12 +1,14 @@
 <sect1 id="perf">
-	<title><application>DataparkSearch</application> performance issues</title>
 <indexterm><primary>Performance issues</primary></indexterm>
+	<title><application>DataparkSearch</application> performance issues</title>
 
 <para>The cache mode is the fastest <application>DataparkSearch</application>'s storage mode. Use it if
 you need maximal search speed.
 </para>
-<para id="coldvar-cmd"><indexterm><primary>Command</primary><secondary>ColdVar</secondary></indexterm>
-If your <filename>/var</filename> directory isn't changing since indexing is finished, you may disable file locking using 
+
+<para>
+<indexterm><primary>Command</primary><secondary>ColdVar</secondary></indexterm>
+If your <filename>/var</filename> directory isn't changed since the indexing has been finished, you may disable file locking using 
 <command>"ColdVar yes"</command> command placed in <filename>search.htm</filename> (or in <filename>searchd.conf</filename>,
 if <command>searchd</command> is used). This allow you to save some time on file locking.
 </para>

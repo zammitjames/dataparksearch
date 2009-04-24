@@ -17,7 +17,6 @@ TITLE="Расширенные возможности индексирования"
 HREF="dpsearch-extended-indexing.ru.html"><LINK
 REL="NEXT"
 TITLE="Хранение сжатых копий документов
-
 "
 HREF="dpsearch-stored.ru.html"><LINK
 REL="STYLESHEET"
@@ -28,7 +27,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -78,49 +77,40 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="syslog"
+NAME="SYSLOG"
 >3.12. Использование syslog</A
 ></H1
->
-	
-<A
-NAME="AEN2483"
+><A
+NAME="AEN2514"
 ></A
->
-<A
-NAME="AEN2485"
+><A
+NAME="AEN2516"
 ></A
->
-
-	<P
+><P
 >Все приложения <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > по-умолчанию используют syslog
 	для протоколирования своих действий, ошибок и прочих сообщений.
 	indexer поддерживает несколько уровней подробности выдачи сообщений,
 	которые могут быть заданы поцией -v или командой <B
-CLASS="command"
+CLASS="COMMAND"
 >LogLevel</B
 > в файле конфигурации:</P
->
-	
-	<DIV
-CLASS="table"
+><DIV
+CLASS="TABLE"
 ><A
-NAME="AEN2491"
+NAME="AEN2522"
 ></A
 ><P
 ><B
 >&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 3-1. уровни подробности сообщений indexer'а</B
 ></P
->
-		
-		<TABLE
+><TABLE
 BORDER="1"
 CLASS="CALSTABLE"
 ><COL><COL><COL><TBODY
@@ -174,100 +164,83 @@ CLASS="CALSTABLE"
 ></TR
 ></TBODY
 ></TABLE
->
-	</DIV
->
-
-	<P
+></DIV
+><P
 >Параллельно с записью в syslog, indexer так же производит
 вывод на stdout/stderr. Чтобы подавить этот вывод, например, при запуске
 из cron, используйте опцию -l. Если Вы не хотите использовать syslog,
 то при запуске configure можно указать флаг <TT
-CLASS="literal"
+CLASS="LITERAL"
 >--disable-syslog</TT
 >.
 Собраный таким образом, indexer будет использовать только stdout/stderr для
 вывода своих сообщений.
 	</P
->
-
-	<P
+><P
 >Syslog использует различные "facilities", чтобы направлять
 вывод от разных програм в разные логи. По-умолчанию indexer исполтьзует
 facility LOCAL7, который можно поменять во время сборки, указав configure опцию
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >--enable-syslog=LOG_FACILITY</TT
 >. LOG_FACILITY
 должен быть правильным именем facility, которые обычно перечислены в
 заголовочном файле <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/include/sys/syslog.h</TT
 >
 	</P
->
-	
-	<P
+><P
 >Вы можете отредактировать файл <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/etc/syslog.conf</TT
 >,
 	чтобы перенаправить сообщения <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > в желаемые файлы. Например,
 	<PRE
-CLASS="programlisting"
->&#13;# Log all messages from DataparkSearch to separate file
-local7.*        -/var/log/DataparkSearch.log
-</PRE
+CLASS="PROGRAMLISTING"
+># Log all messages from DataparkSearch to separate file
+local7.*        -/var/log/DataparkSearch.log</PRE
 >
 	</P
->
-	
-	<P
+><P
 >Еще пример:
 	<PRE
-CLASS="programlisting"
->&#13;# Send all DataparkSearch messages to host named central
+CLASS="PROGRAMLISTING"
+># Send all DataparkSearch messages to host named central
 # Syslog on central should be configured to allow this
-local7.*        @central
-</PRE
+local7.*        @central</PRE
 >
 	</P
->
-
-	<P
+><P
 >По-умолчанию, все сообщения пишутся так же в лог-файл
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >/var/log/messages</TT
 >. Чтобы избежать этого, добавьте
 local7.none or local7.!* (игнорировать любые сообщения с facility local7) в
 Ваши 'catch-all' лог-файлы.</P
->
-	<P
+><P
 >For example:
 	<PRE
-CLASS="programlisting"
->&#13;#
+CLASS="PROGRAMLISTING"
+>#
 # Some `catch-all' logfiles.
 #
 *.=info;*.=notice;*.=warn;\
         auth,authpriv.none;\
         cron,daemon.none;\
         mail,news.none;\
-        local7.!*               -/var/log/messages
-</PRE
+        local7.!*               -/var/log/messages</PRE
 >
 	</P
->
-	<P
+><P
 >Для получения более подробной справки о syslog и его
 	конфигурации, посмотрите страницы man syslogd(8) и syslog.conf(5).
 	</P
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -328,7 +301,7 @@ ALIGN="right"
 VALIGN="top"
 >Хранение сжатых копий документов
 <A
-NAME="AEN2537"
+NAME="AEN2568"
 ></A
 ></TD
 ></TR

@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,337 +76,276 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="perf"
+NAME="PERF"
 >5.3. <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > performance issues</A
 ></H1
->
-	
-<A
-NAME="AEN2897"
+><A
+NAME="AEN2926"
 ></A
->
-
-<P
+><P
 >The cache mode is the fastest <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >'s storage mode. Use it if
-you need maximal search speed.
-</P
->
-<P
+you need maximal search speed.</P
+><P
 ><A
-NAME="AEN2902"
+NAME="AEN2933"
 ></A
 >
 If your <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/var</TT
-> directory isn't changing since indexing is finished, you may disable file locking using 
+> directory isn't changed since the indexing has been finished, you may disable file locking using 
 <B
-CLASS="command"
+CLASS="COMMAND"
 >"ColdVar yes"</B
 > command placed in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > (or in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >,
 if <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
-> is used). This allow you to save some time on file locking.
-</P
->
-
-<P
+> is used). This allow you to save some time on file locking.</P
+><P
 >Using <KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >UseCRC32URLId yes</KBD
-> command (see ) allow to speed up indexing, but
-small number of collisions is possible, especially on large database. 
-</P
->
-
-
-<DIV
-CLASS="sect2"
+> command (see <A
+HREF="dpsearch-indexcmd.en.html#USECRC32URLID_CMD"
+>Section 3.10.12</A
+>&#62;) allow to speed up indexing, but
+small number of collisions is possible, especially on large database. </P
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="searchd-rec"
+NAME="SEARCHD-REC"
 >5.3.1. <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > usage recommendation</A
 ></H2
->
-
-<P
+><P
 >If you plan use ispell data, synonym or stopword lists, it's recommended setup
 the <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
-> daemon for speed-up searches (See ). 
+> daemon for speed-up searches (See <A
+HREF="dpsearch-searchd.en.html"
+>Section 5.4</A
+>&#62;). 
 <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > daemon preload all these data and lists
-and holds them in memory. This reduce average search query execution time.
-</P
->
-<P
+and holds them in memory. This reduce average search query execution time.</P
+><P
 >Also, <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > can preload url info data (20 bytes per URL indexed) and 
-cache mode limits (4 or 8 bytes per URL depend on limit type). This allow reduce average search time.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+cache mode limits (4 or 8 bytes per URL depend on limit type). This allow reduce average search time.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="mfs-rec"
+NAME="MFS-REC"
 >5.3.2. Memory based filesystem (mfs) usage recommendation</A
 ></H2
->
-
-<P
+><P
 >If you use cache storage mode and you have enough RAM on your PC, 
 you may place <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var</TT
 >
-directory on memory based filesystem (mfs). This allow speedup both indexing and searching.
-</P
->
-<P
+directory on memory based filesystem (mfs). This allow speedup both indexing and searching.</P
+><P
 >If you haven't enough RAM to fit  <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var</TT
 >, 
 you may place on memory filesystem any of <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var/tree</TT
 >,
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var/url</TT
 > or <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/local/dpsearch/var/store</TT
 >
-directories as well.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+directories as well.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="urlinfo-cmd"
+NAME="URLINFO-CMD"
 >5.3.3. <B
-CLASS="command"
+CLASS="COMMAND"
 >URLInfoSQL</B
 > command</A
 ></H2
->
-
-<A
-NAME="AEN2934"
+><A
+NAME="AEN2965"
 ></A
->
-<P
+><P
 >For dbmode cache, you may use <B
-CLASS="command"
+CLASS="COMMAND"
 >URLInfoSQL no</B
 > command to disable storing URL Info into SQL database.
-But using this command, you'll be unable to use limits by language and by Content-Type.
-</P
->
-</DIV
->
-
-<DIV
-CLASS="sect2"
+But using this command, you'll be unable to use limits by language and by Content-Type.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="markforindex-cmd"
+NAME="MARKFORINDEX-CMD"
 >5.3.4. <B
-CLASS="command"
+CLASS="COMMAND"
 >MarkForIndex</B
 > command</A
 ></H2
->
-
-<A
-NAME="AEN2942"
+><A
+NAME="AEN2973"
 ></A
->
-<P
+><P
 >By default, <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > are marking all URLs selected for indexing as indexed for 4 hours.
 This prevent possible simultaneous indexing of the same URL by different indexer instance running. But for huge installation this feature
 can take some time for processing. You may switch off this markage using <B
-CLASS="command"
+CLASS="COMMAND"
 >"MarkForIndex no"</B
 > in your 
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
-> file.
-</P
->
-</DIV
->
-
-
-<DIV
-CLASS="sect2"
+> file.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="checkinsertsql-cmd"
+NAME="CHECKINSERTSQL-CMD"
 >5.3.5. <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckInsertSQL</B
 > command</A
 ></H2
->
-
-<A
-NAME="AEN2952"
+><A
+NAME="AEN2983"
 ></A
->
-<P
+><P
 >By default, <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > trying to insert data into SQL database regardless it's already present there.
 On some systems this raise some error loggings. To avoid such errors, 
 you may enable additional checks, is the inserting data new, by specifying
 <B
-CLASS="command"
+CLASS="COMMAND"
 >CheckInsertSQL yes</B
 > command in your <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer.conf</TT
->.
-</P
->
-</DIV
->
-
-
-
-
-	<DIV
-CLASS="sect2"
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="perf-mysql"
+NAME="PERF-MYSQL"
 >5.3.6. MySQL performance</A
 ></H2
->
-		
-		<P
+><P
 >MySQL users may declare <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > tables with
 <CODE
-CLASS="option"
+CLASS="OPTION"
 >DELAY_KEY_WRITE=1</CODE
 > option. This will make the updating
 of indexes faster, as these are not logged to disk until the file is
 closed. <CODE
-CLASS="option"
+CLASS="OPTION"
 >DELAY_KEY_WRITE</CODE
 > excludes updating indexes on
 disk at all. </P
->
-		<P
+><P
 >With it indexes are processed only in memory and
 written onto disk as last resort, command <B
-CLASS="command"
->FLUSH TABLES
-</B
+CLASS="COMMAND"
+>FLUSH TABLES</B
 > or mysqld shutdown. This can take even minutes and
 impatient user can <TT
-CLASS="literal"
+CLASS="LITERAL"
 >kill -9 mysql server</TT
 > and break
 index files with this.  Another downside is that you should run
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >myisamchk</TT
 > on these tables before you start mysqld
 to ensure that they are okay if something killed mysqld in the
 middle.</P
->
-		<P
+><P
 >Because of it we didn't include this table
 option into default tables structure. However as the key information
 can always be generated from the data, you should not lose anything by
 using <CODE
-CLASS="option"
+CLASS="OPTION"
 >DELAY_KEY_WRITE</CODE
 >. So, use this option for your
 own risk.</P
->
-	</DIV
->
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="perf-optimization"
+NAME="PERF-OPTIMIZATION"
 >5.3.7. Post-indexing optimization</A
 ></H2
->
-		
-		<P
+><P
 >This article was supplied by Randy Winch <CODE
-CLASS="email"
+CLASS="EMAIL"
 >&#60;<A
 HREF="mailto:gumby@cafes.net"
 >gumby@cafes.net</A
 >&#62;</CODE
 >
 		</P
->
-		<P
+><P
 >I have some performance numbers that some of you
 might find interesting. I'm using RH 6.2 with the 2.2.14-6.1.1 kernel
 update (allows files larger than 2 gig) and mysql 2.23.18-alpha.  I
 have just indexed most of our site using mnoGoSearch 3.0.18:
 		<PRE
-CLASS="programlisting"
->&#13;
-          mnoGoSearch statistics
+CLASS="PROGRAMLISTING"
+>&#13;          mnoGoSearch statistics
 
     Status    Expired      Total
    -----------------------------
@@ -420,17 +359,12 @@ CLASS="programlisting"
        500          0          1 Internal Server Error
        503          0          1 Service Unavailable
    -----------------------------
-     Total     852668    2182703
-
-</PRE
->
-</P
->
-
-		<P
+     Total     852668    2182703&#13;</PRE
+></P
+><P
 >I optimize the data by dumping it into a file
 using <CODE
-CLASS="option"
+CLASS="OPTION"
 >SELECT * INTO OUTFILE</CODE
 >, sort it using the system
 sort routine into word (CRC) order and then reloading it into the
@@ -440,48 +374,33 @@ HREF="http://www.mysql.com/documentation/mysql/commented/manual.php?section=Inse
 TARGET="_top"
 >mysql online manual</A
 >.</P
->
-		<P
+><P
 >The performance is wonderful. My favorite test
 is searching for "John Smith". The optimized database version takes
 about 13 seconds. The raw version takes about 73 seconds.</P
->
-
-		<PRE
-CLASS="programlisting"
->&#13;Search results: john : 620241 smith : 177096
-Displaying documents 1-20 of total 128656 found
-</PRE
->
-
-		
-	</DIV
->
-
-<DIV
-CLASS="sect2"
+><PRE
+CLASS="PROGRAMLISTING"
+>Search results: john : 620241 smith : 177096
+Displaying documents 1-20 of total 128656 found</PRE
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="ares"
+NAME="ARES"
 >5.3.8. Asynchronous resolver library</A
 ></H2
->
-
-<P
+><P
 >Using <A
 HREF="ftp://athena-dist.mit.edu/pub/ATHENA/ares/"
 TARGET="_top"
 >ares</A
 >, 
 an asynchronous resolver library (dns/ares in FreeBSD ports collection), allow to perform DNS queries without blocking for every
-indexing thread. Please note, this also increase the number of concurrent queries to your DNS server.
-</P
->
-</DIV
->
-
-</DIV
+indexing thread. Please note, this also increase the number of concurrent queries to your DNS server.</P
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

@@ -14,12 +14,10 @@ TITLE="Поиск документов"
 HREF="dpsearch-doingsearch.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Как создавать шаблоны результатов поиска
-
 "
 HREF="dpsearch-templates.ru.html"><LINK
 REL="NEXT"
 TITLE="Релевантность
-
 "
 HREF="dpsearch-rel.ru.html"><LINK
 REL="STYLESHEET"
@@ -30,7 +28,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -80,72 +78,55 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="html"
+NAME="HTML"
 >8.4. Дизайн search.html</A
 ></H1
->
-	
-	<P
+><P
 >В этой секции подразумевается, что в качестве фронтэнда используется <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 >.</P
->
-
-	<DIV
-CLASS="sect2"
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="html-respage"
+NAME="HTML-RESPAGE"
 >8.4.1. Как создаётся страница результатов</A
 ></H2
->
-		
-
-		<P
+><P
 >Файл <TT
-CLASS="filename"
+CLASS="FILENAME"
 >etc/search.htm</TT
 > соостоит из некоторого числа блоков,
-разделённых HTML коммантариями, начинающимися с &#60;!--comment--&#62; и заканчивающимися &#60;!--/comment--&#62;.</P
->
-
-		<P
->Блок &#60;!--variables--&#62; только используется <TT
-CLASS="filename"
+разделённых HTML коммантариями, начинающимися с &lt;!--comment--&gt; и заканчивающимися &lt;!--/comment--&gt;.</P
+><P
+>Блок &lt;!--variables--&gt; только используется <TT
+CLASS="FILENAME"
 >search.cgi</TT
 >
 Остальные блоки формируют части страницы результатов поиска в зависимости от ситуации. </P
->
-
-		<P
->Блоки &#60;!--top--&#62; и &#60;!--bottom--&#62; всегда показываются пользователям как верх и низ
+><P
+>Блоки &lt;!--top--&gt; и &lt;!--bottom--&gt; всегда показываются пользователям как верх и низ
 страницы результатов соответственно. </P
->
-
-		<P
->также существуют следующие блоки    &#60;!--restop--&#62;,
-&#60;!--res--&#62; and &#60;!--resbot--&#62; , блоки навигации и блоки  &#60;!--notfound--&#62;,
-&#60;!--noquery--&#62; and &#60;!--error--&#62;. Последние выдаются в зависимости от результата поиска.</P
->
-
-		<P
+><P
+>также существуют следующие блоки    &lt;!--restop--&gt;,
+&lt;!--res--&gt; and &lt;!--resbot--&gt; , блоки навигации и блоки  &lt;!--notfound--&gt;,
+&lt;!--noquery--&gt; and &lt;!--error--&gt;. Последние выдаются в зависимости от результата поиска.</P
+><P
 >Любой HTML-код, расположенный вне этих блоков игнорируется. </P
->
-
-		<P
+><P
 >Таким образом, вывод <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > всегда будет примерно таким:
 		<PRE
-CLASS="programlisting"
->&#13;				
+CLASS="PROGRAMLISTING"
+>				
   top                 
   restop                top                 top              top
   res           или     notfound     или    error     или    noquery
@@ -154,64 +135,50 @@ CLASS="programlisting"
   bottom
 			
 			</PRE
->
-</P
->
-		<P
+></P
+><P
 >Навигационный блок строится таким же образом.
-Блоки &#60;!--navleft--&#62; и &#60;!--navright--&#62; отображаются на всех страницах и ссылаются на предыдущую и на
-следующую страницы с результатами поиска, тогда как &#60;!--navXXX_nop--&#62; используются, если нет больше страниц в
+Блоки &lt;!--navleft--&gt; и &lt;!--navright--&gt; отображаются на всех страницах и ссылаются на предыдущую и на
+следующую страницы с результатами поиска, тогда как &lt;!--navXXX_nop--&gt; используются, если нет больше страниц в
 том или другом направлении. </P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="html-yourhtml"
+NAME="HTML-YOURHTML"
 >8.4.2. Ваш HTML-шаблон</A
 ></H2
->
-		
-
-		<P
+><P
 >Простейший HTML-шаблон, необходимый для работы, дан в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >etc/search.htm-dist</TT
 >.
-Рекомендуется начать работу именно с него, ввнеся только ваши настроки в блок &#60;!--variables--&#62;. </P
->
-
-		<P
+Рекомендуется начать работу именно с него, ввнеся только ваши настроки в блок &lt;!--variables--&gt;. </P
+><P
 >Если вы решили украсить ваш поиск, у вас есть два пути.
 Первый: оставить простой дизайн <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >, но сделать его частью набора фреймов.
 Таким образом вы можете добавить меню и др. элементы в одном фрейме, и остваить вывод <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 в другом.</P
->
-
-		<P
+><P
 >Второй путь состоит во внесении вашего дизайна целиком в <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >
 Если вы хорошо понимаете сситему блоков, описанную выше, этот путь не будет слишком сложным. Самым важным моментом при этом будет
 отслеживание открытия html-тэгов в одном блоке и закрытие их в другом. </P
->
-
-		<P
+><P
 >Например, вы желаете видеть страницу как таблицы примерно такого вида:
 		<PRE
-CLASS="programlisting"
->&#13;                   ----------------------------------
+CLASS="PROGRAMLISTING"
+>                   ----------------------------------
                   |       верхняя таблица            |
                   |..................................|
                   |        .                         |
@@ -221,240 +188,208 @@ CLASS="programlisting"
                   |таблица .                         |
                   |        .                         |
                   |        .                         |
-                   ----------------------------------
-</PRE
->
-</P
->
-
-		<P
+                   ----------------------------------</PRE
+></P
+><P
 >Если планируется поместить результаты поиска в основную таблицу, вы можете поместить в
-блок &#60;!--top--&#62; в <TT
-CLASS="filename"
+блок &lt;!--top--&gt; в <TT
+CLASS="FILENAME"
 >search.htm</TT
 > весь HTML-код вплоть до открытия основной таблицы
-(&#60;table&#62;&#60;tr&#62;&#60;td&#62;). Если вы также поместите код закрытия основной таблицы и остальные закрывающие тэги страницы в
-блок &#60;!--bottom--&#62; (&#60;/table&#62;&#60;/tr&#62;&#60;/td&#62;&#60;/body&#62;&#60;/html&#62;) и оставите остальные блоки без изменения,
+(&lt;table&gt;&lt;tr&gt;&lt;td&gt;). Если вы также поместите код закрытия основной таблицы и остальные закрывающие тэги страницы в
+блок &lt;!--bottom--&gt; (&lt;/table&gt;&lt;/tr&gt;&lt;/td&gt;&lt;/body&gt;&lt;/html&gt;) и оставите остальные блоки без изменения,
 вы получите желаемый табличный дизайн и результаты поиска будут в основной таблице.
  </P
->
-
-		<P
+><P
 >При более сложном дизайне, если сами хотите формировать страницу с результатами поиска,
 вы можете и далее пользовать этим методом, до тех пор, пока можете отслеживать откртие-закрытие тэгов в раличных блоках или
 их комбинациях.
  </P
->
-		<P
+><P
 >Отдельные блоки могут быть отформатированы так угодно, насколько их форматирование закончено в пределах этого
 блока. Т.е. ничто не мешает делать что-то вроде этого:
 			<PRE
-CLASS="programlisting"
->&#13;  &#60;!--error--&#62;
-    &#60;table&#62;
-    &#60;tr&#62;&#60;td bgcolor"red"&#62;
-      &#60;font color="#ffffff"&#62;  
+CLASS="PROGRAMLISTING"
+>  &lt;!--error--&gt;
+    &lt;table&gt;
+    &lt;tr&gt;&lt;td bgcolor"red"&gt;
+      &lt;font color="#ffffff"&gt;  
       [error variables]
-      &#60;/font&#62;
-    &#60;/tr&#62;&#60;td&#62;
-    &#60;/table&#62;
-  &#60;!--error--&#62;
+      &lt;/font&gt;
+    &lt;/tr&gt;&lt;td&gt;
+    &lt;/table&gt;
+  &lt;!--error--&gt;
 		</PRE
 >
 		</P
->
-
-		<P
+><P
 >Чего вы не можете сделать без редактирования исходного кода <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >,
 это изменить порядок обработки блоков из <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >.</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="html-forms"
+NAME="HTML-FORMS"
 >8.4.3. О формах</A
 ></H2
->
-		
-		<P
+><P
 >Многие современные броузеры могут работать с формами, разнесёнными по разным элементам
 таблицы или разным таблицам, однако создание таких форм противоречит всем стандартам создания HTML-кода. 
 Создавайте такие формы только когда не можете избежать этого.
  </P
->
-		<P
+><P
 >Например,
 			<PRE
-CLASS="programlisting"
->&#13;  &#60;table&#62;
-  &#60;tr&#62;&#60;td&#62;
-     &#60;form&#62;
-     &#60;input type="text" name="something"&#62;
-     &#60;input type="radio" name"button1"&#62;
-     &#60;input type="radio" name"button2"&#62;
-     &#60;/form&#62;
-  &#60;/tr&#62;&#60;/td&#62;
-  &#60;/table&#62;
+CLASS="PROGRAMLISTING"
+>  &lt;table&gt;
+  &lt;tr&gt;&lt;td&gt;
+     &lt;form&gt;
+     &lt;input type="text" name="something"&gt;
+     &lt;input type="radio" name"button1"&gt;
+     &lt;input type="radio" name"button2"&gt;
+     &lt;/form&gt;
+  &lt;/tr&gt;&lt;/td&gt;
+  &lt;/table&gt;
 			</PRE
 >
 		это допустимо, а
 			<PRE
-CLASS="programlisting"
->&#13;  &#60;table&#62;
-    &#60;tr&#62;&#60;td&#62;
-       &#60;form&#62;
-       &#60;input type="text" name="something"&#62;
-    &#60;/tr&#62;&#60;/td&#62;
-  &#60;/table&#62;
-  &#60;table&#62;
-    &#60;tr&#62;&#60;td&#62;
-       &#60;input type="radio" name"button1"&#62;
-       &#60;input type="radio" name"button2"&#62;
-       &#60;/form&#62;
-    &#60;/tr&#62;&#60;/td&#62;
-    &#60;/table&#62;
+CLASS="PROGRAMLISTING"
+>  &lt;table&gt;
+    &lt;tr&gt;&lt;td&gt;
+       &lt;form&gt;
+       &lt;input type="text" name="something"&gt;
+    &lt;/tr&gt;&lt;/td&gt;
+  &lt;/table&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;td&gt;
+       &lt;input type="radio" name"button1"&gt;
+       &lt;input type="radio" name"button2"&gt;
+       &lt;/form&gt;
+    &lt;/tr&gt;&lt;/td&gt;
+    &lt;/table&gt;
 			</PRE
 >
 		это <SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >нет</I
 ></SPAN
 >.</P
->
-
-		<P
+><P
 >Заметим, что элементы ввода в формах поиска могут быть изменены по желанию.
 В образце шаблона поиска используются меню-раскладушки, но ничто не мешает использовать кпоки-переключалки или скрытые поля ввода, даже
 текста запроса поиска. Например, если в  <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > указано
 			<PRE
-CLASS="programlisting"
->&#13;  Results per page:
-  &#60;SELECT NAME="ps"&#62;
-  &#60;OPTION VALUE="10" SELECTED="$ps"&#62;10
-  &#60;OPTION VALUE="20" SELECTED="$ps"&#62;20
-  &#60;OPTION VALUE="50" SELECTED="$ps"&#62;50
-  &#60;/SELECT&#62;
+CLASS="PROGRAMLISTING"
+>  Results per page:
+  &lt;SELECT NAME="ps"&gt;
+  &lt;OPTION VALUE="10" SELECTED="$ps"&gt;10
+  &lt;OPTION VALUE="20" SELECTED="$ps"&gt;20
+  &lt;OPTION VALUE="50" SELECTED="$ps"&gt;50
+  &lt;/SELECT&gt;
 			</PRE
 >
 		вы можете заменить это на
 			<PRE
-CLASS="programlisting"
->&#13;  &#60;input type="radio" name="ps" value="10" checked="$(ps)"&#62;
-  &#60;input type="radio" name="ps" value="20" checked="$(ps)"&#62;
-  &#60;input type="radio" name="ps" value="50" checked="$(ps)"&#62;
+CLASS="PROGRAMLISTING"
+>  &lt;input type="radio" name="ps" value="10" checked="$(ps)"&gt;
+  &lt;input type="radio" name="ps" value="20" checked="$(ps)"&gt;
+  &lt;input type="radio" name="ps" value="50" checked="$(ps)"&gt;
 			</PRE
 >
 		в результате чего получим три кпоки-переключалки вместо выпадающего меню, тем же значением "20" по умолчанию и
 с той же функциональнотью. Единственное, что вы не можете делать, это давать возможность множественного
-выбора в меню типа &#60;type="checkbox"&#62; или &#60;select multiple&#62;. </P
->
-
-		<P
+выбора в меню типа &lt;type="checkbox"&gt; или &lt;select multiple&gt;. </P
+><P
 >Заметим, что вы можете также использовать формат
 			<PRE
-CLASS="programlisting"
->&#13;  &#60;input type="hidden" name="XX" value="YY"&#62;
+CLASS="PROGRAMLISTING"
+>  &lt;input type="hidden" name="XX" value="YY"&gt;
   			</PRE
 >
 		если вы хотите использовать другие значения вместо значений по умолчанию и/или не заботить пользователя выбором
 значения этого параметра. </P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="html-rellinks"
+NAME="HTML-RELLINKS"
 >8.4.4. Относительные ссылки в search.htm</A
 ></H2
->
-		
-		<P
+><P
 >Возможно необходимо заметить, что <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 > обрабатывается в вашей
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >cgi-bin</TT
 > директории. Позиция этой директории относительно корня определяется вашим веб-сервером независимо от
 ее расположения на файловой системе. Вполне вероятно, это <TT
-CLASS="literal"
+CLASS="LITERAL"
 >http://your_document_root/cgi-bin/</TT
 > . Т.к.
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > расположен в cgi-bin, любая ссылка на изображения или др. в search.htm
 подразумевает, что cgi-bin - базовая директория. Тем самым, если у вас фаловая система вида
 			<PRE
-CLASS="programlisting"
->&#13;   home/
+CLASS="PROGRAMLISTING"
+>   home/
    home/your_document_root/
    home/your_document_root/img/
    home/cgi-bin/
 			</PRE
 >
 		правильная относительная ссылка с <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > на изображения в img/ должна быть
 <TT
-CLASS="literal"
->&#60;img src="../img/image.gif"&#62;</TT
+CLASS="LITERAL"
+>&lt;img src="../img/image.gif"&gt;</TT
 >, несмотря на несоотвествие структуре фаловой системы.</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="html-searchform"
+NAME="HTML-SEARCHFORM"
 >8.4.5. Добавление формы поиска на другие страницы</A
 ></H2
->
-		
-		<P
+><P
 >Чтобы добавить форму поиска на дюбой вашей страницы, разместите следующий код на
 этих страницах где сочтёте нужным:
 			<PRE
-CLASS="programlisting"
->&#13;&#60;FORM 
+CLASS="PROGRAMLISTING"
+>&lt;FORM 
 	METHOD=GET 
-	ACTION="http://path-to-search.cgi"&#62;
-      &#60;INPUT TYPE="text" NAME="q" VALUE=""&#62;
-      &#60;INPUT TYPE="submit" VALUE="Search!"&#62;
+	ACTION="http://path-to-search.cgi"&gt;
+      &lt;INPUT TYPE="text" NAME="q" VALUE=""&gt;
+      &lt;INPUT TYPE="submit" VALUE="Search!"&gt;
 
-&#60;/FORM&#62;
-</PRE
+&lt;/FORM&gt;</PRE
 >
 		</P
->
-	</DIV
->
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -501,7 +436,7 @@ ALIGN="left"
 VALIGN="top"
 >Как создавать шаблоны результатов поиска
 <A
-NAME="AEN4698"
+NAME="AEN4729"
 ></A
 ></TD
 ><TD
@@ -519,7 +454,7 @@ ALIGN="right"
 VALIGN="top"
 >Релевантность
 <A
-NAME="AEN5259"
+NAME="AEN5296"
 ></A
 ></TD
 ></TR

@@ -2,9 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->META-тэги
-
-</TITLE
+>META-тэги&#13;</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -12,8 +10,7 @@ REL="HOME"
 TITLE="DataparkSearch Engine 4.52"
 HREF="index.ru.html"><LINK
 REL="UP"
-TITLE="HTML-парсер в DataparkSearch
-"
+TITLE="HTML-парсер в DataparkSearch"
 HREF="dpsearch-htmlparser.ru.html"><LINK
 REL="PREVIOUS"
 TITLE="Специальные символы"
@@ -29,7 +26,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -64,7 +61,7 @@ WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
 >&#1043;&#1083;&#1072;&#1074;&#1072; 4. HTML-парсер в <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 ></TD
 ><TD
@@ -82,138 +79,126 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="htmlparser-meta"
+NAME="HTMLPARSER-META"
 >4.3. META-тэги
 <A
-NAME="AEN2758"
+NAME="AEN2789"
 ></A
 ></A
 ></H1
->
-		
-		<P
+><P
 >В настоящий момент HTML-парсер обрабатывает
 		специальным образом следующие META-тэги.
 		<DIV
-CLASS="note"
+CLASS="NOTE"
 ><BLOCKQUOTE
-CLASS="note"
->&#13;		Замечание:  <TT
-CLASS="literal"
->&#60;META "NAME"&#62;</TT
->
-		обрабатывается так же, как и
+CLASS="NOTE"
+>Замечание:  <TT
+CLASS="LITERAL"
+>&lt;META "NAME"&gt;</TT
+>обрабатывается так же, как и
 		<TT
-CLASS="literal"
->&#60;META "HTTP-EQUIV"&#62;</TT
->
-		</BLOCKQUOTE
+CLASS="LITERAL"
+>&lt;META "HTTP-EQUIV"&gt;</TT
+></BLOCKQUOTE
 ></DIV
 >
 		</P
->
-
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 ><A
-NAME="AEN2767"
+NAME="AEN2798"
 ></A
 >
 					<TT
-CLASS="literal"
->&#60;META
-NAME="Content-Type" Content="text/html; charset=xxxx"&#62;</TT
+CLASS="LITERAL"
+>&lt;META
+NAME="Content-Type" Content="text/html; charset=xxxx"&gt;</TT
 >
 Этот тэг используется для определения кодировки документа, если она
 не была указана в заголовке <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Content-type</TT
 > HTTP-ответа.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 ><A
-NAME="AEN2774"
+NAME="AEN2805"
 ></A
 >
 					<TT
-CLASS="literal"
->&#60;META
-NAME="REFRESH" Content="5; URL=http://www.somewhere.com"&#62;</TT
+CLASS="LITERAL"
+>&lt;META
+NAME="REFRESH" Content="5; URL=http://www.somewhere.com"&gt;</TT
 >
 URL, указанный в параметре, будет поставлен в очередь на индексацию.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 ><A
-NAME="AEN2780"
+NAME="AEN2811"
 ></A
 >
 					<TT
-CLASS="literal"
->&#60;META NAME="Keywords" Content="xxx"&#62;</TT
+CLASS="LITERAL"
+>&lt;META NAME="Keywords" Content="xxx"&gt;</TT
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 ><A
-NAME="AEN2786"
+NAME="AEN2817"
 ></A
 >
 					<TT
-CLASS="literal"
->&#60;META NAME="Description" Content="xxx"&#62;</TT
+CLASS="LITERAL"
+>&lt;META NAME="Description" Content="xxx"&gt;</TT
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 ><A
-NAME="AEN2792"
+NAME="AEN2823"
 ></A
 >
 					<TT
-CLASS="literal"
->&#60;META
-NAME="Robots" Content="xxx"&#62;</TT
+CLASS="LITERAL"
+>&lt;META
+NAME="Robots" Content="xxx"&gt;</TT
 >, где Content содержит
 список из следующий ключевых слов, разделенных запятой:
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >ALL, NONE, INDEX, NOINDEX, FOLLOW, NOFOLLOW, NOARCHIVE</TT
->.
-</P
->
-			</LI
+>.</P
+></LI
 ><LI
->&#13;<P
+><P
 ><A
-NAME="AEN2799"
+NAME="AEN2830"
 ></A
 >
 <TT
-CLASS="literal"
->&#60;META NAME="DP.PopRank" Content="xxx"&#62;</TT
+CLASS="LITERAL"
+>&lt;META NAME="DP.PopRank" Content="xxx"&gt;</TT
 > где значение Content - вещественное число. 
-Этот тэг используется для задания начального значения PopularityRank для страницы.
-</P
->
-</LI
+Этот тэг используется для задания начального значения <A
+HREF="dpsearch-rel.ru.html#POPRANK"
+>PopularityRank</A
+> для страницы.</P
+></LI
 ></UL
->
-	</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

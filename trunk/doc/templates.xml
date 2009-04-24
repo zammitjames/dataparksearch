@@ -711,8 +711,8 @@ following meta symbol:<indexterm><primary>Template variable</primary><secondary>
 
 
 	<sect2 id="templates-var">
-		<title>Variables section</title>
 <indexterm><primary>Templates</primary><secondary>Variables section</secondary></indexterm>
+		<title>Variables section</title>
 
 		<para>There is also a special variables section, in which you can set up some values for search. </para>
 		<para>Special variables section usually looks like this:</para>
@@ -787,7 +787,7 @@ Use "<command>GroupBySite</command> yes/no" to enable/disable grouping results b
 Use <command>PagesInGroup</command> command to specify the number of additional results from the same site when google-like groupping is
 enabled.</para>
 
-<para><indexterm><primary>Command</primary><secondary>MaxSiteLevel</secondary></indexterm>
+<para id="maxsitelevel-cmd"><indexterm><primary>Command</primary><secondary>MaxSiteLevel</secondary></indexterm>
 You may use <command>MaxSiteLevel</command> command to specify maximal domain name level using for site_id calculation. 
 Default value: 2. One exception: three or less letter domains at level 2 count as domain names at level 1. For example:
 domain.ext - level 2, www.domain.ext - level 3, domain.com.ext - level 2. A negative value for <command>MaxSiteLevel</command> mean 
@@ -839,12 +839,17 @@ is used, this command may be specified in <filename>searchd.conf</filename>.
 <command>ResultContentType</command> command is uses to specify Content-Type header for results page. 
 Default value: <literal>text/html</literal>.
 </para>
+
 <para>
 <indexterm><primary>Command</primary><secondary>Locale</secondary></indexterm>
 <command>Locale</command> command is uses to specify LC_ALL locale settings for search results output. 
 Default value: <literal>unspecified</literal> (uses the value specified before in system settings).
 </para>
 
+<para><indexterm><primary>Command</primary><secondary>MakePrefixes</secondary></indexterm>
+With <command>MakePrexixes yes</command> command you can instruct to extend a search query automatically by producing all prefixes of query words.
+This is suitable, for example, for making search suggestions.(See also <xref linkend="mkprefix-cmd"/>)
+</para>
 
 	</sect2>
 

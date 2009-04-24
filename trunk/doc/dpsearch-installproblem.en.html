@@ -16,8 +16,8 @@ REL="PREVIOUS"
 TITLE="Installing DataparkSearch"
 HREF="dpsearch-installing.en.html"><LINK
 REL="NEXT"
-TITLE="Installation registration"
-HREF="dpsearch-register.en.html"><LINK
+TITLE="Quick usage tour"
+HREF="dpsearch-quick-usage.en.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="datapark.css"><META
@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -66,7 +66,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-register.en.html"
+HREF="dpsearch-quick-usage.en.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -76,63 +76,52 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="installproblem"
+NAME="INSTALLPROBLEM"
 >2.5. Possible installation problems</A
 ></H1
->
-		
-<A
-NAME="AEN468"
+><A
+NAME="AEN478"
 ></A
->
-
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Every time you run
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >configure</TT
 >, you must run <TT
-CLASS="literal"
+CLASS="LITERAL"
 >make</TT
 >
 again to recompile.</P
->
-
-				<P
+><P
 >To prevent old configuration
 information or object files from being used, run these commands before
 re-running <TT
-CLASS="literal"
+CLASS="LITERAL"
 >configure</TT
->:
-
-</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+>:&#13;</P
+><P
+>					<KBD
+CLASS="USERINPUT"
 >sh$ rm config.cache</KBD
 >
 				</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
+><P
+>					<KBD
+CLASS="USERINPUT"
 >sh$ make clean</KBD
 >
 				</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >If your compile fails with make
 errors, this can be because you are using the wrong version of
 make. The behavior of Solaris, FreeBSD, OpenBSD make is slightly
@@ -144,62 +133,51 @@ TARGET="_top"
 HREF="http://www.gnu.org/software/make/make.html"
 TARGET="_top"
 >GNU make</A
-> instead, often installed as gmake.
-</P
->
-				<P
+> instead, often installed as gmake.</P
+><P
 >GNU <TT
-CLASS="filename"
+CLASS="FILENAME"
 >make</TT
 > version 3.77 is known to work.</P
->
-			</LI
+></LI
 ><LI
->&#13;<P
+><P
 >If starting <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Apache</SPAN
 > with <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >mod_dpsearch</SPAN
 > module, 
 you're getting the following error:
 <KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >Undefined symbol "pthread_join"</KBD
 > (or something similar related to pthreads), 
 try to add the following commmand into <TT
-CLASS="filename"
+CLASS="FILENAME"
 >httpd.conf</TT
 > file before loading <TT
-CLASS="filename"
+CLASS="FILENAME"
 >mod_dpsearch.so</TT
->:
-</P
->
-<P
+>:</P
+><P
 ><KBD
-CLASS="userinput"
+CLASS="USERINPUT"
 >LoadFile /usr/lib/libpthread.so</KBD
 ></P
->
-</LI
+></LI
 ></UL
->
-
-<P
+><P
 >If above information doesn't help you, please feel free to contact DataparkSearch mailing list
 <CODE
-CLASS="email"
+CLASS="EMAIL"
 >&#60;<A
 HREF="mailto:dataparksearch@yahoogroups.com"
 >dataparksearch@yahoogroups.com</A
 >&#62;</CODE
->.
-</P
->
-
-	</DIV
+>.</P
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -234,7 +212,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="dpsearch-register.en.html"
+HREF="dpsearch-quick-usage.en.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -245,7 +223,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 >Installing <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 ></TD
 ><TD
@@ -261,7 +239,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Installation registration</TD
+>Quick usage tour</TD
 ></TR
 ></TABLE
 ></DIV

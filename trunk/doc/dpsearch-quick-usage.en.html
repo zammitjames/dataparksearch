@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Clones</TITLE
+>Quick usage tour</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -10,14 +10,14 @@ REL="HOME"
 TITLE="DataparkSearch Engine 4.52"
 HREF="index.en.html"><LINK
 REL="UP"
-TITLE="Indexing"
-HREF="dpsearch-indexing.en.html"><LINK
+TITLE="Installation"
+HREF="dpsearch-install.en.html"><LINK
 REL="PREVIOUS"
-TITLE="Stopwords"
-HREF="dpsearch-stopwords.en.html"><LINK
+TITLE="Possible installation problems"
+HREF="dpsearch-installproblem.en.html"><LINK
 REL="NEXT"
-TITLE="Specifying WEB space to be indexed"
-HREF="dpsearch-follow.en.html"><LINK
+TITLE="Installation registration"
+HREF="dpsearch-register.en.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="datapark.css"><META
@@ -52,7 +52,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-stopwords.en.html"
+HREF="dpsearch-installproblem.en.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,13 +60,13 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 3. Indexing</TD
+>Chapter 2. Installation</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-follow.en.html"
+HREF="dpsearch-register.en.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -80,54 +80,38 @@ CLASS="SECT1"
 ><H1
 CLASS="SECT1"
 ><A
-NAME="CLONES"
->3.5. Clones</A
+NAME="QUICK-USAGE"
+>2.6. Quick usage tour</A
 ></H1
-><A
-NAME="AEN785"
-></A
 ><P
-><TT
-CLASS="LITERAL"
->Clones</TT
-> -- are documents having equal values of Hash32 on all document sections. Indentical copies of the same
-document always have equal values of Hash32. This allow to eliminate duplicate documents in a collection.
-However, if only <TT
-CLASS="LITERAL"
->title</TT
-> section is defined in <TT
-CLASS="FILENAME"
->sections.conf</TT
->, all documents with different bodies but
-with identical titles will be considered as clones.</P
-><DIV
-CLASS="SECT2"
-><H2
-CLASS="SECT2"
-><A
-NAME="DETECTCLONES_CMD"
->3.5.1. <B
+>Before running <B
 CLASS="COMMAND"
->DetectClones</B
-> command</A
-></H2
-><A
-NAME="AEN794"
-></A
-><PRE
-CLASS="PROGRAMLISTING"
->DetectClones yes/no</PRE
-><P
->Allow/disallow clone detection and eliminating. If allowed, indexer will 
-detect the same documents under different location, such as
-mirrors, and will index only one document from the group of
-such equal documents. "DetectClones yes" also allows to reduce space usage.
-Default value is "yes".
+>indexer</B
+> first time, you need specify web space to index (see <A
+HREF="dpsearch-follow.en.html"
+>Section 3.6</A
+>&#62;). 
+Basically, if you want index one site, you should put a <B
+CLASS="COMMAND"
+>Server</B
+> command similar to the following into your <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> file:
 <PRE
 CLASS="PROGRAMLISTING"
->DetectClones no</PRE
+>Server http://www.server.ext/</PRE
 ></P
-></DIV
+><P
+>Run the <B
+CLASS="COMMAND"
+>indexer</B
+> to index your data and write URL data:</P
+><P
+><KBD
+CLASS="USERINPUT"
+>sh$ /usr/local/dpsearch/sbin/indexer -W</KBD
+></P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -145,7 +129,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="dpsearch-stopwords.en.html"
+HREF="dpsearch-installproblem.en.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -163,7 +147,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="dpsearch-follow.en.html"
+HREF="dpsearch-register.en.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -173,13 +157,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Stopwords</TD
+>Possible installation problems</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="dpsearch-indexing.en.html"
+HREF="dpsearch-install.en.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -187,7 +171,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Specifying WEB space to be indexed</TD
+>Installation registration</TD
 ></TR
 ></TABLE
 ></DIV

@@ -25,7 +25,7 @@ CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и И
 NAME="Keywords"
 CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="chapter"
+CLASS="CHAPTER"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -75,10 +75,10 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="chapter"
+CLASS="CHAPTER"
 ><H1
 ><A
-NAME="install"
+NAME="INSTALL"
 ></A
 >&#1043;&#1083;&#1072;&#1074;&#1072; 2. Установка
 <A
@@ -95,7 +95,7 @@ CLASS="TOC"
 ></DT
 ><DT
 >2.1. <A
-HREF="dpsearch-install.ru.html#sqlreq"
+HREF="dpsearch-install.ru.html#SQLREQ"
 >Требования к SQL базе даных</A
 ></DT
 ><DT
@@ -112,7 +112,7 @@ HREF="dpsearch-toolsreq.ru.html"
 >2.4. <A
 HREF="dpsearch-installing.ru.html"
 >Инсталяция <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 <A
@@ -125,216 +125,181 @@ NAME="AEN304"
 HREF="dpsearch-installproblem.ru.html"
 >Возможные проблемы установки
 <A
-NAME="AEN479"
+NAME="AEN489"
 ></A
 ></A
 ></DT
 ><DT
 >2.6. <A
+HREF="dpsearch-quick-usage.ru.html"
+>Простая рутина использования</A
+></DT
+><DT
+>2.7. <A
 HREF="dpsearch-register.ru.html"
 >Регистрация установки</A
 ></DT
 ></DL
 ></DIV
->
-	
-	<DIV
-CLASS="sect1"
+><DIV
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="sqlreq"
+NAME="SQLREQ"
 >2.1. Требования к SQL базе даных</A
 ></H1
->
-                
-		<P
+><P
 >Если вы хотите скомпилировать <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 с одной из поддерживаемых SQL баз данных, вы должны установить эту SQL базу данных до начала установки
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >.</P
->
-
-		<P
+><P
 >Начиная с версии 3.2 возможно использовать несколько различных SQL баз данных одновременно.</P
->
-		<P
+><P
 >Вы также должны иметь права на создание новой базы данных и/или записи в уже существующую базу данных.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >О <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 ></I
 ></SPAN
 >: Если вы хотите собрать
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > с поддержкой <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 >,
 вам потребуется версия 4.1 или старше.
 Библиотека <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libz</TT
 > должна быть также установлена для успешной компиляции <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 с поддержкой <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >MySQL</SPAN
 >. Пользователи Linux могут установить ее из zlib-devel RPM.
 		</P
->
-
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >О <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
 ></I
 ></SPAN
 >: Если вы хотите собрать
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > с поддержкой <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
 >,
 вам потребуется версия 7.3.x или старше. <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >PostgreSQL</SPAN
-> 8.1 рекомендуется для лучшей производительности.
-</P
->
-
-		<P
->&#13;			<SPAN
+> 8.1 рекомендуется для лучшей производительности.</P
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Об <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >iODBC</SPAN
 ></I
 ></SPAN
 >: работает с iodbc-2.50.22a.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Об <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >unixODBC</SPAN
 ></I
 ></SPAN
 >: работает с unixODBC-1.7.</P
->
-		
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Об <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >InterBase</SPAN
 ></I
 ></SPAN
 >:</P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Работает с Interbase 4.0.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Работает с InterBase CS 6.0.</P
->
-			</LI
+></LI
 ><LI
->&#13;				<P
+><P
 >Работает с FirebirdCS-0.9-4.</P
->
-			</LI
+></LI
 ></UL
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >О <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >FreeTDS</SPAN
 ></I
 ></SPAN
 >: Работает с версий 0.52 и с MS SQL 7.0.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Об <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Oracle8</SPAN
 ></I
 ></SPAN
 >: Работает с версией 8.0.5.X.</P
->
-		<P
->&#13;			<SPAN
+><P
+>			<SPAN
 CLASS="emphasis"
 ><I
-CLASS="emphasis"
+CLASS="EMPHASIS"
 >Об <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >Oracle8i</SPAN
 ></I
 ></SPAN
 >: Работает с версией 8.1.6 R2 EE.</P
->
-		
-	</DIV
->
-
-	
-
-	
-
-	
-	
-
-	
-
-	
-
-
-
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

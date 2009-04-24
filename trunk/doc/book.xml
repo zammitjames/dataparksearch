@@ -1,4 +1,5 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+	<!ENTITY index SYSTEM "index.xml">
 	<!ENTITY intro SYSTEM "intro.xml">
 	<!ENTITY install SYSTEM "install.xml">
 	<!ENTITY general SYSTEM "general.xml">
@@ -37,13 +38,12 @@
 	<!ENTITY syn SYSTEM "syn.xml">
 	<!ENTITY bugs SYSTEM "bugs.xml">
 	<!ENTITY lib SYSTEM "lib.xml">
-	<!ENTITY index SYSTEM "index.xml">
 	<!ENTITY cjk SYSTEM "cjk.xml">
         <!ENTITY dbschema SYSTEM "dbschema.xml">
         <!ENTITY vary SYSTEM "vary.xml">
         <!ENTITY indexcmd SYSTEM "indexcmd.xml">
         <!ENTITY accent SYSTEM "accent.xml">
-        <!ENTITY mod_dpsearch SYSTEM "mod_dpsearch.xml">
+        <!ENTITY mod-dpsearch SYSTEM "mod_dpsearch.xml">
         <!ENTITY csalias SYSTEM "cs-aliases.xml">
         <!ENTITY groups SYSTEM "groups.xml">
         <!ENTITY acronym SYSTEM "acronym.xml">
@@ -118,7 +118,7 @@
 	<chapter id="doingsearch">
 		<title>Searching documents</title>
 &search;
-&mod_dpsearch;
+&mod-dpsearch;
 &tmpl;
 &html-design;
 &relevancy;

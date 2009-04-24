@@ -266,8 +266,8 @@ to. <!--It works in SQL database mode and is not supported in cache mode.--> To 
 
 
 <sect2 id="sea">
-<title>The Summary Extraction Algorithm (SEA)</title>
 <indexterm><primary>Summary Extraction Algorithm, The</primary></indexterm>
+<title>The Summary Extraction Algorithm (SEA)</title>
 <indexterm><primary>SEA</primary><secondary>The Summary Extraction Algorithm</secondary></indexterm>
 <indexterm><primary>Template variable</primary><secondary>$(sea)</secondary></indexterm>
 <indexterm><primary>Document</primary><secondary>summary</secondary></indexterm>

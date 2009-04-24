@@ -766,11 +766,13 @@ $(R1) и $(R2).</para>
 выводимых результатов поиска. При использовании <application>searchd</application>,
 эта команда может быть указана в файле конфигурации <filename>searchd.conf</filename>.
 </para>
+
 <para>
 <indexterm><primary>Команда</primary><secondary>ResultContentType</secondary></indexterm>
 Команда <command>ResultContentType</command> используется для указания заголовка Content-Type страницы с результатами. 
 Значение по умолчанию: <literal>text/html</literal>.
 </para>
+
 <para>
 <indexterm><primary>Команда</primary><secondary>Locale</secondary></indexterm>
 Команда <command>Locale</command> используется для указания заголовка для задания LC_ALL локали при выдаче результатов
@@ -778,6 +780,10 @@ $(R1) и $(R2).</para>
 Значение по умолчанию: <literal>не определено</literal> (используется установленное ранее значение).
 </para>
 
+<para id="mkprefix-template"><indexterm><primary>Команда</primary><secondary>MakePrefixes</secondary></indexterm>
+При помощи команды <command>MakePrefixes yes</command> вы можете автоматически расширять поисковый запрос префиксами слов запроса.
+В частности, это можно использовать при организации подсказок при поиске. (См. также <xref linkend="mkprefix-cmd"/>)
+</para>
 
 	</sect2>
 

@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,46 +76,38 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="syslog"
+NAME="SYSLOG"
 >3.12. Using syslog</A
 ></H1
->
-	
-<A
-NAME="AEN2237"
+><A
+NAME="AEN2268"
 ></A
->
-<A
-NAME="AEN2239"
+><A
+NAME="AEN2270"
 ></A
->
-
-	<P
+><P
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > indexer uses syslog to log its messages. 
 Different verbose levels could be specified with -v option or by <B
-CLASS="command"
+CLASS="COMMAND"
 >LogLevel</B
 > command in config files:</P
->
-	<DIV
-CLASS="table"
+><DIV
+CLASS="TABLE"
 ><A
-NAME="AEN2245"
+NAME="AEN2276"
 ></A
 ><P
 ><B
 >Table 3-1. Verbose levels</B
 ></P
->
-		
-		<TABLE
+><TABLE
 BORDER="1"
 CLASS="CALSTABLE"
 ><COL><COL><COL><TBODY
@@ -169,101 +161,89 @@ CLASS="CALSTABLE"
 ></TR
 ></TBODY
 ></TABLE
->
-	</DIV
->
-	<P
+></DIV
+><P
 >You may use -l option to suppress log to stdout/stderr
 when running indexer via crontab. Without -l option log is sent both
 to stdout/stderr and to log files. If you do not like such behavior,
 run configure with <TT
-CLASS="literal"
+CLASS="LITERAL"
 >--disable-syslog</TT
 > flag and
 recompile indexer. Compiled without syslog support, indexer uses only
 stdout/stderr.</P
->
-	<P
+><P
 >Syslog uses different facilities to separate log
 messages. The indexer's default facility is LOCAL7. Facility could be
 changed during configure with
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >--enable-syslog=LOG_FACILITY</TT
 > option. LOG_FACILITY
 should be one of the standard facilities, usually listed in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/usr/include/sys/syslog.h</TT
 > header file.</P
->
-	<P
+><P
 >Facility helps to separate <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > messages from
 others. You can modify <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/etc/syslog.conf</TT
 > to tell
 syslog how to treat <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > messages. For example:
 	<PRE
-CLASS="programlisting"
->&#13;# Log all messages from DataparkSearch to separate file
-local7.*        -/var/log/DataparkSearch.log
-</PRE
+CLASS="PROGRAMLISTING"
+># Log all messages from DataparkSearch to separate file
+local7.*        -/var/log/DataparkSearch.log</PRE
 >
 	</P
->
-	<P
+><P
 >Other example:
 	<PRE
-CLASS="programlisting"
->&#13;# Send all DataparkSearch messages to host named central
+CLASS="PROGRAMLISTING"
+># Send all DataparkSearch messages to host named central
 # Syslog on central should be configured to allow this
-local7.*        @central
-</PRE
+local7.*        @central</PRE
 >
 	</P
->
-	<P
+><P
 >By default all messages are logged to
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >/var/log/messages</TT
 > as well. <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > could
 populate this file with a number of messages. To avoid this, add
 local7.none or local7.!* (ignore any messages from local7 facility) to
 your 'catch-all' log files.</P
->
-	<P
+><P
 >For example:
 	<PRE
-CLASS="programlisting"
->&#13;#
+CLASS="PROGRAMLISTING"
+>#
 # Some `catch-all' logfiles.
 #
 *.=info;*.=notice;*.=warn;\
         auth,authpriv.none;\
         cron,daemon.none;\
         mail,news.none;\
-        local7.!*               -/var/log/messages
-</PRE
+        local7.!*               -/var/log/messages</PRE
 >
 	</P
->
-	<P
+><P
 >Please take a look at syslogd(8) and syslog.conf(5) man
 pages for more detailed information about syslog and its configuration
 notes.</P
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

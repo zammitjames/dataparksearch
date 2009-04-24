@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,179 +76,157 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="lib"
+NAME="LIB"
 >9.2. Using <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libdpsearch</TT
 > library</A
 ></H1
->
-	
-<A
-NAME="AEN5559"
+><A
+NAME="AEN5596"
 ></A
->
-
-	<P
+><P
 >The <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libdpsearch</TT
 > is available
 for using it in third party applications. You can easily add search
 into your own application using library and include files installed in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/lib</TT
 > and <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/include</TT
 > 
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > directories. Each application which uses
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libdpsearch</TT
 > must have <TT
-CLASS="filename"
+CLASS="FILENAME"
 >dpsearch.h</TT
 > header file
 included.</P
->
-
-	<DIV
-CLASS="sect2"
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="lib-dpsconf"
+NAME="LIB-DPSCONF"
 >9.2.1. <TT
-CLASS="filename"
+CLASS="FILENAME"
 >dps-config</TT
 > script</A
 ></H2
->
-		
-		<P
+><P
 >When compiled with one of supported SQL
 back-end, <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libdpsearch</TT
 > requires some dependent libraries, for example
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libmysqlclient</TT
 >. You can find <TT
-CLASS="filename"
+CLASS="FILENAME"
 >dps-config</TT
 > script in
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/bin</TT
 > directory of <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > installation. This script helps to take
 in account required dependencies. <TT
-CLASS="filename"
+CLASS="FILENAME"
 >dps-config</TT
 > script can take several
 options in it's command line. By default <TT
-CLASS="filename"
+CLASS="FILENAME"
 >dps-config</TT
 > outputs all
 available options:</P
->
-
-		<P
->&#13;			<PRE
-CLASS="programlisting"
->&#13;Usage: ./dps-config [OPTIONS]
+><P
+>			<PRE
+CLASS="PROGRAMLISTING"
+>Usage: ./dps-config [OPTIONS]
 Options:
         [--version]
         [--libs]
-        [--cflags]
-</PRE
+        [--cflags]</PRE
 >
 		</P
->
-		<P
+><P
 >When executed with <CODE
-CLASS="option"
+CLASS="OPTION"
 >--libs</CODE
 >
 command line option <TT
-CLASS="filename"
+CLASS="FILENAME"
 >dps-config</TT
 > outputs all required to <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libdpsearch</TT
 >
 linker flags, for example:
 		<PRE
-CLASS="programlisting"
->&#13;# ./dps-config --libs
+CLASS="PROGRAMLISTING"
+># ./dps-config --libs
 -lm -L/usr/local/mysql/lib/mysql -lmysqlclient \
--L/usr/local/dpsearch/lib -ldpsearch
-</PRE
+-L/usr/local/dpsearch/lib -ldpsearch</PRE
 >
 		</P
->
-		<P
+><P
 >So you may insert <TT
-CLASS="filename"
+CLASS="FILENAME"
 >dps-config</TT
 > <CODE
-CLASS="option"
+CLASS="OPTION"
 >--libs</CODE
 > into CC compiler command line:
 		<PRE
-CLASS="programlisting"
->&#13;cc myprog.c -o myprog `dps-config --libs`
-</PRE
+CLASS="PROGRAMLISTING"
+>cc myprog.c -o myprog `dps-config --libs`</PRE
 >
 		</P
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="api"
+NAME="API"
 >9.2.2. <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > API</A
 ></H2
->
-		
-		<P
+><P
 >There is no detailed description of <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >
 API yet. This is because API is currently under rapid development and
 may  have major changes from version to version. You may use
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.c</TT
 > as an example of application which uses
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >libdpsearch</TT
 > library.</P
->
-	</DIV
->
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

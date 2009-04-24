@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,100 +76,80 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="content-enc"
+NAME="CONTENT-ENC"
 >3.3. Content-Encoding support</A
 ></H1
->
-	
-<A
-NAME="AEN723"
+><A
+NAME="AEN745"
 ></A
->
-
-	<P
->&#13;		<SPAN
-CLASS="application"
+><P
+>		<SPAN
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > engine
 supports HTTP compression (Content encoding). Compression can have a
 major impact on the performance of HTTP transactions. The only way to
 obtain higher performance is to reduce the number of bytes
-transmitted.
-</P
->
-
-	<P
+transmitted.</P
+><P
 >Using content encoding to receive a server's response you can reduce the traffic by twice or more.</P
->
-	<P
+><P
 >The <A
 HREF="ftp://ftp.isi.edu/in-notes/rfc2616.txt"
 TARGET="_top"
 >HTTP 1.1 (RFC 2616) specification</A
 >
 contains four content encoding methods: <TT
-CLASS="literal"
+CLASS="LITERAL"
 >gzip, deflate, compress</TT
 >, and <TT
-CLASS="literal"
+CLASS="LITERAL"
 >identity</TT
 >.</P
->
-
-	<P
+><P
 >When Content-encoding is enabled,
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >'s indexer sends to a server
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >Accept-Encoding: gzip,deflate,compress</TT
 > string in HTTP
 headers. </P
->
-
-	<P
+><P
 >If the server supports any of gzip, deflate or compress
 encoding, it sends gziped, deflated or compressed response.</P
->
-	<P
+><P
 >To compile <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > with
 HTTP Content encoding support, the <TT
-CLASS="literal"
+CLASS="LITERAL"
 >zlib</TT
 > library is
 required.</P
->
-
-	<P
+><P
 >To enable HTTP Content encoding support, configure
 <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > with the following
 option:</P
->
-
-	<P
->&#13;		<KBD
-CLASS="userinput"
+><P
+>		<KBD
+CLASS="USERINPUT"
 >./configure --with-zlib</KBD
 >
 	</P
->
-
-	<P
+><P
 >Use this option along with all the other necessary ones.</P
->
-</DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR

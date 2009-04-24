@@ -26,7 +26,7 @@ CONTENT="DataparkSearch - Full Featured Web site Open Source Search Engine Softw
 NAME="Keywords"
 CONTENT="shareware, freeware, download, internet, unix, utilities, search engine, text retrieval, knowledge retrieval, text search, information retrieval, database search, mining, intranet, webserver, index, spider, filesearch, meta, free, open source, full-text, udmsearch, website, find, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
 ><BODY
-CLASS="sect1"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000C4"
@@ -76,272 +76,221 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="sect1"
+CLASS="SECT1"
 ><H1
-CLASS="sect1"
+CLASS="SECT1"
 ><A
-NAME="searchd"
+NAME="SEARCHD"
 >5.4. SearchD support</A
 ></H1
->
-	
-<A
-NAME="AEN2988"
-></A
->
-
-	
-
-	<DIV
-CLASS="sect2"
-><H2
-CLASS="sect2"
 ><A
-NAME="searchd-why"
+NAME="AEN3019"
+></A
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="SEARCHD-WHY"
 >5.4.1. Why using searchd</A
 ></H2
->
-		
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Faster searching, especially when using
 ISpell, synonyms or segmenters for east asian languages. Related files are loaded into memory when searchd
 is started, while <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.cgi</TT
 > loads data before
 every query.</P
->
-<P
+><P
 >Also, <B
-CLASS="command"
+CLASS="COMMAND"
 >searchd</B
 > can preload url info data (20 bytes per URL indexed) and 
-cache mode limits (4 or 8 bytes per URL depend on limit type). This allow reduce average search time.
-</P
->
-			</LI
+cache mode limits (4 or 8 bytes per URL depend on limit type). This allow reduce average search time.</P
+></LI
 ><LI
->&#13;				<P
+><P
 >It is possible to distribute
 words index and web-server between different machines.</P
->
-			</LI
+></LI
 ></UL
->
-	</DIV
->
-
-	<DIV
-CLASS="sect2"
+></DIV
+><DIV
+CLASS="SECT2"
 ><H2
-CLASS="sect2"
+CLASS="SECT2"
 ><A
-NAME="searchd-start"
+NAME="SEARCHD-START"
 >5.4.2. Starting searchd</A
 ></H2
->
-		
-		<P
+><P
 >To start using searchd:</P
->
-		<P
+><P
 ></P
 ><UL
 ><LI
->&#13;				<P
+><P
 >Copy <TT
-CLASS="filename"
+CLASS="FILENAME"
 >$PREFIX/etc/searchd.conf-dist</TT
 > to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >.</P
->
-			</LI
-><LI
->&#13;				<P
->Edit <TT
-CLASS="filename"
->searchd.conf</TT
->.</P
->
-			</LI
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN3013"
+>Edit <TT
+CLASS="FILENAME"
+>searchd.conf</TT
+>.</P
+></LI
+><LI
+><P
+><A
+NAME="AEN3044"
 ></A
 >
 If you need preload url data to speed-up searches (this cost about 20 bytes of memory per url),
 add the following command to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 >:
 				<PRE
-CLASS="programlisting"
->&#13;PreloadURLData yes
-</PRE
->
-</P
->
-</LI
+CLASS="PROGRAMLISTING"
+>PreloadURLData yes</PRE
+></P
+></LI
 ><LI
 ><P
->&#13;<A
-NAME="AEN3020"
+><A
+NAME="AEN3051"
 ></A
 >
 You may also preload cache mode limits for most frequently used limit values using
 <B
-CLASS="command"
+CLASS="COMMAND"
 >PreloadLimit</B
 > command in <TT
-CLASS="filename"
+CLASS="FILENAME"
 >searchd.conf</TT
 > file:
 				<PRE
-CLASS="programlisting"
->&#13;PreloadLimit &#60;limit type&#62; &#60;limit value&#62;
-</PRE
->
-</P
->
-<P
+CLASS="PROGRAMLISTING"
+>PreloadLimit &lt;limit type&gt; &lt;limit value&gt;</PRE
+></P
+><P
 >For example:
 			<PRE
-CLASS="programlisting"
->&#13;PreloadLimit tag Unix
-</PRE
->
-</P
->
-</LI
+CLASS="PROGRAMLISTING"
+>PreloadLimit tag Unix</PRE
+></P
+></LI
 ><LI
->&#13;				<P
+><P
 >Add the following command to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >search.htm</TT
 >:</P
->
-				<P
->&#13;<TT
-CLASS="literal"
+><P
+><TT
+CLASS="LITERAL"
 >DBAddr searchd://hostname/</TT
 > or <TT
-CLASS="literal"
+CLASS="LITERAL"
 >DBAddr searchd://hostname:port/</TT
 >, e.g.
 				<PRE
-CLASS="programlisting"
->&#13;DBAddr searchd://localhost/
-</PRE
->
-</P
->
-				<P
+CLASS="PROGRAMLISTING"
+>DBAddr searchd://localhost/</PRE
+></P
+><P
 >Default <TT
-CLASS="literal"
+CLASS="LITERAL"
 >port</TT
 > value is 7003</P
->
-			</LI
+></LI
 ><LI
->&#13;<P
+><P
 ><A
-NAME="AEN3039"
+NAME="AEN3070"
 ></A
 >
 You may start several searchd's children answering search queries simultaneously. Use <B
-CLASS="command"
+CLASS="COMMAND"
 >MaxClients</B
 > comamnd to specify the number of
-searchd's children. Value by default is 1.
-</P
->
-<PRE
-CLASS="programlisting"
->&#13;MaxClients 2
-</PRE
->
-</LI
+searchd's children. Value by default is 1.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxClients 2</PRE
+></LI
 ><LI
->&#13;				<P
+><P
 >Start searchd:</P
->
-				<P
->&#13;					<KBD
-CLASS="userinput"
->/usr/local/dpsearch/sbin/searchd &#38;</KBD
+><P
+>					<KBD
+CLASS="USERINPUT"
+>/usr/local/dpsearch/sbin/searchd &amp;</KBD
 >
 				</P
->
-			</LI
+></LI
 ></UL
->
-		<P
+><P
 >To suppress output to stderr, use
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >-l</TT
 > option. The output will go through syslog only
 (in case syslog support was not disabled during installation with
 <TT
-CLASS="literal"
+CLASS="LITERAL"
 >--disable-syslog</TT
 >). In case syslog is disabled, it
 is possible to direct stderr to a file: </P
->
-		<P
->&#13;			<KBD
-CLASS="userinput"
->/usr/local/dpsearch/sbin/searchd 2&#62;/var/log/searchd.log &#38;</KBD
+><P
+>			<KBD
+CLASS="USERINPUT"
+>/usr/local/dpsearch/sbin/searchd 2&gt;/var/log/searchd.log &amp;</KBD
 >
 		</P
->
-		<P
->&#13;			<TT
-CLASS="literal"
+><P
+>			<TT
+CLASS="LITERAL"
 >searchd</TT
 > just like
 <TT
-CLASS="filename"
+CLASS="FILENAME"
 >indexer</TT
 > can be used with an option of a
 configuration file, e.g. relative path to <TT
-CLASS="filename"
+CLASS="FILENAME"
 >/etc</TT
 >
 directory of <SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > installation:
 		<PRE
-CLASS="programlisting"
->&#13;searchd searchd1.conf
-</PRE
+CLASS="PROGRAMLISTING"
+>searchd searchd1.conf</PRE
 >
 		</P
->
-		<P
+><P
 >or with absolute path:</P
->
-		<P
->&#13;			<KBD
-CLASS="userinput"
+><P
+>			<KBD
+CLASS="USERINPUT"
 >searchd /usr/local/dpsearch/etc/searchd1.conf</KBD
 >
 		</P
->
-	</DIV
->
-
-	
-
-</DIV
+></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
@@ -387,7 +336,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><SPAN
-CLASS="application"
+CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > performance issues</TD
 ><TD
