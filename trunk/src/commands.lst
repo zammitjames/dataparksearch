@@ -1,3 +1,21 @@
+/**/
+/*   Copyright (C) 2003-2009 Datapark corp. All rights reserved.               */
+/**/
+/*   This program is free software; you can redistribute it and/or modify      */
+/*   it under the terms of the GNU General Public License as published by      */
+/*   the Free Software Foundation; either version 2 of the License, or         */
+/*   (at your option) any later version.                                       */
+/**/
+/*   This program is distributed in the hope that it will be useful,           */
+/*   but WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
+/*   GNU General Public License for more details.                              */
+/**/
+/*   You should have received a copy of the GNU General Public License         */
+/*   along with this program; if not, write to the Free Software               */
+/*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+/**/
+/**/
 	{"Include",		1,1,	do_include},
 	{"ImportEnv",		1,1,	env_rpl_env_var},
 	{"DBAddr",		1,1,	env_rpl_var},
@@ -177,7 +195,7 @@
 	{"LoadChineseList",	0,2,	add_chinese},
 	{"LoadKoreanList",      0,2,    add_korean},
 	{"LoadThaiList",        0,2,    add_thai},
-	{"Limit",		1,1,	add_limit},
+	{"Limit",		1,3,	add_limit},
 	{"ServerTable",		1,1,	add_srv_table},
 	{"FlushServerTable",	0,0,	flush_srv_table},
 	{"ServerDB",            1,100,  add_srv_db},

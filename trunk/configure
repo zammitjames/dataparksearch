@@ -2794,7 +2794,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=dpsearch
- VERSION=4.52
+ VERSION=4.53-`date "+%d%m%Y"`
 
 
 cat >>confdefs.h <<_ACEOF

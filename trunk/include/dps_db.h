@@ -131,6 +131,8 @@ extern __C_LINK int __DPSCALL DpsTargets(DPS_AGENT *Indexer);
 
 extern __C_LINK int __DPSCALL DpsLimit8(DPS_AGENT *A, DPS_UINT8URLIDLIST *L,const char *field, int type, void *db);
 extern __C_LINK int __DPSCALL DpsLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type, void *db);
+extern __C_LINK int __DPSCALL DpsSQLLimit8(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *req, int type, DPS_DB *db);
+extern __C_LINK int __DPSCALL DpsSQLLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *req, int type, DPS_DB *db);
 
 extern __C_LINK DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A);
 extern __C_LINK int __DPSCALL DpsClearDatabase(DPS_AGENT *A);

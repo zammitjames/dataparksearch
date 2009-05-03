@@ -86,7 +86,7 @@ are:</para>
 				<para>Solaris 10 x86, gcc</para>
 			</listitem>
 			<listitem>
-				<para>Ubuntu Linux 6.10</para>
+				<para>Ubuntu Linux 6.10, 7.x, 8.x, 9.04</para>
 			</listitem>
 			<listitem>
 				<para>Gentoo Linux 2007.0 amd64</para>

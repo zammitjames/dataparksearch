@@ -5574,6 +5574,146 @@ int DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type
 }
 
 
+__C_LINK int __DPSCALL DpsSQLLimit8(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *req, int type, DPS_DB *db) {
+	DPS_SQLRES SQLres;
+	dps_uint8  offset;
+	char       *qbuf;
+	size_t     url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
+	size_t	   i, p, nrows, qbuflen;
+	int	   rc = DPS_OK, u;
+	urlid_t    rec_id = 0;
+
+	if ((qbuf = (char*)DpsMalloc((qbuflen = 128 + dps_strlen(req)))) == NULL) {
+		return DPS_ERROR;
+	}
+	
+	DpsSQLResInit(&SQLres);
+	u = 1;
+	offset = (dps_uint8)0;
+	while (u) {
+	  dps_snprintf(qbuf, qbuflen, "%s OFFSET %ld LIMIT %d", req, offset, url_num);
+	  for (i = 0; i < 3; i++) {
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+	    rc = DpsSQLQuery(db, &SQLres, qbuf);
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+	    if(DPS_OK != rc) {
+	      if (i < 2) { DPSSLEEP(120); continue; }
+	        DPS_FREE(qbuf);
+		return rc;
+	    } else break;
+	  }
+	
+	  nrows = DpsSQLNumRows(&SQLres);
+	  L->Item = (DPS_UINT8URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT8URLID));
+	  if(L->Item == NULL) {
+	    DpsLog(A, DPS_LOG_ERROR, "Error: %d %s", errno, strerror(errno));
+		db->errcode=0;
+		DpsSQLFree(&SQLres);
+	        DPS_FREE(qbuf);
+		return DPS_ERROR;
+	  }
+	  for(i = p = 0; i < nrows; i++) {
+		const char *val0 = DpsSQLValue(&SQLres, i, 0);
+		const char *val1 = DpsSQLValue(&SQLres, i, 1);
+
+		switch(type){
+
+			case DPS_IFIELD_TYPE_HEX8STR: 
+			  DpsDecodeHex8Str(val0,&L->Item[L->nitems + p].hi, &L->Item[L->nitems + p].lo, NULL, NULL); break;
+
+			case DPS_IFIELD_TYPE_INT: 
+			  L->Item[L->nitems + p].hi = atoi(val0); L->Item[L->nitems + p].lo = 0; break;
+		}
+		L->Item[L->nitems + p].url_id = DPS_ATOI(val1);
+		p++;
+	  }
+	  DpsSQLFree(&SQLres);
+	  offset += (dps_uint8)nrows;
+	  DpsLog(A, DPS_LOG_EXTRA, "%ld records processed.", offset);
+	  L->nitems += p;
+	  u = (nrows == url_num);
+	}
+	DPS_FREE(qbuf);
+	return rc;
+}
+
+__C_LINK int __DPSCALL DpsSQLLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *req, int type, DPS_DB *db) {
+	DPS_SQLRES SQLres;
+	dps_uint8  offset;
+	char       *qbuf;
+	size_t     url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
+	size_t	   i, p, nrows, qbuflen;
+	int	   rc = DPS_OK, u;
+	urlid_t    rec_id = 0;
+
+	if ((qbuf = (char*)DpsMalloc((qbuflen = 128 + dps_strlen(req)))) == NULL) {
+		return DPS_ERROR;
+	}
+	
+	DpsSQLResInit(&SQLres);
+	u = 1;
+	offset = (dps_uint8)0;
+	while (u) {
+	  dps_snprintf(qbuf, qbuflen, "%s OFFSET %ld LIMIT %d", req, offset, url_num);
+	  for (i = 0; i < 3; i++) {
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+	    rc = DpsSQLQuery(db, &SQLres, qbuf);
+	    if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+	    if(DPS_OK != rc) {
+	      if (i < 2) { DPSSLEEP(120); continue; }
+	        DPS_FREE(qbuf);
+		return rc;
+	    } else break;
+	  }
+	
+	  nrows = DpsSQLNumRows(&SQLres);
+	  L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT4URLID));
+	  if(L->Item == NULL) {
+	    DpsLog(A, DPS_LOG_ERROR, "Error: %d %s", errno, strerror(errno));
+		db->errcode=0;
+		DpsSQLFree(&SQLres);
+	        DPS_FREE(qbuf);
+		return DPS_ERROR;
+	  }
+	  for(i = p = 0; i < nrows; i++) {
+		const char *val0 = DpsSQLValue(&SQLres, i, 0);
+		const char *val1 = DpsSQLValue(&SQLres, i, 1);
+
+		switch(type){
+
+			case DPS_IFIELD_TYPE_HOUR: L->Item[L->nitems + p].val = atoi(val0) / 3600; break;
+			case DPS_IFIELD_TYPE_MIN: L->Item[L->nitems + p].val = atoi(val0) / 60; break;
+			case DPS_IFIELD_TYPE_HOSTNAME: {
+				DPS_URL *url = DpsURLInit(NULL);
+				if (url != NULL) {
+				  if(!DpsURLParse(url,val0)){
+					if(url->hostname) L->Item[L->nitems + p].val = DpsStrHash32(url->hostname);
+					else L->Item[L->nitems + p].val=0;
+				  }else
+					L->Item[L->nitems + p].val=0;
+				  DpsURLFree(url);
+				}
+			}
+				break;
+		        case DPS_IFIELD_TYPE_STR2CRC32: 
+			  L->Item[L->nitems + p].val = DpsHash32(val0, (dps_strlen(val0)) > 2 ? 2 : dps_strlen(val0)); break;
+			case DPS_IFIELD_TYPE_STRCRC32: L->Item[L->nitems + p].val = DpsStrHash32(val0); break;
+			case DPS_IFIELD_TYPE_INT: L->Item[L->nitems + p].val = atoi(val0); break;
+		}
+		L->Item[L->nitems + p].url_id = DPS_ATOI(val1);
+		p++;
+	  }
+	  DpsSQLFree(&SQLres);
+	  offset += (dps_uint8)nrows;
+	  DpsLog(A, DPS_LOG_EXTRA, "%ld records processed.", offset);
+	  L->nitems += p;
+	  u = (nrows == url_num);
+	}
+	DPS_FREE(qbuf);
+	return rc;
+}
+
+
 /***************************************************************************/
 #ifdef WITH_POPHOPS
 #define f(x) (1.0 / (1.0 + exp(-1.0 * hops * (x))))

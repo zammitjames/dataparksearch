@@ -72,7 +72,7 @@
 	{"IspellUsePrefixes",	1,1,	env_rpl_var},
 	{"LangMapFile",		1,1,	add_langmap},
 	{"LangMapUpdate",	1,1,	env_rpl_bool_var},
-	{"Limit",		1,1,	add_limit},
+	{"Limit",		1,3,	add_limit},
 	{"Listen",		1,1,	env_rpl_var},
 	{"LoadChineseList",	0,2,	add_chinese},
 	{"LoadKoreanList",      0,2,    add_korean},
@@ -186,3 +186,21 @@
 	{"wf",   		1,1,	env_rpl_var},
 	{"WrdFiles",		1,1,	env_rpl_var},
   
+/*   (at your option) any later version.                                       */
+/*   along with this program; if not, write to the Free Software               */
+/*   but WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/*   Copyright (C) 2003-2009 Datapark corp. All rights reserved.               */
+/*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+/*   GNU General Public License for more details.                              */
+/*   it under the terms of the GNU General Public License as published by      */
+/*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
+/*   the Free Software Foundation; either version 2 of the License, or         */
+/*   This program is distributed in the hope that it will be useful,           */
+/*   This program is free software; you can redistribute it and/or modify      */
+/*   You should have received a copy of the GNU General Public License         */
+/**/
+/**/
+/**/
+/**/
+/**/
+/**/
