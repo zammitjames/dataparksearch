@@ -1136,9 +1136,11 @@ static int add_limit(void *Cfg, size_t ac, char **av) {
 		  Conf->Flags.limits |= DPS_LIMIT_CTYPE;
 		} else if(!strcasecmp(sc, "siteid")) {
 		  Conf->Flags.limits |= DPS_LIMIT_SITE;
+		} else if(!strcasecmp(sc, "link")) {
+/*		  Conf->Flags.limits |= DPS_LIMIT_LINK;*/
 		} else {
-		  if (ac < 3) {
-		    dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "SQL request isn't specified.");
+		  if (ac == 1) {
+		    dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "SQL request isn't specified. [ac:%d]", ac);
 		    return DPS_ERROR;
 		  }
 		  if (strcasecmp(sc, "hex8str") && strcasecmp(sc, "strcrc32") && strcasecmp(sc, "int") && strcasecmp(sc, "hour")
@@ -1148,7 +1150,7 @@ static int add_limit(void *Cfg, size_t ac, char **av) {
 		  }
 		  dps_snprintf(nm, nm_len, "Req-%s", av[1]);
 		  DpsVarListReplaceStr(&Conf->Vars, nm, av[2]);
-		  if (ac < 4) {
+		  if (ac == 3) {
 		    dps_snprintf(nm, nm_len, "DBAddr-%s", av[1]);
 		    DpsVarListReplaceStr(&Conf->Vars, nm, av[3]);
 		  }
