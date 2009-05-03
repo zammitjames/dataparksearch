@@ -221,14 +221,18 @@ edit as usually your <filename>search.htm</filename> template and add the "cache
 
 <sect2 id="limits">
 <title>Using search limits</title>
-<para>To use search limits in cache mode, you should add appropriate
+<para><indexterm><primary>Command</primary><secondary>Limit</secondary></indexterm>
+To use search limits in cache mode, you should add appropriate
 <literal>Limit</literal> command(s) to your <filename>indexer.conf</filename> 
 (or <filename>cached.conf</filename>, if <command>cached</command> is used) and to <filename>search.htm</filename>
 or <filename>searchd.conf</filename> (if <literal>searchd</literal> is used).
+<synopsis>
+Limit prm:type [SQL-Request [DBAddr]]
+</synopsis>
 </para>
 
 
-<para><indexterm><primary>Command</primary><secondary>Limit</secondary></indexterm>
+<para>
 To use, for example, search limit by tag, by category and by site, add follow lines to
 <filename>search.htm</filename> or to <filename>indexer.conf</filename>
 (<filename>searchd.conf</filename>, if <literal>searchd</literal> is used).
@@ -245,7 +249,7 @@ constraint, <literal>tag</literal> - type of constraint.
 
 <para>Instead of tag/category/siteid in example above you can use any of values from table below:
 <table>
-<title>Cache limit types</title>
+<title> Cache mode predefined limit types</title>
  <tgroup cols="2">
   <tbody>
 
@@ -262,6 +266,35 @@ constraint, <literal>tag</literal> - type of constraint.
  </tgroup>
 </table>
 </para>
+
+<para>If the second, optional, parameter <option>SQL-Request</option> is specified for <command>Limit</command> command, then this SQL-query is executed for limit construction. 
+This SQL-query should return all possible pairs of limit value and url.rec_id. E.g.:
+<programlisting>
+Limit prm:strcrc32 "SELECT label, rec_id FROM labels" pgsql://u:p@localhost/sitedb/
+</programlisting>
+where prm - is the name of limit and the name of CGI-parameter is used for this limit; strcrc32 - is the type of limit, particularly for this limit is a string. 
+Instead of strcrc32 it's possible to use any of the following limit types:
+<table>
+<title>SQL-based cache mode limit types</title>
+ <tgroup cols="2">
+  <tbody>
+<row><entry>hex8str</entry><entry>Hex or hexavigesimal (base-26) string similar to those used in categories. The nested limit will be created.</entry></row>
+<row><entry>strcrc32</entry><entry>A string, the hash32 value is calculated on, used as key for this limit.</entry></row>
+<row><entry>int</entry><entry>An integer (4-byte wide).</entry></row>
+  </tbody>
+ </tgroup>
+</table>
+</para>
+
+<para>With third, optional, parameter <option>DBAddr</option> for <command>Limit</command> command it's possible to specify a connection to an alternate SQL-database where to get data for this limit.
+</para>
+
+<para>It's possible to omit optional parameters <option>SQL-Request</option> and <option>DBAddr</option> of <command>Limit</command> command in search template <filename>search.htm</filename> or in <filename>searchd.conf</filename> file (when <command>searchd</command> is used), since they are used only for limit construction.
+<programlisting>
+Limit prm:strcrc32
+</programlisting>
+</para>
+
 
 </sect2>
 

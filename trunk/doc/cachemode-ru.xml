@@ -1,7 +1,6 @@
-<sect1 id="cachemode">
-	<title>Способ хранения Cache
+<sect1 id="cachemode"><title>
 <indexterm><primary>Способы хранения</primary><secondary>cache</secondary></indexterm>
-        </title>
+Способ хранения Cache</title>
 
 	<sect2 id="cachemode-intro">
 		<title>Введение</title>
@@ -217,14 +216,17 @@ run-splitter -k -s
 
 <sect2 id="limits">
 <title>Использование лимитов при поиске</title>
-<para>Для применения лимитов при поиске с использование способа хранения cache,
+<para><indexterm><primary>Команда</primary><secondary>Limit</secondary></indexterm>
+Для применения лимитов при поиске с использование способа хранения cache,
 необходимо добавить соответсвующие команды <command>Limit</command> в ваши <filename>indexer.conf</filename> 
 (или <filename>cached.conf</filename>, если используется <command>cached</command>) и
 <filename>search.htm</filename> или <filename>searchd.conf</filename> (если используется <command>searchd</command>).
+<synopsis>
+Limit prm:type [SQL-Request [DBAddr]]
+</synopsis>
 </para>
 
-
-<para><indexterm><primary>Команда</primary><secondary>Limit</secondary></indexterm>
+<para>
 Для использования, например, лимитов по тэгу, категории и сайту, добавьте следующие строки в ваши файлы конфигурации:
 </para>
 <programlisting>
@@ -238,7 +240,7 @@ Limit site:siteid
 
 <para>Вместо tag/category/siteid в примере выше вы можете использовать значения из следующей таблицы:
 <table>
-<title>Типы лимитов способа хранения Cache</title>
+<title>Типы предопределенных лимитов способа хранения Cache</title>
  <tgroup cols="2">
   <tbody>
 
@@ -249,11 +251,40 @@ Limit site:siteid
 <row><entry>content</entry><entry>Лимит по MIME-типу.</entry></row>
 <row><entry>siteid</entry><entry>Лимит по url.site_id (по имени сервера).</entry></row>
 <row><entry>link</entry><entry>Лимит по документам, ссылающимся на указаный url.rec_id.</entry></row>
-<row><entry>hostname (устаревшее)</entry><entry>Лимит по имени сервера. Это утсравшая команда, вытесненная лимитом по site_id</entry></row>
+<row><entry>hostname (устаревшее)</entry><entry>Лимит по имени сервера. Это устаревшая команда, вытесненная лимитом по site_id</entry></row>
 
   </tbody>
  </tgroup>
 </table>
+</para>
+
+<para>Если для команды <command>Limit</command> указан второй, необязательный, параметр <option>SQL-Request</option>, то при построении индекса будет выполнятся заданный запрос
+к SQL-базе. Этот запрос должен возращать все возможные пары значение лимита и соответсвующее ему значение url.rec_id. Например:
+<programlisting>
+Limit prm:strcrc32 "SELECT label, rec_id FROM labels" pgsql://u:p@localhost/sitedb/
+</programlisting>
+здесь prm - имя лимита и имя CGI-параметра, используемого для задания ограничения по этому лимиту; strcrc32 - тип используемого лимита, в данном случа - строка. Вместо strcrc32 возможно использовать
+следующие типы:
+<table>
+<title>Типы SQL-лимитов способа хранения Cache</title>
+ <tgroup cols="2">
+  <tbody>
+<row><entry>hex8str</entry><entry>Шестнадцатеричная строка, или строка в base-26, аналогичная используемым в лимите по категории. В этом случае строится вложенный лимит.</entry></row>
+<row><entry>strcrc32</entry><entry>Строка символов, по которой расчитывается значение hash32, служащее ключом этого лимита.</entry></row>
+<row><entry>int</entry><entry>Целое (4-байтовое) число.</entry></row>
+  </tbody>
+ </tgroup>
+</table>
+</para>
+
+<para>Третьим, необязательным, пораметром <option>DBAddr</option> для команды <command>Limit</command> можно указать соединение к SQL-базе, отличной от базы, используемой для поиска.
+</para>
+
+<para>В поисковом шаблоне <filename>search.htm</filename> или в файле конфигурации <filename>searchd.conf</filename> (если используется <command>searchd</command>) указывать необязательные параметры
+<option>SQL-Request</option> и <option>DBAddr</option> нужно, они используются только при построении лимита.
+<programlisting>
+Limit prm:strcrc32
+</programlisting>
 </para>
 
 </sect2>
