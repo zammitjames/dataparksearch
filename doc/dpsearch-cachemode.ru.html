@@ -2,14 +2,12 @@
 <HTML
 ><HEAD
 ><TITLE
->Способ хранения Cache
-
-        </TITLE
+>&#13;Способ хранения Cache</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="DataparkSearch Engine 4.52"
+TITLE="DataparkSearch Engine 4.53"
 HREF="index.ru.html"><LINK
 REL="UP"
 TITLE="Хранение данных"
@@ -46,7 +44,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->DataparkSearch Engine 4.52: Справочное руководство</TH
+>DataparkSearch Engine 4.53: Справочное руководство</TH
 ></TR
 ><TR
 ><TD
@@ -83,11 +81,11 @@ CLASS="SECT1"
 CLASS="SECT1"
 ><A
 NAME="CACHEMODE"
->5.2. Способ хранения Cache
-<A
+>5.2. <A
 NAME="AEN2957"
 ></A
-></A
+>
+Способ хранения Cache</A
 ></H1
 ><DIV
 CLASS="SECT2"
@@ -672,7 +670,11 @@ NAME="LIMITS"
 >5.2.8. Использование лимитов при поиске</A
 ></H2
 ><P
->Для применения лимитов при поиске с использование способа хранения cache,
+><A
+NAME="AEN3141"
+></A
+>
+Для применения лимитов при поиске с использование способа хранения cache,
 необходимо добавить соответсвующие команды <B
 CLASS="COMMAND"
 >Limit</B
@@ -696,13 +698,13 @@ CLASS="FILENAME"
 > (если используется <B
 CLASS="COMMAND"
 >searchd</B
->).</P
+>).
+<PRE
+CLASS="SYNOPSIS"
+>Limit prm:type [SQL-Request [DBAddr]]</PRE
+></P
 ><P
-><A
-NAME="AEN3149"
-></A
->
-Для использования, например, лимитов по тэгу, категории и сайту, добавьте следующие строки в ваши файлы конфигурации:</P
+>Для использования, например, лимитов по тэгу, категории и сайту, добавьте следующие строки в ваши файлы конфигурации:</P
 ><PRE
 CLASS="PROGRAMLISTING"
 >Limit t:tag
@@ -721,11 +723,11 @@ CLASS="LITERAL"
 <DIV
 CLASS="TABLE"
 ><A
-NAME="AEN3157"
+NAME="AEN3158"
 ></A
 ><P
 ><B
->&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 5-1. Типы лимитов способа хранения Cache</B
+>&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 5-1. Типы предопределенных лимитов способа хранения Cache</B
 ></P
 ><TABLE
 BORDER="1"
@@ -777,11 +779,91 @@ CLASS="CALSTABLE"
 ><TD
 >hostname (устаревшее)</TD
 ><TD
->Лимит по имени сервера. Это утсравшая команда, вытесненная лимитом по site_id</TD
+>Лимит по имени сервера. Это устаревшая команда, вытесненная лимитом по site_id</TD
 ></TR
 ></TBODY
 ></TABLE
 ></DIV
+></P
+><P
+>Если для команды <B
+CLASS="COMMAND"
+>Limit</B
+> указан второй, необязательный, параметр <CODE
+CLASS="OPTION"
+>SQL-Request</CODE
+>, то при построении индекса будет выполнятся заданный запрос
+к SQL-базе. Этот запрос должен возращать все возможные пары значение лимита и соответсвующее ему значение url.rec_id. Например:
+<PRE
+CLASS="PROGRAMLISTING"
+>Limit prm:strcrc32 "SELECT label, rec_id FROM labels" pgsql://u:p@localhost/sitedb/</PRE
+>
+здесь prm - имя лимита и имя CGI-параметра, используемого для задания ограничения по этому лимиту; strcrc32 - тип используемого лимита, в данном случа - строка. Вместо strcrc32 возможно использовать
+следующие типы:
+<DIV
+CLASS="TABLE"
+><A
+NAME="AEN3190"
+></A
+><P
+><B
+>&#1058;&#1072;&#1073;&#1083;&#1080;&#1094;&#1072; 5-2. Типы SQL-лимитов способа хранения Cache</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><TBODY
+><TR
+><TD
+>hex8str</TD
+><TD
+>Шестнадцатеричная строка, или строка в base-26, аналогичная используемым в лимите по категории. В этом случае строится вложенный лимит.</TD
+></TR
+><TR
+><TD
+>strcrc32</TD
+><TD
+>Строка символов, по которой расчитывается значение hash32, служащее ключом этого лимита.</TD
+></TR
+><TR
+><TD
+>int</TD
+><TD
+>Целое (4-байтовое) число.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+><P
+>Третьим, необязательным, пораметром <CODE
+CLASS="OPTION"
+>DBAddr</CODE
+> для команды <B
+CLASS="COMMAND"
+>Limit</B
+> можно указать соединение к SQL-базе, отличной от базы, используемой для поиска.</P
+><P
+>В поисковом шаблоне <TT
+CLASS="FILENAME"
+>search.htm</TT
+> или в файле конфигурации <TT
+CLASS="FILENAME"
+>searchd.conf</TT
+> (если используется <B
+CLASS="COMMAND"
+>searchd</B
+>) указывать необязательные параметры
+<CODE
+CLASS="OPTION"
+>SQL-Request</CODE
+> и <CODE
+CLASS="OPTION"
+>DBAddr</CODE
+> нужно, они используются только при построении лимита.
+<PRE
+CLASS="PROGRAMLISTING"
+>Limit prm:strcrc32</PRE
 ></P
 ></DIV
 ></DIV

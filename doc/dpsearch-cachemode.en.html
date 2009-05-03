@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="DataparkSearch Engine 4.52"
+TITLE="DataparkSearch Engine 4.53"
 HREF="index.en.html"><LINK
 REL="UP"
 TITLE="Storing data"
@@ -44,7 +44,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->DataparkSearch Engine 4.52: Reference manual</TH
+>DataparkSearch Engine 4.53: Reference manual</TH
 ></TR
 ><TR
 ><TD
@@ -636,7 +636,11 @@ NAME="LIMITS"
 >5.2.8. Using search limits</A
 ></H2
 ><P
->To use search limits in cache mode, you should add appropriate
+><A
+NAME="AEN2877"
+></A
+>
+To use search limits in cache mode, you should add appropriate
 <TT
 CLASS="LITERAL"
 >Limit</TT
@@ -660,13 +664,13 @@ CLASS="FILENAME"
 > (if <TT
 CLASS="LITERAL"
 >searchd</TT
-> is used).</P
+> is used).
+<PRE
+CLASS="SYNOPSIS"
+>Limit prm:type [SQL-Request [DBAddr]]</PRE
+></P
 ><P
-><A
-NAME="AEN2885"
-></A
->
-To use, for example, search limit by tag, by category and by site, add follow lines to
+>To use, for example, search limit by tag, by category and by site, add follow lines to
 <TT
 CLASS="FILENAME"
 >search.htm</TT
@@ -700,11 +704,11 @@ CLASS="LITERAL"
 <DIV
 CLASS="TABLE"
 ><A
-NAME="AEN2897"
+NAME="AEN2898"
 ></A
 ><P
 ><B
->Table 5-1. Cache limit types</B
+>Table 5-1.  Cache mode predefined limit types</B
 ></P
 ><TABLE
 BORDER="1"
@@ -761,6 +765,88 @@ CLASS="CALSTABLE"
 ></TBODY
 ></TABLE
 ></DIV
+></P
+><P
+>If the second, optional, parameter <CODE
+CLASS="OPTION"
+>SQL-Request</CODE
+> is specified for <B
+CLASS="COMMAND"
+>Limit</B
+> command, then this SQL-query is executed for limit construction. 
+This SQL-query should return all possible pairs of limit value and url.rec_id. E.g.:
+<PRE
+CLASS="PROGRAMLISTING"
+>Limit prm:strcrc32 "SELECT label, rec_id FROM labels" pgsql://u:p@localhost/sitedb/</PRE
+>
+where prm - is the name of limit and the name of CGI-parameter is used for this limit; strcrc32 - is the type of limit, particularly for this limit is a string. 
+Instead of strcrc32 it's possible to use any of the following limit types:
+<DIV
+CLASS="TABLE"
+><A
+NAME="AEN2930"
+></A
+><P
+><B
+>Table 5-2. SQL-based cache mode limit types</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><TBODY
+><TR
+><TD
+>hex8str</TD
+><TD
+>Hex or hexavigesimal (base-26) string similar to those used in categories. The nested limit will be created.</TD
+></TR
+><TR
+><TD
+>strcrc32</TD
+><TD
+>A string, the hash32 value is calculated on, used as key for this limit.</TD
+></TR
+><TR
+><TD
+>int</TD
+><TD
+>An integer (4-byte wide).</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+><P
+>With third, optional, parameter <CODE
+CLASS="OPTION"
+>DBAddr</CODE
+> for <B
+CLASS="COMMAND"
+>Limit</B
+> command it's possible to specify a connection to an alternate SQL-database where to get data for this limit.</P
+><P
+>It's possible to omit optional parameters <CODE
+CLASS="OPTION"
+>SQL-Request</CODE
+> and <CODE
+CLASS="OPTION"
+>DBAddr</CODE
+> of <B
+CLASS="COMMAND"
+>Limit</B
+> command in search template <TT
+CLASS="FILENAME"
+>search.htm</TT
+> or in <TT
+CLASS="FILENAME"
+>searchd.conf</TT
+> file (when <B
+CLASS="COMMAND"
+>searchd</B
+> is used), since they are used only for limit construction.
+<PRE
+CLASS="PROGRAMLISTING"
+>Limit prm:strcrc32</PRE
 ></P
 ></DIV
 ></DIV
