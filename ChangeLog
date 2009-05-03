@@ -2,6 +2,9 @@
 History
 -------
 
+Latest snapshot:
+	* Limit command has been extended to accept SQL-based limits.
+	
 25 Apr 2009: 4.52
 	* Busy timemout has been increased for SQLite.
 	* Fixes for sub-document recoding and content-length calculation for a document with sub-documents.
