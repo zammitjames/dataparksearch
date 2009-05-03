@@ -1104,41 +1104,58 @@ static int add_srv_table(void *Cfg, size_t ac,char **av){
 }
 
 
-static int add_limit(void *Cfg, size_t ac,char **av){
+static int add_limit(void *Cfg, size_t ac, char **av) {
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	char * sc;
 	char * nm;
+	size_t nm_len;
+	int rc = DPS_OK;
 	
 	if((sc = strchr(av[1],':'))){
 		*sc++='\0';
-		nm=(char*)DpsMalloc(dps_strlen(av[1])+8);
-		if (nm == NULL) return DPS_ERROR;
-		sprintf(nm,"Limit-%s",av[1]);
+		nm_len = dps_strlen(av[1]) + 24;
+		nm=(char*)DpsMalloc(nm_len);
+		if (nm == NULL) {
+		  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Can't alloc %d bytes, Limit command: %s", nm_len, av[1]);
+		  return DPS_ERROR;
+		}
+		dps_snprintf(nm, nm_len, "Limit-%s", av[1]);
 
 		DpsVarListReplaceStr(&Conf->Vars, nm, sc);
 
 		if(!strcasecmp(sc, "category")) {
 		  Conf->Flags.limits |= DPS_LIMIT_CAT;
-		} else
-		  if(!strcasecmp(sc, "tag")) {
-		    Conf->Flags.limits |= DPS_LIMIT_TAG;
-		  } else
-		    if(!strcasecmp(sc, "time")) {
-		      Conf->Flags.limits |= DPS_LIMIT_TIME;
-		    } else
-		      if(!strcasecmp(sc, "language")) {
-			Conf->Flags.limits |= DPS_LIMIT_LANG;
-		      } else
-			if(!strcasecmp(sc, "content")) {
-			  Conf->Flags.limits |= DPS_LIMIT_CTYPE;
-			} else
-			  if(!strcasecmp(sc, "siteid")) {
-			    Conf->Flags.limits |= DPS_LIMIT_SITE;
-			  }
+		} else if(!strcasecmp(sc, "tag")) {
+		  Conf->Flags.limits |= DPS_LIMIT_TAG;
+		} else if(!strcasecmp(sc, "time")) {
+		  Conf->Flags.limits |= DPS_LIMIT_TIME;
+		} else if(!strcasecmp(sc, "language")) {
+		  Conf->Flags.limits |= DPS_LIMIT_LANG;
+		} else if(!strcasecmp(sc, "content")) {
+		  Conf->Flags.limits |= DPS_LIMIT_CTYPE;
+		} else if(!strcasecmp(sc, "siteid")) {
+		  Conf->Flags.limits |= DPS_LIMIT_SITE;
+		} else {
+		  if (ac < 3) {
+		    dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "SQL request isn't specified.");
+		    return DPS_ERROR;
+		  }
+		  if (strcasecmp(sc, "hex8str") && strcasecmp(sc, "strcrc32") && strcasecmp(sc, "int") && strcasecmp(sc, "hour")
+		      && strcasecmp(sc, "hostname")  && strcasecmp(sc, "str2crc32")) {
+		    dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Unknown Limit type %s", sc);
+		    return DPS_ERROR;
+		  }
+		  dps_snprintf(nm, nm_len, "Req-%s", av[1]);
+		  DpsVarListReplaceStr(&Conf->Vars, nm, av[2]);
+		  if (ac < 4) {
+		    dps_snprintf(nm, nm_len, "DBAddr-%s", av[1]);
+		    DpsVarListReplaceStr(&Conf->Vars, nm, av[3]);
+		  }
+		}
 		DPS_FREE(nm);
-	}
-	return DPS_OK;
+	} else rc = DPS_ERROR;
+	return rc;
 }
 
 static int preload_limit(void *Cfg, size_t ac,char **av){

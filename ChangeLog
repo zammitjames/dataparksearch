@@ -3,6 +3,7 @@ History
 -------
 
 25 Apr 2009: 4.52
+	* Busy timemout has been increased for SQLite.
 	* Fixes for sub-document recoding and content-length calculation for a document with sub-documents.
 	* A fix for incomplete passing text items from a subdocument to parant document.
 	* The command parser has been fixed for case when a section in allin<section>: operator contains character '_' or '-'.

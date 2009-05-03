@@ -2864,40 +2864,43 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 		  DpsVarListReplaceStr(vars, qname, str);
 
 		  sprintf(str,"Limit-%s",tok);
-		  if((lim=DpsVarListFindStr(vars,str,NULL))){
-			int ltype=0;
-			const char * type, * fname = NULL;
+		  if((lim = DpsVarListFindStr(vars, str, NULL))) {
+			int ltype = 0;
+			const char *fname = NULL;
 			char * llt;
-			dps_strncpy(str, lim, len);
 			
-			if((type = dps_strtok_r(str, ":", &llt))) {
-			  if(!strcasecmp(type, "category")) {
-			    ltype = DPS_LIMTYPE_NESTED; fname = DPS_LIMFNAME_CAT;
-			  } else
-			  if(!strcasecmp(type, "tag")) {
-			    ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_TAG;
-			  } else
-			  if(!strcasecmp(type, "link")) {
-			    ltype = DPS_LIMTYPE_LINEAR_INT; fname = DPS_LIMFNAME_LINK;
-			  } else
-			  if(!strcasecmp(type, "time")) {
-			    ltype = DPS_LIMTYPE_TIME; fname = DPS_LIMFNAME_TIME;
-			  } else
-			  if(!strcasecmp(type, "hostname")) {
-			    ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_HOST;
-			  } else
-			  if(!strcasecmp(type, "language")) {
-			    ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_LANG;
-			  } else
-			  if(!strcasecmp(type, "content")) {
-			    ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_CTYPE;
-			  } else
-			  if(!strcasecmp(type, "siteid")) {
-			    ltype = DPS_LIMTYPE_LINEAR_INT; fname = DPS_LIMFNAME_SITE;
-			  }
-			  if((fname != NULL) && *val != '\0') {
-			    DpsAddSearchLimit(Agent,ltype,fname,val);
-			  }
+			if(!strcasecmp(lim, "category")) {
+			  ltype = DPS_LIMTYPE_NESTED; fname = DPS_LIMFNAME_CAT;
+			} else if(!strcasecmp(lim, "tag")) {
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_TAG;
+			} else if(!strcasecmp(lim, "link")) {
+			  ltype = DPS_LIMTYPE_LINEAR_INT; fname = DPS_LIMFNAME_LINK;
+			} else if(!strcasecmp(lim, "time")) {
+			  ltype = DPS_LIMTYPE_TIME; fname = DPS_LIMFNAME_TIME;
+			} else if(!strcasecmp(lim, "hostname")) {
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_HOST;
+			} else if(!strcasecmp(lim, "language")) {
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_LANG;
+			} else if(!strcasecmp(lim, "content")) {
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = DPS_LIMFNAME_CTYPE;
+			} else if(!strcasecmp(lim, "siteid")) {
+			  ltype = DPS_LIMTYPE_LINEAR_INT; fname = DPS_LIMFNAME_SITE;
+			} else if (!strcasecmp(lim, "hex8str")) {
+			  ltype = DPS_LIMTYPE_NESTED, fname = str + 6;
+			} else if (!strcasecmp(lim, "strcrc32")) {
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str + 6;
+			} else if (!strcasecmp(lim, "hour")) {
+			  ltype = DPS_LIMTYPE_TIME; fname = str + 6;
+			} else if (!strcasecmp(lim, "hostname")) {
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str + 6;
+			} else if (!strcasecmp(lim, "char2")) {
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str + 6;
+			} else if (!strcasecmp(lim, "int")) {
+			  ltype = DPS_LIMTYPE_LINEAR_INT; fname = str + 6;
+			}
+
+			if((fname != NULL) && *val != '\0') {
+			  DpsAddSearchLimit(Agent, ltype, fname, val);
 			}
 		  }
 		}
