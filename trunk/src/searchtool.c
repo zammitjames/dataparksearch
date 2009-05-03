@@ -2886,17 +2886,17 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 			} else if(!strcasecmp(lim, "siteid")) {
 			  ltype = DPS_LIMTYPE_LINEAR_INT; fname = DPS_LIMFNAME_SITE;
 			} else if (!strcasecmp(lim, "hex8str")) {
-			  ltype = DPS_LIMTYPE_NESTED, fname = str + 6;
+			  ltype = DPS_LIMTYPE_NESTED, fname = str;
 			} else if (!strcasecmp(lim, "strcrc32")) {
-			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str + 6;
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str;
 			} else if (!strcasecmp(lim, "hour")) {
-			  ltype = DPS_LIMTYPE_TIME; fname = str + 6;
+			  ltype = DPS_LIMTYPE_TIME; fname = str;
 			} else if (!strcasecmp(lim, "hostname")) {
-			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str + 6;
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str;
 			} else if (!strcasecmp(lim, "char2")) {
-			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str + 6;
+			  ltype = DPS_LIMTYPE_LINEAR_CRC; fname = str;
 			} else if (!strcasecmp(lim, "int")) {
-			  ltype = DPS_LIMTYPE_LINEAR_INT; fname = str + 6;
+			  ltype = DPS_LIMTYPE_LINEAR_INT; fname = str;
 			}
 
 			if((fname != NULL) && *val != '\0') {
