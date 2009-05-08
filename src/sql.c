@@ -3006,25 +3006,35 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	} else if ( (Indexer->flags & (DPS_FLAG_SORT_HOPS | DPS_FLAG_SORT_EXPIRED | DPS_FLAG_SORT_POPRANK)) 
 	     || (Indexer->flags & DPS_FLAG_DONTSORT_SEED)  ) {
 	  int notfirst = 0;
-	  sprintf(sortstr, " ORDER BY ");
 	  if (Indexer->flags & DPS_FLAG_SORT_HOPS) {
-	    sprintf(DPS_STREND(sortstr), "hops");
-	    notfirst = 1;
-	  }
-	  if (Indexer->flags & DPS_FLAG_DONTSORT_SEED) {
-	    dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed%c=%d", (random()&1) ? '<' : '>', 0x1FFF + (random() & 0x3FFF));
-	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",seed" : "seed");
+	    sprintf(DPS_STREND(sortstr), "ORDER BY hops");
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
-	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "pop_rank DESC");
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_EXPIRED) {
-	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",next_index_time" : "next_index_time");
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",next_index_time" : "ORDER BY next_index_time");
 	    notfirst = 1;
 	  }
-	  sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",rec_id" : "rec_id");
+	  if (Indexer->flags & DPS_FLAG_DONTSORT_SEED) {
+	    if(db->DBSQL_LIMIT){
+	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%u %s %s %s LIMIT 1", db->from, 
+		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
+		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
+		       where[0] ? "AND" : "", where, sortstr);
+	    } else {
+	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%u %s %s %s", db->from, 
+		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
+		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
+		       where[0] ? "AND" : "", where, sortstr);
+	    }
+
+	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
+	    dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes,0,0));
+	    DpsSQLFree(&SQLRes);
+	  }
 	}
 		
 			
