@@ -347,7 +347,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					Res->Doc[ndocs].method = DPS_METHOD_GET;
 					DpsDocFromTextBuf(&Res->Doc[ndocs], tok);
 #ifdef WITH_MULTIDBADDR
-					{
+					if ((Agent->flags & DPS_FLAG_UNOCON) ? (Agent->Conf->dbl.nitems > 1) : (Agent->dbl.nitems > 1)) {
 					  char *dbstr = DpsVarListFindStr(&Res->Doc[ndocs].Sections, "dbnum", NULL);
 					  if (dbstr != NULL) {
 					    Res->Doc[ndocs].dbnum = DPS_ATOI(dbstr);
