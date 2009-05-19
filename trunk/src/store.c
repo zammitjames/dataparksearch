@@ -619,7 +619,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
   DPS_CONV dc_uni, uni_bc;
   const char *hello = "E\0";
   dpshash32_t rec_id;
-  size_t ChunkSize, DocSize, dbnum;
+  size_t ChunkSize, DocSize, dbnum = Doc->dbnum;
   char *Source = NULL, *SourceToFree = NULL;
   int needFreeSource = 1;
   int NOprefixHL = 0;
@@ -682,7 +682,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
   index_limit = (size_t)DpsVarListFindInt(&query->Vars, "IndexDocSizeLimit", 0);
   rec_id = DpsURL_ID(Doc, NULL);
 /*  dbnum = ((size_t)rec_id) % ((query->flags & DPS_FLAG_UNOCON) ? query->Conf->dbl.nitems : query->dbl.nitems);*/
-  if (query->flags & DPS_FLAG_UNOCON) {
+/*  if (query->flags & DPS_FLAG_UNOCON) {
     if (query->Conf->dbl.cnt_db) {
       dbnum = query->Conf->dbl.dbfrom + ((size_t)rec_id) % query->Conf->dbl.cnt_db;
     } else {
@@ -695,7 +695,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
       dbnum = ((size_t)rec_id) % query->dbl.nitems;
     }
   }
-
+*/
   if ((tag.socket_sd = s = query->Demons.Demon[dbnum].stored_sd) <= 0)  {
 #ifdef HAVE_ZLIB
     if ((query->Flags.do_store == 0) || (GetStore(query, Doc, rec_id, dbnum, "") != DPS_OK) || Doc->Buf.buf == NULL)

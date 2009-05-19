@@ -689,7 +689,7 @@ MaxDepth 2
 <programlisting>
 MaxDocsPerServer &lt;number&gt;
 </programlisting>
-<para>Limits the number of documents retrieved from Server.
+<para>Limits the number of hrefs accepted from a Server.
 Default value is -1, that means no limits.
 If set to positive value, no more than given number of pages will be
 indexed from one server during this run of index.
@@ -701,6 +701,22 @@ MaxDocsPerServer 100
 </para>
 </sect2>
 
+<sect2 id="maxhrefsperserver_cmd">
+<title><command>MaxHrefsPerServer</command> command</title>
+<indexterm><primary>Command</primary><secondary>MaxHrefsPerServer</secondary></indexterm>
+<programlisting>
+MaxHrefsPerServer &lt;number&gt;
+</programlisting>
+<para>Limits the number of documents retrieved from a Server.
+Default value is -1, that means no limits.
+If set to positive value, no more than given number of hrefs will be picked up from one server during this run of index.
+Can be set multiple times before <command>Server</command> command and takes effect
+till the end of config file or till next <command>MaxHrefsPerServer</command> command.
+<programlisting>
+MaxHrefsPerServer 100
+</programlisting>
+</para>
+</sect2>
 
 
 <sect2 id="maxneterrors_cmd">

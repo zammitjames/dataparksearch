@@ -1421,7 +1421,7 @@ NAME="AEN1801"
 CLASS="PROGRAMLISTING"
 >MaxDocsPerServer &lt;number&gt;</PRE
 ><P
->Limits the number of documents retrieved from Server.
+>Limits the number of hrefs accepted from a Server.
 Default value is -1, that means no limits.
 If set to positive value, no more than given number of pages will be
 indexed from one server during this run of index.
@@ -1443,14 +1443,48 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="MAXNETERRORS_CMD"
+NAME="MAXHREFSPERSERVER_CMD"
 >3.10.34. <B
+CLASS="COMMAND"
+>MaxHrefsPerServer</B
+> command</A
+></H2
+><A
+NAME="AEN1812"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxHrefsPerServer &lt;number&gt;</PRE
+><P
+>Limits the number of documents retrieved from a Server.
+Default value is -1, that means no limits.
+If set to positive value, no more than given number of hrefs will be picked up from one server during this run of index.
+Can be set multiple times before <B
+CLASS="COMMAND"
+>Server</B
+> command and takes effect
+till the end of config file or till next <B
+CLASS="COMMAND"
+>MaxHrefsPerServer</B
+> command.
+<PRE
+CLASS="PROGRAMLISTING"
+>MaxHrefsPerServer 100</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="MAXNETERRORS_CMD"
+>3.10.35. <B
 CLASS="COMMAND"
 >MaxNetErrors</B
 > command</A
 ></H2
 ><A
-NAME="AEN1812"
+NAME="AEN1823"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1482,13 +1516,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="READTIMEOUT_CMD"
->3.10.35. <B
+>3.10.36. <B
 CLASS="COMMAND"
 >ReadTimeOut</B
 > command</A
 ></H2
 ><A
-NAME="AEN1824"
+NAME="AEN1835"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1522,13 +1556,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="DOCTIMEOUT_CMD"
->3.10.36. <B
+>3.10.37. <B
 CLASS="COMMAND"
 >DocTimeOut</B
 > command</A
 ></H2
 ><A
-NAME="AEN1837"
+NAME="AEN1848"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1562,13 +1596,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="NETERRORDELAYTIME_CMD"
->3.10.37. <B
+>3.10.38. <B
 CLASS="COMMAND"
 >NetErrorDelayTime</B
 > command</A
 ></H2
 ><A
-NAME="AEN1850"
+NAME="AEN1861"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1594,13 +1628,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="COOKIES_CMD"
->3.10.38. <B
+>3.10.39. <B
 CLASS="COMMAND"
 >Cookies</B
 > command</A
 ></H2
 ><A
-NAME="AEN1861"
+NAME="AEN1872"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1627,13 +1661,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="ROBOTS_CMD"
->3.10.39. <B
+>3.10.40. <B
 CLASS="COMMAND"
 >Robots</B
 > command</A
 ></H2
 ><A
-NAME="AEN1872"
+NAME="AEN1883"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1667,14 +1701,14 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="ROBOTSPERIOD_CMD"
->3.10.40. <B
+>3.10.41. <B
 CLASS="COMMAND"
 >RobotsPeriod</B
 > command</A
 ></H2
 ><P
 ><A
-NAME="AEN1886"
+NAME="AEN1897"
 ></A
 >
 By defaults, robots.txt data holds in SQL-database for one week. You may change this period using
@@ -1704,14 +1738,14 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="CRAWLDELAY_CMD"
->3.10.41. <B
+>3.10.42. <B
 CLASS="COMMAND"
 >CrawlDelay</B
 > command</A
 ></H2
 ><P
 ><A
-NAME="AEN1898"
+NAME="AEN1909"
 ></A
 >
 Use this command to specify default pause in seconds between consecutive fetches from same server. 
@@ -1742,13 +1776,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="SECTION_CMD"
->3.10.42. <B
+>3.10.43. <B
 CLASS="COMMAND"
 >Section</B
 > command</A
 ></H2
 ><A
-NAME="AEN1909"
+NAME="AEN1920"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1806,13 +1840,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="HREFSECTION_CMD"
->3.10.43. <B
+>3.10.44. <B
 CLASS="COMMAND"
 >HrefSection</B
 > command</A
 ></H2
 ><A
-NAME="AEN1926"
+NAME="AEN1937"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1844,13 +1878,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="FASTHREFCHECK"
->3.10.44. <B
+>3.10.45. <B
 CLASS="COMMAND"
 >FastHrefCheck</B
 > command</A
 ></H2
 ><A
-NAME="AEN1938"
+NAME="AEN1949"
 ></A
 ><P
 >The "<B
@@ -1868,13 +1902,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="INDEX_CMD"
->3.10.45. <B
+>3.10.46. <B
 CLASS="COMMAND"
 >Index</B
 > command</A
 ></H2
 ><A
-NAME="AEN1947"
+NAME="AEN1958"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1902,13 +1936,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="PROXYAUTHBASIC_CMD"
->3.10.46. <B
+>3.10.47. <B
 CLASS="COMMAND"
 >ProxyAuthBasic</B
 > command</A
 ></H2
 ><A
-NAME="AEN1958"
+NAME="AEN1969"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1939,13 +1973,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="PROXY_CMD"
->3.10.47. <B
+>3.10.48. <B
 CLASS="COMMAND"
 >Proxy</B
 > command</A
 ></H2
 ><A
-NAME="AEN1970"
+NAME="AEN1981"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1984,13 +2018,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AUTHBASIC_CMD"
->3.10.48. <B
+>3.10.49. <B
 CLASS="COMMAND"
 >AuthBasic</B
 > command</A
 ></H2
 ><A
-NAME="AEN1982"
+NAME="AEN1993"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2024,13 +2058,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="SERVERWEIGHT_CMD"
->3.10.49. <B
+>3.10.50. <B
 CLASS="COMMAND"
 >ServerWeight</B
 > command</A
 ></H2
 ><A
-NAME="AEN1993"
+NAME="AEN2004"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2051,13 +2085,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="OPTIMIZEATUPDATE_CMD"
->3.10.50. <B
+>3.10.51. <B
 CLASS="COMMAND"
 >OptimizeAtUpdate</B
 > command</A
 ></H2
 ><A
-NAME="AEN2003"
+NAME="AEN2014"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2079,13 +2113,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="SKIPUNREFERRED_CMD"
->3.10.51. <B
+>3.10.52. <B
 CLASS="COMMAND"
 >SkipUnreferred</B
 > command</A
 ></H2
 ><A
-NAME="AEN2013"
+NAME="AEN2024"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2104,13 +2138,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="BIND_CMD"
->3.10.52. <B
+>3.10.53. <B
 CLASS="COMMAND"
 >Bind</B
 > command</A
 ></H2
 ><A
-NAME="AEN2022"
+NAME="AEN2033"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2124,13 +2158,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="PROVIDEREF_CMD"
->3.10.53. <B
+>3.10.54. <B
 CLASS="COMMAND"
 >ProvideReferer</B
 > command</A
 ></H2
 ><A
-NAME="AEN2030"
+NAME="AEN2041"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2147,13 +2181,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="LONGESTTEXTITEMS_CMD"
->3.10.54. <B
+>3.10.55. <B
 CLASS="COMMAND"
 >LongestTextItems</B
 > command</A
 ></H2
 ><A
-NAME="AEN2039"
+NAME="AEN2050"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2167,13 +2201,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="MKPREFIX-CMD"
->3.10.55. <B
+>3.10.56. <B
 CLASS="COMMAND"
 >MakePrefixes</B
 > command</A
 ></H2
 ><A
-NAME="AEN2045"
+NAME="AEN2056"
 ></A
 ><P
 >With <B

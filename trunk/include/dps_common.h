@@ -414,7 +414,9 @@ typedef struct {
         DPS_EXPIRE      ExpireAt;
         dps_uint4       MaxHops;
         dps_uint4       ndocs;
+        dps_uint4       nhrefs;
         dps_uint4       MaxDocsPerServer;/**< Maximum number of document from Server at one indexer run */
+        dps_uint4       MaxHrefsPerServer;/**< Maximum number of href from Server at one indexer run */
         dps_uint4       MaxDepth;
         time_t          crawl_delay;     /**< Delay between consecutive fetches from this server, in seconds */
         time_t          *last_crawled;

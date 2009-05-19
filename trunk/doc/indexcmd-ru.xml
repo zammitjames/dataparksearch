@@ -752,7 +752,7 @@ MaxDepth 2
 <programlisting>
 MaxDocsPerServer &lt;number&gt;
 </programlisting>
-<para>Щграничивает число документов, выкачиваемых с одного Server.
+<para>Ограничивает число документов, выкачиваемых с одного Server.
 Значение по умолчанию: -1, что обозначает &quot;без ограничений&quot;.
 Если задано неотрицательное значение, за один запуск <command>indexer</command>
 будет проиндексировано не более указанного числа документов,
@@ -766,6 +766,25 @@ MaxDocsPerServer 100
 </para>
 </sect2>
 
+<sect2 id="maxhrefsperserver_cmd">
+<title>Команда <command>MaxHrefsPerServer</command></title>
+<indexterm><primary>Команда</primary><secondary>MaxHrefsPerServer</secondary></indexterm>
+<programlisting>
+MaxHrefsPerServer &lt;number&gt;
+</programlisting>
+<para>Ограничивает число ссылок, собираемых с одного Server.
+Значение по умолчанию: -1, что обозначает &quot;без ограничений&quot;.
+Если задано неотрицательное значение, за один запуск <command>indexer</command>
+будет собирать не более указанного числа ссылок,
+относящихся к одной команда <command>Server</command> или <command>Realm</command>.
+ Может быть задано несколько команд <command>MaxHrefsPerServer</command>, например,
+по одной на каждую команду <command>Server</command>. Действует до конца файла конфигурации, либо до следующей команды
+<command>MaxHrefsPerServer</command>.
+<programlisting>
+MaxHrefsPerServer 100
+</programlisting>
+</para>
+</sect2>
 
 
 <sect2 id="maxneterrors_cmd">
