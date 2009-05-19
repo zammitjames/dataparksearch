@@ -215,6 +215,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  new->MaxHops = srv->MaxHops;
 	  new->MaxDepth = srv->MaxDepth;
 	  new->MaxDocsPerServer = srv->MaxDocsPerServer;
+	  new->MaxHrefsPerServer = srv->MaxHrefsPerServer;
 	  new->ExpireAt = srv->ExpireAt;
 	  new->use_robots = srv->use_robots;
 	  {
@@ -431,12 +432,14 @@ __C_LINK int __DPSCALL DpsServerInit(DPS_SERVER * srv){
 	}
 	srv->Match.match_type=DPS_MATCH_BEGIN;
 	srv->weight = 1;                       /* default ServerWeight */
-	srv->MinSiteWeight = 0.0;               /* default Minimum Site weight to be indexed */
+	srv->MinSiteWeight = 0.0;              /* default Minimum Site weight to be indexed */
 	srv->MinServerWeight = 0.0;            /* default Minimum Server weight to be indexed */
 	srv->MaxHops = DPS_DEFAULT_MAX_HOPS;   /* default MaxHops value */
 	srv->MaxDepth = DPS_DEFAULT_MAX_DEPTH; /* default MaxDepth value */
 	srv->MaxDocsPerServer = (dps_uint4)-1; /* default MaxDocsPerServer value */
+	srv->MaxHrefsPerServer = (dps_uint4)-1;/* default MaxHrefsPerServer value */
 	srv->ndocs = 0;                        /* no docs indexed */
+	srv->nhrefs = 0;                       /* no hrefs added */
 	srv->use_robots = 1;
 	return(0);
 }

@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* MaxHrefsPerServer command has been added. Uset it to limit the maximum number of hrefs accepted per server during one indexer run.
 	* Limit command has been extended to accept SQL-based limits.
 	
 25 Apr 2009: 4.52

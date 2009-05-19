@@ -267,6 +267,7 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	    DpsLog(Indexer, DPS_LOG_DEBUG, "Visit later by Server/Realm/Skip command, skip it");
 	    goto check_ret;
 	  }
+
 /*
 	  if (Href->hops > Srv->MaxHops) {
 	    DpsLog(Indexer, DPS_LOG_DEBUG, "too many hops (%d, max: %d), skip it", Href->hops, Srv->MaxHops);
@@ -280,6 +281,18 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	    DpsLog(Indexer, DPS_LOG_DEBUG, "too deep depth (%d, max: %d), skip it", depth, Srv->MaxDepth);
 	    Href->method = DPS_METHOD_DISALLOW;
 	    goto check_ret;
+	  }
+
+	  if (Srv->MaxHrefsPerServer != (dps_uint4)-1) {
+	    if (Srv->MaxHrefsPerServer > Srv->nhrefs) {
+	      Href->method = DPS_METHOD_VISITLATER;
+	      DpsLog(Indexer, DPS_LOG_DEBUG, " The maximum of %d hrefs per Server/Realm/Skip command reached, skip it", Srv->MaxHrefsPerServer);
+	      goto check_ret;
+	    } else {
+	      DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
+	      if (Srv) Srv->nhrefs++;
+	      DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+	    }
 	  }
 
 #if 0
@@ -1671,7 +1684,9 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				return result;
 			}
 			
+			DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 			if (Server) Server->ndocs++;
+			DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 
 /*			DpsParseHTTPResponse(Indexer, Doc);*/
 			DpsDocProcessResponseHeaders(Indexer, Doc);
@@ -2154,7 +2169,9 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 				return result;
 			}
 			
+			DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 			if (Server) Server->ndocs++;
+			DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 
 /*			DpsParseHTTPResponse(Indexer, Doc);*/
 			DpsDocProcessResponseHeaders(Indexer, Doc);
