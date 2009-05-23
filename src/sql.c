@@ -5440,13 +5440,13 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
 	  dps_snprintf(L->shm_name, PATH_MAX, "%sLINK.%d", DPSSLASHSTR, A->handle);
 	  if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
-	    sprintf(db->errstr, "shm_open (%s): %d: %s", L->shm_name, errno, strerror(errno));
+	    DpsLog(A, DPS_LOG_ERROR, "shm_open (%s): %d: %s", L->shm_name, errno, strerror(errno));
 	    return DPS_ERROR;
 	  }
 	}
 	if (( L->Item = (DPS_UINT4URLID*)
 		 mmap( NULL, (nrows + 1) * sizeof(DPS_UINT4URLID), PROT_READ | PROT_WRITE, MAP_SHARED, fd, (off_t)0)) == NULL) {
-	  sprintf(db->errstr, "mmap: %d: %s", errno, strerror(errno));
+	  DpsLog (A, DPS_LOG_ERROR, "mmap: %d: %s", errno, strerror(errno));
 	  return DPS_ERROR;
 	}
 	ftruncate(fd, (off_t) (nrows + 1) * sizeof(DPS_UINT4URLID));
@@ -5454,11 +5454,11 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	L->mapped = 1;
 #elif defined(HAVE_SYS_SHM_H)
 	if ((fd = shmget(ftok(L->shm_name, 0), (nrows+1)*sizeof(DPS_UINT4URLID), IPC_CREAT|SHM_R|SHM_W|(SHM_R>>3)|(SHM_R>>6) )) < 0) {
-	  sprintf(Env->errstr, "shmget (%s): %d: %s", L->shm_name, errno, strerror(errno));
+	  DpsLog(A, DPS_LOG_ERROR, "shmget (%s): %d: %s", L->shm_name, errno, strerror(errno));
 	  return DPS_ERROR;
 	}
 	if ((L->Item = (DPS_UINT4URLID*)shmat( fd, NULL, 0)) == (void*)-1) {
-	  sprintf(db->errstr, "shmat: %d: %s", errno, strerror(errno));
+	  DpsLog(A, DPS_LOG_ERROR, "shmat: %d: %s", errno, strerror(errno));
 	  return DPS_ERROR;
 	}
 	L->mapped = 1;
@@ -5466,7 +5466,7 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (nrows + 1) * sizeof(DPS_UINT4URLID));
 #endif
 	if(L->Item == NULL) {
-	  sprintf(db->errstr, "Error: %s (alloc: %d bytes",strerror(errno), (nrows + 1) * sizeof(DPS_UINT4URLID) );
+	  DpsLog(A, DPS_LOG_ERROR, "Error: %s (alloc: %d bytes",strerror(errno), (nrows + 1) * sizeof(DPS_UINT4URLID) );
 	  db->errcode = 1;
 	  DpsSQLFree(&SQLres);
 	  DPS_FREE(qbuf);
