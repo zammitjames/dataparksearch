@@ -507,6 +507,10 @@ static void TemplateSet(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok,DPS_I
 	var=DpsVarListFindStr(&attr,"Name","");
 	val=DpsVarListFindStr(&attr,"Content","");
 	DpsVarListReplaceStr(vars,var,val);
+
+	if (strncasecmp(var, "ENV.", 4) == 0) {
+	  setenv(var+4, val, 1);
+	}
 	
 	DpsVarListFree(&attr);
 }
