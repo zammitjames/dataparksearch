@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2009 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -210,9 +210,9 @@ void * dps_strncat(void *dst0, const void *src0, size_t length) {
 
 size_t dps_strlen(const char *src) {
 #if 1
-  register const char *s;
+  register const char *s = src;
 
-  for (s = src; *s; s++);
+  if (s) for (; *s; s++);
   return(s - src);
 
 #else
