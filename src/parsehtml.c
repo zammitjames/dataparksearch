@@ -745,7 +745,7 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 		Item.str = dps_strtok_r(buf_content, "\r\n", &lt);
 		Item.section_name = BSec->name; /*"body";*/
 		while(Item.str){
-		        Item.len = (lt != NULL) ? (lt - Item.str) : 0;
+		        Item.len = (lt != NULL) ? (lt - Item.str) : dps_strlen(Item.str);
 			DpsTextListAdd(&Doc->TextList, &Item);
 			Item.str = dps_strtok_r(NULL, "\r\n", &lt);
 		}
