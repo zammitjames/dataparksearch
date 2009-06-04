@@ -39,7 +39,7 @@
             <b>relevancy</b>&nbsp;|&nbsp;<a href="?np=0&amp;q=second&amp;wf=1000000000&s=DRP">last modified date</a>
         </td></tr>
 </table><DL>
-  <DT>1.
+  <DT>1.<!-- DP_ID: 3-->
   <a href="http://site/test2.html" TARGET="_blank">
     Test2  </a>
   <small>[<b>0.091%</b> Popularity: <b>0.25000</b>]</small>
@@ -73,7 +73,7 @@
   </table>
 
 </DL><DL>
-  <DT>2.
+  <DT>2.<!-- DP_ID: 5-->
   <a href="http://site/test.xml" TARGET="_blank">
     http://site/test.xml  </a>
   <small>[<b>0.091%</b> Popularity: <b>0.25000</b>]</small>

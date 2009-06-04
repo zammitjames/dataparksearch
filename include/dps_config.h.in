@@ -91,7 +91,7 @@
 /* Define if you want word count in relevancy calculation */
 #undef WITH_REL_WRDCOUNT
 
-/* Define if you want to track relevance summands */
+/* Define if you want to track relevance commands */
 #undef WITH_REL_TRACK
 
 /* best first word position for relevancy calculation */

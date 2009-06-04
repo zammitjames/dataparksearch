@@ -1069,7 +1069,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
 	const char	*ct=DpsVarListFindStr(&Doc->Sections,"Content-Type","");
 	const char	*ce=DpsVarListFindStr(&Doc->Sections,"Content-Encoding","");
-	int		result=DPS_OK;
+	int		result = DPS_OK;
+	size_t          i, r;
 	
 	if(!strcmp(DPS_NULL2EMPTY(Doc->CurURL.filename), "robots.txt")) return DPS_OK;
 
@@ -1160,7 +1161,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    DPS_MATCH       *Alias;
 	    DPS_MATCH_PART  Parts[10];
 	    size_t nparts = 10;
-	    size_t i, buf_len;
+	    size_t buf_len;
 
 	    buf = (char*)DpsMalloc(buf_len = (Doc->Buf.size + 1024));
 	    if (buf == NULL) return DPS_OK;
@@ -1179,6 +1180,24 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    Doc->Buf.size = buf_len + (Doc->Buf.content - Doc->Buf.buf);*/
 	    if (Doc->Buf.pattern == NULL) DPS_FREE(buf);
 
+	  }
+
+	  for (r = 0; r < 256; r++) {
+	    for(i = 0; i < Indexer->Conf->Vars.Root[r].nvars; i++) {
+		DPS_VAR *Sec = &Indexer->Conf->Vars.Root[r].Var[i];
+		if (Sec->section) {
+		  DPS_VAR *Dsec = DpsVarListFind(&Doc->Sections, Sec->name);
+		  if (Dsec && Dsec->val) {
+		        DPS_TEXTITEM	Item;
+			Item.section = Sec->section;
+			Item.strict = Sec->strict;
+			Item.str = Dsec->val;
+			Item.section_name = Sec->name;
+			Item.len = 0;
+			DpsTextListAdd(&Doc->TextList, &Item);
+		  }
+		}
+	    }
 	  }
 
 #ifdef WITH_MP3
