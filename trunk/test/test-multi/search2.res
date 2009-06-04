@@ -47,7 +47,7 @@
   <table width=60%>
     <tr>
       <td>
-        <small>This is a text file. No title available. <b>abcdefghijklmnopqrstuvwxyz</b> ...</small>
+        <small>This is a text file. No title available. <b>abcdefghijklmnopqrstuvwxyz</b> Ford motor company ...</small>
       </td>
     </tr>
     <tr>
@@ -57,7 +57,7 @@
            <small>
              <A HREF="http://site/test1.txt" TARGET="_blank">http://site/test1.txt</A>
              <font color="#008800">
-              - 69 bytes [text/plain]
+              - 87 bytes [text/plain]
               - 
 	      	      	      <DD><small>[<a href="?np=0&amp;q=abcdefghijklmnopqrstuvwxyz&amp;site=388628276">More result from this site
 		    	        </a>]</small></DD>

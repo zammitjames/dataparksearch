@@ -66,10 +66,10 @@
 				<para>CentOS 3.1, CentOS 3.3</para>
 			</listitem>
 			<listitem>
-				<para>Debian GNU/Linux (i386)</para>
+				<para>Debian GNU/Linux (Lenny, Etch) (i386)</para>
 			</listitem>
 			<listitem>
-				<para>FreeBSD 2.2.x, 3.x, 4.x, 5.x, 6.x</para>
+				<para>FreeBSD 2.2.x, 3.x, 4.x, 5.x, 6.x, 7.0</para>
 			</listitem>
 			<listitem>
 				<para>Linux Fedora Core-1, Kernel 2.4.22-1.2174</para>
@@ -87,10 +87,13 @@
 				<para>Solaris 10 x86, gcc</para>
 			</listitem>
 			<listitem>
-				<para>Ubuntu Linux 6.10, 7.x, 8.x, 9.04</para>
+				<para>Ubuntu Linux 6.10, 7.x, 8.x, 9.04 (i386 and amd)</para>
 			</listitem>
 			<listitem>
 				<para>Gentoo Linux 2007.0 amd64</para>
+			</listitem>
+			<listitem>
+				<para>OpenBSD 4.5 (i386)</para>
 			</listitem>
 		</itemizedlist>
 

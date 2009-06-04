@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
-<TITLE>mnoGoSearch: t</TITLE>
+<TITLE>mnoGoSearch: ford mot co</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -13,7 +13,7 @@
   <tr>
     <td>
       <BR> Search for:
-      <INPUT TYPE="text" NAME="q" SIZE="50" value="t" >
+      <INPUT TYPE="text" NAME="q" SIZE="50" value="ford mot co" >
       <INPUT TYPE="submit" NAME="cmd" value="Search!" >
       <small><a href="?form=extended">Extended</a></small>
       <BR><BR>
@@ -26,164 +26,28 @@
 <table bgcolor=#EEEEEE width=100% border=0>
   <tr>
     <td>
-      <small>Search for <b>t</b>.</small>
-      <small>Search results: <b>t: 37 / 37</b>.</small>
+      <small>Search for <b>ford mot co</b>.</small>
+      <small>Search results: <b>ford: 1 / 1, mot: 1 / 1, co: 1 / 1</b>.</small>
     </td>
     <td>
-      <small>Results <b>1-5</b> of <B>5</B>.</small>
+      <small>Results <b>1-1</b> of <B>1</B>.</small>
       <small>Search took <b></b> seconds</small>
     </td>
   </tr>
   <tr><td colspan="2">
       Sort by:
-            <b>relevancy</b>&nbsp;|&nbsp;<a href="?np=0&amp;q=t&amp;wm=beg&s=DRP">last modified date</a>
+            <b>relevancy</b>&nbsp;|&nbsp;<a href="?np=0&amp;q=ford+mot+co&amp;wm=beg&s=DRP">last modified date</a>
         </td></tr>
 </table><DL>
   <DT>1.
-  <a href="http://site/test1.html" TARGET="_blank">
-    Test 1 title  </a>
-  <small>[<b>0.221%</b> Popularity: <b>0.25000</b>]</small>
-  <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small>This is the first test page. Here is the second one. 1 22 333 4444 55555 666666 7777777 88888888 999999999 AAAAAAAAAA BBBBBBBBBBB CCCCCCCCCCCC DDDDDDDDDDDDD EEEEEEEEEEEEEE FFFFFFFFFFFFFFF GGGGGGGGGGGGGGGG HHHHHHHHHHHHHHHHH IIIIIIIIIIIIIIIIII JJJJJJJJJJJJJJJ...</small>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <UL>
-         <li>
-           <small>
-             <A HREF="http://site/test1.html" TARGET="_blank">http://site/test1.html</A>
-             <font color="#008800">
-              - 817 bytes [text/html]
-              - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=t&amp;site=388628276&amp;wm=beg">More result from this site
-		    	        </a>]</small></DD>
-	                   </font>
-           </small>
-           <BR>
-           
-        </UL>
-        
-
-      </td>
-    </tr>
-  </table>
-
-</DL><DL>
-  <DT>2.
-  <a href="http://site/test2.html" TARGET="_blank">
-    Test 2 title  </a>
-  <small>[<b>0.221%</b> Popularity: <b>0.25000</b>]</small>
-  <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small>This is the second test page. Here is the third one. ÏÂÝÅÓÔ×ÅÎÎÙÅ...</small>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <UL>
-         <li>
-           <small>
-             <A HREF="http://site/test2.html" TARGET="_blank">http://site/test2.html</A>
-             <font color="#008800">
-              - 164 bytes [text/html]
-              - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=t&amp;site=388628276&amp;wm=beg">More result from this site
-		    	        </a>]</small></DD>
-	                   </font>
-           </small>
-           <BR>
-           
-        </UL>
-        
-
-      </td>
-    </tr>
-  </table>
-
-</DL><DL>
-  <DT>3.
-  <a href="http://site/test3.html" TARGET="_blank">
-    Test 3 title  </a>
-  <small>[<b>0.221%</b> Popularity: <b>0.25000</b>]</small>
-  <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small>This is the third test. No more tests available....</small>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <UL>
-         <li>
-           <small>
-             <A HREF="http://site/test3.html" TARGET="_blank">http://site/test3.html</A>
-             <font color="#008800">
-              - 122 bytes [text/html]
-              - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=t&amp;site=388628276&amp;wm=beg">More result from this site
-		    	        </a>]</small></DD>
-	                   </font>
-           </small>
-           <BR>
-           
-        </UL>
-        
-
-      </td>
-    </tr>
-  </table>
-
-</DL><DL>
-  <DT>4.
-  <a href="http://site/test4.html" TARGET="_blank">
-    Test 4 title  </a>
-  <small>[<b>0.221%</b> Popularity: <b>0.25000</b>]</small>
-  <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small>This is the 4th test page. Here is the third one. &#1087;&#1088;&#1086;&#1074;&#1077;&#1088;&#1082;&#1072; &#1074;&#1080;&#1085;&#1076;&#1086;&#1074;&#1086;&#1081; &#1082;&#1086;&#1076;&#1080;&#1088;&#1086;&#1082;&#1080; &#1086;&#1073;&#1097;&#1077;&#1089;&#1090;&#1074;&#1077;&#1085;&#1085;&#1099;&#1077;...</small>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <UL>
-         <li>
-           <small>
-             <A HREF="http://site/test4.html" TARGET="_blank">http://site/test4.html</A>
-             <font color="#008800">
-              - 198 bytes [text/html]
-              - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=t&amp;site=388628276&amp;wm=beg">More result from this site
-		    	        </a>]</small></DD>
-	                   </font>
-           </small>
-           <BR>
-           
-        </UL>
-        
-
-      </td>
-    </tr>
-  </table>
-
-</DL><DL>
-  <DT>5.
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt  </a>
-  <small>[<b>0.152%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0.202%</b> Popularity: <b>0.25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>This is a text file. No title available. abcdefghijklmnopqrstuvwxyz...</small>
+        <small> ... title available. abcdefghijklmnopqrstuvwxyz <b>Ford</b> motor company ...</small>
       </td>
     </tr>
     <tr>
@@ -193,9 +57,9 @@
            <small>
              <A HREF="http://site/test1.txt" TARGET="_blank">http://site/test1.txt</A>
              <font color="#008800">
-              - 69 bytes [text/plain]
+              - 87 bytes [text/plain]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=t&amp;site=388628276&amp;wm=beg">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=ford+mot+co&amp;site=388628276&amp;wm=beg">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

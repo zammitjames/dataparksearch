@@ -63,7 +63,7 @@ HlEnd	</b>
 # Use strftime function meta variables
 #DateFormat %d %b %Y %X %Z
 
-Section dp_id 14 0
+Section dp_id 15 0
 
 -->
 
@@ -256,7 +256,7 @@ Section dp_id 14 0
   </a>
   <small>[<b>$(Score)</b>]</small>
 <!ELSE>
-  <DT>$(Order).
+  <DT>$(Order).<!-- DP_ID: $(DP_ID)-->
   <a href="$(URL)" TARGET="_blank">
     <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title)<!ENDIF>
   </a>
