@@ -878,7 +878,7 @@ end:
 	      Agent->aspell_pid[i] = 0;
 	    }
 	  }
-	  while(waitpid(-1, &status, WNOHANG) > 0);
+/*	  while(waitpid(-1, &status, WNOHANG) > 0);*/
 	  Agent->naspell = 0;
 	}
 #endif /* HAVE_ASPELL*/	
