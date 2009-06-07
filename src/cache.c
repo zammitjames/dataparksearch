@@ -2081,7 +2081,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	ticks=DpsStartTimer();
 #endif
 
-	if (Res->CoordList.ncoords == 0) goto zero_exit;
+	if (Res->CoordList.ncoords == 0) { DPS_FREE(lims); goto zero_exit; }
 /* will make this later
 	Res->CoordList.Coords = (DPS_URL_CRD*)DpsRealloc(Res->CoordList.Coords, Res->CoordList.ncoords * sizeof(DPS_URL_CRD));
 	if (Res->CoordList.Coords == NULL) {
