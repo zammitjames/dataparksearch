@@ -859,6 +859,11 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
 			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
 			if (arg) DpsVarListReplaceStr(vars, tok, arg);
+		}else
+		  if((str[0] == 'g' || str[0] == 'G') && (str[1] == ' ' || str[1] == HT_CHAR)) {
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+			if (arg) DpsVarListReplaceStr(vars, tok, arg);
 		}else{
 		 
 		  res = DPS_ERROR;
