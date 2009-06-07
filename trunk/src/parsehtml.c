@@ -474,10 +474,10 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
 #ifdef HAVE_ASPELL
   if (Indexer->Flags.use_aspellext) {
-    aspell_config_replace(Indexer->aspell_config, "lang", content_lang);
+    aspell_config_replace(Indexer->aspell_config, "lang", (*content_lang != '\0') ? content_lang : "en");
     ret = new_aspell_speller(Indexer->aspell_config);
     if (aspell_error(ret) != 0) {
-      DpsLog(Indexer, DPS_LOG_ERROR, "aspell error: %s", aspell_error_message(ret));
+      DpsLog(Indexer, DPS_LOG_ERROR, " aspell error: %s", aspell_error_message(ret));
       delete_aspell_can_have_error(ret);
     } else {
       speller = to_aspell_speller(ret);
