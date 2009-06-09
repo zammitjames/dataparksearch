@@ -47,6 +47,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <math.h>
 #include <sys/types.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -2657,12 +2658,12 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	while(u) {
 	  if (use_showcnt) {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank*log(u.shows+2.1)/log(1.1+%d)*log(1.1+s.weight-(%d))/log(1.1+%d),u.last_mod_time,u.since,u.status,u.crc32,u.pop_rank FROM url u, server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
-			 max_shows, min_weight, scale_weight, rec_id, recs);
+    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight,u.shows FROM url u, server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+			 rec_id, recs);
 	  } else {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank*log(1.1+s.weight-(%d))/log(1.1+%d),u.last_mod_time,u.since,u.status,u.crc32,u.pop_rank FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
-			 min_weight, scale_weight, rec_id, recs);
+    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+			 rec_id, recs);
 	  }
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	  rc = DpsSQLQuery(db, &SQLres, str);
@@ -2678,7 +2679,12 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 
 	    Item.url_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 0));
 	    Item.site_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
-	    Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2 /*7*/));
+	    if (use_showcnt) {
+	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.1 + DPS_ATOF(DpsSQLValue(&SQLres, i, 8))) / log(1.1 + max_shows) 
+		* log(1.1 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(1.1 + scale_weight);
+	    } else {
+	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(1.1 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(1.1 + scale_weight);
+	    }
 	    if ((Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 3))) == 0) {
 	      Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 4));
 	    }
