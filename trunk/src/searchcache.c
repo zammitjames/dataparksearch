@@ -61,6 +61,7 @@
 static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RESULT *Res) {
 	char param[4*1024];
 	const char *vardir = DpsVarListFindStr(Conf_Vars, "VarDir", DPS_VAR_DIR);
+	const char *appname = DpsVarListFindStr(Conf_Vars, "appname", NULL);
 	size_t bytes;
 	
 	bytes = dps_snprintf(param, sizeof(param)-1, "%s.%s.%d.%s.%s.%s.%s.%s.%s.%s.%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s-%s-%s-%s-%d",
@@ -103,9 +104,12 @@ static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RE
 	fprintf(stderr, "param: |%s|\n", param);
 #endif
 	
-	dps_snprintf(dst, len, "%s%s%s%s%s%08X.%08X",
+	dps_snprintf(dst, len, "%s%s%s%s%s%s%.%d.s%08X.%08X",
 		     vardir, DPSSLASHSTR,
-		     "cache",DPSSLASHSTR, DpsVarListFindStr(Conf_Vars, "label", ""),
+		     "cache",DPSSLASHSTR, 
+		     appname?appname:"", appname?"-":"",
+		     DpsVarListFindInt(Conf_Vars, "Listen", 0),
+		     DpsVarListFindStr(Conf_Vars, "label", ""),
 		     DpsStrHash32(param),
 		     DpsStrHash32(DpsVarListFindStr(Conf_Vars, "q", ""))
 		     );
