@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -201,6 +201,7 @@ int DpsOpenLog(const char *appname, DPS_ENV *Env, int log_to_stderr) {
 #endif /* LOG_PERROR */
 #endif /* HAVE_SYSLOG_H */
   }
+  if (appname) DpsVarListReplaceStr(&Env->Vars, "appname", appname);
   return DPS_OK;
 }
 
