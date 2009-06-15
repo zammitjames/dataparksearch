@@ -1992,7 +1992,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	}
 	rec_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	old_hops = (urlid_t)DpsVarListFindInt(&Doc->Sections, "hops", 0);
-	url_seed = (crc32_rec_id = (urlid_t)DpsStrHash32(e_url)) & 0x7FFF /*& 0xFF*/;
+	url_seed = (crc32_rec_id = (urlid_t)DpsStrHash32(e_url)) & 0xFFF /*& 0xFF*/;
 
 	if (rec_id == 0) {
 	  updated = 0;
@@ -2935,7 +2935,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	DPS_CHARSET	*doccs;
 	DPS_CHARSET	*loccs;
 	DPS_CONV        lc_dc;
-	int             prev_id = -1;
+	int             prev_id = -1, ntry = 0;
 
 	TRACE_IN(Indexer, "DpsTargetsSQL");
 
@@ -2997,8 +2997,9 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		  rc = DPS_ERROR;
 		  goto unlock;
 	}
-	qbuf[0]='\0';
 
+ one_try:
+	qbuf[0]='\0';
 	sortstr[0] = '\0';
 	smallbuf[0] = '\0';
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {
@@ -3020,7 +3021,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	  }
 	  if (Indexer->flags & DPS_FLAG_DONTSORT_SEED) {
 	    if(db->DBSQL_LIMIT){
-	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%u %s %s %s LIMIT 1", db->from, 
+	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%u %s %s %s LIMIT 10", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
 		       where[0] ? "AND" : "", where, sortstr);
@@ -3032,7 +3033,9 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    }
 
 	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
-	    dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes,0,0));
+	    if (nrows = DpsSQLNumRows(&SQLRes)) {
+	      dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes,rand()%nrows,0));
+	    }
 	    DpsSQLFree(&SQLRes);
 	  }
 	}
@@ -3057,6 +3060,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 
 	if(!(nrows = DpsSQLNumRows(&SQLRes))) {
 		DpsSQLFree(&SQLRes);
+		if (Indexer->flags & DPS_FLAG_DONTSORT_SEED && ntry++ < 3) goto one_try;
 		goto unlock;
 	}
 
