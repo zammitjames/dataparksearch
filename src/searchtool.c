@@ -866,7 +866,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	bzero(&state, sizeof(state));
 	state.order = state.order_inquery = -1;
        	state.sp = DpsVarListFindInt(&query->Vars, "sp", 1);
-	state.sy = DpsVarListFindInt(&query->Vars, "sy", 0);
+	state.sy = DpsVarListFindInt(&query->Vars, "sy", 1);
 	state.nphrasecmd = 0;
 	state.qlang = DpsVarListFindStr(&query->Vars, "g", NULL);
 	state.secno = DpsXmalloc((state.n_secno = 256) * sizeof(state.secno[0]));
