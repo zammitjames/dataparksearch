@@ -104,9 +104,8 @@ static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RE
 	fprintf(stderr, "param: |%s|\n", param);
 #endif
 	
-	dps_snprintf(dst, len, "%s%s%s%s%s%s%.%d.s%08X.%08X",
-		     vardir, DPSSLASHSTR,
-		     "cache",DPSSLASHSTR, 
+	dps_snprintf(dst, len, "%s%scache%s%s%s%d.%s%08X.%08X",
+		     vardir, DPSSLASHSTR, DPSSLASHSTR, 
 		     appname?appname:"", appname?"-":"",
 		     DpsVarListFindInt(Conf_Vars, "Listen", 0),
 		     DpsVarListFindStr(Conf_Vars, "label", ""),
@@ -120,14 +119,22 @@ int DpsSearchCacheClean(DPS_AGENT *query) {
 	char param[PATH_MAX];
 	char filen[PATH_MAX];
 	const char *vardir = DpsVarListFindStr(&query->Conf->Vars, "VarDir", DPS_VAR_DIR);
+	const char *appname = DpsVarListFindStr(&query->Conf->Vars, "appname", NULL);
 	DIR * dir;
 	struct dirent * item;
+	size_t prefix_len;
 
 	dps_snprintf(param, sizeof(param), "%s%scache%s", vardir, DPSSLASHSTR, DPSSLASHSTR);
+	dps_snprintf(filen, sizeof(filen), "%s%s%d.%s",
+		     appname?appname:"", appname?"-":"",
+		     DpsVarListFindInt(&query->Conf->Vars, "Listen", 0),
+		     DpsVarListFindStr(&query->Conf->Vars, "label", ""));
+	prefix_len = dps_strlen(filen);
 	dir = opendir(param);
 	if (!dir) return DPS_ERROR;
 	while((item = readdir(dir))){
 	  if (item->d_type != DT_REG) continue;
+	  if (strncasecmp(item->d_name, filen, prefix_len) != 0) continue;
 	  dps_snprintf(filen, sizeof(filen), "%s%s", param, item->d_name);
 	  unlink(filen);
 	}
