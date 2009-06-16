@@ -781,12 +781,16 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strcasecmp(cmd, "sp")) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt))) {
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
+		    DpsVarListInsStr(&Agent->Vars, tok, DPS_NULL2EMPTY(lt));
+		  }
 		}else
 		if(!strcasecmp(cmd, "sy")) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt))) {
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
+		    DpsVarListInsStr(&Agent->Vars, tok, DPS_NULL2EMPTY(lt));
+		  }
 		}else
 		if(!strncasecmp(str, "ResultContentType", 17)) {
 		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
