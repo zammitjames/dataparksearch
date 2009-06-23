@@ -158,7 +158,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag) {
 /*		   strcasecmp(S->name, "Pop_Rank") &&*/
 		   strcasecmp(S->name, "Z") &&
 #ifdef WITH_MULTIDBADDR
-		   strcasecmp(S->name, "dbnum") &&
+		   (!(numsection_flag) || strcasecmp(S->name, "dbnum")) &&
 #endif
 		   strcasecmp(S->name, "Category"))
 			continue;
@@ -195,7 +195,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag) {
 /*		   strcasecmp(S->name, "Pop_Rank") &&*/
 		   strcasecmp(S->name, "Z") &&
 #ifdef WITH_MULTIDBADDR
-		   strcasecmp(S->name, "dbnum") &&
+		   (!(numsection_flag) || strcasecmp(S->name, "dbnum")) &&
 #endif
 		   strcasecmp(S->name,"Category"))
 			continue;
