@@ -1011,9 +1011,10 @@ static int dpsearch_handler(request_rec *r) {
 		}
 		DpsEscapeURL(edm, dm);
 
-		dps_snprintf(storedstr, storedlen, "%s?rec_id=%d&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
+		dps_snprintf(storedstr, storedlen, "%s?rec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
 			     DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi"),
 			     DpsURL_ID(Doc, NULL),
+			     DpsVarListFindStr(&Agent->Vars, "label", ""),
 			     edm,
 			     sc = DpsVarListFindInt(&Agent->Vars, "Content-Length", 0),
 			     DpsVarListFindStr(&Agent->Vars,"Content-Language",""),

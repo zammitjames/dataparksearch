@@ -278,49 +278,60 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
   
 #ifdef HAVE_ZLIB
   const char *hello = "G\0";
+  const char *label = DpsVarListFindStr(&Agent->Vars, "label", NULL);
+  DPS_DB *db;
   int s, r;
   dpshash32_t rec_id;
-  size_t content_size = 0, dbnum;
+  size_t content_size = 0, dbnum, s_dbnum, i, ndb;
   ssize_t nread = 0;
   
 /*  rec_id = (origurl) ? DpsStrHash32(origurl) :  DpsVarListFindInt(&Doc->Sections, "URL_ID", 0);*/
   rec_id = DpsURL_ID(Doc, origurl);
   Doc->Buf.size=0;
-  dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
-  
-  if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
-    if (!Agent->Flags.do_store) return DPS_OK;
-    GetStore(Agent, Doc, rec_id, dbnum, "");
-  } else {
-  
-    r = Agent->Demons.Demon[dbnum].stored_rv;
+  ndb = (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
+  s_dbnum = ((size_t)rec_id) % ndb;
 
-    /* FIXME: add send() results checking */
-    DpsSend(s, hello, 1, 0);
-    DpsSend(s, &rec_id, sizeof(rec_id), 0);
+  for (i = 0; i < ndb; i++) {
+    dbnum = (i + s_dbnum) % ndb;
+    db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[dbnum] : &Agent->dbl.db[dbnum];
+    if (label != NULL && db->label == NULL) continue;
+    if (label == NULL && db->label != NULL) continue;
+    if (label != NULL && db->label != NULL && strcasecmp(db->label, label)) continue;
   
-    if (
-	(DpsRecvall(r, &content_size, sizeof(content_size), 360) < 0) ||
-	(content_size == 0)     )   {
-      return -1;
-    }
- 
-    if (Doc->Buf.buf == NULL) {
-      Doc->Buf.buf = (char*) DpsMalloc(content_size + 1);
+    if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
+      if (!Agent->Flags.do_store) return DPS_OK;
+      if (DPS_OK == GetStore(Agent, Doc, rec_id, dbnum, "")) break;
     } else {
-      Doc->Buf.buf = (char*) DpsRealloc(Doc->Buf.buf, content_size + 1);
-    }
-    Doc->Buf.size = content_size;
-    Doc->Buf.allocated_size = content_size;
-    if ( (content_size > 0) && (
-				(Doc->Buf.buf == NULL) ||
-				((nread = DpsRecvall(r, Doc->Buf.buf, content_size, 360)) < 0)
-				) ) {
-      return -2;
-    }
   
-    Doc->Buf.buf[nread] = '\0';
-    Doc->Buf.size = nread;
+      r = Agent->Demons.Demon[dbnum].stored_rv;
+
+      /* FIXME: add send() results checking */
+      DpsSend(s, hello, 1, 0);
+      DpsSend(s, &rec_id, sizeof(rec_id), 0);
+  
+      if (DpsRecvall(r, &content_size, sizeof(content_size), 360) < 0)   {
+	return -1;
+      }
+
+      if (content_size == 0) continue;
+
+      if (Doc->Buf.buf == NULL) {
+	Doc->Buf.buf = (char*) DpsMalloc(content_size + 1);
+      } else {
+	Doc->Buf.buf = (char*) DpsRealloc(Doc->Buf.buf, content_size + 1);
+      }
+      Doc->Buf.size = content_size;
+      Doc->Buf.allocated_size = content_size;
+      if ( (content_size > 0) && (
+				  (Doc->Buf.buf == NULL) ||
+				  ((nread = DpsRecvall(r, Doc->Buf.buf, content_size, 360)) < 0)
+				  ) ) {
+	return -2;
+      }
+  
+      Doc->Buf.buf[nread] = '\0';
+      Doc->Buf.size = nread;
+    }
   }
 
   if(origurl != NULL) {
@@ -631,7 +642,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
   ST.val = "1";
 
   lcharset = DpsVarListFindStr(&query->Vars, "LocalCharset", "iso-8859-1");
-  doclang = DpsVarListFindStr(&Doc->Sections, "Content-Language", "xx");
+  doclang = DpsVarListFindStr(&Doc->Sections, "Content-Language", "en");
   if ((!query->Flags.make_prefixes) && strncasecmp(doclang, "zh", 2) && strncasecmp(doclang, "th", 2) 
 	   && strncasecmp(doclang, "ja", 2) && strncasecmp(doclang, "ko", 2) ) NOprefixHL = 1;
 
