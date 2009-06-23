@@ -366,7 +366,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 #endif
 				
 				if(DPS_OK != DpsResAction(Agent, Res, DPS_RES_ACTION_DOCINFO)){
-					DpsResultFree(Res);
+/*					DpsResultFree(Res);  must not be here */
 					dps_snprintf(buf,sizeof(buf)-1,"%s",DpsEnvErrMsg(Agent->Conf));
 					DpsLog(Agent,verb,"%s",DpsEnvErrMsg(Agent->Conf));
 					hdr.cmd=DPS_SEARCHD_CMD_ERROR;

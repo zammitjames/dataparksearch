@@ -1520,7 +1520,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	    }
 	  }
 
-	  if (DpsVarListFindInt(&Res->Doc[i].Sections, "ST", 0) == 0) {
+	  if (DpsVarListFindInt(&Res->Doc[i].Sections, "ST", -1) == -1) {
 	    if (A->Flags.do_excerpt) Excerpt = DpsExcerptDoc(A, Res, &Res->Doc[i], ExcerptSize, ExcerptPadding);
 	    if ((Excerpt != NULL) && (dps_strlen(Excerpt) > 6)) {
 	      DpsVarListReplaceStr(&Res->Doc[i].Sections, "body", Excerpt);
