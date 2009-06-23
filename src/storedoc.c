@@ -18,6 +18,7 @@
 #include "dpsearch.h"
 #include "dps_xmalloc.h"
 #include "dps_charsetutils.h"
+#include "dps_contentencoding.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -312,6 +313,43 @@ int main(int argc, char **argv, char **envp) {
 	    DpsDocAddDocExtraHeaders(Agent, Doc);
 	    DpsDocLookupConn(Agent, Doc);
 	    if (DpsGetURL(Agent, Doc, origurl) != DPS_OK) goto fin;
+	    {
+	      const char   *ce = DpsVarListFindStr(&Doc->Sections,"Content-Encoding","");
+	      const int status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
+#ifdef HAVE_ZLIB
+	      if((!strcasecmp(ce, "gzip")) || (!strcasecmp(ce, "x-gzip"))) {
+		if (status == 206) {
+		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't ungzip it.");
+		  goto fin;
+		}
+		DpsUnGzip(Agent, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
+	      } else if(!strcasecmp(ce,"deflate")){
+		if (status == 206) {
+		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't inflate it.");
+		  goto fin;
+		}
+		DpsInflate(Agent, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
+	      } else if((!strcasecmp(ce, "compress")) || (!strcasecmp(ce, "x-compress"))) {
+		if (status == 206) {
+		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't uncomress it.");
+		  goto fin;
+		}
+		DpsUncompress(Agent, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
+	      }else 
+#endif	
+	      if((!strcasecmp(ce,"identity")) || (!strcasecmp(ce,""))) {
+		/* Nothing to do*/
+	      }else{
+		DpsLog(Agent, DPS_LOG_ERROR, "Unsupported Content-Encoding");
+	      }
+
+	    }
 	  }
 	  else goto fin;
 	}
