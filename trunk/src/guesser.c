@@ -46,7 +46,7 @@
 
 
 
-DPS_LANG_ALIAS dps_language[] = {
+DPS_LANG_ALIAS dps_language[] = { /* This table is ordered by language ID */
   {DPS_LANG_AB, "ab" },
   {DPS_LANG_ADY, "ady" },
   {DPS_LANG_AF, "af" },
@@ -154,7 +154,6 @@ DPS_LANG_ALIAS dps_language[] = {
   {DPS_LANG_RMY, "rmy"},
   {DPS_LANG_RO, "ro"},
   {DPS_LANG_RU, "ru"},
-  {DPS_LANG_RU_OLD, "ru-old"},
   {DPS_LANG_SA, "sa"},
   {DPS_LANG_SCN, "scn"},
   {DPS_LANG_SCO, "sco"},
@@ -265,11 +264,12 @@ DPS_LANG_ALIAS dps_language[] = {
   {DPS_LANG_MY, "my"},
   {DPS_LANG_EN_IE, "en-ie"},
   {DPS_LANG_FR_FX, "fr-fx"},
+  {DPS_LANG_RU_OLD,"ru-old"},
   
   { 0, NULL }
 };
 
-DPS_LANG_ALIAS dps_lang_alias[] = {
+DPS_LANG_ALIAS dps_lang_alias[] = { /* This table is ordered by the language name */
   {DPS_LANG_AA,    "aa"},
   {DPS_LANG_AA,    "aar"},
   {DPS_LANG_AB,    "ab"},
@@ -625,7 +625,9 @@ DPS_LANG_ALIAS dps_lang_alias[] = {
   {DPS_LANG_RO,    "romanian"},
   {DPS_LANG_RO,    "ron"},
   {DPS_LANG_RU,    "ru"},
+  {DPS_LANG_RU_OLD,"ru-old"},
   {DPS_LANG_RU,    "ru-ru"},
+  {DPS_LANG_RU_OLD,"ru_old"},
   {DPS_LANG_RU,    "ru_ru"},
   {DPS_LANG_RO,    "rum"},
   {DPS_LANG_RN,    "run"},
