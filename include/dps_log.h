@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,7 @@
 
 /* According to some recommendations, try not to exceed about 800 bytes 
    or you might have problems with old syslog implementations */
-#define DPS_LOG_BUF_LEN 255
+#define DPS_LOG_BUF_LEN 480
 
 /* Verbose levels */
 #define DPS_LOG_NONE	0
