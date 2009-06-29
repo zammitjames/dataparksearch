@@ -1347,6 +1347,8 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
   urlid_t url_id = DpsVarListFindInt(&Doc->Sections, "URL_ID", 0);
   const char     *accept_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", NULL);
   
+  fprintf(stderr, " -- URL_ID: %x  lang:%s\n", url_id, accept_lang);
+
   if (url_id != 0) return url_id;
   if (url == NULL) url = DpsVarListFindStr(&Doc->Sections, "URL", NULL);
   if (url != NULL) {
