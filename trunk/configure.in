@@ -73,7 +73,7 @@ dnl Checks for header files.
 AC_STDC_HEADERS
 AC_CHECK_HEADERS(sys/types.h fcntl.h unistd.h sys/cdefs.h libutil.h \
 sys/ioctl.h sys/time.h sys/times.h sys/param.h sys/wait.h limits.h \
-syslog.h select.h sys/select.h sys/socket.h arpa/inet.h netdb.h sys/sysctl.h sys/mman.h \
+syslog.h select.h sys/select.h sys/socket.h arpa/inet.h netdb.h sys/sysctl.h sys/mman.h sys/shm.h \
 netinet/in.h netinet/in_systm.h netinet/tcp.h arpa/nameser.h sys/ipc.h semaphore.h sys/sem.h sys/msg.h)
 
 AC_CHECK_HEADERS(netinet/ip.h resolv.h,,,
@@ -275,7 +275,7 @@ if test "$sharedmem" = no; then
  shm_open("/tmp", 0, 0644);
 ], cok=yes 
    sharedmem=posix
-   AC_DEFINE(HAVE_SYS_MMAN_H)
+   AC_DEFINE(HAVE_SHAREDMEM_POSIX)
    AC_MSG_RESULT(ok)
 )
 	if test "$cok" = no; then
@@ -289,7 +289,7 @@ if test "$sharedmem" = no; then
  shm_open("/tmp", 0, 0644);
 ], cok=yes 
    sharedmem=posix
-   AC_DEFINE(HAVE_SYS_MMAN_H)
+   AC_DEFINE(HAVE_SHAREDMEM_POSIX)
    AC_MSG_RESULT(-lc), 
    LIBS="$ac_save_libs"
 )
@@ -305,7 +305,7 @@ if test "$sharedmem" = no; then
  shm_open("/tmp", 0, 0644);
 ], cok=yes 
    sharedmem=posix
-   AC_DEFINE(HAVE_SYS_MMAN_H)
+   AC_DEFINE(HAVE_SHAREDMEM_POSIX)
    AC_MSG_RESULT(-lrt), 
    LIBS="$ac_save_libs"
 )
@@ -322,7 +322,7 @@ if test "$sharedmem" = no; then
  shmat(1, 0, 0);
 ],cok=yes
   sharedmem=sysV
-  AC_DEFINE(HAVE_SYS_SHM_H)
+  AC_DEFINE(HAVE_SHAREDMEM_SYSV)
   AC_MSG_RESULT(ok))
 	if test "$cok" = no; then
 		ac_save_libs="$LIBS"
@@ -335,7 +335,7 @@ if test "$sharedmem" = no; then
  shmat(1, 0, 0);
 ],cok=yes 
   sharedmem=sysV
-  AC_DEFINE(HAVE_SYS_SHM_H)
+  AC_DEFINE(HAVE_SHAREDMEM_SYSV)
   AC_MSG_RESULT(-lc), 
   LIBS="$ac_save_libs"
 )
@@ -351,7 +351,7 @@ if test "$sharedmem" = no; then
  shmat(1, 0, 0);
 ],cok=yes 
   sharedmem=sysV
-  AC_DEFINE(HAVE_SYS_SHM_H)
+  AC_DEFINE(HAVE_SHAREDMEM_SYSV)
   AC_MSG_RESULT(-lrt), 
   LIBS="$ac_save_libs"
 )

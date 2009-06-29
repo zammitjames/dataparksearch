@@ -400,8 +400,14 @@
 /* Define if you have the <sys/mman.h> header file.  */
 #undef HAVE_SYS_MMAN_H
 
+/* Define if you have Posix style shared memory interface */
+#undef HAVE_SHAREDMEM_POSIX
+
 /* Define if you have the <sys/shm.h> header file.  */
 #undef HAVE_SYS_SHM_H
+
+/* Define if you have SysV style shared memory interface */
+#undef HAVE_SHAREDMEM_SYSV
 
 /* Define if you have the <sys/msg.h> header file. */
 #undef HAVE_SYS_MSG_H

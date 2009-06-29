@@ -21693,9 +21693,10 @@ fi
 
 
 
+
 for ac_header in sys/types.h fcntl.h unistd.h sys/cdefs.h libutil.h \
 sys/ioctl.h sys/time.h sys/times.h sys/param.h sys/wait.h limits.h \
-syslog.h select.h sys/select.h sys/socket.h arpa/inet.h netdb.h sys/sysctl.h sys/mman.h \
+syslog.h select.h sys/select.h sys/socket.h arpa/inet.h netdb.h sys/sysctl.h sys/mman.h sys/shm.h \
 netinet/in.h netinet/in_systm.h netinet/tcp.h arpa/nameser.h sys/ipc.h semaphore.h sys/sem.h sys/msg.h
 do
 as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
@@ -26876,7 +26877,7 @@ $as_echo "$ac_try_echo") >&5
   cok=yes
    sharedmem=posix
    cat >>confdefs.h <<\_ACEOF
-#define HAVE_SYS_MMAN_H 1
+#define HAVE_SHAREDMEM_POSIX 1
 _ACEOF
 
    { $as_echo "$as_me:$LINENO: result: ok" >&5
@@ -26939,7 +26940,7 @@ $as_echo "$ac_try_echo") >&5
   cok=yes
    sharedmem=posix
    cat >>confdefs.h <<\_ACEOF
-#define HAVE_SYS_MMAN_H 1
+#define HAVE_SHAREDMEM_POSIX 1
 _ACEOF
 
    { $as_echo "$as_me:$LINENO: result: -lc" >&5
@@ -27003,7 +27004,7 @@ $as_echo "$ac_try_echo") >&5
   cok=yes
    sharedmem=posix
    cat >>confdefs.h <<\_ACEOF
-#define HAVE_SYS_MMAN_H 1
+#define HAVE_SHAREDMEM_POSIX 1
 _ACEOF
 
    { $as_echo "$as_me:$LINENO: result: -lrt" >&5
@@ -27069,7 +27070,7 @@ $as_echo "$ac_try_echo") >&5
   cok=yes
   sharedmem=sysV
   cat >>confdefs.h <<\_ACEOF
-#define HAVE_SYS_SHM_H 1
+#define HAVE_SHAREDMEM_SYSV 1
 _ACEOF
 
   { $as_echo "$as_me:$LINENO: result: ok" >&5
@@ -27131,7 +27132,7 @@ $as_echo "$ac_try_echo") >&5
   cok=yes
   sharedmem=sysV
   cat >>confdefs.h <<\_ACEOF
-#define HAVE_SYS_SHM_H 1
+#define HAVE_SHAREDMEM_SYSV 1
 _ACEOF
 
   { $as_echo "$as_me:$LINENO: result: -lc" >&5
@@ -27195,7 +27196,7 @@ $as_echo "$ac_try_echo") >&5
   cok=yes
   sharedmem=sysV
   cat >>confdefs.h <<\_ACEOF
-#define HAVE_SYS_SHM_H 1
+#define HAVE_SHAREDMEM_SYSV 1
 _ACEOF
 
   { $as_echo "$as_me:$LINENO: result: -lrt" >&5

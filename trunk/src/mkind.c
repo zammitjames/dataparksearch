@@ -76,11 +76,11 @@ static int cmp_ind4(const DPS_UINT4URLID *c1, const DPS_UINT4URLID *c2) {
 
 static void ClearIndex4(DPS_UINT4URLIDLIST *L) {
      if (L->mapped) {
-#ifdef HAVE_SYS_MMAN_H
+#ifdef HAVE_SHAREDMEM_POSIX
        if (munmap(L->Item, (L->nitems + 1) * sizeof(DPS_UINT4URLID))) {
 	 fprintf(stderr, "Can't shmdt '%s': %s\n", L->shm_name, strerror(errno));
        }
-#elif defined(HAVE_SYS_SHM_H)
+#elif defined(HAVE_SHAREDMEM_SYSV)
        if (shmdt(L->Item)) {
 	 fprintf(stderr, "Can't shmdt '%s': %s\n", L->shm_name, strerror(errno));
        }
