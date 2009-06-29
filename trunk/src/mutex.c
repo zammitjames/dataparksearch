@@ -45,7 +45,6 @@
 #endif
 
 #ifdef HAVE_SYS_SEM_H
-#include <sys/ipc.h>
 #include <sys/sem.h>
 #ifdef __Linux__
 #include <linux/sem.h>
@@ -81,6 +80,9 @@
 
 #endif /* HAVE_SYS_SEM_H */
 
+#ifdef HAVE_SYS_IPC_H
+#include <sys/ipc.h>
+#endif
 
 
 #ifdef HAVE_SEMAPHORE_H

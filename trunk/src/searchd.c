@@ -72,8 +72,10 @@
 #include <getopt.h>
 #endif
 #ifdef HAVE_SYS_MSG_H
-#include <sys/ipc.h>
 #include <sys/msg.h>
+#endif
+#ifdef HAVE_SYS_IPC_H
+#include <sys/ipc.h>
 #endif
 
 /* This should be last include */
