@@ -711,7 +711,7 @@ int dps_need2segment(dpsunicode_t *uwrd) {
     if (u == 0x302E || u == 0x302F) return 1;
     if ((u >= 0xAC00) && (u <= 0xD7A3)) return 1;
     if (u >= 0x3131 && u <= 0x318E) return 1;
-    if (u >= 3200 && u <= 0x321C) return 1;
+    if ((u >= 0x3200) && (u <= 0x321C)) return 1;
     if (u >= 0x3260 && u <= 0x327F) return 1;
     if (u >= 0xFFA0 && u <= 0xFFDC) return 1;
     if (u >= 0x3031 && u <= 0x3035) return 1; /* KANA */
