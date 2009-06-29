@@ -58,13 +58,12 @@
 
 #ifdef HAVE_SYS_MMAN_H
 #include <sys/mman.h>
-#else
+#endif
 #ifdef HAVE_SYS_SHM_H
 #include <sys/shm.h>
 #endif
 #ifdef HAVE_SYS_IPC_H
 #include <sys/ipc.h>
-#endif
 #endif
 
 #include <signal.h>
@@ -2470,7 +2469,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 		return DPS_ERROR;
 	    }
 	    DpsClose(fd);
-#ifdef HAVE_SYS_MMAN_H
+#ifdef HAVE_SHAREDMEM_POSIX
 	    if ((fd = shm_open(shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
 	      dps_snprintf(shm_name, PATH_MAX, "%sLOGD.%d", DPSSLASHSTR, i);
 	      if ((fd = shm_open(shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
@@ -2486,7 +2485,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	    }
 	    ftruncate(fd, (off_t) WrdBufSize);
 	    DpsClose(fd);
-#elif defined(HAVE_SYS_SHM_H)
+#elif defined(HAVE_SHAREDMEM_SYSV)
 	    if ((fd = shmget(ftok(shm_name, 0), WrdBufSize, IPC_CREAT | SHM_R | SHM_W | (SHM_R>>3) | (SHM_R>>6) )) < 0) {
 	      sprintf(Env->errstr, "shmget (%s): %d: %s", shm_name, errno, strerror(errno));
 	      return DPS_ERROR;

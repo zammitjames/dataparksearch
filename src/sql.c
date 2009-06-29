@@ -73,13 +73,12 @@
 
 #ifdef HAVE_SYS_MMAN_H
 #include <sys/mman.h>
-#else
+#endif
 #ifdef HAVE_SYS_SHM_H
 #include <sys/shm.h>
 #endif
 #ifdef HAVE_SYS_IPC_H
 #include <sys/ipc.h>
-#endif
 #endif
 
 /*
@@ -5440,7 +5439,7 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 
 	nrows = DpsSQLNumRows(&SQLres);
 	
-#ifdef HAVE_SYS_MMAN_H
+#ifdef HAVE_SHAREDMEM_POSIX
 	if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
 	  dps_snprintf(L->shm_name, PATH_MAX, "%sLINK.%d", DPSSLASHSTR, A->handle);
 	  if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
@@ -5456,7 +5455,7 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	ftruncate(fd, (off_t) (nrows + 1) * sizeof(DPS_UINT4URLID));
 	close(fd);
 	L->mapped = 1;
-#elif defined(HAVE_SYS_SHM_H)
+#elif defined(HAVE_SHAREDMEM_SYSV)
 	if ((fd = shmget(ftok(L->shm_name, 0), (nrows+1)*sizeof(DPS_UINT4URLID), IPC_CREAT|SHM_R|SHM_W|(SHM_R>>3)|(SHM_R>>6) )) < 0) {
 	  DpsLog(A, DPS_LOG_ERROR, "shmget (%s): %d: %s", L->shm_name, errno, strerror(errno));
 	  return DPS_ERROR;
