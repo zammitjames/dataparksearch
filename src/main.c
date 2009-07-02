@@ -1272,7 +1272,11 @@ static int DpsIndex(DPS_AGENT *A) {
 
 #ifdef __FreeBSD__
 #if __FreeBSD__ >= 7
+ #if __FreeBSD_version < 701000
+     extern const char *_malloc_options = "axNNNH";
+ #else
      extern const char *_malloc_options = "ax3N10f";
+ #endif
 #elif __FreeBSD__ >= 5
      extern const char *_malloc_options = "axH>>R";
 #else
