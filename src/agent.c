@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -407,7 +407,7 @@ __C_LINK void __DPSCALL DpsAgentFree(DPS_AGENT *Indexer){
 	DPS_FREE(Indexer->Demons.Demon);
 	Indexer->Demons.nitems = 0;
 	for(i = 0; i < DPS_FINDURL_CACHE_SIZE; i++) DPS_FREE(Indexer->DpsFindURLCache[i]);
-	for(i = 0; i < DPS_SERVERID_CACHE_SIZE; i++) DPS_FREE(Indexer->ServerIdCache[i]);
+	for(i = 0; i < DPS_SERVERID_CACHE_SIZE; i++) DPS_FREE(Indexer->ServerIdCache[i].Match_Pattern);
 	if(Indexer->freeme) DPS_FREE(Indexer);
 }
 

@@ -1017,18 +1017,13 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	}
 
 	for (i = 0; i < DPS_SERVERID_CACHE_SIZE; i++) {
-	  if (Indexer->ServerIdCacheCommand[i] == Server->command)
-	    if (!strcmp(DPS_NULL2EMPTY(Indexer->ServerIdCache[i]), Server->Match.pattern)) {
-	      char *tp = Indexer->ServerIdCache[i];
-	      Server->site_id = id = Indexer->ServerIdCacheId[i];
-	      Server->weight = Indexer->ServerIdCacheWeight[i];
+	  if (Indexer->ServerIdCache[i].Command == Server->command)
+	    if (!strcmp(DPS_NULL2EMPTY(Indexer->ServerIdCache[i].Match_Pattern), Server->Match.pattern)) {
+	      DPS_SERVERCACHE tp = Indexer->ServerIdCache[i];
+	      Server->site_id = id = Indexer->ServerIdCache[i].Id;
+	      Server->weight = Indexer->ServerIdCache[i].Weight;
 
-	      Indexer->ServerIdCacheId[i] = Indexer->ServerIdCacheId[Indexer->pServerIdCache];
-	      Indexer->ServerIdCacheWeight[i] = Indexer->ServerIdCacheWeight[Indexer->pServerIdCache];
 	      Indexer->ServerIdCache[i] = Indexer->ServerIdCache[Indexer->pServerIdCache];
-
-	      Indexer->ServerIdCacheId[Indexer->pServerIdCache] = id;
-	      Indexer->ServerIdCacheWeight[Indexer->pServerIdCache] = Server->weight;
 	      Indexer->ServerIdCache[Indexer->pServerIdCache] = tp;
 	      Indexer->pServerIdCache = (Indexer->pServerIdCache + 1) % DPS_SERVERID_CACHE_SIZE;
 	      break;
@@ -1048,11 +1043,12 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	  if ((res == DPS_OK) && DpsSQLNumRows(&SQLRes)) {
 	    id = Server->site_id = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 	    Server->weight = DPS_ATOF(DpsSQLValue(&SQLRes, 0, 1));
-	    DPS_FREE(Indexer->ServerIdCache[Indexer->pServerIdCache]);
-	    Indexer->ServerIdCache[Indexer->pServerIdCache] = (char*)DpsStrdup(Server->Match.pattern);
-	    Indexer->ServerIdCacheCommand[Indexer->pServerIdCache] = Server->command;
-	    Indexer->ServerIdCacheId[Indexer->pServerIdCache] = id;
-	    Indexer->ServerIdCacheWeight[Indexer->pServerIdCache] = Server->weight;
+	    DPS_FREE(Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern);
+	    Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(Server->Match.pattern);
+	    Indexer->ServerIdCache[Indexer->pServerIdCache].Command = Server->command;
+	    Indexer->ServerIdCache[Indexer->pServerIdCache].Id = id;
+	    Indexer->ServerIdCache[Indexer->pServerIdCache].Weight = Server->weight;
+	    Indexer->ServerIdCache[Indexer->pServerIdCache].OnErrored = 0;
 	    Indexer->pServerIdCache = (Indexer->pServerIdCache + 1) % DPS_SERVERID_CACHE_SIZE;
 	    DPS_FREE(buf); DPS_FREE(arg);
 	    DpsSQLFree(&SQLRes);
@@ -1097,11 +1093,12 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	  DpsSQLFree(&SQLRes);
 
 	  Server->site_id = id = rec_id;
-	  DPS_FREE(Indexer->ServerIdCache[Indexer->pServerIdCache]);
-	  Indexer->ServerIdCache[Indexer->pServerIdCache] = (char*)DpsStrdup(Server->Match.pattern);
-	  Indexer->ServerIdCacheCommand[Indexer->pServerIdCache] = Server->command;
-	  Indexer->ServerIdCacheId[Indexer->pServerIdCache] = id;
-	  Indexer->ServerIdCacheWeight[Indexer->pServerIdCache] = weight;
+	  DPS_FREE(Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern);
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(Server->Match.pattern);
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].Command = Server->command;
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].Id = id;
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].Weight = weight;
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].OnErrored = 0;
 	  Indexer->pServerIdCache = (Indexer->pServerIdCache + 1) % DPS_SERVERID_CACHE_SIZE;
 	}
 	DPS_FREE(buf); DPS_FREE(arg);
@@ -4654,7 +4651,15 @@ static int DpsStoredRehash(DPS_AGENT *A, DPS_DB *db) {
 
 static int DpsDocPostponeSite(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
   char qbuf[512];
-  int site_id = DpsVarListFindInt(&Doc->Sections, "site_id", 0);
+  int i, site_id = DpsVarListFindInt(&Doc->Sections, "site_id", 0);
+
+  for (i = 0; i < DPS_SERVERID_CACHE_SIZE; i++) {
+    if (A->ServerIdCache[i].Id == site_id) {
+      if (A->ServerIdCache[i].OnErrored) return DPS_OK;
+      A->ServerIdCache[i].OnErrored = 1;
+      break;
+    }
+  }
   dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET next_index_time=%lu WHERE site_id=%d", A->now + Doc->Spider.net_error_delay_time, site_id);
   return DpsSQLAsyncQuery(db, NULL, qbuf);
 }

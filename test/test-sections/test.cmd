@@ -12,12 +12,20 @@ fail !0 exec $(INDEXER) -Eindex  -am $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_
 fail !0 exec $(INDEXER) -Esqlmon $(DPS_TEST_DIR)/indexer.conf < $(DPS_TEST_DIR)/query.tst > $(DPS_TEST_DIR)/query.rej 2>&1
 fail !0 exec $(SEARCH) "second&wf=1000000000" > $(DPS_TEST_DIR)/search.rej 2>&1
 fail !0 exec $(SEARCH) "allindp_id: 1&m=bool" > $(DPS_TEST_DIR)/search2.rej 2>&1
+fail !0 exec $(SEARCH) "insurance AND NOT (allinmeta.source: %22associated press%22)&m=bool" > $(DPS_TEST_DIR)/search3.rej 2>&1
+fail !0 exec $(SEARCH) "insurance AND (allinmeta.source: %22associated press%22)&m=bool" > $(DPS_TEST_DIR)/search4.rej 2>&1
 
 fail !0 mdiff $(DPS_TEST_DIR)/search.rej $(DPS_TEST_DIR)/search.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/search.rej
 
 fail !0 mdiff $(DPS_TEST_DIR)/search2.rej $(DPS_TEST_DIR)/search2.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/search2.rej
+
+fail !0 mdiff $(DPS_TEST_DIR)/search3.rej $(DPS_TEST_DIR)/search3.res
+fail !0 exec rm -f $(DPS_TEST_DIR)/search3.rej
+
+fail !0 mdiff $(DPS_TEST_DIR)/search4.rej $(DPS_TEST_DIR)/search4.res
+fail !0 exec rm -f $(DPS_TEST_DIR)/search4.rej
 
 
 fail !0 mdiff $(DPS_TEST_DIR)/query.rej $(DPS_TEST_DIR)/query.res
