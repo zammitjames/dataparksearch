@@ -1025,6 +1025,14 @@ typedef struct {
   const char   *GrBeg, *GrEnd; /**< template same site quoting for grouping a-la google */
 } DPS_TEMPLATE;
 
+typedef struct {
+        char    *Match_Pattern;
+        urlid_t Id;
+        float   Weight;
+        char    Command;
+        char    OnErrored;
+} DPS_SERVERCACHE;
+
 /** Indexer */
 typedef struct dps_indexer_struct{
 	int		freeme;		/**< whenever it was allocated    */
@@ -1066,10 +1074,7 @@ typedef struct dps_indexer_struct{
         int     DpsFindURLCacheHops[DPS_FINDURL_CACHE_SIZE];
         size_t  pURLCache;
 
-        char    *ServerIdCache[DPS_SERVERID_CACHE_SIZE];
-        char    ServerIdCacheCommand[DPS_SERVERID_CACHE_SIZE];
-        urlid_t ServerIdCacheId[DPS_SERVERID_CACHE_SIZE];
-        float   ServerIdCacheWeight[DPS_SERVERID_CACHE_SIZE];
+        DPS_SERVERCACHE ServerIdCache[DPS_SERVERID_CACHE_SIZE];
         size_t  pServerIdCache;
 
         int     *Locked;  /**< is locked, how many times */
