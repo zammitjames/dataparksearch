@@ -2838,6 +2838,7 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 	}
 
 	Agent->nlimits = 0;
+	DpsVarListDel(vars, "ul");
 
 	DpsSGMLUnescape(qs);
 	
@@ -2860,7 +2861,8 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 		  int res = !strcasecmp(str, "yes");
 		  Agent->Flags.do_excerpt = res;
 		} else {
-		  DpsVarListReplaceStr(vars,tok,str);
+		  if (strncasecmp(tok, "ul", 2) == 0) DpsVarListAddStr(vars, tok, str);
+		  else DpsVarListReplaceStr(vars, tok, str);
 		  dps_snprintf(qname, 256, "query.%s", tok);
 		  DpsVarListReplaceStr(vars, qname, str);
 
@@ -3375,6 +3377,7 @@ void DpsParseQStringUnescaped(DPS_VARLIST *vars, const char *qstring){
 	char *name = NULL, *arg;
 
 	if (qs != NULL) {
+	  DpsVarListDel(vars, "ul");
 	  DpsUnescapeCGIQuery(qs, qs);
 	  name = qs;
 	  tok = strchr(qs, '&');
@@ -3386,16 +3389,16 @@ void DpsParseQStringUnescaped(DPS_VARLIST *vars, const char *qstring){
 	    arg = strchr(name, '=');
 	    if(arg) *arg++ = '\0';
 	    *tok = '\0';
-/*	      DpsVarListAddStr(vars,tok,arg?arg:"");*/
-	    DpsVarListReplaceStr(vars, name, arg ? arg : "");
+	    if (strncasecmp(name, "ul", 2) == 0) DpsVarListAddStr(vars, name, arg ? arg : "");
+	    else DpsVarListReplaceStr(vars, name, arg ? arg : "");
 	    name = tok + 1;
 	    tok = strchr(name, '&');
 	  }
 	  if (*name) {
 	    arg = strchr(name, '=');
 	    if(arg) *arg++ = '\0';
-/*	      DpsVarListAddStr(vars,tok,arg?arg:"");*/
-	    DpsVarListReplaceStr(vars, name, arg ? arg : "");
+	    if (strncasecmp(name, "ul", 2) == 0) DpsVarListAddStr(vars, name, arg ? arg : "");
+	    else DpsVarListReplaceStr(vars, name, arg ? arg : "");
 	  }
 
 
