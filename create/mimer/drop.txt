@@ -7,6 +7,8 @@ DROP TABLE links;
 DROP TABLE qtrack;
 DROP TABLE categories;
 DROP TABLE storedchk;
+DROP TABLE cachedchk;
+DROP TABLE cachedchk2;
 DROP TABLE robots;
 
 -- DROP TABLE qinfo;

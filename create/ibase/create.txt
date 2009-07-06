@@ -113,3 +113,26 @@ create table links (
 CREATE UNIQUE INDEX links_links ON links (ot, k);
 CREATE        INDEX links_ot    ON links (ot);
 CREATE        INDEX links_k     ON links (k);
+
+
+CREATE TABLE storedchk (
+       rec_id integer, 
+       url_id integer
+);
+CREATE INDEX storedchk_i ON storedchk (url_id);
+
+CREATE TABLE cachedchk (
+       rec_id integer
+);
+CREATE UNIQUE INDEX cachedchk_i ON cachedchk (rec_id);
+
+CREATE TABLE cachedchk2 (
+       url_id integer
+);
+CREATE UNIQUE INDEX cachedchk2_i ON cachedchk2 (url_id);
+
+CREATE TABLE cachedchk2 (
+       url_id integer
+);
+CREATE UNIQUE INDEX cachedchk2_i ON cachedchk (url_id);
+

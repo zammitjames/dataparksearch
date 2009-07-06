@@ -10,6 +10,7 @@ DROP TABLE "qtrack";
 DROP TABLE "qinfo";
 DROP TABLE storedchk;
 DROP TABLE cachedchk;
+DROP TABLE cachedchk2;
 DROP TABLE robots;
 DROP TABLE cookies;
 DROP SEQUENCE url_rec_id_seq;

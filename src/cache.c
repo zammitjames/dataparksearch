@@ -3096,10 +3096,10 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
 
   if (level > 2) {
 
-    DpsLog(A, DPS_LOG_EXTRA, "update storedchk table");
+    DpsLog(A, DPS_LOG_EXTRA, "update cachedchk2 table");
 
     if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-    res = DpsSQLAsyncQuery(db, NULL, "DELETE FROM storedchk");
+    res = DpsSQLAsyncQuery(db, NULL, "DELETE FROM cachedchk2");
     if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
     if(DPS_OK != res) { TRACE_OUT(A); return res; }
 
@@ -3113,7 +3113,7 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
       if(DPS_OK != res) { TRACE_OUT(A); return res; }
       nitems = DpsSQLNumRows(&SQLRes);
       for( i = 0; i < nitems; i++) {
-	dps_snprintf(dat_name, sizeof(dat_name), "INSERT INTO storedchk (rec_id, url_id) VALUES (0, %s)", DpsSQLValue(&SQLRes, i, 0));
+	dps_snprintf(dat_name, sizeof(dat_name), "INSERT INTO cachedchk2 (url_id) VALUES (%s)", DpsSQLValue(&SQLRes, i, 0));
 
 	if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
 	res = DpsSQLAsyncQuery(db, NULL, dat_name);
@@ -3193,14 +3193,14 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
 
 /*      DpsSort(crd, (size_t)ncrd, sizeof(DPS_URL_CRD), (qsort_cmp)DpsCmpURL_CRD);*/ /* it's sorted already */
 
-      prev_urlid = -1;
+      prev_urlid = 0;
       for (j = 0; j < ncrd; j++) {
 
 	if (crd[j].url_id == prev_urlid) continue;
 	prev_urlid = crd[j].url_id;
 
 	if (level > 2) {
-	  dps_snprintf(dat_name, sizeof(dat_name), "DELETE FROM storedchk WHERE url_id=%d", crd[j].url_id);
+	  dps_snprintf(dat_name, sizeof(dat_name), "DELETE FROM cachedchk2 WHERE url_id=%d", crd[j].url_id);
 	  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
 	  res = DpsSQLAsyncQuery(db, NULL, dat_name);
 	  if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
@@ -3347,11 +3347,11 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
     DpsLog(A, DPS_LOG_EXTRA, "force reindexing for urls without words");
 
     while (u) {
-      dps_snprintf(dat_name, sizeof(dat_name), "SELECT url_id FROM storedchk ORDER BY url_id LIMIT %d OFFSET %ld", recs, offset);
+      dps_snprintf(dat_name, sizeof(dat_name), "SELECT url_id FROM cachedchk2 ORDER BY url_id LIMIT %d OFFSET %ld", recs, offset);
       if(DPS_OK != (res = DpsSQLQuery(db, &SQLRes, dat_name))) { TRACE_OUT(A); return res; }
       nitems = DpsSQLNumRows(&SQLRes);
       for( i = 0; i < nitems; i++) {
-	dps_snprintf(dat_name,sizeof(dat_name), "UPDATE url SET status=0,last_mod_time=0  WHERE rec_id=%s AND status IN (200,206,302,304)", 
+	dps_snprintf(dat_name,sizeof(dat_name), "UPDATE url SET last_mod_time=0  WHERE rec_id=%s AND status IN (200,206,302,304)", 
 		     DpsSQLValue(&SQLRes, i, 0));
 
 	if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
@@ -3372,7 +3372,7 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
   DPS_FREE(todel);
 
   if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-  res = DpsSQLAsyncQuery(db, NULL, "DELETE FROM storedchk");
+  res = DpsSQLAsyncQuery(db, NULL, "DELETE FROM cachedchk2");
   if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
   if(DPS_OK != res) { TRACE_OUT(A); return res; }
 
