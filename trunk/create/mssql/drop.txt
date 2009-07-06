@@ -10,4 +10,7 @@ DROP TABLE "categories";
 DROP TABLE "crossdict";
 DROP TABLE "qinfo";
 DROP TABLE "qtrack";
+DROP TABLE storedchk;
+DROP TABLE cachedchk;
+DROP TABLE cachedchk2;
 

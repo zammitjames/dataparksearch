@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* cachedchk2 table has been added to SQL database. Please execute "indexer -Ecreate" command on upgrade.
 	* A function of canonical lanuage name has been fixed. The languages with names below "ru" in lexical order were affected.
 	* The maximim length of log records has been enlarged to 480 bytes, the MUST size for a syslog message.
 	* MaxHrefsPerServer command has been added. Uset it to limit the maximum number of hrefs accepted per server during one indexer run.

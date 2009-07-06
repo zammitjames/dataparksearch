@@ -1088,7 +1088,7 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 	  DpsSQLFree(&SQLRes);
      
 	}
-	if (notfound) {
+	if (notfound && (P.Item.rec_id != 0)) {
 	  if (ndel >= mdel) {
 	    mdel += 128;
 	    todel = (urlid_t*)DpsRealloc(todel, mdel * sizeof(urlid_t));
