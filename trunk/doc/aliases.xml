@@ -166,13 +166,13 @@ AliasProg  "echo $1 | /usr/local/mysql/bin/mysql/replace http://www.apache.org/ 
 <filename>indexer.conf</filename> command allows URL mapping before
 URL is inserted into database. Unlike Alias command, that triggers
 mapping right before a document is downloaded, ReverseAlias command
-triggers mapping after the link is found. 
+triggers mapping after the link is found. </para>
 
 		<programlisting>
 ReverseAlias http://name2/   http://name2.yourname.com/
 Server       http://name2.yourname.com/
 </programlisting>
-		</para>
+
 		<para>All links with short server name will be mapped
 to links with full server name before they are inserted into
 database.</para>

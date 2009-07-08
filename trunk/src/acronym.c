@@ -40,6 +40,7 @@ void DpsAcronymListInit(DPS_ACRONYMLIST *List) {
 }
 
 int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
+     DPS_MATCH	Alias;
      struct stat     sb;
      char      *str, *data = NULL, *cur_n = NULL;
      char      lang[64]="";
@@ -49,6 +50,9 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      DPS_WIDEWORD    *ww = NULL;
      int             fd;
      char            savebyte;
+     char            *av[255];
+     size_t          ac, i;
+     dpsunicode_t    *t;
      
      if (stat(filename, &sb)) {
        fprintf(stderr, "Unable to stat acronyms file '%s': %s", filename, strerror(errno));
@@ -82,6 +86,46 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      DpsConvInit(&uni_lc, sys_int, Env->lcs, Env->CharsToEscape, DPS_RECODE_HTML);
 
      while(str != NULL) {
+
+          if (str[0] == '#' && str[1] == '*') {
+	    ac = DpsGetArgs(str + 2, av, 255);
+	    if (ac < 2) goto loop_continue;
+	    DpsMatchInit(&Alias);
+	    Alias.match_type = DPS_MATCH_BEGIN;
+	    for(i = 0; i < ac; i++) {
+		if(!strcasecmp(av[i],"regex"))
+			Alias.match_type=DPS_MATCH_REGEX;
+		else
+		if(!strcasecmp(av[i],"regexp"))
+			Alias.match_type=DPS_MATCH_REGEX;
+		else
+		if(!strcasecmp(av[i],"case"))
+			Alias.case_sense=1;
+		else
+		if(!strcasecmp(av[i],"nocase"))
+			Alias.case_sense=0;
+		else
+		if(!strcasecmp(av[i],"last"))
+			Alias.last = 1;
+		else
+		if(!Alias.pattern){
+			Alias.pattern=av[i];
+		}else{
+			char	    err[120] = "";
+			
+			Alias.arg = av[i];
+			
+			if(DPS_OK != DpsMatchListAdd(NULL, &Env->QAliases, &Alias, err, sizeof(err), 0)) {
+				dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "%s", err);
+				return DPS_ERROR;
+			}
+		}
+	    }
+	    if(!Alias.arg){
+	      dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "too few arguments in file '%s'", filename);
+		return DPS_ERROR;
+	    }
+	  }
           if(str[0]=='#'||str[0]==' '||str[0]==HT_CHAR||str[0]==CR_CHAR||str[0]==NL_CHAR) goto loop_continue;
           
           if(!strncmp(str,"Charset:",8)){
@@ -105,9 +149,6 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
                     dps_strncpy(lang, l, sizeof(lang)-1);
                }
           }else{
-               char      *av[255];
-               size_t         ac, i;
-	       dpsunicode_t *t;
 
                if(!cs){
                     dps_snprintf(Env->errstr,sizeof(Env->errstr)-1,"No Charset command in acronyms file '%s'",filename);

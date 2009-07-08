@@ -380,6 +380,9 @@ static int add_alias(void *Cfg, size_t ac,char **av){
 		if(!strcasecmp(av[i],"nocase"))
 			Alias.case_sense=0;
 		else
+		if(!strcasecmp(av[i],"last"))
+			Alias.last = 1;
+		else
 		if(!Alias.pattern){
 			Alias.pattern=av[i];
 		}else{
