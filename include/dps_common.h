@@ -365,7 +365,6 @@ typedef union {
 typedef struct {
 	int		match_type;
 	int		nomatch;
-	int		case_sense;
         int             compiled;
         char            *section;
         char            *subsection;
@@ -374,6 +373,8 @@ typedef struct {
 	char		*arg;
         char            *dbaddr;
 	urlid_t         server_id;        /**< server.rec_id            */
+	dps_uint2	case_sense;
+        dps_uint2       last;
 } DPS_MATCH;
 
 typedef struct {
@@ -961,10 +962,11 @@ typedef struct dps_config_struct {
 	DPS_MATCHLIST	SectionFilters;	/**< IndexIf, NoIndexIf, etc    */
 	DPS_MATCHLIST	StoreFilters;	/**< Store, NoStore, etc        */
         DPS_MATCHLIST   SectionMatch;   /**< Section's patterns         */
-        DPS_MATCHLIST   HrefSectionMatch;   /**< HrefSection's patterns         */
+        DPS_MATCHLIST   HrefSectionMatch;   /**< HrefSection's patterns */
 	DPS_MATCHLIST	SubSectionMatch;/**< TagIf, CategoryIf          */
         DPS_MATCHLIST   BodyPatterns;   /**< Body extraction patterns   */
         DPS_MATCHLIST   ActionSQLMatch; /**< ActionSQL patterns         */
+	DPS_MATCHLIST	QAliases;	/**< query word aliases         */
 	
 	DPS_RESULT	Targets;	/**< Targets cache              */
 	

@@ -1350,113 +1350,189 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 
 #if 1
 		  OWord.uword = uwrd;
-		  if (state.sp&&/*!(state.nphrasecmd & 1)&&-*/(first = DpsAcronymListFind(&query->Conf->Acronyms, &OWord, &last)) != NULL) {
-		    while(first <= last) {
-		      if ((state.nphrasecmd & 1) && (first->unroll.nwords > 1)) { first++; continue; }
-		      if (!(state.nphrasecmd & 1)) state.order++;
-		      state.cmd = DPS_STACK_OR;
-		      state.add_cmd = add_cmd;
-		      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			DPS_FREE(uwrddup);
-			DPS_PREPARE_RETURN(0);
-		      }
-		      if (first->unroll.nwords > 1) {
-			state.cmd = DPS_STACK_PHRASE_LEFT;
+		  if (state.sp) {
+		    DPS_MATCH_PART	Parts[10];
+		    DPS_MATCH	 *Alias;
+		    size_t	 aliassize, nparts = 10;
+		    char	 *alias = NULL;
+		    dpsunicode_t *ualias = NULL;
+		    int          cascade;
+
+
+
+		    if (/*!(state.nphrasecmd & 1)&&-*/(first = DpsAcronymListFind(&query->Conf->Acronyms, &OWord, &last)) != NULL) {
+		      while(first <= last) {
+			if ((state.nphrasecmd & 1) && (first->unroll.nwords > 1)) { first++; continue; }
+			if (!(state.nphrasecmd & 1)) state.order++;
+			state.cmd = DPS_STACK_OR;
 			state.add_cmd = add_cmd;
 			if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
 			  DPS_FREE(uwrddup);
 			  DPS_PREPARE_RETURN(0);
 			}
-		      }
-		      { register size_t z;
-			for (z = 0; z < first->unroll.nwords; z++) {
-			  if (z) {
-			    state.order++;
-			    state.cmd = DPS_STACK_AND;
-			    state.add_cmd = add_cmd;
-			    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
-			      DPS_FREE(uwrddup);
-			      DPS_PREPARE_RETURN(0);
-			    }
-			  }
-			  state.cmd = DPS_STACK_LEFT;
+			if (first->unroll.nwords > 1) {
+			  state.cmd = DPS_STACK_PHRASE_LEFT;
 			  state.add_cmd = add_cmd;
 			  if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
 			    DPS_FREE(uwrddup);
 			    DPS_PREPARE_RETURN(0);
 			  }
+			}
+			{ register size_t z;
+			  for (z = 0; z < first->unroll.nwords; z++) {
+			    if (z) {
+			      state.order++;
+			      state.cmd = DPS_STACK_AND;
+			      state.add_cmd = add_cmd;
+			      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
+				DPS_FREE(uwrddup);
+				DPS_PREPARE_RETURN(0);
+			      }
+			    }
+			    state.cmd = DPS_STACK_LEFT;
+			    state.add_cmd = add_cmd;
+			    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
+			      DPS_FREE(uwrddup);
+			      DPS_PREPARE_RETURN(0);
+			    }
 
 #if 1
-			  state.cmd = DPS_STACK_WORD;
-			  state.add_cmd = add_cmd;
-			  state.origin = DPS_WORD_ORIGIN_ACRONYM;
-			  if (DpsAddStackItem(query, Res, &state, first->unroll.Word[z].word, first->unroll.Word[z].uword) != DPS_OK) {
-			    DPS_FREE(uwrddup);
-			    DPS_PREPARE_RETURN(0);
-			  }
-			  OWord.uword = first->unroll.Word[z].uword;
-			  OWord.ulen = DpsUniLen(first->unroll.Word[z].uword);
-			  OWord.origin = DPS_WORD_ORIGIN_ACRONYM;
-			  { size_t nphrasecmd = state.nphrasecmd;
-			    state.nphrasecmd = 1/*(first->unroll.nwords > 1) ? 1 : 0*/;
-			    state.have_bukva_forte = 0;
-			    if (DPS_OK != DpsExpandWord(query, Res, &OWord, &state)) {
-			      DPS_FREE(uwrddup);
-			      DPS_PREPARE_RETURN(0);
-			    }
-			    state.nphrasecmd = nphrasecmd;
-			  }
-
-#else
-			  if(DpsStopListFind(&query->Conf->StopWords, first->unroll.Word[z].uword, state.qlang) ||
-			     (query->WordParam.min_word_len > first->unroll.Word[z].ulen) ||
-			     (query->WordParam.max_word_len < first->unroll.Word[z].ulen)) {
-			    if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_STOP, 
-						first->unroll.Word[z].word, 
-						first->unroll.Word[z].uword, qlang) != DPS_OK) {
-			      DPS_FREE(uwrddup);
-			      DPS_PREPARE_RETURN(0);
-			    }
-			    Res->items[ORDER].order_origin |= DPS_WORD_ORIGIN_STOP;
-			  } else {
-			    if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_ACRONYM, 
-						first->unroll.Word[z].word, 
-						first->unroll.Word[z].uword, qlang) != DPS_OK) {
+			    state.cmd = DPS_STACK_WORD;
+			    state.add_cmd = add_cmd;
+			    state.origin = DPS_WORD_ORIGIN_ACRONYM;
+			    if (DpsAddStackItem(query, Res, &state, first->unroll.Word[z].word, first->unroll.Word[z].uword) != DPS_OK) {
 			      DPS_FREE(uwrddup);
 			      DPS_PREPARE_RETURN(0);
 			    }
 			    OWord.uword = first->unroll.Word[z].uword;
 			    OWord.ulen = DpsUniLen(first->unroll.Word[z].uword);
 			    OWord.origin = DPS_WORD_ORIGIN_ACRONYM;
-			    local.order = state.order;
-			    local.order_inquery = state.order_inquery;
-			    local.nphrasecmd = 1 /*(first->unroll.nwords > 1) ? 1 : 0*/;
-			    local.have_bukva_forte = 0;
-			    if (DPS_OK != DpsExpandWord(query, Res, &OWord, &local)) {
+			    { size_t nphrasecmd = state.nphrasecmd;
+			      state.nphrasecmd = 1/*(first->unroll.nwords > 1) ? 1 : 0*/;
+			      state.have_bukva_forte = 0;
+			      if (DPS_OK != DpsExpandWord(query, Res, &OWord, &state)) {
+				DPS_FREE(uwrddup);
+				DPS_PREPARE_RETURN(0);
+			      }
+			      state.nphrasecmd = nphrasecmd;
+			    }
+
+#else
+			    if(DpsStopListFind(&query->Conf->StopWords, first->unroll.Word[z].uword, state.qlang) ||
+			       (query->WordParam.min_word_len > first->unroll.Word[z].ulen) ||
+			       (query->WordParam.max_word_len < first->unroll.Word[z].ulen)) {
+			      if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_STOP, 
+						  first->unroll.Word[z].word, 
+						  first->unroll.Word[z].uword, qlang) != DPS_OK) {
+				DPS_FREE(uwrddup);
+				DPS_PREPARE_RETURN(0);
+			      }
+			      Res->items[ORDER].order_origin |= DPS_WORD_ORIGIN_STOP;
+			    } else {
+			      if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_ACRONYM, 
+						  first->unroll.Word[z].word, 
+						  first->unroll.Word[z].uword, qlang) != DPS_OK) {
+				DPS_FREE(uwrddup);
+				DPS_PREPARE_RETURN(0);
+			      }
+			      OWord.uword = first->unroll.Word[z].uword;
+			      OWord.ulen = DpsUniLen(first->unroll.Word[z].uword);
+			      OWord.origin = DPS_WORD_ORIGIN_ACRONYM;
+			      local.order = state.order;
+			      local.order_inquery = state.order_inquery;
+			      local.nphrasecmd = 1 /*(first->unroll.nwords > 1) ? 1 : 0*/;
+			      local.have_bukva_forte = 0;
+			      if (DPS_OK != DpsExpandWord(query, Res, &OWord, &local)) {
+				DPS_FREE(uwrddup);
+				DPS_PREPARE_RETURN(0);
+			      }
+			    }
+#endif
+
+			    state.cmd = DPS_STACK_RIGHT;
+			    state.add_cmd = add_cmd;
+			    if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
 			      DPS_FREE(uwrddup);
 			      DPS_PREPARE_RETURN(0);
 			    }
 			  }
-#endif
-
-			  state.cmd = DPS_STACK_RIGHT;
+			}
+			if (first->unroll.nwords > 1) {
+			  state.cmd = DPS_STACK_PHRASE_RIGHT;
 			  state.add_cmd = add_cmd;
 			  if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
 			    DPS_FREE(uwrddup);
 			    DPS_PREPARE_RETURN(0);
 			  }
 			}
+			first++;
 		      }
-		      if (first->unroll.nwords > 1) {
-			state.cmd = DPS_STACK_PHRASE_RIGHT;
+		    }
+		    
+		    for(cascade = 0; ((Alias = DpsMatchListFind(&query->Conf->QAliases, wrd, nparts, Parts))) && (cascade < 1024); cascade++) {
+		      aliassize = dps_strlen(Alias->arg) + dps_strlen(Alias->pattern) + dps_strlen(wrd) + 128;
+		      alias = (char*)DpsRealloc(alias, aliassize);
+		      if (alias == NULL) {
+			DpsLog(query, DPS_LOG_ERROR, "No memory (%d bytes). %s line %d", aliassize, __FILE__, __LINE__);
+			goto ret;
+		      }
+		      DpsMatchApply(alias,aliassize,wrd,Alias->arg,Alias,nparts,Parts);
+		      if(alias[0]){
+			DpsLog(query, DPS_LOG_DEBUG, "QAlias%d: pattern:%s, arg:%s -> '%s'", cascade, Alias->pattern, Alias->arg, alias);
+			ualias = (dpsunicode_t*)DpsRealloc(ualias, sizeof(dpsunicode_t) * aliassize);
+			if (ualias == NULL) {
+			  DpsLog(query, DPS_LOG_ERROR, "No memory (%d bytes). %s line %d", sizeof(dpsunicode_t) * aliassize, __FILE__, __LINE__);
+			  goto ret;
+			}
+			DpsConv(&query->lc_uni, (char*)ualias, sizeof(dpsunicode_t) * aliassize, alias, aliassize);
+
+			OWord.len = dps_strlen(alias);
+			OWord.order = state.order;
+			OWord.order_inquery = state.order_inquery;
+			OWord.count = 0;
+			OWord.crcword = DpsStrHash32(alias);
+			OWord.word = alias;
+			OWord.uword = ualias;
+			OWord.ulen = DpsUniLen(ualias);
+			OWord.origin = DPS_WORD_ORIGIN_ACRONYM;
+
+			state.cmd = DPS_STACK_OR;
 			state.add_cmd = add_cmd;
 			if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
 			  DPS_FREE(uwrddup);
+			  DPS_FREE(alias); DPS_FREE(ualias);
 			  DPS_PREPARE_RETURN(0);
 			}
-		      }
-		      first++;
+			    state.cmd = DPS_STACK_WORD;
+			    state.add_cmd = add_cmd;
+			    state.origin = DPS_WORD_ORIGIN_ACRONYM;
+			    if (DpsAddStackItem(query, Res, &state, alias, ualias) != DPS_OK) {
+			      DPS_FREE(uwrddup);
+			      DPS_FREE(alias); DPS_FREE(ualias);
+			      DPS_PREPARE_RETURN(0);
+			    }
+			    OWord.uword = ualias;
+			    OWord.ulen = DpsUniLen(ualias);
+			    OWord.origin = DPS_WORD_ORIGIN_ACRONYM;
+			    { size_t nphrasecmd = state.nphrasecmd;
+			      state.nphrasecmd = 1;
+			      state.have_bukva_forte = 0;
+			      if (DPS_OK != DpsExpandWord(query, Res, &OWord, &state)) {
+				DPS_FREE(uwrddup);
+				DPS_FREE(alias); DPS_FREE(ualias);
+				DPS_PREPARE_RETURN(0);
+			      }
+			      state.nphrasecmd = nphrasecmd;
+			    }
+
+		      } else break;
+		      if (Alias->last) break;
 		    }
+ret:	
+		    DPS_FREE(alias); DPS_FREE(ualias);
+
+
+
 		  }
 #endif
 

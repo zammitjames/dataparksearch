@@ -453,6 +453,7 @@ static void RelLink(DPS_AGENT *Indexer, DPS_URL *curURL, DPS_URL *newURL, char *
 		  DPS_FREE(*str);
 		  *str = (char*)DpsStrdup(alias);
 		} else break;
+		if (Alias->last) break;
 	}
 
 ret:	

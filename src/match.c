@@ -109,7 +109,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 	
 /*	
 	fprintf(stderr, "DpsMatchExec: '%s' -> '%s' '%s'\n",string, Match->pattern, DpsMatchTypeStr(Match->match_type));
-*/	
+*/
 	
 	switch(Match->match_type){
 		case DPS_MATCH_REGEX:
@@ -302,6 +302,7 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	N->arg = M->arg ? (char*)DpsStrdup(M->arg) : NULL;
 	N->section = M->section ? (char *)DpsStrdup(M->section) : NULL;
 	N->subsection = M->subsection ? (char *)DpsStrdup(M->subsection) : NULL;
+	N->last = M->last;
 
 	if (A != NULL) {
 
