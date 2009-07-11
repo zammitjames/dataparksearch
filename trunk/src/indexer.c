@@ -1918,9 +1918,6 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 
 	DPS_FREE(origurl); DPS_FREE(aliasurl);
-	DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
-	if (result == DPS_OK) result = Indexer->action;
-	DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
 	TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
 	DpsViolationExit(Indexer->handle, paran);
@@ -1947,6 +1944,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 
 	if(DPS_OK==(result=DpsStoreHrefs(Indexer))) {
 	        if (Indexer->action != DPS_OK && Indexer->action != DPS_NOTARGET) {
+		  DpsDocFree(Doc);
 		  TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
 		  DpsViolationExit(Indexer->handle, paran);
