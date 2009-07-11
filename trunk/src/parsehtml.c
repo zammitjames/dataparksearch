@@ -427,6 +427,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #endif
 
   TRACE_IN(Indexer, "DpsPrepareWords");
+  DpsLog(Indexer, DPS_LOG_DEBUG, "Preparing words");
 
   if (DpsDSTRInit(&exrpt, dps_max( 4096, Doc->Buf.size >> 2 )) == NULL) {
     TRACE_OUT(Indexer);
@@ -734,6 +735,8 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 	DPS_TEXTITEM	Item;
 	DPS_VAR		*BSec=DpsVarListFind(&Doc->Sections,"body");
 	const char      *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
+
+	DpsLog(Indexer, DPS_LOG_DEBUG, "Executing Text parser");
 	
 	if (BSec == NULL) return DPS_OK;
 	Item.href = NULL;
@@ -1251,30 +1254,33 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 					/* Set Server parameters */
 					tag->follow=Doc->Spider.follow;
 					tag->index=Doc->Spider.index;
-				}else
-				if(!strcasecmp(rtok,"NONE")){
+				}else if(!strcasecmp(rtok,"NONE")){
 					tag->follow=DPS_FOLLOW_NO;
 					tag->index=0;
 					Doc->Spider.follow = DPS_FOLLOW_NO;
 					Doc->Spider.index = 0;
-				}else
-				  if(!strcasecmp(rtok,"NOINDEX")) {
+					if (DpsNeedLog(DPS_LOG_DEBUG)) {
+					  DpsVarListReplaceInt(&Doc->Sections, "Index", 0);
+					  DpsVarListReplaceInt(&Doc->Sections, "Follow", DPS_FOLLOW_NO);
+					}
+				}else if(!strcasecmp(rtok,"NOINDEX")) {
 					tag->index=0;
 					Doc->Spider.index = 0;
 /*					Doc->method = DPS_METHOD_DISALLOW;*/
-				}else
-				  if(!strcasecmp(rtok,"NOFOLLOW")) {
+					if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Index", 0);
+				}else if(!strcasecmp(rtok,"NOFOLLOW")) {
 					tag->follow=DPS_FOLLOW_NO;
 					Doc->Spider.follow = DPS_FOLLOW_NO;
-				}else
-				  if(!strcasecmp(rtok,"NOARCHIVE")) {
+					if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Follow", DPS_FOLLOW_NO);
+				}else if(!strcasecmp(rtok,"NOARCHIVE")) {
 				        DpsVarListReplaceStr(&Doc->Sections, "Z", "");
-				}else
-				  if(!strcasecmp(rtok,"INDEX")) {
+				}else if(!strcasecmp(rtok,"INDEX")) {
 				        tag->index = Doc->Spider.index;
-				}else
-				if(!strcasecmp(rtok,"FOLLOW")) 
+					if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Index", Doc->Spider.index);
+				}else if(!strcasecmp(rtok,"FOLLOW")) {
 					tag->follow=Doc->Spider.follow;
+					if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Follow", Doc->Spider.follow);
+				}
 				rtok = dps_strtok_r(NULL," \r\n\t",&lt);
 			}
 		}else
@@ -1464,5 +1470,6 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 }
 
 int DpsHTMLParse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
+  DpsLog(Indexer, DPS_LOG_DEBUG, "Executing HTML parser");
   return DpsHTMLParseBuf(Indexer, Doc, NULL, (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern);
 }

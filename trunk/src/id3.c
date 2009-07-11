@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -637,6 +637,9 @@ int DpsMP3Type(DPS_DOCUMENT *Doc){
 }
 
 int DpsMP3Parse(DPS_AGENT *A,DPS_DOCUMENT *Doc){
+
+  DpsLog(A, DPS_LOG_DEBUG, "Executing MP3 parser");
+
   if (!strncmp(Doc->Buf.content, "ID3", 3)) {
     if (Doc->Buf.content[3] == 2 && Doc->Buf.content[4] == 0) {
       DpsLog(A, DPS_LOG_EXTRA, "ID3v20 tag detected");
