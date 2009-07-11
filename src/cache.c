@@ -2394,23 +2394,25 @@ int DpsLogdSaveAllBufs(DPS_AGENT *Agent) {
 	  DPS_GETLOCK(Agent, DPS_LOCK_CONF);
 	  db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[j] : &Agent->dbl.db[j];
 	  DPS_RELEASELOCK(Agent, DPS_LOCK_CONF);
+	  if (Agent->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Agent, DPS_LOCK_DB);
 
-	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED);
+/**	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED);**/
 	  u = (db->LOGD.wrd_buf == NULL);
-	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);
+/**	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);**/
 	  if (u) continue;
 	  for(i = 0; i < ((db->WrdFiles) ? db->WrdFiles : NWrdFiles); i++) {
-	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
+/**	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 /*	    u = (db->LOGD.wrd_buf == NULL);*/
 	    /*if (u)*/ u = (db->LOGD.wrd_buf[i].nrec || db->LOGD.wrd_buf[i].ndel);
 	    if (u) {
 	      res = DpsLogdSaveBuf(Agent, Env, i);
 	    }
-	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
+/**	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 	    if (res != DPS_OK) break;
 /*	    DPSSLEEP(0);*/
 	  }
 	  db->LOGD.cur_del_buf = 0;
+	  if (Agent->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Agent, DPS_LOCK_DB);
 	  if (res != DPS_OK) break;
 	}
 	TRACE_OUT(Agent);
@@ -2953,7 +2955,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 
 	if (Env->logs_only) {
 
-	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED);
+/**	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED);**/
 /*	  logd = db->LOGD;*/
 
 	  if (logd->wrd_buf[logd->cur_del_buf].ndel == CacheLogDels) logd->cur_del_buf++;
@@ -2966,7 +2968,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 		sprintf(db->errstr, "Can't write to del.log: %s\n", strerror(errno));
 		db->errcode = 1;
 		DpsUnLock(db->del_fd);
-		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);
+/**		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);**/
 		TRACE_OUT(Agent);
 		return DPS_ERROR;
 	      }
@@ -2978,18 +2980,18 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	  nrec = logd->wrd_buf[logd->cur_del_buf].ndel;
 	  logd->wrd_buf[logd->cur_del_buf].del_buf[nrec] = logdel;
 	  logd->wrd_buf[logd->cur_del_buf].ndel++;
-	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);
+/**	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);**/
 
 	} else {
 	      
 	  for (i = 0; i < NWrdFiles; i++) {
-	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
+/**	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 	    nrec = logd->wrd_buf[i].ndel;
 	    if (nrec == CacheLogDels /*|| ( (nrec > CacheLogDels - DPS_INF_DEL) && (nrec + (rand() % DPS_INF_DEL) > CacheLogDels))*/ ) {
 	      DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
 		     i, logd->wrd_buf[i].nrec, logd->wrd_buf[i].ndel);
 	      if(DPS_OK != DpsLogdSaveBuf(Agent, Env, i)) {
-		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
+/**		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 		TRACE_OUT(Agent);
 		return DPS_ERROR;
 	      }
@@ -2997,7 +2999,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	    }
 	    logd->wrd_buf[i].del_buf[nrec] = logdel;
 	    logd->wrd_buf[i].ndel++;
-	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
+/**	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 /*	    DPSSLEEP(0);*/
 	  }
 	}
@@ -3012,12 +3014,12 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	  if (wrd[i].coord == 0) continue;
 	  num = DPS_FILENO(wrd[i].wrd_id, NWrdFiles);
 
-	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(num));
+/**	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(num));**/
 	  if(logd->wrd_buf[num].nrec == CacheLogWords) {
 	    DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
 		   num, logd->wrd_buf[num].nrec, logd->wrd_buf[num].ndel);
 	    if (DPS_OK != DpsLogdSaveBuf(Agent, Env, num)) {
-	      DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));
+/**	      DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));**/
 	      TRACE_OUT(Agent);
 	      return DPS_ERROR;
 	    }
@@ -3028,7 +3030,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	  logd->wrd_buf[num].data[nrec].wrd_id = wrd[i].wrd_id;
 	  logd->wrd_buf[num].data[nrec].coord = wrd[i].coord;
 	  logd->wrd_buf[num].nrec++;
-	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));
+/**	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));**/
 /*	  DPSSLEEP(0);*/
 	}
 	TRACE_OUT(Agent);

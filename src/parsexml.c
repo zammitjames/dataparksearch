@@ -746,6 +746,8 @@ int DpsXMLParse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   int body_strict = BSec ? BSec->strict : 0;
   int res = DPS_OK;
 
+  DpsLog(Indexer, DPS_LOG_DEBUG, "Executing XML parser");
+
   DpsXMLParserCreate(&parser);
   bzero(&Data, sizeof(Data));
   Data.Indexer = Indexer;

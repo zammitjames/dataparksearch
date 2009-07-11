@@ -607,9 +607,9 @@ static void * thread_optimize(void *arg) {
       P.rec_id = current_base;
 
       if (!Agent->Conf->logs_only) {
-	DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(current_base));
+/**	DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(current_base));**/
 	res = DpsLogdSaveBuf(Agent, Agent->Conf, current_base);
-	DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(current_base));
+/**	DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(current_base));**/
       }
       if (!Agent->Flags.OptimizeAtUpdate) DpsBaseOptimize(&P, current_base);
       DpsBaseClose(&P);

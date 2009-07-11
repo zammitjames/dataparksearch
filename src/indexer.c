@@ -1356,7 +1356,7 @@ static int DpsNextTarget(DPS_AGENT * Indexer, DPS_DOCUMENT *Result) {
 		  Indexer->Conf->Targets.cur_row++;
 		  Indexer->Conf->url_number--;
 		  DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
-		  DpsVarListLog(Indexer, &Result->Sections, DPS_LOG_DEBUG, "Target");
+/*		  DpsVarListLog(Indexer, &Result->Sections, DPS_LOG_DEBUG, "Target");*/
 		  return DPS_OK;
 		}
 	}
@@ -1385,6 +1385,8 @@ int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server) {
 	S->use_cookies		= DpsVarListFindInt(V, "Cookies",	0);
 	S->Server               = Server;
 	DpsVarListReplaceStr(&Doc->Sections, "HoldBadHrefs", DpsVarListFindStr(V, "HoldBadHrefs", 0));
+	DpsVarListReplaceInt(&Doc->Sections, "Follow", S->follow);
+	DpsVarListReplaceInt(&Doc->Sections, "Index", S->index);
 /*
 	for (i = 0; i < DPS_DEFAULT_MAX_HOPS; i++) {
 	  dps_snprintf(str, sizeof(str), "Period%u", i);
@@ -2266,86 +2268,87 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 				return result;
 			}
 		}
-	}
+	
 
-	/* Guesser was here */			
+		/* Guesser was here */			
 			
-	DpsParseURLText(Indexer, Doc);
-	{
-	  char reason[PATH_MAX+1];
-	  int m;
-	  if ((m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason)) != DPS_METHOD_NOINDEX) {
-	    char *subsection;
-	    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
-	    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
-	    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
-	    case DPS_METHOD_TAG:
-	      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
-	    case DPS_METHOD_CATEGORY:
-	      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
-	    }
-	    if (Doc->method != DPS_METHOD_HREFONLY) DpsPrepareWords(Indexer, Doc);
-	  } else Doc->method = m;
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
-	}
+		DpsParseURLText(Indexer, Doc);
+		{
+		  char reason[PATH_MAX+1];
+		  int m;
+		  if ((m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason)) != DPS_METHOD_NOINDEX) {
+		    char *subsection;
+		    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
+		    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
+		    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
+		    case DPS_METHOD_TAG:
+		      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
+		    case DPS_METHOD_CATEGORY:
+		      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
+		    }
+		    if (Doc->method != DPS_METHOD_HREFONLY) DpsPrepareWords(Indexer, Doc);
+		  } else Doc->method = m;
+		  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
+		}
 	
-	{
-	  size_t wordnum;
-	  const char *lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
-	  /* Remove StopWords */
-	  DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
-	  for(wordnum = 0; wordnum < Doc->Words.nwords; wordnum++) {
-	    const dpsunicode_t	*w = Doc->Words.Word[wordnum].uword;
-	    size_t		wlen = Doc->Words.Word[wordnum].ulen;
+		{
+		  size_t wordnum;
+		  const char *lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
+		  /* Remove StopWords */
+		  DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
+		  for(wordnum = 0; wordnum < Doc->Words.nwords; wordnum++) {
+		    const dpsunicode_t	*w = Doc->Words.Word[wordnum].uword;
+		    size_t		wlen = Doc->Words.Word[wordnum].ulen;
 				
-	    if(wlen > Indexer->WordParam.max_word_len ||
-	       wlen < Indexer->WordParam.min_word_len ||
-	       DpsStopListFind(&Indexer->Conf->StopWords, w, lang ) != NULL)
-	      {
-		Doc->Words.Word[wordnum].coord=0;
-	      }	
-	  }
-	  for(wordnum = 0; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
-	    const dpsunicode_t	*w = Doc->CrossWords.CrossWord[wordnum].uword;
-	    size_t		wlen = Doc->CrossWords.CrossWord[wordnum].ulen;
+		    if(wlen > Indexer->WordParam.max_word_len ||
+		       wlen < Indexer->WordParam.min_word_len ||
+		       DpsStopListFind(&Indexer->Conf->StopWords, w, lang ) != NULL)
+		      {
+			Doc->Words.Word[wordnum].coord=0;
+		      }	
+		  }
+		  for(wordnum = 0; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
+		    const dpsunicode_t	*w = Doc->CrossWords.CrossWord[wordnum].uword;
+		    size_t		wlen = Doc->CrossWords.CrossWord[wordnum].ulen;
 	    
-	    if(wlen>Indexer->WordParam.max_word_len ||
-	       wlen<Indexer->WordParam.min_word_len ||
-	       DpsStopListFind(&Indexer->Conf->StopWords,w, lang) != NULL)
-	      {
-		Doc->CrossWords.CrossWord[wordnum].weight=0;
-	      }	
-	  }
-	  DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
-	  if (Indexer->Flags.collect_links && (status == 200 || status == 206 || status == 302) )
-	    if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_MARKTODEL))) {
-	      DpsDocFree(Doc);
-	      TRACE_OUT(Indexer);
+		    if(wlen>Indexer->WordParam.max_word_len ||
+		       wlen<Indexer->WordParam.min_word_len ||
+		       DpsStopListFind(&Indexer->Conf->StopWords,w, lang) != NULL)
+		      {
+			Doc->CrossWords.CrossWord[wordnum].weight=0;
+		      }	
+		  }
+		  DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+		  if (Indexer->Flags.collect_links && (status == 200 || status == 206 || status == 302) )
+		    if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_MARKTODEL))) {
+		      DpsDocFree(Doc);
+		      TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	      DpsViolationExit(Indexer->handle, paran);
+		      DpsViolationExit(Indexer->handle, paran);
 #endif
-	      return result;
-	    }
-	}
+		      return result;
+		    }
+		}
 
-	DpsExecActions(Indexer, Doc);
-	DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
+		DpsExecActions(Indexer, Doc);
+		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	
 
-	if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {
-	  if ((DPS_OK == (result = DpsStoreHrefs(Indexer))) && Indexer->Flags.collect_links  
-	      && (status == 200 || status == 206 || status == 302) )
-	    result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_DELETE);
-	}
+		if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {
+		  if ((DPS_OK == (result = DpsStoreHrefs(Indexer))) && Indexer->Flags.collect_links  
+		      && (status == 200 || status == 206 || status == 302) )
+		    result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_DELETE);
+		}
 	
-	if(result!=DPS_OK){
-	        DPS_FREE(origurl); DPS_FREE(aliasurl);
-		DpsDocFree(Doc);
-		TRACE_OUT(Indexer);
+		if(result!=DPS_OK){
+		  DPS_FREE(origurl); DPS_FREE(aliasurl);
+		  DpsDocFree(Doc);
+		  TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-		DpsViolationExit(Indexer->handle, paran);
+		  DpsViolationExit(Indexer->handle, paran);
 #endif
-		return result;
+		  return result;
+		}
 	}
 	
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) DpsDocFree(Doc);

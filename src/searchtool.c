@@ -1240,7 +1240,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			  pwrd[tlen] = '\0';
 			  DpsConv(&query->utf_lc, wrd, 12 * query->WordParam.max_word_len, pwrd, sizeof(pwrd[0]) * (tlen  + 1));
 			  DpsDSTRAppendStrWithSpace(&suggest, wrd);
-			  fprintf(stderr, " -- aspell suggest: %s\n", wrd);
+/*			  fprintf(stderr, " -- aspell suggest: %s\n", wrd);*/
 			  have_suggest = 1;
 			  toadd = 0;
 			}
