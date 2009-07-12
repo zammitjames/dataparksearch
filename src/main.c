@@ -954,6 +954,16 @@ static void * thread_main(void *arg){
                     break;
 #endif
                case DPS_ERROR:
+		    DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
+		    { size_t z;
+		      for (z = 0 ; z < maxthreads; z++) {
+			if (ThreadIndexers[z]) {
+			  DpsAgentSetAction(ThreadIndexers[z], DPS_TERMINATED);
+			}
+		      }
+		    }
+		    DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
+		                                                       /* no break here! */
 	       case DPS_TERMINATED:
 
                default:
