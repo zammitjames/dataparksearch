@@ -107,7 +107,6 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
       }
     }
     DPS_FREE(af_uword);
-    TRACE_LINE(Indexer);
     de_uword = DpsUniGermanReplace(uword);
     if (DpsUniStrCmp(de_uword, uword) != 0) {
 
@@ -247,6 +246,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
       if (res != DPS_OK) break;
     }
   }
+  TRACE_OUT(Indexer);
 }
 
 
@@ -307,7 +307,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  }
 	}
 
-	TRACE_LINE(Indexer);
 	dps_memcpy(uword, tok, tlen * sizeof(dpsunicode_t)); /* was: dps_memmove */
 	uword[tlen]=0;
 
@@ -315,7 +314,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	Word.uword = uword;
 	Word.ulen = tlen;
 				
-	TRACE_LINE(Indexer);
 	res = DpsWordListAdd(Doc, &Word, Item->section);
 	if(res!=DPS_OK)break;
 
@@ -329,7 +327,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  DpsCrossListAdd(Doc, &cw);
 	}
 
-	TRACE_LINE(Indexer);
 	DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, have_bukva_forte, uword, Indexer->Flags.make_prefixes, Item->strict
 #ifdef HAVE_ASPELL
 			  , have_speller, speller

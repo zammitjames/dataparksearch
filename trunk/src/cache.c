@@ -411,7 +411,7 @@ static int PresentInDelLog(DPS_LOGDEL *buf, size_t buf_count, size_t *start, con
 		
 	}
 	if(start) *start = r;
-	if(r == (ssize_t)buf_count) return 0;
+	if(r == buf_count) return 0;
 	if(buf[r].url_id==url_id) {
 	  return buf[r].stamp;
 	}
@@ -457,7 +457,7 @@ int DpsDeleteURLFromCache(DPS_AGENT * Indexer, urlid_t url_id, DPS_DB *db){
 		  return DPS_ERROR;
 		}
 	}else{
-		if(DpsLogdStoreDoc(Indexer, cmd, NULL, db)) {
+		if(DPS_OK != DpsLogdStoreDoc(Indexer, cmd, NULL, db)) {
 			TRACE_OUT(Indexer);
 			return(DPS_ERROR);
 		}
@@ -632,7 +632,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  }
 	  }
 	}else{
-		if(DpsLogdStoreDoc(Indexer, cmd, wrd, db)) {
+		if(DPS_OK != DpsLogdStoreDoc(Indexer, cmd, wrd, db)) {
 			DPS_FREE(wrd); DPS_FREE(lcsword);
 			TRACE_OUT(Indexer);
 			return(DPS_ERROR);
@@ -1050,7 +1050,14 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 #endif
 
       P->rec_id = log_buf[i].wrd_id;
-      DpsBaseWrite(P, data, (n_old + n_add) * sizeof(DPS_URL_CRD));
+      if (DPS_OK != DpsBaseWrite(P, data, (n_old + n_add) * sizeof(DPS_URL_CRD))) {
+	DPS_FREE(data);
+	DpsLog(Indexer, DPS_LOG_ERROR, "Can't write base %s/%s {%s:%d}", P->subdir, P->basename, __FILE__, __LINE__);
+	DpsBaseClose(P);
+	DPS_FREE(todel);
+	TRACE_OUT(Indexer);
+	return DPS_ERROR;
+      }
       DPS_FREE(data);
     }
 /*************/
@@ -1559,7 +1566,7 @@ static int PresentInLimit(urlid_t *buf, size_t buf_count, size_t *start, const u
 	}
 /*	fprintf(stderr, "r: %d  buf_count: %d  buf[r]: %d  m: %d  buf[m]: %d\n", r, buf_count, buf[r], m, buf[m]);*/
 	if (start) *start = r;
-	if(r == (ssize_t)buf_count) return(0);
+	if(r == buf_count) return(0);
 	else
 		if(buf[r]==url_id) return(1);
 		else return(0);
@@ -1581,7 +1588,7 @@ int DpsURLDataLoadCache(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db) {
 	struct stat sb;
         size_t i, j, count, nrec = 0, first = 0;
 	const char	*vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&A->Conf->Vars, "VarDir", DPS_VAR_DIR);
-	int NFiles = (db->URLDataFiles > 0) ? db->URLDataFiles : DpsVarListFindInt(&A->Conf->Vars, "URLDataFiles", 0x300);
+	int NFiles = (db->URLDataFiles > 0) ? (int)db->URLDataFiles : DpsVarListFindInt(&A->Conf->Vars, "URLDataFiles", 0x300);
 	int filenum, fd = -1, prevfilenum = - 1;
 	char fname[PATH_MAX];
 
@@ -1679,7 +1686,7 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	struct stat sb;
         size_t nrec = 0, mem_used = 0;
 	const char	*vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Conf->Vars, "VarDir", DPS_VAR_DIR); /* should be fetched from Conf->Vars */
-	int NFiles = (db->URLDataFiles > 0) ? db->URLDataFiles : DpsVarListFindInt(&Agent->Conf->Vars, "URLDataFiles", 0x300);
+	int NFiles = (db->URLDataFiles > 0) ? (int)db->URLDataFiles : DpsVarListFindInt(&Agent->Conf->Vars, "URLDataFiles", 0x300);
 	int filenum, fd = -1;
 	char fname[PATH_MAX];
 
@@ -1973,7 +1980,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	P.subdir = DPS_TREEDIR;
 	P.basename = "wrd";
 	P.indname = "wrd";
-	P.NFiles = (db->WrdFiles > 0) ? db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
+	P.NFiles = (db->WrdFiles > 0) ? (int)db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
 	P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Indexer->Vars, "VarDir", DPS_VAR_DIR);
 	P.A = Indexer;
 	P.mode = DPS_READ_LOCK;
@@ -2259,6 +2266,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
   const char *vardir;
   DPS_LOGD *logd;
   size_t z, dbfrom = 0, dbto, n, del_count;
+  int res = DPS_OK;
 
   TRACE_IN(Indexer, "DpsLogdSaveBuf");
 
@@ -2284,7 +2292,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
     db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[z] : &Indexer->dbl.db[z];
     if (db->DBMode != DPS_DBMODE_CACHE) continue;
     P.vardir = (db->vardir) ? db->vardir : vardir;
-    P.NFiles = (db->WrdFiles > 0) ? db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
+    P.NFiles = (db->WrdFiles > 0) ? (int)db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
 
 /*    DPS_GETLOCK(Indexer, DPS_LOCK_CACHED);*/
     logd = &db->LOGD;
@@ -2297,6 +2305,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
       if (nbytes > 0) {
 	dps_snprintf(fname, sizeof(fname), "%s%03X.log", db->log_dir, log_num);
 	
+	DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
 	if((fd = DpsOpen3(fname, open_flags, open_perm)) != -1) {
 	  nbytes = logd->wrd_buf[log_num].nrec * sizeof(DPS_LOGWORD);
 	  DpsWriteLock(fd);
@@ -2305,16 +2314,19 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
 	    DpsUnLock(fd);
 	    DpsClose(fd);
 	    DpsBaseClose(&P);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
 /*	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED);*/
 	    TRACE_OUT(Indexer);
 	    return DPS_ERROR;
 	  }
 	  DpsUnLock(fd);
 	  DpsClose(fd);
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
 	  logd->wrd_buf[log_num].nrec = 0;
 	}else{
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't open '%s': %s\n", fname, strerror(errno));
 	  DpsBaseClose(&P);
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
 /*	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED);*/
 	  TRACE_OUT(Indexer);
 	  return DPS_ERROR;
@@ -2356,21 +2368,23 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
     n = DpsRemoveOldWords(log_buf, n, del_buf, del_count);
     if (n > 1) DpsSort(log_buf, n, sizeof(DPS_LOGWORD), (qsort_cmp)DpsCmplog_wrd);
 
-    DpsProcessBuf(Indexer, &P, log_num, log_buf, n, del_buf, del_count);
+    DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+    res = DpsProcessBuf(Indexer, &P, log_num, log_buf, n, del_buf, del_count);
 
     logd->wrd_buf[log_num].nrec = 0;
     logd->wrd_buf[log_num].ndel = 0;
 /*    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED);*/
 
-    if (Indexer->Flags.OptimizeAtUpdate && n > 0) {
-      DpsBaseOptimize(&P, (int)log_num);    /* disk space save strategy: optimize after every update, 
+    if (Indexer->Flags.OptimizeAtUpdate && (res == DPS_OK) && (n > 0)) {
+      res = DpsBaseOptimize(&P, (int)log_num);    /* disk space save strategy: optimize after every update, 
 							but this slow down indexing. */
     }
     DpsBaseClose(&P);
+    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
   }
   
   TRACE_OUT(Indexer);
-  return DPS_OK;
+  return res;
 }
 
 
@@ -3089,8 +3103,8 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
   Q.zlib_strategy = DPS_BASE_WRD_STRATEGY;
 #endif
 
-  I.NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&A->Vars, "URLDataFiles", 0x300);
-  Q.NFiles = WrdFiles = (db->WrdFiles) ? db->WrdFiles : DpsVarListFindInt(&A->Vars, "WrdFiles", 0x300);
+  I.NFiles = (db->URLDataFiles) ? (int)db->URLDataFiles : DpsVarListFindInt(&A->Vars, "URLDataFiles", 0x300);
+  Q.NFiles = WrdFiles = (db->WrdFiles) ? (int)db->WrdFiles : DpsVarListFindInt(&A->Vars, "WrdFiles", 0x300);
 
   DpsLog(A, DPS_LOG_INFO, "Cached database checkup started. 0x%x files to check.", WrdFiles);
 
@@ -3323,7 +3337,7 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
       cmd.nwords = 0;
 
       if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-      if(DpsLogdStoreDoc(A, cmd, NULL, db)) {
+      if(DPS_OK != DpsLogdStoreDoc(A, cmd, NULL, db)) {
 	if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
 	DpsBaseClose(&I);
 	DpsBaseClose(&Q);
@@ -3724,13 +3738,13 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
     P.zlib_memLevel = 9;
     P.zlib_strategy = DPS_BASE_INFO_STRATEGY;
 #endif
-    P.NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&A->Vars, "URLDataFiles", 0x300);
+    P.NFiles = (db->URLDataFiles) ? (int)db->URLDataFiles : DpsVarListFindInt(&A->Vars, "URLDataFiles", 0x300);
     P.mode = DPS_WRITE_LOCK;
     P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&A->Vars, "VarDir", DPS_VAR_DIR);
     P.A = A;
     P.rec_id = rec_id;
-    DpsBaseWrite(&P, textbuf, tlen);
-    res =  DpsBaseClose(&P);
+    if ((res = DpsBaseWrite(&P, textbuf, tlen)) != DPS_OK) DpsBaseClose(&P);
+    else res =  DpsBaseClose(&P);
     DpsFree(textbuf);
     TRACE_OUT(A);
     return res;
@@ -3775,7 +3789,7 @@ int DpsResAddDocInfoCache(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t 
   P.subdir = DPS_URLDIR;
   P.basename = "info";
   P.indname = "info";
-  P.NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&query->Vars, "URLDataFiles", 0x300);
+  P.NFiles = (db->URLDataFiles) ? (int)db->URLDataFiles : DpsVarListFindInt(&query->Vars, "URLDataFiles", 0x300);
   P.mode = DPS_READ_LOCK;
   P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&query->Vars, "VarDir", DPS_VAR_DIR);
   P.A = query;
@@ -3855,7 +3869,7 @@ static int DpsCachedResort(DPS_AGENT *A, DPS_DB *db) {
   P.zlib_strategy = DPS_BASE_WRD_STRATEGY;
 #endif
 
-  for(base = 0; base < P.NFiles; base++) {
+  for(base = 0; base < (urlid_t)P.NFiles; base++) {
     P.rec_id = (base << DPS_BASE_BITS);
     DpsLog(A, DPS_LOG_EXTRA, "Resorting base: %d [0x%x]", base, base);
     if (DpsBaseSeek(&P, DPS_WRITE_LOCK) != DPS_OK) {

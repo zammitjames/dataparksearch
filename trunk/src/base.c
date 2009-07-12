@@ -168,15 +168,17 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
       return DPS_ERROR;
     }
   }
-/*  switch(mode) {
-  case DPS_READ_LOCK:
-    DpsReadLock(P->Sfd);
-    break;
-  case DPS_WRITE_LOCK:
-    DpsWriteLock(P->Sfd);
-    break;
+  if (!P->A->Flags.cold_var) {
+    switch(mode) {
+    case DPS_READ_LOCK:
+      DpsReadLock(P->Sfd);
+      break;
+    case DPS_WRITE_LOCK:
+      DpsWriteLock(P->Sfd);
+      break;
+    }
   }
-*/
+
 #ifdef DEBUG_SEARCH
     stop_ticks = DpsStartTimer();
     total_ticks = stop_ticks - start_ticks;
@@ -287,8 +289,8 @@ __C_LINK int __DPSCALL DpsBaseClose(DPS_BASE_PARAM *P) {
       fsync(P->Sfd);
       fsync(P->Ifd);
     }
-/*    DpsUnLock(P->Sfd);*/
     if (!P->A->Flags.cold_var) {
+      DpsUnLock(P->Sfd);
       DpsUnLock(P->Ifd); 
 #if 1
       DPS_RELEASELOCK(P->A, DPS_LOCK_BASE_N(P->FileNo));
@@ -321,8 +323,10 @@ __C_LINK int __DPSCALL DpsBaseSeek(DPS_BASE_PARAM *P, int mode) {
   unsigned int FileNo = DPS_FILENO(P->rec_id, P->NFiles);
   ssize_t wr;
 
+  TRACE_IN(P->A, "DpsBaseSeek");
   if (FileNo != P->FileNo || ((P->mode != mode) && (P->mode == DPS_READ_LOCK)) || P->opened == 0) {
     if (P->opened) DpsBaseClose(P);
+    TRACE_OUT(P->A);
     return DpsBaseOpen(P, mode);
   }
 /*  if (P->rec_id == P->Item.rec_id) return DPS_OK;*/
@@ -332,11 +336,12 @@ __C_LINK int __DPSCALL DpsBaseSeek(DPS_BASE_PARAM *P, int mode) {
 
   if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)hash * sizeof(DPS_BASEITEM), SEEK_SET)) == (dps_uint8)-1) {
     DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s", P->Ifilename);
+    TRACE_OUT(P->A);
     return DPS_ERROR;
   }
   if (read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) != sizeof(DPS_BASEITEM)) {
-    DpsLog(P->A, DPS_LOG_ERROR, "{%s:%d} Can't read index for file %s seek:%ld hash: %u (%d)", 
-	   __FILE__, __LINE__, P->Ifilename, P->CurrentItemPos, hash, hash);
+    DpsLog(P->A, DPS_LOG_ERROR, "{%s:%d} Can't read index for file %s seek:%ld hash: %u (%d)", __FILE__, __LINE__, P->Ifilename, P->CurrentItemPos, hash, hash);
+    TRACE_OUT(P->A);
     return DPS_ERROR;
   }
 
@@ -349,6 +354,7 @@ __C_LINK int __DPSCALL DpsBaseSeek(DPS_BASE_PARAM *P, int mode) {
       P->CurrentItemPos = P->Item.next;
       if (lseek(P->Ifd, (off_t)P->CurrentItemPos, SEEK_SET) == (off_t)-1) {
 	DpsLog(P->A, DPS_LOG_ERROR, "Can't seek for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
+	TRACE_OUT(P->A);
 	return DPS_ERROR;
       }
       if (( wr = read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM))) != sizeof(DPS_BASEITEM)) {
@@ -757,7 +763,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
     error_cnt = 0;
     gain = (dps_uint8)0;
     P->rec_id = base << DPS_BASE_BITS;
-    if (DpsBaseSeek(P, DPS_WRITE_LOCK) != DPS_OK) {
+    if (DpsBaseOpen(P, DPS_WRITE_LOCK) != DPS_OK) {
       DpsLog(P->A, DPS_LOG_ERROR, "Can't open base %s/%s {%s:%d}", P->subdir, P->basename, __FILE__, __LINE__);
       DpsBaseClose(P);
       return DPS_ERROR;
@@ -782,7 +788,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
     ActualSize = 0;
     OriginalSize = 0;
     while(read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) == sizeof(DPS_BASEITEM)) {
-      if ((P->Item.rec_id != 0) && ((long)P->Item.offset < (long)SSize) && (P->Item.size > 0)) {
+      if ((P->Item.rec_id != 0) && ((dps_uint8)P->Item.offset < (dps_uint8)SSize) && (P->Item.size > 0)) {
 	ActualSize += (long)P->Item.size;
 	OriginalSize += (long)(P->Item.orig_size ? P->Item.orig_size : P->Item.size);
 	nitems++;
@@ -989,9 +995,8 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
     }
 
     if (error_cnt) base--;
-
+    DpsBaseClose(P);
   }
-  DpsBaseClose(P);
   return DPS_OK;
 }
 
