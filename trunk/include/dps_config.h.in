@@ -483,6 +483,9 @@
 /* Define if you have the aspell library (libaspell) */
 #undef HAVE_ASPELL
 
+/* Define if you have the libextractor library */
+#undef HAVE_LIBEXTRACTOR
+
 /* Name of package */
 #undef PACKAGE
 

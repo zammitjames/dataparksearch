@@ -161,6 +161,9 @@ AC_CHECK_LIB(cares, ares_init, AC_DEFINE(HAVE_LIBCARES) LIBS="$LIBS -lcares",
 )
 
 
+AC_CHECK_LIB(extractor, EXTRACTOR_loadDefaultLibraries, AC_DEFINE(HAVE_LIBEXTRACTOR) LIBS="$LIBS -lextractor")
+
+
 dnl AC_CHECK_LIB(bind, getaddrinfo, AC_DEFINE(HAVE_LIBBIND) [
 dnl 	if test "$pthreads" != no; then
 dnl 		LIBLIB="-lbind_r"
