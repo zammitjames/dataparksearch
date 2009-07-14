@@ -89,7 +89,11 @@
 #include <unistd.h>
 #endif
 
-     #include <sys/mman.h>
+#include <sys/mman.h>
+
+#ifdef HAVE_LIBEXTRACTOR
+#include <extractor.h>
+#endif
 
 /* This should be last include */
 #ifdef DMALLOC
@@ -1059,6 +1063,148 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   return DPS_OK;
 }
 
+#ifdef HAVE_LIBEXTRACTOR
+static const char * DpsLibextractorMsgName(int type) {
+  switch(type) {
+/*  case EXTRACTOR_UNKNOWN: return "body";*/
+  case EXTRACTOR_FILENAME: return "Filename";
+  case EXTRACTOR_MIMETYPE: return "Mimetype";
+  case EXTRACTOR_TITLE: return "Title";
+  case EXTRACTOR_AUTHOR: return "Author";
+  case EXTRACTOR_ARTIST: return "Artist";
+  case EXTRACTOR_DESCRIPTION: return "Description";
+  case EXTRACTOR_COMMENT: return "Comment";
+  case EXTRACTOR_DATE: return "Date";
+  case EXTRACTOR_PUBLISHER: return "Publisher";
+  case EXTRACTOR_LANGUAGE: return "Content-Language";
+  case EXTRACTOR_ALBUM: return "Album";
+  case EXTRACTOR_GENRE: return "Genre";
+  case EXTRACTOR_LOCATION: return "Location";
+  case EXTRACTOR_VERSIONNUMBER: return "VersionNumber";
+  case EXTRACTOR_ORGANIZATION: return "Organization";
+  case EXTRACTOR_COPYRIGHT: return "Copyright";
+  case EXTRACTOR_SUBJECT: return "Subject";
+  case EXTRACTOR_KEYWORDS: return "Meta.Keywords";
+  case EXTRACTOR_CONTRIBUTOR: return "Contributor";
+  case EXTRACTOR_RESOURCE_TYPE: return "Resource-Type";
+  case EXTRACTOR_FORMAT: return "Format";
+  case EXTRACTOR_RESOURCE_IDENTIFIER: return "Resource-Idendifier";
+  case EXTRACTOR_SOURCE: return "Source";
+  case EXTRACTOR_RELATION: return "Relation";
+  case EXTRACTOR_COVERAGE: return "Coverage";
+  case EXTRACTOR_SOFTWARE: return "Software";
+  case EXTRACTOR_DISCLAIMER: return "Disclaimer";
+  case EXTRACTOR_WARNING: return "Warning";
+  case EXTRACTOR_TRANSLATED: return "Translated";
+  case EXTRACTOR_CREATION_DATE: return "Creation-Date";
+  case EXTRACTOR_MODIFICATION_DATE: return "Modification-Date";
+  case EXTRACTOR_CREATOR: return "Creator";
+  case EXTRACTOR_PRODUCER: return "Producer";
+  case EXTRACTOR_PAGE_COUNT: return "Page-Count";
+  case EXTRACTOR_PAGE_ORIENTATION: return "Page-Orientation";
+  case EXTRACTOR_PAPER_SIZE: return "Paper-Size";
+  case EXTRACTOR_USED_FONTS: return "Used-Fonts";
+  case EXTRACTOR_PAGE_ORDER: return "Page-Order";
+  case EXTRACTOR_CREATED_FOR: return "Created-For";
+  case EXTRACTOR_MAGNIFICATION: return "Magnification";
+  case EXTRACTOR_RELEASE: return "Release";
+  case EXTRACTOR_GROUP: return "Group";
+  case EXTRACTOR_SIZE: return "Size";
+  case EXTRACTOR_SUMMARY: return "Summary";
+  case EXTRACTOR_PACKAGER: return "Packager";
+  case EXTRACTOR_VENDOR: return "Vendor";
+  case EXTRACTOR_LICENSE: return "License";
+  case EXTRACTOR_DISTRIBUTION: return "Distribution";
+  case EXTRACTOR_BUILDHOST: return "BuildHost";
+  case EXTRACTOR_OS: return "OS";
+  case EXTRACTOR_DEPENDENCY: return "Dependency";
+  case EXTRACTOR_HASH_MD4: return "Hash-MD4";
+  case EXTRACTOR_HASH_MD5: return "Hash-MD5";
+  case EXTRACTOR_HASH_SHA0: return "Hash-SHA0";
+  case EXTRACTOR_HASH_SHA1: return "Hash-SHA1";
+  case EXTRACTOR_HASH_RMD160: return "Hash-RMD160";
+  case EXTRACTOR_RESOLUTION: return "Resolution";
+  case EXTRACTOR_CATEGORY: return "Ext.Category";
+  case EXTRACTOR_BOOKTITLE: return "BookTitle";
+  case EXTRACTOR_PRIORITY: return "Priority";
+  case EXTRACTOR_CONFLICTS: return "Conflicts";
+  case EXTRACTOR_REPLACES: return "Replaces";
+  case EXTRACTOR_PROVIDES: return "Provides";
+  case EXTRACTOR_CONDUCTOR: return "Conductor";
+  case EXTRACTOR_INTERPRET: return "Interpret";
+  case EXTRACTOR_OWNER: return "Owner";
+  case EXTRACTOR_LYRICS: return "Lyrics";
+  case EXTRACTOR_MEDIA_TYPE: return "Media-Type";
+  case EXTRACTOR_CONTACT: return "Contact";
+  case EXTRACTOR_THUMBNAIL_DATA: return "Thumbnail-Data";
+  case EXTRACTOR_PUBLICATION_DATE: return "Publication-Date";
+  case EXTRACTOR_CAMERA_MAKE: return "Camera-Make";
+  case EXTRACTOR_CAMERA_MODEL: return "Camera-Model";
+  case EXTRACTOR_EXPOSURE: return "Exposure";
+  case EXTRACTOR_APERTURE: return "Aperture";
+  case EXTRACTOR_EXPOSURE_BIAS: return "Exposure-Bias";
+  case EXTRACTOR_FLASH: return "Flash";
+  case EXTRACTOR_FLASH_BIAS: return "Flash-Bias";
+  case EXTRACTOR_FOCAL_LENGTH: return "Focal-Length";
+  case EXTRACTOR_FOCAL_LENGTH_35MM: return "Focal-Length-35MM";
+  case EXTRACTOR_ISO_SPEED: return "ISO-Speed";
+  case EXTRACTOR_EXPOSURE_MODE: return "Exposure-Mode";
+  case EXTRACTOR_METERING_MODE: return "Metering-Mode";
+  case EXTRACTOR_MACRO_MODE: return "Macro-Mode";
+  case EXTRACTOR_IMAGE_QUALITY: return "Image-Quality";
+  case EXTRACTOR_WHITE_BALANCE: return "White-Balance";
+  case EXTRACTOR_ORIENTATION: return "Orientation";
+  case EXTRACTOR_TEMPLATE: return "Template";
+  case EXTRACTOR_SPLIT: return "Split";
+  case EXTRACTOR_PRODUCTVERSION: return "ProductVersion";
+  case EXTRACTOR_LAST_SAVED_BY: return "Last-Saved-By";
+  case EXTRACTOR_LAST_PRINTED: return "Last-Printed";
+  case EXTRACTOR_WORD_COUNT: return "Word-Count";
+  case EXTRACTOR_CHARACTER_COUNT: return "Character-Count";
+  case EXTRACTOR_TOTAL_EDITING_TIME: return "Total-Editing-Time";
+  case EXTRACTOR_THUMBNAILS: return "Thumbnails";
+  case EXTRACTOR_SECURITY: return "Security";
+  case EXTRACTOR_CREATED_BY_SOFTWARE: return "Created-By-Software";
+  case EXTRACTOR_MODIFIED_BY_SOFTWARE: return "Modified-By-Software";
+  case EXTRACTOR_REVISION_HISTORY: return "Revision-History";
+  case EXTRACTOR_LOWERCASE: return "Lowercase";
+  case EXTRACTOR_COMPANY: return "Company";
+  case EXTRACTOR_GENERATOR: return "Generator";
+  case EXTRACTOR_CHARACTER_SET: return "Meta-Charset";
+  case EXTRACTOR_LINE_COUNT: return "Line-Count";
+  case EXTRACTOR_PARAGRAPH_COUNT: return "Paragraph-Count";
+  case EXTRACTOR_EDITING_CYCLES: return "Editing-Cycles";
+  case EXTRACTOR_SCALE: return "Scale";
+  case EXTRACTOR_MANAGER: return "Manager";
+  case EXTRACTOR_MOVIE_DIRECTOR: return "Movie-Director";
+  case EXTRACTOR_DURATION: return "Duration";
+  case EXTRACTOR_INFORMATION: return "Information";
+  case EXTRACTOR_FULL_NAME: return "Full-Name";
+  case EXTRACTOR_CHAPTER: return "Chapter";
+  case EXTRACTOR_YEAR: return "Year";
+  case EXTRACTOR_LINK: return "Link";
+  case EXTRACTOR_MUSIC_CD_IDENTIFIER: return "Music-CD-Identifier";
+  case EXTRACTOR_PLAY_COUNTER: return "Play-Counter";
+  case EXTRACTOR_POPULARITY_METER: return "Popularity-Meter";
+  case EXTRACTOR_CONTENT_TYPE: return "Ext.Content-Type";
+  case EXTRACTOR_ENCODED_BY: return "Encoded-By";
+  case EXTRACTOR_TIME: return "Time";
+  case EXTRACTOR_MUSICIAN_CREDITS_LIST: return "Musician-Credits-List";
+  case EXTRACTOR_MOOD: return "Mood";
+  case EXTRACTOR_FORMAT_VERSION: return "Format-Version";
+  case EXTRACTOR_TELEVISION_SYSTEM: return "Television-System";
+  case EXTRACTOR_SONG_COUNT: return "Song-Count";
+  case EXTRACTOR_STARTING_SONG: return "Strting-Song";
+  case EXTRACTOR_HARDWARE_DEPENDENCY: return "Hardware-Dependency";
+  case EXTRACTOR_RIPPER: return "Ripper";
+  case EXTRACTOR_FILE_SIZE: return "File-Size";
+  case EXTRACTOR_TRACK_NUMBER: return "Track-Number";
+  case EXTRACTOR_ISRC: return "ISRC";
+  case EXTRACTOR_DISC_NUMBER: return "Disc-Number";
+  }
+  return "body";
+}
+#endif
 
 static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
@@ -1070,6 +1216,9 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
 	const char	*ct=DpsVarListFindStr(&Doc->Sections,"Content-Type","");
 	const char	*ce=DpsVarListFindStr(&Doc->Sections,"Content-Encoding","");
+#ifdef HAVE_LIBEXTRACTOR
+	int             nosections = 0;
+#endif
 	int		result = DPS_OK;
 	size_t          i, r;
 	
@@ -1236,10 +1385,42 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	     || !strncasecmp(real_content_type, "application/rss+xml", 19) ) {
 			DpsXMLParse(Indexer, Doc);
 			DpsParseSections(Indexer, Doc);
+#ifdef HAVE_LIBEXTRACTOR
+	  } else {
+	    DPS_TEXTITEM  Item;
+	    DPS_VAR       *Sec;
+	    DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
+	    EXTRACTOR_ExtractorList *plugins = EXTRACTOR_loadDefaultLibraries();
+	    EXTRACTOR_KeywordList   *md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf)), *pmd;
+
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "Executing Libextractor parser");
+	    Item.href = NULL;
+	    nosections = 1;
+	    for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
+	      char *secname = DpsLibextractorMsgName(pmd->keywordType);
+	      nosections = 0;
+	      DpsLog(Indexer, DPS_LOG_DEBUG, "Libextracted %s: %s", secname, pmd->keyword);
+	      Sec = DpsVarListFind(&Doc->Sections, secname);
+	      if (Sec || BSec) {
+		Item.section = (Sec) ? Sec->section : BSec->section;
+		Item.strict = (Sec) ? Sec->strict : BSec->strict;
+		Item.str = pmd->keyword;
+		Item.section_name = (Sec) ? Sec->name : BSec->name;
+		Item.len = dps_strlen(Item.str);
+		DpsTextListAdd(&Doc->TextList, &Item);
+	      }
+	    }
+
+	    EXTRACTOR_freeKeywords(md_list);
+	    EXTRACTOR_removeAll(plugins);
+	  }
+	  if (nosections && status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
+#else
 	  }else
 	  if(!strncasecmp(real_content_type, "image/gif", 9)) {
 			DpsGIFParse(Indexer, Doc);
-	  }else if (status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
+	  } else if (status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
+#endif
 			/* Unknown Content-Type  */
 			DpsLog(Indexer,DPS_LOG_ERROR,"Unsupported Content-Type '%s'",real_content_type);
 			DpsVarListReplaceInt(&Doc->Sections,"Status",DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);

@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* Support for libextractor has been added.
 	* Acronym files have been extended by regex based transformations.
 	* cachedchk2 table has been added to SQL database. Please execute "indexer -Ecreate" command on upgrade.
 	* A function of canonical lanuage name has been fixed. The languages with names below "ru" in lexical order were affected.
