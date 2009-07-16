@@ -445,12 +445,14 @@ static size_t TemplateTag(DPS_AGENT *Agent, DPS_OUTPUTFUNCTION dps_out, void *st
 #define DPS_IFSTACKMAX	15
 
 typedef struct dps_if_stack_item_st {
+  DPS_MATCH     Match;
 	int	condition;
 	int	showelse;
 } DPS_IFITEM;
 
 typedef struct dps_if_stack_st {
 	size_t		pos;
+    DPS_MATCH_PART      Parts[10];
 	DPS_IFITEM	Items[DPS_IFSTACKMAX+1];
 } DPS_IFSTACK;
 
@@ -475,7 +477,13 @@ static DPS_IFITEM *DpsIfStackPush(DPS_IFSTACK *S){
 }
 
 static DPS_IFITEM *DpsIfStackPop(DPS_IFSTACK *S){
-	if(S->pos>0)S->pos--;
+        if(S->pos > 0) {
+	  if (S->Items[S->pos].Match.reg) {
+		regfree((regex_t*)S->Items[S->pos].Match.reg);
+		DPS_FREE(S->Items[S->pos].Match.reg);
+	  }
+	  S->pos--;
+	}
 	return &S->Items[S->pos];
 }
 
@@ -540,7 +548,7 @@ static void TemplateCopy(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok,DPS_
 static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok,DPS_IFSTACK *is){
 	DPS_HTMLTOK	tag;
 	DPS_VARLIST	attr;
-	const char	*var,*val,*hlast=NULL;
+	const char	*var, *val, *hlast = NULL;
 	DPS_IFITEM	*it=&is->Items[is->pos];
 	
 	DpsHTMLTOKInit(&tag);
@@ -555,11 +563,16 @@ static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok
 
 	if(!(strncasecmp(tok,"<!IFNOT",7)) || !(strncasecmp(tok, "<!ELSEIFNOT", 11)) || !(strncasecmp(tok, "<!ELIFNOT", 9)) ) {
 		it->condition = strcasecmp(var,val);
-	}else
-	if( !(strncasecmp(tok, "<!IFLIKE", 8)) || !(strncasecmp(tok, "<!ELIKE", 7)) || !(strncasecmp(tok, "<!ELSELIKE", 10)) ) {
+	}else if( !(strncasecmp(tok, "<!IFLIKE", 8)) || !(strncasecmp(tok, "<!ELIKE", 7)) || !(strncasecmp(tok, "<!ELSELIKE", 10)) ) {
 		it->condition = !DpsWildCaseCmp(var, val);
-	}else
-	if( !(strncasecmp(tok, "<!IF", 4)) || !(strncasecmp(tok, "<!ELIF", 6)) || !(strncasecmp(tok, "<!ELSEIF", 8)) ) {
+	}else if( !(strncasecmp(tok, "<!IFREGEX", 9)) || !(strncasecmp(tok, "<!EREGEX", 8)) || !(strncasecmp(tok, "<!ELSEREGEX", 11)) ) {
+	        DpsMatchInit(&it->Match);
+		it->Match.match_type = DPS_MATCH_REGEX;
+		it->Match.arg = var;
+		it->Match.pattern = val;
+/*		it->Match.compiled = 0;*/
+		it->condition = !DpsMatchExec(&it->Match, var, var, NULL, 10, is->Parts);
+	}else if( !(strncasecmp(tok, "<!IF", 4)) || !(strncasecmp(tok, "<!ELIF", 6)) || !(strncasecmp(tok, "<!ELSEIF", 8)) ) {
 		it->condition = !strcasecmp(var,val);
 	}
 	
@@ -621,6 +634,9 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 		if(!(strncasecmp(tok,"<!IFLIKE", 8))) {
 			TemplateIf(Agent,vars,tok,&is); if (*lt == NL_CHAR) lt++;
 		}else
+		if(!(strncasecmp(tok,"<!IFREGEX", 9))) {
+			TemplateIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
+		}else
 		if(!(strncasecmp(tok, "<!ELSEIF", 8))) {
 			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
 		}else
@@ -630,7 +646,13 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 		if(!(strncasecmp(tok, "<!ELIKE", 7))) {
 			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
 		}else
+		if(!(strncasecmp(tok, "<!EREGEX", 8))) {
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
+		}else
 		if(!(strncasecmp(tok, "<!ELSELIKE", 10))) {
+			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
+		}else
+		if(!(strncasecmp(tok, "<!ELSEREGEX", 11))) {
 			TemplateElseIf(Agent, vars, tok, &is); if (*lt == NL_CHAR) lt++;
 		}else
 		if(!(strncasecmp(tok,"<!ELSE",6))){
@@ -651,6 +673,14 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 			}else
 			if(!strncasecmp(tok,"<!INCLUDE",9)){
 				if(Agent)TemplateInclude(Agent, dps_out, stream, tmplt, tok);
+			}else if (is.Items[is.pos].Match.reg) {
+			  size_t buf_len = dps_strlen(is.Items[is.pos].Match.pattern) + dps_strlen(tok) + 8;
+			  char *buf = (char*)DpsMalloc(buf_len);
+			  if (buf != NULL) {
+			    DpsMatchApply(buf, buf_len - 1, is.Items[is.pos].Match.arg, tok, &is.Items[is.pos].Match, 10, is.Parts);
+			    dlen += DpsPrintTextTemplate(Agent, dps_out, stream, dst + dlen, dst_len - dlen, tmplt, buf);
+			    DPS_FREE(buf);
+			  }
 			}else{
 				dlen += DpsPrintTextTemplate(Agent, dps_out, stream, dst + dlen, dst_len - dlen, tmplt, tok);
 			}
