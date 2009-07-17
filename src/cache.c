@@ -2394,7 +2394,7 @@ int DpsLogdSaveAllBufs(DPS_AGENT *Agent) {
   DPS_DB *db;
   DPS_ENV *Env = Agent->Conf;
 	size_t i;
-	size_t j, dbfrom = 0, dbto;
+	size_t j, dbfrom = 0, dbto, pi, shift;
 	int res = DPS_OK, u;
 	size_t NWrdFiles = (size_t)DpsVarListFindInt(&Env->Vars, "WrdFiles", 0x300);
 
@@ -2414,12 +2414,14 @@ int DpsLogdSaveAllBufs(DPS_AGENT *Agent) {
 	  u = (db->LOGD.wrd_buf == NULL);
 /**	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);**/
 	  if (u) continue;
+	  shift = (Agent->now + j + Agent->handle * 7) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
 	  for(i = 0; i < ((db->WrdFiles) ? db->WrdFiles : NWrdFiles); i++) {
 /**	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 /*	    u = (db->LOGD.wrd_buf == NULL);*/
-	    /*if (u)*/ u = (db->LOGD.wrd_buf[i].nrec || db->LOGD.wrd_buf[i].ndel);
+	    pi = (shift + i) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
+	    /*if (u)*/ u = (db->LOGD.wrd_buf[pi].nrec || db->LOGD.wrd_buf[pi].ndel);
 	    if (u) {
-	      res = DpsLogdSaveBuf(Agent, Env, i);
+	      res = DpsLogdSaveBuf(Agent, Env, pi);
 	    }
 /**	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 	    if (res != DPS_OK) break;

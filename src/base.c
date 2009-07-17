@@ -412,8 +412,9 @@ __C_LINK int __DPSCALL DpsBaseDelete(DPS_BASE_PARAM *P) {
       DpsLog(P->A, DPS_LOG_ERROR, "Can't write hash chain for file %s (%s:%d)", P->Ifilename, __FILE__, __LINE__);
       return DPS_ERROR;
     }
-
+#ifdef DEBUG_SEARCH
     DpsLog(P->A, DPS_LOG_DEBUG, "[%s/%s] Deleted rec_id: %x", P->subdir, P->basename, P->rec_id);
+#endif
   } else {
     DpsLog(P->A, DPS_LOG_DEBUG, "[%s/%s] rec_id: %x not found for delete", P->subdir, P->basename, P->rec_id);
   }
@@ -520,7 +521,9 @@ __C_LINK int __DPSCALL DpsBaseWrite(DPS_BASE_PARAM *P, void *buffer, size_t len)
     DpsLog(P->A, DPS_LOG_ERROR, "Can't write index for file %s {%s:%d}", P->Ifilename, __FILE__, __LINE__);
   }
 /*  DpsBaseFsync(P->A, P);*/
+#ifdef DEBUG_SEARCH
   DpsLog(P->A, DPS_LOG_DEBUG, "[%s/%s] Stored rec_id: %x Size: %d", P->subdir, P->basename, P->rec_id, len);
+#endif
 
  DpsBaseWrite_exit:
 
@@ -584,7 +587,9 @@ __C_LINK int __DPSCALL DpsBaseRead(DPS_BASE_PARAM *P, void *buf, size_t len) {
     DpsLog(P->A, DPS_LOG_DEBUG, "%s:[%s/%s] Not found rec_id: %x",  P->vardir, P->subdir, P->basename, P->rec_id);
     return DPS_ERROR;
   }
+#ifdef DEBUG_SEARCH
   DpsLog(P->A, DPS_LOG_DEBUG, "[%s/%s] Retrieved rec_id: %x Size: %d", P->subdir, P->basename, P->rec_id, P->Item.size);
+#endif
   return DPS_OK;
 }
 
@@ -659,8 +664,9 @@ __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len) {
     return NULL;
   }
   buf[*len] = '0';
-  DpsLog(P->A, DPS_LOG_DEBUG, "[%s/%s] ARetrieved rec_id: %x Size: %d->%d", 
-	 P->subdir, P->basename, P->rec_id, P->Item.size, P->Item.orig_size);
+#ifdef DEBUG_SEARCH
+  DpsLog(P->A, DPS_LOG_DEBUG, "[%s/%s] ARetrieved rec_id: %x Size: %d->%d", P->subdir, P->basename, P->rec_id, P->Item.size, P->Item.orig_size);
+#endif
   return buf;
 }
 

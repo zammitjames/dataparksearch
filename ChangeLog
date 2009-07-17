@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* <!IFREGEX conditional operator has been added for search template.
 	* Support for libextractor has been added.
 	* Acronym files have been extended by regex based transformations.
 	* cachedchk2 table has been added to SQL database. Please execute "indexer -Ecreate" command on upgrade.
