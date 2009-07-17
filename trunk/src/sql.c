@@ -2600,13 +2600,17 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 #endif
 	if(!qbuf[0]) {
 	  if ( (prevStatus != status) && (status > 300) && (status != 304) && (status < 2000) )
-		sprintf(qbuf, "UPDATE url SET status=%d,next_index_time=%u,bad_since_time=%d,site_id=%s%i%s,server_id=%s%i%s WHERE rec_id=%s%i%s",
+		sprintf(qbuf, "UPDATE url SET status=%d,next_index_time=%u,bad_since_time=%d,site_id=%s%i%s,server_id=%s%i%s,pop_rank=%s%s%s WHERE rec_id=%s%i%s",
 			status, (unsigned int)next_index_time, (int)Indexer->now, qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
-			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, qu, url_id, qu);
+			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, 
+			qu, DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25"), qu, 
+			qu, url_id, qu);
 	  else
-		sprintf(qbuf,"UPDATE url SET status=%d,next_index_time=%u, site_id=%s%i%s,server_id=%s%i%s WHERE rec_id=%s%i%s",
+		sprintf(qbuf,"UPDATE url SET status=%d,next_index_time=%u, site_id=%s%i%s,server_id=%s%i%s,pop_rank=%s%s%s WHERE rec_id=%s%i%s",
 			status, (unsigned int)next_index_time, qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
-			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, qu, url_id, qu);
+			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, 
+			qu, DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25"), qu, 
+			qu, url_id, qu);
 	}
 
 	if(DPS_OK!=(res=DpsSQLAsyncQuery(db,NULL,qbuf)))return res;
@@ -5069,6 +5073,9 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			Item.len = dps_strlen(Item.str);
 			Indexer->nbytes += Item.len;
 			DpsTextListAdd(&Doc->TextList, &Item);
+			if (!strcasecmp(Sec->name, "Pop_Rank") || !strcasecmp(Sec->name, "Meta-Language") || !strcasecmp(Sec->name, "Meta-Charset")) {
+			  DpsVarListReplaceStr(&Doc->Sections, Sec->name, DpsSQLValue(&SQLres, j, 0));
+			}
 		      }
 		      DpsSQLFree(&SQLres);
 		    }
