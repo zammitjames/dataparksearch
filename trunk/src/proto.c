@@ -1575,56 +1575,53 @@ int DpsGetURL(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc, const char *origurl) {
 	}
 
 	if (!found_in_mirror) {
-	if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "exec")) {
+	  if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "exec")) {
 		res = DpsExecGet(Indexer,Doc);
-	}else
-	if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "cgi")) {
+	  }else	if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "cgi")) {
 		res = DpsExecGet(Indexer,Doc);
-	}
+	  }
 #ifdef HAVE_SQL
-	else
-	if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "htdb")) {
+	  else if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "htdb")) {
 		res = DpsHTDBGet(Indexer, Doc);
-	}
+	  }
 #endif
 #ifdef WITH_FILE
-	else
-	if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "file")) {
+	  else if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "file")) {
 		res = DpsFILEGet(Indexer,Doc);
-	}
+	  }
 #endif
 #ifdef WITH_NEWS
-	else
-	if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "news"))) {
+	  else if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "news"))) {
 		res = DpsNNTPGet(Indexer,Doc);
-	}else
-	if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "nntp"))) {
+	  }else if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "nntp"))) {
 		res = DpsNNTPGet(Indexer,Doc);
-	}
+	  }
 #endif
 #ifdef WITH_HTTPS
-	else
-	if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "https"))) {
+	  else if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "https"))) {
 		res = DpsHTTPSGet(Indexer,Doc);
-	}
+	  }
 #endif
 #ifdef WITH_HTTP
-	else
-	if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "http")) ||
+	  else if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "http")) ||
 	   (!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "ftp") && (proxy))) {
 		res = DpsHTTPGet(Indexer,Doc);
-	}
+	  }
 #endif
 #ifdef WITH_FTP
-	else
-	if ((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "ftp")) && (!proxy)) {
+	  else if ((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "ftp")) && (!proxy)) {
 		res = DpsFTPGet(Indexer,Doc);
-	}
+	  }
 #endif
 	}
 
 	/* Add NULL terminator */
-	if (Doc->Buf.buf) Doc->Buf.buf[Doc->Buf.size]='\0';
+	if (Doc->Buf.buf) {
+	  Doc->Buf.buf[Doc->Buf.size]='\0';
+	  /* Increment indexer's download statistics */
+	  Indexer->nbytes += Doc->Buf.size;
+	}
+	Indexer->ndocs++;
 	
 	switch(res){
 		case DPS_NET_UNKNOWN:
