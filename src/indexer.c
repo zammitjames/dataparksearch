@@ -1927,10 +1927,6 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			return result;
 		}
 		
-		/* Increment indexer's download statistics */
-		Indexer->nbytes += Doc->Buf.size;
-		Indexer->ndocs++;
-		
 		if((!Doc->Buf.content) && (status < 500)) {
 			DpsLog(Indexer, DPS_LOG_WARN, "No data received");
 			status=DPS_HTTP_STATUS_SERVICE_UNAVAILABLE;
@@ -2409,10 +2405,6 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 #endif
 			return result;
 		}
-		
-		/* Increment indexer's download statistics */
-		Indexer->nbytes += Doc->Buf.size;
-		Indexer->ndocs++;
 		
 		if((!Doc->Buf.content) && (status < 500) && (!strncasecmp(&Doc->CurURL.schema, "htdb:", 5))) {
 			DpsLog(Indexer, DPS_LOG_WARN, "No data received");

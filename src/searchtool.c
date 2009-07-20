@@ -1761,8 +1761,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 
 /*  fprintf(stderr, "2. x:%lf  xy:%lf  y:%lf {xy /(x + y):%lf}\n\n", 
 	  x, xy, y, xy / (x + y) );*/
-  y /= phr_n--;
-  y *= phr_n;
+  xy /= phr_n--;
+  xy *= phr_n;
 #ifdef WITH_REL_TRACK
   *D_y = y;
 #endif
@@ -1914,13 +1914,13 @@ static inline dps_uint4 DpsCalcCosineWeightUltra(dps_uint4 *R, double x, double 
 
 
 static int DpsOriginWeightFull(int origin) {  /* Weight for origin can be from 1 to 15 */
-  if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x10;
-  if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x10;
-  if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x20;
-  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x40;
-  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x40;
-  if (origin & DPS_WORD_ORIGIN_QUERY)   return 0x80;
-  if (origin & DPS_WORD_ORIGIN_COMMON)  return 0xF0;
+  if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x01;
+  if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x02;
+  if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x14;
+  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x08;
+  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x18;
+  if (origin & DPS_WORD_ORIGIN_QUERY)   return 0x24;
+  if (origin & DPS_WORD_ORIGIN_COMMON)  return 0x3F;
   return 0;
 }
 
@@ -2152,7 +2152,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 					       );
 #ifdef WITH_REL_TRACK
 	Track[j].x = Rbc;
-	Track[j].xy = xy * nsec;
+	Track[j].xy = xy * nsec * (phr_n - 1) / phr_n;
 #endif
       }
       j++;
@@ -2231,7 +2231,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 					   );
 #ifdef WITH_REL_TRACK
     Track[j].x = Rbc;
-    Track[j].xy = xy * nsec;
+    Track[j].xy = xy * nsec * (phr_n - 1) / phr_n;
     Res->CoordList.Track = (DPS_URLTRACK*)DpsRealloc(Res->CoordList.Track, Res->CoordList.ncoords * sizeof(*Res->CoordList.Track));
 #endif
   }

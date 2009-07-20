@@ -99,9 +99,9 @@
 #define DPS_BINARY 0
 #endif
 
-
+/*
 #define DEBUG_SEARCH 1
-
+*/
 
 /* uncomment this to enable MODE_ALL realisation via search limits */
 /*#define MODE_ALL_VIA_LIMITS*/
