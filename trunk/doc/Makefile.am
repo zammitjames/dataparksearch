@@ -181,7 +181,6 @@ uninstall-local:
 	done
 
 index.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
-	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
 	$(JADE) -t sgml -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl \
 		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
@@ -191,7 +190,6 @@ index.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
 		 book.xml
 
 index.ru.html: $(@doc_FILES_RU@)
-	perl $(COLLATEINDEX) -x -N -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -t sgml \
 		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
@@ -201,7 +199,6 @@ index.ru.html: $(@doc_FILES_RU@)
 		 book-ru.xml
 
 book.tex: $(@doc_FILES_EN@)
-	LANG=C LC_ALL=C perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
 	LANG=C LC_ALL=C $(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl -t sgml \
 		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
@@ -217,7 +214,6 @@ book.pdf: book.tex
 	pdftex "&pdfjadetex" book
 
 single.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
-	perl $(COLLATEINDEX) -N -i index -o index.xml HTML.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -V %root-filename%=single -t sgml \
 		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
@@ -227,7 +223,6 @@ single.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
 		 book.xml
 
 single.ru.html: $(@doc_FILES_RU@)
-	perl $(COLLATEINDEX) -N -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -V %root-filename%=single -t sgml \
 		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
