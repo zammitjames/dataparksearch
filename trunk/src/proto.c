@@ -1355,7 +1355,9 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 	if(sb.st_mode&S_IFDIR){
 
 		if((dir=opendir(openname))){
+		        DPS_HREF Href;
 			char *stre;
+			int hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", -1);
 			dps_strcpy(Doc->Buf.buf,"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n<HTML><BODY>\n");
 			
 			stre=DPS_STREND(Doc->Buf.buf);
@@ -1370,16 +1372,6 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 				if (cvs_ignore && !strcmp(rec->d_name,"CVS"))
 					continue;
 
-				gap = stre - Doc->Buf.buf + 1;
-				if (gap >= Doc->Buf.allocated_size - 2048) {
-				  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
-				  if ((e = (char*)DpsRealloc(Doc->Buf.buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
-				    break;
-				  }
-				  Doc->Buf.buf = e;
-				  stre = e + gap;
-				}
-				
 				sprintf(newfilename, "%s%s", openname, rec->d_name);
 				if(stat(newfilename,&sb1)){
 					DpsLog(Indexer, DPS_LOG_EXTRA, "Can't stat '%s'", newfilename);
@@ -1399,9 +1391,25 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 					}
 				}
 				*e=0;
-				sprintf(stre, "<A HREF=\"%s%s\">\n", escaped_name, is_dir ? "/" : "");
+				DpsHrefInit(&Href);
+				Href.url = escaped_name;
+				Href.method = DPS_METHOD_GET;
+				Href.hops = hops;
+				DpsHrefListAdd(Indexer, &Doc->Hrefs, &Href);
+				if (Doc->Buf.allocated_size > Doc->Buf.max_size) continue;
+
+				gap = stre - Doc->Buf.buf + 1;
+				if (gap >= Doc->Buf.allocated_size - 2048) {
+				  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
+				  if ((e = (char*)DpsRealloc(Doc->Buf.buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
+				    break;
+				  }
+				  Doc->Buf.buf = e;
+				  stre = e + gap;
+				}
+				
+				sprintf(stre, "<A HREF=\"%s%s\"></A>\n", escaped_name, is_dir ? "/" : "");
 				stre=DPS_STREND(stre);
-				if (Doc->Buf.allocated_size > Doc->Buf.max_size) break;
 			}
 			closedir(dir);
 			dps_strcpy(DPS_STREND(Doc->Buf.buf),"</BODY><HTML>\n");
