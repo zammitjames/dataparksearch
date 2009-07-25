@@ -1133,52 +1133,35 @@ void DpsLangMapListSave(DPS_LANGMAPLIST *List) {
 
 
 void DpsBuildLangMap(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
-  unsigned char buf1[2 * DPS_LM_MAXGRAM1 + 1];
-  unsigned char buf2[2 * DPS_LM_MAXGRAM2 + 1];
-  const char * end = text + textlen;
-  unsigned char code, prevb = 32;
-  unsigned int hindex;
-  size_t pat_s1 = 0, pat_s2 = 0;
+  size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
+  const char * end1 = text + maplen - DPS_LM_MAXGRAM1;
+  const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
+  register const char *p;
 
-  memset(buf1, 32, 2 * DPS_LM_MAXGRAM1 + 1);
-  memset(buf2, 32, 2 * DPS_LM_MAXGRAM2 + 1);
-  
-  for (; text <= end; text++) {
-    code = (unsigned char)(*text);
-    if ((code <= 32) && (code >= 8) && (prevb <= 32) && (prevb >= 8)) continue;
-    buf1[pat_s1] = buf1[pat_s1 + DPS_LM_MAXGRAM1] = buf2[pat_s2] = buf2[pat_s2 + DPS_LM_MAXGRAM2] = prevb = code;
-    hindex = DpsHash32(buf1 + pat_s1 + 1, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
+  for(p = text; p < end1; p += DPS_LM_MAXGRAM1) {
+    register unsigned int hindex;
+    hindex = DpsHash32(p, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
     map->memb3[hindex].count++;
-    hindex = DpsHash32(buf2 + pat_s2 + 1, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
-    map->memb6[hindex].count++;
-    pat_s1++; pat_s2++;
-    if (pat_s1 == DPS_LM_MAXGRAM1) pat_s1 = 0;
-    if (pat_s2 == DPS_LM_MAXGRAM2) pat_s2 = 0;
-    map->nbytes++;
-    if (max_nbytes > 0 && map->nbytes >= max_nbytes) break;
   }
+  for(p = text; p < end2; p += DPS_LM_MAXGRAM2) {
+    register unsigned int hindex;
+    hindex = DpsHash32(p, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
+    map->memb6[hindex].count++;
+  }
+  map->nbytes += maplen;
 }
 
 void DpsBuildLangMap6(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
-  unsigned char buf2[2 * DPS_LM_MAXGRAM1 + 1];
-  const char * end = text + textlen;
-  unsigned char code, prevb = 32;
-  unsigned int hindex;
-  size_t pat_s2 = 0;
-
-  memset(buf2, 32, 2 * DPS_LM_MAXGRAM1 + 1);
+  size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
+  const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
+  register const char *p;
   
-  for (; text <= end; text++) {
-    code = (unsigned char)(*text);
-    if ((code <= 32) && (code >= 8) && (prevb <= 32) && (prevb >= 8)) continue;
-    buf2[pat_s2] = buf2[pat_s2 + DPS_LM_MAXGRAM1] = prevb = code;
-    hindex = DpsHash32(buf2 + pat_s2 + 1, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
-    map->memb3[hindex].count++;
-    pat_s2++;
-    if (pat_s2 == DPS_LM_MAXGRAM1) pat_s2 = 0;
-    map->nbytes++;
-    if (max_nbytes > 0 && map->nbytes >= max_nbytes) break;
+  for(p = text; p < end2; p += DPS_LM_MAXGRAM2) {
+    register unsigned int hindex;
+    hindex = DpsHash32(p, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
+    map->memb6[hindex].count++;
   }
+  map->nbytes += maplen;
 }
 
 

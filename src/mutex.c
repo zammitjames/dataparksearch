@@ -238,7 +238,12 @@ void DpsDestroyMutexes(void) {
 
 
 static void DpsCAS_lock(DPS_AGENT *A, dps_mutex_t *mut) {
-  while(!CAS(mut, A, NULL));
+  while(!CAS(mut, A, NULL)) 
+#if defined(HAVE_PTHREAD) && defined(HAVE_PTHREAD_YIELD_PROTO)
+    pthread_yield();
+#else
+    DPSSLEEP(0);
+#endif
 }
 
 static void DpsCAS_unlock(DPS_AGENT *A, dps_mutex_t *mut) {

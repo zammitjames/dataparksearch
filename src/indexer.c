@@ -60,6 +60,7 @@
 #include "dps_image.h"
 #include "dps_charsetutils.h"
 #include "dps_template.h"
+#include "dps_sqldbms.h"
 #ifdef HAVE_ZLIB
 #include "dps_store.h"
 #endif

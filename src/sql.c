@@ -5939,7 +5939,7 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
     if (pas > PAS_HI) pas = PAS_HI;
     else if (PAS_LO > pas) pas = PAS_LO;
 
-    DpsLog(A, DPS_LOG_EXTRA, "%s:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
+    DpsLog(A, DPS_LOG_DEBUG, "%s:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
 	   rec_id, it, pdiv, cur_div,  di, Oi, delta, pas);
 
     u_it = ( (pdiv = cur_div) > EPS );
@@ -5965,6 +5965,7 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
     
     dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%.12f WHERE rec_id=%s%s%s", nPR, qu, rec_id, qu );
     DpsSQLAsyncQuery(db, NULL, qbuf);
+    DpsLog(A, DPS_LOG_EXTRA, "Neo PopRank: %.12f", nPR);
   }
   
 /*  DpsSQLEnd(db);*/
@@ -6110,7 +6111,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
     if (pas > PAS_HI) pas = PAS_HI;
     else if (PAS_LO > pas) pas = PAS_LO;
 
-    DpsLog(A, DPS_LOG_EXTRA, "%s:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
+    DpsLog(A, DPS_LOG_DEBUG, "%s:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
 	   rec_id, it, pdiv, cur_div,  di, Oi, delta, pas);
 
     u_it = ( (pdiv = cur_div) > EPS );
@@ -6138,6 +6139,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
       DpsSQLFree(&SQLres);
       dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%.12f WHERE rec_id=%s%s%s", nPR, qu, rec_id, qu );
       DpsSQLAsyncQuery(db, NULL, qbuf);
+      DpsLog(A, DPS_LOG_EXTRA, "Neo PopRank: %.12f", nPR);
   }
 
   /*DPS_FREE(IN);*/ DPS_FREE(OUT);

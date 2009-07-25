@@ -180,6 +180,7 @@ AC_SUBST(MODLIB)
 AC_CHECK_FUNCS(hstrerror getaddrinfo)
 AC_CHECK_FUNCS(inet_net_pton)
 AC_CHECK_FUNC_PROTO(pthread_setconcurrency, pthread.h)
+AC_CHECK_FUNC_PROTO(pthread_yield, pthread.h)
 AC_CHECK_FUNC_PROTO(thr_setconcurrency, thread.h)
 
 
@@ -999,6 +1000,19 @@ if test "$news" != no; then
     AC_MSG_RESULT(yes)
 else
     AC_MSG_RESULT([no])
+fi
+
+
+gprofiler=no
+AC_MSG_CHECKING(for Google profiler support)
+AC_ARG_ENABLE(gprofiler,
+[  --enable-gprofiler        enable Google profiler support],gprofiler=$enableval)
+
+if test "$profiler" != no; then
+	LIBS="-lprofiler $LIBS"
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT([no])
 fi
 
 
@@ -2252,19 +2266,22 @@ AC_ARG_WITH(sqlite,
 			SQLITE_LIBDIR=$withval/lib
 		else
     			AC_MSG_RESULT(no)
-			AC_MSG_ERROR(Invalid sqlite directory - unable to find sqlite.h)
+			AC_MSG_ERROR(Invalid sqlite directory $withval - unable to find sqlite.h)
 		fi
 		SQLITE_LFLAGS="-L$SQLITE_LIBDIR -lsqlite"
 		SQLITE_INCLUDE="-I$SQLITE_INCDIR"
 		AC_DEFINE(HAVE_SQLITE)
 		AC_MSG_RESULT(yes)
 		have_db=yes
-	fi
 
-	if test "x$DBTYPE" = "x" ; then
-		DBTYPE="sqlite"
+
+		if test "x$DBTYPE" = "x" ; then
+			DBTYPE="sqlite"
+		else
+			DBTYPE="$DBTYPE-sqlite"
+		fi
 	else
-		DBTYPE="$DBTYPE-sqlite"
+		AC_MSG_RESULT(no)
 	fi
 
 ],[
@@ -2279,34 +2296,40 @@ AC_ARG_WITH(sqlite3,
 [  --with-sqlite3[=DIR]   Include sqlite3 support.  DIR is the sqlite3
                           install directory, defaults to "/usr /usr/local".],
 [
+
 	path=""
 
 	if test "$withval" = "yes"; then
 		withval="/usr /usr/local"
 	fi
 
-	for d in $withval; do
-		if test -f $d/include/sqlite3.h; then
-			SQLITE3_INCDIR=$d/include
-			SQLITE3_LIBDIR=$d/lib
-			SQLITE3_LFLAGS="-L$SQLITE3_LIBDIR -lsqlite3"
-			SQLITE3_INCLUDE="-I$SQLITE3_INCDIR"
-			path=$d
-			AC_DEFINE(HAVE_SQLITE3)
-			AC_MSG_RESULT(yes, $d)
-			have_db=yes
- 		fi
-       done
+	if test "$withval" != "no"; then
 
-	if test "$path" = ""; then
-		AC_MSG_RESULT(no)
-		AC_MSG_ERROR(Invalid sqlite3 directory - unable to find sqlite3.h)
-	fi
+		for d in $withval; do
+			if test -f $d/include/sqlite3.h; then
+				SQLITE3_INCDIR=$d/include
+				SQLITE3_LIBDIR=$d/lib
+				SQLITE3_LFLAGS="-L$SQLITE3_LIBDIR -lsqlite3"
+				SQLITE3_INCLUDE="-I$SQLITE3_INCDIR"
+				path=$d
+				AC_DEFINE(HAVE_SQLITE3)
+				AC_MSG_RESULT(yes, $d)
+				have_db=yes
+ 			fi
+	        done
 
-	if test "x$DBTYPE" = "x" ; then
-		DBTYPE="sqlite3"
+		if test "$path" = ""; then
+			AC_MSG_RESULT(no)
+			AC_MSG_ERROR(Invalid sqlite3 directory $withval - unable to find sqlite3.h)
+		fi
+
+		if test "x$DBTYPE" = "x" ; then
+			DBTYPE="sqlite3"
+		else
+			DBTYPE="$DBTYPE-sqlite3"
+		fi
 	else
-		DBTYPE="$DBTYPE-sqlite3"
+		AC_MSG_RESULT(no)
 	fi
 
 ],[
@@ -2523,6 +2546,9 @@ else
    db_PROGS="indexer$ac_exeext searchd$ac_exeext splitter$ac_exeext stored$ac_exeext cached$ac_exeext dpguesser$ac_exeext dpconv$ac_exeext"
 fi
 
+AC_SUBST(CFLAGS)
+AC_SUBST(LFLAGS)
+AC_SUBST(LDFLAGS)
 AC_SUBST(INCLUDES)
 AC_SUBST(db_PROGS)
 AC_DEFINE_UNQUOTED(DPS_DBTYPE,"$DBTYPE")

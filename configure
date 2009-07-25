@@ -990,6 +990,7 @@ DOCBOOKSTYLE
 COLLATEINDEX
 doc_FILES_EN
 doc_FILES_RU
+LFLAGS
 INCLUDES
 db_PROGS
 DBTYPE
@@ -1042,6 +1043,7 @@ enable_file
 enable_http
 enable_ftp
 enable_news
+enable_gprofiler
 enable_dmalloc
 enable_boehmgc
 enable_efence
@@ -1761,6 +1763,7 @@ Optional Features:
   --disable-http          disable http:// URL scheme support
   --disable-ftp           disable ftp:// URL scheme support
   --disable-news          disable news:// URL schema support
+  --enable-gprofiler        enable Google profiler support
   --enable-dmalloc        enable DMALLOC memory debugger support
   --enable-boehmgc        enable Boehm's garbage collector support
   --enable-efence         enable Electricfence memory debugger support
@@ -5092,7 +5095,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5095 "configure"' > conftest.$ac_ext
+  echo '#line 5098 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8194,11 +8197,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8197: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8200: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8201: \$? = $ac_status" >&5
+   echo "$as_me:8204: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8484,11 +8487,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8487: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8490: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8491: \$? = $ac_status" >&5
+   echo "$as_me:8494: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8588,11 +8591,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8591: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8594: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8595: \$? = $ac_status" >&5
+   echo "$as_me:8598: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10988,7 +10991,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10991 "configure"
+#line 10994 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11088,7 +11091,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11091 "configure"
+#line 11094 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13497,11 +13500,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13500: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13503: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13504: \$? = $ac_status" >&5
+   echo "$as_me:13507: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13601,11 +13604,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13604: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13607: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13608: \$? = $ac_status" >&5
+   echo "$as_me:13611: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -15184,11 +15187,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15187: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15190: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15191: \$? = $ac_status" >&5
+   echo "$as_me:15194: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15288,11 +15291,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15291: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15294: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15295: \$? = $ac_status" >&5
+   echo "$as_me:15298: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17503,11 +17506,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17506: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17509: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17510: \$? = $ac_status" >&5
+   echo "$as_me:17513: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17793,11 +17796,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17796: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17799: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17800: \$? = $ac_status" >&5
+   echo "$as_me:17803: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17897,11 +17900,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17900: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17903: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17904: \$? = $ac_status" >&5
+   echo "$as_me:17907: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -24177,6 +24180,39 @@ _ACEOF
 
         fi
 
+{ $as_echo "$as_me:$LINENO: checking for pthread_yield function prototype in pthread.h" >&5
+$as_echo_n "checking for pthread_yield function prototype in pthread.h... " >&6; }
+if test "${ac_cv_have_pthread_yield_proto+set}" = set; then
+  $as_echo_n "(cached) " >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <pthread.h>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "pthread_yield" >/dev/null 2>&1; then
+  ac_cv_have_pthread_yield_proto=yes
+else
+  ac_cv_have_pthread_yield_proto=no
+fi
+rm -f conftest*
+
+fi
+{ $as_echo "$as_me:$LINENO: result: $ac_cv_have_pthread_yield_proto" >&5
+$as_echo "$ac_cv_have_pthread_yield_proto" >&6; }
+        if test $ac_cv_have_pthread_yield_proto = yes ; then
+                ac_tr_func=HAVE_`echo pthread_yield | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`_PROTO
+                cat >>confdefs.h <<_ACEOF
+#define $ac_tr_func 1
+_ACEOF
+
+        fi
+
 { $as_echo "$as_me:$LINENO: checking for thr_setconcurrency function prototype in thread.h" >&5
 $as_echo_n "checking for thr_setconcurrency function prototype in thread.h... " >&6; }
 if test "${ac_cv_have_thr_setconcurrency_proto+set}" = set; then
@@ -28809,6 +28845,25 @@ $as_echo "no" >&6; }
 fi
 
 
+gprofiler=no
+{ $as_echo "$as_me:$LINENO: checking for Google profiler support" >&5
+$as_echo_n "checking for Google profiler support... " >&6; }
+# Check whether --enable-gprofiler was given.
+if test "${enable_gprofiler+set}" = set; then
+  enableval=$enable_gprofiler; gprofiler=$enableval
+fi
+
+
+if test "$profiler" != no; then
+	LIBS="-lprofiler $LIBS"
+	{ $as_echo "$as_me:$LINENO: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+	{ $as_echo "$as_me:$LINENO: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
 dmalloc=no
 { $as_echo "$as_me:$LINENO: checking for DMALLOC memory debugger support" >&5
 $as_echo_n "checking for DMALLOC memory debugger support... " >&6; }
@@ -32186,8 +32241,8 @@ if test "${with_sqlite+set}" = set; then
 		else
     			{ $as_echo "$as_me:$LINENO: result: no" >&5
 $as_echo "no" >&6; }
-			{ { $as_echo "$as_me:$LINENO: error: Invalid sqlite directory - unable to find sqlite.h" >&5
-$as_echo "$as_me: error: Invalid sqlite directory - unable to find sqlite.h" >&2;}
+			{ { $as_echo "$as_me:$LINENO: error: Invalid sqlite directory $withval - unable to find sqlite.h" >&5
+$as_echo "$as_me: error: Invalid sqlite directory $withval - unable to find sqlite.h" >&2;}
    { (exit 1); exit 1; }; }
 		fi
 		SQLITE_LFLAGS="-L$SQLITE_LIBDIR -lsqlite"
@@ -32199,12 +32254,16 @@ _ACEOF
 		{ $as_echo "$as_me:$LINENO: result: yes" >&5
 $as_echo "yes" >&6; }
 		have_db=yes
-	fi
 
-	if test "x$DBTYPE" = "x" ; then
-		DBTYPE="sqlite"
+
+		if test "x$DBTYPE" = "x" ; then
+			DBTYPE="sqlite"
+		else
+			DBTYPE="$DBTYPE-sqlite"
+		fi
 	else
-		DBTYPE="$DBTYPE-sqlite"
+		{ $as_echo "$as_me:$LINENO: result: no" >&5
+$as_echo "no" >&6; }
 	fi
 
 
@@ -32225,41 +32284,48 @@ $as_echo_n "checking for sqlite3 support... " >&6; }
 # Check whether --with-sqlite3 was given.
 if test "${with_sqlite3+set}" = set; then
   withval=$with_sqlite3;
+
 	path=""
 
 	if test "$withval" = "yes"; then
 		withval="/usr /usr/local"
 	fi
 
-	for d in $withval; do
-		if test -f $d/include/sqlite3.h; then
-			SQLITE3_INCDIR=$d/include
-			SQLITE3_LIBDIR=$d/lib
-			SQLITE3_LFLAGS="-L$SQLITE3_LIBDIR -lsqlite3"
-			SQLITE3_INCLUDE="-I$SQLITE3_INCDIR"
-			path=$d
-			cat >>confdefs.h <<\_ACEOF
+	if test "$withval" != "no"; then
+
+		for d in $withval; do
+			if test -f $d/include/sqlite3.h; then
+				SQLITE3_INCDIR=$d/include
+				SQLITE3_LIBDIR=$d/lib
+				SQLITE3_LFLAGS="-L$SQLITE3_LIBDIR -lsqlite3"
+				SQLITE3_INCLUDE="-I$SQLITE3_INCDIR"
+				path=$d
+				cat >>confdefs.h <<\_ACEOF
 #define HAVE_SQLITE3 1
 _ACEOF
 
-			{ $as_echo "$as_me:$LINENO: result: yes" >&5
+				{ $as_echo "$as_me:$LINENO: result: yes" >&5
 $as_echo "yes" >&6; }
-			have_db=yes
- 		fi
-       done
+				have_db=yes
+ 			fi
+	        done
 
-	if test "$path" = ""; then
+		if test "$path" = ""; then
+			{ $as_echo "$as_me:$LINENO: result: no" >&5
+$as_echo "no" >&6; }
+			{ { $as_echo "$as_me:$LINENO: error: Invalid sqlite3 directory $withval - unable to find sqlite3.h" >&5
+$as_echo "$as_me: error: Invalid sqlite3 directory $withval - unable to find sqlite3.h" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
+
+		if test "x$DBTYPE" = "x" ; then
+			DBTYPE="sqlite3"
+		else
+			DBTYPE="$DBTYPE-sqlite3"
+		fi
+	else
 		{ $as_echo "$as_me:$LINENO: result: no" >&5
 $as_echo "no" >&6; }
-		{ { $as_echo "$as_me:$LINENO: error: Invalid sqlite3 directory - unable to find sqlite3.h" >&5
-$as_echo "$as_me: error: Invalid sqlite3 directory - unable to find sqlite3.h" >&2;}
-   { (exit 1); exit 1; }; }
-	fi
-
-	if test "x$DBTYPE" = "x" ; then
-		DBTYPE="sqlite3"
-	else
-		DBTYPE="$DBTYPE-sqlite3"
 	fi
 
 
@@ -32812,6 +32878,9 @@ if test "$have_db" != "yes"; then
 else
    db_PROGS="indexer$ac_exeext searchd$ac_exeext splitter$ac_exeext stored$ac_exeext cached$ac_exeext dpguesser$ac_exeext dpconv$ac_exeext"
 fi
+
+
+
 
 
 
