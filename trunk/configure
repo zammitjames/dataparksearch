@@ -28854,7 +28854,7 @@ if test "${enable_gprofiler+set}" = set; then
 fi
 
 
-if test "$profiler" != no; then
+if test "$gprofiler" == yes; then
 	LIBS="-lprofiler $LIBS"
 	{ $as_echo "$as_me:$LINENO: result: yes" >&5
 $as_echo "yes" >&6; }

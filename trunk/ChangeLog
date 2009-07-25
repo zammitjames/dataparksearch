@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* Language and charset guesser has been modified for speed. It need to recreate language maps, if you've created yours own.
 	* <!IFREGEX conditional operator has been added for search template.
 	* Support for libextractor has been added.
 	* Acronym files have been extended by regex based transformations.
