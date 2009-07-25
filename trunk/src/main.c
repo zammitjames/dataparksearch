@@ -1285,7 +1285,7 @@ static int DpsIndex(DPS_AGENT *A) {
  #if __FreeBSD_version < 701000
      extern const char *_malloc_options = "axNNNH";
  #else
-     extern const char *_malloc_options = "ax3N10f";
+     extern const char *_malloc_options = "ax3N";
  #endif
 #elif __FreeBSD__ >= 5
      extern const char *_malloc_options = "axH>>R";
@@ -1302,7 +1302,6 @@ int main(int argc, char **argv, char **envp) {
      malloc_options = "axH>>>R";
 #endif
 
-     
      DpsInit(argc, argv, envp); /* Initialize library */
      DpsGetSemLimit();
      

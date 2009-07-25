@@ -192,10 +192,10 @@ typedef struct dps_conv_st {
 /************** Language and charset guesser *************/
 
 
-#define DPS_LM_MAXGRAM1		2
+#define DPS_LM_MAXGRAM1		3
 #define DPS_LM_MAXGRAM2		(3 * sizeof(dpsunicode_t))
 #define DPS_LM_HASHMASK		0x07FF
-#define DPS_LM_TOPCNT           200
+#define DPS_LM_TOPCNT           150
 
 typedef struct {
 	size_t		count, index;
