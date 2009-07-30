@@ -454,14 +454,16 @@ typedef struct dps_if_stack_st {
 	size_t		pos;
     DPS_MATCH_PART      Parts[10];
 	DPS_IFITEM	Items[DPS_IFSTACKMAX+1];
+      DPS_TEMPLATE      *tmplt;
 } DPS_IFSTACK;
 
-static void DpsIfStackInit(DPS_IFSTACK *S){
+static void DpsIfStackInit(DPS_IFSTACK *S, DPS_TEMPLATE *tmplt) {
 	DPS_IFITEM	*top=&S->Items[0];
 	
 	bzero((void*)S, sizeof(*S));
 	top->condition=1;
 	top->showelse=1;
+	S->tmplt = tmplt;
 }
 
 static DPS_IFITEM *DpsIfStackPush(DPS_IFSTACK *S){
@@ -481,6 +483,7 @@ static DPS_IFITEM *DpsIfStackPop(DPS_IFSTACK *S){
 	  if (S->Items[S->pos].Match.reg) {
 		regfree((regex_t*)S->Items[S->pos].Match.reg);
 		DPS_FREE(S->Items[S->pos].Match.reg);
+		DPS_FREE(S->Items[S->pos].Match.arg);
 	  }
 	  S->pos--;
 	}
@@ -548,7 +551,7 @@ static void TemplateCopy(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok,DPS_
 static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok,DPS_IFSTACK *is){
 	DPS_HTMLTOK	tag;
 	DPS_VARLIST	attr;
-	const char	*var, *val, *hlast = NULL;
+	const char	*var, *val, *hlast = NULL, *type;
 	DPS_IFITEM	*it=&is->Items[is->pos];
 	
 	DpsHTMLTOKInit(&tag);
@@ -559,6 +562,7 @@ static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok
 	
 	var=DpsVarListFindStr(&attr,"Name","");
 	val=DpsVarListFindStr(&attr,"Content","");
+	type = DpsVarListFindStr(&attr, "Type", "");
 	var=DpsVarListFindStr(vars,var,"");
 
 	if(!(strncasecmp(tok,"<!IFNOT",7)) || !(strncasecmp(tok, "<!ELSEIFNOT", 11)) || !(strncasecmp(tok, "<!ELIFNOT", 9)) ) {
@@ -566,12 +570,36 @@ static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok
 	}else if( !(strncasecmp(tok, "<!IFLIKE", 8)) || !(strncasecmp(tok, "<!ELIKE", 7)) || !(strncasecmp(tok, "<!ELSELIKE", 10)) ) {
 		it->condition = !DpsWildCaseCmp(var, val);
 	}else if( !(strncasecmp(tok, "<!IFREGEX", 9)) || !(strncasecmp(tok, "<!EREGEX", 8)) || !(strncasecmp(tok, "<!ELSEREGEX", 11)) ) {
+	  const char *eval = NULL, *eval2 = NULL;
+
+		switch(*type) {
+		case '(': 
+		case '*': 
+		  eval = DpsRemoveHiLightDup(var); 
+		  break;
+		case '&':
+		case '^': 
+		  eval = HiLightDup(var, is->tmplt->HlBeg, is->tmplt->HlEnd); 
+		  break;
+		case '%':
+		  eval2 = DpsRemoveHiLightDup(var);
+		  if (eval2) {
+		    eval =( char*)DpsMalloc(dps_strlen(eval2) * 3 + 1);
+		    if (eval != NULL) {
+		      DpsEscapeURL(eval, eval2);
+		    }
+		    DPS_FREE(eval2);
+		  }
+		  break;
+		default: /* do nothing */;
+		}
 	        DpsMatchInit(&it->Match);
 		it->Match.match_type = DPS_MATCH_REGEX;
-		it->Match.arg = var;
+		it->Match.arg = DpsStrdup((eval != NULL) ? eval : var);
 		it->Match.pattern = val;
 /*		it->Match.compiled = 0;*/
-		it->condition = !DpsMatchExec(&it->Match, var, var, NULL, 10, is->Parts);
+		it->condition = !DpsMatchExec(&it->Match, it->Match.arg, it->Match.arg, NULL, 10, is->Parts);
+		DPS_FREE(eval);
 	}else if( !(strncasecmp(tok, "<!IF", 4)) || !(strncasecmp(tok, "<!ELIF", 6)) || !(strncasecmp(tok, "<!ELSEIF", 8)) ) {
 		it->condition = !strcasecmp(var,val);
 	}
@@ -618,7 +646,7 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 	DPS_IFSTACK	is;
 	DPS_VARLIST     *vars = tmplt->Env_Vars;
 	
-	DpsIfStackInit(&is);
+	DpsIfStackInit(&is, tmplt);
 	
 	tok=GetHtmlTok(template,&lt);
 	while(tok){
@@ -674,7 +702,7 @@ static void PrintHtmlTemplate(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, voi
 			if(!strncasecmp(tok,"<!INCLUDE",9)){
 				if(Agent)TemplateInclude(Agent, dps_out, stream, tmplt, tok);
 			}else if (is.Items[is.pos].Match.reg) {
-			  size_t buf_len = dps_strlen(is.Items[is.pos].Match.pattern) + dps_strlen(tok) + 8;
+			  size_t buf_len = dps_strlen(is.Items[is.pos].Match.pattern) + dps_strlen(is.Items[is.pos].Match.arg) + dps_strlen(tok) + 8;
 			  char *buf = (char*)DpsMalloc(buf_len);
 			  if (buf != NULL) {
 			    DpsMatchApply(buf, buf_len - 1, is.Items[is.pos].Match.arg, tok, &is.Items[is.pos].Match, 10, is.Parts);
@@ -934,7 +962,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	char            savebyte;
 	
 	DpsServerInit(&Srv);
-	DpsIfStackInit(&is);
+	DpsIfStackInit(&is, t);
 	bzero((void*)&Cfg, sizeof(Cfg));
 	Cfg.Indexer = Agent;
 	/*Agent->Conf->Cfg_Srv =*/ Cfg.Srv = &Srv;
