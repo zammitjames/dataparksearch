@@ -338,7 +338,7 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
   }
 	
   net[0] = '\0';
-/*  fprintf(stderr, "FindServer for URL: %s [max_server_ordre:%d]\n", url, dps_max_server_ordre);*/
+/*  fprintf(stderr, " -- FindServer for URL: %s [max_server_ordre:%d]\n", url, dps_max_server_ordre);*/
 
   for (tix = DPS_MATCH_min; tix < DPS_MATCH_max; tix++) {
     List = &Agent->Conf->Servers[tix];
@@ -386,7 +386,7 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
 	break;
       }
     }
-/*    fprintf(stderr, "tix: %s -- cur_idx: %d, i:%d nserver:%d  lastORDRE:%d\n", DpsMatchTypeStr(tix), cur_idx, i, List->nservers, 
+/*    fprintf(stderr, " -- tix: %s -- cur_idx: %d, i:%d nserver:%d  lastORDRE:%d\n", DpsMatchTypeStr(tix), cur_idx, i, List->nservers, 
 	    (List->nservers > 0) ? List->Server[List->nservers-1].ordre : 0);
     if (i < List->nservers) fprintf(stderr, "\t\tServer[i].ordre:%d\n", List->Server[i].ordre);*/
   }

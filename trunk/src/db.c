@@ -1452,6 +1452,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Rel.wrdcount", Res->CoordList.Track[i + Res->first * Res->offset].D_wrdcount);
 #endif
 	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Rel.n_count", Res->CoordList.Track[i + Res->first * Res->offset].D_n_count);
+	  DpsVarListReplaceInt(&Res->Doc[i].Sections, "Rel.n_origin", Res->CoordList.Track[i + Res->first * Res->offset].D_n_origin);
 #endif
 	}
 	

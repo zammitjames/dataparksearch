@@ -48,16 +48,16 @@ int DpsMatchComp(DPS_MATCH *Match,char *errstr,size_t errstrsize){
 			if (Match->reg == NULL) {
 			  dps_snprintf(errstr, errstrsize, "Can't alloc for regex at %s:%d\n", __FILE__, __LINE__);
 				fprintf(stderr, " !!! - regexcomp: %s\n", errstr);
-			  return 1;
+			  return DPS_ERROR;
 			}
 			bzero((void*)Match->reg, sizeof(regex_t));
 			if(Match->case_sense)
 				flag|=REG_ICASE;
 			if((err=regcomp(Match->reg, Match->pattern, flag))){
 				regerror(err, Match->reg, errstr, errstrsize);
-				fprintf(stderr, "DpsMatchComp of %s !!! - regexcomp[%d]: %s\n", Match->pattern, err, errstr);
+				fprintf(stderr, "DpsMatchComp of %s !!! - regcomp[%d]: %s\n", Match->pattern, err, errstr);
 				DPS_FREE(Match->reg);
-				return(1);
+				return DPS_ERROR;
 			}
 			Match->compiled = 1;
 			
@@ -69,9 +69,9 @@ int DpsMatchComp(DPS_MATCH *Match,char *errstr,size_t errstrsize){
 			break;
 		default:
 			dps_snprintf(errstr,errstrsize,"Unknown match type '%d'",Match->match_type);
-			return(1);
+			return DPS_ERROR;
 	}
-	return 0;
+	return DPS_OK;
 }
 
 DPS_MATCH *DpsMatchInit(DPS_MATCH *M){

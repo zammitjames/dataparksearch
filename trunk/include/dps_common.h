@@ -210,29 +210,32 @@ typedef struct {
 } DPS_WORDPARAM;
 
 
-#define DPS_N_DISTANCE 0
-#define DPS_N_COUNT    1
+#define DPS_N_COUNT    0
+#define DPS_N_ORIGIN   1
 #define DPS_N_PHRASE   2
 #define DPS_N_EXACT    3
 #ifdef WITH_REL_DISTANCE
-#define DPS_N_POSITION 4
-#define DPS_N_FIRSTPOS 5
+#define DPS_N_DISTANCE (DPS_N_EXACT + 1)
 #else
-#define DPS_N_POSITION 3
-#define DPS_N_FIRSTPOS 3
+#define DPS_N_DISTANCE DPS_N_EXACT
 #endif
 
 #ifdef WITH_REL_POSITION
+#define DPS_N_POSITION (DPS_N_DISTANCE + 1)
+#define DPS_N_FIRSTPOS (DPS_N_DISTANCE + 2)
+#else
+#define DPS_N_POSITION DPS_N_DISTANCE
+#define DPS_N_FIRSTPOS DPS_N_DISTANCE
+#endif
+
+#ifdef WITH_REL_WRDCOUNT
 #define DPS_N_WRDCOUNT (DPS_N_FIRSTPOS + 1)
 #else
 #define DPS_N_WRDCOUNT DPS_N_FIRSTPOS
 #endif
 
-#ifdef WITH_REL_WRDCOUNT
 #define DPS_N_ADD (DPS_N_WRDCOUNT + 1)
-#else
-#define DPS_N_ADD DPS_N_WRDCOUNT
-#endif
+
 
 /** Main search structure */
 typedef struct{
@@ -271,6 +274,7 @@ typedef struct {
   int D_wrdcount;
 #endif
   int D_n_count;
+  int D_n_origin;
 } DPS_URLTRACK;
 #endif
 
@@ -916,6 +920,7 @@ typedef struct {
         int             PopRankNeoIterations;
         size_t          GuesserBytes;     /**< Number of bytes used for language and charset guessing */
         int             skip_unreferred;
+        int             rel_nofollow;     /**< Flag to obi rel="nofollow" attribute */
         int             track_hops;
         int             poprank_postpone; /**< Skip the Neo PopRank calculation at indexing */
         int             limits;           /**< mask of defined cache mode limits */

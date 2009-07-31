@@ -39,6 +39,7 @@
 	{"DefaultLang",		1,1,	srv_rpl_var},
 	{"DeleteOlder",         1,1,    srv_rpl_time_var},
 	{"DetectClones",	1,1,	srv_rpl_bool_var},
+	{"DisableRelNofollow",  1,1,    env_rpl_bool_var},
 	{"Disallow",		1,100,	add_filter},
 	{"DocMemCacheSize",	1,1,	env_rpl_var},
 	{"DocTimeOut",		1,1,	srv_rpl_time_var},
