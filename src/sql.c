@@ -5982,7 +5982,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   double pr, nPR;
   const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
   char		qbuf[512];
-  double di = 0.0, Oi = 0.0, delta, pas, pdiv, cur_div, dw;
+  double di = 0.0, Oi = 0.0, delta, pas, pdiv, cur_div, dw, PopRank;
   size_t j, jrows;
   size_t n_di, n_Oi;
   int  rc = DPS_ERROR, it, u_it, to_update = 0;
@@ -6026,6 +6026,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
     IN[j].weight = DPS_ATOF(DpsSQLValue(&SQLres, j, 2));
     di += IN[j].pop_rank * IN[j].weight;*/
     di += DPS_ATOF(DpsSQLValue(&SQLres, j, 1)) * DPS_ATOF(DpsSQLValue(&SQLres, j, 2));
+    if (!strcmp(DpsSQLValue(&SQLres, j, 0), rec_id)) PopRank = DPS_ATOF(DpsSQLValue(&SQLres, j, 1));
   }
   DpsSQLFree(&SQLres);
 /*  if (jrows < n_di) n_di = jrows;*/
@@ -6076,8 +6077,11 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
 
   pas = -0.7;
 
-  pdiv = cur_div = fabs(di - Oi);
-  u_it = ( cur_div > EPS && n_Oi > 0);
+  cur_div = fabs(di - Oi);
+  pdiv = fabs(PopRank - Oi);
+  u_it = ( (cur_div > EPS || pdiv > EPS) && n_Oi > 0);
+
+  DpsLog(A, DPS_LOG_DEBUG, " di:%f  Oi:%f  cur_div:%f  pdiv:%f", di, Oi, cur_div, pdiv);
 
   for (it = 0; u_it && (it < A->Flags.PopRankNeoIterations); it++) {
 
