@@ -1088,7 +1088,6 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  DPS_FREE(y);
 		}else
 		if(Indexer->Flags.rel_nofollow && ISTAG(i, "rel")) {
-		  fprintf(stderr, " -- rel nofollow allowed: %d\n", Indexer->Flags.rel_nofollow);
 		  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
 		  if (strcasestr(y, "nofollow") != NULL) {
 		    tag->follow = DPS_FOLLOW_NO;
