@@ -824,6 +824,7 @@ static int DpsServerTableFlush(DPS_DB *db){
 
 static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	DPS_SQLRES	SQLRes;
+	char            server_weight[32];
 	int		res = DPS_OK, done = 1, nr = 0;
 	const char	*alias = DpsVarListFindStr(&Server->Vars, "Alias", NULL);
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
@@ -866,6 +867,9 @@ static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	/* Escape URL string */
 	DpsDBEscStr(db->DBType, arg_insert, arg, dps_strlen(arg));
 	
+	dps_snprintf(server_weight, sizeof(server_weight), "%f", Server->weight);
+	DpsDBEscDoubleStr(server_weight);
+
 	while(done) {
 	  dps_snprintf(buf, len, "SELECT rec_id, url, tag, category, command, parent, ordre, weight FROM server WHERE rec_id=%s%d%s", 
 		       qu, rec_id, qu);
@@ -906,7 +910,7 @@ static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	  dps_snprintf(buf, len, "\
 INSERT INTO server (rec_id, enabled, tag, category, \
 command, parent, ordre, weight, url, pop_weight \
-) VALUES (%s%d%s, 1, '%s', %s, '%c', %s%d%s, %d, %f, '%s', 0\
+) VALUES (%s%d%s, 1, '%s', %s, '%c', %s%d%s, %d, %s, '%s', 0\
 )",
 		       qu, rec_id, qu,
 		       DpsVarListFindStr(&Server->Vars, "Tag", ""),
@@ -914,7 +918,7 @@ command, parent, ordre, weight, url, pop_weight \
 		       Server->command,
 		       qu, Server->parent, qu,
 		       Server->ordre,
-		       Server->weight,
+		       server_weight,
 		       arg_insert
 		       );
 	
@@ -938,13 +942,13 @@ command, parent, ordre, weight, url, pop_weight \
 	    fprintf(stderr, "    Cat: %s - %s|\n", DpsVarListFindStr(&Server->Vars, "Category", ""), DpsSQLValue(&SQLRes, 0, 3));
 */
 	    if (Server->weight != 1.0) 
-	      dps_snprintf(buf, len, "UPDATE server SET enabled=1, tag='%s', category=%s, command='%c', parent=%s%i%s, ordre=%d%, weight=%f WHERE rec_id=%s%d%s",
+	      dps_snprintf(buf, len, "UPDATE server SET enabled=1, tag='%s', category=%s, command='%c', parent=%s%i%s, ordre=%d%, weight=%s WHERE rec_id=%s%d%s",
 			   DpsVarListFindStr(&Server->Vars, "Tag", ""),
 			   DpsVarListFindStr(&Server->Vars, "Category", "0"),
 			   Server->command,
 			   qu, Server->parent, qu,
 			   Server->ordre,
-			   Server->weight,
+			   server_weight,
 			   qu, rec_id, qu
 			   );
 	    else 
@@ -1899,7 +1903,7 @@ static int DpsStoreCrossWords(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 	/* Insert new words */
 	for(i=0;i<Doc->CrossWords.ncrosswords;i++){
 		if(Doc->CrossWords.CrossWord[i].weight && Doc->CrossWords.CrossWord[i].referree_id){
-			int weight=DPS_WRDCOORD(Doc->CrossWords.CrossWord[i].pos,Doc->CrossWords.CrossWord[i].weight);
+		  int weight = DPS_WRDCOORDL(Doc->CrossWords.CrossWord[i].pos, Doc->CrossWords.CrossWord[i].weight, Doc->CrossWords.CrossWord[i].ulen);
 
 			DpsConv(&Indexer->uni_lc, lcsword, lcslen, 
 				(char*)Doc->CrossWords.CrossWord[i].uword, sizeof(dpsunicode_t) * (Doc->CrossWords.CrossWord[i].ulen + 1));
@@ -2149,7 +2153,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	  urlid_t ot = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 
 	  if (rec_id != 0 && ot != 0) {
-	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "1.0");
+	    const char *weight = DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "1.0"));
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    int is_not_same_site = (rec_id == ot);
 /*	    urlid_t k = rec_id;*/
@@ -2284,7 +2288,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 	if (rc != 0) {
 	    urlid_t ot = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-	    const char *weight = DpsVarListFindStr(&Doc->Sections, "weight", "1.0");
+	    const char *weight = DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "1.0"));
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
 	    int is_not_same_site = (ot == k);
 
@@ -2603,13 +2607,13 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 		sprintf(qbuf, "UPDATE url SET status=%d,next_index_time=%u,bad_since_time=%d,site_id=%s%i%s,server_id=%s%i%s,pop_rank=%s%s%s WHERE rec_id=%s%i%s",
 			status, (unsigned int)next_index_time, (int)Indexer->now, qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, 
-			qu, DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25"), qu, 
+			qu, DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25")), qu, 
 			qu, url_id, qu);
 	  else
 		sprintf(qbuf,"UPDATE url SET status=%d,next_index_time=%u, site_id=%s%i%s,server_id=%s%i%s,pop_rank=%s%s%s WHERE rec_id=%s%i%s",
 			status, (unsigned int)next_index_time, qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, 
-			qu, DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25"), qu, 
+			qu, DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25")), qu, 
 			qu, url_id, qu);
 	}
 
@@ -2707,7 +2711,7 @@ WHERE rec_id=%s%s%s",
 					     (Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 	DpsVarListFindStr(&Doc->Sections, "Next-Index-Time","0"),
 	DpsVarListFindInt(&Doc->Sections,"Content-Length",0),
-	qu, DpsVarListFindStr(&Doc->Sections, "Pop_Rank", "0.25"), qu,
+	qu, DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "Pop_Rank", "0.25")), qu,
 	DpsVarListFindInt(&Doc->Sections,"crc32",0),
 	qsmall,
 	qu, DpsVarListFindInt(&Doc->Sections, "Site_id",0), qu,
@@ -4303,15 +4307,18 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		      while ((pmerg[i].pcur < pmerg[i].plast) && (pmerg[i].pcur->url_id == cur_url_id) ) {
 			Crd->coord = pmerg[i].pcur->coord;
 			if (pmerg[i].secno == 0 || DPS_WRDSEC(Crd->coord) == pmerg[i].secno) {
-			  Crd->url_id = pmerg[i].pcur->url_id;
-			  Crd->coord &= 0xFFFFFF00;
-			  Crd->coord += (Res->items[wordnum].wordnum /*order*/ & 0xFF);
+			  register size_t mlen = (Crd->coord & 0xFF);
+			  if (mlen == 0 || mlen == pmerg[i].ulen) {
+			    Crd->url_id = pmerg[i].pcur->url_id;
+			    Crd->coord &= 0xFFFFFF00;
+			    Crd->coord += (Res->items[wordnum].wordnum /*order*/ & 0xFF);
 #ifdef WITH_MULTIDBADDR
-			  Crd->dbnum = db->dbnum;
+			    Crd->dbnum = db->dbnum;
 /*			fprintf(stderr, "url_id: %x  dbnum:%d\n", Crd->url_id, Crd->dbnum);*/
 #endif		  
-			  pmerg[i].pchecked++;
-			  Crd++;
+			    pmerg[i].pchecked++;
+			    Crd++;
+			  }
 			}
 			pmerg[i].pcur++;
 /*			pmerg[i].count++;*/
@@ -5767,6 +5774,7 @@ typedef struct {
 
 static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num,
 			    int need_count) {
+  char double_str[64];
   DPS_SQLRES	SQLres;
   const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
   char		qbuf[512];
@@ -5865,9 +5873,10 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
 	  dw = delta * DPS_ATOF(DpsSQLValue(&SQLres, j, 1));
 	    
 	  if (fabs(dw) > 0.000000000001) {
+	    dps_snprintf(double_str, sizeof(double_str), "%.12f", dw);
 	    dps_snprintf(qbuf, sizeof(qbuf), 
-			 "UPDATE links SET weight = MAX(%d, MIN(%d, weight + (%.12f))) WHERE k=%s%s%s AND ot=%s%s%s", 
-			 LINK_WEIGHT_LO, LINK_WEIGHT_HI, dw, qu, DpsSQLValue(&SQLres, j, 0), qu, qu, rec_id, qu);
+			 "UPDATE links SET weight = MAX(%d, MIN(%d, weight + (%s))) WHERE k=%s%s%s AND ot=%s%s%s", 
+			 LINK_WEIGHT_LO, LINK_WEIGHT_HI, DpsDBEscDoubleStr(double_str), qu, DpsSQLValue(&SQLres, j, 0), qu, qu, rec_id, qu);
 	    DpsSQLAsyncQuery(db, NULL, qbuf);
 	  }
 	}
@@ -5880,7 +5889,8 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
       }
 
     } else {
-      dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%.12f WHERE rec_id=%s%s%s", (di + Oi)/2, qu, rec_id, qu );
+      dps_snprintf(double_str, sizeof(double_str), "%.12f", (di + Oi)/2);
+      dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
       DpsSQLAsyncQuery(db, NULL, qbuf);
       to_update = 0;
       break;
@@ -5944,7 +5954,8 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
 
     u_it = ( (pdiv = cur_div) > EPS );
 
-    dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%.12f WHERE rec_id=%s%s%s", (di + Oi)/2, qu, rec_id, qu );
+    dps_snprintf(double_str, sizeof(double_str), "%.12f", (di + Oi)/2);
+    dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
     DpsSQLAsyncQuery(db, NULL, qbuf);
 /*    to_update = 0;*/
 	      
@@ -5963,9 +5974,10 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
     }
     DpsSQLFree(&SQLres);
     
-    dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%.12f WHERE rec_id=%s%s%s", nPR, qu, rec_id, qu );
+    dps_snprintf(double_str, sizeof(double_str), "%.12f", nPR);
+    dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
     DpsSQLAsyncQuery(db, NULL, qbuf);
-    DpsLog(A, DPS_LOG_EXTRA, "Neo PopRank: %.12f", nPR);
+    DpsLog(A, DPS_LOG_EXTRA, "Neo PopRank: %s", double_str);
   }
   
 /*  DpsSQLEnd(db);*/
@@ -5977,11 +5989,12 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
 
 static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num,
 			    int need_count) {
+  char		qbuf[512];
+  char          double_str[64];
   DPS_SQLRES	SQLres;
   DPS_LNK /**IN = NULL,*/ *OUT = NULL;
   double pr, nPR;
   const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
-  char		qbuf[512];
   double di = 0.0, Oi = 0.0, delta, pas, pdiv, cur_div, dw, PopRank;
   size_t j, jrows;
   size_t n_di, n_Oi;
@@ -6124,8 +6137,9 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
 
   if (to_update) {
       for (j = 0; j < n_Oi; j++) {
-	dps_snprintf(qbuf, sizeof(qbuf), "UPDATE links SET weight=%.12f WHERE k=%s%d%s AND ot=%s%s%s", 
-		     OUT[j].weight, qu, OUT[j].rec_id, qu, qu, rec_id, qu );
+	dps_snprintf(double_str, sizeof(double_str), "%.12f", OUT[j].weight);
+	dps_snprintf(qbuf, sizeof(qbuf), "UPDATE links SET weight=%s WHERE k=%s%d%s AND ot=%s%s%s", 
+		     DpsDBEscDoubleStr(double_str), qu, OUT[j].rec_id, qu, qu, rec_id, qu );
 	DpsSQLAsyncQuery(db, NULL, qbuf);
       }    
   
@@ -6141,9 +6155,10 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
 	}
       }
       DpsSQLFree(&SQLres);
-      dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%.12f WHERE rec_id=%s%s%s", nPR, qu, rec_id, qu );
+      dps_snprintf(double_str, sizeof(double_str), "%.12f", nPR);
+      dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
       DpsSQLAsyncQuery(db, NULL, qbuf);
-      DpsLog(A, DPS_LOG_EXTRA, "Neo PopRank: %.12f", nPR);
+      DpsLog(A, DPS_LOG_EXTRA, "Neo PopRank: %s", double_str);
   }
 
   /*DPS_FREE(IN);*/ DPS_FREE(OUT);
@@ -6216,6 +6231,8 @@ Calc_unlockNeo:
 }
 
 static int DpsPopRankCalculateGoo(DPS_AGENT *A, DPS_DB *db) {
+	char		qbuf[256];
+	char            ratio_str[64];
 	DPS_SQLRES	SQLres, Res, POPres;
 	int             rc = DPS_ERROR, u = 0;
 	size_t		i, nrows, offset = 0;
@@ -6228,11 +6245,13 @@ static int DpsPopRankCalculateGoo(DPS_AGENT *A, DPS_DB *db) {
 	double          ratio = DpsVarListFindDouble(&A->Vars, "PopRankShowCntWeight", 0.01);
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	const char	*where;
-	char		qbuf[256];
 
 	DpsSQLResInit(&SQLres);
 	DpsSQLResInit(&Res);
 	DpsSQLResInit(&POPres);
+
+	dps_snprintf(ratio_str, sizeof(ratio_str), "%f", ratio);
+	DpsDBEscDoubleStr(ratio_str);
 
 	where = BuildWhere(A, db);
 	if (where == NULL) {
@@ -6350,8 +6369,8 @@ static int DpsPopRankCalculateGoo(DPS_AGENT *A, DPS_DB *db) {
 	    if(DPS_OK != (rc = DpsSQLQuery(db, &SQLres, qbuf))) goto Calc_unlock;
 	    if (*DpsSQLValue(&SQLres, 0, 0)) {
 	      if (use_showcnt) {
-		dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s + (shows * %f) WHERE rec_id=%s%s%s", 
-			     DpsSQLValue(&SQLres, 0, 0), ratio, qu, DpsSQLValue(&Res, i, 0), qu );
+		dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s + (shows * %s) WHERE rec_id=%s%s%s", 
+			     DpsSQLValue(&SQLres, 0, 0), ratio_str, qu, DpsSQLValue(&Res, i, 0), qu );
 	      } else {
 		dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", 
 			     DpsSQLValue(&SQLres, 0, 0), qu, DpsSQLValue(&Res, i, 0), qu );
@@ -6359,8 +6378,8 @@ static int DpsPopRankCalculateGoo(DPS_AGENT *A, DPS_DB *db) {
 	      DpsSQLAsyncQuery(db, NULL, qbuf);
 	    } else {
 	      if (use_showcnt) {
-		dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=(shows * %f) WHERE rec_id=%s%s%s", 
-			     ratio, qu, DpsSQLValue(&Res, i, 0), qu );
+		dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=(shows * %s) WHERE rec_id=%s%s%s", 
+			     ratio_str, qu, DpsSQLValue(&Res, i, 0), qu );
 	      } else {
 		dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=0 WHERE rec_id=%s%s%s", 
 			     qu, DpsSQLValue(&Res, i, 0), qu );

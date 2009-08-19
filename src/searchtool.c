@@ -1709,7 +1709,7 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						) {
   register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : xy /*DPS_PHRASE_FACTOR*/;
   if (D[DPS_N_EXACT] == 0) y += xy;
-  y += x * 0.05 * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
+  y += x * 0.125  * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
 
 #ifdef WITH_REL_WRDCOUNT
   if (D[DPS_N_WRDCOUNT] > R[DPS_N_WRDCOUNT]) {

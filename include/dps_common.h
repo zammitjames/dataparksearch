@@ -325,6 +325,7 @@ typedef struct {
 
 
 #define DPS_WRDCOORD(p,w)	( (((dps_uint4)(p)) << 16) + (((dps_uint4)(w)) << 8) )
+#define DPS_WRDCOORDL(p,w,l)	( (((dps_uint4)(p)) << 16) + (((dps_uint4)(w)) << 8) + (((dps_uint4)(l)) & 255) )
 #define DPS_WRDSEC(c)		( ((c) >> 8) & 0xFF )
 #define DPS_WRDPOS(c)		( (c) >> 16 )
 #define DPS_WRDNUM(c)		( (c) & 0xFF )
