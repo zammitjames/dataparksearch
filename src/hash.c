@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -111,6 +111,8 @@ static dpshash64_t hash64( register const char *k, register size_t length, dpsha
   len = length;
   a = b = level;                         /* the previous hash value */
   c = 0x9e3779b97f4a7c13LL; /* the golden ratio; an arbitrary value */
+
+  if (k == NULL || length == 0) return c;
 
   /*---------------------------------------- handle most of the key */
   while (len >= 24)
@@ -254,6 +256,8 @@ static dpshash32_t __DPSCALL hash32(register const char *k, size_t length, const
 {
    register dpshash32_t a, b, c;
    register size_t len;
+
+   if (k == NULL || length == 0) return initval;
 
    /* Set up the internal state */
    len = length;
