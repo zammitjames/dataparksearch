@@ -43,8 +43,9 @@ int DpsWordListAddFantom(DPS_DOCUMENT *Doc, DPS_WORD *word, int section) {
 	
 	/* Add new word */
 	Doc->Words.Word[Doc->Words.nwords].uword = DpsUniDup(word->uword);
-	Doc->Words.Word[Doc->Words.nwords].coord = DPS_WRDCOORD(Doc->Words.wordpos, section);
+	Doc->Words.Word[Doc->Words.nwords].coord = DPS_WRDCOORDL(Doc->Words.wordpos, section, word->ulen);
 	Doc->Words.Word[Doc->Words.nwords].ulen = word->ulen;
+
 	Doc->Words.nwords++;
 	
 	return(DPS_OK);

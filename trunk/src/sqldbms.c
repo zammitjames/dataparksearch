@@ -2510,6 +2510,7 @@ static int DpsSQLite3Query(DPS_DB *db, DPS_SQLRES *res, const char *q) {
 /*
  *   Wrappers for different databases
  *
+ *   DpsDBEscDoubleStr();
  *   DpsDBEscStr();
  *   DpsSQLQuery();
  *   DpsSQLValue();
@@ -2517,6 +2518,15 @@ static int DpsSQLite3Query(DPS_DB *db, DPS_SQLRES *res, const char *q) {
  *   DpsSQLFree();
  *   DpsSQLClose();
  */  
+
+
+char * DpsDBEscDoubleStr(char *from) {
+  char *p = from;
+  while((p = strchr(p, (int)','))) {
+    *p = '.';
+  }
+  return from;
+}
 
 
 char * DpsDBEscStr(int DBType,char *to,const char *from,size_t len){
