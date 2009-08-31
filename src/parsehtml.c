@@ -1039,7 +1039,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  tag->section_name[tag->level] = (Sec) ? Sec->name : NULL;
 		  if ((tag->level + 2 >= sizeof(tag->visible)) || (((tag->trailend - tag->trail) + name_len + 2) > sizeof(tag->trail)) ) {
 		    DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML, level:%d, trailsize:%d", tag->level, (tag->trailend - tag->trail) + name_len);
-		    DpsLog(Indexer, DPS_LOG_WARN, " -- trail: %s", tag->trail);
+		    DpsLog(Indexer, DPS_LOG_DEBUG, " -- trail: %s", tag->trail);
 #ifdef WITH_PARANOIA
 		    DpsViolationExit(Indexer->handle, paran);
 #endif

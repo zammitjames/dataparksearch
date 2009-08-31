@@ -909,10 +909,10 @@ RobotsPeriod 30d
 <sect2 id="crawldelay_cmd">
 <title>Команда <command>CrawlDelay</command></title>
 <para><indexterm><primary>Команда</primary><secondary>CrawlDelay</secondary></indexterm>
-Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу.. 
-Аналогична команде crawl-delay в файле <filename>robots.txt</filename>, но может быть заданав <filename>indexer.conf</filename> 
+Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу. 
+Аналогична команде crawl-delay в файле <filename>robots.txt</filename>, но может быть задана в <filename>indexer.conf</filename> 
 файле для каждого сервера в отдельности. Если не задано значение crawl-delay value в <filename>robots.txt</filename>, 
-bcgjkmpetncz значение, указаное в <command>CrawlDelay</command>. 
+используется значение, указаное в <command>CrawlDelay</command>. 
 Если значение crawl-delay указано в <filename>robots.txt</filename>, тогда используется максимальное значение из
 <command>CrawlDelay</command> и crawl-delay.
 </para>

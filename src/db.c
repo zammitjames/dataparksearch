@@ -338,7 +338,7 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	  }
 	  next_index_time = mktime(&nowtime);
 	} else {
-	  if (Doc->Spider.Server->crawl_delay > 0) Indexer->now += Doc->Spider.Server->crawl_delay;
+	  if (Doc->Spider.Server->crawl_delay > 0) Indexer->now += (Doc->Spider.Server->crawl_delay / 1000) + 1;
 	  next_index_time = Indexer->now + Doc->Spider.Server->period[hops];
 	}
 
