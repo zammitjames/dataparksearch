@@ -2032,7 +2032,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    if (pmerg[npmerge]->db_pbegin == NULL) {
 
 	      pmerg[npmerge]->count = 0;
-	      DpsLog(Indexer, DPS_LOG_EXTRA, "No data for %dth word or error occured", i, __FILE__, __LINE__);
+	      DpsLog(Indexer, DPS_LOG_EXTRA, "No data for %dth word or error occured (%s:%d)", i, __FILE__, __LINE__);
 	      continue;
 	    }
 	    pmerg[npmerge]->count = num = RemoveOldCrds(pmerg[npmerge]->db_pcur, orig_size / sizeof(DPS_URL_CRD), del_buf, del_count);
@@ -2040,7 +2040,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    if (pmerg[npmerge]->pbegin == NULL) {
 
 	      pmerg[npmerge]->count = 0;
-	      DpsLog(Indexer, DPS_LOG_EXTRA, "No data for %dth word or error occured", i, __FILE__, __LINE__);
+	      DpsLog(Indexer, DPS_LOG_EXTRA, "No data for %dth word or error occured (%s:%d)", i, __FILE__, __LINE__);
 	      continue;
 	    }
 		

@@ -950,16 +950,6 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     DpsMatchApply(buf, buf_len - 1, buf_content, Alias->arg, Alias, nparts, Parts);
 /*    fprintf(stderr, " -- Alias:%s, after match apply: %s\n", Alias->section, buf);*/
 
-    if (Sec->maxlen) {
-      bzero((void*)&S, sizeof(S));
-      S.name = Sec->name;
-      S.section = Sec->section;
-      S.strict = Sec->strict;
-      S.maxlen = Sec->maxlen;
-      S.val = buf;
-      DpsVarListAdd(&Doc->Sections, &S);
-    }
-
     Item.href = NULL;
     Item.section = Sec->section;
     Item.strict = Sec->strict;

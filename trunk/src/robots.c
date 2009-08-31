@@ -156,7 +156,7 @@ static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int
 #endif
 
 	if (cmd == DPS_METHOD_CRAWLDELAY) {
-	  robot->crawl_delay = DPS_ATOI(path);
+	  robot->crawl_delay = 1000 * DPS_ATOF(path);
 	} 
 	{
 
@@ -479,12 +479,12 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 	      now = time(NULL);
 	      diff = (size_t) (now - *(Server->last_crawled));
-	      while (diff < Server->crawl_delay) {
-		to_sleep = Server->crawl_delay - diff;
+	      while (1000 * diff < Server->crawl_delay) {
+		to_sleep = Server->crawl_delay - diff * 1000;
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
-		DpsLog(Indexer, DPS_LOG_EXTRA, "Server.%s.Crawl-delay: %d of %d sec.", 
+		DpsLog(Indexer, DPS_LOG_EXTRA, "Server.%s.Crawl-delay: %d of %d msec.", 
 		       Server->Match.pattern, to_sleep, Server->crawl_delay);
-		DPS_MSLEEP(1000 * to_sleep + 500);
+		DPS_MSLEEP(to_sleep);
 		DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 		now = time(NULL);
 		diff = (size_t) (now - *(Server->last_crawled));
@@ -499,12 +499,12 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 	      now = time(NULL);
 	      diff = (size_t) (now - *(robot->last_crawled));
-	      while (diff < robot->crawl_delay) {
-		to_sleep = robot->crawl_delay - diff;
+	      while (1000 * diff < robot->crawl_delay) {
+		to_sleep = robot->crawl_delay - 1000 * diff;
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
-		DpsLog(Indexer, DPS_LOG_EXTRA, "%s/robots.txt: Crawl-delay: %d of %d sec.", 
+		DpsLog(Indexer, DPS_LOG_EXTRA, "%s/robots.txt: Crawl-delay: %d of %d msec.", 
 		       robot->hostinfo, to_sleep, robot->crawl_delay);
-		DPS_MSLEEP(1000 * to_sleep + 500);
+		DPS_MSLEEP(to_sleep);
 		DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 		now = time(NULL);
 		diff = (size_t) (now - *(robot->last_crawled));

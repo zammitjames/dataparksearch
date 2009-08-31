@@ -1594,16 +1594,15 @@ static int srv_rpl_time_var(void *Cfg, size_t ac,char **av){
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	time_t	res;
 
-	if (strcasecmp(av[0], "PeriodByHops")) {
+	if (!strcasecmp(av[0], "CrawlDelay")) {
+	  C->Srv->crawl_delay = (time_t)(1000 * DPS_ATOF(av[1]));
+	} else if (strcasecmp(av[0], "PeriodByHops")) {
 	  res = Dps_dp2time_t(av[1]);
 	  if(res==-1){
 		dps_snprintf(Conf->errstr,  sizeof(Conf->errstr) - 1, "bad time interval: %s", av[1]);
 		return DPS_ERROR;
 	  }
 	  DpsVarListReplaceUnsigned(&C->Srv->Vars, av[0], (unsigned)res);
-	  if (!strcasecmp(av[0], "CrawlDelay")) {
-	    C->Srv->crawl_delay = res;
-	  }
 	  
 	} else {
 	  char str[64];

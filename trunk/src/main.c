@@ -993,7 +993,7 @@ static void * thread_main(void *arg){
           }
           if((milliseconds)&&(!done)){
                DpsLog(Indexer,DPS_LOG_DEBUG,"Sleeping %d millisecond(s)", milliseconds);
-               Indexer->nsleepsecs += milliseconds - DPS_MSLEEP(milliseconds);
+               Indexer->nsleepsecs += milliseconds * (DPS_MSLEEP(milliseconds) == 0);
           }
      }
 
