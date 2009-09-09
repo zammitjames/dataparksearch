@@ -550,9 +550,11 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		curwrd++;
 	}
 	if (Indexer->Flags.use_crosswords) {
+	  dps_uint4 posadd = (curwrd) ? (wrd[curwrd-1].coord & 0xFFFF0000) : 0;
 	  for (i = 0; i < DpsSQLNumRows(&SQLres); i++) {
 	    wrd[curwrd].coord = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
 	    if (wrd[curwrd].coord == 0) continue;
+	    wrd[curwrd].coord += posadd;
 	    wrd[curwrd].wrd_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 0));
 	    curwrd++;
 	  }
