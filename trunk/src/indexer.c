@@ -1002,26 +1002,14 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   if (buf == NULL) return DPS_OK;
 
   {
-    char qbuf[16384]/*, cbuf[16384]*/;
+    char qbuf[16384];
     DPS_TEMPLATE t;
     DPS_DBLIST      dbl;
     DPS_DB *db;
-/*    const char	*doccset;
-    DPS_CHARSET	*doccs, *loccs;
-    DPS_CONV	dc_lc;*/
     bzero(&t, sizeof(t));
     t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = NULL;
     t.Env_Vars = &Doc->Sections;
-/*
-    doccset=DpsVarListFindStr(&Doc->Sections,"Charset",NULL);
-    if(!doccset||!*doccset)doccset=DpsVarListFindStr(&Doc->Sections,"RemoteCharset","iso-8859-1");
-    doccs=DpsGetCharSet(doccset);
-    if(!doccs)doccs=DpsGetCharSet("iso-8859-1");
-    loccs = Doc->lcs;
-    if (!loccs) loccs = Indexer->Conf->lcs;
-    if (!loccs) loccs = DpsGetCharSet("iso-8859-1");
-    DpsConvInit(&dc_lc, doccs, loccs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
-*/
+
     for (i = 0; i < Indexer->Conf->ActionSQLMatch.nmatches; i++) {
       DPS_TEXTLIST	*tlist = &Doc->TextList;
       Alias = &Indexer->Conf->ActionSQLMatch.Match[i];
@@ -1041,7 +1029,6 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	if (strcasecmp(Item->section_name, Alias->section)) continue;
 	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) continue;
 	DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
-/*	DpsConv(&dc_lc, cbuf, sizeof(cbuf), buf, buf_len);*/
 	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
 	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
       }
@@ -1053,6 +1040,68 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_FREE(buf);
   return DPS_OK;
 }
+
+
+static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
+  DPS_MATCH       *Alias;
+  DPS_MATCH_PART  Parts[10];
+  DPS_SQLRES	SQLres;
+  size_t nparts = 10;
+  DPS_VAR *Sec;
+  char *buf;
+  DPS_TEXTITEM Item;
+  size_t i, z, buf_len;
+
+  if (Indexer->Conf->SectionSQLMatch.nmatches == 0) return DPS_OK;
+
+  buf = (char*)DpsMalloc(buf_len = (Doc->Buf.size + 1024));
+  if (buf == NULL) return DPS_OK;
+
+  {
+    DPS_TEMPLATE t;
+    DPS_DBLIST      dbl;
+    DPS_DB *db;
+    bzero(&t, sizeof(t));
+    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = NULL;
+    t.Env_Vars = &Doc->Sections;
+
+    DpsSQLResInit(&SQLres);
+    Item.href = NULL;
+
+    for (i = 0; i < Indexer->Conf->SectionSQLMatch.nmatches; i++) {
+      DPS_TEXTLIST	*tlist = &Doc->TextList;
+      Alias = &Indexer->Conf->SectionSQLMatch.Match[i];
+
+      Sec = DpsVarListFind(&Indexer->Conf->Sections, Alias->section);
+      if (! Sec) continue;
+      if (Alias->dbaddr != NULL) {
+	DpsDBListInit(&dbl);
+	DpsDBListAdd(&dbl, Alias->dbaddr, DPS_OPEN_MODE_READ);
+	db = &dbl.db[0];
+      } else {
+	db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[0] :  &Indexer->dbl.db[0];
+      }
+      DpsPrintTextTemplate(Indexer, NULL, NULL, buf, buf_len, &t, Alias->arg);
+      if (DPS_OK != DpsSQLQuery(db, &SQLres, buf)) DpsLog(Indexer, DPS_ERROR, "SectionSQL error");
+      for (i = 0; i < DpsSQLNumRows(&SQLres); i++) {
+	Item.str = DpsSQLValue(&SQLres, i, 0);
+	Item.section = Sec->section;
+	Item.strict = Sec->strict;
+	Item.section_name = Sec->name;
+	Item.len = 0;
+	DpsTextListAdd(&Doc->TextList, &Item);
+      }
+      if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
+    }  
+    DpsTemplateFree(&t);
+  }
+
+  DpsSQLFree(&SQLres);
+  DPS_FREE(buf);
+  return DPS_OK;
+}
+
+
 
 #ifdef HAVE_LIBEXTRACTOR
 static const char * DpsLibextractorMsgName(int type) {
@@ -1485,7 +1534,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    }
 	  }
 	}
-
+	if (result == DPS_OK) result = DpsSQLSections(Indexer, Doc);
 
 	return result;
 }

@@ -84,6 +84,7 @@ void DpsMatchFree(DPS_MATCH * Match){
 	DPS_FREE(Match->arg);
 	DPS_FREE(Match->section);
 	DPS_FREE(Match->subsection);
+	DPS_FREE(Match->dbaddr);
 	if(Match->reg){
 		regfree((regex_t*)Match->reg);
 		DPS_FREE(Match->reg);
@@ -295,13 +296,14 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	}
 	N=&L->Match[L->nmatches++];
 	DpsMatchInit(N);
-	N->pattern = (char*)DpsStrdup(M->pattern);
+	N->pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(M->pattern));
 	N->match_type=M->match_type;
 	N->case_sense=M->case_sense;
 	N->nomatch=M->nomatch;
-	N->arg = M->arg ? (char*)DpsStrdup(M->arg) : NULL;
+	N->arg = M->arg ? (char*)DpsStrdup(DPS_NULL2EMPTY(M->arg)) : NULL;
 	N->section = M->section ? (char *)DpsStrdup(M->section) : NULL;
 	N->subsection = M->subsection ? (char *)DpsStrdup(M->subsection) : NULL;
+	N->dbaddr = M->dbaddr ? (char *)DpsStrdup(M->dbaddr) : NULL;
 	N->last = M->last;
 
 	if (A != NULL) {

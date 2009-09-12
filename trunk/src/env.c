@@ -117,6 +117,7 @@ void DpsEnvFree(DPS_ENV * Env){
 	DpsMatchListFree(&Env->HrefSectionMatch);
 	DpsMatchListFree(&Env->SubSectionMatch);
 	DpsMatchListFree(&Env->ActionSQLMatch);
+	DpsMatchListFree(&Env->SectionSQLMatch);
 	DpsMatchListFree(&Env->BodyPatterns);
 	DpsMatchListFree(&Env->QAliases);
 	

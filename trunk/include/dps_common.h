@@ -973,6 +973,7 @@ typedef struct dps_config_struct {
         DPS_MATCHLIST   BodyPatterns;   /**< Body extraction patterns   */
         DPS_MATCHLIST   ActionSQLMatch; /**< ActionSQL patterns         */
 	DPS_MATCHLIST	QAliases;	/**< query word aliases         */
+        DPS_MATCHLIST   SectionSQLMatch;/**< SectionSQL queries         */
 	
 	DPS_RESULT	Targets;	/**< Targets cache              */
 	
