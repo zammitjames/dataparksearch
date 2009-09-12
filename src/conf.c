@@ -714,6 +714,59 @@ static int add_section(void *Cfg, size_t ac,char **av){
 }
 
 
+static int add_sectionsql(void *Cfg, size_t ac,char **av){
+	char err[128] = "";
+	DPS_CFG	*C=(DPS_CFG*)Cfg;
+	DPS_ENV	*Conf=C->Indexer->Conf;
+	DPS_VAR S;
+	DPS_MATCH M;
+	int shift = 0;
+
+	if (ac < 4 || ac > 7) {
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "wrong number (%d) of arguments for SectionSQL command", ac);
+	  return DPS_ERROR;
+	}
+
+	bzero((void*)&S, sizeof(S));
+
+	if (ac == 5) {
+	  if (strcasecmp(av[4], "strict") == 0) {
+	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments is \"strict\", perhaps SQLtemplate is missed for SectionSQL command");
+	    return DPS_ERROR;
+	  }
+	}
+
+	S.name = av[1];
+	S.section = atoi(av[2]);
+	S.maxlen = ((ac > 2) && av[3]) ? atoi(av[3]) : 0;
+	if (ac > 4 && !strcasecmp(av[4], "strict")) {
+	  S.strict = 1;
+	  shift = 1;
+	}
+
+	if (ac == 5 || ac == 6) {
+
+	  if(!(C->flags & DPS_FLAG_ADD_SERV))
+	    return DPS_OK;
+
+	  DpsMatchInit(&M);
+	  M.match_type = DPS_MATCH_BEGIN;
+	  M.case_sense = 1;
+	  M.section = av[1];
+	  M.pattern = ".";
+	  M.arg = av[shift + 4];
+	  M.dbaddr = (ac == 5 + shift) ? NULL : av[5]; 
+	  if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->SectionSQLMatch, &M, err, sizeof(err), ++C->ordre)) {
+	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "SectionSQLMatch Add: %s", err);
+	    return DPS_ERROR;
+	  }
+	}
+
+	DpsVarListReplace(&Conf->Sections, &S);
+	return DPS_OK;
+}
+
+
 static int add_body_pattern(void *Cfg, size_t ac, char **av) {
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
@@ -775,7 +828,6 @@ static int add_hrefsection(void *Cfg, size_t ac,char **av){
 static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
-/*	DPS_VAR S;*/
 	DPS_MATCH M;
 	char err[128] = "";
 
@@ -784,14 +836,8 @@ static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	  return DPS_ERROR;
 	}
 
-/*	bzero((void*)&S, sizeof(S));
-	S.name = av[1];
-	S.section = 0;
-	S.maxlen = 0;
-*/
+	if(!(C->flags & DPS_FLAG_ADD_SERV)) return DPS_OK;
 
-	if (!(C->flags & DPS_FLAG_ADD_SERV)) return DPS_OK;
-	
 	DpsMatchInit(&M);
 	M.match_type = DPS_MATCH_REGEX;
 	M.case_sense = 1;
@@ -803,7 +849,6 @@ static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "%s", err);
 	  return DPS_ERROR;
 	}
-/*	DpsVarListReplace(&Conf->ActionSQLSections, &S);*/
 	return DPS_OK;
 }
 

@@ -400,7 +400,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					DPS_DOCUMENT	*D=&Res->Doc[i];
 					
 					al = DpsVarListFindStrTxt(&D->Sections, "URL", "");
-					DpsLog(Agent, DPS_LOG_DEBUG, "Start excerpts for %s", al);
+					DpsLog(Agent, DPS_LOG_DEBUG, "Start excerpts for %s [dbnum:%d]", al, D->dbnum);
 
 					if (Agent->Flags.do_excerpt) Excerpt = DpsExcerptDoc(Agent, Res, D, ExcerptSize, ExcerptPadding);
 
