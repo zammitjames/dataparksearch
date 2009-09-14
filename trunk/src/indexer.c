@@ -2084,7 +2084,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		  return result;
 		}
 
-		{
+		if(status == DPS_HTTP_STATUS_OK || status == DPS_HTTP_STATUS_PARTIAL_OK) {
 		  DPS_CHARSET *parent_cs = DpsGetCharSetByID(Parent->charset_id), *doc_cs = Doc->lcs; /*DpsGetCharSetByID(Doc->charset_id);*/
 		  DPS_CONV     dc_parent;
 		  DPS_TEXTLIST *tlist = &Doc->TextList;
