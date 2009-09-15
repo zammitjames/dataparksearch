@@ -43,6 +43,7 @@
 #include "dps_acronym.h"
 #include "dps_charsetutils.h"
 #include "dps_guesser.h"
+#include "dps_match.h"
 
 #include <stdlib.h>
 #include <fcntl.h>
@@ -74,6 +75,7 @@
 #endif
 
 #define DEBUG_CACHE
+#define MULTITHREADED_SORT
 
 /*
 #define DEBUG_PHRASES
@@ -208,8 +210,22 @@ void DpsSortSearchWordsByURL0(DPS_URL_CRD *wrd, size_t num){
 #define med3(func, a, b, c, L, pattern)  (func(L, a, b, pattern) < 0 ?	\
 					  (func(L, b, c, pattern) < 0 ? (b) : (func(L, a, c, pattern) < 0 ? (c) : (a))) \
 					  : (func(L, b, c, pattern) > 0 ? (b) : (func(L, a, c, pattern) < 0 ? (a) : (c))))
+#define MIN_SLICE 9
+#define MIDDLE_SLICE 40
 
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+#define SORT_THREADS 32
+#define THREAD_SLICE 128
+static int sort_threads = SORT_THREADS;
+#endif
 
+typedef struct {
+  DPS_RESULT *Res;
+  DPS_URLCRDLIST *L;
+  const char *pattern;
+  size_t l, r;
+  int merge;
+} DPS_SORT_PARAM;
 
 static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t r, const char *pattern, int merge) {
   DPS_URL_CRD_DB Crd;
@@ -223,7 +239,7 @@ static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, 
   pm = (p + r) / 2;
   pl = p;
   pn = r;
-  if ( (d = (r - p)) > 40) {
+  if ( (d = (r - p)) > MIDDLE_SLICE) {
     d /= 8;
     pl = med3(DpsCmpSiteid, pl, pl + d, pl + 2 * d, L, pattern);
     pm = med3(DpsCmpSiteid, pm - d, pm, pm + d, L, pattern);
@@ -261,23 +277,35 @@ static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, 
 
 
 
-static void DpsQsortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t r, const char *pattern, int merge) {
-
+static void * DpsQsortSearchWordsBySite(void *arg) {
+  DPS_SORT_PARAM *P = (DPS_SORT_PARAM*)arg;
   DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK Trk;
 #endif
-  size_t l = p, q;
+  size_t l = P->l, r = P->r, q, d;
   size_t PerS;
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+  DPS_SORT_PARAM PAR[SORT_THREADS];
+  pthread_t tid[SORT_THREADS];
+  size_t ptid = 0;
+#endif
 
  DpsQsortBySiteLoop:
-  if (l >= r) return;
-  if (r - l <= 7) {
+  if (l >= r) {
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+#endif
+    return NULL;
+  }
+  if ((d = r - l) <= MIN_SLICE) {
     register size_t i, j;
+    DPS_RESULT *Res = P->Res;
+    DPS_URLCRDLIST *L = P->L;
 
     for (j = l + 1; j <= r; j++) {
-      for (i = j; (i > l) && (DpsCmpSiteid(L, i - 1, i, pattern) > 0); i--) {
+      for (i = j; (i > l) && (DpsCmpSiteid(L, i - 1, i, P->pattern) > 0); i--) {
 	  Crd = L->Coords[i];
 	  Dat = L->Data[i];
 	  L->Coords[i] = L->Coords[i - 1];
@@ -289,23 +317,43 @@ static void DpsQsortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t
 	  L->Track[i] = L->Track[i - 1];
 	  L->Track[i - 1] = Trk;
 #endif
-	  if (merge) {
+	  if (P->merge) {
 	    PerS = Res->PerSite[i];
 	    Res->PerSite[i] = Res->PerSite[i - 1];
 	    Res->PerSite[i - 1] = PerS;
 	  }
       }
     }
-
-    return;
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+#endif
+    return NULL;
   }
-  q = DpsPartitionSearchWordsBySite(Res, L, l, r, pattern, merge);
+  q = DpsPartitionSearchWordsBySite(P->Res, P->L, l, r, P->pattern, P->merge);
   if (q == r) { 
     r--; 
     goto DpsQsortBySiteLoop; 
   }
-  DpsQsortSearchWordsBySite(Res, L, l, q, pattern, merge);
-  l = q + 1;
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+  if (d >= THREAD_SLICE && sort_threads > 0) {
+    PAR[ptid] = *P;
+    PAR[ptid].r = q;
+    if (pthread_create(&tid[ptid], NULL, &DpsQsortSearchWordsBySite, &PAR[ptid]) == 0) {
+      sort_threads--;
+      ptid++;
+    } else {
+      DPS_SORT_PARAM PP = *P;
+      PP.r = q;
+      DpsQsortSearchWordsBySite(&PP);
+    }
+  } else 
+#endif
+  {
+    DPS_SORT_PARAM PP = *P;
+    PP.r = q;
+    DpsQsortSearchWordsBySite(&PP);
+  }
+  P->l = l = q + 1;
   goto DpsQsortBySiteLoop;
   
 
@@ -313,8 +361,17 @@ static void DpsQsortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t
 
 
 void DpsSortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, const char *pattern) {
-
-  if (num > 1) DpsQsortSearchWordsBySite(Res, L, 0, num - 1, pattern, (Res->PerSite != NULL));
+  
+  if (num > 1) {
+    DPS_SORT_PARAM P;
+    P.Res = Res;
+    P.L = L;
+    P.l = 0;
+    P.r = num - 1;
+    P.pattern = pattern;
+    P.merge = (Res->PerSite != NULL);
+    DpsQsortSearchWordsBySite(&P);
+  }
 
 }
 
@@ -332,7 +389,7 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
   pm = (p + r) / 2;
   pl = p;
   pn = r;
-  if ( (d = (r - p)) > 40) {
+  if ( (d = (r - p)) > MIDDLE_SLICE) {
     d /= 8;
     pl = med3(DpsCmpPattern, pl, pl + d, pl + 2 * d, L, pattern);
     pm = med3(DpsCmpPattern, pm - d, pm, pm + d, L, pattern);
@@ -369,24 +426,36 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
 }
 
 
-static void DpsQsortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t q, const char *pattern) {
-
-  size_t l = p, r = q, c;
+static void * DpsQsortSearchWordsByPattern(void *arg) {
+  DPS_SORT_PARAM *P = (DPS_SORT_PARAM*)arg;
+  size_t l = P->l, r = P->r, c, d;
   size_t Cnt = 1;
   DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK Trk;
 #endif
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+  DPS_SORT_PARAM PAR[SORT_THREADS];
+  pthread_t tid[SORT_THREADS];
+  size_t ptid = 0;
+#endif
 
  DpsQsortByPatternLoop:
-  if (l >= r) return;
-  if (r - l <= 7) {
+  if (l >= r) {
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+#endif
+    return NULL;
+  }
+  if ((d = r - l) <= MIN_SLICE) {
     register size_t i, j;
+    DPS_RESULT *Res = P->Res;
+    DPS_URLCRDLIST *L = P->L;
 
     for (j = l + 1; j <= r; j++) {
 
-      for (i = j; i > l && (DpsCmpPattern(L, i - 1, i, pattern) > 0); i--) {
+      for (i = j; i > l && (DpsCmpPattern(L, i - 1, i, P->pattern) > 0); i--) {
 	Crd = L->Coords[i];
 	Dat = L->Data[i];
 	L->Coords[i] = L->Coords[i - 1];
@@ -406,15 +475,36 @@ static void DpsQsortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, siz
       }
 
     }
-    return;
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+#endif
+    return NULL;
   }
-  c = DpsPartitionSearchWordsByPattern(Res, L, l, r, pattern);
+  c = DpsPartitionSearchWordsByPattern(P->Res, P->L, l, r, P->pattern);
   if (c == r) { 
     r--; 
     goto DpsQsortByPatternLoop; 
+  } 
+#if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
+  if (d >= THREAD_SLICE && sort_threads > 0) {
+    PAR[ptid] = *P;
+    PAR[ptid].r = c;
+    if (pthread_create(&tid[ptid], NULL, &DpsQsortSearchWordsByPattern, &PAR[ptid]) == 0) {
+      sort_threads--;
+      ptid++;
+    } else {
+      DPS_SORT_PARAM PP = *P;
+      PP.r = c;
+      DpsQsortSearchWordsBySite(&PP);
+    }
+  } else 
+#endif
+  {
+    DPS_SORT_PARAM PP = *P;
+    PP.r = c;
+    DpsQsortSearchWordsByPattern(&PP);
   }
-  DpsQsortSearchWordsByPattern(Res, L, l, c, pattern);
-  l = c + 1;
+  P->l = l = c + 1;
   goto DpsQsortByPatternLoop;
   
 
@@ -423,7 +513,16 @@ static void DpsQsortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, siz
 
 void DpsSortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, const char *pattern) {
 
-  if (num > 1) DpsQsortSearchWordsByPattern(Res, L, 0, num - 1, pattern);
+  if (num > 1) {
+    DPS_SORT_PARAM P;
+    P.Res = Res;
+    P.L = L;
+    P.l = 0;
+    P.r = num - 1;
+    P.merge = 0;
+    P.pattern = pattern;
+    DpsQsortSearchWordsByPattern(&P);
+  }
 
 }
 
