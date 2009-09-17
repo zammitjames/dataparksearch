@@ -1507,7 +1507,7 @@ unlock_StoreWordsMulti:
 
 static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
   size_t	i, lcslen;
-	char	qbuf[256]="";
+	char	qbuf[512]="";
 	char    *word_escaped, *lcsword;
 	int	rc=DPS_OK;
 	urlid_t	url_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
@@ -1607,12 +1607,12 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 
 					if(db->DBMode==DPS_DBMODE_SINGLE){
 					  DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
-					  dps_snprintf(qe, (size_t)(qe - qb), "('%s',%d,%d)", word_escaped, url_id, Doc->Words.Word[i].coord);
+					  dps_snprintf(qe, mlen - (size_t)(qe - qb), "('%s',%d,%d)", word_escaped, url_id, Doc->Words.Word[i].coord);
 					  qe = DPS_STREND(qe);
 					}else
 					if(db->DBMode==DPS_DBMODE_SINGLE_CRC){
-						sprintf(qe,"(%i,%d,%d)", url_id, DpsStrHash32(lcsword), Doc->Words.Word[i].coord);
-						qe=qe+dps_strlen(qe);
+					  dps_snprintf(qe, mlen - (size_t)(qe-qb), "(%i,%d,%d)", url_id, DpsStrHash32(lcsword), Doc->Words.Word[i].coord);
+					  qe = DPS_STREND(qe);
 					}
 					if(qe>qb+DPS_MAX_MULTI_INSERT_QSIZE)
 						break;
@@ -1635,10 +1635,10 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 
 			if(db->DBMode==DPS_DBMODE_SINGLE){
 			  DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
-			  sprintf(qbuf,"INSERT INTO dict (url_id,word,intag) VALUES(%s%i%s,'%s',%d)", qu, url_id, qu, 
+			  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO dict (url_id,word,intag)VALUES(%s%i%s,'%s',%d)", qu, url_id, qu, 
 				  word_escaped, Doc->Words.Word[i].coord);
 			}else{
-				sprintf(qbuf,"INSERT INTO ndict (url_id,word_id,intag) VALUES(%s%i%s,%d,%d)", qu, url_id, qu,
+			  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO ndict (url_id,word_id,intag)VALUES(%s%i%s,%d,%d)", qu, url_id, qu,
 					DpsStrHash32(lcsword), Doc->Words.Word[i].coord);
 			}
 			if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf)))
