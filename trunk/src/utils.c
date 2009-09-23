@@ -2028,9 +2028,23 @@ int ARGC;
 char **ARGV;
 char **ENVP;
 
+static char *endargv = (char *)NULL, *beginargv = (char*)NULL, *start;
+static char **new_environ = NULL;
+
+void DpsDeInit(void) {
+
+  if (new_environ) {
+    size_t i;
+    for (i = 0; new_environ[i]; i++) DPS_FREE(new_environ[i]);
+    DPS_FREE(new_environ);
+  }
+
+}
+
+
 #ifndef HAVE_SETPROCTITLE
+
 void dps_setproctitle( const char *fmt, ... ) {
-  static char *endargv = (char *)NULL, *beginargv = (char*)NULL, *start;
   char	*s;
   int		i;
   char	buf[ 1024 ];
@@ -2044,7 +2058,6 @@ void dps_setproctitle( const char *fmt, ... ) {
   va_end(ap);
 
   if ( endargv == (char *)NULL ) {
-    char **new_environ;
     for (i = 0; i < ARGC; i++) {
       if (!beginargv) beginargv = ARGV[i];
       if (!endargv || endargv + 1 == ARGV[i]) endargv = ARGV[i] + dps_strlen(ARGV[i]);
