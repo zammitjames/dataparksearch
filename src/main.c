@@ -1687,6 +1687,7 @@ ex:
        DPS_FREE(DpsARGV);
      }
      
+     DpsDeInit();
 
 #ifdef EFENCE
      fprintf(stderr, "Memory leaks checking\n");

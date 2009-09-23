@@ -891,6 +891,8 @@ end:
 	DPS_FREE(query_string);
 	DPS_FREE(url);
 	DPS_FREE(nav);
+
+	DpsDeInit();
 	
 #ifdef EFENCE
 	fprintf(stderr, "Memory leaks checking\n");
