@@ -75,7 +75,7 @@ static int udb_free_result(DPS_SQLRES *res){
 
 static int DpsMySQLInit(DPS_DB *db){
 	mysql_init(&(db->mysql));
-	if(!(mysql_real_connect(&(db->mysql),db->addr.hostname,db->DBUser,db->DBPass,db->DBName?db->DBName:"search",(unsigned)db->addr.port,db->DBSock,0))){
+	if(!(mysql_real_connect(&(db->mysql),db->addrURL.hostname,db->DBUser,db->DBPass,db->DBName?db->DBName:"search",(unsigned)db->addrURL.port,db->DBSock,0))){
 		db->errcode=1;
 		sprintf(db->errstr,"MySQL driver: #%d: %s",mysql_errno(&db->mysql),mysql_error(&db->mysql));
 		return DPS_ERROR;
@@ -237,8 +237,8 @@ static int DpsMySQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query) {
 static int DpsPgSQLInitDB(DPS_DB *db){
 	char port[8];
 
-	sprintf(port,"%d",db->addr.port);
-	db->pgsql = PQsetdbLogin(db->DBSock ? db->DBSock:db->addr.hostname, db->addr.port?port:0, 0, 0, db->DBName, db->DBUser, db->DBPass);
+	sprintf(port,"%d",db->addrURL.port);
+	db->pgsql = PQsetdbLogin(db->DBSock ? db->DBSock:db->addrURL.hostname, db->addrURL.port?port:0, 0, 0, db->DBName, db->DBUser, db->DBPass);
 	if (PQstatus(db->pgsql) == CONNECTION_BAD){
 		db->errcode = 1;
 		return DPS_ERROR;
@@ -382,8 +382,8 @@ static int DpsMSQLInitDB(DPS_DB *db){
 	/* To hide "never used" warning */
 	if(msqlTypeNames[0][0]);
 	
-	if((host=db->addr.hostname))
-		if(!strcmp(db->addr.hostname,"localhost"))
+	if((host=db->addrURL.hostname))
+		if(!strcmp(db->addrURL.hostname,"localhost"))
 			host=NULL;
 	if((db->msql=msqlConnect(host))<0){
 		db->errcode=1;
@@ -561,9 +561,9 @@ static int DpsODBCInitDB(DPS_DB *db){
 	char DSN[512]="";
 
 #if (HAVE_SOLID)
-	dps_snprintf(DSN,sizeof(DSN)-1,"tcp %s %d",db->addr.hostname?db->addr.hostname:"localhost",db->addr.port?db->addr.port:1313);
+	dps_snprintf(DSN,sizeof(DSN)-1,"tcp %s %d",db->addrURL.hostname?db->addrURL.hostname:"localhost",db->addrURL.port?db->addrURL.port:1313);
 #elif (HAVE_SAPDB)
-	dps_snprintf(DSN,sizeof(DSN)-1,"%s:%s",db->addr.hostname?db->addr.hostname:"localhost",db->DBName?db->DBName:"");
+	dps_snprintf(DSN,sizeof(DSN)-1,"%s:%s",db->addrURL.hostname?db->addrURL.hostname:"localhost",db->DBName?db->DBName:"");
 #else
 	dps_strncpy(DSN,db->DBName?db->DBName:"",sizeof(DSN)-1);
 #endif
@@ -693,8 +693,8 @@ static int DpsIBaseInitDB(DPS_DB *db){
 
 	dpb_length = dpb - dpb_buffer;
 	
-	if(strcmp(db->addr.hostname,"localhost"))
-		dps_snprintf(connect_string,sizeof(connect_string)-1,"%s:%s",db->addr.hostname, db->DBName);
+	if(strcmp(db->addrURL.hostname,"localhost"))
+		dps_snprintf(connect_string,sizeof(connect_string)-1,"%s:%s",db->addrURL.hostname, db->DBName);
 	else
 		dps_snprintf(connect_string,sizeof(connect_string)-1,"%s",db->DBName);
 	
@@ -1965,8 +1965,8 @@ static int DpsCTLIBInitDB(DPS_DB *db)
 	}
 	if (retcode == CS_SUCCEED)
 	{
-		len = (db->addr.hostname == NULL) ? 0 : CS_NULLTERM;
-		retcode = ct_connect(db->conn,db->addr.hostname,len);
+		len = (db->addrURL.hostname == NULL) ? 0 : CS_NULLTERM;
+		retcode = ct_connect(db->conn,db->addrURL.hostname,len);
 		if (retcode != CS_SUCCEED)
 		{
 			dps_snprintf(db->errstr,sizeof(db->errstr)-1,"ct_connect failed: %s",sybsrvmsg);

@@ -108,7 +108,7 @@ void *DpsDBInit(void *vdb){
 	}
 	db->numtables=32;
 
-	DpsURLInit(&db->addr);
+	DpsURLInit(&db->addrURL);
 	
 #if (HAVE_IODBC || HAVE_UNIXODBC || HAVE_SOLID || HAVE_VIRT || HAVE_EASYSOFT || HAVE_SAPDB || HAVE_DB2)
 	db->hDbc=SQL_NULL_HDBC;
@@ -131,8 +131,10 @@ void *DpsDBInit(void *vdb){
 
 void DpsDBFree(void *vdb){
 	DPS_DB	*db=vdb;
+
+	DpsSQLFree(&db->Res);
 	
-	DpsURLFree(&db->addr);
+	DpsURLFree(&db->addrURL);
 	DPS_FREE(db->DBADDR);
 	DPS_FREE(db->DBName);
 	DPS_FREE(db->DBUser);
@@ -1511,7 +1513,24 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 
 	for(i = 0; i < num; i++) {
 	  DPS_DOCUMENT *D = &Res->Doc[i];
-	  const char *url = DpsVarListFindStrTxt(&D->Sections, "URL", "");
+	  DPS_MATCH    *Alias = NULL;
+	  char	       *aliastr = NULL;
+	  char         *url = DpsVarListFindStrTxt(&D->Sections, "URL", "");
+	  char	       *alcopy = NULL;
+
+	  alcopy = DpsRemoveHiLightDup(url);
+	  if (alcopy != NULL) {
+	    if((Alias = DpsMatchListFind(&A->Conf->Aliases, alcopy, 0, NULL))) {
+	      aliastr = (char*)DpsMalloc(dps_strlen(Alias->arg) + dps_strlen(alcopy) + 1);
+	      if (aliastr != NULL) {
+		sprintf(aliastr, "%s%s", Alias->arg, alcopy + dps_strlen(Alias->pattern));
+		DpsVarListReplaceStr(&D->Sections, "Alias-of", url);
+		DpsVarListReplaceStr(&D->Sections, "URL", url = aliastr);
+	    fprintf(stderr, " -- alias:%s\n", aliastr);
+	      }
+	    }
+	  }
+
 	  if (*url != '\0') {
 	    if (!DpsURLParse(&D->CurURL, url)) {
 	      DpsVarListInsStr(&D->Sections, "url.host", DPS_NULL2EMPTY(D->CurURL.hostname));
@@ -1522,6 +1541,8 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	      Res->fetched++;
 	    }
 	  }
+	  DpsFree(aliastr);
+	  DpsFree(alcopy);
 
 	  if (DpsVarListFindInt(&Res->Doc[i].Sections, "ST", -1) == -1) {
 	    if (A->Flags.do_excerpt) Excerpt = DpsExcerptDoc(A, Res, &Res->Doc[i], ExcerptSize, ExcerptPadding);
@@ -1620,7 +1641,7 @@ __C_LINK const char* __DPSCALL DpsDBTypeToStr(int dbtype)
     case DPS_DB_MSSQL:   return "mssql";
     case DPS_DB_ORACLE8: return "oracle";
     case DPS_DB_SQLITE:  return "sqlite";
-    case DPS_DB_SQLITE3: return "sqlite";
+    case DPS_DB_SQLITE3: return "sqlite3";
     case DPS_DB_MIMER:   return "mimer";
 	case DPS_DB_ACCESS:  return "access";
   }
@@ -1655,7 +1676,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	  return DPS_ERROR;
 	}
 
-	if(DpsURLParse(&db->addr,dbaddr)) {
+	if(DpsURLParse(&db->addrURL, dbaddr)) {
 #ifdef WITH_PARANOIA
 	  DpsViolationExit(-1, paran);
 #endif
@@ -1675,37 +1696,37 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	db->DBMode = DPS_DBMODE_CACHE;
 	db->DBADDR = (char*)DpsStrdup(dbaddr);
 
-	if (db->addr.schema == NULL){
+	if (db->addrURL.schema == NULL){
 #ifdef WITH_PARANOIA
 	  DpsViolationExit(-1, paran);
 #endif
 	  return DPS_ERROR;
 	}
-	if(!strcasecmp(db->addr.schema,"cached")){
+	if(!strcasecmp(db->addrURL.schema,"cached")){
 		db->DBType = DPS_DB_CACHED;
 	}
-	else if(!strcasecmp(db->addr.schema,"cache")){
+	else if(!strcasecmp(db->addrURL.schema,"cache")){
 		db->DBType = DPS_DB_CACHE;
 	}
-	else if(!strcasecmp(db->addr.schema,"searchd")){
+	else if(!strcasecmp(db->addrURL.schema,"searchd")){
 		db->DBType=DPS_DB_SEARCHD;
 /*		if (DPS_OK != DpsSearchdConnect(db)) return DPS_ERROR;*/
 	}
 #if (HAVE_DP_MSQL||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"msql")){
+	else if(!strcasecmp(db->addrURL.schema,"msql")){
 		db->DBType=DPS_DB_MSQL;
 		db->DBSQL_LIMIT=1;
 	}
 #endif
 #if (HAVE_SOLID||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"solid")){
+	else if(!strcasecmp(db->addrURL.schema,"solid")){
 		db->DBType=DPS_DB_SOLID;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 	}
 #endif
 #if (HAVE_ORACLE7||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"oracle7")){
+	else if(!strcasecmp(db->addrURL.schema,"oracle7")){
 		db->DBType=DPS_DB_ORACLE7;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
@@ -1714,14 +1735,14 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_ORACLE8||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"oracle8")){
+	else if(!strcasecmp(db->addrURL.schema,"oracle8")){
 		db->DBType=DPS_DB_ORACLE8;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 		db->DBSQL_TRUNCATE=1;
 		db->DBSQL_SUBSELECT = 1;
 	}
-	else if(!strcasecmp(db->addr.schema,"oracle")){
+	else if(!strcasecmp(db->addrURL.schema,"oracle")){
 		db->DBType=DPS_DB_ORACLE8;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
@@ -1730,7 +1751,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_CTLIB||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"mssql")){
+	else if(!strcasecmp(db->addrURL.schema,"mssql")){
 		db->DBType=DPS_DB_MSSQL;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
@@ -1738,7 +1759,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_DP_MYSQL||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"mysql")){
+	else if(!strcasecmp(db->addrURL.schema,"mysql")){
 		db->DBType=DPS_DB_MYSQL;
 		db->DBSQL_IN=1;
 		db->DBSQL_LIMIT=1;
@@ -1746,7 +1767,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_DP_PGSQL||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"pgsql")){
+	else if(!strcasecmp(db->addrURL.schema,"pgsql")){
 		db->DBType=DPS_DB_PGSQL;
 		db->DBSQL_IN=1;
 		db->DBSQL_LIMIT=1;
@@ -1756,7 +1777,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_IBASE||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"ibase")){
+	else if(!strcasecmp(db->addrURL.schema,"ibase")){
 		db->DBType=DPS_DB_IBASE;
 		
 		/* 
@@ -1771,7 +1792,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_SQLITE)
-	else if (!strcasecmp(db->addr.schema,"sqlite")){
+	else if (!strcasecmp(db->addrURL.schema,"sqlite")){
 		db->DBType=DPS_DB_SQLITE;
 		db->DBSQL_IN=1;
 		db->DBSQL_LIMIT=1;
@@ -1779,7 +1800,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_SQLITE3)
-	else if (!strcasecmp(db->addr.schema, "sqlite3")){
+	else if (!strcasecmp(db->addrURL.schema, "sqlite3")){
 		db->DBType = DPS_DB_SQLITE3;
 		db->DBSQL_IN = 1;
 		db->DBSQL_LIMIT = 1;
@@ -1787,21 +1808,21 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_SAPDB||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"sapdb")){
+	else if(!strcasecmp(db->addrURL.schema,"sapdb")){
 		db->DBType=DPS_DB_SAPDB;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 	}
 #endif
 #if (HAVE_DB2||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"db2")){
+	else if(!strcasecmp(db->addrURL.schema,"db2")){
 		db->DBType=DPS_DB_DB2;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 	}
 #endif
 #if (HAVE_DB_ACCESS||HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"access")){
+	else if(!strcasecmp(db->addrURL.schema, "access")) {
 		db->DBType=DPS_DB_ACCESS;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
@@ -1809,7 +1830,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 #endif
 #if (HAVE_ODBC)
-	else if(!strcasecmp(db->addr.schema,"mimer")){
+	else if(!strcasecmp(db->addrURL.schema, "mimer")) {
 		db->DBType=DPS_DB_MIMER;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
@@ -1825,7 +1846,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	
 	db->DBDriver=db->DBType;
 	
-	if((s = strchr(DPS_NULL2EMPTY(db->addr.query_string), '?'))) {
+	if((s = strchr(DPS_NULL2EMPTY(db->addrURL.query_string), '?'))) {
 		char * tok, *lt;
 		
 		*s++='\0';
@@ -1898,20 +1919,20 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 		/* Ibase is a special case        */
 		/* It's database name consists of */
 		/* full path and file name        */ 
-		db->DBName = (char*)DpsStrdup(DPS_NULL2EMPTY(db->addr.path));
+		db->DBName = (char*)DpsStrdup(DPS_NULL2EMPTY(db->addrURL.path));
 	}else{
-		db->DBName = (char*)DpsStrdup(DPS_NULL2EMPTY(db->addr.path));
-		sscanf(DPS_NULL2EMPTY(db->addr.path), "/%[^/]s", db->DBName);
+		db->DBName = (char*)DpsStrdup(DPS_NULL2EMPTY(db->addrURL.path));
+		sscanf(DPS_NULL2EMPTY(db->addrURL.path), "/%[^/]s", db->DBName);
 	}
-	if((s=strchr(DPS_NULL2EMPTY(db->addr.auth),':'))){
+	if((s=strchr(DPS_NULL2EMPTY(db->addrURL.auth),':'))){
 		*s=0;
-		db->DBUser = (char*)DpsStrdup(db->addr.auth);
+		db->DBUser = (char*)DpsStrdup(db->addrURL.auth);
 		db->DBPass = (char*)DpsStrdup(s+1);
 		DpsUnescapeCGIQuery(db->DBUser, db->DBUser);
 		DpsUnescapeCGIQuery(db->DBPass, db->DBPass);
 		*s=':';
 	}else{
-		db->DBUser = (char*)DpsStrdup(DPS_NULL2EMPTY(db->addr.auth));
+		db->DBUser = (char*)DpsStrdup(DPS_NULL2EMPTY(db->addrURL.auth));
 	}
 
 	bzero((void*)&db->stored_addr, sizeof(db->stored_addr));

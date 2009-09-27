@@ -181,5 +181,5 @@ CREATE UNIQUE INDEX cachedchk_i ON cachedchk (rec_id);
 CREATE TABLE "cachedchk2" (
        url_id integer
 );
-CREATE UNIQUE INDEX cachedchk2_i ON cachedchk (url_id);
+CREATE UNIQUE INDEX cachedchk2_i ON cachedchk2 (url_id);
 

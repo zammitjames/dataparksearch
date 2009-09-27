@@ -1302,12 +1302,12 @@ int main(int argc, char **argv, char **envp) {
      malloc_options = "axH>>>R";
 #endif
 
-     DpsInit(argc, argv, envp); /* Initialize library */
-     DpsGetSemLimit();
-     
      bzero(&Conf, sizeof(Conf));
      bzero(&Main, sizeof(Main));
 
+     DpsInit(argc, argv, envp); /* Initialize library */
+     DpsGetSemLimit();
+     
      if (DpsEnvInit(&Conf) == NULL) exit(1);
      DpsSetRefProc(&Conf,DpsRefProc);
 #ifdef THINFO_TEST

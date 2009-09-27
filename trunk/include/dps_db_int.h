@@ -229,7 +229,7 @@ typedef struct {
 
 typedef struct struct_dps_db {
         DPS_SQLRES Res;
-	DPS_URL    addr;
+	DPS_URL    addrURL;
         size_t     dbnum;
 	int	   freeme;
 	char	   *DBADDR;

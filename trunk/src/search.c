@@ -639,34 +639,7 @@ int main(int argc, char **argv, char **envp) {
 	}
 	
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "restop");
-	
-	for(i=0;i<Res->num_rows;i++){
-		DPS_DOCUMENT	*Doc=&Res->Doc[i];
-		DPS_MATCH	*Alias;
-		char		*aliastr;
-		char		*alcopy;
-		
-		/* Create "Alias" variable */
-		alcopy=DpsRemoveHiLightDup(DpsVarListFindStr(&Doc->Sections,"URL",""));
-		if (alcopy != NULL) {
-		  if((Alias=DpsMatchListFind(&Agent->Conf->Aliases,alcopy,0,NULL))){
-		        aliastr = (char*)DpsMalloc(dps_strlen(Alias->arg) + dps_strlen(alcopy) + 1);
-			if (aliastr == NULL) {
-			  if(httpd){
-			    printf("Content-Type: text/plain\r\n\r\n");
-			  }
-			  printf("Can't realloc aliastr\n");
-			  exit(0);
-			}
-			sprintf(aliastr, "%s%s", Alias->arg, alcopy + dps_strlen(Alias->pattern));
-		  }else{
-			aliastr = (char*)DpsStrdup(alcopy);
-		  }
-		  DpsVarListReplaceStr(&Doc->Sections,"Alias", aliastr);
-		}
-		DpsFree(aliastr);
-		DpsFree(alcopy);
-	}		
+
 	for(i=0;i<Res->num_rows;i++){
 		DPS_DOCUMENT	*Doc=&Res->Doc[i];
 		DPS_CATEGORY	C;
@@ -720,7 +693,8 @@ int main(int argc, char **argv, char **envp) {
 		DpsVarListReplaceStr(&Agent->Vars, "CL", clist);
 		DpsVarListReplaceInt(&Agent->Vars, "DP_ID", dc_url_id);
 		
-		DpsVarListReplace(&Agent->Vars, DpsVarListFind(&Doc->Sections, "URL"));
+/*		DpsVarListReplace(&Agent->Vars, DpsVarListFind(&Doc->Sections, "URL"));*/
+		DpsVarListReplace(&Agent->Vars, DpsVarListFind(&Doc->Sections, "Alias"));
 		
 
 		DpsVarListReplaceStr(&Agent->Vars, "title", "[no title]");

@@ -611,7 +611,7 @@ static int DpsURLDB(DPS_AGENT *Indexer, DPS_SERVER *S, DPS_DB *db) {
   int           res;
   DPS_CHARSET *cs = DpsGetCharSet(DpsVarListFindStr(&Indexer->Conf->Cfg_Srv->Vars, "RemoteCharset", 
 						    DpsVarListFindStr(&Indexer->Conf->Cfg_Srv->Vars, "URLCharset", "iso-8859-1")));
-  const char *tablename = ((db->addr.filename != NULL) && (db->addr.filename[0] != '\0')) ? db->addr.filename : "links";
+  const char *tablename = ((db->addrURL.filename != NULL) && (db->addrURL.filename[0] != '\0')) ? db->addrURL.filename : "links";
   const char *fieldname = DpsVarListFindStr(&db->Vars, "field", "url");
   char		qbuf[1024];
 
@@ -654,7 +654,7 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
   int           res, charset_id;
   DPS_CHARSET *cs = DpsGetCharSet(DpsVarListFindStr(&Indexer->Conf->Cfg_Srv->Vars, "RemoteCharset", 
 						    DpsVarListFindStr(&Indexer->Conf->Cfg_Srv->Vars, "URLCharset", "iso-8859-1")));
-  const char *tablename = ((db->addr.filename != NULL) && (db->addr.filename[0] != '\0')) ? db->addr.filename : "links";
+  const char *tablename = ((db->addrURL.filename != NULL) && (db->addrURL.filename[0] != '\0')) ? db->addrURL.filename : "links";
   const char *fieldname = DpsVarListFindStr(&db->Vars, "field", "url");
   char		qbuf[1024];
 
@@ -705,7 +705,7 @@ static int DpsLoadServerTable(DPS_AGENT * Indexer, DPS_DB *db){
 	DPS_SQLRES	SQLRes, SRes;
 	DPS_HREF	Href;
 	char		qbuf[1024];
-	const char	*name = ((db->addr.filename != NULL) && (db->addr.filename[0] != '\0')) ? db->addr.filename : "server";
+	const char	*name = ((db->addrURL.filename != NULL) && (db->addrURL.filename[0] != '\0')) ? db->addrURL.filename : "server";
 	const char      *infoname = DpsVarListFindStr(&db->Vars, "srvinfo", "srvinfo");
 	int		res;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
