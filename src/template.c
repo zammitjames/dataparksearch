@@ -484,6 +484,7 @@ static DPS_IFITEM *DpsIfStackPop(DPS_IFSTACK *S){
 		regfree((regex_t*)S->Items[S->pos].Match.reg);
 		DPS_FREE(S->Items[S->pos].Match.reg);
 		DPS_FREE(S->Items[S->pos].Match.arg);
+		DPS_FREE(S->Items[S->pos].Match.pattern);
 	  }
 	  S->pos--;
 	}
@@ -596,7 +597,7 @@ static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok
 	        DpsMatchInit(&it->Match);
 		it->Match.match_type = DPS_MATCH_REGEX;
 		it->Match.arg = DpsStrdup((eval != NULL) ? eval : var);
-		it->Match.pattern = val;
+		it->Match.pattern = DpsStrdup(val);
 /*		it->Match.compiled = 0;*/
 		it->condition = !DpsMatchExec(&it->Match, it->Match.arg, it->Match.arg, NULL, 10, is->Parts);
 		DPS_FREE(eval);

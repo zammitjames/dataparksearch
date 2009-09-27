@@ -223,7 +223,7 @@ static int dps_logger(DPS_AGENT *Agent, DPS_ENV *Env, int handle, int level, con
 
 #if defined(HAVE_SYSLOG_H) && defined(WITH_SYSLOG)
 #ifdef DEBUG_TIME
-	dps_snprintf(logFMT, DPS_LOG_BUF_LEN, "{%02d} %ld %s", handle, ticks, fmt);
+	dps_snprintf(logFMT, DPS_LOG_BUF_LEN, "{%02d} %lu %s", handle, ticks, fmt);
 #else
 	dps_snprintf(logFMT, DPS_LOG_BUF_LEN, "{%02d} %s", handle, fmt);
 #endif

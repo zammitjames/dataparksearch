@@ -134,7 +134,7 @@ int DpsSearchdConnect(DPS_DB *cl) {
   socklen_t addrlen;
 #endif
 	
-  cl->searchd[1] = open_host(cl->addr.hostname, cl->addr.port ? cl->addr.port : DPS_SEARCHD_PORT, 0);
+  cl->searchd[1] = open_host(cl->addrURL.hostname, cl->addrURL.port ? cl->addrURL.port : DPS_SEARCHD_PORT, 0);
   if(cl->searchd[1] <= 0) {
     cl->searchd[1] = 0;
 /*		DpsLog(query, DPS_LOG_ERROR, "Can't connect to searchd at '%s:%d'", host, port);*/

@@ -326,10 +326,11 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 	DpsConvInit(&result->uni_utf, unics, utfcs, Env->CharsToEscape, DPS_RECODE_HTML);
 
 	result->aspell_config = new_aspell_config();
-/*	aspell_config_replace(result->aspell_config, "encoding", "machine unsigned 32");*/
 	aspell_config_replace(result->aspell_config, "encoding", "utf-8");
-	aspell_config_replace(result->aspell_config, "sug-mode", "ultra");
+	aspell_config_replace(result->aspell_config, "sug-mode", "slow");
 	aspell_config_replace(result->aspell_config, "ignore-case", "true");
+	aspell_config_replace(result->aspell_config, "normalize", "false");
+	aspell_config_replace(result->aspell_config, "size", "10");
 #endif
 #if defined(HAVE_LIBARES) || defined (HAVE_LIBCARES)
 	{
