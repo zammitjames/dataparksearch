@@ -2005,7 +2005,8 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	  if (Res->items[i].cmd != DPS_STACK_WORD) continue;
 /*	  if (Res->items[i].origin & DPS_WORD_ORIGIN_STOP) continue;*/ /* FIX: add a command to skip reading */
 
-	  for (z = 0 ; z < npmerge; z++) if (pmerg[z]->crcword == Res->items[i].crcword) break;
+	  for (z = 0 ; z < npmerge; z++) 
+	    if (pmerg[z]->crcword == Res->items[i].crcword && (pmerg[z]->secno == 0 || pmerg[z]->secno == Res->items[i].secno)) break;
 	  if (z < npmerge) continue;
 	  
 	  P.rec_id = Res->items[i].crcword;

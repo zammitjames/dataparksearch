@@ -14,6 +14,7 @@ fail !0 exec $(SEARCH) "second&wf=1000000000" > $(DPS_TEST_DIR)/search.rej 2>&1
 fail !0 exec $(SEARCH) "allindp_id: 1&m=bool" > $(DPS_TEST_DIR)/search2.rej 2>&1
 fail !0 exec $(SEARCH) "insurance AND NOT (allinmeta.source: %22associated press%22)&m=bool" > $(DPS_TEST_DIR)/search3.rej 2>&1
 fail !0 exec $(SEARCH) "insurance AND (allinmeta.source: %22associated press%22)&m=bool" > $(DPS_TEST_DIR)/search4.rej 2>&1
+fail !0 exec $(SEARCH) "press AND NOT (allinmeta.source: press)&m=bool" > $(DPS_TEST_DIR)/search5.rej 2>&1
 
 fail !0 mdiff $(DPS_TEST_DIR)/search.rej $(DPS_TEST_DIR)/search.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/search.rej
@@ -26,6 +27,9 @@ fail !0 exec rm -f $(DPS_TEST_DIR)/search3.rej
 
 fail !0 mdiff $(DPS_TEST_DIR)/search4.rej $(DPS_TEST_DIR)/search4.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/search4.rej
+
+fail !0 mdiff $(DPS_TEST_DIR)/search5.rej $(DPS_TEST_DIR)/search5.res
+fail !0 exec rm -f $(DPS_TEST_DIR)/search5.rej
 
 
 fail !0 mdiff $(DPS_TEST_DIR)/query.rej $(DPS_TEST_DIR)/query.res
