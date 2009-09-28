@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -60,8 +60,8 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
   dpshash32_t crcword = (word == NULL) ? 0 : DpsStrHash32(word);
 
 #ifdef DEBUG_BOOL
-  DpsLog(query, DPS_LOG_EXTRA, "0[%d].%x %c -- %s [%x] .secno:%d\n", state->order, state->origin, item_type(state->cmd), 
-	 (word == NULL) ? "<NULL>" : word, crcword, state->secno[state->p_secno]);
+  DpsLog(query, DPS_LOG_EXTRA, "0[%d].%x %c -- %s [%x] .secno:%d  wlen:%d\n", state->order, state->origin, item_type(state->cmd), 
+	 (word == NULL) ? "<NULL>" : word, crcword, state->secno[state->p_secno], wlen);
 #endif
 
   if((uword != NULL) && ( DpsStopListFind(&query->Conf->StopWords, uword, state->qlang) ||
@@ -746,6 +746,11 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  if (x1 != NULL) { res = *x1; x1 = NULL; }
 			  if (x2 != NULL) { res = *x2; x2 = NULL; }
 			} else {
+#ifdef DEBUG_BOOL
+			  printBoolRes(query, x1);
+			  DpsLog(query, DPS_LOG_EXTRA, "^^^");
+			  printBoolRes(query, x2);
+#endif
 			  res.order_from = (x1->order_from <= x2->order_from) ? x1->order_from : x2->order_from;
 			  res.order_to = (x1->order_to >= x2->order_to) ? x1->order_to : x2->order_to;
 			  if ((x1->origin & DPS_WORD_ORIGIN_STOP) && (x2->origin & DPS_WORD_ORIGIN_STOP) ) {
@@ -839,7 +844,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 #endif
 			DpsLog(query, DPS_LOG_EXTRA, "Perform {%d}.%x & {%d}.%x - > {%d}.%x", 
 	       (x1) ? x1->count : -1, (x1) ? x1->origin : -1, (x2) ? x2->count : -1 , (x2) ? x2->origin : -1, res.count, res.origin);
-/*			printBoolRes(query, &res);*/
+			printBoolRes(query, &res);
 			DpsLog(query, DPS_LOG_EXTRA, "===");
 #endif
 			rc = PUSHARG(s, &res);
@@ -848,11 +853,17 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 		        x1 = POPARG(s);
 			/* res = x1 ? 0 : 1; */
 			if (x1 != NULL) {
+#ifdef DEBUG_BOOL
+			  printBoolRes(query, x1);
+			  DpsLog(query, DPS_LOG_EXTRA, "^^^");
+#endif
 			  x1->cmd ^= DPS_STACK_WORD_NOT;
 			  rc = PUSHARG(s, x1);
 			}
 #ifdef DEBUG_BOOL
 			DpsLog(query, DPS_LOG_EXTRA, "Perform ~ {%d}", (x1) ? x1->count : -1);
+			printBoolRes(query, &x1);
+			DpsLog(query, DPS_LOG_EXTRA, "===");
 #endif
 			break;
 	}
@@ -909,7 +920,7 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
     if (items[i].cmd != DPS_STACK_WORD) continue;
     if ((items[i].pbegin == NULL) && ((items[i].origin & DPS_WORD_ORIGIN_STOP) == 0)) {
       for(j = 0; j < i; j++) 
-	if (items[j].crcword == items[i].crcword) break;
+	if (items[j].crcword == items[i].crcword && (items[j].secno == 0 || items[j].secno == items[i].secno)) break;
       if (j < i) {
 	items[i].count = items[j].count;
 	items[i].pbegin = (DPS_URL_CRD_DB*)DpsMalloc((items[j].count + 1) * sizeof(DPS_URL_CRD_DB));
@@ -918,13 +929,24 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
 	  DpsBoolStackFree(s);
 	  return DPS_STACK_ERR;
 	}
-	{
+	if (items[i].secno == 0) {
 	  register size_t z;
 	  for (z = 0; z < items[i].count; z++) {
 	    items[i].pbegin[z] = items[j].pbegin[z];
 	    items[i].pbegin[z].coord &= 0xFFFFFF00;
 	    items[i].pbegin[z].coord += (items[i].wordnum & 0xFF);
 	  }
+	} else {
+	  register size_t z, n = 0;
+	  for (z = 0; z < items[i].count; z++) {
+	    if (DPS_WRDSEC(items[j].pbegin[z].coord) == items[i].secno) {
+	      items[i].pbegin[n] = items[j].pbegin[z];
+	      items[i].pbegin[n].coord &= 0xFFFFFF00;
+	      items[i].pbegin[n].coord += (items[i].wordnum & 0xFF);
+	      n++;
+	    }
+	  }
+	  items[i].count = n;
 	}
       }
     }

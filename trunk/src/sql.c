@@ -461,6 +461,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	  timestr = (char*)DpsRealloc(timestr, 128);
 	  if (timestr == NULL) {
 		db->where = (char*)DpsStrdup("");
+		DPS_FREE(db->from);
 		db->from = (char*)DpsStrdup("");
 		goto ret;
 	  }
@@ -470,6 +471,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	  timestr = (char*)DpsRealloc(timestr, 128);
 	  if (timestr == NULL) {
 		db->where = (char*)DpsStrdup("");
+		DPS_FREE(db->from);
 		db->from = (char*)DpsStrdup("");
 		goto ret;
 	  }
@@ -480,6 +482,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	  timestr = (char*)DpsRealloc(timestr, 128);
 	  if (timestr == NULL) {
 		db->where = (char*)DpsStrdup("");
+		DPS_FREE(db->from);
 		db->from = (char*)DpsStrdup("");
 		goto ret;
 	  }
@@ -495,6 +498,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	  fromstr = (char*)DpsRealloc(fromstr, dps_strlen(fromstr) + 12);
 	  if (fromstr == NULL) {
 		db->where = (char*)DpsStrdup("");
+		DPS_FREE(db->from);
 		db->from = (char*)DpsStrdup("");
 		goto ret;
 	  }
@@ -502,6 +506,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	  serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 64);
 	  if (serverstr == NULL) {
 		db->where = (char*)DpsStrdup("");
+		DPS_FREE(db->from);
 		db->from = (char*)DpsStrdup("");
 		goto ret;
 	  }
@@ -512,6 +517,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	if( !urlstr[0] && !tagstr[0] && !statusstr[0] && !catstr[0] && !langstr[0] 
 	    && !typestr[0] && !serverstr[0] && !fromstr[0] && !sitestr[0] && !timestr[0] && !hopstr[0] ){
 		db->where = (char*)DpsStrdup("");
+		DPS_FREE(db->from);
 		db->from = (char*)DpsStrdup("");
 		goto ret;
 	}
@@ -4045,7 +4051,7 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 		for (z = 0 ; z < wordnum; z++) {
 		  if (Res->items[z].cmd != DPS_STACK_WORD) continue;
 		  if (Res->items[z].origin & DPS_WORD_ORIGIN_STOP) continue;
-		  if (Res->items[z].crcword == Res->items[wordnum].crcword) break;
+		  if (Res->items[z].crcword == Res->items[wordnum].crcword && (Res->items[z].secno == 0 || Res->items[z].secno == Res->items[wordnum].secno)) break;
 		}
 		if (z < wordnum) continue;
 	  
@@ -4307,21 +4313,19 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		      while ((pmerg[i].pcur < pmerg[i].plast) && (pmerg[i].pcur->url_id == cur_url_id) ) {
 			Crd->coord = pmerg[i].pcur->coord;
 			if (pmerg[i].secno == 0 || DPS_WRDSEC(Crd->coord) == pmerg[i].secno) {
-			  register size_t mlen = (Crd->coord & 0xFF);
-			  if (mlen == 0 || mlen == pmerg[i].ulen) {
+/*			  register size_t mlen = (Crd->coord & 0xFF);            We don't need to check ulen here for SQL-based modes!!!
+			  if (mlen == 0 || mlen == pmerg[i].ulen) {*/
 			    Crd->url_id = pmerg[i].pcur->url_id;
 			    Crd->coord &= 0xFFFFFF00;
 			    Crd->coord += (Res->items[wordnum].wordnum /*order*/ & 0xFF);
 #ifdef WITH_MULTIDBADDR
 			    Crd->dbnum = db->dbnum;
-/*			fprintf(stderr, "url_id: %x  dbnum:%d\n", Crd->url_id, Crd->dbnum);*/
 #endif		  
 			    pmerg[i].pchecked++;
 			    Crd++;
-			  }
+/*			  }*/
 			}
 			pmerg[i].pcur++;
-/*			pmerg[i].count++;*/
 		      }
 		    }
 		  }
