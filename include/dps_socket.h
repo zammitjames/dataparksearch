@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -42,5 +42,6 @@ void socket_buf_clear(DPS_CONN *connp);
 
 extern ssize_t DpsRecvall(int s, void *buf, size_t len, size_t time_to_wait);
 extern ssize_t DpsSend(int s, const void *msg, size_t len, int flags);
+extern void DpsSockOpt(DPS_AGENT *A, int socket);
 
 #endif

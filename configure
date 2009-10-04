@@ -21697,8 +21697,9 @@ fi
 
 
 
+
 for ac_header in sys/types.h fcntl.h unistd.h sys/cdefs.h libutil.h \
-sys/ioctl.h sys/time.h sys/times.h sys/param.h sys/wait.h limits.h \
+sys/ioctl.h sys/time.h sys/times.h sys/param.h sys/wait.h limits.h sched.h \
 syslog.h select.h sys/select.h sys/socket.h arpa/inet.h netdb.h sys/sysctl.h sys/mman.h sys/shm.h \
 netinet/in.h netinet/in_systm.h netinet/tcp.h arpa/nameser.h sys/ipc.h semaphore.h sys/sem.h sys/msg.h
 do

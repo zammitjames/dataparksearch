@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -807,7 +807,7 @@ int main(int argc,char **argv, char **envp) {
 		DpsLog(Agent, DPS_LOG_ERROR, "%s setsockopt() error %d", Logd_time_pid_info(), errno);
 		goto err1;
 	}
-	
+	DpsSockOpt(Agent, ctl_sock);
 	
 	/* Prepare to start TCP server */
 	
@@ -990,6 +990,7 @@ int main(int argc,char **argv, char **envp) {
 /*		    close(cl.send_fd);*/
 		    continue;
 		  }
+		  DpsSockOpt(Agent, cl.send_fd);
 		  if (bind(cl.send_fd, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
 		    DpsLog(Agent, DPS_LOG_ERROR, "CacheD ERR bind() error %d %s", errno, strerror(errno));
 		    close(cl.recv_fd);

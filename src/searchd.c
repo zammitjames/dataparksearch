@@ -77,6 +77,9 @@
 #ifdef HAVE_SYS_IPC_H
 #include <sys/ipc.h>
 #endif
+#ifdef HAVE_SCHED_H
+#include <sched.h>
+#endif
 
 /* This should be last include */
 #ifdef DMALLOC
@@ -261,6 +264,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 	  close(client);
 	  return DPS_ERROR;
 	}
+	DpsSockOpt(Agent, pre_server);
 	if (bind(pre_server, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "bind() ERR: %d %s", errno, strerror(errno));
 	  close(pre_server);
@@ -571,6 +575,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 				
 			case DPS_SEARCHD_CMD_WORDS:
 		        case DPS_SEARCHD_CMD_WORDS_ALL:
+			  DpsLog(Agent, verb, "Doing allocs");
 			        words = (char*)DpsRealloc(words, hdr.len + 1);
 				if (words == NULL) {
 					dps_snprintf(buf, sizeof(buf)-1, "Can't alloc memory for query");
@@ -581,6 +586,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					done=1;
 					break;
 				}
+			  DpsLog(Agent, verb, "Did allocs");
 				nrecv=DpsRecvall(client, words, hdr.len, 360); /* FIXME: check */
 				words[nrecv]='\0';
 				DpsLog(Agent,verb,"Received words len=%d words='%s'",nrecv,words);
@@ -759,7 +765,6 @@ static int do_client(DPS_AGENT *Agent, int client){
 	close(client);
 	client=0;
 	DpsLog(Agent,verb,"Quit");
-/*	DpsAgentFree(Agent);*/
 	DpsResultFree(Res);
 	DPS_FREE(words);
 	return DPS_OK;
@@ -1282,6 +1287,7 @@ int main(int argc, char **argv, char **envp) {
 			unlink(dps_pid_name);
 			exit(1);
 		  }
+		  DpsSockOpt(Agent, clt_sock);
 
 
 		  if (bind(clt_sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
@@ -1343,7 +1349,11 @@ int main(int argc, char **argv, char **envp) {
 		}
 
 		while(!internaldone) {
+#ifdef HAVE_SCHED_H
+		  sched_yield();
+#else
 		  DPSSLEEP(1);
+#endif
 		  if(have_sighup){
 			DpsLog(Agent,verb,"SIGHUP arrived");
 			have_sighup=0;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All right reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All right reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -441,6 +441,7 @@ int main(int argc, char **argv, char **envp) {
 		unlink(dps_pid_name);
 		exit(1);
 	}
+	DpsSockOpt(Agent, s);
 
 	bzero((void*)&server_addr, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
@@ -614,6 +615,7 @@ int main(int argc, char **argv, char **envp) {
                 close(ns);
                 exit(0);
               }
+	      DpsSockOpt(Agent, sd);
 	      if (bind(sd, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
 		DpsLog(Agent, DPS_LOG_ERROR, "StoreD ERR bind() error %d %s", errno, strerror(errno));
 		close(ns);

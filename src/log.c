@@ -28,9 +28,9 @@
 #include <string.h>
 #include <sys/types.h>
 
-/*
+
 #define DEBUG_TIME 1
-*/
+
 
 #if defined(APACHE1) || defined(APACHE2)
 

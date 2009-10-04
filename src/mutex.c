@@ -100,7 +100,7 @@ static DPS_MUTEX *MuMu = NULL;
 
 size_t DpsNsems = DPS_LOCK_MAX;
 
-#if defined(CAS_MUTEX) && (defined(__i386) || defined(__x86_64__))
+#if defined(CAS_MUTEX)
 
 void DpsGetSemLimit(void) {
     DpsNsems = (size_t) 0x1000 + DPS_LOCK_MAX;
@@ -194,9 +194,9 @@ void DpsGetSemLimit(void) {
 #endif
 
 
-#if defined(CAS_MUTEX) && (defined(__i386) || defined(__x86_64__))
+#if defined(CAS_MUTEX)
 
-inline char CAS(dps_mutex_t *target, dps_mutex_t exchange, dps_mutex_t compare) {
+static inline char CAS(dps_mutex_t *target, dps_mutex_t exchange, dps_mutex_t compare) {
   char ret;
   __asm__ __volatile__ (
 			"lock\n\t"

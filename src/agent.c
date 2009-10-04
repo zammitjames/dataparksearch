@@ -53,7 +53,6 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
   struct sockaddr_in dps_addr;
   unsigned char *p = (unsigned char*)&dps_addr.sin_port;
   unsigned int ip[2];
-  struct timeval so_tval;
 
   if (Indexer->Demons.Demon == NULL) {
     Indexer->Demons.nitems = Indexer->Conf->dbl.nitems;
@@ -74,6 +73,10 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
 	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR socket_rv: %s", strerror(errno));
 	return DPS_ERROR;
       }
+
+      DpsSockOpt(Indexer, Indexer->Demons.Demon[i].stored_sd);
+      DpsSockOpt(Indexer, Indexer->Demons.Demon[i].stored_rv);
+
       if(connect(Indexer->Demons.Demon[i].stored_sd, (struct sockaddr *)&Env->dbl.db[i].stored_addr, 
 		 sizeof(Env->dbl.db[i].stored_addr)) == -1) {
 	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR connect to %s: %s", 
@@ -96,13 +99,6 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
       DpsLog(Indexer, DPS_LOG_EXTRA, "Stored @ [%s] PORT: %s, decimal:%d", 
 	     inet_ntoa(Env->dbl.db[i].stored_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));
 
-      so_tval.tv_sec = 300;
-      so_tval.tv_usec = 0;
-#if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-      if (setsockopt(Indexer->Demons.Demon[i].stored_rv, SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
-	DpsLog(Indexer, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-      }
-#endif
       if(connect(Indexer->Demons.Demon[i].stored_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
 	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR revert connect to %s:%d - %s", 
 	       inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));
@@ -125,7 +121,6 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
   struct sockaddr_in dps_addr;
   unsigned char *p = (unsigned char*)&dps_addr.sin_port;
   unsigned int ip[2];
-  struct timeval so_tval;
   DPS_CHARSET *unics, *loccs;
 #ifdef HAVE_ASPELL
   DPS_CHARSET *utfcs;
@@ -196,6 +191,9 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 		return NULL;
 	      }
   
+	      DpsSockOpt(NULL, result->Demons.Demon[i].stored_sd);
+	      DpsSockOpt(NULL, result->Demons.Demon[i].stored_rv);
+
 	      if(connect(result->Demons.Demon[i].stored_sd, (struct sockaddr *)&DBL->db[i].stored_addr, 
 			 sizeof(DBL->db[i].stored_addr)) == -1) {
 		fprintf(stderr, "StoreD ERR connect to %s: %s\n", inet_ntoa(DBL->db[i].stored_addr.sin_addr), strerror(errno));
@@ -218,13 +216,6 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 /*	      fprintf(stderr, "[%s] PORT: %s, decimal:%d\n", 
 		      inet_ntoa(Env->dbl.db[i].stored_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));*/
 
-	      so_tval.tv_sec = 300;
-	      so_tval.tv_usec = 0;
-#if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-	      if (setsockopt(result->Demons.Demon[i].stored_rv, SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
-		fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-	      }
-#endif
 	      if(connect(result->Demons.Demon[i].stored_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
 		fprintf(stderr, "StoreD ERR revert connect to %s:%d - %s", 
 			inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));
@@ -250,15 +241,9 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 		return NULL;
 	      }
   
-	      tval.tv_sec = 300;
-	      tval.tv_usec = 0;
-#if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-	      if (setsockopt(result->Demons.Demon[i].cached_sd, SOL_SOCKET, SO_SNDTIMEO, (char *)&tval, sizeof(tval)) != 0) {
-		fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-/*		DpsAgentFree(result);
-		return NULL;*/
-	      }
-#endif
+	      DpsSockOpt(NULL, result->Demons.Demon[i].cached_sd);
+	      DpsSockOpt(NULL, result->Demons.Demon[i].cached_rv);
+
 	      for (z = 0; z < 5; z++) {
 		if(connect(result->Demons.Demon[i].cached_sd, (struct sockaddr *)&DBL->db[i].cached_addr, 
 			   sizeof(DBL->db[i].cached_addr)) == 0) {
@@ -289,13 +274,6 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 /*	      fprintf(stderr, "[%s] PORT: %s, decimal:%d\n", 
 		      inet_ntoa(Env->dbl.db[i].cached_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));*/
 
-	      so_tval.tv_sec = 300;
-	      so_tval.tv_usec = 0;
-#if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-	      if (setsockopt(result->Demons.Demon[i].cached_rv, SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
-		fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-	      }
-#endif
 	      if(connect(result->Demons.Demon[i].cached_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
 		fprintf(stderr, "CacheD ERR revert connect to %s:%d - %s", 
 			inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));
