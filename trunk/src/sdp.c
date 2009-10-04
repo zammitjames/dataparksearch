@@ -69,15 +69,19 @@
 */
 
 ssize_t DpsSearchdSendPacket(int fd,const DPS_SEARCHD_PACKET_HEADER *hdr,const void *data){
-	ssize_t nsent;
+	ssize_t nsent = 0;
 
-	nsent=DpsSend(fd,hdr,sizeof(*hdr),0);
-	
-	if(nsent!=sizeof(*hdr)) {
-		return(nsent);
-	}
-	if(data){
-		nsent+=DpsSend(fd,data,hdr->len,0);
+	if (data == NULL) {
+	  nsent = DpsSend(fd, hdr, sizeof(*hdr), 0);
+	} else {
+	  char *ldata = (char*)DpsMalloc(sizeof(*hdr) + hdr->len);
+	  if (ldata != NULL) {
+	    dps_memmove(ldata, hdr, sizeof(*hdr));
+	    dps_memmove(ldata + sizeof(*hdr), data, hdr->len);
+	  
+	    nsent = DpsSend(fd, ldata, sizeof(*hdr) + hdr->len, 0);
+	  }
+	  DPS_FREE(ldata);
 	}
 	
 	return nsent;
@@ -113,7 +117,9 @@ static int open_host(char *hostname,int port, int timeout)
 			return(DPS_NET_CANT_RESOLVE);
 		}
 	}
-	net=socket(AF_INET, SOCK_STREAM, 0);
+	net = socket(AF_INET, SOCK_STREAM, 0);
+
+	DpsSockOpt(NULL, net);
 
 	if(connect(net, (struct sockaddr *)&sa_in, sizeof (sa_in)))
 		return(DPS_NET_CANT_CONNECT);
@@ -124,7 +130,6 @@ static int open_host(char *hostname,int port, int timeout)
 int DpsSearchdConnect(DPS_DB *cl) {
   char port_str[16];
   struct sockaddr_in dps_addr;
-  struct timeval so_tval;
   unsigned char *p = (unsigned char*)&dps_addr.sin_port;
   unsigned int ip[2];
   int res = DPS_OK;
@@ -172,13 +177,8 @@ int DpsSearchdConnect(DPS_DB *cl) {
       DpsLog(Indexer, DPS_LOG_EXTRA, "Stored @ [%s] PORT: %s, decimal:%d", 
 	     inet_ntoa(Env->dbl.db[i].stored_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));
 */
-    so_tval.tv_sec = 300;
-    so_tval.tv_usec = 0;
-#if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-    if (setsockopt(cl->searchd[0], SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
-/*      DpsLog(query, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));*/
-    }
-#endif
+    DpsSockOpt(NULL, cl->searchd[0]);
+
     if(connect(cl->searchd[0], (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
 /*	DpsLog(query, DPS_LOG_ERROR, "StoreD ERR revert connect to %s:%d - %s", 
 	       inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));*/

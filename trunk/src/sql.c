@@ -1795,7 +1795,7 @@ static int DpsDeleteCrossWordFromURL(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_D
 		dps_strcpy(table,"crossdict");
 		crcmode=0;
 	}
-	DpsSQLBegin(db);
+	if (url_id || referrer_id) DpsSQLBegin(db);
 	if(url_id){
 		sprintf(qbuf,"DELETE FROM %s WHERE url_id=%s%i%s", table, qu, url_id, qu);
 		if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf))) {
@@ -1807,7 +1807,7 @@ static int DpsDeleteCrossWordFromURL(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_D
 		sprintf(qbuf,"DELETE FROM %s WHERE ref_id=%s%i%s", table, qu, referrer_id, qu);
 		rc=DpsSQLAsyncQuery(db,NULL,qbuf);
 	}
-	DpsSQLEnd(db);
+	if (url_id || referrer_id) DpsSQLEnd(db);
 	return rc;
 }
 

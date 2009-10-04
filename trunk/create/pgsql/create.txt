@@ -109,6 +109,7 @@ CREATE TABLE "links" (
 ALTER TABLE ONLY "links" ADD CONSTRAINT links_pkey PRIMARY KEY (ot,k); 
 CREATE INDEX links_ot ON links (ot);
 CREATE INDEX links_k ON links (k);
+CREATE INDEX links_otvalid ON links USING HASH (ot) WHERE ot!=k AND valid='f';
 
 
 CREATE TABLE "categories" (

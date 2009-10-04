@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -30,10 +30,13 @@
 #endif
 
 
-#define CAS_MUTEX 1
+#if defined(__i386) || defined(__x86_64__) || defined(__amd64__) || defined(__ia64__)
 
+/*#define CAS_MUTEX 1*/
 
-#if defined(CAS_MUTEX) && (defined(__i386) || defined(__x86_64__))
+#endif
+
+#if defined(CAS_MUTEX)
 
 #define dps_mutex_t             DPS_AGENT*
 #define InitMutex(x)            (*(x) = NULL)

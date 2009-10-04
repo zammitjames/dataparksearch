@@ -169,6 +169,7 @@ static int open_host(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
         int net;
 	
 	net = socket(AF_INET, SOCK_STREAM, 0);
+	DpsSockOpt(Agent, net);
 	if (bind(net, (struct sockaddr *)&Agent->Flags.bind_addr, sizeof(Agent->Flags.bind_addr)) == -1) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "bind() to %s error %d %s", inet_ntoa(Agent->Flags.bind_addr.sin_addr), errno, strerror(errno));
 	  dps_closesocket(net);

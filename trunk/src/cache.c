@@ -222,7 +222,6 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 	DPS_DB		*db;
 	const char	*vardir = DpsVarListFindStr(&A->Vars, "VarDir", DPS_VAR_DIR);
 	size_t i, dbfrom = 0, dbto =  (A->flags & DPS_FLAG_UNOCON) ? A->Conf->dbl.nitems : A->dbl.nitems;
-	struct timeval tval;
 
 	DpsLog(A, DPS_LOG_DEBUG, "DpsOpenCache:");
 
@@ -258,15 +257,10 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 		DpsLog(A, DPS_LOG_ERROR, "CacheD ERR socket_rv: %s", strerror(errno));
 		return DPS_ERROR;
 	      }
+
+	      DpsSockOpt(A, A->Demons.Demon[i].cached_sd);
+	      DpsSockOpt(A, A->Demons.Demon[i].cached_rv);
   
-	      tval.tv_sec = 300;
-	      tval.tv_usec = 0;
-#if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-	      if (setsockopt(A->Demons.Demon[i].cached_sd, SOL_SOCKET, SO_SNDTIMEO, (char *)&tval, sizeof(tval)) != 0) {
-		DpsLog(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-/*		return DPS_ERROR;*/
-	      }
-#endif
 	      if(connect(A->Demons.Demon[i].cached_sd, (struct sockaddr *)&db->cached_addr, sizeof(db->cached_addr)) == -1) {
 		DpsLog(A, DPS_LOG_ERROR, "CacheD ERR connect to %s: %s", inet_ntoa(db->cached_addr.sin_addr), strerror(errno));
 		return DPS_ERROR;
@@ -286,13 +280,6 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 
 	      DpsLog(A, DPS_LOG_DEBUG, "[%s] PORT: %s, decimal:%d", inet_ntoa(db->cached_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));
 
-	      so_tval.tv_sec = 300;
-	      so_tval.tv_usec = 0;
-#if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-	      if (setsockopt(A->Demons.Demon[i].cached_rv, SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
-		DpsLog(A, DPS_LOG_ERROR, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-	      }
-#endif
 	      if(connect(A->Demons.Demon[i].cached_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
 		DpsLog(A, DPS_LOG_ERROR, "Cached ERR revert connect to %s:%d - %s", 
 			inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));

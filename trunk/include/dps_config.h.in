@@ -397,6 +397,9 @@
 /* Define if you have the <select.h> header file.  */
 #undef HAVE_SELECT_H
 
+/* Define if you have the <sched.h> header file.  */
+#undef HAVE_SCHED_H
+
 /* Define if you have the <sys/ioctl.h> header file.  */
 #undef HAVE_SYS_IOCTL_H
 
