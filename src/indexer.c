@@ -932,6 +932,8 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_HREF     Href;
   size_t i, buf_len;
 
+/*  fprintf(stderr, " -- SectionMatch.n:%d\n", Indexer->Conf->SectionMatch.nmatches);*/
+
   if (Indexer->Conf->SectionMatch.nmatches == 0 && Indexer->Conf->HrefSectionMatch.nmatches == 0) return DPS_OK;
 
   buf = (char*)DpsMalloc(buf_len = (Doc->Buf.size + 1024));
@@ -940,7 +942,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   for (i = 0; i < Indexer->Conf->SectionMatch.nmatches; i++) {
     Alias = &Indexer->Conf->SectionMatch.Match[i];
 
-/*    fprintf(stderr, " -- Alias:%s, before match\n", Alias->section);*/
+/*    fprintf(stderr, " -- Alias:%s, before match  pattern:%s\n", Alias->section, Alias->pattern);*/
     if (DpsMatchExec(Alias, buf_content, buf_content, NULL, nparts, Parts)) continue;
 
     Sec = DpsVarListFind(&Doc->Sections, Alias->section);
@@ -957,7 +959,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     Item.str = dps_strtok_r(buf, "\r\n", &lt);
     while(Item.str) {
       Item.len = (lt != NULL) ? (lt - Item.str) : 0 /*dps_strlen(Item.str)*/;
-/*      fprintf(stderr, " -- Alias:%s, [%d] %s\n", Alias->section, Item.len, Item.str);*/
+/*      fprintf(stderr, " -- Alias:%s/%s, [%d] %s\n", Sec->name, Alias->section, Item.len, Item.str);*/
       DpsTextListAdd(&Doc->TextList, &Item);
       Item.str = dps_strtok_r(NULL, "\r\n", &lt);
     }

@@ -285,7 +285,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 /*  ustr = (dps_need2segment(nfc)) ? DpsUniSegment(Indexer, nfc, content_lang) : nfc;*/
 
   TRACE_LINE(Indexer);
-  if (ustr != NULL)
+  if (ustr != NULL && Item->section && ((Indexer->Flags.LongestTextItems == 0) || (Item->marked)) )
     for(tok = DpsUniGetToken(ustr, &lt, &have_bukva_forte, Item->strict); 
 	tok ; 
 	tok = DpsUniGetToken(NULL, &lt, &have_bukva_forte, Item->strict) ) {
@@ -343,7 +343,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
       /* +4 to avoid attempts to fill the only one  */
       /* last byte with multibyte sequence          */
       /* as well as to add a space between portions */
-			
+
       if(Sec->curlen < Sec->maxlen || Sec->maxlen == 0) {
 				
 	src = (char*)UStr;
@@ -558,27 +558,24 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DpsHrefListAdd(Indexer, &Doc->Hrefs, &Href);
     }
 
-    if(Item->section && ((Indexer->Flags.LongestTextItems == 0) || (Item->marked)) ) {
 
-      if (seasec && strstr(SEASections, Item->section_name)) {
-	DpsDSTRAppendUniWithSpace(&exrpt, UStr);
-      }
+    if (seasec && strstr(SEASections, Item->section_name)) {
+      DpsDSTRAppendUniWithSpace(&exrpt, UStr);
+    }
 
-      if (DPS_OK != DpsPrepareItem(Indexer, Doc, Item, ustr, UStr, 
-				   content_lang, &indexed_size, &indexed_limit, max_word_len, min_word_len, crossec
+    if (DPS_OK != DpsPrepareItem(Indexer, Doc, Item, ustr, UStr, 
+				 content_lang, &indexed_size, &indexed_limit, max_word_len, min_word_len, crossec
 #ifdef HAVE_ASPELL
-				   , have_speller, speller
+				 , have_speller, speller
 #endif
-				   )) {
-	DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
-	DpsDSTRFree(&exrpt);
-	TRACE_OUT(Indexer);
+				 )) {
+      DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
+      DpsDSTRFree(&exrpt);
+      TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
-	DpsViolationExit(Indexer->handle, paran);
+      DpsViolationExit(Indexer->handle, paran);
 #endif
-	return DPS_ERROR;
-      }
-
+      return DPS_ERROR;
     }
 		
 		
