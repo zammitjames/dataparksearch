@@ -86,8 +86,7 @@
 */
 
 
-static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num,
-			    int need_count);
+static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num, int need_count);
 
 
 #if HAVE_ORACLE8
@@ -5766,7 +5765,7 @@ __C_LINK int __DPSCALL DpsSQLLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const c
 #define HI_BORDER_EPS2 (1.0 - 0.000001)
 
 #define LINK_WEIGHT_HI 1.0
-#define LINK_WEIGHT_LO -1.0
+#define LINK_WEIGHT_LO LOW_BORDER_EPS
 #define PAS_HI -0.01
 #define PAS_LO -9999999.99
 
@@ -5776,8 +5775,7 @@ typedef struct {
 } DPS_LNK;
 
 
-static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num,
-			    int need_count) {
+static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num, int need_count) {
   char double_str[64];
   DPS_SQLRES	SQLres;
   const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
@@ -6095,10 +6093,10 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   pas = -0.7;
 
   cur_div = fabs(di - Oi);
-  pdiv = fabs(PopRank - Oi);
+  if ((pdiv = fabs(PopRank - Oi)) > EPS) to_update++;
   u_it = ( (cur_div > EPS || pdiv > EPS) && n_Oi > 0);
 
-  DpsLog(A, DPS_LOG_DEBUG, " di:%f  Oi:%f  cur_div:%f  pdiv:%f", di, Oi, cur_div, pdiv);
+  DpsLog(A, DPS_LOG_DEBUG, " -- di:%f  Oi:%f  cur_div:%f  pdiv:%f  nOi:%d", di, Oi, cur_div, pdiv, n_Oi);
 
   for (it = 0; u_it && (it < A->Flags.PopRankNeoIterations); it++) {
 
@@ -6195,10 +6193,10 @@ static int DpsPopRankCalculateNeo(DPS_AGENT *A, DPS_DB *db) {
 	while (u) {
 
 #ifdef WITH_POPHOPS
-	  dps_snprintf(qbuf, sizeof(qbuf),"SELECT url.rec_id,url.next_index_time,url.hops  FROM url%s WHERE url.next_index_time>%d %s %s ORDER BY url.next_index_time LIMIT %d", 
+	  dps_snprintf(qbuf, sizeof(qbuf),"SELECT url.rec_id,url.next_index_time,url.hops FROM url%s WHERE url.next_index_time>%d %s %s ORDER BY url.next_index_time LIMIT %d", 
 		       db->from, nit, (where[0]) ? "AND" : "", where, url_num);
 #else
-	  dps_snprintf(qbuf, sizeof(qbuf),"SELECT url.rec_id,url.next_index_time  FROM url%s WHERE url.next_index_time>%d %s %s ORDER BY url.next_index_time LIMIT %d", 
+	  dps_snprintf(qbuf, sizeof(qbuf),"SELECT url.rec_id,url.next_index_time, FROM url%s WHERE url.next_index_time>%d %s %s ORDER BY url.next_index_time LIMIT %d", 
 		       db->from, nit, (where[0]) ? "AND" : "", where, url_num);
 #endif
 
