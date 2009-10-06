@@ -1030,7 +1030,9 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) continue;
 	DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
 	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
+	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
+	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
       }
       if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
     }  
@@ -1082,6 +1084,7 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[0] :  &Indexer->dbl.db[0];
       }
       DpsPrintTextTemplate(Indexer, NULL, NULL, buf, buf_len, &t, Alias->arg);
+      if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
       if (DPS_OK != DpsSQLQuery(db, &SQLres, buf)) DpsLog(Indexer, DPS_ERROR, "SectionSQL error");
       for (i = 0; i < DpsSQLNumRows(&SQLres); i++) {
 	Item.str = DpsSQLValue(&SQLres, i, 0);
@@ -1091,6 +1094,7 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	Item.len = 0;
 	DpsTextListAdd(&Doc->TextList, &Item);
       }
+      if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
       if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
     }  
     DpsTemplateFree(&t);
