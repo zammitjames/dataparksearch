@@ -2343,6 +2343,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
       continue;
     }
 
+    if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
     /* Open del log file */
     del_buf = logd->wrd_buf[log_num].del_buf;
     del_count = logd->wrd_buf[log_num].ndel;
@@ -2361,8 +2362,8 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
     n = DpsRemoveOldWords(log_buf, n, del_buf, del_count);
     if (n > 1) DpsSort(log_buf, n, sizeof(DPS_LOGWORD), (qsort_cmp)DpsCmplog_wrd);
 
-    DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
-    res = DpsProcessBuf(Indexer, &P, log_num, log_buf, n, del_buf, del_count);
+    if (!(Indexer->flags & DPS_FLAG_UNOCON)) DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+    if (n || del_count) res = DpsProcessBuf(Indexer, &P, log_num, log_buf, n, del_buf, del_count);
 
     logd->wrd_buf[log_num].nrec = 0;
     logd->wrd_buf[log_num].ndel = 0;
@@ -2401,13 +2402,13 @@ int DpsLogdSaveAllBufs(DPS_AGENT *Agent) {
 	  DPS_GETLOCK(Agent, DPS_LOCK_CONF);
 	  db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[j] : &Agent->dbl.db[j];
 	  DPS_RELEASELOCK(Agent, DPS_LOCK_CONF);
-	  if (Agent->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Agent, DPS_LOCK_DB);
+/*	  if (Agent->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Agent, DPS_LOCK_DB);*/
 
 /**	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED);**/
 	  u = (db->LOGD.wrd_buf == NULL);
 /**	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);**/
 	  if (u) continue;
-	  shift = (Agent->now + j + Agent->handle * 7) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
+	  shift = (Agent->handle * 321) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
 	  for(i = 0; i < ((db->WrdFiles) ? db->WrdFiles : NWrdFiles); i++) {
 /**	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));**/
 /*	    u = (db->LOGD.wrd_buf == NULL);*/
@@ -2421,7 +2422,7 @@ int DpsLogdSaveAllBufs(DPS_AGENT *Agent) {
 /*	    DPSSLEEP(0);*/
 	  }
 	  db->LOGD.cur_del_buf = 0;
-	  if (Agent->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Agent, DPS_LOCK_DB);
+/*	  if (Agent->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Agent, DPS_LOCK_DB);*/
 	  if (res != DPS_OK) break;
 	}
 	TRACE_OUT(Agent);

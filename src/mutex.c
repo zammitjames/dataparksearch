@@ -412,16 +412,7 @@ __C_LINK void __DPSCALL DpsLockProc(DPS_AGENT *A, int command, size_t type, cons
 
 #ifdef DEBUG_LOCK
   int handle = A ? A->handle : -1;
-
-#ifdef WITH_TRACE
-  time_t tloc = time(NULL);
-#if defined(__sun) || defined(sun)
-  ctime_r(&tloc, A->timebuf, 32);
-#else
-  ctime_r(&tloc, A->timebuf);
-#endif
-  A->timebuf[20] = '\0';
-#endif
+  unsigned long ticks = DpsStartTimer();
 
   if (type != DPS_LOCK_THREAD)
 	fprintf(
@@ -430,16 +421,10 @@ __C_LINK void __DPSCALL DpsLockProc(DPS_AGENT *A, int command, size_t type, cons
 #else
 		stderr
 #endif
-		, "%s[%d]{%02d} %2d Try %s\t%s\t%d\n", 
-#ifdef WITH_TRACE
-		A->timebuf+4, 
-#else
-		"",
-#endif
-		(int)getpid(), handle, type, (command==DPS_LOCK) ? "lock\t" : "unlock\t", fn, ln);
-#endif
+		, "%lu [%d]{%02d} %2d Try %s\t%s\t%d\n", ticks, (int)getpid(), handle, type, (command==DPS_LOCK) ? "lock\t" : "unlock\t", fn, ln);
 #ifdef WITH_TRACE
   fflush(A->TR);
+#endif
 #endif
 	switch(command){
 		case DPS_LOCK:
@@ -465,14 +450,8 @@ __C_LINK void __DPSCALL DpsLockProc(DPS_AGENT *A, int command, size_t type, cons
 #else
 		stderr
 #endif
-		, "%s[%d]{%02d} %2d %s\t%s\t%d\n", 
-#ifdef WITH_TRACE
-		A->timebuf+4, 
-#else
-		"",
-#endif
-		(int)getpid(),
-		handle, type, (command==DPS_LOCK) ? "locked\t" : ((u) ? "unlocked\t" : "still locked"), fn, ln);
+		, "%lu [%d]{%02d} %2d %s\t%s\t%d\n", 
+		ticks, (int)getpid(), handle, type, (command==DPS_LOCK) ? "locked\t" : ((u) ? "unlocked\t" : "still locked"), fn, ln);
 #ifdef WITH_TRACE
   fflush(A->TR);
 #endif

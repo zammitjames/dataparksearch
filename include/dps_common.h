@@ -1109,7 +1109,7 @@ typedef struct dps_indexer_struct{
 #ifdef WITH_TRACE
         FILE *TR;
         int level;
-        char timebuf[32];
+/*        char timebuf[32];*/
 #endif
 	
 } DPS_AGENT;
@@ -1416,91 +1416,6 @@ enum dps_href_from {
   DPS_HREF_FROM_LINK    = 128,
   DPS_HREF_FROM_SCRIPT  = 256
 };
-
-
-#ifdef WITH_TRACE
-
-#if defined(__sun) || defined(sun)
-
-#define TRACE_IN(A, fn)  {						\
-  register int trace_i;							\
-  time_t tloc = time(NULL);						\
-  ctime_r(&tloc, A->timebuf, 32);						\
-  A->timebuf[20] = '\0';						\
-  fprintf(A->TR, "%s[%d] in ", A->timebuf+4, A->handle);		\
-  for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
-  A->level++;								\
-  fprintf(A->TR, "%s at %s:%d\n", fn, __FILE__, __LINE__);		\
-  fflush(A->TR);							\
-}
-#define TRACE_OUT(A)   {						\
-    register int trace_i;						\
-    time_t tloc = time(NULL);						\
-    ctime_r(&tloc, A->timebuf, 32);					\
-    A->timebuf[20] = '\0';						\
-    fprintf(A->TR, "%s[%d] out", A->timebuf+4, A->handle);		\
-    if (A->level) A->level--;						\
-    for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
-    fprintf(A->TR, "at %s:%d\n", __FILE__, __LINE__);		        \
-    fflush(A->TR);							\
-  }
-
-#define TRACE_LINE(A) {                                                 \
-    register int trace_i;						\
-    time_t tloc = time(NULL);						\
-    ctime_r(&tloc, A->timebuf, 32);					\
-    A->timebuf[20] = '\0';						\
-    fprintf(A->TR, "%s[%d] got", A->timebuf+4, A->handle);		\
-    for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
-    fprintf(A->TR, "the %s:%d\n", __FILE__, __LINE__);	        	\
-    fflush(A->TR);							\
-  }
-
-
-#else /* __sun */
-
-#define TRACE_IN(A, fn)  {						\
-  register int trace_i;							\
-  time_t tloc = time(NULL);						\
-  ctime_r(&tloc, A->timebuf);						\
-  A->timebuf[20] = '\0';						\
-  fprintf(A->TR, "%s[%d] in ", A->timebuf+4, A->handle);		\
-  for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
-  A->level++;								\
-  fprintf(A->TR, "%s at %s:%d\n", fn, __FILE__, __LINE__);		\
-  fflush(A->TR);							\
-}
-#define TRACE_OUT(A)   {						\
-    register int trace_i;						\
-    time_t tloc = time(NULL);						\
-    ctime_r(&tloc, A->timebuf);						\
-    A->timebuf[20] = '\0';						\
-    fprintf(A->TR, "%s[%d] out", A->timebuf+4, A->handle);		\
-    if (A->level) A->level--;						\
-    for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
-    fprintf(A->TR, "at %s:%d\n", __FILE__, __LINE__);		\
-    fflush(A->TR);							\
-  }
-#define TRACE_LINE(A) {                                                 \
-    register int trace_i;						\
-    time_t tloc = time(NULL);						\
-    ctime_r(&tloc, A->timebuf); 					\
-    A->timebuf[20] = '\0';						\
-    fprintf(A->TR, "%s[%d] at ", A->timebuf+4, A->handle);		\
-    for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
-    fprintf(A->TR, "%s:%d\n", __FILE__, __LINE__);	        	\
-    fflush(A->TR);							\
-  }
-
-#endif /* __sun */
-
-#else
-
-#define TRACE_IN(A, fn)
-#define TRACE_OUT(A)
-#define TRACE_LINE(A)
-
-#endif
 
 
 extern char dps_pid_name[];
