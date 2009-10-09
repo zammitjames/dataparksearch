@@ -319,8 +319,13 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	  n.Match.subsection = N->subsection;
 	  n.ordre = ordre;
 
-	  rc = DpsSrvAction(A, &n, DPS_SRV_ACTION_ADD);
-	  N->server_id = n.site_id;
+	  if(A->flags & DPS_FLAG_ADD_SERVURL) {
+	    rc = DpsSrvAction(A, &n, DPS_SRV_ACTION_ADD);
+	    N->server_id = n.site_id;
+	  } else {
+	    rc = DPS_OK;
+	    N->server_id = 0;
+	  }
 	  DpsVarListFree(&n.Vars);
 
 	  if (rc != DPS_OK) return rc;

@@ -249,7 +249,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  fprintf(stderr, " command:%c  match_type:%d  pattern: %s\n", srv->command, srv->Match.match_type, urlstr);
 #endif
 	
-	  res = DpsSrvAction(A, new, DPS_SRV_ACTION_ADD);
+	  if(A->flags & DPS_FLAG_ADD_SERVURL) res = DpsSrvAction(A, new, DPS_SRV_ACTION_ADD);
 	
 	  List->nservers++;
 	  if (new->ordre > dps_max_server_ordre) dps_max_server_ordre = new->ordre;
