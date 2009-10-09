@@ -993,7 +993,7 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
     ndel = 0, mdel = 128, totaldel = 0;
 
     while (u) {
-      dps_snprintf(req, sizeof(req), "SELECT rec_id,url,charset_id FROM url ORDER BY rec_id LIMIT %d OFFSET %ld", recs, offset);
+      dps_snprintf(req, sizeof(req), "SELECT rec_id,url,charset_id FROM url WHERE status!= 0 ORDER BY rec_id LIMIT %d OFFSET %ld", recs, offset);
       if(DPS_OK != (res = DpsSQLQuery(db, &SQLRes, req))) {
 	DpsDocFree(Doc); return res;
       }
