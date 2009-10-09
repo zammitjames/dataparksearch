@@ -739,11 +739,9 @@ __C_LINK int __DPSCALL DpsURLAction(DPS_AGENT *A, DPS_DOCUMENT *D, int cmd) {
 
 #if defined(WITH_TRACE) && defined(DEBUG)
 	{
-	  time_t tloc = time(NULL);
-	  ctime_r(&tloc, A->timebuf);
-	  A->timebuf[20] = '\0';
-	  fprintf(A->TR, "%s[%d] URLAction: (%d) %s   dbfrom: %d, dbto: %d  n.dbl: %d\n", 
-		  A->timebuf+4, A->handle, cmd, DpsURLActionStr(cmd), dbfrom, dbto, A->Conf->dbl.nitems);
+	  register unsigned long ticks = DpsStartTimer();
+	  fprintf(A->TR, "%lu [%d] URLAction: (%d) %s   dbfrom: %d, dbto: %d  n.dbl: %d\n", 
+		  ticks, A->handle, cmd, DpsURLActionStr(cmd), dbfrom, dbto, A->Conf->dbl.nitems);
 	  fflush(A->TR);
 	}
 #endif
@@ -776,10 +774,8 @@ __C_LINK int __DPSCALL DpsURLAction(DPS_AGENT *A, DPS_DOCUMENT *D, int cmd) {
 	        if (db->DBMode == DPS_DBMODE_CACHE) {
 #if defined(WITH_TRACE) && defined(DEBUG)
 		  {
-		    time_t tloc = time(NULL);
-		    ctime_r(&tloc, A->timebuf);
-		    A->timebuf[20] = '\0';
-		    fprintf(A->TR, "%s[%d] URLActionCache: (%d) %s\n", A->timebuf+4, A->handle, cmd, DpsURLActionStr(cmd));
+		    register unsigned long ticks = DpsStartTimer();
+		    fprintf(A->TR, "%lu [%d] URLActionCache: (%d) %s\n", ticks, A->handle, cmd, DpsURLActionStr(cmd));
 		    fflush(A->TR);
 		  }
 #endif
@@ -791,10 +787,8 @@ __C_LINK int __DPSCALL DpsURLAction(DPS_AGENT *A, DPS_DOCUMENT *D, int cmd) {
 		  
 #if defined(WITH_TRACE) && defined(DEBUG)
 		{
-		  time_t tloc = time(NULL);
-		  ctime_r(&tloc, A->timebuf);
-		  A->timebuf[20] = '\0';
-		  fprintf(A->TR, "%s[%d] URLActionSQL: %d (%s)\n", A->timebuf+4, A->handle, cmd, DpsURLActionStr(cmd));
+		  register unsigned long ticks = DpsStartTimer();
+		  fprintf(A->TR, "%lu [%d] URLActionSQL: %d (%s)\n", ticks, A->handle, cmd, DpsURLActionStr(cmd));
 		  fflush(A->TR);
 		}
 #endif

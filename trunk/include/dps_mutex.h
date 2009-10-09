@@ -32,7 +32,7 @@
 
 #if defined(__i386) || defined(__x86_64__) || defined(__amd64__) || defined(__ia64__)
 
-/*#define CAS_MUTEX 1*/
+#define CAS_MUTEX 1
 
 #endif
 

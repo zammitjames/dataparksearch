@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -201,6 +201,49 @@ extern int dps_demonize(void);
 #define DPS_ATOU(x)		((x)?(urlid_t)strtoll((x), (char**)NULL,0):0)
 #define DPS_NULL2EMPTY(x)	((x)?(x):"")
 #define DPD_NULL2STR(x)         ((x)?(x):"<NULL>")
+
+
+
+#ifdef WITH_TRACE
+
+
+#define TRACE_IN(A, fn)  {						\
+  register int trace_i;							\
+  register unsigned long ticks = DpsStartTimer();                       \
+  fprintf(A->TR, "%lu [%d] in ", ticks, A->handle);		        \
+  for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
+  A->level++;								\
+  fprintf(A->TR, "%s at %s:%d\n", fn, __FILE__, __LINE__);		\
+  fflush(A->TR);							\
+}
+#define TRACE_OUT(A)   {						\
+  register int trace_i;		 				        \
+  register unsigned long ticks = DpsStartTimer();                       \
+  fprintf(A->TR, "%lu [%d] out", ticks, A->handle);		        \
+  if (A->level) A->level--;						\
+  for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
+  fprintf(A->TR, "at %s:%d\n", __FILE__, __LINE__);		        \
+  fflush(A->TR);							\
+}
+
+#define TRACE_LINE(A) {                                                 \
+  register int trace_i;						        \
+  register unsigned long ticks = DpsStartTimer();                       \
+  fprintf(A->TR, "%lu [%d] got", ticks, A->handle);		\
+  for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
+  fprintf(A->TR, "the %s:%d\n", __FILE__, __LINE__);	        	\
+  fflush(A->TR);							\
+}
+
+
+#else
+
+#define TRACE_IN(A, fn)
+#define TRACE_OUT(A)
+#define TRACE_LINE(A)
+
+#endif
+
 
 
 
