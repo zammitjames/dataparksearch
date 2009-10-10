@@ -4544,7 +4544,7 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
     DpsResultFree(Res);
 
     if (nrows > 0) rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nrows - 1, 0));
-    u = ((nrows == url_num) || (rec_id == 0));
+    u = (nrows == url_num);
     offset += nrows;
     DpsLog(A, DPS_LOG_EXTRA, "%ld records processed. %d cached of last %d (%.2f%%) at %d", 
 	   offset, ncached, nrows, 100.0 * ncached / nrows, rec_id);
@@ -5076,15 +5076,16 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			goto HTDBexit;
 		      }
 		      for (j = 0; j < DpsSQLNumRows(&SQLres); j++){
-			Item.section = Sec->section;
-			Item.strict = Sec->strict;
-			Item.str = DpsSQLValue(&SQLres, j, 0);
-			Item.section_name = Sec->name;
-			Item.len = dps_strlen(Item.str);
-			Indexer->nbytes += Item.len;
-			DpsTextListAdd(&Doc->TextList, &Item);
 			if (!strcasecmp(Sec->name, "Pop_Rank") || !strcasecmp(Sec->name, "Meta-Language") || !strcasecmp(Sec->name, "Meta-Charset")) {
 			  DpsVarListReplaceStr(&Doc->Sections, Sec->name, DpsSQLValue(&SQLres, j, 0));
+			} else {
+			  Item.section = Sec->section;
+			  Item.strict = Sec->strict;
+			  Item.str = DpsSQLValue(&SQLres, j, 0);
+			  Item.section_name = Sec->name;
+			  Item.len = dps_strlen(Item.str);
+			  Indexer->nbytes += Item.len;
+			  DpsTextListAdd(&Doc->TextList, &Item);
 			}
 		      }
 		      DpsSQLFree(&SQLres);
