@@ -2652,10 +2652,13 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  scale_weight = DPS_ATOI(DpsSQLValue(&SQLres, 0, 1)) - min_weight + 1;
 	  min_weight--;
 	  DpsSQLFree(&SQLres);
-	}
+	
 
-	if (use_showcnt && (db->DBType != DPS_DB_CACHE)) {
-	  dps_snprintf(str, sizeof(str), "SELECT MAX(shows) FROM url");
+	  if (use_showcnt) {
+	    dps_snprintf(str, sizeof(str), "SELECT MAX(shows),MIN(rec_id) FROM url");
+	  }else {
+	    dps_snprintf(str, sizeof(str), "SELECT 0, MIN(rec_id) FROM url");
+	  }
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	  rc = DpsSQLQuery(db, &SQLres, str);
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
@@ -2663,17 +2666,18 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	    goto URLDataWrite_exit;
 	  }
 	  max_shows = DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) + 1;
+	  max_shows = DPS_ATOI(DpsSQLValue(&SQLres, 0, 1)) - 1;
 	  DpsSQLFree(&SQLres);
 	}
 
 	while(u) {
 	  if (use_showcnt) {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight,u.shows FROM url u, server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight,u.shows FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id AND u.status>199 AND u.status<400 ORDER by u.rec_id LIMIT %d",
 			 rec_id, recs);
 	  } else {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id AND u.status>199 ORDER by u.rec_id LIMIT %d",
 			 rec_id, recs);
 	  }
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
@@ -2686,7 +2690,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  for (i = 0; i < nitems; i++) {
 	    status = DPS_ATOI(DpsSQLValue(&SQLres, i, 5));
 	    
-	    if ((status < 200 || status >= 400) /*&& (status != 304)*/) continue;
+	    if ((status < 200 /*|| status >= 400*/) /*&& (status != 304)*/) continue;
 
 	    Item.url_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 0));
 	    Item.site_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
