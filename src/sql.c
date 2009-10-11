@@ -4514,7 +4514,7 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
     Res->num_rows = nrows;
 
     if (db->DBMode == DPS_DBMODE_CACHE) {
-      rc = DpsResAddDocInfoCache(A, db, Res, 0);
+      rc = DpsResAddDocInfoCache(A, db, Res, db->dbnum);
     }
 
     ncached = Res->fetched;
@@ -4522,7 +4522,7 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
     if (A->Flags.URLInfoSQL) {
 
 #ifdef HAVE_SQL
-      rc = DpsResAddDocInfoSQL(A, db, Res, i);
+      rc = DpsResAddDocInfoSQL(A, db, Res, db->dbnum);
 #endif
     }else {
       char sbuf[512];
@@ -4742,7 +4742,7 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 		
 		/* Compose IN string and set to zero url_id field */
 		for(i = 0; i < Res->num_rows; i++) {
-/*		  fprintf(stderr, "docinfoSQL: %d fetched:%d  dbnum:%d for %d\n", i, Res->Doc[i].fetched, Res->Doc[i].dbnum, db->dbnum);*/
+/*		  fprintf(stderr, " -- docinfoSQL: %d fetched:%d  dbnum:%d for %d [%d]\n", i, Res->Doc[i].fetched, Res->Doc[i].dbnum, db->dbnum, dbnum);*/
 #ifdef WITH_MULTIDBADDR
 		  if (Res->Doc[i].dbnum != dbnum) continue;
 #endif
@@ -4750,9 +4750,9 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 			if(db->DBType==DPS_DB_PGSQL)
 			  sprintf(DPS_STREND(instr), "%s'%i'", notfirst ? "," : "",
 				  DpsVarListFindInt(&Res->Doc[i].Sections, "DP_ID", 0));
-			  else
-			    sprintf(DPS_STREND(instr),"%s%i", notfirst ? "," : "",
-				    DpsVarListFindInt(&Res->Doc[i].Sections, "DP_ID", 0));
+			else
+			  sprintf(DPS_STREND(instr),"%s%i", notfirst ? "," : "",
+				  DpsVarListFindInt(&Res->Doc[i].Sections, "DP_ID", 0));
 			notfirst = 1;
 		}
 		
