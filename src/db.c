@@ -240,10 +240,9 @@ __C_LINK int __DPSCALL DpsLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char 
 	TRACE_IN(A, "DpsLimit4");
 
 #ifdef HAVE_SQL
-	if (strcasecmp(field, "link"))
-	  rc = DpsLimit4SQL(A, L, field, type, db);
-	else 
-	  rc = DpsLimitLinkSQL(A, L, field, type, db);
+	if (!strcasecmp(field, "link")) rc = DpsLimitLinkSQL(A, L, field, type, db);
+	else if (!strcasecmp(field, "tag")) rc = DpsLimitTagSQL(A, L, db);
+	else rc = DpsLimit4SQL(A, L, field, type, db);
 #endif
 	dps_strcpy(A->Conf->errstr, db->errstr);
 	TRACE_OUT(A);

@@ -5287,6 +5287,104 @@ int DpsLimit8SQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L,const char *field, int type
 }
 
 
+int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
+  char qbuf[512];
+  const char *info_query = "SELECT i.sval,u.rec_id FROM url u,urlinfo i WHERE u.rec_id=i.url_id AND i.sname='Tag' AND u.status>0 AND";
+  const char *srv_query  = "SELECT s.tag,u.rec_id FROM url u,server s WHERE s.rec_id=u.server_id AND u.status>0 AND";
+  DPS_SQLRES Res;
+  size_t  url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
+  size_t i, pL, nL, nrows, offset;
+  int rc= DPS_OK, u;
+  urlid_t rec_id, start_id = 0;
+  
+  DpsSQLResInit(&Res);
+  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+  rc = DpsSQLQuery(db, &Res, "SELECT MIN(rec_id) FROM url");
+  if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+  if (DpsSQLNumRows(&Res)) start_id = DPS_ATOI(DpsSQLValue(&Res, 0, 0));
+  DpsSQLFree(&Res);
+
+  u = 1;
+  offset = 0;
+  rec_id = start_id;
+  while (u) {
+    dps_snprintf(qbuf, sizeof(qbuf), "%s u.rec_id>%d ORDER BY u.rec_id LIMIT %d", info_query, rec_id, url_num);
+
+    for (i = 0; i < 3; i++) {
+      if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+      rc = DpsSQLQuery(db, &Res, qbuf);
+      if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+      if(DPS_OK != rc) {
+	if (i < 2) { DPSSLEEP(120); continue; }
+	return rc;
+      } else break;
+    }
+    nrows = DpsSQLNumRows(&Res);
+    L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT4URLID));
+    if(L->Item == NULL) {
+      sprintf(db->errstr,"Error: %s",strerror(errno));
+      db->errcode = 1;
+      DpsSQLFree(&Res);
+      return DPS_ERROR;
+    }
+    for(i = 0; i < nrows; i++) {
+      L->Item[L->nitems].url_id = DPS_ATOI(DpsSQLValue(&Res, i, 0));
+      L->Item[L->nitems].val = DpsStrHash32(DpsSQLValue(&Res, i, 1));
+      L->nitems++;
+    }
+    offset += nrows;
+    DpsLog(A, DPS_LOG_EXTRA, "%d records processed at %d", offset, rec_id);
+    rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&Res, nrows - 1, 1));
+    DpsSQLFree(&Res);
+    u = (nrows == url_num);
+    if (u) DPSSLEEP(0);
+  }
+
+
+  pL = 0;
+  nL = L->nitems;
+
+  u = 1;
+  offset = 0;
+  rec_id = start_id;
+  while (u) {
+    dps_snprintf(qbuf, sizeof(qbuf), "%s u.rec_id>%d ORDER BY u.rec_id LIMIT %d", srv_query, rec_id, url_num);
+
+    for (i = 0; i < 3; i++) {
+      if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+      rc = DpsSQLQuery(db, &Res, qbuf);
+      if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+      if(DPS_OK != rc) {
+	if (i < 2) { DPSSLEEP(120); continue; }
+	return rc;
+      } else break;
+    }
+    nrows = DpsSQLNumRows(&Res);
+    L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT4URLID));
+    if(L->Item == NULL) {
+      sprintf(db->errstr,"Error: %s",strerror(errno));
+      db->errcode = 1;
+      DpsSQLFree(&Res);
+      return DPS_ERROR;
+    }
+    for(i = 0; i < nrows; i++) {
+      L->Item[L->nitems].url_id = DPS_ATOI(DpsSQLValue(&Res, i, 0));
+      while(pL < nL && L->Item[pL].url_id < L->Item[L->nitems].url_id) pL++;
+      if (pL < nL && L->Item[pL].url_id < L->Item[L->nitems].url_id) continue;
+      L->Item[L->nitems].val = DpsStrHash32(DpsSQLValue(&Res, i, 1));
+      L->nitems++;
+    }
+    offset += nrows;
+    DpsLog(A, DPS_LOG_EXTRA, "%d records processed at %d", offset, rec_id);
+    rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&Res, nrows - 1, 1));
+    DpsSQLFree(&Res);
+    u = (nrows == url_num);
+    if (u) DPSSLEEP(0);
+  }
+
+  return rc;
+}
+
 int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, int type, DPS_DB *db) {
 	char		*qbuf;
 	size_t		c, i, nrows, offset, qbuflen, ncats;
