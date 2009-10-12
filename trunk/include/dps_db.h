@@ -177,6 +177,7 @@ extern int   DpsLimit8SQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field
 extern int   DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, int type, DPS_DB *db);
 extern int   DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int type, DPS_DB *db);
 extern int   DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type, DPS_DB *db);
+extern int   DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db);
 extern unsigned int   DpsGetCategoryIdSQL(DPS_ENV *Conf, char *category, DPS_DB *db);
 extern int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t i);
 extern int DpsTrackSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db);

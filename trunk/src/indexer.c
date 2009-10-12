@@ -2452,7 +2452,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			return result;
 		}
 		
-		if((!Doc->Buf.content) && (status < 500) && (!strncasecmp(&Doc->CurURL.schema, "htdb:", 5))) {
+		if((!Doc->Buf.content) && (status < 500) && (!strncasecmp(Doc->CurURL.schema, "htdb:", 5))) {
 			DpsLog(Indexer, DPS_LOG_WARN, "No data received");
 			status=DPS_HTTP_STATUS_SERVICE_UNAVAILABLE;
 			DpsVarListReplaceInt(&Doc->Sections, "Status", status);
