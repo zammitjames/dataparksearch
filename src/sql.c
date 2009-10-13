@@ -5176,7 +5176,7 @@ static char *BuildLimitQuery(DPS_DB *db, const char * field) {
   dps_snprintf(smallbuf, 128, ":%s:", field);
   if (strstr(":status:docsize:next_index_time:crc32:referrer:hops:seed:bad_since_time:site_id:pop_rank:url:", 
 	     smallbuf) != NULL) {
-    dps_snprintf(qbuf, 2048, "SELECT %s,rec_id,status FROM url u WHERE ", field);
+    dps_snprintf(qbuf, 2048, "SELECT %s,rec_id,status FROM url u WHERE u.status>0 AND", field);
   } else if(strstr(":last_mod_time:", smallbuf) != NULL) {
     switch(db->DBType) {
     case DPS_DB_PGSQL:
