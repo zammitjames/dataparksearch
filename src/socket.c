@@ -45,7 +45,9 @@
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
-
+#ifdef __linux__
+#include <linux/version.h>
+#endif
 
 void socket_close( DPS_CONN *connp ){
 	if (!connp)
@@ -375,30 +377,30 @@ ssize_t DpsSend(int s, const void *msg, size_t len, int flags) {
 }
 
 
-void DpsSockOpt(DPS_AGENT *A, int socket) {
+void DpsSockOpt(DPS_AGENT *A, int dps_socket) {
   const int lowat = 1;
   struct timeval so_tval;
   so_tval.tv_sec = 300;
   so_tval.tv_usec = 0;
 
 #if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
-  if (setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
+  if (setsockopt(dps_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
     if (A)
       DpsLog(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
     else
       fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
   }
 #endif
-#if defined(SO_SNDLOWAT)
-  if (setsockopt(socket, SOL_SOCKET, SO_SNDLOWAT, (char *)&lowat, sizeof(lowat)) != 0) {
+#if defined(SO_SNDLOWAT) && !defined(__linux__)
+  if (setsockopt(dps_socket, SOL_SOCKET, SO_SNDLOWAT, (char *)&lowat, sizeof(lowat)) != 0) {
     if (A)
       DpsLog(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
     else
       fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
   }
 #endif
-#if defined(SO_RCVLOWAT)
-  if (setsockopt(socket, SOL_SOCKET, SO_RCVLOWAT, (char *)&lowat, sizeof(lowat)) != 0) {
+#if defined(SO_RCVLOWAT) && (!defined(__linux__) || LINUX_VERSION_CODE >= 0x20400)
+  if (setsockopt(dps_socket, SOL_SOCKET, SO_RCVLOWAT, (char *)&lowat, sizeof(lowat)) != 0) {
     if (A)
       DpsLog(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
     else
