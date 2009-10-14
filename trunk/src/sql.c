@@ -5328,8 +5328,8 @@ int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
       return DPS_ERROR;
     }
     for(i = 0; i < nrows; i++) {
-      L->Item[L->nitems].url_id = DPS_ATOI(DpsSQLValue(&Res, i, 0));
-      L->Item[L->nitems].val = DpsStrHash32(DpsSQLValue(&Res, i, 1));
+      L->Item[L->nitems].url_id = DPS_ATOI(DpsSQLValue(&Res, i, 1));
+      L->Item[L->nitems].val = DpsStrHash32(DpsSQLValue(&Res, i, 0));
       L->nitems++;
     }
     offset += nrows;
@@ -5368,10 +5368,10 @@ int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
       return DPS_ERROR;
     }
     for(i = 0; i < nrows; i++) {
-      L->Item[L->nitems].url_id = DPS_ATOI(DpsSQLValue(&Res, i, 0));
+      L->Item[L->nitems].url_id = DPS_ATOI(DpsSQLValue(&Res, i, 1));
       while(pL < nL && L->Item[pL].url_id < L->Item[L->nitems].url_id) pL++;
       if (pL < nL && L->Item[pL].url_id < L->Item[L->nitems].url_id) continue;
-      L->Item[L->nitems].val = DpsStrHash32(DpsSQLValue(&Res, i, 1));
+      L->Item[L->nitems].val = DpsStrHash32(DpsSQLValue(&Res, i, 0));
       L->nitems++;
     }
     offset += nrows;
