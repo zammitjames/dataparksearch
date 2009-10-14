@@ -2084,7 +2084,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   DpsLog(query, DPS_LOG_DEBUG, "max_order: %d  max_order_inquery: %d", Res->max_order, Res->max_order_inquery);
 
 #ifdef WITH_REL_TRACK
-  Track = Res->CoordList.Track = (DPS_URLTRACK*)DpsRealloc(Res->CoordList.Track, Res->CoordList.ncoords * sizeof(*Res->CoordList.Track));
+  Track = Res->CoordList.Track = (DPS_URLTRACK*)DpsRealloc(Res->CoordList.Track, (Res->CoordList.ncoords + 1) * sizeof(*Res->CoordList.Track));
   if (Track == NULL) {TRACE_OUT(query); return; }
 #endif
 
