@@ -4475,7 +4475,6 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
   }
 	
   DpsSQLResInit(&SQLres);
-/*  DpsSQLBegin(db);*/
   while (u) {
     dps_snprintf(qbuf, qbuflen, 
 		 "SELECT rec_id FROM url WHERE rec_id > %d AND (status=200 OR status=206 OR status=302 OR status=304 OR status=303 OR status=307) ORDER BY rec_id LIMIT %d", 
@@ -4484,7 +4483,6 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
     rc = DpsSQLQuery(db, &SQLres, qbuf);
     if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
     if(DPS_OK != rc) {
-/*      DpsSQLEnd(db);*/
       DPS_FREE(qbuf);
       return rc;
     }
@@ -4492,14 +4490,12 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
 
     Res = DpsResultInit(NULL);
     if (Res == NULL) {
-/*	DpsSQLEnd(db);*/
       DPS_FREE(qbuf);
       DpsSQLFree(&SQLres);
       return DPS_ERROR;
     }
     Res->Doc = (DPS_DOCUMENT*)DpsMalloc(sizeof(DPS_DOCUMENT) * nrows + 1);
     if (Res->Doc == NULL) {
-/*	DpsSQLEnd(db);*/
       DPS_FREE(qbuf);
       DpsSQLFree(&SQLres);
       DpsResultFree(Res);
@@ -4528,13 +4524,12 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
       char sbuf[512];
       for(i = 0; i < nrows; i++) {
 	if (Res->Doc[i].fetched) continue;
-	dps_strcpy(sbuf, "UPDATE url SET next_index_time=0,crc32=0 WHERE rec_id=");
+	dps_strcpy(sbuf, "UPDATE url SET next_index_time=0,last_mod_time=0,crc32=0,status=0 WHERE rec_id=");
 	dps_strcat(sbuf, DpsVarListFindStr(&Res->Doc[i].Sections, "DP_ID", "0") );
 	if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
-	rc = DpsSQLQuery(db, NULL, sbuf);
+	rc = DpsSQLAsyncQuery(db, NULL, sbuf);
 	if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
 	if(DPS_OK != rc) {
-/*	  DpsSQLEnd(db);*/
 	  DPS_FREE(qbuf);
 	  return rc;
 	}
@@ -4552,7 +4547,6 @@ static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
     if (u) DPSSLEEP(0);
   }
 
-/*  DpsSQLEnd(db);*/
   DPS_FREE(qbuf);
   return rc;
 }

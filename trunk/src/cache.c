@@ -1134,10 +1134,10 @@ int __DPSCALL DpsAddSearchLimit(DPS_AGENT *Agent, int type, const char *file_nam
 	dps_strncpy(Agent->limits[Agent->nlimits].file_name, file_name, PATH_MAX);
 	Agent->limits[Agent->nlimits].file_name[PATH_MAX-1] = '\0';
 	switch(type){
-		case 0: DpsDecodeHex8Str(str, &hi, &lo, &f_hi, &f_lo); break;
-		case 1: f_hi = hi = 0; f_lo = lo = 0; break;
-		case 2: hi = atoi(str); lo=0; f_hi = hi; f_lo = lo; break;
-		case 3: hi = DpsStrHash32(str); lo = 0; f_hi = hi; f_lo = 0; break;
+		case DPS_LIMTYPE_NESTED: DpsDecodeHex8Str(str, &hi, &lo, &f_hi, &f_lo); break;
+		case DPS_LIMTYPE_TIME: f_hi = hi = 0; f_lo = lo = 0; break;
+		case DPS_LIMTYPE_LINEAR_INT: hi = atoi(str); lo=0; f_hi = hi; f_lo = lo; break;
+		case DPS_LIMTYPE_LINEAR_CRC: hi = DpsStrHash32(str); lo = 0; f_hi = hi; f_lo = 0; break;
 	}	
 	Agent->limits[Agent->nlimits].hi = hi;
 	Agent->limits[Agent->nlimits].lo = lo;
@@ -3367,7 +3367,7 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
       if(DPS_OK != (res = DpsSQLQuery(db, &SQLRes, dat_name))) { TRACE_OUT(A); return res; }
       nitems = DpsSQLNumRows(&SQLRes);
       for( i = 0; i < nitems; i++) {
-	dps_snprintf(dat_name,sizeof(dat_name), "UPDATE url SET last_mod_time=0  WHERE rec_id=%s AND status IN (200,206,302,304)", 
+	dps_snprintf(dat_name,sizeof(dat_name), "UPDATE url SET last_mod_time=0,next_index_time=0 WHERE rec_id=%s AND status IN (200,206,302,304)", 
 		     DpsSQLValue(&SQLRes, i, 0));
 
 	if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
