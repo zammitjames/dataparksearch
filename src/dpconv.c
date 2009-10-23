@@ -26,6 +26,7 @@
 #endif
 
 #include "dps_uniconv.h"
+#include "dps_unidata.h"
 
 #define DPCONV_BUF_SIZE 4096
 
@@ -96,7 +97,7 @@ static int usage(int level){
 
 	fprintf(stderr, "\ndpconv from %s-%s-%s\n\
 (C)1998-2003, LavTech Corp.\n\
-(C)2003-2004, Datapark Corp.\n\
+(C)2003-2009, Datapark Corp.\n\
 \n\
 Usage: dpconv [OPTIONS] -f charset_from -t charset_to  < infile > outfile\n\
 \n\
@@ -104,6 +105,8 @@ Converting options:\n\
   -v            verbose output\n\
   -e            use HTML escape entities for input\n\
   -E            use HTML escape entities for output\n\
+  -C            use Unicode Normalization NFC\n\
+  -D            use Unicode Normalization NFD\n\
 "
 "  -h,-?         print help page and exit\n\
   -hh,-??       print more help and exit\n\
@@ -122,17 +125,18 @@ int main(int argc, char **argv) {
 	DPS_CONV fc_uni, uni_tc;
 	int html_from = 0, html_to = 0;
 	char *from_buf, *uni_buf, *to_buf;
-	int ch, help = 0, verbose = 0;
+	int ch, help = 0, verbose = 0, NFC = 0, NFD = 0;
         char *CharsToEscape = "\"&<>";
 
-
-	while ((ch = getopt(argc, argv, "Eehv?t:f:")) != -1){
+	while ((ch = getopt(argc, argv, "CDEehv?t:f:")) != -1){
 		switch (ch) {
 		case 'E': html_to = 1; break;
 		case 'e': html_from = 1; break;
 		case 'v': verbose = 1; break;
 		case 't': charset_to =  optarg; break;
 		case 'f': charset_from = optarg; break;
+                case 'C': NFC = 1; NFD = 0; break;
+                case 'D': if (NFC == 0) NFD = 1; break;
 		case '?':
 		case 'h':
 		default:
@@ -181,6 +185,8 @@ int main(int argc, char **argv) {
  
 	while((fgets(from_buf, DPCONV_BUF_SIZE, stdin)) != NULL) {
 	  DpsConv(&fc_uni, uni_buf, 4 * DPCONV_BUF_SIZE * sizeof(int), from_buf, DPCONV_BUF_SIZE);
+          if (NFC) uni_buf = DpsUniNormalizeNFC((dpsunicode_t*)uni_buf, (dpsunicode_t*)uni_buf);
+          if (NFD) uni_buf = DpsUniNormalizeNFD((dpsunicode_t*)uni_buf, (dpsunicode_t*)uni_buf);
 	  DpsConv(&uni_tc, to_buf, 16 * DPCONV_BUF_SIZE, uni_buf, 4 * DPCONV_BUF_SIZE * sizeof(int));
           if (fwrite(to_buf, uni_tc.obytes, 1, stdout) != 1) {
 /*	  if (fputs(to_buf, stdout) != 0) {*/
@@ -195,6 +201,9 @@ int main(int argc, char **argv) {
 	}
 
 	fflush(NULL);
+        free(to_buf);
+        free(from_buf);
+        free(uni_buf);
 	
 	return 0;
 }
