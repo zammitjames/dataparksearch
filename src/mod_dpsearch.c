@@ -715,6 +715,7 @@ static int dpsearch_handler(request_rec *r) {
 	DpsVarListReplaceInt(&Agent->Vars,"first",(int)Res->first);
 	DpsVarListReplaceInt(&Agent->Vars,"last",(int)Res->last);
 	DpsVarListReplaceInt(&Agent->Vars,"total",(int)Res->total_found);
+	DpsVarListReplaceInt(&Agent->Vars,"grand_total",(int)Res->grand_total);
 
 	{ 
 	  const char *s_save = DpsStrdup(DpsVarListFindStr(&query_vars, "s", ""));

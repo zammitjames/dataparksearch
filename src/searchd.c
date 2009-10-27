@@ -630,7 +630,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					break;
 				}
 				
-				dps_snprintf(buf,sizeof(buf)-1,"Total_found=%d(%d)",Res->total_found,Res->CoordList.ncoords);
+				dps_snprintf(buf,sizeof(buf)-1,"Total_found=%d %d", Res->total_found, Res->grand_total);
 				hdr.cmd=DPS_SEARCHD_CMD_MESSAGE;
 				hdr.len = dps_strlen(buf) + 1;
 				nsent=DpsSearchdSendPacket(server, &hdr, buf);

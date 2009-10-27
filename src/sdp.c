@@ -426,6 +426,7 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 				msg[nrecv]='\0';
 				if (strncmp(msg, "Total_found", 11) == 0) {
 				  Res->total_found = (size_t)DPS_ATOI(msg + 12);
+				  Res->grand_total = (size_t)DPS_ATOI(strchr(msg + 12, (int)' ') + 1);
 				}
 #ifdef DEBUG_SDP
 				DpsLog(query, DPS_LOG_ERROR, "Message from searchd: '%s'\n",msg);

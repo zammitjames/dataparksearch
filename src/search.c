@@ -506,6 +506,7 @@ int main(int argc, char **argv, char **envp) {
 	DpsVarListAddInt(&Agent->Vars, "first", (int)Res->first);
 	DpsVarListAddInt(&Agent->Vars, "last", (int)Res->last);
 	DpsVarListAddInt(&Agent->Vars, "total", (int)Res->total_found);
+	DpsVarListAddInt(&Agent->Vars, "grand_total", (int)Res->grand_total);
 	
 #ifdef HAVE_ASPELL
 	{ const char *q_save;
