@@ -164,9 +164,9 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			    fromstr = (char*)DpsRealloc(fromstr, dps_strlen(fromstr) + 32);
 			    if (fromstr == NULL) continue;
 			    sprintf(DPS_STREND(fromstr), ", urlinfo ic, categories c");
-			    serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 92);
+			    serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 256);
 			    if (serverstr == NULL) continue;
-			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ic.url_id AND c.rec_id=CAST(ic.sval AS %s) AND ic.sname='Category'",
+			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ic.url_id AND ic.sname='Category' AND c.rec_id=CAST(ic.sval AS %s)",
 				    (serverstr[0]) ? " AND " : "", (db->DBType == DPS_DB_MYSQL) ? "SIGNED" : "INTEGER");
 			  }
 			} else {
@@ -3042,7 +3042,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    }
 
 	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
-	    if (nrows = DpsSQLNumRows(&SQLRes)) {
+	    if ((nrows = DpsSQLNumRows(&SQLRes)) > 0) {
 	      dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes,rand()%nrows,0));
 	    }
 	    DpsSQLFree(&SQLRes);
@@ -4459,6 +4459,101 @@ static void SQLResToDoc(DPS_ENV *Conf, DPS_DOCUMENT *D, DPS_SQLRES *sqlres, size
 	DpsVarListReplaceStr(&D->Sections, "Pop_Rank", dbuf);
 }
 
+
+static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
+  char timestr[64];
+  DPS_SQLRES	SQLres;
+  DPS_CHARSET	*loccs, *utf8cs;
+  DPS_CONV      lc_utf8;
+  long offset = 0L;
+  time_t last_mod_time, diff;
+  int u = 1, rc = DPS_OK;
+  size_t len, url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLSelectCacheSize", DPS_URL_SELECT_CACHE_SIZE);
+  urlid_t rec_id = 0;
+  size_t i, nrows, qbuflen;
+  char *qbuf, *url, *dc_url;
+  const char *freq, *where;
+
+  loccs = A->Conf->lcs;
+  if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
+  utf8cs = DpsGetCharSet("UTF-8");
+  DpsConvInit(&lc_utf8, loccs, utf8cs, A->Conf->CharsToEscape, DPS_RECODE_URL | DPS_RECODE_HTML_TO);
+
+  where = BuildWhere(A, db);
+  if (where == NULL) return DPS_ERROR;
+
+  if ((qbuf = (char*)DpsMalloc(qbuflen = 1024)) == NULL) {
+    return DPS_ERROR;
+  }
+
+  DpsSQLResInit(&SQLres);
+
+  dps_snprintf(qbuf, qbuflen, "SELECT MIN(rec_id) FROM url");
+  if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+  rc = DpsSQLQuery(db, &SQLres, qbuf);
+  if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+  if(DPS_OK != rc) {
+    DPS_FREE(qbuf);
+    return rc;
+  }
+  rec_id = DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) - 1;
+  DpsSQLFree(&SQLres);
+
+
+  printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+  printf("<urlset xmlns=\"http://www.google.com/schemas/sitemap/0.84\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.google.com/schemas/sitemap/0.84 http://www.google.com/schemas/sitemap/0.84/sitemap.xsd\">\n");
+
+  while (u) {
+    dps_snprintf(qbuf, qbuflen, 
+		 "SELECT url,last_mod_time,rec_id FROM url WHERE %s%srec_id > %d AND (status=0 OR (status>=200 AND status< 400) OR (status>2200 AND status<2400)) ORDER BY rec_id LIMIT %d", 
+		 where[0] ? where : "", where[0] ? " AND ": "", rec_id, url_num);
+    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+    rc = DpsSQLQuery(db, &SQLres, qbuf);
+    if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+    if(DPS_OK != rc) {
+      DPS_FREE(qbuf);
+      return rc;
+    }
+    nrows = DpsSQLNumRows(&SQLres);
+
+    for(i = 0; i < nrows; i++) {
+
+      last_mod_time = atol(DpsSQLValue(&SQLres, i, 1));
+      strftime(timestr, sizeof(timestr), "%Y-%m-%dT%H:%M:%S+00:00", gmtime(&last_mod_time));
+
+      diff = A->now - last_mod_time;
+      if (diff < 3600) freq = "hourly";
+      else if (diff < 24 * 3600) freq = "daily";
+      else if (diff < 7 * 24 * 3600) freq = "weekly";
+      else if (diff < 31 * 24 * 3600) freq = "monthly";
+      else if (diff < 366 * 24 * 3600) freq = "yearly";
+      else freq = "never";
+
+      len = dps_strlen(url = DpsSQLValue(&SQLres,i,0));
+      dc_url = (char*)DpsMalloc((size_t)(24 * len + 1));
+      if (dc_url == NULL) continue;
+      /* Convert URL from LocalCharset */
+      DpsConv(&lc_utf8, dc_url, (size_t)24 * len,  url, (size_t)(len + 1));
+
+      printf("<url><loc>%s</loc><lastmod>%s</lastmod><changefreq>%s</changefreq></url>\n", dc_url, timestr, freq);
+
+      DPS_FREE(dc_url);
+
+    }
+
+    if (nrows > 0) rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nrows - 1, 2));
+    u = (nrows == url_num);
+    offset += nrows;
+    DpsLog(A, DPS_LOG_EXTRA, "%ld records processed at %d", offset, rec_id);
+    DpsSQLFree(&SQLres);
+    if (u) DPSSLEEP(0);
+  }
+  printf("</urlset>\n");
+
+
+  DPS_FREE(qbuf);
+  return rc;
+}
 
 static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
   DPS_RESULT *Res;
@@ -6612,6 +6707,9 @@ int DpsURLActionSQL(DPS_AGENT * A, DPS_DOCUMENT * D, int cmd,DPS_DB *db){
 	        case DPS_URL_ACTION_REFRESHDOCINFO:
 		        res = DpsDocInfoRefresh(A, db);
 			break;
+	        case DPS_URL_ACTION_SITEMAP:
+		        res = DpsSitemap(A, db);
+			break;
 	        case DPS_URL_ACTION_REFERER:
 		        res= DpsRefererGet(A, D, db);
 			break;
@@ -6707,7 +6805,7 @@ unsigned int   DpsGetCategoryIdSQL(DPS_ENV *Conf, char *category, DPS_DB *db) {
   dps_snprintf(qbuf, 128, "SELECT rec_id FROM categories WHERE path='%s'", category);
   if(DPS_OK != (rc = DpsSQLQuery(db, &Res, qbuf))) return rc;
   if ( DpsSQLNumRows(&Res) > 0) {
-    sscanf(DpsSQLValue(&Res, 0, 0), "%d", &rc);
+    sscanf(DpsSQLValue(&Res, 0, 0), "%u", &rc);
   }
   DpsSQLFree(&Res);
   return rc;
