@@ -249,18 +249,6 @@ int res;
 }
 
 
-__C_LINK static int __DPSCALL RefreshDocInfo(DPS_AGENT *Indexer) {
-  return DpsURLAction(Indexer, NULL, DPS_URL_ACTION_REFRESHDOCINFO);
-}
-
-__C_LINK static int __DPSCALL ResortCached(DPS_AGENT *Indexer) {
-  return DpsURLAction(Indexer, NULL, DPS_URL_ACTION_RESORT);
-}
-
-__C_LINK static int __DPSCALL RehashStored(DPS_AGENT *Indexer) {
-  return DpsURLAction(Indexer, NULL, DPS_URL_ACTION_REHASHSTORED);
-}
-
 
 static int cmpgrp(const void *v1, const void *v2){
      int res;
@@ -621,6 +609,7 @@ static enum dps_indcmd DpsIndCmd(const char *cmd) {
   else if (!strncasecmp(cmd,"che",3))return DPS_IND_CHECKCONF;
   else if (!strncasecmp(cmd,"docinfo",7))return DPS_IND_DOCINFO;
   else if (!strncasecmp(cmd,"resort",6)) return DPS_IND_RESORT;
+  else if (!strncasecmp(cmd,"sitemap",7)) return DPS_IND_SITEMAP;
   else if (!strncasecmp(cmd,"rehashstore",11)) return DPS_IND_REHASHSTORED;
    
   return DPS_IND_INDEX;
@@ -1544,17 +1533,22 @@ int main(int argc, char **argv, char **envp) {
                }
                break;
           case DPS_IND_DOCINFO:
-	    if (DPS_OK != RefreshDocInfo(&Main)) {
+	    if (DPS_OK != DpsURLAction(&Main, NULL, DPS_URL_ACTION_REFRESHDOCINFO)) {
+                    DpsLog(&Main, DPS_LOG_ERROR, "Error: '%s'", DpsEnvErrMsg(Main.Conf));
+	    }
+	    break;
+          case DPS_IND_SITEMAP:
+	    if (DPS_OK != DpsURLAction(&Main, NULL, DPS_URL_ACTION_SITEMAP)) {
                     DpsLog(&Main, DPS_LOG_ERROR, "Error: '%s'", DpsEnvErrMsg(Main.Conf));
 	    }
 	    break;
           case DPS_IND_RESORT:
-	    if (DPS_OK != ResortCached(&Main)) {
+	    if (DPS_OK != DpsURLAction(&Main, NULL, DPS_URL_ACTION_RESORT)) {
                     DpsLog(&Main, DPS_LOG_ERROR, "Error: '%s'", DpsEnvErrMsg(Main.Conf));
 	    }
 	    break;
           case DPS_IND_REHASHSTORED:
-	    if (DPS_OK != RehashStored(&Main)) {
+	    if (DPS_OK != DpsURLAction(&Main, NULL, DPS_URL_ACTION_REHASHSTORED)) {
                     DpsLog(&Main, DPS_LOG_ERROR, "Error: '%s'", DpsEnvErrMsg(Main.Conf));
 	    }
 	    break;

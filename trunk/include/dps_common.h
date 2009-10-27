@@ -737,6 +737,9 @@ typedef struct dps_search_limit {
         dps_uint4        f_hi;
         dps_uint4        f_lo;
         urlid_t          *data;
+#ifdef HAVE_PTHREADS
+        pthread_t        tid;
+#endif
 } DPS_SEARCH_LIMIT;
 
 
@@ -890,7 +893,8 @@ enum dps_indcmd {
   DPS_IND_DOCINFO,
   DPS_IND_POPRANK,
   DPS_IND_RESORT,
-  DPS_IND_REHASHSTORED
+  DPS_IND_REHASHSTORED,
+  DPS_IND_SITEMAP
 };
 
 enum dps_prmethod {
@@ -1035,9 +1039,9 @@ typedef struct {
 } DPS_TEMPLATE;
 
 typedef struct {
+        float   Weight;
         char    *Match_Pattern;
         urlid_t Id;
-        float   Weight;
         char    Command;
         char    OnErrored;
 } DPS_SERVERCACHE;
