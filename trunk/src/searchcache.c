@@ -158,9 +158,10 @@ int __DPSCALL DpsSearchCacheStore(DPS_AGENT * query, DPS_RESULT *Res){
 #endif
 	if((fd = DpsOpen3(fname, O_WRONLY | O_CREAT | O_TRUNC | DPS_BINARY, DPS_IWRITE)) >= 0) {
 #ifdef DEBUG_CACHE
-	  fprintf(stderr, "found:%d, ncoords:%d\n", Res->total_found, Res->CoordList.ncoords );	
+	  fprintf(stderr, "found:%d, grand_total:%d ncoords:%d\n", Res->total_found, Res->grand_total, Res->CoordList.ncoords );	
 #endif
 	  write(fd, &Res->total_found, sizeof(Res->total_found));
+	  write(fd, &Res->grand_total, sizeof(Res->grand_total));
 
 			
 	  write(fd, &(Res->WWList),sizeof(DPS_WIDEWORDLIST)); 
@@ -261,6 +262,15 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 	
 #ifdef DEBUG_CACHE
 	fprintf(stderr, " found: %d\n", Res->total_found);
+#endif
+
+	if( (-1 == read(fd,&Res->grand_total, sizeof(Res->grand_total))) ){
+		DpsClose(fd);
+		return DPS_ERROR;
+	}
+	
+#ifdef DEBUG_CACHE
+	fprintf(stderr, " grand_total: %d\n", Res->grand_total);
 #endif
 
 	if (-1==read(fd, &wwl, sizeof(DPS_WIDEWORDLIST))) {

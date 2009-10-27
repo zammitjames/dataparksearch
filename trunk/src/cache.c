@@ -2183,6 +2183,8 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Stop load url data %d docs in (%.2f)", Res->CoordList.ncoords, (float)ticks / 1000);
 #endif
 
+	Res->grand_total = Res->CoordList.ncoords;
+
 	if ((!strcasecmp(DpsVarListFindStr(&Indexer->Vars, "GroupBySite", "no"), "yes")) 
 	    && (DpsVarListFindInt(&Indexer->Vars, "site", 0) == 0)) {
 

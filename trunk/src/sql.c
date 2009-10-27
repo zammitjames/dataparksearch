@@ -3974,6 +3974,8 @@ static int DpsSortAndGroupByURL(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db){
 	ticks=DpsStartTimer()-ticks;
 	DpsLog(A,DPS_LOG_DEBUG,"Stop load url data:\t%.2f",(float)ticks/1000);
 
+	R->grand_total = R->CoordList.ncoords;
+
 	if (use_site_id) {
 	  DpsLog(A,DPS_LOG_DEBUG,"Start sort by site_id %d words",R->CoordList.ncoords);
 	  if (R->CoordList.ncoords > 1) 
