@@ -1605,10 +1605,25 @@ AC_ARG_ENABLE(idn,
 				IDN_LIBS="-lidnkit"
 				AC_DEFINE(WITH_IDNKIT)
 				;;
-			*)
+			*-*-freebsd*)
 				if test -f /usr/local/include/idn-int.h; then
 					IDN_CFLAGS="-I/usr/local/include"
 					IDN_LIBS="-L/usr/local/lib -lidn -liconv"
+				else
+					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_LIBS=`pkg-config libidn --libs`
+				fi
+				AC_DEFINE(WITH_IDN)
+				;;
+			*-*-linux*)
+				IDN_CFLAGS=`pkg-config libidn --cflags`
+				IDN_LIBS=`pkg-config libidn --libs`
+				AC_DEFINE(WITH_IDN)
+				;;
+			*)
+				if test -f /usr/local/include/idn-int.h; then
+					IDN_CFLAGS="-I/usr/local/include"
+					IDN_LIBS="-L/usr/local/lib -lidn"
 				else
 					IDN_CFLAGS=`pkg-config libidn --cflags`
 					IDN_LIBS=`pkg-config libidn --libs`
