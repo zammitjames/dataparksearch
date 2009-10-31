@@ -30302,8 +30302,13 @@ _ACEOF
 
 				;;
 			*-*-linux*)
-				IDN_CFLAGS=`pkg-config libidn --cflags`
-				IDN_LIBS=`pkg-config libidn --libs`
+				if test -f /usr/include/idn-int.h; then
+					IDN_CFLAGS=""
+					IDN_LIBS="-lidn"
+				else
+					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_LIBS=`pkg-config libidn --libs`
+				fi
 				cat >>confdefs.h <<\_ACEOF
 #define WITH_IDN 1
 _ACEOF

@@ -1616,8 +1616,13 @@ AC_ARG_ENABLE(idn,
 				AC_DEFINE(WITH_IDN)
 				;;
 			*-*-linux*)
-				IDN_CFLAGS=`pkg-config libidn --cflags`
-				IDN_LIBS=`pkg-config libidn --libs`
+				if test -f /usr/include/idn-int.h; then
+					IDN_CFLAGS=""
+					IDN_LIBS="-lidn"
+				else
+					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_LIBS=`pkg-config libidn --libs`
+				fi
 				AC_DEFINE(WITH_IDN)
 				;;
 			*)
