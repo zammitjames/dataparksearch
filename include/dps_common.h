@@ -374,9 +374,12 @@ typedef struct {
         char            *section;
         char            *subsection;
 	char		*pattern;
-	regex_t		*reg;
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+        char            *idn_pattern;
+#endif
 	char		*arg;
         char            *dbaddr;
+	regex_t		*reg;
 	urlid_t         server_id;        /**< server.rec_id            */
 	dps_uint2	case_sense;
         dps_uint2       last;

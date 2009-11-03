@@ -53,6 +53,11 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#if defined(WITH_IDN) && !defined(APACHE1) && !defined(APACHE2)
+#include <idna.h>
+#elif defined(WITH_IDNKIT) && !defined(APACHE1) && !defined(APACHE2)
+#include <idn/api.h>
+#endif
 
 /*
 #define TRACE_CMDS 1
@@ -238,16 +243,18 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	DPS_AGENT *Indexer = C->Indexer;
+	DPS_CHARSET *cs = NULL;
 	size_t	i;
 	int	has_alias=0;
-#ifdef WITH_PARANOIA
-	void * paran = DpsViolationEnter(paran);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	DPS_CHARSET *uni_cs;
+	char   *ascii = NULL, *uni = NULL;
+	DPS_CONV  url_uni;
+	DPS_URL *SrvURL = NULL, *PunyURL = NULL;
+	size_t len;
 #endif
 	
 	if(!(C->flags & DPS_FLAG_ADD_SERV)) {
-#ifdef WITH_PARANOIA
-	  DpsViolationExit(-1, paran);
-#endif
 	  return DPS_OK;
 	}
 	
@@ -291,26 +298,59 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 		else
 		if(!strcasecmp(av[i], "page")) C->Srv->Match.match_type = DPS_MATCH_FULL;
 		else{
-			if(!C->Srv->Match.pattern)
+		        if(!C->Srv->Match.pattern) {
 				C->Srv->Match.pattern = (char*)DpsStrdup(av[i]);
-			else
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if(((C->Srv->Match.match_type==DPS_MATCH_BEGIN) || (C->Srv->Match.match_type==DPS_MATCH_FULL) ) && (C->Srv->Match.pattern[0])) {
+				  uni_cs = DpsGetCharSet("UTF8");
+				  cs = DpsGetCharSet(DpsVarListFindStr(&C->Srv->Vars, "RemoteCharset", DpsVarListFindStr(&C->Srv->Vars, "URLCharset", "iso8859-1")));
+				  DpsConvInit(&url_uni, cs, uni_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
+				  SrvURL = DpsURLInit(NULL);
+				  PunyURL = DpsURLInit(NULL);
+				  DpsURLParse(SrvURL, av[i]);
+				  if (SrvURL->hostname != NULL) {
+				    uni = (char*)DpsMalloc(len = (48 * dps_strlen(SrvURL->hostname + 1)));
+				    if (uni == NULL) {
+				      return DPS_ERROR;
+				    }
+				    DpsConv(&url_uni, (char*)uni, len, SrvURL->hostname, len);
+#ifdef WITH_IDN
+				    if (idna_to_ascii_8z((const char *)uni, &ascii, 0) != IDNA_SUCCESS) {
+				      DPS_FREE(uni); 
+				      return DPS_ERROR;
+				    }
+#else
+				    ascii = (char*)DpsMalloc(len);
+				    if (ascii == NULL) {
+				      DPS_FREE(uni); 
+				      return DPS_ERROR;
+				    }
+				    if (idn_encodename(IDN_IDNCONV, (const char *)uni, ascii, len) != idn_success) {
+				      DPS_FREE(ascii);
+				      DPS_FREE(uni); 
+				      return DPS_ERROR;
+				    }
+#endif
+				    PunyURL->hostname = ascii;
+				    RelLink(Indexer, SrvURL, PunyURL, &C->Srv->Match.idn_pattern, 0);
+				  }
+/*				  DPS_FREE(ascii);  will be fried later with DpsURLFree(PunyURL) */
+				  DPS_FREE(uni); 
+				  DpsURLFree(SrvURL); DpsURLFree(PunyURL);
+				}
+#endif
+			} else
 			if(!has_alias){
 				has_alias=1;
 				DpsVarListReplaceStr(&C->Srv->Vars,"Alias",av[i]);
 			}else{
 			  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "too many argiments: '%s'", av[i]);
-#ifdef WITH_PARANOIA
-			  DpsViolationExit(-1, paran);
-#endif
 			  return DPS_ERROR;
 			}
 		}
 	}
 	if (!C->Srv->Match.pattern) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr), "too few argiments in '%s' command", av[0]);
-#ifdef WITH_PARANOIA
-	  DpsViolationExit(-1, paran);
-#endif
 	  return DPS_ERROR;
 	}
 	if(DPS_OK != DpsServerAdd(Indexer, C->Srv)) {
@@ -319,17 +359,14 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 		dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "%s [%s:%d]", s_err, __FILE__, __LINE__);
 		DPS_FREE(s_err);
 		DpsMatchFree(&C->Srv->Match);
-#ifdef WITH_PARANOIA
-		DpsViolationExit(-1, paran);
-#endif
 		return DPS_ERROR;
 	}
-	if(((C->Srv->Match.match_type==DPS_MATCH_BEGIN) || (C->Srv->Match.match_type==DPS_MATCH_FULL) ) && 
-	   (C->Srv->Match.pattern[0])&&(C->flags&DPS_FLAG_ADD_SERVURL)) {
+	if(((C->Srv->Match.match_type == DPS_MATCH_BEGIN) || (C->Srv->Match.match_type == DPS_MATCH_FULL) ) && 
+	   (C->Srv->Match.pattern[0]) && (C->flags&DPS_FLAG_ADD_SERVURL)) {
 		DPS_HREF Href;
 		int charset_id;
-		DPS_CHARSET *cs = DpsGetCharSet(DpsVarListFindStr(&C->Srv->Vars, "RemoteCharset", 
-								  DpsVarListFindStr(&C->Srv->Vars, "URLCharset", "iso8859-1")));
+		
+		if (cs == NULL) cs = DpsGetCharSet(DpsVarListFindStr(&C->Srv->Vars, "RemoteCharset", DpsVarListFindStr(&C->Srv->Vars, "URLCharset", "iso8859-1")));
 
 		bzero((void*)&Href, sizeof(Href));
 		Href.url=C->Srv->Match.pattern;
@@ -349,9 +386,6 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 	DpsMatchFree(&C->Srv->Match);
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
-#ifdef WITH_PARANOIA
-	DpsViolationExit(-1, paran);
-#endif
 	return DPS_OK;
 }
 

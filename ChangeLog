@@ -3,6 +3,9 @@ History
 -------
 
 Latest snapshot:
+	* Improved support for Internationalized Domain Names (IDN).
+	* $(grand_total) teplate meta-variable has been added. Use it to show the number of URL found before groupping by site.
+	* -Esitemap command has been added fot indexer. Use it to make a sitemap listing. All filtering options aplly.
 	* Multithreaded results sorting has been implemented.
 	* SectionSQL command has been added.
 	* Language and charset guesser has been modified for speed. It need to recreate language maps, if you've created yours own.

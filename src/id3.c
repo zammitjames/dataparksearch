@@ -39,7 +39,7 @@ static int add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, char
                 Item.section = Sec->section;
 		Item.strict = Sec->strict;
                 Item.str=val;
-                Item.section_name=name;
+                Item.section_name = (char*)name;
 		Item.len = 0;
                 DpsTextListAdd(&Doc->TextList,&Item);
 		DpsLog(Indexer, DPS_LOG_DEBUG, "Added: %s:%s", name, val); 
@@ -50,7 +50,7 @@ static int add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, char
 }
 
 
-static int id3_add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, unsigned char *val, int charset, size_t len) {
+static int id3_add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, char *val, int charset, size_t len) {
 	DPS_VAR		*Sec;
 /*
 	DPS_CHARSET     *from_cs, *utf8_cs;
@@ -151,8 +151,8 @@ static int get_tag(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 */
 
 static int get_id3v2(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
-	unsigned char	*ch;
-	unsigned char 	*buf_in = Doc->Buf.content;
+	char	*ch;
+	char 	*buf_in = Doc->Buf.content;
 	size_t	hdr_len=Doc->Buf.content-Doc->Buf.buf;
 	size_t	cont_len=Doc->Buf.size-hdr_len;
 	size_t  tag_size, frame_size;
@@ -172,11 +172,11 @@ static int get_id3v2(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	
 	ch += 10;
 
-	while(((size_t)(ch - buf_in) + 6 < tag_size) && ((size_t)(ch - buf_in) + 6 < cont_len)){
+	while( (ch + 6 < buf_in + tag_size) && (ch + 6 < buf_in + cont_len) ){
 		
 		frame_size = (ch[3] << 16) + (ch[4] << 8) + ch[5];
 
-		if ( ((ch - buf_in) + 6 + frame_size > tag_size) ||
+		if ( (ch + 6 + frame_size > buf_in + tag_size) ||
 		     (frame_size > tag_size) ||
 		     (frame_size == 0) )
 		  break;

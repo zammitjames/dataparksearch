@@ -210,7 +210,7 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
     Href.url= DpsStrndup(s, (size_t)len);
 /*    DpsSGMLUnescape(Href.url);  we do this later */
     Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-    Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", -1);
+    Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
     Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
     Href.method = DPS_METHOD_GET;
     DpsHrefListAdd(Indexer, &Doc->Hrefs, &Href);

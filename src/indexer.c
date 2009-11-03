@@ -397,74 +397,6 @@ __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT * Indexer) {
 	return DPS_OK;
 }
 
-static void RelLink(DPS_AGENT *Indexer, DPS_URL *curURL, DPS_URL *newURL, char **str) {
-	const char	*schema = newURL->schema ? newURL->schema : curURL->schema;
-	const char	*hostinfo = newURL->hostinfo ? newURL->hostinfo : curURL->hostinfo;
-	const char	*path = (newURL->path && newURL->path[0]) ? newURL->path : curURL->path;
-	const char	*fname = ((newURL->filename && newURL->filename[0]) || (newURL->path && newURL->path[0])) ? 
-	  newURL->filename : curURL->filename;
-	const char     *query_string = newURL->query_string;
-	char		*pathfile = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(path)) + dps_strlen(DPS_NULL2EMPTY(fname)) +
-						     dps_strlen(DPS_NULL2EMPTY(query_string)) + 5);
-	int             cascade;
-	DPS_MATCH	*Alias;
-	char		*alias = NULL;
-	size_t		aliassize, nparts = 10;
-	DPS_MATCH_PART	Parts[10];
-
-	if (newURL->hostinfo == NULL) newURL->charset_id = curURL->charset_id;
-	
-	if (pathfile == NULL) return;
-/*	sprintf(pathfile, "/%s%s%s",  DPS_NULL2EMPTY(path), DPS_NULL2EMPTY(fname), DPS_NULL2EMPTY(query_string));*/
-	pathfile[0] = '/'; 
-	dps_strcpy(pathfile + 1, DPS_NULL2EMPTY(path)); dps_strcat(pathfile, DPS_NULL2EMPTY(fname)); dps_strcat(pathfile, DPS_NULL2EMPTY(query_string));
-		
-	DpsURLNormalizePath(pathfile);
-
-	if (!strcasecmp(DPS_NULL2EMPTY(schema), "mailto") 
-	    || !strcasecmp(DPS_NULL2EMPTY(schema), "javascript")
-	    || !strcasecmp(DPS_NULL2EMPTY(schema), "feed")
-	    ) {
-	        *str = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(schema)) + dps_strlen(DPS_NULL2EMPTY(newURL->specific)) + 4);
-		if (*str == NULL) return;
-/*		sprintf(*str, "%s:%s", DPS_NULL2EMPTY(schema), DPS_NULL2EMPTY(newURL->specific));*/
-		dps_strcpy(*str, DPS_NULL2EMPTY(schema)); dps_strcat(*str, ":"); dps_strcat(*str, DPS_NULL2EMPTY(newURL->specific));
-	} else if(/*!strcasecmp(DPS_NULL2EMPTY(schema), "file") ||*/ !strcasecmp(DPS_NULL2EMPTY(schema), "htdb")) {
-	        *str = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(schema)) + dps_strlen(pathfile) + 4);
-		if (*str == NULL) return;
-/*		sprintf(*str, "%s:%s", DPS_NULL2EMPTY(schema), pathfile);*/
-		dps_strcpy(*str, DPS_NULL2EMPTY(schema)); dps_strcat(*str, ":"); dps_strcat(*str, pathfile);
-	}else{
-	        *str = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(schema)) + dps_strlen(pathfile) + dps_strlen(DPS_NULL2EMPTY(hostinfo)) + 8);
-		if (*str == NULL) return;
-/*		sprintf(*str, "%s://%s%s", DPS_NULL2EMPTY(schema), DPS_NULL2EMPTY(hostinfo), pathfile);*/
-		dps_strcpy(*str, DPS_NULL2EMPTY(schema)); dps_strcat(*str, "://"); dps_strcat(*str, DPS_NULL2EMPTY(hostinfo)); dps_strcat(*str, pathfile);
-	}
-	
-	if(!strncmp(*str, "ftp://", 6) && (strstr(*str, ";type=")))
-		*(strstr(*str, ";type")) = '\0';
-	DPS_FREE(pathfile);
-
-	for(cascade = 0; ((Alias=DpsMatchListFind(&Indexer->Conf->ReverseAliases,*str,nparts,Parts))) && (cascade < 1024); cascade++) {
-	        aliassize = dps_strlen(Alias->arg) + dps_strlen(Alias->pattern) + dps_strlen(*str) + 128;
-		alias = (char*)DpsRealloc(alias, aliassize);
-		if (alias == NULL) {
-		  DpsLog(Indexer, DPS_LOG_ERROR, "No memory (%d bytes). %s line %d", aliassize, __FILE__, __LINE__);
-		  goto ret;
-		}
-		DpsMatchApply(alias,aliassize,*str,Alias->arg,Alias,nparts,Parts);
-		if(alias[0]){
-		  DpsLog(Indexer,DPS_LOG_DEBUG,"ReverseAlias%d: pattern:%s, arg:%s -> '%s'", cascade, Alias->pattern, Alias->arg, alias);
-		  DPS_FREE(*str);
-		  *str = (char*)DpsStrdup(alias);
-		} else break;
-		if (Alias->last) break;
-	}
-
-ret:	
-	DPS_FREE(alias);
-
-}
 
 static int DpsDocBaseHref(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 	const char	*basehref=DpsVarListFindStr(&Doc->Sections,"base.href",NULL);
@@ -533,7 +465,7 @@ int DpsConvertHref(DPS_AGENT *Indexer, DPS_URL *CurURL, DPS_HREF *Href){
 	}
 
 	newURL->charset_id = Href->charset_id;
-	RelLink(Indexer, CurURL, newURL, &newhref);
+	RelLink(Indexer, CurURL, newURL, &newhref, 1);
 	
 	DpsLog(Indexer,DPS_LOG_DEBUG,"Link '%s' %s",Href->url,newhref);
 
@@ -552,7 +484,7 @@ int DpsConvertHref(DPS_AGENT *Indexer, DPS_URL *CurURL, DPS_HREF *Href){
 
 static int DpsDocConvertHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 	size_t		i;
-	int		hops = DpsVarListFindInt(&Doc->Sections, "Hops", -1);
+	int		hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 	urlid_t		url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	dps_uint4           maxhops = DpsVarListFindUnsigned(&Doc->Sections, "MaxHops", 255);
 	urlid_t         server_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0);
@@ -977,7 +909,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
     DpsHrefInit(&Href);
     Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-    Href.hops = 1 + DpsVarListFindInt(&Doc->Sections,"Hops", -1);
+    Href.hops = 1 + DpsVarListFindInt(&Doc->Sections,"Hops", 0);
     Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
     Href.url = buf;
     Href.method = DPS_METHOD_GET;
@@ -1693,7 +1625,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	}
 
 	newURL->charset_id = Parent->charset_id;
-	RelLink(Indexer, (base) ? baseURL : &Parent->CurURL, newURL, &newhref);
+	RelLink(Indexer, (base) ? baseURL : &Parent->CurURL, newURL, &newhref, 1);
 	DpsVarListReplaceLst(&Doc->Sections, &Parent->Sections, NULL, "*");
 	DpsVarListDel(&Doc->Sections, "E_URL");
 	DpsVarListDel(&Doc->Sections, "URL_ID");
@@ -2452,7 +2384,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			return result;
 		}
 		
-		if((!Doc->Buf.content) && (status < 500) && (!strncasecmp(Doc->CurURL.schema, "htdb:", 5))) {
+		if((!Doc->Buf.content) && (status < 500) && (!strncasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "htdb:", 5))) {
 			DpsLog(Indexer, DPS_LOG_WARN, "No data received");
 			status=DPS_HTTP_STATUS_SERVICE_UNAVAILABLE;
 			DpsVarListReplaceInt(&Doc->Sections, "Status", status);

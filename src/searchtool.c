@@ -1861,8 +1861,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 
 /*  fprintf(stderr, "2. x:%lf  xy:%lf  y:%lf {xy /(x + y):%lf}\n\n", 
 	  x, xy, y, xy / (x + y) );*/
-  xy /= phr_n--;
-  xy *= phr_n;
+  xy *= (phr_n - 1);
+  xy /= phr_n;
 #ifdef WITH_REL_TRACK
   *D_y = y;
 #endif
@@ -2026,8 +2026,8 @@ static int DpsOriginWeightFull(int origin) {  /* Weight for origin can be from 1
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x01;
   if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x02;
   if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x14;
-  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x08;
-  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x18;
+  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x0A;
+  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x21;
   if (origin & DPS_WORD_ORIGIN_QUERY)   return 0x24;
   if (origin & DPS_WORD_ORIGIN_COMMON)  return 0x3F;
   return 0;
@@ -2066,6 +2066,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t	i, j = 0, D_size, R_size, phr_n;
   size_t  *count, *xy_o, count_size;
   size_t wordsec, wordpos, prev_wordpos, wordnum, prev_wordnum, wordorder, prev_wordorder;
+  size_t n_order_inquery = Res->max_order_inquery + 1;
   DPS_URL_CRD_DB *Crd;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK *Track;
@@ -2073,7 +2074,6 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t nsections = DpsVarListFindInt(&query->Vars, "NumSections", 256);
   size_t cur_order, cur_exact, cur_sec;
   int wf[256];
-/*  int cnt_pas;*/
   double Rbc;
   dps_uint4 *R, *D;
   register double xy_wf;
@@ -2104,7 +2104,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 
   DpsWeightFactorsInit(DpsVarListFindStr(&query->Vars, "wf", ""), wf);
 
-  D_size = (1 + nsections /*Res->WWList.nwords * 256*/ + DPS_N_ADD) * sizeof(dps_uint4);
+  D_size = (1 + nsections  + DPS_N_ADD) * sizeof(dps_uint4);
   R_size = (1 + DPS_N_ADD) * sizeof(dps_uint4);
   if ((R = (dps_uint4*)DpsXmalloc(R_size)) == NULL) {
     DPS_FREE(count);
@@ -2126,7 +2126,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   R[DPS_N_FIRSTPOS] = DPS_BEST_POSITION;
 #endif
 #ifdef WITH_REL_WRDCOUNT
-  R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT  * (Res->max_order_inquery + 1);
+  R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT  * n_order_inquery;
 #endif
   R[DPS_N_COUNT] = 0;
   R[DPS_N_ORIGIN] = DpsOriginIndex(DPS_WORD_ORIGIN_QUERY);
@@ -2141,7 +2141,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   } else { cur_order = -1; cur_exact = 0; }
 
   for(xy_wf = 0, i = 0; i < nsections; i++) xy_wf += wf[i];
-  Rbc = /*DpsOriginWeightFull(DPS_WORD_ORIGIN_QUERY) **/ (double)DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON) * (Res->max_order_inquery + 1) * xy_wf /** nsections*/;
+  Rbc = (double)DpsOriginWeightFull(DPS_WORD_ORIGIN_COMMON) * n_order_inquery * xy_wf;
 
   xy_o[wordorder] = DpsOriginWeightFull(Res->WWList.Word[wordnum].origin);
   nsec = wf[wordsec]; D[DPS_N_ADD + wordsec] = 1;
@@ -2167,7 +2167,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 
   for(i = 1; i < Res->CoordList.ncoords; i++) {
     /* Group by url_id */
-    { size_t nwordpos = DPS_WRDPOS(Crd[i].coord);
+    { register size_t nwordpos = DPS_WRDPOS(Crd[i].coord);
       if (wordpos != nwordpos) {
 	prev_wordpos = wordpos;
       }
@@ -2199,7 +2199,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef WITH_REL_DISTANCE
 /*      D[DPS_N_DISTANCE] += (wordnum == prev_wordnum + 1) ? (wordpos - prev_wordpos) : (1000 + wordpos - prev_wordpos);*/
       D[DPS_N_DISTANCE] += (wordpos - prev_wordpos);
-      if (wordorder && (wordorder != prev_wordorder + 1)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;
+/*      if ((prev_wordorder != (wordorder + 1) % n_order_inquery) && (wordorder != (prev_wordorder + 1) % n_order_inquery)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;*/
 #endif
       count[wordorder]++;
       count[Res->max_order_inquery + DpsOriginIndex(Res->WWList.Word[wordnum].origin)]++;
@@ -2238,14 +2238,15 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	register size_t xy = 0;
 #ifdef WITH_REL_WRDCOUNT
 	register size_t tt, sum = 0;
-	register size_t median = phr_n / (Res->max_order_inquery + 1);
+	register size_t median = phr_n / n_order_inquery;
 #endif
 	for (tt = 0; tt <= Res->max_order_inquery; tt++) {
 	  xy += xy_o[tt];
 #ifdef WITH_REL_WRDCOUNT
+	  if (Res->items[tt].order_origin & DPS_WORD_ORIGIN_STOP) continue;
 	  if (count[tt])
 	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-	  else sum += 2000;
+	  else sum += 20000;
 #endif
 	}
 	D[DPS_N_ORIGIN] = tt;
@@ -2256,7 +2257,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 /*	xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
 	D[DPS_N_WRDCOUNT] = phr_n - 2;
-	D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / (Res->max_order_inquery + 1);
+	D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / n_order_inquery;
       
 #ifdef WITH_REL_TRACK
 	Track[j].D_wrdcount = phr_n - 2;
@@ -2273,7 +2274,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 					       );
 #ifdef WITH_REL_TRACK
 	Track[j].x = Rbc;
-	Track[j].xy = xy * nsec * (phr_n - 1) / phr_n;
+	Track[j].xy = xy * nsec * phr_n / (phr_n + 1);
 #endif
       }
       j++;
@@ -2322,14 +2323,15 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     register size_t xy = 0;
 #ifdef WITH_REL_WRDCOUNT
     register size_t tt, sum = 0;
-    register size_t median = phr_n / (Res->max_order_inquery + 1);
+    register size_t median = phr_n / n_order_inquery;
 #endif
     for (tt = 0; tt <= Res->max_order_inquery; tt++) {
       xy += xy_o[tt];
 #ifdef WITH_REL_WRDCOUNT
+      if (Res->items[tt].order_origin & DPS_WORD_ORIGIN_STOP) continue;
       if (count[tt])
 	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-      else sum += 2000;
+      else sum += 20000;
 #endif
     }
     D[DPS_N_ORIGIN] = tt;
@@ -2340,7 +2342,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     /*    xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
     D[DPS_N_WRDCOUNT] = phr_n - 2;
-    D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / (Res->max_order_inquery + 1);
+    D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / n_order_inquery;
   
 #ifdef WITH_REL_TRACK
     Track[j].D_wrdcount = phr_n - 2;
@@ -2374,6 +2376,7 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t	i, j = 0, D_size, R_size, phr_n;
   size_t  *count, count_size;
   size_t wordsec, wordpos, prev_wordpos, wordnum, prev_wordnum, wordorder, prev_wordorder;
+  size_t n_order_inquery = Res->max_order_inquery + 1;
   DPS_URL_CRD_DB *Crd;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK *Track;
@@ -2483,7 +2486,7 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef WITH_REL_DISTANCE
 /*	    D[DPS_N_DISTANCE] += (wordnum == prev_wordnum + 1) ? (wordpos - prev_wordpos) : (1000 + wordpos - prev_wordpos);*/
       D[DPS_N_DISTANCE] += (wordpos - prev_wordpos);
-      if (wordorder && (wordorder != prev_wordorder + 1)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;
+      if ((prev_wordorder != (wordorder + 1) % n_order_inquery) && (wordorder != (prev_wordorder + 1) % n_order_inquery)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;
 #endif
       count[wordorder]++;
 
@@ -2606,6 +2609,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
   size_t	i, j = 0, D_size, R_size, phr_n;
   size_t  *count, count_size;
   size_t wordsec, wordpos, prev_wordpos, wordnum, prev_wordnum, wordorder, prev_wordorder;
+  size_t n_order_inquery = Res->max_order_inquery + 1;
   DPS_URL_CRD_DB *Crd;
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK *Track;
@@ -2716,7 +2720,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
 #ifdef WITH_REL_DISTANCE
 /*	    D[DPS_N_DISTANCE] += (wordnum == prev_wordnum + 1) ? (wordpos - prev_wordpos) : (1000 + wordpos - prev_wordpos);*/
       D[DPS_N_DISTANCE] += (wordpos - prev_wordpos);
-      if (wordorder && (wordorder != prev_wordorder + 1)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;
+      if ((prev_wordorder != (wordorder + 1) % n_order_inquery) && (wordorder != (prev_wordorder + 1) % n_order_inquery)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;
 #endif
       count[wordorder]++;
 

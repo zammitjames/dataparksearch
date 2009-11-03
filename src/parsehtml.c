@@ -551,7 +551,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_HREF	Href;
       DpsHrefInit(&Href);
       Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-      Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", -1);
+      Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
       Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
       Href.url = Item->str;
       Href.method = DPS_METHOD_GET;
@@ -1339,7 +1339,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 /*		DpsSGMLUnescape(href); why we need do this ? */
 		  DpsHrefInit(&Href);
 		  Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-		  Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", -1);
+		  Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 		  Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
 		  Href.url=href;
 		  Href.method=DPS_METHOD_GET;

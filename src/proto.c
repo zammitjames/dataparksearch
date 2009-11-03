@@ -1358,7 +1358,7 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 		if((dir=opendir(openname))){
 		        DPS_HREF Href;
 			char *stre;
-			int hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", -1);
+			int hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 			dps_strcpy(Doc->Buf.buf,"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n<HTML><BODY>\n");
 			
 			stre=DPS_STREND(Doc->Buf.buf);

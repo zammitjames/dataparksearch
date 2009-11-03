@@ -20,6 +20,7 @@
 #include "dps_url.h"
 #include "dps_utils.h"
 #include "dps_charsetutils.h"
+#include "dps_log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -399,5 +400,82 @@ char * DpsURLNormalizePath(char * str){
 	}
 
 	return str;
+}
+
+
+ void RelLink(DPS_AGENT *Indexer, DPS_URL *curURL, DPS_URL *newURL, char **str, int ReverseAliasFlag) {
+	const char	*schema = newURL->schema ? newURL->schema : curURL->schema;
+	const char	*hostname = newURL->hostname ? newURL->hostname : curURL->hostname;
+	const char	*auth = newURL->auth ? newURL->auth : curURL->auth;
+	const char	*path = (newURL->path && newURL->path[0]) ? newURL->path : curURL->path;
+	const char	*fname = ((newURL->filename && newURL->filename[0]) || (newURL->path && newURL->path[0])) ? 
+	  newURL->filename : curURL->filename;
+	const char     *query_string = newURL->query_string;
+	char		*pathfile = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(path)) + dps_strlen(DPS_NULL2EMPTY(fname)) +
+						     dps_strlen(DPS_NULL2EMPTY(query_string)) + 5);
+	int             cascade;
+	DPS_MATCH	*Alias;
+	char		*alias = NULL;
+	size_t		aliassize, nparts = 10;
+	DPS_MATCH_PART	Parts[10];
+
+	if (newURL->hostinfo == NULL) newURL->charset_id = curURL->charset_id;
+	
+	if (pathfile == NULL) return;
+/*	sprintf(pathfile, "/%s%s%s",  DPS_NULL2EMPTY(path), DPS_NULL2EMPTY(fname), DPS_NULL2EMPTY(query_string));*/
+	pathfile[0] = '/'; 
+	dps_strcpy(pathfile + 1, DPS_NULL2EMPTY(path)); dps_strcat(pathfile, DPS_NULL2EMPTY(fname)); dps_strcat(pathfile, DPS_NULL2EMPTY(query_string));
+		
+	DpsURLNormalizePath(pathfile);
+
+	if (!strcasecmp(DPS_NULL2EMPTY(schema), "mailto") 
+	    || !strcasecmp(DPS_NULL2EMPTY(schema), "javascript")
+	    || !strcasecmp(DPS_NULL2EMPTY(schema), "feed")
+	    ) {
+	        *str = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(schema)) + dps_strlen(DPS_NULL2EMPTY(newURL->specific)) + 4);
+		if (*str == NULL) return;
+/*		sprintf(*str, "%s:%s", DPS_NULL2EMPTY(schema), DPS_NULL2EMPTY(newURL->specific));*/
+		dps_strcpy(*str, DPS_NULL2EMPTY(schema)); dps_strcat(*str, ":"); dps_strcat(*str, DPS_NULL2EMPTY(newURL->specific));
+	} else if(/*!strcasecmp(DPS_NULL2EMPTY(schema), "file") ||*/ !strcasecmp(DPS_NULL2EMPTY(schema), "htdb")) {
+	        *str = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(schema)) + dps_strlen(pathfile) + 4);
+		if (*str == NULL) return;
+/*		sprintf(*str, "%s:%s", DPS_NULL2EMPTY(schema), pathfile);*/
+		dps_strcpy(*str, DPS_NULL2EMPTY(schema)); dps_strcat(*str, ":"); dps_strcat(*str, pathfile);
+	}else{
+	  *str = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(schema)) + dps_strlen(pathfile) + dps_strlen(DPS_NULL2EMPTY(hostname)) + dps_strlen(DPS_NULL2EMPTY(auth)) + 8);
+	  if (*str == NULL) return;
+/*		sprintf(*str, "%s://%s%s", DPS_NULL2EMPTY(schema), DPS_NULL2EMPTY(hostinfo), pathfile);*/
+	  dps_strcpy(*str, DPS_NULL2EMPTY(schema)); dps_strcat(*str, "://"); 
+	  if (auth) {
+	    dps_strcat(*str, auth); dps_strcat(*str,"@");
+	  }
+	  dps_strcat(*str, DPS_NULL2EMPTY(hostname)); dps_strcat(*str, pathfile);
+	}
+	
+	if(!strncmp(*str, "ftp://", 6) && (strstr(*str, ";type=")))
+		*(strstr(*str, ";type")) = '\0';
+	DPS_FREE(pathfile);
+
+	if (ReverseAliasFlag) {
+	  for(cascade = 0; ((Alias=DpsMatchListFind(&Indexer->Conf->ReverseAliases,*str,nparts,Parts))) && (cascade < 1024); cascade++) {
+	        aliassize = dps_strlen(Alias->arg) + dps_strlen(Alias->pattern) + dps_strlen(*str) + 128;
+		alias = (char*)DpsRealloc(alias, aliassize);
+		if (alias == NULL) {
+		  DpsLog(Indexer, DPS_LOG_ERROR, "No memory (%d bytes). %s line %d", aliassize, __FILE__, __LINE__);
+		  goto ret;
+		}
+		DpsMatchApply(alias,aliassize,*str,Alias->arg,Alias,nparts,Parts);
+		if(alias[0]){
+		  DpsLog(Indexer,DPS_LOG_DEBUG,"ReverseAlias%d: pattern:%s, arg:%s -> '%s'", cascade, Alias->pattern, Alias->arg, alias);
+		  DPS_FREE(*str);
+		  *str = (char*)DpsStrdup(alias);
+		} else break;
+		if (Alias->last) break;
+	  }
+	}
+
+ret:	
+	DPS_FREE(alias);
+
 }
 
