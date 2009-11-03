@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -200,6 +200,9 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  DpsVarListReplaceLst(&new->Vars, &srv->Vars, NULL, "*");
 	
 	  new->Match.pattern = (char*)DpsStrdup(urlstr);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	  new->Match.idn_pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(srv->Match.idn_pattern));
+#endif
 	  new->Match.nomatch = srv->Match.nomatch;
 	  new->Match.case_sense = srv->Match.case_sense;
 	  new->Match.match_type = srv->Match.match_type;

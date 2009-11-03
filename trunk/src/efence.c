@@ -886,8 +886,11 @@ extern C_LINKAGE void _DpsFree(void * address, char *filename, size_t fileline) 
 
 	slot = slotForUserAddress(address);
 
-	if ( !slot )
-	  EF_Abort("DpsFree(%a): address not from DpsMalloc() at %s:%d.", address, filename, fileline);
+	if ( !slot ) {
+/*	  EF_Abort("DpsFree(%a): address not from DpsMalloc() at %s:%d.", address, filename, fileline);*/
+	  EF_Print("DpsFree(%a): address not from DpsMalloc() at %s:%d.\n", address, filename, fileline);
+	  return;
+	}
 
 	if ( slot->mode != ALLOCATED ) {
 		if ( internalUse && slot->mode == INTERNAL_USE )

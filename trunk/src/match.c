@@ -81,6 +81,9 @@ DPS_MATCH *DpsMatchInit(DPS_MATCH *M){
 
 void DpsMatchFree(DPS_MATCH * Match){
 	DPS_FREE(Match->pattern);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	DPS_FREE(Match->idn_pattern);
+#endif
 	DPS_FREE(Match->arg);
 	DPS_FREE(Match->section);
 	DPS_FREE(Match->subsection);
@@ -107,9 +110,8 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
 #endif
-	
 /*	
-	fprintf(stderr, "DpsMatchExec: '%s' -> '%s' '%s'\n",string, Match->pattern, DpsMatchTypeStr(Match->match_type));
+	fprintf(stderr, "DpsMatchExec: '%s' -> '%s'['%s'] '%s'\n",string, Match->pattern, DPS_NULL2EMPTY(Match->idn_pattern), DpsMatchTypeStr(Match->match_type));
 */
 	
 	switch(Match->match_type){
@@ -177,16 +179,34 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			slen = dps_strlen(DPS_NULL2EMPTY(Match->pattern));
 			if(Match->case_sense){
 				res=strncasecmp(Match->pattern,string,slen);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res) {
+				  slen = dps_strlen(DPS_NULL2EMPTY(Match->idn_pattern));
+				  if (slen) res = strncasecmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
+				}
+#endif
 			}else{
 				res=strncmp(Match->pattern,string,slen);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res) {
+				  slen = dps_strlen(DPS_NULL2EMPTY(Match->idn_pattern));
+				  if (slen) res = strncmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
+				}
+#endif
 			}
 			break;
 		case DPS_MATCH_FULL:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			if(Match->case_sense){
 				res=strcasecmp(Match->pattern,string);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = strcasecmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
+#endif
 			}else{
 				res=strcmp(Match->pattern,string);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = strcmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
+#endif
 			}
 			break;
 		case DPS_MATCH_END:
@@ -297,6 +317,9 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	N=&L->Match[L->nmatches++];
 	DpsMatchInit(N);
 	N->pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(M->pattern));
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	N->idn_pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(M->idn_pattern));
+#endif
 	N->match_type=M->match_type;
 	N->case_sense=M->case_sense;
 	N->nomatch=M->nomatch;

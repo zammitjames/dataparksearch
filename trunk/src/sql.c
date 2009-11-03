@@ -80,6 +80,11 @@
 #ifdef HAVE_SYS_IPC_H
 #include <sys/ipc.h>
 #endif
+#if defined(WITH_IDN) && !defined(APACHE1) && !defined(APACHE2)
+#include <idna.h>
+#elif defined(WITH_IDNKIT) && !defined(APACHE1) && !defined(APACHE2)
+#include <idn/api.h>
+#endif
 
 /*
 #define DEBUG
@@ -662,6 +667,13 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
   const char *tablename = ((db->addrURL.filename != NULL) && (db->addrURL.filename[0] != '\0')) ? db->addrURL.filename : "links";
   const char *fieldname = DpsVarListFindStr(&db->Vars, "field", "url");
   char		qbuf[1024];
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+  DPS_CHARSET *uni_cs;
+  char   *ascii = NULL, *uni = NULL;
+  DPS_CONV  url_uni;
+  DPS_URL *SrvURL = NULL, *PunyURL = NULL;
+  size_t len;
+#endif
 
   DpsSQLResInit(&SQLRes);
 
@@ -673,6 +685,45 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
     
     DpsMatchFree(&Srv->Match);
     Srv->Match.pattern	= strdupnull(DpsSQLValue(&SQLRes,i,0));
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+    if(((Srv->Match.match_type==DPS_MATCH_BEGIN) || (Srv->Match.match_type==DPS_MATCH_FULL) ) && (Srv->Match.pattern[0]) ) {
+
+      uni_cs = DpsGetCharSet("UTF8");
+      DpsConvInit(&url_uni, cs, uni_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
+      SrvURL = DpsURLInit(NULL);
+      PunyURL = DpsURLInit(NULL);
+      DpsURLParse(SrvURL, Srv->Match.pattern);
+      if (SrvURL->hostname != NULL) {
+	uni = (char*)DpsMalloc(len = (48 * dps_strlen(SrvURL->hostname + 1)));
+	if (uni == NULL) {
+	  return DPS_ERROR;
+	}
+	DpsConv(&url_uni, (char*)uni, len, SrvURL->hostname, len);
+#ifdef WITH_IDN
+	if (idna_to_ascii_8z((const char *)uni, &ascii, 0) != IDNA_SUCCESS) {
+	  DPS_FREE(uni); 
+	  return DPS_ERROR;
+	}
+#else
+	ascii = (char*)DpsMalloc(len);
+	if (ascii == NULL) {
+	  DPS_FREE(uni); 
+	  return DPS_ERROR;
+			  }
+	if (idn_encodename(IDN_IDNCONV, (const char *)uni, ascii, len) != idn_success) {
+	  DPS_FREE(ascii);
+	  DPS_FREE(uni); 
+	  return DPS_ERROR;
+	}
+#endif
+	PunyURL->hostname = ascii;
+	RelLink(Indexer, SrvURL, PunyURL, &Srv->Match.idn_pattern, 0);
+      }
+/*				  DPS_FREE(ascii);  will be fried later with DpsURLFree(PunyURL) */
+      DPS_FREE(uni); 
+      DpsURLFree(SrvURL); DpsURLFree(PunyURL);
+    }
+#endif
     if(DPS_OK != DpsServerAdd(Indexer, Srv)) {
       char * s_err;
       s_err = (char*)DpsStrdup(Indexer->Conf->errstr);
@@ -714,6 +765,13 @@ static int DpsLoadServerTable(DPS_AGENT * Indexer, DPS_DB *db){
 	const char      *infoname = DpsVarListFindStr(&db->Vars, "srvinfo", "srvinfo");
 	int		res;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	DPS_CHARSET *uni_cs, *cs;
+	char   *ascii = NULL, *uni = NULL;
+	DPS_CONV  url_uni;
+	DPS_URL *SrvURL = NULL, *PunyURL = NULL;
+	size_t len;
+#endif
 	
 	DpsSQLResInit(&SQLRes);
 	DpsSQLResInit(&SRes);
@@ -766,6 +824,46 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 		DPS_FREE(Server->Match.arg);
 		
 		if (Server->command == 'S') {
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+		        if(((Server->Match.match_type==DPS_MATCH_BEGIN) || (Server->Match.match_type==DPS_MATCH_FULL) ) && (Server->Match.pattern[0]) ) {
+
+			  uni_cs = DpsGetCharSet("UTF8");
+			  cs = DpsGetCharSet(DpsVarListFindStr(&Server->Vars, "RemoteCharset", DpsVarListFindStr(&Server->Vars, "URLCharset", "iso8859-1")));
+			  DpsConvInit(&url_uni, cs, uni_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
+			  SrvURL = DpsURLInit(NULL);
+			  PunyURL = DpsURLInit(NULL);
+			  DpsURLParse(SrvURL, Server->Match.pattern);
+			  if (SrvURL->hostname != NULL) {
+			    uni = (char*)DpsMalloc(len = (48 * dps_strlen(SrvURL->hostname + 1)));
+			    if (uni == NULL) {
+			      return DPS_ERROR;
+			    }
+			    DpsConv(&url_uni, (char*)uni, len, SrvURL->hostname, len);
+#ifdef WITH_IDN
+			    if (idna_to_ascii_8z((const char *)uni, &ascii, 0) != IDNA_SUCCESS) {
+			      DPS_FREE(uni); 
+			      return DPS_ERROR;
+			    }
+#else
+			    ascii = (char*)DpsMalloc(len);
+			    if (ascii == NULL) {
+			      DPS_FREE(uni); 
+			      return DPS_ERROR;
+			    }
+			    if (idn_encodename(IDN_IDNCONV, (const char *)uni, ascii, len) != idn_success) {
+			      DPS_FREE(ascii);
+			      DPS_FREE(uni); 
+			      return DPS_ERROR;
+			    }
+#endif
+			    PunyURL->hostname = ascii;
+			    RelLink(Indexer, SrvURL, PunyURL, &Server->Match.idn_pattern, 0);
+			  }
+/*				  DPS_FREE(ascii);  will be fried later with DpsURLFree(PunyURL) */
+			  DPS_FREE(uni); 
+			  DpsURLFree(SrvURL); DpsURLFree(PunyURL);
+			}
+#endif
 			DpsServerAdd(Indexer, Server);
 			if(((Server->Match.match_type==DPS_MATCH_BEGIN) ||(Server->Match.match_type==DPS_MATCH_FULL) ) && 
 			   (Indexer->flags & DPS_FLAG_ADD_SERVURL)) {

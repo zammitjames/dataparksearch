@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,7 @@ extern int _DpsURLParse(DPS_URL *url, const char *s, const char *file, int line)
 extern int DpsURLParse(DPS_URL *url,const char *s);
 #endif
 extern char * DpsURLNormalizePath(char * path);
+extern void RelLink(DPS_AGENT *Indexer, DPS_URL *curURL, DPS_URL *newURL, char **str, int ReverseAliasFlag);
 
 #endif
 

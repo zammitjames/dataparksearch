@@ -13,9 +13,9 @@ use vars qw( $VERSION @ISA $AUTOLOAD );
 require DynaLoader;
 
 @ISA     = qw( DynaLoader );
-$VERSION = '4.52';
+$VERSION = '4.53';
 
-bootstrap Dataparksearch $VERSION;
+bootstrap Dataparksearch;
 
 my %methods = map { $_ => 1 } qw( total_found page_number W WE
                                   num_pages is_next work_time 
