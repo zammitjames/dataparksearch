@@ -378,6 +378,9 @@ int DpsDocAddConfExtraHeaders(DPS_ENV *Conf,DPS_DOCUMENT *Doc) {
 	DpsVarListInsStr(&Doc->RequestHeaders, "Connection","close");
 #ifdef HAVE_ZLIB
 	DpsVarListInsStr(&Doc->RequestHeaders,"Accept-Encoding","gzip,x-gzip,deflate,compress,x-compress");
+	DpsVarListInsStr(&Doc->RequestHeaders,"TE","gzip,deflate,compress,identity");
+#else
+	DpsVarListInsStr(&Doc->RequestHeaders,"TE","identity");
 #endif
 	return DPS_OK;
 }
