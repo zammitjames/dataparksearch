@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,16 +19,15 @@
 #ifndef _DPS_CONTENTENCODING_H
 #define _DPS_CONTENTENCODING_H
 
-/*
-#define DPS_ENCODING_IDENTITY 0
-#define DPS_ENCODING_DEFLATE  1
-#define DPS_ENCODING_GZIP     2
-#define DPS_ENCODING_COMPRESS 4
-#define DPS_ENCODING_UNKNOWN  7
-*/
+
+#ifdef HAVE_ZLIB
 
 extern __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc);
 extern __C_LINK int __DPSCALL DpsInflate(DPS_AGENT *query, DPS_DOCUMENT *Doc);
 extern __C_LINK int __DPSCALL DpsUncompress(DPS_AGENT *query, DPS_DOCUMENT *Doc);
+
+#endif
+
+extern int DpsUnchunk(DPS_AGENT *query, DPS_DOCUMENT *Doc, const char *ce);
 
 #endif
