@@ -1194,16 +1194,27 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
 	const char	*ct=DpsVarListFindStr(&Doc->Sections,"Content-Type","");
 	const char	*ce=DpsVarListFindStr(&Doc->Sections,"Content-Encoding","");
+	const char	*te=DpsVarListFindStr(&Doc->Sections,"Transfer-Encoding","");
 #ifdef HAVE_LIBEXTRACTOR
 	int             nosections = 0;
 #endif
 	int		result = DPS_OK;
 	size_t          i, r;
-	
+
 	if(!strcmp(DPS_NULL2EMPTY(Doc->CurURL.filename), "robots.txt")) return DPS_OK;
 
 	if(Doc->method != DPS_METHOD_HEAD) {
 	
+	  if(!strcasecmp(te, "chunked")) {
+		DPS_THREADINFO(Indexer, "Unchunk", url);
+		if (status == 206) {
+		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't unchunk it.");
+		  return result;
+		}
+		DpsUnchunk(Indexer, Doc, ce);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
+	  }
 #ifdef HAVE_ZLIB
 	  if((!strcasecmp(ce, "gzip")) || (!strcasecmp(ce, "x-gzip"))) {
 		DPS_THREADINFO(Indexer,"UnGzip",url);

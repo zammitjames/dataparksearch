@@ -129,8 +129,8 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   if( (Doc->Buf.size) <= (Doc->Buf.content - Doc->Buf.buf + sizeof(gzheader)) )
     return -1;
   /* check magic identificator */
- if ((unsigned char)Doc->Buf.content[0] != gzheader[0]) return -1;
- if ((unsigned char)Doc->Buf.content[1] != gzheader[1]) return -1;
+  if ((unsigned char)Doc->Buf.content[0] != gzheader[0]) return -1;
+  if ((unsigned char)Doc->Buf.content[1] != gzheader[1]) return -1;
 
   gap = (Doc->Buf.content - Doc->Buf.buf)/* + 1*/;
   csize = Doc->Buf.size - gap;
@@ -268,3 +268,53 @@ __C_LINK int __DPSCALL DpsUncompress(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 }
 
 #endif
+
+
+
+int DpsUnchunk(DPS_AGENT *query, DPS_DOCUMENT *Doc, const char *ce) {
+  char *buf, *to_buf, *from_content, *dead_end;
+  uLong   Len;
+  size_t csize, gap, allocated_size;
+  int res, chunk_size, rc = DPS_OK;
+
+  if( (Doc->Buf.size) <= (size_t)(Doc->Buf.content - Doc->Buf.buf) )
+    return DPS_ERROR;
+  gap = (Doc->Buf.content - Doc->Buf.buf);
+  csize = Doc->Buf.size - gap;
+
+  allocated_size = (size_t)Doc->Buf.allocated_size;
+  buf = (char*)DpsMalloc(allocated_size + 1);
+  if (buf == NULL) return DPS_ERROR;
+  dps_memmove(buf, Doc->Buf.buf, gap);
+  
+  to_buf = buf + gap;
+  from_content = Doc->Buf.content;
+  dead_end = buf + allocated_size;
+
+  chunk_size = DPS_HTOI(from_content);
+  while(chunk_size) {
+/*    while((from_content < dead_end) && (*from_content != '\r')) from_content++;
+    if (from_content >= dead_end) { rc = DPS_ERROR; break; }*/
+    while(from_content < dead_end && *from_content != '\n') from_content++;
+    if (from_content >= dead_end) { rc = DPS_ERROR; break; }
+    from_content++;
+
+    if (from_content + chunk_size >= dead_end) { rc = DPS_ERROR; break; }
+    dps_memmove(to_buf, from_content, chunk_size);
+
+    to_buf += chunk_size;
+    from_content += chunk_size;
+    chunk_size = DPS_HTOI(from_content);
+  }
+  Doc->Buf.size = from_content - Doc->Buf.buf;
+  DPS_FREE(Doc->Buf.buf);
+  Doc->Buf.buf = (char*)buf;
+  Doc->Buf.allocated_size = Doc->Buf.size + 1;
+  Doc->Buf.content = Doc->Buf.buf + gap;
+  Doc->Buf.buf[Doc->Buf.size] = '\0';
+  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size)) == NULL) {
+    return DPS_ERROR;
+  }
+
+  return rc;
+}

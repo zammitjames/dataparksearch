@@ -196,6 +196,7 @@ extern int dps_demonize(void);
 /* NULL safe atoi*/
 /*#define DPS_ATOI(x)		((x)?atoi(x):0)*/
 #define DPS_ATOI(x)		((x)?(int)strtol((x), (char **)NULL, 0):0)
+#define DPS_HTOI(x)             ((x)?(int)strtol((x), (char **)NULL, 16):0)
 /*#define DPS_ATOF(x)		((x)?atof(x):0.0)*/
 #define DPS_ATOF(x)		((x)?strtod(x, (char **)NULL):0.0)
 #define DPS_ATOU(x)		((x)?(urlid_t)strtoll((x), (char**)NULL,0):0)
@@ -245,6 +246,7 @@ extern int dps_demonize(void);
 #endif
 
 
+#define __ fprintf(stderr, " == %s:%d\n", __FILE__, __LINE__);
 
 
 #endif /* _DPS_UTILS_H */
