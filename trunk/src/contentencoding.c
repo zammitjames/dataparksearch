@@ -310,11 +310,11 @@ int DpsUnchunk(DPS_AGENT *query, DPS_DOCUMENT *Doc, const char *ce) {
   DPS_FREE(Doc->Buf.buf);
   Doc->Buf.buf = (char*)buf;
   Doc->Buf.allocated_size = Doc->Buf.size + 1;
-  Doc->Buf.content = Doc->Buf.buf + gap;
-  Doc->Buf.buf[Doc->Buf.size] = '\0';
   if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size)) == NULL) {
     return DPS_ERROR;
   }
+  Doc->Buf.content = Doc->Buf.buf + gap;
+  Doc->Buf.buf[Doc->Buf.size] = '\0';
 
   return rc;
 }
