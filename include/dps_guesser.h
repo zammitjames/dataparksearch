@@ -24,7 +24,7 @@
 /* Structure to sort guesser results */
 typedef struct {
      DPS_LANGMAP * map;
-     size_t hits, miss;
+  size_t hits, miss, diff;
 } DPS_MAPSTAT;
 
 typedef struct {

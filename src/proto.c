@@ -815,6 +815,7 @@ static int DpsNNTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc){
 	int  headers=1;
 	int  has_content=0;
 	ssize_t nbytes;
+	char savec;
 	
 	memset(cmd,0,sizeof(cmd));
 	end=Doc->Buf.buf;
@@ -837,7 +838,7 @@ static int DpsNNTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc){
 	inscmd(cmd,&ncmd,DPS_NNTP_QUIT);
 	
 	/* Parse request headers */
-	tok = dps_strtok_r(Doc->Buf.buf,"\r\n",&lt);
+	tok = dps_strtok_r(Doc->Buf.buf, "\r\n", &lt, &savec);
 	while(tok){
 #ifdef DEBUG_NNTP
 		fprintf(stderr,"HEADER: '%s'\n",tok);
@@ -854,7 +855,7 @@ static int DpsNNTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc){
 				dps_strcpy(pass,auth);
 			}
 		}
-		tok = dps_strtok_r(NULL,"\r\n",&lt);
+		tok = dps_strtok_r(NULL, "\r\n", &lt, &savec);
 	}
 
 
@@ -1136,7 +1137,7 @@ static int DpsNNTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc){
 			}else
 			if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "nntp")) {
 				char *e;
-				if((e = dps_strtok_r(str,"\t\r\n",&lt)))
+				if((e = dps_strtok_r(str, "\t\r\n", &lt, NULL)))
 					dps_snprintf(end, Doc->Buf.allocated_size - dps_strlen(Doc->Buf.buf), 
 						     "<A HREF=\"%s%s\"></A>\n", DPS_NULL2EMPTY(Doc->CurURL.path), e);
 				end=end+dps_strlen(end);
@@ -1147,13 +1148,13 @@ static int DpsNNTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc){
 				char * field[10];
 				memset(field,sizeof(field),0);
 				
-				tok = dps_strtok_r(str,"\t\r\n",&lt);
+				tok = dps_strtok_r(str, "\t\r\n", &lt, NULL);
 				while(tok){
 #ifdef DEBUG_NNTP
 					fprintf(stderr,"NNTPGet : field[%d]: '%s'\n",n,tok);
 #endif
 					if(n<10)field[n]=tok;
-					tok = dps_strtok_r(NULL,"\t\r\n",&lt);
+					tok = dps_strtok_r(NULL, "\t\r\n", &lt, NULL);
 					n++;
 				}
 				if(field[4]){
@@ -1323,12 +1324,12 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 
 
 	/* Remember If-Modified-Since timestamp */
-	s = dps_strtok_r(Doc->Buf.buf,"\r\n",&lt);
+	s = dps_strtok_r(Doc->Buf.buf, "\r\n", &lt, NULL);
 	while(s){
 		if(!strncasecmp(s,"If-Modified-Since: ",19)){
 			ims=DpsHttpDate2Time_t(s+19);
 		}
-		s = dps_strtok_r(NULL,"\r\n",&lt);
+		s = dps_strtok_r(NULL, "\r\n", &lt, NULL);
 	}
 
 	dps_strcpy(mystatname,openname);

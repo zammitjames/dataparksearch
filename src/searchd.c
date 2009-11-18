@@ -336,7 +336,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 				}
 				dinfo[hdr.len]='\0';
 				ndocs = 0;
-				tok = dps_strtok_r(dinfo, "\r\n", &lt);
+				tok = dps_strtok_r(dinfo, "\r\n", &lt, NULL);
 				
 				while(tok){
 					Res->Doc = (DPS_DOCUMENT*)DpsRealloc(Res->Doc, sizeof(DPS_DOCUMENT) * (ndocs + 1));
@@ -358,7 +358,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					}
 #endif
 					
-					tok = dps_strtok_r(NULL, "\r\n", &lt);
+					tok = dps_strtok_r(NULL, "\r\n", &lt, NULL);
 					ndocs++;
 				}
 				
@@ -1019,15 +1019,15 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		  res = DpsSQLAsyncQuery(db, NULL, query);
 		  if (res != DPS_OK) {to_delete = 0; continue; }
 		} else {
-		  IP = dps_strtok_r(query + sizeof(long), "\2", &lt);
+		  IP = dps_strtok_r(query + sizeof(long), "\2", &lt, NULL);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: IP: %s", IP);*/
-		  qwords = dps_strtok_r(NULL, "\2", &lt);
+		  qwords = dps_strtok_r(NULL, "\2", &lt, NULL);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: qwords: %s", qwords);*/
-		  qtime = dps_strtok_r(NULL, "\2", &lt);
+		  qtime = dps_strtok_r(NULL, "\2", &lt, NULL);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: qtime: %s", qtime);*/
-		  total_found = dps_strtok_r(NULL, "\2", &lt); 
+		  total_found = dps_strtok_r(NULL, "\2", &lt, NULL); 
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: total: %s", total_found);*/
-		  wtime = dps_strtok_r(NULL, "\2", &lt); 
+		  wtime = dps_strtok_r(NULL, "\2", &lt, NULL); 
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: wtime: %s", wtime);*/
       
 		  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qtrack (ip,qwords,qtime,found,wtime) VALUES ('%s','%s',%s,%s,%s)",
@@ -1044,9 +1044,9 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		  DpsSQLFree(&sqlRes);
 
 		  do {
-		    var = dps_strtok_r(NULL, "\2", &lt);
+		    var = dps_strtok_r(NULL, "\2", &lt, NULL);
 		    if (var != NULL) {
-		      val = dps_strtok_r(NULL, "\2", &lt); 
+		      val = dps_strtok_r(NULL, "\2", &lt, NULL); 
 		      dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qinfo (q_id,name,value) VALUES (%s%i%s,'%s','%s')", 
 				   qu, rec_id, qu, var, val);
 		      res = DpsSQLAsyncQuery(db, NULL, qbuf);

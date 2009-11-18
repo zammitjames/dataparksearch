@@ -136,9 +136,9 @@ extern __C_LINK int __DPSCALL dps_snprintf(char *str, size_t size, const char *f
 #define snprintf dps_snprintf
 #endif
 
-extern char *dps_strtok_r(char *s, const char *delim, char **save_ptr);
+extern char *dps_strtok_r(char *s, const char *delim, char **last, char *save);
 #ifndef HAVE_STRTOK_R
-#define strtok_r dps_rstok_r
+#define strtok_r(x,y,z) dps_rstok_r((x), (y), (z), NULL);
 #endif
 
 extern double dps_strtod (const char *nptr, char **endptr);

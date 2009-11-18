@@ -343,13 +343,16 @@ int len;
 
 
 /* strtok_r clone */
-char * dps_strtok_r(char *s, const char *delim, char **last) {
+char * dps_strtok_r(char *s, const char *delim, char **last, char *save) {
     const char *spanp;
     int c, sc;
     char *tok;
 
-    if (s == NULL && (s = *last) == NULL)
+    if (s == NULL) {
+      if ((s = *last) == NULL)
 	return NULL;
+      if (save && *save) *(*last - 1) = *save;
+    } else if (save) *save = 0;
 
 cont:
     c = *s++;
@@ -383,6 +386,7 @@ cont:
 		else
 		{
 		    char *w = s - 1;
+		    if (save) *save = *w;
 		    *w = '\0';
 		}
 		*last = s;

@@ -729,6 +729,7 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 	DPS_TEXTITEM	Item;
 	DPS_VAR		*BSec=DpsVarListFind(&Doc->Sections,"body");
 	const char      *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
+	char savec;
 
 	DpsLog(Indexer, DPS_LOG_DEBUG, "Executing Text parser");
 	
@@ -739,12 +740,12 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 		char *lt;
 		Item.section = BSec->section;
 		Item.strict = BSec->strict;
-		Item.str = dps_strtok_r(buf_content, "\r\n", &lt);
+		Item.str = dps_strtok_r(buf_content, "\r\n", &lt, &savec);
 		Item.section_name = BSec->name; /*"body";*/
 		while(Item.str){
 		        Item.len = (lt != NULL) ? (lt - Item.str) : dps_strlen(Item.str);
 			DpsTextListAdd(&Doc->TextList, &Item);
-			Item.str = dps_strtok_r(NULL, "\r\n", &lt);
+			Item.str = dps_strtok_r(NULL, "\r\n", &lt, &savec);
 		}
 	}
 	return(DPS_OK);
@@ -974,6 +975,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	char *lang = NULL;
 	char *secname = NULL;
 	size_t i, seclen = 128, metacont_len = 0;
+	char savec;
 
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
@@ -1242,7 +1244,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 			char * lt;
 			char * rtok;
 					
-			rtok = dps_strtok_r(metacont," ,\r\n\t",&lt);
+			rtok = dps_strtok_r(metacont, " ,\r\n\t", &lt, &savec);
 			while(rtok){
 				if(!strcasecmp(rtok,"ALL")){
 					/* Set Server parameters */
@@ -1275,7 +1277,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 					tag->follow=Doc->Spider.follow;
 					if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Follow", Doc->Spider.follow);
 				}
-				rtok = dps_strtok_r(NULL," \r\n\t",&lt);
+				rtok = dps_strtok_r(NULL, " \r\n\t", &lt, &savec);
 			}
 		}else
 		if(!strcasecmp(metaname, "DP.PopRank")) {

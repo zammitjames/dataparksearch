@@ -85,7 +85,7 @@ static const char	version[] = "\n  Internal memory debugger based on Electric Fe
  * system at one time. We'll break that memory down into smaller pieces for
  * malloc buffers. One megabyte is probably a good value.
  */
-#define			MEMORY_CREATION_SIZE	1 * 1024 * 1024
+#define			MEMORY_CREATION_SIZE	32 * 1024 * 1024
 
 /*
  * Enum Mode indicates the status of a malloc buffer.

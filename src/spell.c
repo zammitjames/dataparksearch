@@ -88,7 +88,7 @@ static const dpsunicode_t *DpsUniRegTok(const dpsunicode_t *s, const dpsunicode_
 	return s;
 }
 
-static int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern) {
+int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern) {
 	const dpsunicode_t *tok, *lt;
 
 	reg->ntokens=0;
@@ -114,7 +114,7 @@ static int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern) {
 }
 
 
-static int DpsUniRegExec(const DPS_UNIREG_EXP *reg, const dpsunicode_t *string) {
+int DpsUniRegExec(const DPS_UNIREG_EXP *reg, const dpsunicode_t *string) {
 	const dpsunicode_t *start = string;
 	int match=0;
 #ifdef DEBUG_UNIREG
@@ -206,7 +206,7 @@ static int DpsUniRegExec(const DPS_UNIREG_EXP *reg, const dpsunicode_t *string) 
 }
 
 
-static void DpsUniRegFree(DPS_UNIREG_EXP *reg){
+void DpsUniRegFree(DPS_UNIREG_EXP *reg){
 	size_t i;
 	
 	for(i=0;i<reg->ntokens;i++)

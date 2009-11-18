@@ -822,7 +822,8 @@ static DPS_LANGMAP *FindLangMap(DPS_LANGMAPLIST *L, const char *lang, const char
   DPS_LANGMAP *o = NULL;
   ssize_t i, l, r;
   register int c;
-  char *lt, *language = DpsLanguageCanonicalName(dps_strtok_r(lang, ", ", &lt));
+  char savec;
+  char *lt, *language = DpsLanguageCanonicalName(dps_strtok_r(lang, ", ", &lt, &savec));
 
   if (L->nmaps) {
     while(language) {
@@ -853,7 +854,7 @@ static DPS_LANGMAP *FindLangMap(DPS_LANGMAPLIST *L, const char *lang, const char
 	  else r = i - 1;
 	}
       }
-      language = DpsLanguageCanonicalName(dps_strtok_r(NULL, ", ", &lt));
+      language = DpsLanguageCanonicalName(dps_strtok_r(NULL, ", ", &lt, &savec));
     }
   }
 
@@ -946,7 +947,7 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
                
                char * charset, * lasttok;
                DPS_FREE(Ccharset);
-               if((charset = dps_strtok_r(str+8," \t\n\r",&lasttok))){
+               if((charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok, NULL))){
                        const char *canon = DpsCharsetCanonicalName(charset);
                     if (canon) {
                       Ccharset = (char*)DpsStrdup(canon);
@@ -959,13 +960,13 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
           if(!strncmp(str,"Language:",9)){
                char * lang, *lasttok;
                DPS_FREE(Clanguage);
-               if((lang = dps_strtok_r(str+9," \t\n\r",&lasttok))){
+               if((lang = dps_strtok_r(str + 9, " \t\n\r", &lasttok, NULL))){
 		 Clanguage = (char*)DpsStrdup(DpsLanguageCanonicalName(lang));
                }
           }else
           if(!strncmp(str,"Length:",7)){
                char * lang, *lasttok;
-               if((lang = dps_strtok_r(str+9," \t\n\r",&lasttok))){
+               if((lang = dps_strtok_r(str + 9, " \t\n\r", &lasttok, NULL))){
 		 Clen = DPS_ATOI(lang);
                }
           }else{
@@ -1232,13 +1233,15 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
 	 Stat->miss += 1;
        } else {
 	 register int p = (HIT - map0->memb3);
-	 Stat->hits += (i >= p) ? (i - p) : (p - i);
+	 Stat->diff += (i >= p) ? (i - p) : (p - i);
+	 Stat->hits++;
        }
        if ( (HIT = bsearch(&map1->memb6[i], map0->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
-	 Stat->miss += 1;
+	 Stat->miss += 2;
        } else {
 	 register int p = (HIT - map0->memb6);
-	 Stat->hits += (i >= p) ? (i - p) : (p - i);
+	 Stat->diff += (i >= p) ? (i - p) : (p - i);
+	 Stat->hits += 2;
        }
 
        if ( (HIT = bsearch(&map0->memb3[i], map1->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
@@ -1269,7 +1272,8 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
 	 Stat->miss++;
        } else {
 	 register int p = (HIT - map1->memb6);
-	 Stat->hits += (i >= p) ? (i - p) : (p - i);
+	 Stat->diff += (i >= p) ? (i - p) : (p - i);
+	 Stat->hits++;
        }
 /*       if (Stat->miss > InfMiss) break;*/
      }
@@ -1468,7 +1472,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
 	     }
 	   }
 	   if (*charset != '\0') break;
-	   if ((i > 5) && (mapstat[i].miss > mapstat[0].miss + 2)) break;
+	   if ((i > 50) && (mapstat[i].miss > mapstat[0].miss + 2)) break;
 	 }
           
        for(i=0;i<List->nmaps;i++){

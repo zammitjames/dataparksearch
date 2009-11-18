@@ -124,8 +124,14 @@
 /* first word less distance factor for relevancy calculation */
 #undef DPS_LESS_DISTANCE_FACTOR
 
-/* non-uniform words count distribution factor for relevancy calculation */
+/* border value for non-uniform word count distribution in relevancy calculation */
+#undef DPS_UNICNT_BORDER
+
+/* non-uniform word count distribution factor for relevancy calculation */
 #undef DPS_UNICNT_FACTOR
+
+/* non-uniform word less count distribution factor for relevancy calculation */
+#undef DPS_LESS_UNICNT_FACTOR
 
 /* Define if you want to use external parser */
 #undef WITH_PARSER

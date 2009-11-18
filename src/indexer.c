@@ -860,6 +860,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_VAR S;
   char *lt, *buf;
   const char *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
+  char savec;
   DPS_TEXTITEM Item;
   DPS_HREF     Href;
   size_t i, buf_len;
@@ -888,12 +889,12 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = Sec->name;
-    Item.str = dps_strtok_r(buf, "\r\n", &lt);
+    Item.str = dps_strtok_r(buf, "\r\n", &lt, &savec);
     while(Item.str) {
       Item.len = (lt != NULL) ? (lt - Item.str) : 0 /*dps_strlen(Item.str)*/;
 /*      fprintf(stderr, " -- Alias:%s/%s, [%d] %s\n", Sec->name, Alias->section, Item.len, Item.str);*/
       DpsTextListAdd(&Doc->TextList, &Item);
-      Item.str = dps_strtok_r(NULL, "\r\n", &lt);
+      Item.str = dps_strtok_r(NULL, "\r\n", &lt, &savec);
     }
   }
 
@@ -1438,7 +1439,6 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	       DpsVarListFindStr(&Doc->Sections,"Content-Language",""),
 	       DpsVarListFindStr(&Doc->Sections,"Charset",""));
 	/* /Guesser stuff */	
-
 
 #ifdef HAVE_ZLIB
 	if ((Doc->method != DPS_METHOD_HEAD) && (strncmp(real_content_type, "text/", 5) == 0)) {

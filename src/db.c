@@ -1658,6 +1658,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	char *stored_host = NULL, *cached_host = NULL;
 	struct hostent *hp;
 	int nport;
+	char savec;
 #ifdef WITH_PARANOIA
 	void * paran = DpsViolationEnter(paran);
 #endif
@@ -1843,7 +1844,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 		char * tok, *lt;
 		
 		*s++='\0';
-		tok = dps_strtok_r(s,"&",&lt);
+		tok = dps_strtok_r(s, "&", &lt, &savec);
 		while(tok){
 			char * val;
 			
@@ -1904,7 +1905,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 			}else {
 			  DpsVarListReplaceStr(&db->Vars, tok, "");
 			}
-			tok = dps_strtok_r(NULL,"&",&lt);
+			tok = dps_strtok_r(NULL, "&", &lt, &savec);
 		}
 	}
 	
