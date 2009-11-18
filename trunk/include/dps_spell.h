@@ -50,5 +50,9 @@ extern void DpsAffixListFree(DPS_AFFIXLIST *);
 extern void DpsQuffixListFree(DPS_QUFFIXLIST *);
 
 extern void DpsUniRegCompileAll(DPS_ENV *Conf);
+extern int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern);
+extern int DpsUniRegExec(const DPS_UNIREG_EXP *reg, const dpsunicode_t *string);
+extern void DpsUniRegFree(DPS_UNIREG_EXP *reg);
+
 
 #endif

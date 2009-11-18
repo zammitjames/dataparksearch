@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -331,7 +331,7 @@ int Dps_ftp_login(DPS_CONN *connp, char *user, char *passwd){
 static int ftp_parse_list(DPS_CONN *connp, char *path){
 	char *line, *buf_in, *ch, *buf_out, *tok, *fname;
         int len_h, len_f,len_p, i;
-	char *dir;
+	char *dir, savec;
 	size_t len,buf_len,cur_len;
 	
 	if (!connp->buf || !connp->buf_len)
@@ -345,7 +345,7 @@ static int ftp_parse_list(DPS_CONN *connp, char *path){
         buf_out = DpsXmalloc(buf_len + 1);
 	if (buf_out == NULL) return -1;
 	buf_out[0] = '\0';
-	line = dps_strtok_r(buf_in,"\r\n",&tok);
+	line = dps_strtok_r(buf_in, "\r\n", &tok, &savec);
         do{
     		if (!(fname = strtok(line, " ")))
 			continue;
@@ -411,7 +411,7 @@ static int ftp_parse_list(DPS_CONN *connp, char *path){
 		}
 		cur_len += len;
 		
-	}while( (line = dps_strtok_r(NULL, "\r\n", &tok)));
+	}while( (line = dps_strtok_r(NULL, "\r\n", &tok, &savec)));
 
 	if (cur_len+1 > connp->buf_len_total){
 		connp->buf_len_total = cur_len;  

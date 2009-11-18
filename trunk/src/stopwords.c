@@ -21,6 +21,10 @@
 #include "dps_stopwords.h"
 #include "dps_unicode.h"
 #include "dps_unidata.h"
+#include "dps_match.h"
+#include "dps_conf.h"
+#include "dps_match.h"
+#include "dps_spell.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -119,6 +123,7 @@ int DpsStopListAdd(DPS_STOPLIST *List, DPS_STOPWORD * stopword) {
 
 void DpsStopListFree(DPS_STOPLIST *List){
 	size_t i;
+	DpsMatchListFree(&List->StopMatch);
 	for(i=0;i<List->nstopwords;i++){
 		DPS_FREE(List->StopWord[i].uword);
 		DPS_FREE(List->StopWord[i].word);
@@ -137,10 +142,13 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 	DPS_STOPWORD stopword;
 	DPS_CHARSET *cs = NULL, *uni_cs = DpsGetCharSet("sys-int");
 	DPS_CONV cnv;
+	DPS_MATCH M;
 	char * charset=NULL;
 	dpsunicode_t *uwrd, *nfc;
 	int             fd;
 	char savebyte;
+	char		*av[256];
+	size_t		ac, i;
 
 	if (stat(filename, &sb)) {
 	  fprintf(stderr, "Unable to stat stopword file '%s': %s", filename, strerror(errno));
@@ -181,17 +189,70 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 		
 		if(!strncmp(str,"Charset:",8)){
 			DPS_FREE(charset);
-			charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok);
+			charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok, NULL);
 			if(charset){
 				charset = (char*)DpsStrdup(charset);
 			}
 		}else
 		if(!strncmp(str,"Language:",9)){
 			DPS_FREE(stopword.lang);
-			stopword.lang = dps_strtok_r(str + 9, " \t\n\r", &lasttok);
+			stopword.lang = dps_strtok_r(str + 9, " \t\n\r", &lasttok, NULL);
 			if(stopword.lang)stopword.lang = (char*)DpsStrdup(stopword.lang);
 		}else
-		if((stopword.word = dps_strtok_r(str, "\t\n\r", &lasttok))) {
+		if(!strncmp(str, "Match:", 6)) {
+			if(!cs){
+				if(!charset){
+					sprintf(Conf->errstr,"No charset definition in stopwords file '%s'", filename);
+					DPS_FREE(stopword.lang);
+					DPS_FREE(uwrd);
+					DPS_FREE(data);
+					return DPS_ERROR;
+				}else{
+					cs=DpsGetCharSet(charset);
+					if(!cs){
+						sprintf(Conf->errstr,"Unknown charset '%s' in stopwords file '%s'", charset,filename);
+						DPS_FREE(stopword.lang);
+						DPS_FREE(charset);
+						DPS_FREE(uwrd);
+						DPS_FREE(data);
+						return DPS_ERROR;
+					}
+					DpsConvInit(&cnv, cs, uni_cs, Conf->CharsToEscape, DPS_RECODE_HTML);
+				}
+			}
+			ac = DpsGetArgs(str + 6, av, 255);
+			DpsMatchInit(&M);
+			M.match_type = DPS_MATCH_WILD;
+			M.case_sense = 1;
+			for(i = 0; i < ac ; i++) {
+			  if(!strcasecmp(av[i], "case")) M.case_sense = 1;
+			  else
+			  if(!strcasecmp(av[i], "nocase")) M.case_sense = 0;
+			  else
+			  if(!strcasecmp(av[i], "regex")) M.match_type = DPS_MATCH_REGEX;
+			  else
+			  if(!strcasecmp(av[i], "regexp")) M.match_type = DPS_MATCH_REGEX;
+			  else
+			  if(!strcasecmp(av[i], "string")) M.match_type = DPS_MATCH_WILD;
+			  else
+			  if(!strcasecmp(av[i], "nomatch")) M.nomatch = 1;
+			  else
+			  if(!strcasecmp(av[i], "match")) M.nomatch = 0;
+			  else{
+			    char		err[120] = "";
+			
+			    M.arg = av[0];
+			    M.pattern = av[i];
+			
+			    if(DPS_OK != DpsMatchListAdd(NULL, &Conf->StopWords.StopMatch, &M, err, sizeof(err), 0)) {
+				dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "%s", err);
+				return DPS_ERROR;
+			    }
+			  }
+			}
+
+		}else
+		  if((stopword.word = dps_strtok_r(str, "\t\n\r", &lasttok, NULL))) {
 			
 			if(!cs){
 				if(!charset){

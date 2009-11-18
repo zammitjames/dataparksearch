@@ -320,7 +320,7 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 #ifdef DEBUG_SDP
 				DpsLog(query, DPS_LOG_ERROR, "Received DOCINFO size=%d buf=%s\n",hdr.len,dinfo);
 #endif				
-				tok = dps_strtok_r(dinfo, "\r\n", &lt);
+				tok = dps_strtok_r(dinfo, "\r\n", &lt, NULL);
 				
 				while(tok){
 				  urlid_t Doc_url_id, Res_Doc_url_id;
@@ -340,7 +340,7 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 						  break;
 						}
 					}
-					tok = dps_strtok_r(NULL, "\r\n", &lt);
+					tok = dps_strtok_r(NULL, "\r\n", &lt, NULL);
 					DpsDocFree(&Doc);
 				}
 				DPS_FREE(dinfo);
@@ -708,12 +708,12 @@ int __DPSCALL DpsSearchdCatAction(DPS_AGENT *A, DPS_CATEGORY *C, int cmd, void *
 #endif				
 
 				C->ncategories = 0;
-				tok = dps_strtok_r(dinfo, "\r\n", &lt);
+				tok = dps_strtok_r(dinfo, "\r\n", &lt, NULL);
 				
 				while(tok){
 					DpsCatFromTextBuf(C, tok);
 					
-					tok = dps_strtok_r(NULL, "\r\n", &lt);
+					tok = dps_strtok_r(NULL, "\r\n", &lt, NULL);
 				}
 				DPS_FREE(dinfo);
 				done=1;
@@ -884,7 +884,7 @@ int DpsCloneListSearchd(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_RESULT *Res, 
 #endif				
 				if (strcasecmp(dinfo, "nocloneinfo") != 0) {
 
-				  tok = dps_strtok_r(dinfo, "\r\n", &lt);
+				  tok = dps_strtok_r(dinfo, "\r\n", &lt, NULL);
 				
 				  while(tok){
 					DPS_DOCUMENT *D;
@@ -899,7 +899,7 @@ int DpsCloneListSearchd(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_RESULT *Res, 
 					D = &Res->Doc[nd];
 					DpsDocInit(D);
 					DpsDocFromTextBuf(D, tok);
-					tok = dps_strtok_r(NULL, "\r\n", &lt);
+					tok = dps_strtok_r(NULL, "\r\n", &lt, NULL);
 				  }
 				}
 				DPS_FREE(dinfo);

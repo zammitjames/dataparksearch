@@ -147,6 +147,21 @@ typedef struct stat_list_struct{
 	size_t		nstats;
 	DPS_STAT	*Stat;
 } DPS_STATLIST;
+
+/* Unicode regex lite BEGIN */
+
+typedef struct{
+	int		type;
+	dpsunicode_t	*str;
+} DPS_UNIREG_TOK;
+
+typedef struct {
+	size_t		ntokens;
+	DPS_UNIREG_TOK	*Token;
+} DPS_UNIREG_EXP;
+
+/* Unicode regex lite END */
+
 /************************ VARLISTs ************************/
 
 typedef struct dps_var_st {
@@ -184,6 +199,70 @@ typedef struct {
 	DPS_TEXTITEM	*Items;
 } DPS_TEXTLIST;
 
+/*****************************************************************/
+typedef struct {
+	int		match_type;
+	int		nomatch;
+        int             compiled;
+        char            *section;
+        char            *subsection;
+	char		*pattern;
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+        char            *idn_pattern;
+#endif
+	char		*arg;
+        char            *dbaddr;
+	regex_t		*reg;
+        DPS_UNIREG_EXP  UniReg;
+	urlid_t         server_id;        /**< server.rec_id            */
+	dps_uint2	case_sense;
+        dps_uint2       last;
+} DPS_MATCH;
+
+typedef struct {
+	int		match_type;
+	int		nomatch;
+        int             compiled;
+        char            *section;
+        char            *subsection;
+	dpsunicode_t	*pattern;
+	dpsunicode_t	*arg;
+        char            *dbaddr;
+        DPS_UNIREG_EXP  UniReg;
+	urlid_t         server_id;        /**< server.rec_id            */
+	dps_uint2	case_sense;
+        dps_uint2       last;
+} DPS_UNIMATCH;
+
+typedef struct {
+	size_t		nmatches;
+	DPS_MATCH	*Match;
+} DPS_MATCHLIST;
+
+typedef struct {
+	size_t		nmatches;
+	DPS_UNIMATCH	*Match;
+} DPS_UNIMATCHLIST;
+
+typedef struct {
+	int beg;
+	int end;
+} DPS_MATCH_PART;
+/*****************************************************************/
+
+/* word match type */
+enum {
+  DPS_MATCH_min    = 0,
+  DPS_MATCH_FULL   = 0,
+  DPS_MATCH_BEGIN  = 1,
+  DPS_MATCH_SUBSTR = 2,
+  DPS_MATCH_END    = 3,
+  DPS_MATCH_REGEX  = 4,
+  DPS_MATCH_WILD   = 5,
+  DPS_MATCH_SUBNET = 6,
+  DPS_MATCH_max    = 7
+};
+
 /*****************************************************/
 
 /** StopList unit */
@@ -195,8 +274,9 @@ typedef struct dps_stopword_struct {
 } DPS_STOPWORD;
 
 typedef struct {
-	size_t		nstopwords;
-	DPS_STOPWORD	*StopWord;
+	size_t		 nstopwords;
+	DPS_STOPWORD	 *StopWord;
+        DPS_UNIMATCHLIST StopMatch;      /**< Stopword patterns list     */ 
 } DPS_STOPLIST;
 
 /*****************************************************/
@@ -365,49 +445,6 @@ typedef union {
   } cron;
   dps_uint8 eight;
 } DPS_EXPIRE;
-
-/*****************************************************************/
-typedef struct {
-	int		match_type;
-	int		nomatch;
-        int             compiled;
-        char            *section;
-        char            *subsection;
-	char		*pattern;
-#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
-        char            *idn_pattern;
-#endif
-	char		*arg;
-        char            *dbaddr;
-	regex_t		*reg;
-	urlid_t         server_id;        /**< server.rec_id            */
-	dps_uint2	case_sense;
-        dps_uint2       last;
-} DPS_MATCH;
-
-typedef struct {
-	size_t		nmatches;
-	DPS_MATCH	*Match;
-} DPS_MATCHLIST;
-
-typedef struct {
-	int beg;
-	int end;
-} DPS_MATCH_PART;
-/*****************************************************************/
-
-/* word match type */
-enum {
-  DPS_MATCH_min    = 0,
-  DPS_MATCH_FULL   = 0,
-  DPS_MATCH_BEGIN  = 1,
-  DPS_MATCH_SUBSTR = 2,
-  DPS_MATCH_END    = 3,
-  DPS_MATCH_REGEX  = 4,
-  DPS_MATCH_WILD   = 5,
-  DPS_MATCH_SUBNET = 6,
-  DPS_MATCH_max    = 7
-};
 
 /** Structure to store server parameters */
 typedef struct {
@@ -603,20 +640,6 @@ typedef struct {
 	size_t		nparsers;
 	DPS_PARSER	*Parser;
 } DPS_PARSERLIST;
-
-/* Unicode regex lite BEGIN */
-
-typedef struct{
-	int		type;
-	dpsunicode_t	*str;
-} DPS_UNIREG_TOK;
-
-typedef struct {
-	size_t		ntokens;
-	DPS_UNIREG_TOK	*Token;
-} DPS_UNIREG_EXP;
-
-/* Unicode regex lite END */
 
 
 /* Ispell BEGIN */

@@ -363,7 +363,7 @@ int DpsDocAddConfExtraHeaders(DPS_ENV *Conf,DPS_DOCUMENT *Doc) {
 	
 	/* If LocalCharset specified, add Accept-Charset header */
 	if((lc=DpsVarListFindStr(&Conf->Vars,"LocalCharset",NULL))){
-	        dps_snprintf(arg, sizeof(arg)-1, "%s;q=1.0, UTF-8;q=0.9, *;q=0.8", DpsCharsetCanonicalName(lc));
+	        dps_snprintf(arg, sizeof(arg)-1, "%s;q=1.0,UTF-8;q=0.5,*;q=0.1", DpsCharsetCanonicalName(lc));
 		arg[sizeof(arg)-1]='\0';
 		DpsVarListAddStr(&Doc->RequestHeaders,"Accept-Charset",arg);
 	}
@@ -377,10 +377,10 @@ int DpsDocAddConfExtraHeaders(DPS_ENV *Conf,DPS_DOCUMENT *Doc) {
 	
 	DpsVarListInsStr(&Doc->RequestHeaders, "Connection","close");
 #ifdef HAVE_ZLIB
-	DpsVarListInsStr(&Doc->RequestHeaders,"Accept-Encoding","gzip,x-gzip,deflate,compress,x-compress");
-	DpsVarListInsStr(&Doc->RequestHeaders,"TE","gzip,deflate,compress,identity");
+	DpsVarListInsStr(&Doc->RequestHeaders,"Accept-Encoding","gzip,deflate,compress");
+	DpsVarListInsStr(&Doc->RequestHeaders,"TE","gzip,deflate,compress,identity;q=0.5,chuncked;q=0.1");
 #else
-	DpsVarListInsStr(&Doc->RequestHeaders,"TE","identity");
+	DpsVarListInsStr(&Doc->RequestHeaders,"TE","identity,chuncked;q=0.1");
 #endif
 	return DPS_OK;
 }
@@ -450,6 +450,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	const int       content_length = DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
 	const int       parent = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 	const int       status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
+	char savec;
 
 	if ((vary != NULL) && (Doc->fetched == 0)) {
 	  if (strcasestr(vary, "accept-language") != NULL) {
@@ -481,11 +482,11 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 		DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
 /*		DpsAppendTarget(Indexer,  url, "", hops, parent);*/
 		if (Doc->subdoc < Indexer->Flags.SubDocLevel) {
-		  tok = dps_strtok_r((char*)VaryLang, " ,\t", &lt);
+		  tok = dps_strtok_r((char*)VaryLang, " ,\t", &lt, &savec);
 		  while (tok != NULL) {
 /*		    DpsAppendTarget(Indexer, ourl, tok, hops, parent );*/
 		    DpsIndexSubDoc(Indexer, Doc, NULL, tok, ourl);
-		    tok = dps_strtok_r(NULL, " ,\t", &lt);
+		    tok = dps_strtok_r(NULL, " ,\t", &lt, &savec);
 		  }
 		}
 		DPS_FREE(url);

@@ -131,7 +131,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
           if(!strncmp(str,"Charset:",8)){
                char * lasttok;
                char * charset;
-               if((charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok))) {
+               if((charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok, NULL))) {
                     cs=DpsGetCharSet(charset);
                     if(!cs){
                          dps_snprintf(Env->errstr, sizeof(Env->errstr), "Unknown charset '%s' in acronyms file '%s'",
@@ -145,7 +145,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
           if(!strncmp(str,"Language:",9)){
                char * lasttok;
                char * l;
-               if((l = dps_strtok_r(str + 9, " \t\n\r", &lasttok))) {
+               if((l = dps_strtok_r(str + 9, " \t\n\r", &lasttok, NULL))) {
                     dps_strncpy(lang, l, sizeof(lang)-1);
                }
           }else{

@@ -484,6 +484,7 @@ static int add_filter(void *Cfg, size_t ac, char **av) {
 	return DPS_OK;
 }
 
+
 static int add_store_filter(void *Cfg, size_t ac, char **av) {
 	DPS_CFG		*C = (DPS_CFG*)Cfg;
 	DPS_ENV		*Conf = C->Indexer->Conf;

@@ -758,7 +758,7 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
   char *str = DpsTrim(p_str, " \t\r\n");
   int res = DPS_OK;
 	
-/*	if((tok = dps_strtok_r(str, " \t\r\n", &lt))) {*/
+/*	if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL))) {*/
 		char *arg = NULL;
 		char *p = strchr(str, ' ');
 		if (p == NULL) cmd = DpsStrdup(str);
@@ -766,8 +766,8 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 					
 		if(!strcasecmp(cmd, "DBAddr")) {
 			char *pp;
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  if((arg = dps_strtok_r(NULL, " \t\r\n", &lt)) &&
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+			  if((arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL)) &&
 			     (pp = DpsParseEnvVar(Env, arg))) {
 
 			    if (DPS_OK!=DpsDBListAdd(&Env->dbl, pp, DPS_OPEN_MODE_READ)) {
@@ -781,8 +781,8 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 		}else
 		if(!strcasecmp(cmd, "ImportEnv")){
                         const char *val;
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  if ((arg = dps_strtok_r(NULL, " \t\r\n", &lt)) &&
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+			  if ((arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL)) &&
 			      ((val = getenv(arg))) )
                                 DpsVarListReplaceStr(vars, arg, val);
                 }else
@@ -790,8 +790,8 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 			float r;
 			int ir;
 			arg = NULL;
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " =\t\r\n", &lt); 
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+			  arg = dps_strtok_r(NULL, " =\t\r\n", &lt, NULL); 
 			if(arg){
 				r = (float)DPS_ATOF(arg);
 				srand((unsigned)time(0));
@@ -800,74 +800,74 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 			}
 		}else
 		  if(!strncasecmp(str, "HlBeg", 5)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		    if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars,"HlBeg", DPS_NULL2EMPTY(lt));
 		}else
 		    if(!strncasecmp(str, "HlEnd", 5)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		      if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars,"HlEnd", DPS_NULL2EMPTY(lt));
 		}else
 		      if(!strncasecmp(str, "GrBeg", 5)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars,"GrBeg", DPS_NULL2EMPTY(lt));
 		}else
 			if(!strncasecmp(str, "GrEnd", 5)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+			  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars,"GrEnd", DPS_NULL2EMPTY(lt));
 		}else
 			  if(!strncasecmp(str, "DateFormat", 10)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+			    if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, "DateFormat", DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "PagesPerScreen", 14)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "Log2stderr", 10)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "StoredocURL", 11)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "Locale", 6)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "DetectClones", 12)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strcasecmp(cmd, "sp")) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt))) {
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL))) {
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		    DpsVarListInsStr(&Agent->Vars, tok, DPS_NULL2EMPTY(lt));
 		  }
 		}else
 		if(!strcasecmp(cmd, "sy")) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt))) {
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL))) {
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		    DpsVarListInsStr(&Agent->Vars, tok, DPS_NULL2EMPTY(lt));
 		  }
 		}else
 		if(!strncasecmp(str, "ResultContentType", 17)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "CatColumns", 10)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "empty", 5)) {
-		  if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "Limit", 5)){
 			char * sc, * nm;
 			arg = NULL;
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+			  arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if((sc = strchr(arg, ':'))) {
 				*sc='\0'; sc++;
 				nm = (char*)DpsMalloc(dps_strlen(arg) + 8);
@@ -878,59 +878,59 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 			}
 		}else
 		  if(!strncasecmp(str, "LocalCharset", 12)) {
-		        if((tok = dps_strtok_r(str, " \t\r\n", &lt))) {
-			  if ((arg = dps_strtok_r(NULL, " \t\r\n", &lt))) {
+		    if((tok = dps_strtok_r(str, " \t\r\n", &lt,  NULL))) {
+		      if ((arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL))) {
 			    DpsVarListReplaceStr(vars, tok, arg);
 			    Env->lcs = DpsGetCharSet(arg);
 			  }
 			}
                 }else
 		    if(!strncasecmp(str, "BrowserCharset", 14)) {
-		        if((tok = dps_strtok_r(str, " \t\r\n", &lt))) {
-			  if ((arg = dps_strtok_r(NULL, " \t\r\n", &lt))) {
+		      if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL))) {
+			if ((arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL))) {
 			    DpsVarListReplaceStr(vars, tok, arg);
 			    Env->bcs = DpsGetCharSet(arg);
 			  }
 			}
                 }else
 		if(!strncasecmp(str, "ExcerptSize", 11)) {
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceInt(vars, tok, atoi(arg));
 		}else
 		if(!strncasecmp(str, "ExcerptPadding", 14)) {
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceInt(vars, tok, atoi(arg));
 		}else
 		if(!strncasecmp(str, "ps", 2)) {
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceInt(vars, tok, atoi(arg));
 		}else
 		if(!strncasecmp(str, "geo.zoom", 8)) {
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceInt(vars, tok, atoi(arg));
 		}else
 		if(!strncasecmp(str, "my", 2)) {
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceStr(vars, tok, arg);
 		}else
 		  if((str[0] == 'm' || str[0] == 'M') && (str[1] == ' ' || str[1] == HT_CHAR)) {
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+		    if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		      arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceStr(vars, tok, arg);
 		}else
 		  if((str[0] == 'g' || str[0] == 'G') && (str[1] == ' ' || str[1] == HT_CHAR)) {
-			if((tok = dps_strtok_r(str, " \t\r\n", &lt)))
-			  arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+		    if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		      arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceStr(vars, tok, arg);
 		}else{
 		 
 		  res = DPS_ERROR;
-/*			arg = dps_strtok_r(NULL, " \t\r\n", &lt);
+/*			arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			DpsVarListReplaceStr(vars,tok,arg);*/
 		}
 /*	}*/

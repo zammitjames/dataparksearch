@@ -2679,7 +2679,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 			 rec_id, recs);
 	  } else {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id AND u.status>199 ORDER by u.rec_id LIMIT %d",
+    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id AND u.status>199 AND u.status<400 ORDER by u.rec_id LIMIT %d",
 			 rec_id, recs);
 	  }
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);

@@ -39,7 +39,7 @@
 
 static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *header) {
   char *val, *header_name;
-  char	secname[128];
+  char	secname[128], savec;
   DPS_VAR	*Sec;
   DPS_TEXTITEM Item;
 
@@ -62,8 +62,8 @@ static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *
       const char *path = NULL;
       dps_uint4 expire = 0;
       char secure = 'n';
-      for (part = dps_strtok_r(val, ";" , &lpart) ; part;
-	   part = dps_strtok_r(NULL, ";", &lpart)) {
+      for (part = dps_strtok_r(val, ";" , &lpart, &savec) ; part;
+	   part = dps_strtok_r(NULL, ";", &lpart, &savec)) {
 	char *arg;
 	part = DpsTrim(part, " ");
 	if ((arg = strchr(part, '='))) {
@@ -118,7 +118,7 @@ static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *
 }
 
 void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {			
-  char	*token, *lt, *headers;
+  char	*token, *lt, *headers, savec;
 	int     oldstatus;
 	DPS_DSTR header;
 	
@@ -159,7 +159,7 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	headers = (char*)DpsStrdup(Doc->Buf.buf);
 	
 	/* Now lets parse response header lines */
-	token = dps_strtok_r(headers,"\r\n",&lt);
+	token = dps_strtok_r(headers, "\r\n", &lt, &savec);
 	
 	if(!token)return;
 	
@@ -171,7 +171,7 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	        DpsFree(headers);
 		return;
 	}
-	token = dps_strtok_r(NULL,"\r\n",&lt);
+	token = dps_strtok_r(NULL, "\r\n", &lt, &savec);
 	DpsDSTRInit(&header, 128);
 	
 	while(token){
@@ -187,7 +187,7 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 		}
 		DpsDSTRAppendStr(&header, token);
 
-		token = dps_strtok_r(NULL,"\r\n",&lt);
+		token = dps_strtok_r(NULL, "\r\n", &lt, &savec);
 	}
 	if (header.data_size) {
 	  DpsParseHTTPHeader(Indexer, Doc, &header);

@@ -2244,9 +2244,9 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	  xy += xy_o[tt];
 #ifdef WITH_REL_WRDCOUNT
 	  if (Res->items[tt].order_origin & DPS_WORD_ORIGIN_STOP) continue;
-	  if (count[tt])
+/*	  if (count[tt])*/
 	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-	  else sum += 20000;
+/*	  else sum += 20000;*/
 #endif
 	}
 	D[DPS_N_ORIGIN] = tt;
@@ -2257,7 +2257,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 /*	xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
 	D[DPS_N_WRDCOUNT] = phr_n - 2;
-	D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / n_order_inquery;
+	D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT] /*n_order_inquery*/;
       
 #ifdef WITH_REL_TRACK
 	Track[j].D_wrdcount = phr_n - 2;
@@ -2329,9 +2329,9 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       xy += xy_o[tt];
 #ifdef WITH_REL_WRDCOUNT
       if (Res->items[tt].order_origin & DPS_WORD_ORIGIN_STOP) continue;
-      if (count[tt])
+/*      if (count[tt])*/
 	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-      else sum += 20000;
+/*      else sum += 20000;*/
 #endif
     }
     D[DPS_N_ORIGIN] = tt;
@@ -2342,7 +2342,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     /*    xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
     D[DPS_N_WRDCOUNT] = phr_n - 2;
-    D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / n_order_inquery;
+    D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT] /*n_order_inquery*/;
   
 #ifdef WITH_REL_TRACK
     Track[j].D_wrdcount = phr_n - 2;
@@ -3049,7 +3049,7 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 
 	DpsSGMLUnescape(qs);
 	
-	tok = dps_strtok_r(qs, "&", &lt);
+	tok = dps_strtok_r(qs, "&", &lt, NULL);
 	while(tok){
 		char empty[]="";
 		char * val;
@@ -3114,7 +3114,7 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 			}
 		  }
 		}
-		tok = dps_strtok_r(NULL, "&", &lt);
+		tok = dps_strtok_r(NULL, "&", &lt, NULL);
 	}
 	
 	DPS_FREE(str);

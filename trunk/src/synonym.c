@@ -86,7 +86,7 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
           if(!strncasecmp(str,"Charset:",8)){
                char * lasttok;
                char * charset;
-               if((charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok))) {
+               if((charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok, NULL))) {
                     cs=DpsGetCharSet(charset);
                     if(!cs){
                          dps_snprintf(Env->errstr, sizeof(Env->errstr), "Unknown charset '%s' in synonyms file '%s'",
@@ -101,13 +101,13 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
           if(!strncasecmp(str,"Language:",9)){
                char * lasttok;
                char * l;
-               if((l = dps_strtok_r(str + 9, " \t\n\r", &lasttok))) {
+               if((l = dps_strtok_r(str + 9, " \t\n\r", &lasttok, NULL))) {
                     dps_strncpy(lang, l, sizeof(lang)-1);
                }
           }else
           if(!strncasecmp(str, "Thesaurus:", 10)) {
                char * lasttok;
-	       char *tok = dps_strtok_r(str + 10, " \t\n\r", &lasttok);
+	       char *tok = dps_strtok_r(str + 10, " \t\n\r", &lasttok, NULL);
 	       flag_th = (strncasecmp(tok, "yes", 3) == 0) ? 1 : 0;
           }else{
                char      *av[255];

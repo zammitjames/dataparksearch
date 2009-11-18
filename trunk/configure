@@ -1033,7 +1033,9 @@ with_posfactor
 with_lessposfactor
 with_wrdcntfactor
 with_lesswrdcntfactor
+with_wrduniborder
 with_wrdunifactor
+with_lesswrdunifactor
 enable_reltrack
 enable_all_static
 enable_pthreads
@@ -1814,8 +1816,12 @@ Optional Packages:
                           Default value is 3.5.
   --with-lesswrdcntfactor=NUM Define NUM as factor of word count in relevance calculation.
                           Default value is 70.5.
-  --with-wrdunifactor=NUM Define NUM as factor of non-uniform words count distribution in relevance calculation.
+  --with-wrduniborder=NUM Define NUM as border value for non-uniform word count distribution in relevance calculation.
+                          Default value is 10.
+  --with-wrdunifactor=NUM Define NUM as factor of non-uniform word count distribution in relevance calculation.
                           Default value is 2000.
+  --with-lesswrdunifactor=NUM Define NUM as factor of non-uniform words count distribution in relevance calculation.
+                          Default value is 20.
   --with-openssl=DIR    Include Openssl support.  DIR is the Openssl
                           base install directory, defaults to /usr/local/ssl.
   --without-zlib          disable HTTP Content-Encoding support
@@ -5095,7 +5101,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5098 "configure"' > conftest.$ac_ext
+  echo '#line 5104 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8197,11 +8203,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8200: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8206: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8204: \$? = $ac_status" >&5
+   echo "$as_me:8210: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8487,11 +8493,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8490: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8496: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8494: \$? = $ac_status" >&5
+   echo "$as_me:8500: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8591,11 +8597,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8594: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8600: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8598: \$? = $ac_status" >&5
+   echo "$as_me:8604: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10991,7 +10997,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10994 "configure"
+#line 11000 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11091,7 +11097,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11094 "configure"
+#line 11100 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13500,11 +13506,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13503: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13509: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13507: \$? = $ac_status" >&5
+   echo "$as_me:13513: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13604,11 +13610,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13607: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13613: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13611: \$? = $ac_status" >&5
+   echo "$as_me:13617: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -15187,11 +15193,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15190: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15196: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15194: \$? = $ac_status" >&5
+   echo "$as_me:15200: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15291,11 +15297,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15294: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15300: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15298: \$? = $ac_status" >&5
+   echo "$as_me:15304: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17506,11 +17512,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17509: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17515: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17513: \$? = $ac_status" >&5
+   echo "$as_me:17519: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17796,11 +17802,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17799: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17805: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17803: \$? = $ac_status" >&5
+   echo "$as_me:17809: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17900,11 +17906,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17903: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17909: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17907: \$? = $ac_status" >&5
+   echo "$as_me:17913: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -27899,8 +27905,35 @@ _ACEOF
 
 
 
-{ $as_echo "$as_me:$LINENO: checking for non-uniform words count factor in relevance" >&5
-$as_echo_n "checking for non-uniform words count factor in relevance... " >&6; }
+rel_unicnt_border="10"
+{ $as_echo "$as_me:$LINENO: checking for non-uniform word count border value" >&5
+$as_echo_n "checking for non-uniform word count border value... " >&6; }
+
+# Check whether --with-wrduniborder was given.
+if test "${with_wrduniborder+set}" = set; then
+  withval=$with_wrduniborder;
+	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
+		rel_unicnt_border="$withval"
+  	fi
+    	{ $as_echo "$as_me:$LINENO: result: $rel_unicnt_border" >&5
+$as_echo "$rel_unicnt_border" >&6; }
+
+else
+
+  	{ $as_echo "$as_me:$LINENO: result: $rel_unicnt_border" >&5
+$as_echo "$rel_unicnt_border" >&6; }
+
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define DPS_UNICNT_BORDER $rel_unicnt_border
+_ACEOF
+
+
+
+rel_unicnt_factor="2000"
+{ $as_echo "$as_me:$LINENO: checking for non-uniform word count factor in relevance" >&5
+$as_echo_n "checking for non-uniform word count factor in relevance... " >&6; }
 
 # Check whether --with-wrdunifactor was given.
 if test "${with_wrdunifactor+set}" = set; then
@@ -27920,6 +27953,32 @@ fi
 
 cat >>confdefs.h <<_ACEOF
 #define DPS_UNICNT_FACTOR $rel_unicnt_factor
+_ACEOF
+
+
+
+rel_less_unicnt_factor="20"
+{ $as_echo "$as_me:$LINENO: checking for non-uniform words less count factor in relevance" >&5
+$as_echo_n "checking for non-uniform words less count factor in relevance... " >&6; }
+
+# Check whether --with-lesswrdunifactor was given.
+if test "${with_lesswrdunifactor+set}" = set; then
+  withval=$with_lesswrdunifactor;
+	if test "x$withval" != "x" && test "x$withval" != "xyes"; then
+		rel_less_unicnt_factor="$withval"
+  	fi
+    	{ $as_echo "$as_me:$LINENO: result: $rel_less_unicnt_factor" >&5
+$as_echo "$rel_less_unicnt_factor" >&6; }
+
+else
+
+  	{ $as_echo "$as_me:$LINENO: result: $rel_less_unicnt_factor" >&5
+$as_echo "$rel_less_unicnt_factor" >&6; }
+
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define DPS_LESS_UNICNT_FACTOR $rel_less_unicnt_factor
 _ACEOF
 
 
