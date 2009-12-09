@@ -179,6 +179,36 @@ void * dps_strncpy(void *dst0, const void *src0, size_t length) {
 void * dps_strncpy(void *dst0, const void *src0, size_t length) {
   if (length) {
     register size_t n = (length + 7) / 8;
+    register size_t r = (length % 8);
+    register char *dst = dst0, *src = src0;
+    if (r == 0) r = 8;
+    if (!(dst[0] = src[0])) return dst0;
+    if (r > 1) if (!(dst[1] = src[1])) return dst0;
+    if (r > 2) if (!(dst[2] = src[2])) return dst0;
+    if (r > 3) if (!(dst[3] = src[3])) return dst0;
+    if (r > 4) if (!(dst[4] = src[4])) return dst0;
+    if (r > 5) if (!(dst[5] = src[5])) return dst0;
+    if (r > 6) if (!(dst[6] = src[6])) return dst0;
+    if (r > 7) if (!(dst[7] = src[7])) return dst0;
+    src += r; dst += r;
+    while (--n > 0) {
+      if (!(dst[0] = src[0])) break;
+      if (!(dst[1] = src[1])) break;
+      if (!(dst[2] = src[2])) break;
+      if (!(dst[3] = src[3])) break;
+      if (!(dst[4] = src[4])) break;
+      if (!(dst[5] = src[5])) break;
+      if (!(dst[6] = src[6])) break;
+      if (!(dst[7] = src[7])) break;
+      src += 8; dst += 8;
+    }
+  }
+  return dst0;
+}
+/*
+void * dps_strncpy(void *dst0, const void *src0, size_t length) {
+  if (length) {
+    register size_t n = (length + 7) / 8;
     register char *dst = dst0, *src = src0;
     switch(length % 8) {
     case 0:	do {	if (!(*dst++ = *src++)) break;
@@ -194,6 +224,7 @@ void * dps_strncpy(void *dst0, const void *src0, size_t length) {
   }
   return dst0;
 }
+*/
 #endif
 
 void * dps_strcat(void *dst0, const void *src0) {
