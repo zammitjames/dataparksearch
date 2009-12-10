@@ -950,7 +950,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 #endif
 	size_t          *PerSite[256], *persite, *curpersite;
 	size_t          ResultsLimit = DpsVarListFindUnsigned(&A->Vars, "ResultsLimit", 0);
-	size_t          total_found = 0, cnt_db = 0;
+	size_t          total_found = 0, grand_total = 0, cnt_db = 0;
 	DPS_URL_CRD_DB	*wrdX[256];
 	DPS_URL_CRD_DB	*wrd = NULL, *curwrd = NULL;
 	DPS_URLDATA     *udtX[256];
@@ -1039,6 +1039,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	    nwrd += nwrdX[i];
 
 	    total_found += Res->total_found;
+	    grand_total += Res->grand_total;
 	    if ((PerSite[i] = Res->PerSite) == NULL) {
 	      if (nwrdX[i]) {
 		PerSite[i] = (size_t*)DpsXmalloc(sizeof(size_t) * nwrdX[i]);
@@ -1200,6 +1201,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	  }
 
           Res->total_found = total_found /*nwrd*/;
+	  Res->grand_total = grand_total;
           Res->num_rows = Res->CoordList.ncoords = (size_t)nwrd;
 	  Res->CoordList.Coords = wrd;
 	  Res->CoordList.Data = udt;
@@ -1226,7 +1228,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 #endif
 	      }
 	    }
-	    if (p + 1 < Res->CoordList.ncoords) Res->CoordList.ncoords = Res->total_found = Res->grand_total = p + 1;
+	    if (p + 1 < Res->CoordList.ncoords) Res->CoordList.ncoords = Res->total_found = p + 1;
 	    
 	    if (use_site_id) {
 	      DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
