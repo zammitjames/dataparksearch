@@ -247,7 +247,10 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	}
 
 	if (!(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
-	  if(!(Srv = DpsServerFind(Indexer, 0, newhref, newURL->charset_id, NULL))) {
+	  DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
+	  Srv = DpsServerFind(Indexer, 0, newhref, newURL->charset_id, NULL);
+	  DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+	  if(Srv == NULL) {
 		DpsLog(Indexer, DPS_LOG_DEBUG, "no Server, skip it");
 		Href->method = DPS_METHOD_DISALLOW;
 		goto check_ret;
@@ -1689,10 +1692,9 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 
 		Doc->CurURL.charset_id = Doc->charset_id;
 		/* Find correspondent Server */
-/*		DPS_GETLOCK(Indexer,DPS_LOCK_CONF);*/
-		Server = DpsServerFind(Indexer, (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0), 
-				       newhref, Doc->charset_id, &alstr);
-/*		DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);*/
+		DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
+		Server = DpsServerFind(Indexer, (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0), newhref, Doc->charset_id, &alstr);
+		DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 		if ( !Server ) Server = Parent->Server;
 		if ( !Server ) {
 			DpsLog(Indexer,DPS_LOG_WARN,"No 'Server' command for url");
@@ -2175,9 +2177,9 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 
 		Doc->CurURL.charset_id = Doc->charset_id;
 		/* Find correspondent Server */
-/*		DPS_GETLOCK(Indexer,DPS_LOCK_CONF);*/
+		DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 		Server = DpsServerFind(Indexer, (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0), url, Doc->charset_id, &alstr);
-/*		DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);*/
+		DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 		if ( !Server ) {
 			DpsLog(Indexer,DPS_LOG_WARN,"No 'Server' command for url");
 			Doc->method = DPS_METHOD_DISALLOW;
