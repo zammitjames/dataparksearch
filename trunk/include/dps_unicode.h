@@ -25,6 +25,7 @@ int    DpsUniStrCaseCmp(register const dpsunicode_t * s1, register const dpsunic
 int    DpsUniStrBCmp(const dpsunicode_t *s1, const dpsunicode_t *s2);
 int    DpsUniStrBNCmp(const dpsunicode_t *s1, const dpsunicode_t *s2, size_t count);
 int    DpsUniStrNCaseCmp(const dpsunicode_t *s1, const dpsunicode_t *s2, size_t len);
+int    DpsUniStrNCmp(const dpsunicode_t *s1, const dpsunicode_t *s2, size_t len);
 
 dpsunicode_t  *DpsUniStrCpy(dpsunicode_t *dst, const dpsunicode_t *src);
 dpsunicode_t  *DpsUniStrRCpy(dpsunicode_t *dst, const dpsunicode_t *src);

@@ -936,7 +936,6 @@ _WordNormalize( ... )
 
 	 WRDlen = dps_strlen(WRD);
 	 if ((uwrd = (dpsunicode_t*)DpsMalloc(sizeof(dpsunicode_t) * (28 * WRDlen + 64))) == NULL) {
-/*		NORM = WRD;*/
 		goto Norm_exit;
          }
 	 DpsConv(&bc_uni, (char*)uwrd, sizeof(dpsunicode_t) * (WRDlen + 1), WRD, WRDlen + 1);
@@ -957,7 +956,6 @@ _WordNormalize( ... )
 	 if (cur != NULL) {
 	   NORMlen = DpsUniLen((*cur)->word);
 	   if ((NORM = (char*)DpsMalloc(sizeof(char*) * (14 * NORMlen + 1))) == NULL) {
-/*		NORM = WRD;*/
 		goto Norm_exit;
            }
      	   DpsUniStrRCpy(uwrd, (*cur)->word); 
@@ -965,13 +963,10 @@ _WordNormalize( ... )
 	 } else if (FZ.nspell > Agent->WordParam.min_word_len) {
 	   NORMlen = DpsUniLen(s_p.word);
 	   if ((NORM = (char*)DpsMalloc(sizeof(char*) * (14 * NORMlen + 1))) == NULL) {
-/*		NORM = WRD;*/
 		goto Norm_exit;
            }
      	   DpsUniStrRCpy(uwrd, s_p.word); 
 	   DpsConv(&uni_bc, NORM, 14 * NORMlen + 1, (char*)uwrd, sizeof(dpsunicode_t) * (NORMlen + 1));
-	 } else {
-/*	   NORM = WRD;*/
 	 }
  Norm_exit:
 	 DPS_FREE(uwrd);

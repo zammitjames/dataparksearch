@@ -39,6 +39,7 @@
 #include "dps_searchcache.h"
 #include "dps_store.h"
 #include "dps_agent.h"
+#include "dps_match.h"
 
 #include <stdio.h>
 #include <stdlib.h>

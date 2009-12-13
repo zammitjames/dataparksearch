@@ -68,6 +68,12 @@ dnl            CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 	    LIBS="$LIBS -L/usr/local/lib -lrt"
             ;;
 esac
+dnl platform specific flags and options
+case "$host" in
+        sparc-*-*)
+            CFLAGS="$CFLAGS -xmemalign=1i"
+            ;;
+esac
 
 dnl Checks for header files.
 AC_STDC_HEADERS

@@ -24,6 +24,7 @@
 #include "dps_acronym.h"
 #include "dps_conf.h"
 #include "dps_charsetutils.h"
+#include "dps_match.h"
 
 #include <stdio.h>
 #include <stdlib.h>

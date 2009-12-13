@@ -38,6 +38,7 @@
 #include "dps_store.h"
 #include "dps_hash.h"
 #include "dps_charsetutils.h"
+#include "dps_searchcache.h"
 
 #include <stdio.h>
 #include <stdlib.h>

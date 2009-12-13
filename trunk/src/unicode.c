@@ -195,6 +195,22 @@ int DpsUniStrNCaseCmp(const dpsunicode_t *s1, const dpsunicode_t * s2, size_t le
   return 0;
 }
 
+int DpsUniStrNCmp(const dpsunicode_t *s1, const dpsunicode_t * s2, size_t len) {
+  if(len != 0) {
+    register dpsunicode_t d1, d2;
+    do {
+      d1 = *s1;
+      d2 = *s2;
+      if (d1 < d2) return -1;
+      if (d1 > d2) return 1;
+      if (d1 == 0) return 0;
+      s1++;
+      s2++;
+    } while (--len != 0);
+  }
+  return 0;
+}
+
 
 dpsunicode_t *DpsUniAccentStrip(const dpsunicode_t *str) {
   dpsunicode_t *nfd, *s, *d;

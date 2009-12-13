@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -21,5 +21,8 @@
 
 extern int DpsWildCmp(const char *str, const char *expr);
 extern __C_LINK int __DPSCALL DpsWildCaseCmp(const char *str, const char *expr);
+
+extern int DpsUniWildCmp(const dpsunicode_t *str, const dpsunicode_t *expr);
+extern int DpsUniWildCaseCmp(const dpsunicode_t *str, const dpsunicode_t *expr);
 
 #endif

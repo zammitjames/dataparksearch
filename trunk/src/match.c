@@ -22,6 +22,7 @@
 #include "dps_db.h"
 #include "dps_vars.h"
 #include "dps_charsetutils.h"
+#include "dps_spell.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -151,11 +152,11 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			for(i = 0; i < nparts; i++) Parts[i].beg = Parts[i].end = -1;
 			{
 			  dps_uint4 net, mask, addr;
-			  struct sockaddr_in NET;
+			  struct sockaddr_in iNET;
 			  int bits;
 			  if ((sin != NULL) 
-			      && ((bits = inet_net_pton(AF_INET, Match->pattern, &NET.sin_addr.s_addr,sizeof(NET.sin_addr.s_addr)))!= -1)) {
-			    net = (dps_uint4)ntohl(NET.sin_addr.s_addr);
+			      && ((bits = inet_net_pton(AF_INET, Match->pattern, &iNET.sin_addr.s_addr,sizeof(iNET.sin_addr.s_addr)))!= -1)) {
+			    net = (dps_uint4)ntohl(iNET.sin_addr.s_addr);
 			    mask = (dps_uint4)(0xffffffffU << (32 - bits));
 			    addr = (dps_uint4)ntohl(sin->sin_addr.s_addr);
 			    res = !((addr & mask) == net);
@@ -423,4 +424,262 @@ const char *DpsMatchTypeStr(int m){
 		case DPS_MATCH_SUBNET:	return	"Subnet";
 	}
 	return "<Unknown Match Type>";
+}
+
+
+
+/* DPS_UNIMATCH */
+
+int DpsUniMatchListAdd(DPS_AGENT *A, DPS_UNIMATCHLIST *L, DPS_UNIMATCH *M, char *err, size_t errsize, int ordre) {
+	DPS_UNIMATCH	*N;
+	DPS_SERVER n;
+	int rc;
+	size_t i;
+
+	for (i = 0; i < L->nmatches; i++) {
+	  if ((DpsUniStrCmp(L->Match[i].pattern, M->pattern) == 0) &&
+	      (L->Match[i].match_type == M->match_type) &&
+	      (L->Match[i].case_sense == M->case_sense) &&
+	      (L->Match[i].nomatch == M->nomatch)) {
+	    return DPS_OK;
+	  }
+	}
+	
+	L->Match=(DPS_UNIMATCH *)DpsRealloc(L->Match,(L->nmatches+1)*sizeof(DPS_UNIMATCH));
+	if (L->Match == NULL) {
+	  L->nmatches = 0;
+	  dps_snprintf(err, errsize, "Can't realloc at %s:%d\n", __FILE__, __LINE__);
+	  return DPS_ERROR;
+	}
+	N=&L->Match[L->nmatches++];
+	DpsUniMatchInit(N);
+	N->pattern = DpsUniDup(DPS_NULL2EMPTY(M->pattern));
+	N->match_type=M->match_type;
+	N->case_sense=M->case_sense;
+	N->nomatch=M->nomatch;
+	N->arg = M->arg ? (char*)DpsStrdup(DPS_NULL2EMPTY(M->arg)) : NULL;
+	N->section = M->section ? (char *)DpsStrdup(M->section) : NULL;
+	N->subsection = M->subsection ? (char *)DpsStrdup(M->subsection) : NULL;
+	N->dbaddr = M->dbaddr ? (char *)DpsStrdup(M->dbaddr) : NULL;
+	N->last = M->last;
+
+	if (A != NULL) {
+/*
+	  bzero((void*)&n, sizeof(n));
+	  n.command = 'F';
+	  n.Match.pattern = M->pattern;
+	  n.Match.match_type = M->match_type;
+	  n.Match.case_sense = M->case_sense;
+	  n.Match.nomatch = M->nomatch;
+	  n.Match.arg = N->arg;
+	  n.Match.section = N->section;
+	  n.Match.subsection = N->subsection;
+	  n.ordre = ordre;
+
+	  if(A->flags & DPS_FLAG_ADD_SERVURL) {
+	    rc = DpsSrvAction(A, &n, DPS_SRV_ACTION_ADD);
+	    N->server_id = n.site_id;
+	  } else {
+	    rc = DPS_OK;
+	    N->server_id = 0;
+	  }
+	  DpsVarListFree(&n.Vars);
+
+	  if (rc != DPS_OK) return rc;
+*/
+	}
+
+	return DpsUniMatchComp(N, err, errsize);
+}
+
+DPS_UNIMATCH *DpsUniMatchInit(DPS_UNIMATCH *M){
+	bzero((void*)M, sizeof(*M));
+	return M;
+}
+
+void DpsUniMatchListFree(DPS_UNIMATCHLIST *L){
+	size_t i;
+	for(i=0;i<L->nmatches;i++){
+		DpsUniMatchFree(&L->Match[i]);
+	}
+	L->nmatches = 0;
+	DPS_FREE(L->Match);
+}
+
+void DpsUniMatchFree(DPS_UNIMATCH * Match) {
+	DPS_FREE(Match->pattern);
+	DPS_FREE(Match->arg);
+	DPS_FREE(Match->section);
+	DPS_FREE(Match->subsection);
+	DPS_FREE(Match->dbaddr);
+	DpsUniRegFree(&Match->UniReg);
+	Match->compiled = 0;
+}
+
+DPS_UNIMATCH * DpsUniMatchListFind(DPS_UNIMATCHLIST *L, const dpsunicode_t *str, size_t nparts, DPS_MATCH_PART *Parts) {
+	size_t i;
+	for(i = 0; i < L->nmatches; i++) {
+		DPS_UNIMATCH *M = &L->Match[i];
+		if(!DpsUniMatchExec(M, str, str, NULL, nparts, Parts))
+			return M;
+	}
+	return NULL;
+}
+
+int DpsUniMatchComp(DPS_UNIMATCH *Match, char *errstr, size_t errstrsize) {
+	
+	errstr[0]='\0';
+	
+	switch(Match->match_type){
+		case DPS_MATCH_REGEX:
+		        if (Match->compiled) DpsUniRegFree(&Match->UniReg);
+			bzero((void*)&Match->UniReg, sizeof(Match->UniReg));
+			if (DPS_OK != DpsUniRegComp(&Match->UniReg, Match->pattern)) {
+				DpsUniPrint("DpsUniMatchComp error for ", Match->pattern);
+				return DPS_ERROR;
+			}
+			Match->compiled = 1;
+			
+		case DPS_MATCH_WILD:
+		case DPS_MATCH_BEGIN:
+		case DPS_MATCH_END:
+		case DPS_MATCH_SUBSTR:
+		case DPS_MATCH_FULL:
+			break;
+		default:
+			dps_snprintf(errstr, errstrsize, "Unknown match type '%d'", Match->match_type);
+			return DPS_ERROR;
+	}
+	return DPS_OK;
+}
+
+int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsunicode_t *net_string, struct sockaddr_in *sin, 
+		 size_t nparts, DPS_MATCH_PART * Parts) {
+	size_t		i;
+	int		res=0;
+	regmatch_t	subs[DPS_NSUBS];
+	char            regerrstr[ERRSTRSIZ]="";
+	const dpsunicode_t *se;
+	size_t		plen,slen;
+
+#ifdef WITH_PARANOIA
+	void *paran = DpsViolationEnter(paran);
+#endif
+	
+	switch(Match->match_type){
+		case DPS_MATCH_REGEX:
+		        if (!Match->compiled) if (DPS_OK != (res = DpsUniMatchComp(Match, regerrstr, sizeof(regerrstr) - 1))) {
+#ifdef WITH_PARANOIA
+			  DpsViolationExit(-1, paran);
+#endif
+			  return res;
+			}
+			nparts = Match->UniReg.ntokens;
+			res = DpsUniRegExec(&Match->UniReg, string);
+
+			if(res){
+				for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
+			}else{
+				for(i=0;i<nparts;i++){
+					Parts[i].beg = Match->UniReg.Token[i].rm_so;
+					Parts[i].end = Match->UniReg.Token[i].rm_eo;
+				}
+			}
+			break;
+		case DPS_MATCH_WILD:
+			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
+			if(Match->case_sense) {
+				res = DpsUniWildCaseCmp(string, Match->pattern);
+			}else{
+				res = DpsUniWildCmp(string, Match->pattern);
+			}
+			break;
+		case DPS_MATCH_SUBNET:
+			for(i = 0; i < nparts; i++) Parts[i].beg = Parts[i].end = -1;
+			{
+			  dps_uint4 net, mask, addr;
+			  struct sockaddr_in iNET;
+			  int bits;
+			  if ((sin != NULL) 
+			      && ((bits = inet_net_pton(AF_INET, Match->pattern, &iNET.sin_addr.s_addr,sizeof(iNET.sin_addr.s_addr)))!= -1)) {
+			    net = (dps_uint4)ntohl(iNET.sin_addr.s_addr);
+			    mask = (dps_uint4)(0xffffffffU << (32 - bits));
+			    addr = (dps_uint4)ntohl(sin->sin_addr.s_addr);
+			    res = !((addr & mask) == net);
+#ifdef DEBUG_MATCH
+			    fprintf(stderr, "Subnet.pton: addr:%x @ net/mask:%x/%x [%s] => %d\n", addr, net, mask, Match->pattern, res);
+#endif
+			  } else {
+/*			if(Match->case_sense){
+				res = DpsWildCaseCmp(net_string, Match->pattern);
+			}else{*/
+				res = DpsUniWildCmp(net_string, Match->pattern);
+/*			}*/
+#ifdef DEBUG_MATCH
+				fprintf(stderr, "Subnet.WildCmp: %s @ %s => %d\n", net_string, Match->pattern, res);
+#endif
+			  }
+			}
+			break;
+		case DPS_MATCH_BEGIN:
+			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
+			slen = DpsUniLen(DPS_NULL2EMPTY(Match->pattern));
+			if(Match->case_sense){
+			  res = DpsUniStrNCaseCmp(Match->pattern, string, slen);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res) {
+				  slen = DpsUniLen(DPS_NULL2EMPTY(Match->idn_pattern));
+				  if (slen) res = DpsUniStrNCaseCmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
+				}
+#endif
+			}else{
+			  res = DpsUniStrNCmp(Match->pattern, string, slen);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res) {
+				  slen = DpsUniLen(DPS_NULL2EMPTY(Match->idn_pattern));
+				  if (slen) res = DpsUniStrNCmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
+				}
+#endif
+			}
+			break;
+		case DPS_MATCH_FULL:
+			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
+			if(Match->case_sense){
+				res = DpsUniStrCaseCmp(Match->pattern, string);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = DpsUniStrCaseCmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
+#endif
+			}else{
+				res = DpsUniStrCmp(Match->pattern, string);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = DpsUniStrCmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
+#endif
+			}
+			break;
+		case DPS_MATCH_END:
+			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
+			plen = DpsUniLen(Match->pattern);
+			slen = DpsUniLen(string);
+			if(slen < plen){
+				res = 1;
+				break;
+			}
+			se = string + slen - plen;
+			if(Match->case_sense){
+				res = DpsUniStrCaseCmp(Match->pattern, se);
+			}else{
+				res = DpsUniStrCmp(Match->pattern, se);
+			}
+			break;
+
+		case DPS_MATCH_SUBSTR:
+		default:
+			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
+			res=0;
+	}
+	if (Match->nomatch) res = !res;
+#ifdef WITH_PARANOIA
+	DpsViolationExit(-1, paran);
+#endif
+	return res;
 }

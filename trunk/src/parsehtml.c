@@ -41,6 +41,7 @@
 #include "dps_hash.h"
 #include "dps_utils.h"
 #include "dps_indexer.h"
+#include "dps_conf.h"
 
 #include <stdio.h>
 #include <stdlib.h>

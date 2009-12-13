@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2005 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -126,7 +126,57 @@ int DpsWildCaseCmp(const char *str, const char *wexp) {
     while(wexp[y] == '*' || wexp[y] == '?') y++;
     if (wexp[y] == '\0') return 0;
     return -1;
-/*    return (str[x] != '\0') ? 1 : ((wexp[y] == '*' || wexp[y] == '?' || wexp[y] == '\0') ? 0 : -1);*/
 }
 
 #endif
+
+
+/* dpsunicode_t */
+
+
+int DpsUniWildCmp(const dpsunicode_t *str, const dpsunicode_t *wexp) {
+    register size_t x, y;
+
+    for (x = 0, y = 0; str[x] && wexp[y]; ++y, ++x) {
+      if (wexp[y] == (dpsunicode_t)'*') {
+	    while (wexp[++y] == '*');
+	    if (!wexp[y])return 0;
+	    while (str[x]) {
+		register int ret;
+		if ((ret = DpsUniWildCmp(&str[x++], &wexp[y])) != 1) return ret;
+	    }
+	    return -1;
+      } else if (wexp[y] != (dpsunicode_t)'?') {
+	    if (str[x] != wexp[y]) return 1;
+      }
+    }
+    if (str[x] != (dpsunicode_t)'\0') return 1;
+    while(wexp[y] == (dpsunicode_t)'*' || wexp[y] == (dpsunicode_t)'?') y++;
+    if (wexp[y] == (dpsunicode_t)'\0') return 0;
+    return -1;
+}
+
+int DpsUniWildCaseCmp(const dpsunicode_t *str, const dpsunicode_t *wexp) {
+    register size_t x, y;
+
+    for (x = 0, y = 0; str[x] && wexp[y]; ++y, ++x) {
+
+      if (wexp[y] == (dpsunicode_t)'*') {
+	    while (wexp[++y] == '*');
+	    if (!wexp[y])return 0;
+	    while (str[x]) {
+		register int ret;
+		if ((ret = DpsUniWildCaseCmp(&str[x++], &wexp[y])) != 1) return ret;
+	    }
+	    return -1;
+      } else if (wexp[y] != (dpsunicode_t)'?') {
+	    if (dps_tolower(str[x]) != dps_tolower(wexp[y])) return 1;
+      }
+    }
+
+
+    if (str[x] != (dpsunicode_t)'\0') return 1;
+    while(wexp[y] == (dpsunicode_t)'*' || wexp[y] == (dpsunicode_t)'?') y++;
+    if (wexp[y] == (dpsunicode_t)'\0') return 0;
+    return -1;
+}
