@@ -60,29 +60,38 @@
 #define MAX_NORM 512
 #define ERRSTRSIZE 100
 
-
-/*#define DEBUG_UNIREG*/
-
+/*
+#define DEBUG_UNIREG
+*/
 /* Unicode regex lite BEGIN */
 
 static const dpsunicode_t *DpsUniRegTok(const dpsunicode_t *s, const dpsunicode_t **last) {
+  int skip;
 	if(s == NULL && (s=*last) == NULL)
 		return NULL;
+
+	skip = (*s == '\\');
 
 	switch(*s){
 		case 0:
 			return(NULL);
 			break;
 		case '[':
-			for(*last=s+1;(**last)&&(**last!=']');(*last)++);
-			if(**last==']')(*last)++;
-			break;
+		        if (!skip) {
+			  for(*last=s+1;(**last)&&(**last!=']');(*last)++);
+			  if(**last==']')(*last)++;
+			  break;
+			}
 		case '$':
 		case '^':
-			*last=s+1;
-			break;
+		        if (!skip) {
+			  *last=s+1;
+			  break;
+			}
 		default:
-			for(*last=s+1;(**last)&&(**last!=']')&&(**last!='[')&&(**last!='^')&&(**last!='$');(*last)++);
+		        for(*last = s + 1; (**last) && (skip || ( (**last!=']')&&(**last!='[')&&(**last!='^')&&(**last!='$')) ); (*last)++) {
+			  skip = (**last == '\\');
+			}
 			break;
 	}
 	return s;
@@ -90,13 +99,34 @@ static const dpsunicode_t *DpsUniRegTok(const dpsunicode_t *s, const dpsunicode_
 
 int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern) {
 	const dpsunicode_t *tok, *lt;
+	size_t i, p, len;
+#ifdef DEBUG_UNIREG
+	DPS_CHARSET *k = DpsGetCharSet("koi8-r");
+	DPS_CHARSET *sy = DpsGetCharSet("sys-int");
+	DPS_CONV fromuni;
+	char sstr[1024];
+	char rstr[1024];
+	
+	DpsConvInit(&fromuni, sy, k, NULL, 0);
+#endif
 
 	reg->ntokens=0;
 	reg->Token=NULL;
 
+#ifdef DEBUG_UNIREG
+
+	DpsConv(&fromuni, sstr, 1024, (char*)pattern, 1024);
+	printf(" -- pattern='%s'\n", sstr);
+#endif
+
 	tok=DpsUniRegTok(pattern,&lt);
 	while(tok){
-		size_t len;
+#ifdef DEBUG_UNIREG
+
+			DpsConv(&fromuni, sstr, 1024, (char*)tok, 1024);
+			DpsConv(&fromuni, rstr, 1024, (char*)lt, 1024);
+			printf(" -- tok:'%s' lt:'%s'\n", sstr, rstr);
+#endif
 		reg->Token=(DPS_UNIREG_TOK*)DpsRealloc(reg->Token,sizeof(*reg->Token)*(reg->ntokens+1));
 		if (reg->Token == NULL) {
 		  reg->ntokens = 0;
@@ -105,11 +135,18 @@ int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern) {
 		len=lt-tok;
 		reg->Token[reg->ntokens].str = (dpsunicode_t*)DpsMalloc((len+1)*sizeof(dpsunicode_t));
 		dps_memmove(reg->Token[reg->ntokens].str, tok, len * sizeof(dpsunicode_t));
-		reg->Token[reg->ntokens].str[len]=0;
-		
+                reg->Token[reg->ntokens].str[len]=0;
+
 		reg->ntokens++;
 		tok=DpsUniRegTok(NULL,&lt);
 	}
+#ifdef DEBUG_UNIREG
+	for (i = 0; i < reg->ntokens; i++) {
+	  DpsConv(&fromuni, sstr, 1024, (char*)reg->Token[i].str, 1024);
+	  printf(" -- str.%d:'%s'\n", i, sstr);
+	}
+	printf(" -- reg:%x ntokens:%d\n", reg, reg->ntokens);
+#endif
 	return DPS_OK;
 }
 
@@ -125,6 +162,7 @@ int DpsUniRegExec(const DPS_UNIREG_EXP *reg, const dpsunicode_t *string) {
 	char rstr[1024];
 	
 	DpsConvInit(&fromuni, sy, k, NULL, 0);
+	printf(" -- reg:%x ntokens:%d\n", reg, reg->ntokens);
 #endif
 	
 	for(start=string;*start;start++){
@@ -138,8 +176,9 @@ int DpsUniRegExec(const DPS_UNIREG_EXP *reg, const dpsunicode_t *string) {
 
 			DpsConv(&fromuni, sstr, 1024, (char*)tstart, 1024);
 			DpsConv(&fromuni, rstr, 1024, (char*)reg->Token[i].str, 1024);
-			printf("t:%d tstart='%s'\ttok='%s'\t", i, sstr, rstr);
+			printf(" -- t:%d tstart='%s'\ttok='%s'\t", i, sstr, rstr);
 #endif
+			reg->Token[i].rm_so = tstart - start;
 			switch(reg->Token[i].str[0]){
 				case '^':
 					if(string!=tstart){
@@ -181,25 +220,28 @@ int DpsUniRegExec(const DPS_UNIREG_EXP *reg, const dpsunicode_t *string) {
 					for(s=reg->Token[i].str;(*s)&&(*tstart);s++,tstart++){
 						if(*s=='.'){
 							/* Any char */
-						}else
-						if((*s)!=(*tstart)){
+						}else {
+						  if(*s == '\\') if (*(++s) == '\0') break;
+						  if((*s)!=(*tstart)){
 							match=0;
 							break;
+						  }
 						}
 					}
 					if((*s)&&(!*tstart))match=0;
 					break;
 			}
 #ifdef DEBUG_UNIREG
-			printf("match=%d\n",match);
+			printf("%d -- match=%d\n", __LINE__, match);
 #endif
+			reg->Token[i].rm_eo = tstart - start;
 			if(!match)break;
 		}
 		if(match)break;
 	}
 
 #ifdef DEBUG_UNIREG
-	printf("return match=%d\n",match);
+	printf("%d -- return match=%d\n", __LINE__, match);
 #endif
 	return match;
 
@@ -1009,7 +1051,7 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
 	    
   DpsConvInit(&touni, qreg_charset, sys_int, Conf->CharsToEscape, 0);
 #ifdef DEBUG_UNIREG
-  DpsConvInit(&fromuni, sys_int, affix_charset, Conf->CharsToEscape, 0);
+  DpsConvInit(&fromuni, sys_int, qreg_charset, Conf->CharsToEscape, 0);
 #endif
 
   while(str != NULL) {

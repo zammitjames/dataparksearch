@@ -38,6 +38,7 @@
 #include "dps_url.h"
 #include "dps_result.h"
 #include "dps_db.h"
+#include "dps_parser.h"
 
 #include <stdlib.h>
 #include <string.h>

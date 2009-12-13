@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2009, Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -35,5 +35,20 @@ extern DPS_MATCH * __DPSCALL DpsSectionMatchListFind(DPS_MATCHLIST *L, DPS_DOCUM
 extern const char *DpsMatchTypeStr(int m);
 
 extern DPS_MATCH *DpsMatchInit(DPS_MATCH *M);
+
+
+
+extern void DpsUniMatchFree(DPS_UNIMATCH *Match);
+extern DPS_UNIMATCHLIST *DpsUniMatchListInit(DPS_UNIMATCHLIST *L);
+extern void DpsUniMatchListFree(DPS_UNIMATCHLIST *L);
+extern int  DpsUniMatchListAdd(DPS_AGENT *A, DPS_UNIMATCHLIST *L, DPS_UNIMATCH *M, char *err, size_t errsize, int ordre);
+extern DPS_UNIMATCH * DpsUniMatchListFind(DPS_UNIMATCHLIST *L, const dpsunicode_t *str, size_t nparts, DPS_MATCH_PART *Parts);
+extern int DpsUniMatchComp(DPS_UNIMATCH *Match, char *errstr, size_t errstrsize);
+extern int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsunicode_t *net_string, struct sockaddr_in *sin, 
+			   size_t nparts, DPS_MATCH_PART * Parts);
+extern DPS_UNIMATCH *DpsUniMatchInit(DPS_UNIMATCH *M);
+
+
+
 
 #endif

@@ -34,25 +34,33 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+DPS_STOPWORD dps_reg_match = {"<Match>", "", NULL, 7, 0};
 
 DPS_STOPWORD * DpsStopListFind(DPS_STOPLIST *List, const dpsunicode_t *word, const char *lang) {
-	int low  = 0;
-	int high = List->nstopwords - 1;
+  size_t low, high, middle;
+  int match;
 
-	if(!List->StopWord) return NULL;
-	while (low <= high) {
-		int middle = (low + high) / 2;
-		int match = DpsUniStrCmp(List->StopWord[middle].uword, word);
+	if(List->StopWord) {
+	  low = 0;
+	  high = List->nstopwords - 1;
+	  while (low <= high) {
+		middle = (low + high) / 2;
+		match = DpsUniStrCmp(List->StopWord[middle].uword, word);
 		if (match == 0 && lang != NULL && *lang != '\0') {
 		  match = strncasecmp(List->StopWord[middle].lang, lang, dps_strlen(List->StopWord[middle].lang));
 		}
-		if (match < 0) { low = middle + 1;
+		if (match < 0 || low == high) { low = middle + 1;
 		} else if (match > 0) { high = middle - 1;
 		} else {
 /*		  if (lang==NULL || *lang=='\0' || !strncasecmp(List->StopWord[middle].lang, lang, dps_strlen(List->StopWord[middle].lang)))*/
 		    return &List->StopWord[middle];
 /*		  return NULL;*/
 		}
+	  }
+	}
+	for(low = 0; low < List->StopMatch.nmatches; low++) {
+	  match = DpsUniRegExec(&List->StopMatch.Match[low].UniReg, word);
+	  if (match) return &dps_reg_match;
 	}
 	return NULL;
 }
@@ -123,7 +131,7 @@ int DpsStopListAdd(DPS_STOPLIST *List, DPS_STOPWORD * stopword) {
 
 void DpsStopListFree(DPS_STOPLIST *List){
 	size_t i;
-	DpsMatchListFree(&List->StopMatch);
+	DpsUniMatchListFree(&List->StopMatch);
 	for(i=0;i<List->nstopwords;i++){
 		DPS_FREE(List->StopWord[i].uword);
 		DPS_FREE(List->StopWord[i].word);
@@ -142,7 +150,7 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 	DPS_STOPWORD stopword;
 	DPS_CHARSET *cs = NULL, *uni_cs = DpsGetCharSet("sys-int");
 	DPS_CONV cnv;
-	DPS_MATCH M;
+	DPS_UNIMATCH M;
 	char * charset=NULL;
 	dpsunicode_t *uwrd, *nfc;
 	int             fd;
@@ -179,7 +187,7 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 	}
 	DpsClose(fd);
 
-	if ((uwrd = (dpsunicode_t*)DpsMalloc(sizeof(dpsunicode_t) * (Conf->WordParam.max_word_len + 1))) == NULL) return DPS_ERROR;
+	if ((uwrd = (dpsunicode_t*)DpsMalloc(sizeof(dpsunicode_t) * (Conf->WordParam.max_word_len + 128))) == NULL) return DPS_ERROR;
 
 	bzero((void*)&stopword, sizeof(stopword));
 
@@ -221,7 +229,7 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 				}
 			}
 			ac = DpsGetArgs(str + 6, av, 255);
-			DpsMatchInit(&M);
+			DpsUniMatchInit(&M);
 			M.match_type = DPS_MATCH_WILD;
 			M.case_sense = 1;
 			for(i = 0; i < ac ; i++) {
@@ -241,13 +249,20 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 			  else{
 			    char		err[120] = "";
 			
-			    M.arg = av[0];
-			    M.pattern = av[i];
+			    M.arg = "stopword";
+
+			    DpsConv(&cnv, (char*)uwrd, sizeof(dpsunicode_t) * (Conf->WordParam.max_word_len + 127), 
+				    av[i], dps_strlen(av[i]) + 1);
+			    uwrd[Conf->WordParam.max_word_len] = '\0';
+			    nfc = DpsUniNormalizeNFC(NULL, uwrd);
+
+			    M.pattern = nfc;
 			
-			    if(DPS_OK != DpsMatchListAdd(NULL, &Conf->StopWords.StopMatch, &M, err, sizeof(err), 0)) {
+			    if(DPS_OK != DpsUniMatchListAdd(NULL, &Conf->StopWords.StopMatch, &M, err, sizeof(err), 0)) {
 				dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "%s", err);
 				return DPS_ERROR;
 			    }
+			    DPS_FREE(nfc);
 			  }
 			}
 

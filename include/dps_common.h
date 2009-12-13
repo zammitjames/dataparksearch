@@ -152,6 +152,7 @@ typedef struct stat_list_struct{
 
 typedef struct{
 	int		type;
+        int             rm_so, rm_eo;
 	dpsunicode_t	*str;
 } DPS_UNIREG_TOK;
 
@@ -226,7 +227,10 @@ typedef struct {
         char            *section;
         char            *subsection;
 	dpsunicode_t	*pattern;
-	dpsunicode_t	*arg;
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+        dpsunicode_t    *idn_pattern;
+#endif
+        char	        *arg;
         char            *dbaddr;
         DPS_UNIREG_EXP  UniReg;
 	urlid_t         server_id;        /**< server.rec_id            */

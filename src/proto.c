@@ -34,6 +34,7 @@
 #include "dps_hash.h"
 #include "dps_url.h"
 #include "dps_store.h"
+#include "dps_hrefs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
