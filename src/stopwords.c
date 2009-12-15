@@ -40,7 +40,7 @@ DPS_STOPWORD * DpsStopListFind(DPS_STOPLIST *List, const dpsunicode_t *word, con
   size_t low, high, middle;
   int match;
 
-	if(List->StopWord) {
+	if(List->nstopwords > 0) {
 	  low = 0;
 	  high = List->nstopwords - 1;
 	  while (low <= high) {
