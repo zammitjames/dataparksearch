@@ -50,7 +50,7 @@ DPS_STOPWORD * DpsStopListFind(DPS_STOPLIST *List, const dpsunicode_t *word, con
 		  match = strncasecmp(List->StopWord[middle].lang, lang, dps_strlen(List->StopWord[middle].lang));
 		}
 		if (match < 0 || low == high) { low = middle + 1;
-		} else if (match > 0) { high = middle - 1;
+		} else if (match > 0) { if (middle == 0) break; high = middle - 1;
 		} else {
 /*		  if (lang==NULL || *lang=='\0' || !strncasecmp(List->StopWord[middle].lang, lang, dps_strlen(List->StopWord[middle].lang)))*/
 		    return &List->StopWord[middle];
