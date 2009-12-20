@@ -18,7 +18,8 @@
 #ifndef _DPS_CHARSETUTILS_H
 #define _DPS_CHARSETUTILS_H
 
-extern __C_LINK void* dps_memmove(void *dst0, const void *src0, size_t length);
+/*extern __C_LINK void* dps_memmove(void *dst0, const void *src0, size_t length);*/
+#define dps_memmove dps_memcpy
 extern __C_LINK void* dps_memcpy(void *dst0, const void *src0, size_t length);
 extern __C_LINK void* dps_strncpy(void *dst0, const void *src0, size_t length);
 extern __C_LINK void* dps_strcpy(void *dst0, const void *src0);

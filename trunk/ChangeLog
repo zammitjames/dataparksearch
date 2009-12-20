@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* Match: command has been added for stopwords files.
 	* A bug of loosing last line before writing into storedoc database has been fixed.
 	* Added support for chunked Transfer Encoding.
 	* Improved support for Internationalized Domain Names (IDN).
