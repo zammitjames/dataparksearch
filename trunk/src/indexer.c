@@ -945,7 +945,7 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     DPS_DBLIST      dbl;
     DPS_DB *db;
     bzero(&t, sizeof(t));
-    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = NULL;
+    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
     t.Env_Vars = &Doc->Sections;
 
     for (i = 0; i < Indexer->Conf->ActionSQLMatch.nmatches; i++) {
@@ -1002,7 +1002,7 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     DPS_DBLIST      dbl;
     DPS_DB *db;
     bzero(&t, sizeof(t));
-    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = NULL;
+    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
     t.Env_Vars = &Doc->Sections;
 
     DpsSQLResInit(&SQLres);

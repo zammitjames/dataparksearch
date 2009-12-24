@@ -3309,6 +3309,7 @@ char* DpsRemoveHiLightDup(const char *s){
 		switch(s[0]){
 			case '\2':
 			case '\3':
+			case '\4':
 				break;
 			default:
 				*d++=*s;

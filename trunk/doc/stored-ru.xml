@@ -9,17 +9,6 @@
 <application>DataparkSearch</application> (по умолчанию:
 <filename>/usr/local/dpsearch/sbin</filename>).</para>
 
-<para><indexterm><primary>Документ</primary><secondary>цитаты</secondary></indexterm>
-<indexterm><primary>Команда</primary><secondary>DoExcerpt</secondary></indexterm>
-<command>stored</command>
-может быть использован для создания цитат документов на основе слов из запроса.
-<indexterm><primary>Команда</primary><secondary>ExcerptSize</secondary></indexterm>
-Для задания приблизительного размера цитаты в байтах, используйте в <filename>search.htm</filename>
-(в секции <literal>variables</literal>) команду
-<command>ExcerptSize</command>. Значение, используемое по умолчанию, равно 256.
-Вы можете выключить создание цитат (но сохранив возможность показа сохраненных копий) документов указав команду <command>DoExcerpt no</command> в вашем поисковом шаблоне.
-</para>
-
 <para><indexterm><primary>Команда</primary><secondary>DoStore</secondary></indexterm>
 В <application>DataparkSearch</application> можно хранить сжатые копии документов без
 использования демона <command>stored</command>. Для этого вместо настройки параметров <command>stored</command>
@@ -192,4 +181,29 @@
 			</listitem>
 		</orderedlist>
 	</sect2>
+
+	<sect2 id="excerpts">
+		<title>Цитаты документов</title>
+<indexterm><primary>Документ</primary><secondary>цитаты</secondary></indexterm>
+<para>
+<command>stored</command> также используется для создания цитат документов на основе слов из запроса.</para>
+
+<para><indexterm><primary>Команда</primary><secondary>ExcerptSize</secondary></indexterm>
+Для задания приблизительного размера цитаты в символах, используйте в <filename>search.htm</filename>
+(в секции <literal>variables</literal>) команду <command>ExcerptSize</command>. Значение, используемое по умолчанию, равно 256.</para>
+
+<para><indexterm><primary>Команда</primary><secondary>ExcerptPadding</secondary></indexterm>
+С помощью команды <command>ExcerptPadding</command> вы можете задать примерное число символов, возвращаемых в цитате перед и после найденного слова запроса; значение по умолчанию: 40.</para>
+
+<para><indexterm><primary>Команда</primary><secondary>ExcerptMark</secondary></indexterm>
+При помощи команды <command>ExcerptMark</command> вы можете изменить разделяющую последовательность символов, вставляемую между частями цитаты с ключевыми словами; значение по умолчанию: " ... " (пробел, многоточие, пробел).</para>
+
+<para><indexterm><primary>Команда</primary><secondary>DoExcerpt</secondary></indexterm>
+Вы можете выключить создание цитат (но сохранив возможность показа сохраненных копий) документов указав команду <command>DoExcerpt no</command> в вашем поисковом шаблоне.
+</para>
+
+
+
+	</sect2>
+
 </sect1>

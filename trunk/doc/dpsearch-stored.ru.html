@@ -114,40 +114,6 @@ CLASS="FILENAME"
 NAME="AEN2594"
 ></A
 >
-<A
-NAME="AEN2597"
-></A
->
-<B
-CLASS="COMMAND"
->stored</B
->
-может быть использован для создания цитат документов на основе слов из запроса.
-<A
-NAME="AEN2601"
-></A
->
-Для задания приблизительного размера цитаты в байтах, используйте в <TT
-CLASS="FILENAME"
->search.htm</TT
->
-(в секции <TT
-CLASS="LITERAL"
->variables</TT
->) команду
-<B
-CLASS="COMMAND"
->ExcerptSize</B
->. Значение, используемое по умолчанию, равно 256.
-Вы можете выключить создание цитат (но сохранив возможность показа сохраненных копий) документов указав команду <B
-CLASS="COMMAND"
->DoExcerpt no</B
-> в вашем поисковом шаблоне.</P
-><P
-><A
-NAME="AEN2609"
-></A
->
 В <SPAN
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
@@ -196,11 +162,11 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2626"
+NAME="AEN2611"
 ></A
 >
 <A
-NAME="AEN2629"
+NAME="AEN2614"
 ></A
 >
 Вы можете использовать команды <B
@@ -263,7 +229,7 @@ CLASS="COMMAND"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2653"
+NAME="AEN2638"
 ></A
 >Listen</B
 >
@@ -304,7 +270,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2669"
+NAME="AEN2654"
 ></A
 >VarDir</B
 >
@@ -324,7 +290,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2678"
+NAME="AEN2663"
 ></A
 >StoredFiles</B
 >
@@ -343,7 +309,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2687"
+NAME="AEN2672"
 ></A
 >OptimizeInterval</B
 >
@@ -359,7 +325,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2695"
+NAME="AEN2680"
 ></A
 >OptimizeRatio</B
 >
@@ -594,18 +560,78 @@ CLASS="FILENAME"
 					<B
 CLASS="COMMAND"
 ><A
-NAME="AEN2772"
+NAME="AEN2757"
 ></A
 >HlBeg</B
 > and <B
 CLASS="COMMAND"
 ><A
-NAME="AEN2776"
+NAME="AEN2761"
 ></A
 >HlEnd</B
 >;</P
 ></LI
 ></OL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXCERPTS"
+>3.13.4. Цитаты документов</A
+></H2
+><A
+NAME="AEN2766"
+></A
+><P
+><B
+CLASS="COMMAND"
+>stored</B
+> также используется для создания цитат документов на основе слов из запроса.</P
+><P
+><A
+NAME="AEN2772"
+></A
+>
+Для задания приблизительного размера цитаты в символах, используйте в <TT
+CLASS="FILENAME"
+>search.htm</TT
+>
+(в секции <TT
+CLASS="LITERAL"
+>variables</TT
+>) команду <B
+CLASS="COMMAND"
+>ExcerptSize</B
+>. Значение, используемое по умолчанию, равно 256.</P
+><P
+><A
+NAME="AEN2779"
+></A
+>
+С помощью команды <B
+CLASS="COMMAND"
+>ExcerptPadding</B
+> вы можете задать примерное число символов, возвращаемых в цитате перед и после найденного слова запроса; значение по умолчанию: 40.</P
+><P
+><A
+NAME="AEN2784"
+></A
+>
+При помощи команды <B
+CLASS="COMMAND"
+>ExcerptMark</B
+> вы можете изменить разделяющую последовательность символов, вставляемую между частями цитаты с ключевыми словами; значение по умолчанию: " ... " (пробел, многоточие, пробел).</P
+><P
+><A
+NAME="AEN2789"
+></A
+>
+Вы можете выключить создание цитат (но сохранив возможность показа сохраненных копий) документов указав команду <B
+CLASS="COMMAND"
+>DoExcerpt no</B
+> в вашем поисковом шаблоне.</P
 ></DIV
 ></DIV
 ><DIV

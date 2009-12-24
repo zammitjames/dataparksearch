@@ -9,15 +9,6 @@ documents. Copies are stored and retrieved by the new daemon -
 <application>DataparkSearch</application> installation (default:
 <filename>/usr/local/dpsearch/sbin</filename>).</para>
 
-<para><indexterm><primary>Document</primary><secondary>excerpts</secondary></indexterm>
-<indexterm><primary>Command</primary><secondary>DoExcerpt</secondary></indexterm>
-<command>stored</command> is also used to make documents excerpts for search results.
-<indexterm><primary>Command</primary><secondary>ExcerptSize</secondary></indexterm>
-You may use <command>ExcerptSize</command> command in <filename>search.htm</filename> template to specify average excerpt size in bytes.
-Value by default: 256. You may switch off document excerpts (but retain ability to show stored copies) 
-using <command>DoExcerpt no</command> command in your search template.
-</para>
-
 <para><indexterm><primary>Command</primary><secondary>DoStore</secondary></indexterm>
 To enable documents copies archiving without <command>stored</command> usage,
 place <command>DoStore yes</command> command in your
@@ -137,7 +128,7 @@ Use <literal>stored</literal> parameter for <command>DBAddr</command> command, e
 		<para>After you have successfully configured
 <command>stored</command>, the <filename>indexer</filename> pass
 downloaded documents to <command>stored</command> daemon. After that,
-<command>stored</command> will compress the received documents and
+<command>stored</command> compress the received documents and
 save them.</para>
 	</sect2>
 	<sect2 id="stored-search">
@@ -194,4 +185,30 @@ specify other URL, add to <filename>search.htm</filename>
 			</listitem>
 		</orderedlist>
 	</sect2>
+
+
+	<sect2 id="excerpts">
+		<title>Document excerpts</title>
+<indexterm><primary>Document</primary><secondary>excerpts</secondary></indexterm>
+
+<para><command>stored</command> is also used to make documents excerpts for search results.</para>
+
+<para><indexterm><primary>Command</primary><secondary>ExcerptSize</secondary></indexterm>
+You can use <command>ExcerptSize</command> command in <filename>search.htm</filename> template to specify average excerpt size in characters;
+value by default: 256.</para>
+
+<para><indexterm><primary>Command</primary><secondary>ExcerptPadding</secondary></indexterm>
+With <command>ExcerptPadding</command> command you can specify average number of characters is taken before and after a search word in excerpts; value by default: 40.</para>
+
+<para><indexterm><primary>Command</primary><secondary>ExcerptMark</secondary></indexterm>
+With <command>ExcerptMark</command> command you can alter the marking character sequence which delimits excerpt chunks; value by default: " ... " (a space, a dots, a space).</para>
+
+<para><indexterm><primary>Command</primary><secondary>DoExcerpt</secondary></indexterm>
+You may switch off document excerpts (but retain ability to show stored copies) 
+with <command>DoExcerpt no</command> command in your search template.
+</para>
+
+	</sect2>
+
+
 </sect1>
