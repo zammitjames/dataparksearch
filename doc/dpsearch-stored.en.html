@@ -113,35 +113,6 @@ CLASS="FILENAME"
 NAME="AEN2346"
 ></A
 >
-<A
-NAME="AEN2349"
-></A
->
-<B
-CLASS="COMMAND"
->stored</B
-> is also used to make documents excerpts for search results.
-<A
-NAME="AEN2353"
-></A
->
-You may use <B
-CLASS="COMMAND"
->ExcerptSize</B
-> command in <TT
-CLASS="FILENAME"
->search.htm</TT
-> template to specify average excerpt size in bytes.
-Value by default: 256. You may switch off document excerpts (but retain ability to show stored copies) 
-using <B
-CLASS="COMMAND"
->DoExcerpt no</B
-> command in your search template.</P
-><P
-><A
-NAME="AEN2360"
-></A
->
 To enable documents copies archiving without <B
 CLASS="COMMAND"
 >stored</B
@@ -188,11 +159,11 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2376"
+NAME="AEN2362"
 ></A
 >
 <A
-NAME="AEN2379"
+NAME="AEN2365"
 ></A
 >
 You may use the <B
@@ -257,7 +228,7 @@ CLASS="COMMAND"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2403"
+NAME="AEN2389"
 ></A
 >Listen</B
 >
@@ -298,7 +269,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2419"
+NAME="AEN2405"
 ></A
 >VarDir</B
 >
@@ -319,7 +290,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2428"
+NAME="AEN2414"
 ></A
 >StoredFiles</B
 >
@@ -339,7 +310,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2437"
+NAME="AEN2423"
 ></A
 >OptimizeInterval</B
 >
@@ -355,7 +326,7 @@ CLASS="USERINPUT"
 ><B
 CLASS="COMMAND"
 ><A
-NAME="AEN2445"
+NAME="AEN2431"
 ></A
 >OptimizeRatio</B
 >
@@ -443,7 +414,7 @@ CLASS="COMMAND"
 <B
 CLASS="COMMAND"
 >stored</B
-> will compress the received documents and
+> compress the received documents and
 save them.</P
 ></DIV
 ><DIV
@@ -596,18 +567,76 @@ CLASS="FILENAME"
 					<B
 CLASS="COMMAND"
 ><A
-NAME="AEN2524"
+NAME="AEN2510"
 ></A
 >HlBeg</B
 > and <B
 CLASS="COMMAND"
 ><A
-NAME="AEN2528"
+NAME="AEN2514"
 ></A
 >HlEnd</B
 > commands;</P
 ></LI
 ></OL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXCERPTS"
+>3.13.4. Document excerpts</A
+></H2
+><A
+NAME="AEN2519"
+></A
+><P
+><B
+CLASS="COMMAND"
+>stored</B
+> is also used to make documents excerpts for search results.</P
+><P
+><A
+NAME="AEN2525"
+></A
+>
+You can use <B
+CLASS="COMMAND"
+>ExcerptSize</B
+> command in <TT
+CLASS="FILENAME"
+>search.htm</TT
+> template to specify average excerpt size in characters;
+value by default: 256.</P
+><P
+><A
+NAME="AEN2531"
+></A
+>
+With <B
+CLASS="COMMAND"
+>ExcerptPadding</B
+> command you can specify average number of characters is taken before and after a search word in excerpts; value by default: 40.</P
+><P
+><A
+NAME="AEN2536"
+></A
+>
+With <B
+CLASS="COMMAND"
+>ExcerptMark</B
+> command you can alter the marking character sequence which delimits excerpt chunks; value by default: " ... " (a space, a dots, a space).</P
+><P
+><A
+NAME="AEN2541"
+></A
+>
+You may switch off document excerpts (but retain ability to show stored copies) 
+with <B
+CLASS="COMMAND"
+>DoExcerpt no</B
+> command in your search template.</P
 ></DIV
 ></DIV
 ><DIV

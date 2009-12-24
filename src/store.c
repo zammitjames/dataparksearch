@@ -623,7 +623,8 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
   DPS_CHARSET *bcs = NULL, *dcs = NULL, *sys_int;
   DPS_HTMLTOK tag;
   DPS_VAR ST;
-  dpsunicode_t *start, *end, *prevend, *uni, ures, *p, *oi, dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, *np, add;
+  dpsunicode_t *start, *end, *prevend, *uni, ures, *p, *oi, *np, add;
+  dpsunicode_t prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
   dpsunicode_t *c;
   char *os;
   int s = -1, r = -1;
@@ -858,12 +859,15 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
     end = dps_min(p + maxwlen + 1 + padding, uni + ulen);
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (start > uni) && DpsUniNSpace(*start); i++) start--;
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < uni + ulen) && DpsUniNSpace(*end); i++) end++;
-    if ((start != uni) && (start != prevend)) DpsUniStrCat(oi, dot);
-    ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
-    if ((end != uni + ulen)/* && (start != prevend)*/) DpsUniStrCat(oi, dot);
+    while ((start < end) && !DpsUniNSpace(*start)) start++;
+    if (start < end) {
+      if (oi[0]) DpsUniStrCat(oi, mark);
+      if ((start != uni) && (start != prevend)) DpsUniStrCat(oi, prefix_dot);
+      ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
+      if ((end != uni + ulen) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
+    }
     p = prevend = end;
     if (end == np) p++;
-/*    if (*p) p++;*/
   }
 
   {

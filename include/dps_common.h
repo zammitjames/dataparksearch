@@ -1066,6 +1066,7 @@ typedef struct {
   DPS_VARLIST  *Env_Vars;
   const char   *HlBeg, *HlEnd; /**< template highlighting      */
   const char   *GrBeg, *GrEnd; /**< template same site quoting for grouping a-la google */
+  const char   *ExcerptMark;   /**< delimiting mark for excerpts */
 } DPS_TEMPLATE;
 
 typedef struct {

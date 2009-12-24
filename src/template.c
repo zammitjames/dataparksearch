@@ -51,11 +51,12 @@ static size_t out_string(DPS_OUTPUTFUNCTION dps_out, void *stream, char * dst, s
 	return 0;
 }
 
-static char * HiLightDup(const char * src,const char * beg, const char * end){
-	size_t len=15;
-	size_t blen=dps_strlen(beg);
-	size_t elen=dps_strlen(end);
-	const char * s;
+static char * HiLightDup(const char *src, const char *beg, const char *end, const char *mark) {
+	size_t len = 15;
+	size_t blen = dps_strlen(beg);
+	size_t elen = dps_strlen(end);
+	size_t mlen = dps_strlen(mark);
+	const char *s;
 	char  * res, *d;
 	
 	for(s=src;*s;s++){
@@ -65,6 +66,9 @@ static char * HiLightDup(const char * src,const char * beg, const char * end){
 				break;
 			case '\3':
 				len+=elen;
+				break;
+			case '\4':
+				len += mlen;
 				break;
 			default:
 				len++;
@@ -81,6 +85,10 @@ static char * HiLightDup(const char * src,const char * beg, const char * end){
 			case '\3':
 				dps_strcpy(d,end);
 				d+=elen;
+				break;
+			case '\4':
+				dps_strcpy(d, mark);
+				d += mlen;
 				break;
 			default:
 				*d=*s;
@@ -259,7 +267,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 				break;
 			case '&':
 			case '^':
-				eval = HiLightDup(value, tmplt->HlBeg, tmplt->HlEnd);
+			        eval = HiLightDup(value, tmplt->HlBeg, tmplt->HlEnd, tmplt->ExcerptMark);
 				if (eval == NULL) break;
 				dlen+=out_string(dps_out, stream, dst + dlen, dst_len - dlen, eval);
 				DPS_FREE(eval);
@@ -580,7 +588,7 @@ static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok
 		  break;
 		case '&':
 		case '^': 
-		  eval = HiLightDup(var, is->tmplt->HlBeg, is->tmplt->HlEnd); 
+		  eval = HiLightDup(var, is->tmplt->HlBeg, is->tmplt->HlEnd, is->tmplt->ExcerptMark); 
 		  break;
 		case '%':
 		  eval2 = DpsRemoveHiLightDup(var);
@@ -726,6 +734,7 @@ void DpsTemplateFree(DPS_TEMPLATE *tmplt) {
   DPS_FREE(tmplt->HlEnd);
   DPS_FREE(tmplt->GrBeg);
   DPS_FREE(tmplt->GrEnd);
+  DPS_FREE(tmplt->ExcerptMark);
 }
 
 void __DPSCALL DpsTemplatePrint(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, void *stream, char *dst, size_t dst_len, 
@@ -902,6 +911,10 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    arg = dps_strtok_r(NULL, " \t\r\n", &lt, NULL);
 			if (arg) DpsVarListReplaceInt(vars, tok, atoi(arg));
+		}else
+		if(!strncasecmp(str, "ExcerptMark", 11)) {
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    DpsVarListReplaceStr(vars,"ExcerptMark", DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "ps", 2)) {
 		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
@@ -1146,6 +1159,8 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	DPS_FREE(t->GrEnd);
 	t->GrBeg = DpsStrdup(DpsVarListFindStrTxt(vars, "GrBeg", ""));
 	t->GrEnd = DpsStrdup(DpsVarListFindStrTxt(vars, "GrEnd", ""));
+	DPS_FREE(t->ExcerptMark);
+	t->ExcerptMark = DpsStrdup(DpsVarListFindStrTxt(vars, "ExcerptMark", " ... "));
 	
 	unics = DpsGetCharSet("sys-int");
 	DpsConvInit(&Agent->uni_lc, unics, Env->lcs, Env->CharsToEscape, DPS_RECODE_HTML);
