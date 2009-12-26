@@ -1541,7 +1541,7 @@ void DpsQuffixListFree (DPS_QUFFIXLIST *List) {
 }
 
 
-static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLIST *result, size_t order) {
+static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLIST *result, size_t order, size_t order_inquery) {
   DPS_WIDEWORD w;
   size_t i;
   size_t naffixes = Indexer->Conf->Affixes.naffixes;
@@ -1608,6 +1608,7 @@ static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLI
 	DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(dpsunicode_t) * (w.len + 1));
 	w.crcword = DpsStrHash32(w.word);
 	w.order = order;
+	w.order_inquery = order_inquery;
 	w.count = 0;
 	w.origin = DPS_WORD_ORIGIN_SPELL;
 	DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
@@ -1670,13 +1671,14 @@ static void DpsQuffixWord(DPS_AGENT *Indexer, DPS_WIDEWORDLIST *result, DPS_SPEL
 	DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(dpsunicode_t) * (w.len + 1));
 	w.crcword = DpsStrHash32(w.word);
 	w.order = wword->order;
+	w.order_inquery = wword->order_inquery;
 	w.count = 0;
 	w.origin = DPS_WORD_ORIGIN_SPELL;
 	DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
 
 	PS.nspell = 0;
 	DpsFindWord(Indexer, w.uword, 0, &PS, NULL);
-	for (j = 0; PS.cur[j] != NULL; j++) DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order);
+	for (j = 0; PS.cur[j] != NULL; j++) DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order, wword->order_inquery);
       }
     }
   }
@@ -1734,6 +1736,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
       DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(w.uword[0]) * (w.len + 1));
       w.crcword = DpsStrHash32(w.word);
       w.order = wword->order;
+      w.order_inquery = wword->order_inquery;
       w.count = 0;
       w.origin = DPS_WORD_ORIGIN_SPELL;
       if (sp) { DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE); }
@@ -1742,10 +1745,15 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 
       if (syn != NULL)
 	for(i = 0; i < syn->nwords; i++) {
-	  DpsWideWordListAdd(result, &(syn->Word[i]), DPS_WWL_LOOSE);
+	  w = syn->Word[i];
+	  w.order = wword->order;
+	  w.order_inquery = wword->order_inquery;
+	  w.count = 0;
+	  w.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
+	  DpsWideWordListAdd(result, &w /*&(syn->Word[i])*/, DPS_WWL_LOOSE);
 	}
     
-      if (sp) { DpsAllFormsWord(Indexer, *cur, result, wword->order); 
+      if (sp) { DpsAllFormsWord(Indexer, *cur, result, wword->order, wword->order_inquery); 
 	if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, *cur, wword);
       }
       if (syn != NULL) {
@@ -1753,7 +1761,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	  PS.nspell = 0;
 	  DpsFindWord(Indexer, syn->Word[i].uword, 0, &PS, NULL);
 	  for (j = 0; PS.cur[j] != NULL; j++) 
-	    DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order);
+	    DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order, wword->order_inquery);
 	}
       }
       if (Indexer->Flags.use_accentext) {
@@ -1766,9 +1774,11 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(w.uword[0]) * (w.len + 1));
 	    w.crcword = DpsStrHash32(w.word);
 	    w.origin = DPS_WORD_ORIGIN_ACCENT;
+	    w.order = wword->order;
+	    w.order_inquery = wword->order_inquery;
 	    DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
 	    asp.word = aw;
-	    if (sp) { DpsAllFormsWord(Indexer, &asp, result, wword->order);
+	    if (sp) { DpsAllFormsWord(Indexer, &asp, result, wword->order, wword->order_inquery);
 	      if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, &asp, wword);
 	    }
 	  }
@@ -1792,18 +1802,26 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
       DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(w.uword[0]) * (w.len + 1));
       w.crcword = DpsStrHash32(w.word);
       w.order = wword->order;
+      w.order_inquery = wword->order_inquery;
       w.count = 0;
       w.origin = DPS_WORD_ORIGIN_SPELL;
-      if (sp) { DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE); }
+      if (sp) { 
+	DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE); 
+      }
 
       if (sy) syn = DpsSynonymListFind(&(Indexer->Conf->Synonyms), &w);
 
       if (syn != NULL)
 	for(i = 0; i < syn->nwords; i++) {
-	  DpsWideWordListAdd(result, &(syn->Word[i]), DPS_WWL_LOOSE);
+	  w = syn->Word[i];
+	  w.order = wword->order;
+	  w.order_inquery = wword->order_inquery;
+	  w.count = 0;
+	  w.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
+	  DpsWideWordListAdd(result, &w /*&(syn->Word[i])*/, DPS_WWL_LOOSE);
 	}
     
-      if (sp) { DpsAllFormsWord(Indexer, p_sp, result, wword->order); 
+      if (sp) { DpsAllFormsWord(Indexer, p_sp, result, wword->order, wword->order_inquery); 
 	if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, p_sp, wword);
       }
       if (syn != NULL) {
@@ -1811,7 +1829,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	  PS.nspell = 0;
 	  DpsFindWord(Indexer, syn->Word[i].uword, 0, &PS, NULL);
 	  for (j = 0; PS.cur[j] != NULL; j++) 
-	    DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order);
+	    DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order, wword->order_inquery);
 	}
       }
       if (Indexer->Flags.use_accentext) {
@@ -1824,9 +1842,12 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(w.uword[0]) * (w.len + 1));
 	    w.crcword = DpsStrHash32(w.word);
 	    w.origin = DPS_WORD_ORIGIN_ACCENT; 
+	    w.order = wword->order;
+	    w.order_inquery = wword->order_inquery;
+	    w.count = 0;
 	    DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
 	    asp.word = aw;
-	    if (sp) { DpsAllFormsWord(Indexer, &asp, result, wword->order);
+	    if (sp) { DpsAllFormsWord(Indexer, &asp, result, wword->order, wword->order_inquery);
 	      if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, p_sp, wword);
 	    }
 	  }
@@ -1843,6 +1864,11 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 
     if (syn != NULL) {
       for(i = 0; i < syn->nwords; i++) {
+	w = syn->Word[i];
+	w.order = wword->order;
+	w.order_inquery = wword->order_inquery;
+	w.count = 0;
+	w.origin = DPS_WORD_ORIGIN_SYNONYM;
 	DpsWideWordListAdd(result, &(syn->Word[i]), DPS_WWL_LOOSE);
       }
     
@@ -1850,7 +1876,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	PS.nspell = 0;
 	DpsFindWord(Indexer, syn->Word[i].uword, 0, &PS, NULL);
 	for (j = 0; PS.cur[j] != NULL; j++) 
-	  DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order);
+	  DpsAllFormsWord(Indexer, PS.cur[j], result, wword->order, wword->order_inquery);
       }
     }
   }
