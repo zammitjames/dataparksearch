@@ -246,6 +246,7 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 	for (i = 0; i < Res->nitems; i++) {
 	  if (Res->items[i].cmd != DPS_STACK_WORD) continue;
 	  ww.order = Res->items[i].order;
+	  ww.order_inquery = Res->items[i].order_inquery;
 	  ww.count = Res->items[i].count;
 	  ww.crcword = Res->items[i].crcword;
 	  ww.word = Res->items[i].word;

@@ -952,6 +952,7 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
     }
     if (first_time) {
       Word.order = items[i].order;
+      Word.order_inquery = items[i].order_inquery;
       Word.count = items[i].count;
       Word.crcword = items[i].crcword;
       Word.word = items[i].word;
