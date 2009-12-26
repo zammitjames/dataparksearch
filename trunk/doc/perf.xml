@@ -147,8 +147,8 @@ Displaying documents 1-20 of total 128656 found
 
 <sect2 id="ares">
 <title>Asynchronous resolver library</title>
-<para>Using <ulink url="ftp://athena-dist.mit.edu/pub/ATHENA/ares/">ares</ulink>, 
-an asynchronous resolver library (dns/ares in FreeBSD ports collection), allow to perform DNS queries without blocking for every
+<para>Using <ulink url="http://c-ares.haxx.se/">c-ares</ulink>, 
+an asynchronous resolver library (dns/c-ares in FreeBSD ports collection), allow to perform DNS queries without blocking for every
 indexing thread. Please note, this also increase the number of concurrent queries to your DNS server.
 </para>
 </sect2>
