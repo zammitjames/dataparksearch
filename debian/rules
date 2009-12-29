@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
   
-DEB_CONFIGURE_USER_FLAGS=--with-pgsql --enable-apache-module --with-readline --datadir=$(DEB_CONFIGURE_DATADIR) --sbindir=$(DEB_CONFIGURE_SBINDIR)
+DEB_CONFIGURE_USER_FLAGS=--with-pgsql --with-openssl --disable-apache-module --with-readline --enable-multidbaddr --datadir=$(DEB_CONFIGURE_DATADIR) --sbindir=$(DEB_CONFIGURE_SBINDIR)
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
@@ -11,7 +11,11 @@ DEB_CONFIGURE_INCLUDEDIR = "\$${prefix}/include/dpsearch"
 DEB_CONFIGURE_SYSCONFDIR = "\$${prefix}/etc/dpsearch"
 DEB_CONFIGURE_LOCALSTATEDIR = "\$${prefix}/var/lib/dpsearch"
 DEB_CONFIGURE_DATADIR = "\$${prefix}/share/dpsearch"
+DEB_DH_STRIP_ARGS := --dbg-package=dpsearch
 
-install/dpsearch::
-	cp debian/dpsearch.500mod_dpsearch.info \
-		debian/dpsearch/`apxs -q LIBEXECDIR`/500mod_dpsearch.info
+#
+# Turned off the apache stuff.
+#
+#install/dpsearch::
+#	cp debian/dpsearch.500mod_dpsearch.info \
+#		debian/dpsearch/`apxs -q LIBEXECDIR`/500mod_dpsearch.info
