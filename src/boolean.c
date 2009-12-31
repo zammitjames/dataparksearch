@@ -747,9 +747,9 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  if (x2 != NULL) { res = *x2; x2 = NULL; }
 			} else {
 #ifdef DEBUG_BOOL
-			  printBoolRes(query, x1);
+/*			  printBoolRes(query, x1);*/
 			  DpsLog(query, DPS_LOG_EXTRA, "^^^");
-			  printBoolRes(query, x2);
+/*			  printBoolRes(query, x2);*/
 #endif
 			  res.order_from = (x1->order_from <= x2->order_from) ? x1->order_from : x2->order_from;
 			  res.order_to = (x1->order_to >= x2->order_to) ? x1->order_to : x2->order_to;
@@ -844,7 +844,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 #endif
 			DpsLog(query, DPS_LOG_EXTRA, "Perform {%d}.%x & {%d}.%x - > {%d}.%x", 
 	       (x1) ? x1->count : -1, (x1) ? x1->origin : -1, (x2) ? x2->count : -1 , (x2) ? x2->origin : -1, res.count, res.origin);
-			printBoolRes(query, &res);
+/*			printBoolRes(query, &res);*/
 			DpsLog(query, DPS_LOG_EXTRA, "===");
 #endif
 			rc = PUSHARG(s, &res);
@@ -854,7 +854,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			/* res = x1 ? 0 : 1; */
 			if (x1 != NULL) {
 #ifdef DEBUG_BOOL
-			  printBoolRes(query, x1);
+/*			  printBoolRes(query, x1);*/
 			  DpsLog(query, DPS_LOG_EXTRA, "^^^");
 #endif
 			  x1->cmd ^= DPS_STACK_WORD_NOT;
@@ -862,7 +862,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			}
 #ifdef DEBUG_BOOL
 			DpsLog(query, DPS_LOG_EXTRA, "Perform ~ {%d}", (x1) ? x1->count : -1);
-			printBoolRes(query, &x1);
+/*			printBoolRes(query, &x1);*/
 			DpsLog(query, DPS_LOG_EXTRA, "===");
 #endif
 			break;

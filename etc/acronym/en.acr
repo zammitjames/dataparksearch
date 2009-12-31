@@ -75,6 +75,8 @@ apps	appendixes
 appt	appointed
 Apr	April
 aptd	appointed
+aquaria	aquarium
+aquarium	aquaria
 AR	annual return
 AR	Arkansas
 ARE	Arab Republic of Egypt
@@ -107,8 +109,11 @@ AW	actual weight
 Ayr	Ayrshire
 AZ	Arizona
 #
+b	black
 BA	Bachelor of Arts
 BA	British Academy
+bacteria	bacterium
+bacterium	bacteria
 b&b	bed and breakfast
 BBC	British Broadcasting Corporation
 BC	before Christ
@@ -217,6 +222,8 @@ Co	company
 Col	colonel
 Col	Colorado
 Coll	college
+colloquia	colloquium
+colloquium	colloquia
 Colo	Colorado
 Conn	Connecticut
 Corp	corporation
@@ -586,6 +593,8 @@ MI	military Intelligency
 MIA	missing in action
 Mich	Michigan
 mil	military
+millennia	millennium
+millennium	millennia
 min	minimum
 min	minister
 min	minute
@@ -695,6 +704,7 @@ NYC	New York City
 NYSE	New York Stock Exchange
 NZ	New Zealand
 #
+o	old
 OAP	old age pensioner
 OAS	Organization of American States
 OAU	Organization for African Unity
@@ -778,6 +788,8 @@ pk	park
 pkg	package
 pkge	package
 pkt	packet
+planetaria	planetarium
+planetarium	planetaria
 plat	platoon
 plf	plaintiff
 PLO	Palestine Liberation Organization
@@ -915,6 +927,8 @@ SA	South Africa
 SA	South America
 SA	South Australia
 SAm	South America
+sanatoria	sanatorium
+sanatorium	sanatoria
 SAR	Syrian Arab Republic
 Sat	Saturday
 SAus	South Australia
@@ -994,6 +1008,8 @@ ST	Standard Time
 st	state
 St	street
 Sta	station
+stadia	stadium
+stadium	stadia
 sth	something
 stk	stok
 str	steamer
@@ -1071,6 +1087,8 @@ trans	transaction
 trans	transportation
 transp	transportation
 treas	treasurer
+trivia	trivium
+trivium	trivia
 trop	tropical
 ts	this
 TS	top secret
@@ -1125,10 +1143,12 @@ vou	voucher
 VP	Vice President
 VPres	Vice President
 vs	versus
+vs	sue
 VT	vacuum tube
 Vt	Vermont
 vv	vice versa
 #
+w	with
 WA	West Africa
 WA	Western Australia
 Wash	Washington
@@ -1142,6 +1162,7 @@ WCC	World Council of Churches
 wd	word
 Wed	Wednesday
 WF	weather forecast
+wf	white female
 wh	watt hour
 WH	White House
 WHO	World Health Organization
@@ -1157,6 +1178,7 @@ Wis	Wisconsin
 Wisc	Wisconsin
 wk	week
 wk	work
+wm	white male
 WMO	World Meteorological Organization
 wpb	waste paper basket
 WPC	World Peace Council
@@ -1185,6 +1207,7 @@ xpr	without privileges
 xr	without rights
 xw	without warrants
 #
+y	years
 YB	year book
 yd	yard
 yo	years old

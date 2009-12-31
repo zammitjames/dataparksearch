@@ -15,6 +15,18 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 */
+
+#define USE_OLD_DPS_HASH
+
+
+#ifndef USE_OLD_DPS_HASH
+
+
+
+
+#else
+
+
 /* Based on this code:
 --------------------------------------------------------------------
 lookup8.c, by Bob Jenkins, January 4 1997, Public Domain.
@@ -304,3 +316,5 @@ dpshash32_t DpsHash32(const char * buf, size_t size) {
 dpshash32_t DpsHash32Update(const dpshash32_t prev, const char *buf, size_t size) {
   return hash32(buf, size, prev);
 }
+
+#endif

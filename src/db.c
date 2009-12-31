@@ -350,13 +350,15 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	switch(status){
 	
 	case 0: /* No HTTP code */
-	  if (Doc->method != DPS_METHOD_VISITLATER) {
+	  if (Doc->method != DPS_METHOD_VISITLATER && Doc->method == DPS_METHOD_CRAWLDELAY) {
 /*		if (Doc->connp.Host != NULL) Doc->connp.Host->net_errors++;*/
 		DpsLog(Indexer, DPS_LOG_ERROR, "No HTTP response status");
 		next_index_time = Indexer->now + Doc->Spider.net_error_delay_time;
 	  }
+	  if (Doc->method != DPS_METHOD_CRAWLDELAY) {
 		dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 		DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+	  }
 		result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_SUPDATE);
 		TRACE_OUT(Indexer);
 		return result;
@@ -367,14 +369,16 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	case DPS_HTTP_STATUS_SEE_OTHER:				/*  303 */
 	case DPS_HTTP_STATUS_TEMPORARY_REDIRECT:                /*  307 */
 		if(!DpsVarListFind(&Doc->Sections,"Content-Type")){
-		        if (Doc->method != DPS_METHOD_VISITLATER) {
+		        if (Doc->method != DPS_METHOD_VISITLATER && Doc->method == DPS_METHOD_CRAWLDELAY) {
 			  if (Doc->connp.Host != NULL) Doc->connp.Host->net_errors++;
 			  DpsLog(Indexer,DPS_LOG_ERROR,"No Content-type header");
 			  DpsVarListReplaceInt(&Doc->Sections,"Status", status = DPS_HTTP_STATUS_INTERNAL_SERVER_ERROR);
 			}
-			next_index_time = Indexer->now + Doc->Spider.net_error_delay_time;
-			dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
-			DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+			if (Doc->method != DPS_METHOD_CRAWLDELAY) {
+			  next_index_time = Indexer->now + Doc->Spider.net_error_delay_time;
+			  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
+			  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+			}
 			result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_SUPDATE);
 			TRACE_OUT(Indexer);
 			return result;

@@ -6,7 +6,7 @@ SQL>'SELECT status, docsize, hops, crc32, pop_rank, url FROM url ORDER BY status
 200	2989	1	-581397223	0.25	http://site/testpage8.html
 200	924	1	-239789786	0.25	http://site/testpage4.html
 200	986	1	-160679629	0.25	http://site/testpage1.html
-200	398	0	0	0.25	http://site/
+200	458	0	0	0.25	http://site/
 200	1041	1	228960737	0.25	http://site/testpage11.html
 200	941	1	305902286	0.25	http://site/testpage6.html
 200	987	1	368581938	0.25	http://site/testpage3.html
@@ -85,20 +85,20 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	1739314914	http://site/testpage2.html	Content-Type	text/html
 200	1739314914	http://site/testpage2.html	title	TestPage2 Odd Number of BODY's until 30
 SQL>'SELECT u1.docsize,u2.docsize,u1.url,u2.url FROM url u1,url u2, links l WHERE u1.rec_id=l.ot AND u2.rec_id=l.k ORDER BY u1.docsize,u2.docsize'
-398	398	http://site/	http://site/
-398	807	http://site/	http://site/testpage12.html
-398	813	http://site/	http://site/testpage7.html
-398	828	http://site/	http://site/testpage5.html
-398	894	http://site/	http://site/testpage13.html
-398	924	http://site/	http://site/testpage4.html
-398	941	http://site/	http://site/testpage6.html
-398	986	http://site/	http://site/testpage1.html
-398	987	http://site/	http://site/testpage3.html
-398	992	http://site/	http://site/testpage2.html
-398	1023	http://site/	http://site/testpage10.html
-398	1041	http://site/	http://site/testpage11.html
-398	1592	http://site/	http://site/testpage9.html
-398	2989	http://site/	http://site/testpage8.html
+458	458	http://site/	http://site/
+458	807	http://site/	http://site/testpage12.html
+458	813	http://site/	http://site/testpage7.html
+458	828	http://site/	http://site/testpage5.html
+458	894	http://site/	http://site/testpage13.html
+458	924	http://site/	http://site/testpage4.html
+458	941	http://site/	http://site/testpage6.html
+458	986	http://site/	http://site/testpage1.html
+458	987	http://site/	http://site/testpage3.html
+458	992	http://site/	http://site/testpage2.html
+458	1023	http://site/	http://site/testpage10.html
+458	1041	http://site/	http://site/testpage11.html
+458	1592	http://site/	http://site/testpage9.html
+458	2989	http://site/	http://site/testpage8.html
 807	807	http://site/testpage12.html	http://site/testpage12.html
 813	813	http://site/testpage7.html	http://site/testpage7.html
 828	828	http://site/testpage5.html	http://site/testpage5.html
