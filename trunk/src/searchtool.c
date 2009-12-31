@@ -1495,7 +1495,6 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			      DPS_PREPARE_RETURN(0);
 			    }
 
-#if 1
 			    state.cmd = DPS_STACK_WORD;
 			    state.add_cmd = add_cmd;
 			    state.origin = DPS_WORD_ORIGIN_ACRONYM;
@@ -1516,37 +1515,6 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			      state.nphrasecmd = nphrasecmd;
 			    }
 
-#else
-			    if(DpsStopListFind(&query->Conf->StopWords, first->unroll.Word[z].uword, state.qlang) ||
-			       (query->WordParam.min_word_len > first->unroll.Word[z].ulen) ||
-			       (query->WordParam.max_word_len < first->unroll.Word[z].ulen)) {
-			      if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_STOP, 
-						  first->unroll.Word[z].word, 
-						  first->unroll.Word[z].uword, qlang) != DPS_OK) {
-				DPS_FREE(uwrddup);
-				DPS_PREPARE_RETURN(0);
-			      }
-			      Res->items[ORDER].order_origin |= DPS_WORD_ORIGIN_STOP;
-			    } else {
-			      if (DpsAddStackItem(query, Res, DPS_STACK_WORD, add_cmd, state.order, DPS_WORD_ORIGIN_ACRONYM, 
-						  first->unroll.Word[z].word, 
-						  first->unroll.Word[z].uword, qlang) != DPS_OK) {
-				DPS_FREE(uwrddup);
-				DPS_PREPARE_RETURN(0);
-			      }
-			      OWord.uword = first->unroll.Word[z].uword;
-			      OWord.ulen = DpsUniLen(first->unroll.Word[z].uword);
-			      OWord.origin = DPS_WORD_ORIGIN_ACRONYM;
-			      local.order = state.order;
-			      local.order_inquery = state.order_inquery;
-			      local.nphrasecmd = 1 /*(first->unroll.nwords > 1) ? 1 : 0*/;
-			      local.have_bukva_forte = 0;
-			      if (DPS_OK != DpsExpandWord(query, Res, &OWord, &local)) {
-				DPS_FREE(uwrddup);
-				DPS_PREPARE_RETURN(0);
-			      }
-			    }
-#endif
 
 			    state.cmd = DPS_STACK_RIGHT;
 			    state.add_cmd = add_cmd;
@@ -1806,9 +1774,12 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						, double *D_y
 #endif
 						) {
-  register double y = (D[DPS_N_PHRASE] == 1) ? 0.0 : x /*DPS_PHRASE_FACTOR*/;
+  register double y = 0.0;
+
+  if (D[DPS_N_PHRASE] == 1) xy += (x - xy) / 2.0;
   if (D[DPS_N_EXACT] == 0) y += x;
-  y += DPS_UNICNT_FACTOR * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
+  y += x * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
+
 
 #ifdef WITH_REL_WRDCOUNT
   if (D[DPS_N_WRDCOUNT] > R[DPS_N_WRDCOUNT]) {
@@ -1820,7 +1791,7 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 /*    fprintf(stderr, "WRDCNT:: R: %d  D: %d -- %f\n", R[DPS_N_WRDCOUNT], D[DPS_N_WRDCOUNT], 
 	    DPS_WRD_CNT_FACTOR * (double) (R[DPS_N_WRDCOUNT] - D[DPS_N_WRDCOUNT]));*/
   }
-  y += DPS_UNICNT_FACTOR * D[DPS_N_COUNT];
+  y += ((D[DPS_N_COUNT] > DPS_UNICNT_BORDER) ? DPS_UNICNT_FACTOR : DPS_LESS_UNICNT_FACTOR) * D[DPS_N_COUNT];
 /*  fprintf(stderr, "UNICNT:: R: %d  D: %f -- %f\n", R[DPS_N_COUNT], (double)D[DPS_N_COUNT], 
 	  DPS_UNICNT_FACTOR * ((double) D[DPS_N_COUNT]));*/
 #endif

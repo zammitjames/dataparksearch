@@ -94,6 +94,7 @@ static void dosearch(HV *result,char *query_words,DPS_AGENT *Agent) {
 	DpsOpenLog("perl", Agent->Conf, 1);
 /*	fprintf(stderr, "QUERY: %s\n", query_words);*/
   DpsParseQueryString(Agent, &Agent->Conf->Vars, query_words);
+  /* Call again to load search Limits if need */
   DpsParseQueryString(Agent, &Agent->Conf->Vars, query_words);
   Agent->Flags = Agent->Conf->Flags;
   /* res */

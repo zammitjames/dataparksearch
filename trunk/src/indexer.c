@@ -1781,9 +1781,18 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	      /* Check whether URL is disallowed by robots.txt */
 	      rule = DpsRobotRuleFind(Indexer, Server, Doc, &Doc->CurURL, 1, (alias) ? 1 : 0);
 	      if(rule) {
-		DpsLog(Indexer,(rule->cmd==DPS_METHOD_DISALLOW||rule->cmd==DPS_METHOD_VISITLATER) ? DPS_LOG_INFO : DPS_LOG_EXTRA,
-		       "SubDoc.robots.txt: '%s %s'",(rule->cmd==DPS_METHOD_DISALLOW||rule->cmd==DPS_METHOD_VISITLATER)?"Disallow":"Allow",rule->path);
-		if((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) )
+		char *w;
+		switch(rule->cmd) {
+		case DPS_METHOD_DISALLOW:
+		case DPS_METHOD_VISITLATER:
+		  w = "Disallow"; break;
+		case DPS_METHOD_CRAWLDELAY:
+		  w = "Postpone"; break;
+		default:
+		  w = "Allow";
+		}
+		DpsLog(Indexer,(rule->cmd==DPS_METHOD_DISALLOW||rule->cmd==DPS_METHOD_VISITLATER) ? DPS_LOG_INFO : DPS_LOG_EXTRA, "SubDoc.robots.txt: '%s %s'", w, rule->path);
+		if((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) || (rule->cmd == DPS_METHOD_CRAWLDELAY) )
 		  Doc->method = rule->cmd;
 	      }
 	    }
@@ -1817,7 +1826,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 #endif
 	    return result;
 	  }
-	}else if(Doc->method != DPS_METHOD_DISALLOW && Doc->method != DPS_METHOD_VISITLATER) {
+	}else if(Doc->method != DPS_METHOD_DISALLOW && Doc->method != DPS_METHOD_VISITLATER && Doc->method != DPS_METHOD_CRAWLDELAY) {
 		int	start,state;
 		int	mp3type=DPS_MP3_UNKNOWN;
 		
@@ -2266,9 +2275,18 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	      /* Check whether URL is disallowed by robots.txt */
 	      rule = DpsRobotRuleFind(Indexer, Server, Doc, &Doc->CurURL, 1, (alias) ? 1 : 0);
 	      if(rule) {
-		DpsLog(Indexer, (rule->cmd==DPS_METHOD_DISALLOW||rule->cmd==DPS_METHOD_VISITLATER) ? DPS_LOG_INFO : DPS_LOG_EXTRA,
-		       "Doc.robots.txt: '%s %s'",(rule->cmd==DPS_METHOD_DISALLOW||rule->cmd==DPS_METHOD_VISITLATER)?"Disallow":"Allow",rule->path);
-		if((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) )
+		char *w;
+		switch(rule->cmd) {
+		case DPS_METHOD_DISALLOW:
+		case DPS_METHOD_VISITLATER:
+		  w = "Disallow"; break;
+		case DPS_METHOD_CRAWLDELAY:
+		  w = "Postpone"; break;
+		default:
+		  w = "Allow";
+		}
+		DpsLog(Indexer, (rule->cmd==DPS_METHOD_DISALLOW||rule->cmd==DPS_METHOD_VISITLATER) ? DPS_LOG_INFO : DPS_LOG_EXTRA, "Doc.robots.txt: '%s %s'", w, rule->path);
+		if((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) || (rule->cmd == DPS_METHOD_CRAWLDELAY) )
 		  Doc->method = rule->cmd;
 	      }
 	    }
@@ -2300,7 +2318,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 #endif
 	    return result;
 	  }
-	}else if(Doc->method != DPS_METHOD_DISALLOW && Doc->method != DPS_METHOD_VISITLATER) {
+	}else if(Doc->method != DPS_METHOD_DISALLOW && Doc->method != DPS_METHOD_VISITLATER && Doc->method != DPS_METHOD_CRAWLDELAY) {
 		int	start,state;
 		int	mp3type=DPS_MP3_UNKNOWN;
 		

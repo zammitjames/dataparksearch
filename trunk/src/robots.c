@@ -412,7 +412,8 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 }
 
 
-static DPS_ROBOT_RULE dps_host_disallow = {DPS_METHOD_VISITLATER, "No Host: directive found", 23};
+static DPS_ROBOT_RULE dps_host_disallow = {DPS_METHOD_VISITLATER, "No Host: directive found", 24};
+static DPS_ROBOT_RULE dps_host_crawldelay = {DPS_METHOD_CRAWLDELAY, "Too big Crawl-delay: postponing the doc", 39};
 
 DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOCUMENT *Doc, DPS_URL *pURL, int make_pause, int aliased) {
         char l_rurl[PATH_MAX];
@@ -476,9 +477,22 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      size_t to_sleep, diff;
 	      time_t now;
 
-	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 	      now = time(NULL);
+	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 	      diff = (size_t) (now - *(Server->last_crawled));
+	      if (diff > 300) {
+		time_t		next_index_time;
+		char dbuf[64];
+		DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
+			  next_index_time = Indexer->now + diff;
+			  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
+			  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+		DpsDocFree(&HostDoc);
+#ifdef WITH_PARANOIA
+		DpsViolationExit(Indexer->handle, paran);
+#endif
+		return &dps_host_crawldelay;
+	      }
 	      while (1000 * diff < Server->crawl_delay) {
 		to_sleep = Server->crawl_delay - diff * 1000;
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);

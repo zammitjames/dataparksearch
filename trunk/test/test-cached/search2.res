@@ -40,9 +40,43 @@
         </td></tr>
 </table><DL>
   <DT>1.
+  <a href="http://site/testpage9.html" TARGET="_blank">
+    TestPage9 title1 foo2 foo3 foo4 foo5 foo6 foo7 foo8 foo9 foo10 foo11 foo12 foo13 foo14 foo15 foo16 foo17 foo18 foo19 foo20 title  </a>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
+  <DD>
+  <table width=60%>
+    <tr>
+      <td>
+        <small>The <b>Wall</b> Street Journal Mon, 24 May 2005 23:06:00 ......</small>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <UL>
+         <li>
+           <small>
+             <A HREF="http://site/testpage9.html" TARGET="_blank">http://site/testpage9.html</A>
+             <font color="#008800">
+              - 1592 bytes [text/html]
+              - 
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+		    	        </a>]</small></DD>
+	                   </font>
+           </small>
+           <BR>
+           
+        </UL>
+        
+
+      </td>
+    </tr>
+  </table>
+
+</DL><DL>
+  <DT>2.
   <a href="http://site/testpage8.html" TARGET="_blank">
     TestPage8 300 Word Body  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -73,10 +107,10 @@
   </table>
 
 </DL><DL>
-  <DT>2.
+  <DT>3.
   <a href="http://site/testpage7.html" TARGET="_blank">
     TestPage7 Search Body Content only  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -107,10 +141,44 @@
   </table>
 
 </DL><DL>
-  <DT>3.
+  <DT>4.
+  <a href="http://site/testpage6.html" TARGET="_blank">
+    TestPage6 title1 title2 title3 title4 title5 title6 title7 title8 title9 title10 title11 title12 title13 title14 title15 title16  </a>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
+  <DD>
+  <table width=60%>
+    <tr>
+      <td>
+        <small>The <b>Wall</b> Street Journal Wed, 24 May 2006 23:06:00 ......</small>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <UL>
+         <li>
+           <small>
+             <A HREF="http://site/testpage6.html" TARGET="_blank">http://site/testpage6.html</A>
+             <font color="#008800">
+              - 941 bytes [text/html]
+              - 
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+		    	        </a>]</small></DD>
+	                   </font>
+           </small>
+           <BR>
+           
+        </UL>
+        
+
+      </td>
+    </tr>
+  </table>
+
+</DL><DL>
+  <DT>5.
   <a href="http://site/testpage5.html" TARGET="_blank">
     TestPage5 Phrase searching  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -141,10 +209,10 @@
   </table>
 
 </DL><DL>
-  <DT>4.
+  <DT>6.
   <a href="http://site/testpage4.html" TARGET="_blank">
     Testpage4 Stopwords and Phrase Search Check  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -175,10 +243,10 @@
   </table>
 
 </DL><DL>
-  <DT>5.
+  <DT>7.
   <a href="http://site/testpage3.html" TARGET="_blank">
     TestPage3 Even Number of BODY's until 30  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -209,10 +277,10 @@
   </table>
 
 </DL><DL>
-  <DT>6.
+  <DT>8.
   <a href="http://site/testpage2.html" TARGET="_blank">
     TestPage2 Odd Number of BODY's until 30  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -243,10 +311,10 @@
   </table>
 
 </DL><DL>
-  <DT>7.
+  <DT>9.
   <a href="http://site/testpage13.html" TARGET="_blank">
     TestPage13 Within 6 months  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -277,10 +345,10 @@
   </table>
 
 </DL><DL>
-  <DT>8.
+  <DT>10.
   <a href="http://site/testpage12.html" TARGET="_blank">
     TestPage12 Within Three Months  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -296,74 +364,6 @@
              <A HREF="http://site/testpage12.html" TARGET="_blank">http://site/testpage12.html</A>
              <font color="#008800">
               - 807 bytes [text/html]
-              - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
-		    	        </a>]</small></DD>
-	                   </font>
-           </small>
-           <BR>
-           
-        </UL>
-        
-
-      </td>
-    </tr>
-  </table>
-
-</DL><DL>
-  <DT>9.
-  <a href="http://site/testpage11.html" TARGET="_blank">
-    TestPage11 Long Words  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
-  <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small>The <b>Wall</b> Street Journal Mon, 24 May 2005 23:06:00 ......</small>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <UL>
-         <li>
-           <small>
-             <A HREF="http://site/testpage11.html" TARGET="_blank">http://site/testpage11.html</A>
-             <font color="#008800">
-              - 1041 bytes [text/html]
-              - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
-		    	        </a>]</small></DD>
-	                   </font>
-           </small>
-           <BR>
-           
-        </UL>
-        
-
-      </td>
-    </tr>
-  </table>
-
-</DL><DL>
-  <DT>10.
-  <a href="http://site/testpage10.html" TARGET="_blank">
-    TestPage10 Long Words  </a>
-  <small>[<b>1.486%</b> Popularity: <b>0.38123</b>]</small>
-  <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small>The <b>Wall</b> Street Journal Mon, 24 May 2005 23:06:00 ......</small>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <UL>
-         <li>
-           <small>
-             <A HREF="http://site/testpage10.html" TARGET="_blank">http://site/testpage10.html</A>
-             <font color="#008800">
-              - 1023 bytes [text/html]
               - 
 	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
 		    	        </a>]</small></DD>
