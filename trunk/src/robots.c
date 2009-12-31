@@ -480,21 +480,21 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      now = time(NULL);
 	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 	      diff = (size_t) (now - *(Server->last_crawled));
-	      if (diff > 300) {
-		time_t		next_index_time;
-		char dbuf[64];
-		DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
-			  next_index_time = Indexer->now + diff;
-			  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
-			  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
-		DpsDocFree(&HostDoc);
-#ifdef WITH_PARANOIA
-		DpsViolationExit(Indexer->handle, paran);
-#endif
-		return &dps_host_crawldelay;
-	      }
 	      while (1000 * diff < Server->crawl_delay) {
 		to_sleep = Server->crawl_delay - diff * 1000;
+		if ( (to_sleep > 300000) || (Indexer->action == DPS_TERMINATED) ) {
+		  time_t		next_index_time;
+		  char dbuf[64];
+		  DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
+		  next_index_time = Indexer->now + diff;
+		  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
+		  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+		  DpsDocFree(&HostDoc);
+#ifdef WITH_PARANOIA
+		  DpsViolationExit(Indexer->handle, paran);
+#endif
+		  return &dps_host_crawldelay;
+		}
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
 		DpsLog(Indexer, DPS_LOG_EXTRA, "Server.%s.Crawl-delay: %d of %d msec.", 
 		       Server->Match.pattern, to_sleep, Server->crawl_delay);
@@ -515,6 +515,19 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      diff = (size_t) (now - *(robot->last_crawled));
 	      while (1000 * diff < robot->crawl_delay) {
 		to_sleep = robot->crawl_delay - 1000 * diff;
+		if ( (to_sleep > 300000) || (Indexer->action == DPS_TERMINATED) ) {
+		  time_t		next_index_time;
+		  char dbuf[64];
+		  DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
+		  next_index_time = Indexer->now + diff;
+		  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
+		  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+		  DpsDocFree(&HostDoc);
+#ifdef WITH_PARANOIA
+		  DpsViolationExit(Indexer->handle, paran);
+#endif
+		  return &dps_host_crawldelay;
+		}
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
 		DpsLog(Indexer, DPS_LOG_EXTRA, "%s/robots.txt: Crawl-delay: %d of %d msec.", 
 		       robot->hostinfo, to_sleep, robot->crawl_delay);
