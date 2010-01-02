@@ -86,6 +86,7 @@
 	{"MakePrefixes",	1,1,	env_rpl_bool_var},
 	{"MarkForIndex",        1,1,	env_rpl_bool_var},
 	{"MaxClients",          1,1,    env_rpl_var},
+	{"MaxCrawlDelay",	1,1,	env_rpl_num_var},
 	{"MaxDepth",		1,1,	srv_rpl_num_var},
 	{"MaxDocSize",		1,1,	env_rpl_var},
 	{"MaxDocsPerServer",	1,1,	srv_rpl_num_var},
@@ -192,7 +193,7 @@
 /*   (at your option) any later version.                                       */
 /*   along with this program; if not, write to the Free Software               */
 /*   but WITHOUT ANY WARRANTY; without even the implied warranty of            */
-/*   Copyright (C) 2003-2009 Datapark corp. All rights reserved.               */
+/*   Copyright (C) 2003-2010 Datapark corp. All rights reserved.               */
 /*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
 /*   GNU General Public License for more details.                              */
 /*   it under the terms of the GNU General Public License as published by      */

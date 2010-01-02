@@ -1,5 +1,5 @@
 /**/
-/*   Copyright (C) 2003-2009 Datapark corp. All rights reserved.               */
+/*   Copyright (C) 2003-2010 Datapark corp. All rights reserved.               */
 /**/
 /*   This program is free software; you can redistribute it and/or modify      */
 /*   it under the terms of the GNU General Public License as published by      */
@@ -83,6 +83,7 @@
 	{"IspellInCorrectFactor",1,1,	env_rpl_num_var},
 	{"SubDocLevel",		1,1,	env_rpl_num_var},
 	{"SubDocCnt",		1,1,	env_rpl_num_var},
+	{"MaxCrawlDelay",	1,1,	env_rpl_num_var},
 	{"MinWordLength",	1,1,	env_rpl_num_var},
 	{"MaxWordLength",	1,1,	env_rpl_num_var},
 	{"PopRankNeoIterations",1,1,	env_rpl_num_var},
