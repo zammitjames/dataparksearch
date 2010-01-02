@@ -1611,6 +1611,7 @@ static int env_rpl_num_var(void *Cfg, size_t ac,char **av){
 	else if(!strcasecmp(av[0],"LongestTextItems"))Conf->Flags.LongestTextItems = res;
 	else if(!strcasecmp(av[0],"SubDocLevel"))Conf->Flags.SubDocLevel = res;
 	else if(!strcasecmp(av[0],"SubDocCnt"))Conf->Flags.SubDocCnt = res;
+	else if(!strcasecmp(av[0],"MaxCrawlDelay"))Conf->Flags.MaxCrawlDelay = res;
 	return DPS_OK;
 }		
 
