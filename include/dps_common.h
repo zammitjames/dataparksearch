@@ -972,6 +972,7 @@ typedef struct {
         int             LongestTextItems; /**< Number of longest text items to index */
         int             SubDocLevel;      /**< Maximum nested level for sub-documents */
         int             SubDocCnt;        /**< Maximum number of subdocuments to be indexed */
+        int             MaxCrawlDelay;    /**< Maximum Crawl-delay seconds to wait */
         dps_uint4       SkipHrefIn;       /**< Flag to skip some HTML tags from new href lookup */
    enum dps_prmethod    poprank_method;
    enum dps_indcmd      cmd;

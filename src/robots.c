@@ -482,7 +482,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      diff = (size_t) (now - *(Server->last_crawled));
 	      while (1000 * diff < Server->crawl_delay) {
 		to_sleep = Server->crawl_delay - diff * 1000;
-		if ( (to_sleep > 300000) || (Indexer->action == DPS_TERMINATED) ) {
+		if ( (to_sleep > Indexer->Flags.MaxCrawlDelay * 1000) || (Indexer->action == DPS_TERMINATED) ) {
 		  time_t		next_index_time;
 		  char dbuf[64];
 		  DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
@@ -515,7 +515,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      diff = (size_t) (now - *(robot->last_crawled));
 	      while (1000 * diff < robot->crawl_delay) {
 		to_sleep = robot->crawl_delay - 1000 * diff;
-		if ( (to_sleep > 300000) || (Indexer->action == DPS_TERMINATED) ) {
+		if ( (to_sleep > Indexer->Flags.MaxCrawlDelay * 1000) || (Indexer->action == DPS_TERMINATED) ) {
 		  time_t		next_index_time;
 		  char dbuf[64];
 		  DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
