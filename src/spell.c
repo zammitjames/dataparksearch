@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1743,16 +1743,19 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 
       if (sy) syn = DpsSynonymListFind(&(Indexer->Conf->Synonyms), &w);
 
-      if (syn != NULL)
+      if (syn != NULL) {
+	DPS_WIDEWORD sw;
+	bzero(&sw, sizeof(sw));
 	for(i = 0; i < syn->nwords; i++) {
-	  w = syn->Word[i];
-	  w.order = wword->order;
-	  w.order_inquery = wword->order_inquery;
-	  w.count = 0;
-	  w.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
-	  DpsWideWordListAdd(result, &w /*&(syn->Word[i])*/, DPS_WWL_LOOSE);
+	  sw = syn->Word[i];
+	  sw.order = wword->order;
+	  sw.order_inquery = wword->order_inquery;
+	  sw.count = 0;
+	  sw.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
+	  DpsWideWordListAdd(result, &sw, DPS_WWL_LOOSE);
 	}
-    
+      }
+
       if (sp) { DpsAllFormsWord(Indexer, *cur, result, wword->order, wword->order_inquery); 
 	if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, *cur, wword);
       }
@@ -1811,15 +1814,18 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 
       if (sy) syn = DpsSynonymListFind(&(Indexer->Conf->Synonyms), &w);
 
-      if (syn != NULL)
+      if (syn != NULL) {
+	DPS_WIDEWORD sw;
+	bzero(&sw, sizeof(sw));
 	for(i = 0; i < syn->nwords; i++) {
-	  w = syn->Word[i];
-	  w.order = wword->order;
-	  w.order_inquery = wword->order_inquery;
-	  w.count = 0;
-	  w.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
-	  DpsWideWordListAdd(result, &w /*&(syn->Word[i])*/, DPS_WWL_LOOSE);
+	  sw = syn->Word[i];
+	  sw.order = wword->order;
+	  sw.order_inquery = wword->order_inquery;
+	  sw.count = 0;
+	  sw.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
+	  DpsWideWordListAdd(result, &sw, DPS_WWL_LOOSE);
 	}
+      }
     
       if (sp) { DpsAllFormsWord(Indexer, p_sp, result, wword->order, wword->order_inquery); 
 	if (wword->origin & DPS_WORD_ORIGIN_QUERY) DpsQuffixWord(Indexer, result, p_sp, wword);
@@ -1863,13 +1869,15 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
     if (sy) syn = DpsSynonymListFind(&(Indexer->Conf->Synonyms), wword);
 
     if (syn != NULL) {
+      DPS_WIDEWORD sw;
+      bzero(&sw, sizeof(sw));
       for(i = 0; i < syn->nwords; i++) {
-	w = syn->Word[i];
-	w.order = wword->order;
-	w.order_inquery = wword->order_inquery;
-	w.count = 0;
-	w.origin = DPS_WORD_ORIGIN_SYNONYM;
-	DpsWideWordListAdd(result, &(syn->Word[i]), DPS_WWL_LOOSE);
+	sw = syn->Word[i];
+	sw.order = wword->order;
+	sw.order_inquery = wword->order_inquery;
+	sw.count = 0;
+	sw.origin = DPS_WORD_ORIGIN_SYNONYM;
+	DpsWideWordListAdd(result, &sw, DPS_WWL_LOOSE);
       }
     
       for(i = 0; i < syn->nwords; i++) {
