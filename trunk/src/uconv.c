@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include "dps_uniconv.h"
 #include "dps_charsetutils.h"
+#include "dps_unidata.h"
 
 
 void __DPSCALL DpsConvInit(DPS_CONV *cnv, DPS_CHARSET *from, DPS_CHARSET *to, char *CharsToEscape, int fl) {
@@ -144,6 +145,7 @@ int __DPSCALL DpsNConv(DPS_CONV *c, size_t n, char *d, size_t dlen, const char *
   dpsunicode_t  wc[32]; /* Is 32 enough? */
   dpsunicode_t  zero = 0;
   char		*d_o = d;
+  char          *p_space = d, *p_last = d;
   const char	*s_e = s + slen;
   char		*d_e = d + dlen;
   const char	*s_o = s;
@@ -173,6 +175,10 @@ int __DPSCALL DpsNConv(DPS_CONV *c, size_t n, char *d, size_t dlen, const char *
     codes = c->ocodes;
     for(i = 0; i < codes; i += c->icodes) {
 outp:
+      if (DpsUniNSpace(wc[i]) == 0 || DPS_UNI_CTYPECLASS(DpsUniCType(wc[i])) == DPS_UNI_RAZDEL) {
+	p_space = d;
+      }
+      p_last = d;
       if (wc[i] == 0 || ++nw > n) goto outaway;
       res = c->to->wc_mb(c, c->to, &wc[i], (unsigned char*)d, (unsigned char*)d_e);
       if (res > 0) {
@@ -180,7 +186,6 @@ outp:
       } else if (res == DPS_CHARSET_ILUNI && wc[i] != '?') {
 	if (c->flags & DPS_RECODE_HTML_TO) {
 	  if (d_e-d > 11) {
-/*	    res = sprintf(d, "&#%d;", (wc[i] & 0xFFFFFF));*/
 	    res = dps_ENTITYprint(d, '&', (wc[i] & 0xFFFFFF));
 	    d += res;
 	  }
@@ -188,7 +193,6 @@ outp:
 	    break;
 	} else if (c->flags & DPS_RECODE_URL_TO) {
 	  if (d_e-d > 11) {
-/*	    res = sprintf(d, "!#%d;", (wc[i] & 0xFFFFFF));*/
 	    res = dps_ENTITYprint(d, '!', (wc[i] & 0xFFFFFF));
 	    d += res;
 	  }
@@ -203,7 +207,11 @@ outp:
     }
   }
 
-outaway:  
+outaway:
+  if (nw > n && p_space < p_last && p_space != d_o) {
+    bzero(p_space, (p_last - p_space) * sizeof(char));
+    d = p_space;
+  }
   if(d <= d_e) {
     res = c->to->wc_mb(c, c->to, &zero, (unsigned char*)d, (unsigned char*)d_e);
   }
