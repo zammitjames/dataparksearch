@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -4562,16 +4562,18 @@ static void SQLResToDoc(DPS_ENV *Conf, DPS_DOCUMENT *D, DPS_SQLRES *sqlres, size
 
 static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
   char timestr[64];
+  char priostr[32];
   DPS_SQLRES	SQLres;
   DPS_CHARSET	*loccs, *utf8cs;
   DPS_CONV      lc_utf8;
   long offset = 0L;
+  double PRmin, PRmax;
   time_t last_mod_time, diff;
   int u = 1, rc = DPS_OK;
   size_t len, url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLSelectCacheSize", DPS_URL_SELECT_CACHE_SIZE);
   urlid_t rec_id = 0;
   size_t i, nrows, qbuflen;
-  char *qbuf, *url, *dc_url;
+  char *qbuf, *url, *dc_url, *pp;
   const char *freq, *where;
 
   loccs = A->Conf->lcs;
@@ -4588,7 +4590,7 @@ static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
 
   DpsSQLResInit(&SQLres);
 
-  dps_snprintf(qbuf, qbuflen, "SELECT MIN(rec_id) FROM url");
+  dps_snprintf(qbuf, qbuflen, "SELECT MIN(rec_id),MIN(pop_rank),MAX(pop_rank) FROM url");
   if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
   rc = DpsSQLQuery(db, &SQLres, qbuf);
   if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
@@ -4597,6 +4599,8 @@ static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
     return rc;
   }
   rec_id = DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) - 1;
+  PRmin = DPS_ATOF(DpsSQLValue(&SQLres, 0, 1));
+  PRmax = DPS_ATOF(DpsSQLValue(&SQLres, 0, 2));
   DpsSQLFree(&SQLres);
 
 
@@ -4605,7 +4609,7 @@ static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
 
   while (u) {
     dps_snprintf(qbuf, qbuflen, 
-		 "SELECT url,last_mod_time,rec_id FROM url WHERE %s%srec_id > %d AND (status=0 OR (status>=200 AND status< 400) OR (status>2200 AND status<2400)) ORDER BY rec_id LIMIT %d", 
+		 "SELECT url,last_mod_time,rec_id,pop_rank FROM url WHERE %s%srec_id > %d AND (status=0 OR (status>=200 AND status< 400) OR (status>2200 AND status<2400)) ORDER BY rec_id LIMIT %d", 
 		 where[0] ? where : "", where[0] ? " AND ": "", rec_id, url_num);
     if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
     rc = DpsSQLQuery(db, &SQLres, qbuf);
@@ -4635,7 +4639,14 @@ static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
       /* Convert URL from LocalCharset */
       DpsConv(&lc_utf8, dc_url, (size_t)24 * len,  url, (size_t)(len + 1));
 
-      printf("<url><loc>%s</loc><lastmod>%s</lastmod><changefreq>%s</changefreq></url>\n", dc_url, timestr, freq);
+      dps_snprintf(priostr, sizeof(priostr), "%f", (DPS_ATOF(DpsSQLValue(&SQLres, i, 3)) - PRmin) / (PRmax - PRmin + 0.00001));
+      if ((pp = strchr(priostr, (int)',')) != NULL) {
+	*pp = '.';
+      }
+      for (pp = priostr + dps_strlen(priostr) - 1;
+	   pp > priostr && (*pp == '0' || *pp == '.'); pp--) *pp = '\0';
+
+      printf("<url><loc>%s</loc><lastmod>%s</lastmod><changefreq>%s</changefreq><priority>%s</priority></url>\n", dc_url, timestr, freq, priostr);
 
       DPS_FREE(dc_url);
 
