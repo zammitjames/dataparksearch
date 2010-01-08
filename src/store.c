@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -508,54 +508,6 @@ static void DpsNextCharE_stored(void *d) {
   (t->e)++;
 }
 
-/*
-0009 0000 0000 0000 1001
-000A 0000 0000 0000 1010
-000D 0000 0000 0000 1101
-0020 0000 0000 0010 0000
-00A0 0000 0000 1010 0000
-1680 0001 0110 1000 0000
-2000 0010 0000 0000 0000
-2001 0010 0000 0000 0001
-2002 0010 0000 0000 0010
-2003 0010 0000 0000 0011
-2004 0010 0000 0000 0100
-2005 0010 0000 0000 0101
-2006 0010 0000 0000 0110
-2007 0010 0000 0000 0111
-2008 0010 0000 0000 1000
-2009 0010 0000 0000 1001
-200A 0010 0000 0000 1010
-200B 0010 0000 0000 1011
-202F 0010 0000 0010 1111
-2420 0010 0100 0010 0000
-3000 0011 0000 0000 0000
-
-303F 0011 0000 0011 1111
----- -------------------
-CB50 11?? 1?11 ?1?1 ???? - not space bits
-
-*/
-
-
-static int DpsUniNSpace(dpsunicode_t c) {
-     if (c == 0x303F) return 0;
-     if (c == 0xFEFF) return 0;
-     if (c  & 0xCB50) return 1;
-     if (c == 0x0009) return 0;
-     if (c == 0x000A) return 0;
-     if (c == 0x000D) return 0;
-     if (c == 0x0020) return 0;
-/*     if (c == 0x0026) return 0;
-     if (c == 0x002C) return 0;*/
-     if (c == 0x00A0) return 0;
-     if (c == 0x1680) return 0;
-     if ((c >= 0x2000) && (c <= 0x200B)) return 0;
-     if (c == 0x202F) return 0;
-     if (c == 0x2420) return 0;
-     if (c == 0x3000) return 0;
-     return 1;
-}
 
 
 static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsunicode_t *c, size_t *len, size_t minwlen, int NOprefixHL) {
