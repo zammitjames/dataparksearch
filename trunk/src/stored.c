@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All right reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All right reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -746,6 +746,14 @@ int main(int argc, char **argv, char **envp) {
 	DpsAgentFree(Agent);
 	DpsEnvFree(Conf);
 
+	{
+	  size_t i;
+	  for (i = 0; i < DpsARGC; i++) {
+	    DPS_FREE(DpsARGV[i]);
+	  }
+	  DPS_FREE(DpsARGV);
+	}
+
 #else
 	fprintf(stderr, "zlib support required. Please rebuild with --with-zlib option\n");
 
@@ -754,14 +762,6 @@ int main(int argc, char **argv, char **envp) {
      fprintf(stderr, "Memory leaks checking\n");
      DpsEfenceCheckLeaks();
 #endif
-
-     {
-       size_t i;
-       for (i = 0; i < DpsARGC; i++) {
-	 DPS_FREE(DpsARGV[i]);
-       }
-       DPS_FREE(DpsARGV);
-     }
 
 #ifdef FILENCE
      fprintf(stderr, "FD leaks checking\n");
