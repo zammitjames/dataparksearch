@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -273,7 +273,6 @@ __C_LINK int __DPSCALL DpsUncompress(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 
 int DpsUnchunk(DPS_AGENT *query, DPS_DOCUMENT *Doc, const char *ce) {
   char *buf, *to_buf, *from_content, *dead_end;
-  uLong   Len;
   size_t csize, gap, allocated_size;
   int res, chunk_size, rc = DPS_OK;
 
