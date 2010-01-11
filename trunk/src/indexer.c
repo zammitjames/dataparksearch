@@ -1383,13 +1383,18 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    DPS_TEXTITEM  Item;
 	    DPS_VAR       *Sec;
 	    DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
-	    EXTRACTOR_ExtractorList *plugins = EXTRACTOR_loadDefaultLibraries();
-	    EXTRACTOR_KeywordList   *md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf)), *pmd;
+	    EXTRACTOR_ExtractorList *plugins;
+	    EXTRACTOR_KeywordList   *md_list, *pmd;
 
 	    DpsLog(Indexer, DPS_LOG_DEBUG, "Executing Libextractor parser");
-	    Item.href = NULL;
-	    nosections = 1;
-	    for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
+
+	    DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
+	     plugins = EXTRACTOR_loadDefaultLibraries();
+	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf));
+
+	     Item.href = NULL;
+	     nosections = 1;
+	     for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
 	      char *secname = DpsLibextractorMsgName(pmd->keywordType);
 	      nosections = 0;
 	      DpsLog(Indexer, DPS_LOG_DEBUG, "Libextracted %s: %s", secname, pmd->keyword);
@@ -1402,10 +1407,11 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		Item.len = dps_strlen(Item.str);
 		DpsTextListAdd(&Doc->TextList, &Item);
 	      }
-	    }
+	     }
 
-	    EXTRACTOR_freeKeywords(md_list);
-	    EXTRACTOR_removeAll(plugins);
+	     EXTRACTOR_freeKeywords(md_list);
+	     EXTRACTOR_removeAll(plugins);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
 	  }
 	  if (nosections && status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
 #else
