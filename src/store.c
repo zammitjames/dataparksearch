@@ -285,9 +285,11 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
   dpshash32_t rec_id;
   size_t content_size = 0, dbnum, s_dbnum, i, ndb;
   ssize_t nread = 0;
+  int first = 1;
   
 /*  rec_id = (origurl) ? DpsStrHash32(origurl) :  DpsVarListFindInt(&Doc->Sections, "URL_ID", 0);*/
   rec_id = DpsURL_ID(Doc, origurl);
+ unstore_oncemore:
   Doc->Buf.size=0;
   ndb = (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
   s_dbnum = ((size_t)rec_id) % ndb;
@@ -301,7 +303,7 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
   
     if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
       if (!Agent->Flags.do_store) return DPS_OK;
-      if (DPS_OK == GetStore(Agent, Doc, rec_id, dbnum, "")) break;
+      if (DPS_OK == GetStore(Agent, Doc, rec_id, dbnum, "")) { first = 0; break; }
     } else {
   
       r = Agent->Demons.Demon[dbnum].stored_rv;
@@ -332,8 +334,18 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
   
       Doc->Buf.buf[nread] = '\0';
       Doc->Buf.size = nread;
+      first = 0;
+      break;
     }
   }
+
+#ifdef WITH_OLDHASH
+  if (first) {
+    first = 0;
+    rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
+    goto unstore_oncemore;
+  }
+#endif
 
   if(origurl != NULL) {
     DpsVarListReplaceStr(&Doc->Sections, "URL", origurl);
@@ -588,6 +600,9 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
   char *Source = NULL, *SourceToFree = NULL;
   int needFreeSource = 1;
   int NOprefixHL = 0;
+#ifdef WITH_OLDHASH
+  int first = 1;
+#endif
 
   if (Res->WWList.nwords == 0) return NULL;
   bzero(&ST, sizeof(ST));
@@ -646,6 +661,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
 
   index_limit = (size_t)DpsVarListFindInt(&query->Vars, "IndexDocSizeLimit", 0);
   rec_id = DpsURL_ID(Doc, NULL);
+ oncemore:
 /*  dbnum = ((size_t)rec_id) % ((query->flags & DPS_FLAG_UNOCON) ? query->Conf->dbl.nitems : query->dbl.nitems);*/
 /*  if (query->flags & DPS_FLAG_UNOCON) {
     if (query->Conf->dbl.cnt_db) {
@@ -666,6 +682,13 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
     if ((query->Flags.do_store == 0) || (GetStore(query, Doc, rec_id, dbnum, "") != DPS_OK) || Doc->Buf.buf == NULL)
 #endif
       {
+#ifdef WITH_OLDHASH
+	if (first) {
+	  first = 0;
+	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
+	  goto oncemore;
+	}
+#endif
 /*    register int not_have_doc = (query->Flags.do_store == 0);
     if (not_have_doc) not_have_doc = (GetStore(query, Doc, rec_id, "") != DPS_OK);
     if (!not_have_doc) if (Doc->Buf.size == 0) not_have_doc = 1;
@@ -702,6 +725,13 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
     DpsRecvall(r, &ChunkSize, sizeof(ChunkSize), 360);
 
     if (ChunkSize == 0) {
+#ifdef WITH_OLDHASH
+	if (first) {
+	  first = 0;
+	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
+	  goto oncemore;
+	}
+#endif
       DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
       return NULL;
     }
@@ -1314,8 +1344,12 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
 /*    if (accept_lang == NULL) accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);*/
     dps_snprintf(str, str_len, "%s%s%s", (accept_lang == NULL) ? "" : accept_lang, (accept_lang == NULL) ? "" : ".", url);
     url_id = DpsStrHash32(str);
-    DPS_FREE(str);
     DpsVarListAddInt(&Doc->Sections, "URL_ID", url_id);
+#ifdef WITH_OLDHASH
+    url_id = DpsStrOldHash32(str);
+    DpsVarListAddInt(&Doc->Sections, "URL_ID_OLD", url_id);
+#endif
+    DPS_FREE(str);
   }
   return url_id;
 }
