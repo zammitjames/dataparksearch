@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -287,6 +287,10 @@ int main(int argc, char **argv, char **envp) {
 	DpsWWLBoolItems(Res);
 	DpsVarListReplaceStr(&Doc->Sections, "URL_ID", DpsVarListFindStr(&Env->Vars, "rec_id", "0"));
 	
+	content_type = DpsVarListFindStr(&Env->Vars, "L", NULL);
+	if (content_type != NULL) DpsVarListReplaceStr(&Env->Vars, "Content-Language", content_type);
+	content_type = DpsVarListFindStr(&Env->Vars, "CS", NULL);
+	if (content_type != NULL) DpsVarListReplaceStr(&Env->Vars, "Charset", content_type);
 	content_type = DpsVarListFindStr(&Env->Vars, "CT", "text/html");
 
 #ifdef WITH_PARSER

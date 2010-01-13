@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2010 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -276,6 +276,10 @@ static int dpstoredoc_handler(request_rec *r) {
 	DpsWWLBoolItems(Res);
 	DpsVarListReplaceStr(&Doc->Sections, "URL_ID", DpsVarListFindStr(&Agent->Vars, "rec_id", "0"));
 	
+	content_type = DpsVarListFindStr(&Env->Vars, "L", NULL);
+	if (content_type != NULL) DpsVarListReplaceStr(&Env->Vars, "Content-Language", content_type);
+	content_type = DpsVarListFindStr(&Env->Vars, "CS", NULL);
+	if (content_type != NULL) DpsVarListReplaceStr(&Env->Vars, "Charset", content_type);
 	content_type = DpsVarListFindStr(&Agent->Vars, "CT", "text/html");
 
 #ifdef WITH_PARSER
