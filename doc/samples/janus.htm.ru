@@ -7,12 +7,14 @@ BrowserCharset  UTF-8
 Locale ru_RU.UTF-8
 HTTPHeader "Cache-control: public"
 
+#Alias http://www.sochi.ru/ http://www.sochi.com/
+
 #Include i18n/ru.koi8-r.lang
 ReplaceVar 43N39E.lng "43&deg;с.ш. 39&deg;в.д."
 ReplaceVar all.lng "все слова"
 ReplaceVar any.lng "любое из слов"
 ReplaceVar AU.lng "Поиск по Австралии"
-ReplaceVarLcs BE.lng "����� �� �������"
+ReplaceVar BE.lng "Поиск по Бельгии"
 ReplaceVar Books.lng "Книги на 43&deg;с.ш. 39&deg;в.д."
 ReplaceVar Compr.lng "Поиск по серверам, посвященным сжатию данных"
 ReplaceVar Justine.lng "Страницы Интернет о Жюстин Энен-Арден"
@@ -59,7 +61,7 @@ ReplaceVar yandex.lng "Яндекс"
 ReplaceVar rambler.lng "Рамблер"
 ReplaceVar nigma.lng "Нигма"
 ReplaceVar datapark.lng "ДатаПарк"
-ReplaceVar usingdp.lng "Испольуя DataparkSearch"
+ReplaceVar usingdp.lng "Используя DataparkSearch"
 ReplaceVar showndocs.lng "Показаны документы"
 ReplaceVar iz.lng "из"
 ReplaceVar found.lng "найденных"
@@ -81,10 +83,10 @@ ReplaceVar song.lng "Композиция"
 ReplaceVar year.lng "Год"
 ReplaceVar summary.lng "Реферат"
 ReplaceVar stcopy.lng "Сохранённая копия"
-ReplaceVar allresfrom.lng "Все результаты с"
+ReplaceVar allresfrom.lng "Ещё с сайта"
 ReplaceVar onmap.lng "на карте"
 ReplaceVar price.lng "Цена"
-ReplaceVarLcs phone.lng "���."
+ReplaceVar phone.lng "Тел."
 ReplaceVar rur.lng "руб."
 ReplaceVar prev.lng "Пред."
 ReplaceVar next.lng "След."
@@ -93,16 +95,25 @@ ReplaceVar mkreport.lng "Написать отзыв"
 ReplaceVar bytes.lng "байт"
 ReplaceVar score.lng "Рейтинг"
 ReplaceVar ToFind.lng "Найти"
-ReplaceVarLcs extended.lng "����������� �����"
-ReplaceVarLcs Sochi.org.ru.lng "�������� ����"
-ReplaceVarLcs wholinks.lng "��� ���������"
-ReplaceVarLcs qwords.lng "����� �������"
+ReplaceVar extended.lng "Расширеный поиск"
+ReplaceVar Sochi.org.ru.lng "Интернет Сочи"
+ReplaceVar wholinks.lng "Кто ссылается"
+ReplaceVar qwords.lng "Слова запроса"
+ReplaceVar sochi24.lng "Сочи-24"
+ReplaceVar translate.lng "перевод"
+
+<!IF NAME="c" CONTENT="01">
+<!IF NAME="label" CONTENT="">
+<!SET NAME="label" CONTENT="sochi">
+<!ENDIF>
+<!ENDIF>
 
 MinWordLength 1
 MaxWordLength 64
 DetectClones no
 ExcerptSize 156
-ExcerptPadding 36
+ExcerptPadding 72
+ExcerptMark <br>
 HlBeg <span class="rhl">
 HlEnd </span>
 GrBeg <div class="group">
@@ -117,7 +128,7 @@ sy 0
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML lang="ru"><!IF NAME="c" CONTENT="01"><!IF NAME="label" CONTENT=""><!SET NAME="label" CONTENT="sochi"><!ENDIF><!ENDIF>
   <HEAD>
-    <TITLE>$(43N39E.lng): $&(q)</TITLE>
+    <TITLE><!IF NAME="label" CONTENT="sochi">$(Sochi.org.ru.lng)<!ELSE>$(43N39E.lng)<!ENDIF>: $&(q)</TITLE>
     <META HTTP-EQUIV="Content-Type" Content="text/html; charset=$(BrowserCharset)">
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="$(self)?q=$%(q)&amp;c=$&(c)&amp;site=$&(site)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;&amp;s=$&(s)&amp;label=$&(label)&amp;tmplt=rss8.htm.ru">
@@ -138,7 +149,7 @@ sy 0
 <tr>
 <td class="headruler" align="left" valign="top">&nbsp;<b>
 <!IF NAME="c" CONTENT="0B09"><a href="http://books.43n39e.ru/">$(Books.lng)</a>
-<!ELIF NAME="c" CONTENT="01"><a href="http://sochi.org.ru/">$(Sochi.org.ru.lng)</a>
+<!ELIF NAME="label" CONTENT="sochi"><a href="http://sochi.org.ru/">$(Sochi.org.ru.lng)</a>
 <!ELIF NAME="c" CONTENT="09"><a href="http://www.43n39e.ru/gday">$(AU.lng)</a>
 <!ELIF NAME="c" CONTENT="0F"><a href="http://www.43n39e.ru/nz">$(NZ.lng)</a>
 <!ELIF NAME="c" CONTENT="0K"><a href="http://www.43n39e.ru/be">$(BE.lng)</a>
@@ -159,7 +170,7 @@ sy 0
 	      <input type="hidden" name="np" value="0">
 	      <input type="hidden" name="dt" value="back">
 	      <input type="hidden" name="t" value="$&(t)">
-	      <input type="hidden" name="c" value="$&(c)">
+<!IFNOT NAME="c" CONTENT=""><input type="hidden" name="c" value="$&(c)"><!ENDIF>
 	      <input type="hidden" name="tmplt" value="janus.htm.ru">
 	      <input type="hidden" name="label" value="$&(label)">
 	      <input type="hidden" name="s" value="$&(s)">
@@ -169,7 +180,7 @@ sy 0
 	<input type="hidden" name="GroupBySite" value="$&(GroupBySite)">
 	<input type="hidden" name="sy" value="$&(sy)">
 	<input type="hidden" name="rm" value="$&(rm)">
-	<input type="hidden" name="wf" value="$&(wf)">
+<!IFNOT NAME="wf" CONTENT=""><input type="hidden" name="wf" value="$&(wf)"><!ENDIF>
 	<input type="hidden" name="dp" value="$&(dp)">
 	<input type="hidden" name="sp" value="$&(sp)">
 </div>
@@ -233,13 +244,14 @@ sy 0
 <option value="1" selected="$&(rm)">fast</option>
 <option value="3" selected="$&(rm)">ultra</option>
 </select>
+<!IFNOT NAME="wf" CONTENT="">
 <select class="inputrev" name="wf">
 <option value="F1F1" selected="$&(wf)">$(doc.lng)</option>
 <option value="00000F00" selected="$&(wf)">$(ref.lng)</option>
 <option value="000000F0" selected="$&(wf)">$(tit.lng)</option>
 <option value="0000000F" selected="$&(wf)">$(body.lng)</option>
-<!--option value="33F37000" selected="$&(wf)">$(mp3.lng)</option-->
 </select>
+<!ENDIF>
 <SELECT class="inputrev" NAME="dp">
 <OPTION VALUE="0" SELECTED="$&(dp)">$(alldocs.lng)</option>
 <OPTION VALUE="7d" SELECTED="$&(dp)">$(lastweek.lng)</option>
@@ -275,8 +287,7 @@ sy 0
 <a href="http://gogo.ru/go?q=$%(q:cp1251)">GoGo</a> &#8211;
 <a href="http://www.nigma.ru/index.php?0=1&amp;1=1&amp;2=1&amp;3=1&amp;4=1&amp;5=1&amp;6=1&amp;7=1&amp;q=$%(q:cp1251)">$(nigma.lng)</a> &#8211;
 <a href="http://search.yahoo.com/bin/query?p=$%(q:UTF-8)&amp;ei=UTF-8">Yahoo!</a> &#8211;
-<a href="http://search.live.com/results.aspx?q=$%(q:UTF-8)">Live.com</a>
-</small>
+<a href="http://www.bing.com/search?q=$%(q:UTF-8)">Bing</a></small>
 <!ENDIF>
 <table border="0" width="100%">
 <tr>
@@ -287,6 +298,15 @@ sy 0
 <tr><td align="center" valign="middle">
 <small>(C)2009, &laquo;<a href="http://www.datapark.ru/">$(datapark.lng)</a>&raquo;<br>
 <a href="http://www.dataparksearch.org/">$(usingdp.lng)</a></small><br>
+<!--LiveInternet counter--><script type="text/javascript"><!--
+document.write('<a href="http://www.liveinternet.ru/click" '+
+'target=_blank><img src="http://counter.yadro.ru/hit?t26.10;r'+
+escape(document.referrer)+((typeof(screen)=='undefined')?'':
+';s'+screen.width+'*'+screen.height+'*'+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+';u'+escape(document.URL)+
+';'+Math.random()+
+'" alt="" title="LiveInternet: number of visitors for today" '+
+'border=0 width=88 height=15><\/a>')//--></script><!--/LiveInternet-->
 </td></tr>
 </table>
 </div>
@@ -346,7 +366,7 @@ function myCopyContent2(domDoc, uri) {
  if (!dest) return;
  if (dest.innerHTML) dest.innerHTML = domDoc;
 }
-<!IF NAME="c" CONTENT="01">
+<!IF NAME="label" CONTENT="sochi">
 function myCopyContent3(domDoc, uri) {
  var destId = 'rutubeArea';
  var dest = document.getElementById ? document.getElementById(destId) :
@@ -358,14 +378,14 @@ function myCopyContent3(domDoc, uri) {
 function showBooksAndVideo() {
 var CommerceLoader = new HTMLHttpRequest('CommerceLoader', myCopyContent);
 var SimilarLoader = new HTMLHttpRequest('SimilarLoader', myCopyContent2);
-<!IF NAME="c" CONTENT="01">
+<!IF NAME="label" CONTENT="sochi">
 SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=5&tmplt=qsimilar8.htm.ru&label=qsimilar&s_label=$&(label)');
 var RutubeLoader = new HTMLHttpRequest('RutubeLoader', myCopyContent3);
-RutubeLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&&ps=3&tmplt=rutube8.htm.ru&label=rutube');
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&link=$&(link)&ps=5&tmplt=phones8.htm.ru&label=phones');
+RutubeLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&&ps=2&tmplt=rutube8.htm.ru&label=rutube');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&link=$&(link)&ps=4&tmplt=phones8.htm.ru&label=phones');
 <!ELSE>
 SimilarLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&s_c=$&(c)&s_sp=$&(sp)&s_sy=$&(sy)&m=any&sp=1&sy=1&p=$&(p)&GroupBySite=no&s=$&(s)&s_GroupBySite=$&(GroupBySite)&ps=7&tmplt=qsimilar8.htm.ru&label=qsimilar');
-CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&ps=5&tmplt=rutube8.htm.ru&label=rutube');
+CommerceLoader.load('/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&p=$&(p)&GroupBySite=no&s=$&(s)&ps=4&tmplt=rutube8.htm.ru&label=rutube');
 <!ENDIF>
 }
 dp_init();
@@ -376,7 +396,7 @@ function initTimer(interval) {
 		showBooksAndVideo();
 	}
 }
-initTimer(300);
+initTimer(100);
 </script>
 </body>
 </html>
@@ -386,7 +406,7 @@ initTimer(300);
 <div class="news">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr><td colspan="2" align="left" class="serp">
-<small>&nbsp;$(showndocs.lng) <b>$(first)</b>-<b>$(last)</b> $(iz.lng) <b>$(total)</b> $(found.lng).</small>
+<small>&nbsp;$(showndocs.lng) <b>$(first)</b>-<b>$(last)</b> $(iz.lng) <b>$(grand_total)</b> $(found.lng).</small>
 <td>
 <td width="50%" align="right">
 <small>$(stime.lng):&nbsp;<b>$(SearchTime)</b> $(sec.lng)&nbsp;</small>
@@ -410,10 +430,10 @@ initTimer(300);
 <a href="$(FirstPage)&amp;s=IRPD">$(isort.lng)</a>&nbsp;|&nbsp;<span class="hl">$(rsort.lng)</span>&nbsp;|&nbsp;<a href="$(FirstPage)&amp;s=DRP">$(dsort.lng)</a>&nbsp;|&nbsp;<a href="$(FirstPage)&amp;s=PRD">$(psort.lng)</a>
 <!ENDIF></td></tr></table>
 </div>
-<div id="dir">
-<table width="100%" cellpadding="5" cellspacing="0" border="0">
+<div id="dir" style="max-width: 80em;">
+<table cellpadding="5" cellspacing="0" border="0">
 <tr>
-<td rowspan="2" valign="top" align="left" style="padding-right: 20px;">
+<td rowspan="2" valign="top" align="left" style="padding-right: 15px;">
 <!-- a -->
 <!--/restop-->
 
@@ -421,7 +441,7 @@ initTimer(300);
 <!--res-->
 <!-- m -->
 <div style="width: 40em;">
-<div class="serp1"><i class="serp1" style="background-image:url(http://favicon.yandex.ru/favicon/$(url.host))"></i>
+<div class="serp1"><i class="serp1" style="background-image:url(http://www.google.com/s2/favicons?domain=$(url.host))"></i>
 <span style="margin-left:20px;">&#8203;</span>
 $(Order).&nbsp;<!-- $(DP_ID), site_id: $(Site_ID), ST: $(ST) --><!IF NAME="Content-Type" CONTENT="application/msword"><b class="mimetype">[DOC]</b>&nbsp;
 <!ELIKE NAME="Content-Type" CONTENT="audio/*"><b class="mimetype">[MP3]</b>&nbsp;
@@ -458,6 +478,7 @@ $&(MP3.Year)<br><!ENDIF>
 <!IFNOT NAME="Phone" CONTENT=""><span class="result"> - $(phone.lng): </span>$(Phone)<!ENDIF>
 <br>
 	      <!IFNOT NAME="stored_href" CONTENT=""><a onmousedown="return clk('$(DP_ID)','$(Order)');" href="$(stored_href)">$(stcopy.lng)</a><!ENDIF>
+<!IFLIKE NAME="Content-Language" CONTENT="ru*"><!ELSE> &nbsp;&nbsp;<a href="http://translate.google.com/translate?js=y&amp;prev=_t&amp;hl=ru&amp;ie=UTF-8&amp;layout=1&amp;eotf=1&amp;u=$%(url)&amp;sl=auto&amp;tl=ru">$(translate.lng)</a><!ENDIF>
 	      <!IFNOT NAME="sitelimit_href" CONTENT=""> &nbsp;&nbsp;<a href="$(self)$(sitelimit_href)">$(allresfrom.lng) $(url.host)
 				<!IFNOT NAME="PerSite" CONTENT="0">($(PerSite))<!ENDIF><!--
 --></a>
@@ -499,25 +520,29 @@ $(CL)</div>
 <!--resbot-->
 <!-- z -->
 </td>
-<td rowspan="2" valign="top" align="left" style="width:14em; border-right:1px solid #f4f4f4;">
+<td width="170" valign="top" align="left" style="border-left: 2px solid #f4f4f4">
 <br><div id="similarArea">&nbsp;</div>
 <div id="resultArea">&nbsp;</div>
-<!IF NAME="c" CONTENT="01"><div id="rutubeArea">&nbsp;</div><!ENDIF>
+<!IF NAME="label" CONTENT="sochi"><div id="rutubeArea">&nbsp;</div><!ENDIF>
 </td>
-<td width="170" valign="top" align="right" style="border-left: 1px solid #f4f4f4">
+<td rowspan="2" valign="top" align="left" style="width:14em; border-right:1px solid #f4f4f4;">
 <br><br>
 <!-- ads here -->
+<div id="begun">
+<script type="text/javascript">
 <!IFLIKE NAME="ENV.SERVER_NAME" CONTENT="*sochi.org.ru">
-<iframe frameborder="0" width="170" height="650" src="/js/begun-sochi.html" scrolling="no" style="margin:0; padding:0; border:0;"></iframe>
+   var begun_auto_pad = 90069626; // pad id
+   var begun_block_id = 112889598;
 <!ELSE>
-<iframe frameborder="0" width="170" height="650" src="/js/begun-43n39e.html" scrolling="no" style="margin:0; padding:0; border:0;"></iframe>
+   var begun_auto_pad = 90026481; // pad id
+   var begun_block_id = 112888603;
 <!ENDIF>
+document.write('<script src=\"http://autocontext.begun.ru/autocontext2.js\" type=\"text/javascript\"' + '\>\<\/script>');
+</script>
+</div>
 </td>
 </tr>
-<tr><td width="170" align="center" valign="bottom">
-<a class="bottom" href="http://sochi.org.ru/makereport.html">$(mkreport.lng)</a>
-<br><br>
-</td></tr></table>
+</table>
 </div>
 <div class="bottom">
 <br>
@@ -542,7 +567,7 @@ $(sortedby.lng):&nbsp;
 	<input type="hidden" name="np" value="0">
 	<input type="hidden" name="dt" value="back">
 	<input type="hidden" name="t" value="$&(t)">
-	<input type="hidden" name="c" value="$&(c)">
+<!IFNOT NAME="c" CONTENT=""><input type="hidden" name="c" value="$&(c)"><!ENDIF>
 	<input type="hidden" name="s" value="$&(s)">
 	<input type="hidden" name="tmplt" value="janus.htm.ru">
 	<input type="hidden" name="label" value="$&(label)">
@@ -550,7 +575,7 @@ $(sortedby.lng):&nbsp;
 	<input type="hidden" name="GroupBySite" value="$&(GroupBySite)">
 	<input type="hidden" name="sy" value="$&(sy)">
 	<input type="hidden" name="sp" value="$&(sp)">
-	<input type="hidden" name="wf" value="$&(wf)">
+<!IFNOT NAME="wf" CONTENT=""><input type="hidden" name="wf" value="$&(wf)"><!ENDIF>
 	<input type="hidden" name="dp" value="$&(dp)">
 
 <table border="0" cellpadding="2" cellspacing="0">
@@ -598,7 +623,7 @@ $(try.lng)
 <table border="0" cellspacing="0" cellpadding="10"><tr>
 <td><div id="similarArea" style="width: 14em;">&nbsp;</div></td>
 <td><div id="resultArea" style="width="14em;">&nbsp;</div></td>
-<!IF NAME="c" CONTENT="01"><td><div id="rutubeArea" style="width: 14em; float:right;">&nbsp;</div></td><!ENDIF>
+<!IF NAME="label" CONTENT="sochi"><td><div id="rutubeArea" style="width: 14em; float:right;">&nbsp;</div></td><!ENDIF>
 </tr></table>
 <br>
 <!--/notfound-->

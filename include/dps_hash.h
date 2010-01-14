@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,13 @@ extern __C_LINK dpshash32_t __DPSCALL DpsHash32Update(const dpshash32_t prev, co
 #define DpsStrHash64(buf)		DpsHash64((buf), dps_strlen(buf))
 #define DpsStrHash32(buf)		DpsHash32((buf), dps_strlen(buf))
 
+
+#ifdef WITH_OLDHASH
+
+extern dpshash32_t DpsOldHash32(const char * buf, size_t size);
+#define DpsStrOldHash32(buf)		DpsOldHash32((buf), dps_strlen(buf))
+
+#endif
 
 
 #endif

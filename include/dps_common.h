@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1254,9 +1254,10 @@ typedef struct {
 typedef struct dps_cfg_st {
         DPS_AGENT       *Indexer;
 	DPS_SERVER	*Srv;
-	dps_uint8		flags;
+	dps_uint8	flags;
 	int		level;
 	int		ordre;
+        int             flush_server;
 } DPS_CFG;
 
 typedef int (*DPS_OUTPUTFUNCTION)(void*, const char *fmt, ...);

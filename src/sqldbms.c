@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -258,12 +258,9 @@ static int DpsPgSQLQuery(DPS_DB *db, DPS_SQLRES *res, const char *q){
 	size_t i;
 	
 	db->errcode=0;
-	if (db->connected && db->async_in_process) {
+	if (db->connected /*&& db->async_in_process*/) {
 	  /* Wait async query in process */
 	  while ((res->pgsqlres = PQgetResult(db->pgsql))) PQclear(res->pgsqlres);
-/*	  res->pgsqlres = PQgetResult(db->pgsql);
-	  if (res->pgsqlres) PQclear(res->pgsqlres);
-	  res->pgsqlres = NULL;*/
 	  db->async_in_process = 0;
 	}
 
@@ -333,11 +330,9 @@ static int DpsPgSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *res, const char *q) {
   size_t i, rc;
 
   db->errcode = 0;
-  if (db->connected && db->async_in_process) {
+  if (db->connected /*&& db->async_in_process*/) {
     /* Wait async query in progress */
     while ((res->pgsqlres = PQgetResult(db->pgsql))) PQclear(res->pgsqlres);
-/*    if (res->pgsqlres) PQclear(res->pgsqlres);
-    res->pgsqlres = NULL;*/
     db->async_in_process = 0;
   }
   for (i = 0; i < 3; i++) {
@@ -2995,13 +2990,10 @@ void DpsSQLClose(DPS_DB *db){
 	if(!db->connected)return;
 
 #if defined(HAVE_DP_PGSQL)
-	if (db->async_in_process) {
+	if (1 /*db->async_in_process*/) {
 	  /* Wait async query in process */
 	  PGresult  *pgsqlres;
-	  while ((pgsqlres = PQgetResult(db->pgsql)));
-/*	  pgsqlres = PQgetResult(db->pgsql);
-	  if (pgsqlres) PQclear(pgsqlres);*/
-/*	  pgsqlres = NULL;*/
+	  while ((pgsqlres = PQgetResult(db->pgsql))) PQclear(pgsqlres);
 	  db->async_in_process = 0;
 	}
 #endif

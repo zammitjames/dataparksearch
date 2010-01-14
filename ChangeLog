@@ -3,6 +3,8 @@ History
 -------
 
 Latest snapshot:
+	* A faster hash function implemented. You need to configure with --enable-hashcompatible switch when upgrade without reindexing.
+	* Template meta-variables are now rounded on a space or a puntuation mark.
 	* ExcerptMark command has been added. Use it to alter the delimiter of excerpt chunks.
 	* Match: command has been added for stopwords files.
 	* A bug of loosing last line before writing into storedoc database has been fixed.

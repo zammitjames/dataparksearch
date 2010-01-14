@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1981,7 +1981,11 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	P.zlib_strategy = DPS_BASE_WRD_STRATEGY;
 #endif
 
-	if ((pmerg = (DPS_STACK_ITEM**)DpsXmalloc((nwords + 1) * sizeof(DPS_STACK_ITEM *))) == NULL) {
+	if ((pmerg = (DPS_STACK_ITEM**)DpsXmalloc((
+#ifdef WITH_OLDHASH
+						   2 *
+#endif
+						   nwords + 1) * sizeof(DPS_STACK_ITEM *))) == NULL) {
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc %d bytes at %s:%d", (nwords + 1) * sizeof(DPS_STACK_ITEM *), __FILE__, __LINE__);
 	  TRACE_OUT(Indexer);
 	  return DPS_ERROR;
@@ -1995,11 +1999,22 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	  for (z = 0 ; z < npmerge; z++) 
 	    if (pmerg[z]->crcword == Res->items[i].crcword && (pmerg[z]->secno == 0 || pmerg[z]->secno == Res->items[i].secno)) break;
 	  if (z < npmerge) continue;
+
+#ifdef WITH_OLDHASH
+	  { size_t a;
+	    for(a = 0,
+#endif
 	  
 	  P.rec_id = Res->items[i].crcword;
 
+#ifdef WITH_OLDHASH
+		a < 2; a++, P.rec_id = DpsStrOldHash32(Res->items[i].word)) {
+#endif
+
+
+
 #ifdef DEBUG_SEARCH
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "\t\t\tstack.word[%i]:%s", i, Res->items[i].word);
+	      DpsLog(Indexer, DPS_LOG_DEBUG, "\t\t\tstack.word[%i]:%s %x", i, Res->items[i].word, P.rec_id);
 	  seek_ticks = DpsStartTimer();
 #endif
 
@@ -2065,6 +2080,11 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    DpsLog(Indexer, DPS_LOG_EXTRA, "!= P.rec_id:%x  P.Item.rec_id:%x", P.rec_id, P.Item.rec_id);
 #endif	    
 	  }
+
+#ifdef WITH_OLDHASH
+	    }
+	  }
+#endif
 
 	}
 

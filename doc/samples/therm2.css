@@ -350,15 +350,9 @@ noembed, noscript, param {
 html { margin: 0; padding: 0;}
 body {
 	font-family: sans-serif;
-	color: #101010; background-color: white; margin: 0; padding: 0;
+	color: #111; background-color: white; margin: 0; padding: 0;
 	line-height: normal;
 	display: block;
-}
-A {
-        color: #063;
-}
-A:visited {
-        color: #363;
 }
 #topmenu, .topmenu, .therm {
 	font-size: smaller;
@@ -388,7 +382,7 @@ form {
 	background-color: white; color: #69c; text-align: center;
 }
 #form h1, .form h1 {
-	color: #390; font-size: 165%; margin: .1em; padding: .5em .5em 1em .5em; border-bottom: dashed 1px #8ca3c3;
+	color: #390; font-size: 165%; margin: .1em; padding: .25em .25em .5em .25em; border-bottom: dashed 1px #8ca3c3;
 }
 #form input, #form textarea, .form input, .form textarea {
 /*	font-family: Verdana, Arial, Helvetica, sans-serif;*/
@@ -406,7 +400,7 @@ form {
 	font-size: smaller;
 }
 .inputsearch {
-	font-size: larger; border: 1px dotted #666;
+	font-size: x-large; border: 1px dotted #666;
 }
 .inputrev, .inputrev A, .inputrev A:visited, #form A, #form A:visited {
   color: #311;
@@ -417,11 +411,8 @@ form {
 #news {
 	color: #606060;
 }
-.news li {
+.news span {
 	font-size: smaller; margin-bottom: 6px;
-}
-.news, .news table, #news A, .news span {
-	background-color: #fcfcfc; /*#f8fff8;*/ color: #606060;
 }
 #news ul {
 	margin-bottom: 0;
@@ -459,9 +450,9 @@ form {
 #dir .result A, #dir A.result:visited {
   color: #05a;
 }
-#dir A, #dir A:visited {
+/*#dir A, #dir A:visited {
   color: #257;
-}
+}*/
 #dir .restop, #dir .restop A, .restop, A.restop {
 	color: #05a; 
 }
@@ -501,14 +492,20 @@ form {
 .newcat {
   color: #c61; font-weight: bold;
 }
-#bottom A, #bottom A:visited, #bottom .leftmenu, .news, .bottom A, .bottom A:visited {
+#bottom A, #bottom A:visited, #bottom .leftmenu, .bottom A, .bottom A:visited {
 	color: #707070;
 }
 .newswire, .newswire A {
 	color: #011;
 }
-.newshead, .newshead A {
+.newshead, .newshead a, a:visited.newshead, a#newsites.newshead, a#newsites.newshead:visited {
 	color: #666;
+}
+#aday table, #aday span, #aday .news span, #aday .news li {
+	background-color: #fcfcfc; /*#f8fff8;*/ color: #030303;
+}
+.news, .news table, .news span, #dir #aday .news b {
+	background-color: #fcfcfc; /*#f8fff8;*/ color: #606060;
 }
 .newstime {
 	color: #999;
@@ -520,19 +517,19 @@ DL.firstpage {
 	margin-bottom: 1.44em; color: #505050;
 }
 DIV.serp1 {
-	margin-top: 1.44em; color: #474747; text-align: auto;
+	margin-top: 1.44em; color: #474747; text-align: left;
 }
 i.serp1 {
 	top:auto; position:absolute; display:block; width:16px; height:16px;
 }
 DIV.serp2 {
-        color: #333;
+        color: #111;
 }
 DIV.serp3 {
-        margin-left: 1em; margin-right: -1em; color: #555;
+        margin-left: 1em; margin-right: -1em; color: #333;
 }
 DIV.serp4 {
-        /*float: right;*/ margin-left: 2em; color: #555;
+        /*float: right;*/ margin-left: 2em; color: #333;
 }
 
 SPAN.firstpage {
@@ -598,16 +595,17 @@ DIV.sea {
 	position: absolute;
 	background-color: #FFFFFF; 
 	text-align: left; 
-	border: 1px solid #000000;			
+	border: 1px solid #000000;
+	z-index: 255;		
 }
 /* /suggest */
 
 .rtop, .rbottom, .rgtop, .rgbottom { display: block; background-color: white; }
-.rtop *, .rbottom * { display: block; height: 1px; overflow: hidden; background-color: #158000; }
-.rgtop *, .rgbottom * { display: block; height: 1px; overflow: hidden; background-color: #f4f4f4; }
-.r1 { margin: 0 5px; }
-.r2 { margin: 0 3px; }
-.r3 { margin: 0 2px; }
+.rtop *, .rbottom * { display: block; height: 1px; overflow: hidden; background-color: #158000; padding: 0; border: 0; font-size: 1px; }
+.rgtop *, .rgbottom * { display: block; height: 1px; overflow: hidden; background-color: #f4f4f4; padding: 0; border: 0; font-size: 1px; }
+.r1 { margin: 0 5px; display: block; height: 1px; overflow: hidden; padding: 0; border: 0; font-size: 1px; }
+.r2 { margin: 0 3px; display: block; height: 1px; overflow: hidden; padding: 0; border: 0; font-size: 1px; }
+.r3 { margin: 0 2px; display: block; height: 1px; overflow: hidden; padding: 0; border: 0; font-size: 1px; }
 .r4 { margin: 0 1px; height: 2px; }
 a:hover, 
 #dir .leftmenuh3 A:hover, #dir .leftmenuh3 A:visited:hover,
@@ -633,3 +631,11 @@ a:hover,
 	color: #f03; background: #eee;
 	/*color: #ff4444; background: #ffffdd;*/ /*text-decoration: underline;*/
 }
+A {
+        color: #030303; /*#063;*/
+}
+A:visited {
+        color: #030303;/*#257;*/ /*#363;*/
+}
+
+
