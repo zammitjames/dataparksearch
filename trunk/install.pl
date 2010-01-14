@@ -26,7 +26,6 @@ $extra_charsets='no';
 $file='yes';
 $http='yes';
 $ftp='yes';
-$htdb='yes';
 $news='yes';
 $ssl='no';
 $ssl_dir='';
@@ -143,12 +142,6 @@ sub configure {
         	push @arg,"--enable-ftp";
         } elsif ($ftp eq 'no') {
         	push @arg,"--disable-ftp";
-	}
-
-        if ($htdb eq 'yes') {
-        	push @arg,"--enable-htdb";
-        } elsif ($htdb eq 'no') {
-        	push @arg,"--disable-htdb";
 	}
 
         if ($news eq 'yes') {
@@ -763,17 +756,6 @@ sub set_shema {
 			last;			
 		} elsif (($temp eq 'yes') || ($temp eq 'no')){
 			$ftp=$temp;
-			last;
-		}
-	}
-
-	while () {
-		print "Enable htdb:/  virtual URL scheme support? (yes/no) [$htdb]: ";
-		$temp=read_in();
-		if (($temp eq '') || ($temp eq $htdb)) {
-			last;			
-		} elsif (($temp eq 'yes') || ($temp eq 'no')){
-			$htdb=$temp;
 			last;
 		}
 	}
