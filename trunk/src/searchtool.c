@@ -1776,7 +1776,7 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						) {
   register double y = 0.0;
 
-  if (D[DPS_N_PHRASE] == 1) xy += (x - xy) / 2.0;
+  if (D[DPS_N_PHRASE] > 0) xy += (x - xy + D[DPS_N_PHRASE]) / 2.0;
   if (D[DPS_N_EXACT] == 0) y += x;
   y += x * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
 
@@ -1833,6 +1833,7 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 /*  fprintf(stderr, "2. x:%lf  xy:%lf  y:%lf {xy /(x + y):%lf}\n\n", 
 	  x, xy, y, xy / (x + y) );*/
   xy *= (phr_n - 1);
+  y -= D[DPS_N_EXACT];
   xy /= phr_n;
 #ifdef WITH_REL_TRACK
   *D_y = y;
@@ -2179,8 +2180,8 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	if (cur_order == 0) { cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY); }
 	else cur_exact *= (w_origin == DPS_WORD_ORIGIN_QUERY);
       	if (cur_order == Res->max_order_inquery) {
-		D[DPS_N_PHRASE] = 1; cur_order = (wordorder == 0) ? 0 : -1;
-		if (cur_exact) D[DPS_N_EXACT] = 1;
+		D[DPS_N_PHRASE] |= a; cur_order = (wordorder == 0) ? 0 : -1;
+		if (cur_exact) D[DPS_N_EXACT] |= a;
 		cur_exact = (wordorder == 0) ? (w_origin == DPS_WORD_ORIGIN_QUERY) : 0;
 	}
       } else if ((cur_order != wordorder) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) {

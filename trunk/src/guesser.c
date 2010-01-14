@@ -1438,7 +1438,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
 #ifdef DEBUG_GUESSER
        /* Display results, best is shown first */
 
-       for (i = 0; i < 5; i++) {
+       for (i = 0; i < 15; i++) {
 	 if (i >= List->nmaps) break;
 	 if (DpsNeedLog(DPS_LOG_EXTRA))
 	   fprintf(stderr, "Guesser: %dh:%dm %s-%s\n", mapstat[i].hits, mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);

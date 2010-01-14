@@ -915,13 +915,43 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 	return(DPS_OK);
 }
 
+static int DpsServerTableClean(DPS_DB *db){
+	char str[128];
+	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
+	int rc;
+	dps_snprintf(str, sizeof(str),  "DELETE FROM server WHERE enabled=%s0%s", qu, qu);
+	rc = DpsSQLAsyncQuery(db, NULL, str);
+	return rc;
+}
+
 static int DpsServerTableFlush(DPS_DB *db){
+	DPS_SQLRES	SQLRes, SRes;
+	size_t		i, rows;
 	int rc;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	char str[128];
 	
-	dps_snprintf(str, sizeof(str),  "UPDATE server SET enabled=0 WHERE parent=%s0%s", qu, qu);
-	rc = DpsSQLAsyncQuery(db, NULL, str);
+	rc = DpsSQLAsyncQuery(db, NULL, "UPDATE server SET enabled=0");
+	if (rc != DPS_OK) return rc;
+
+	DpsSQLResInit(&SQLRes);
+	DpsSQLResInit(&SRes);
+	dps_snprintf(str, sizeof(str), "SELECT rec_id FROM server WHERE parent!=%s0%s", qu, qu);
+	if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, str))) goto flush_exit;
+	rows = DpsSQLNumRows(&SQLRes);
+	for(i = 0; i < rows; i++) {
+	  dps_snprintf(str, sizeof(str), "SELECT COUNT(*) FROM url WHERE site_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	  if(DPS_OK != (rc = DpsSQLQuery(db, &SRes, str))) goto flush_exit;
+	  if (DPS_ATOI(DpsSQLValue(&SRes, 0, 0)) > 0) {
+	    dps_snprintf(str, sizeof(str),  "UPDATE server SET enabled=1 WHERE rec_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	    rc = DpsSQLAsyncQuery(db, NULL, str);
+	    if (rc != DPS_OK) goto flush_exit;
+	  }
+	}
+ flush_exit:
+	DpsSQLFree(&SRes);
+	DpsSQLFree(&SQLRes);
+
 	return rc;
 }
 
@@ -974,12 +1004,13 @@ static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	DpsDBEscDoubleStr(server_weight);
 
 	while(done) {
-	  dps_snprintf(buf, len, "SELECT rec_id, url, tag, category, command, parent, ordre, weight FROM server WHERE rec_id=%s%d%s", 
+	  dps_snprintf(buf, len, "SELECT rec_id, url, tag, category, command, parent, ordre, weight, enabled FROM server WHERE rec_id=%s%d%s", 
 		       qu, rec_id, qu);
 	  if (DPS_OK != (res = DpsSQLQuery(db, &SQLRes, buf)))
 	    goto ex;
-	
-	  if ((nr = DpsSQLNumRows(&SQLRes)) && (strcasecmp(arg, DpsSQLValue(&SQLRes, 0, 1)) != 0)) {
+
+	  nr = DpsSQLNumRows(&SQLRes);
+	  if ((nr > 0) && (strcmp(arg, DpsSQLValue(&SQLRes, 0, 1)) != 0)) {
 	    rec_id++;
 	  } else {
 	    done = 0;
@@ -1033,7 +1064,8 @@ command, parent, ordre, weight, url, pop_weight \
 	      (Server->ordre != (size_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 6))) ||
 	      (((Server->weight != 1) && (Server->weight != DPS_ATOF(DpsSQLValue(&SQLRes, 0, 7))))) ||
 	      strcmp(DpsVarListFindStr(&Server->Vars, "Tag", ""), DpsSQLValue(&SQLRes, 0, 2)) ||
-	      strcmp(DpsVarListFindStr(&Server->Vars, "Category", "0"), DpsSQLValue(&SQLRes, 0, 3)) ) {
+	      strcmp(DpsVarListFindStr(&Server->Vars, "Category", "0"), DpsSQLValue(&SQLRes, 0, 3)) ||
+	      DPS_ATOI(DpsSQLValue(&SQLRes, 0, 8)) != 1 ) {
 
 /*
 	    fprintf(stderr, "\nrec_id: %d\n", rec_id);
@@ -1168,7 +1200,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	    if (DPS_OK != (res = DpsSQLQuery(db, &SQLRes, buf)))
 	      return res;
 	    
-	    if (DpsSQLNumRows(&SQLRes) && (strcasecmp(Server->Match.pattern,DpsSQLValue(&SQLRes, 0, 1)) != 0)) {
+	    if (DpsSQLNumRows(&SQLRes) && (strcmp(Server->Match.pattern,DpsSQLValue(&SQLRes, 0, 1)) != 0)) {
 	      rec_id++;
 	    } else done = 0;
 	    DpsSQLFree(&SQLRes);
@@ -4190,8 +4222,23 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 		      break;
 		    }
 		    if((db->DBMode==DPS_DBMODE_SINGLE_CRC)||(db->DBMode==DPS_DBMODE_MULTI_CRC)){
-		      int crc;
-		      crc = Res->items[wordnum].crcword;
+		      dpshash32_t crc = Res->items[wordnum].crcword;
+#ifdef WITH_OLDHASH
+		      dpshash32_t crc2 = DpsStrOldHash32(Res->items[wordnum].word);
+		      if(where[0]){
+			dps_snprintf(qbuf,sizeof(qbuf)-1,"\
+SELECT %s.url_id,%s.intag \
+FROM %s, url%s \
+WHERE (%s.word_id=%d OR %s.word_id=%d) \
+AND url.rec_id=%s.url_id AND %s ORDER BY url_id,intag",
+				     tablename, tablename,
+				     tablename, db->from, tablename,crc, tablename, crc2,
+				     tablename, where);
+		      }else{
+			dps_snprintf(qbuf,sizeof(qbuf)-1,"SELECT url_id,intag FROM %s WHERE %s.word_id=%d OR %s.word_id=%d ORDER BY url_id,intag",
+				     tablename, tablename, crc, tablename, crc2);
+		      }
+#else
 		      if(where[0]){
 			dps_snprintf(qbuf,sizeof(qbuf)-1,"\
 SELECT %s.url_id,%s.intag \
@@ -4204,7 +4251,8 @@ AND url.rec_id=%s.url_id AND %s ORDER BY url_id,intag",
 		      }else{
 			dps_snprintf(qbuf,sizeof(qbuf)-1,"SELECT url_id,intag FROM %s WHERE %s.word_id=%d ORDER BY url_id,intag",
 				     tablename,tablename,crc);
-					}
+		      }
+#endif
 		    }else{
 		      char cmparg[256];
 		      switch(word_match){	
@@ -6891,6 +6939,9 @@ int DpsSrvActionSQL(DPS_AGENT *A, DPS_SERVER *S, int cmd, DPS_DB *db) {
 
 	case DPS_SRV_ACTION_FLUSH:
 	  return DpsServerTableFlush(db);
+
+	case DPS_SRV_ACTION_CLEAN:
+	  return DpsServerTableClean(db);
 	  
 	case DPS_SRV_ACTION_ADD:
 	  return DpsServerTableAdd(A, S, db);

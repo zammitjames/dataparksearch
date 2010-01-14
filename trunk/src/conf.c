@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1312,8 +1312,9 @@ static int preload_limit(void *Cfg, size_t ac,char **av){
 static int flush_srv_table(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C = (DPS_CFG*)Cfg;
 	int	res = DPS_OK;
-	if(C->flags & DPS_FLAG_ADD_SERV) {
+	if(C->flags & DPS_FLAG_ADD_SERVURL) {
 		res = DpsSrvAction(C->Indexer, NULL, DPS_SRV_ACTION_FLUSH);
+		C->flush_server = 1;
 	}
 	return res;
 }
@@ -2001,6 +2002,10 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
 		DpsSynonymListSort(&Indexer->Conf->Synonyms);
 		/* Sort acronyms */
 		DpsAcronymListSort(&Indexer->Conf->Acronyms);
+
+		if (Cfg.flush_server) {
+		  DpsSrvAction(Indexer, NULL, DPS_SRV_ACTION_CLEAN);
+		}
 			
 		DpsVarListInsStr(&Indexer->Conf->Vars, "Request.User-Agent", DPS_USER_AGENT);
 

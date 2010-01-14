@@ -89,6 +89,7 @@
 #define DPS_SRV_ACTION_SERVERDB         7
 #define DPS_SRV_ACTION_REALMDB          8
 #define DPS_SRV_ACTION_SUBNETDB         9
+#define DPS_SRV_ACTION_CLEAN            10
 
 #define DPS_IFIELD_TYPE_HOUR      0
 #define DPS_IFIELD_TYPE_MIN       1

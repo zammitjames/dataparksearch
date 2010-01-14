@@ -1,5 +1,8 @@
 <!--variables
-DBAddr		searchd://localhost/?label=qsimilar
+DBAddr		searchd://v.sochi.org.ru/
+DBAddr		searchd://v.sochi.org.ru/?label=sochi
+DBAddr		searchd://v.sochi.org.ru/?label=phones
+DBAddr		searchd://v.sochi.org.ru/?label=qsimilar
 StoredocURL     /cgi-bin/storedoc.cgi
 LocalCharset 	koi8-r
 BrowserCharset  UTF-8
@@ -25,7 +28,7 @@ Locale ru_RU.UTF-8
   <head>
     <title>$&(q)</title>
 </head>
-<!-- BrowserCharset: $(BrowserCharset) -->
+<!-- BrowserCharset: $(BrowserCharset) --><!IF NAME="s_tmplt" CONTENT=""><!SET NAME="s_tmplt" CONTENT="janus.htm.ru"><!ENDIF>
 <body id="Content"> 
 <!--/top-->
 
@@ -41,11 +44,13 @@ Locale ru_RU.UTF-8
 
 
 <!--res-->
+<!IFNOT NAME="query" CONTENT="">
 <div class="qsimilar">
-<small class="restop">
-<a class="restop" href="$(self)?q=$%(query)&amp;wf=F1F1&amp;m=$&(mode)&amp;c=$&(s_c)&amp;sp=$&(s_sp)&amp;sy=$&(s_sy)&amp;GroupBySite=$&(s_GroupBySite)&amp;tmplt=janus.htm.ru&amp;s=IRPD&amp;label=$&(s_label)">
+<small class="restop"><!IF NAME="s_cp" CONTENT="koi8-r"><a class="restop" href="$(self)?q=$%(query:koi8-r)&amp;m=$&(mode)&amp;c=$&(s_c)&amp;sp=$&(s_sp)&amp;sy=$&(s_sy)&amp;GroupBySite=$&(s_GroupBySite)&amp;tmplt=$&(s_tmplt)&amp;s=IRPD&amp;label=$&(s_label)">
+<!ELSE><a class="restop" href="$(self)?q=$%(query)&amp;m=$&(mode)&amp;c=$&(s_c)&amp;sp=$&(s_sp)&amp;sy=$&(s_sy)&amp;GroupBySite=$&(s_GroupBySite)&amp;tmplt=$&(s_tmplt)&amp;s=IRPD&amp;label=$&(s_label)"><!ENDIF>
 $&(query:128)</a></small><br/>
 </div>
+<!ENDIF>
 <!--/res-->
 
 <!--clone-->
