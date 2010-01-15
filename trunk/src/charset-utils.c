@@ -365,10 +365,10 @@ void * dps_strncpy(void *dst0, const void *src0, size_t length) {
 
 void * dps_strncpy(void *dst0, const void *src0, size_t length) {
   if (length) {
-    register size_t n = (length + 7) / 8;
+    register size_t n = length / 8;
     register size_t r = (length % 8);
     register char *dst = dst0, *src = src0;
-    if (r == 0) r = 8;
+    if (r == 0) r = 8; else n++;
     if (!(dst[0] = src[0])) return dst0;
     if (r > 1) { if (!(dst[1] = src[1])) return dst0;
     if (r > 2) { if (!(dst[2] = src[2])) return dst0;
