@@ -224,11 +224,11 @@ void * dps_memcpy(void *dst0, const void *src0, size_t length) {
      }
      t = length / wsize;
      if (t) {
-	register size_t n = (t + 7) / 8;
+	register size_t n = t / 8;
     	register size_t r = (t % 8);
 	register word *wdst = (word*)dst;
 	register const word *wsrc = (const word*)src;
-    	if (r == 0) r = 8;
+    	if (r == 0) r = 8; else n++;
     	wdst[0] = wsrc[0];
     	if (r > 1) { wdst[1] = wsrc[1];
     	if (r > 2) { wdst[2] = wsrc[2];
@@ -268,11 +268,11 @@ void * dps_memcpy(void *dst0, const void *src0, size_t length) {
     }
     t = length / wsize;
     if (t) {
-    	register size_t n = (t + 7) / 8;
+    	register size_t n = t / 8;
     	register size_t r = (t % 8);
 	register word *wdst = (word*)dst;
 	register const word *wsrc = (const word*)src;
-    	if (r == 0) r = 8;
+    	if (r == 0) r = 8; else n++;
 	wsrc -= r; wdst -= r;
 	switch(r) {
 	case 8:wdst[7] = wsrc[7];
