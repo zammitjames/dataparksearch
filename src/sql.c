@@ -5267,7 +5267,7 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 	const char	*htdbdoc=DpsVarListFindStr(&Doc->Sections,"HTDBDoc", NULL);
 	const char	*htdbaddr = DpsVarListFindStr(&Doc->Sections, "HTDBAddr", "");
 	int		rc = DPS_OK, have_htdbtext = 0;
-	size_t          i, j, r, len = 0;
+	size_t          i, j, k, r, len = 0;
 	
 	DpsSQLResInit(&SQLres);
 
@@ -5327,13 +5327,15 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			if (!strcasecmp(Sec->name, "Pop_Rank") || !strcasecmp(Sec->name, "Meta-Language") || !strcasecmp(Sec->name, "Meta-Charset")) {
 			  DpsVarListReplaceStr(&Doc->Sections, Sec->name, DpsSQLValue(&SQLres, j, 0));
 			} else {
-			  Item.section = Sec->section;
-			  Item.strict = Sec->strict;
-			  Item.str = DpsSQLValue(&SQLres, j, 0);
-			  Item.section_name = Sec->name;
-			  Item.len = dps_strlen(Item.str);
-			  Indexer->nbytes += Item.len;
-			  DpsTextListAdd(&Doc->TextList, &Item);
+			  for (k = 0; k < SQLres.nCols; k++) {
+			    Item.section = Sec->section;
+			    Item.strict = Sec->strict;
+			    Item.str = DpsSQLValue(&SQLres, j, k);
+			    Item.section_name = Sec->name;
+			    Item.len = dps_strlen(Item.str);
+			    Indexer->nbytes += Item.len;
+			    DpsTextListAdd(&Doc->TextList, &Item);
+			  }
 			}
 		      }
 		      DpsSQLFree(&SQLres);
