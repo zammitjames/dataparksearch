@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -54,6 +54,8 @@ __C_LINK int __DPSCALL DpsMirrorGET(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
      const char     *mirror_hdrs = DpsVarListFindStr(&Doc->Sections,"MirrorHeadersRoot",NULL);
      const char     *accept_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", NULL);
      
+     if (mirror_data == NULL && mirror_hdrs == NULL) return DPS_MIRROR_NOT_FOUND;
+
      if (accept_lang == NULL) {
        accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);
      }
@@ -159,6 +161,8 @@ __C_LINK int __DPSCALL DpsMirrorPUT(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
      const char     *mirror_hdrs = DpsVarListFindStr(&Doc->Sections, "MirrorHeadersRoot", NULL);
      const char     *accept_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", NULL);
      char            *token, savechar = CR_CHAR;
+
+     if (mirror_data == NULL && mirror_hdrs == NULL) return DPS_OK;
 
      if (accept_lang == NULL) {
        accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);
