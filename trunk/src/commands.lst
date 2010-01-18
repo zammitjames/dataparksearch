@@ -38,6 +38,7 @@
 	{"ResegmentThai",	1,1,	env_rpl_bool_var},
 	{"SyslogFacility",	1,1,	env_rpl_var},
 	{"AliasProg",		1,1,	env_rpl_var},
+	{"ReverseAliasProg",	1,1,	env_rpl_var},
 	{"ForceIISCharset1251",	1,1,	env_rpl_var},
 	{"GroupBySite",		1,1,	env_rpl_var},
 	{"Cache",		1,1,	env_rpl_var},

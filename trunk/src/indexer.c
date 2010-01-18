@@ -686,7 +686,7 @@ static int DpsDocAlias(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 	int		result=DPS_OK;
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
 
-	alstrlen = 256 + dps_strlen(url);
+	alstrlen = 256 + 2 * dps_strlen(url);
 	if ((alstr = (char*)DpsMalloc(alstrlen)) == NULL) return DPS_ERROR;
 	alstr[0] = '\0';
 	if(alias_prog){
