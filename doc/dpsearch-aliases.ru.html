@@ -338,7 +338,7 @@ CLASS="COMMAND"
 CLASS="COMMAND"
 >AliasProg</B
 > - это внешняя исполняемая программа, которая принимает 
-			в качестве аргумента URL, и возвразает его алиас на STDOUT. Использыйте $1 чтобы
+			в качестве аргумента URL, и возвращает его алиас на STDOUT. Используйте $1 чтобы
 			передать значение URL.
 		</P
 ><P
@@ -449,10 +449,41 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="ALIAS-SEARCH"
->3.7.7. Алиасы в search.htm 
+NAME="REVERSEALIAS-PROG"
+>3.7.7. Команда ReverseAliasProg
 <A
 NAME="AEN1244"
+></A
+></A
+></H2
+><P
+>			<B
+CLASS="COMMAND"
+>ReverseAliasProg</B
+> - команда, аналогичная обеим командам <B
+CLASS="COMMAND"
+>AliasProg</B
+> и <B
+CLASS="COMMAND"
+>ReverseAlias</B
+>. 
+Она получает параметры аналогично команде <B
+CLASS="COMMAND"
+>AliasProg</B
+>, но преобразовывет URL перед вставкой в базу, аналогично команде <B
+CLASS="COMMAND"
+>ReverseAlias</B
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="ALIAS-SEARCH"
+>3.7.8. Алиасы в search.htm 
+<A
+NAME="AEN1255"
 ></A
 ></A
 ></H2
@@ -567,7 +598,7 @@ ALIGN="right"
 VALIGN="top"
 >ServerTable
 <A
-NAME="AEN1263"
+NAME="AEN1274"
 ></A
 ></TD
 ></TR

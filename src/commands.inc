@@ -147,6 +147,7 @@
 	{"ResegmentThai",	1,1,	env_rpl_bool_var},
 	{"ResultsLimit",        1,1,    env_rpl_var},
 	{"ReverseAlias",	1,100,	add_alias},
+	{"ReverseAliasProg",	1,1,	env_rpl_var},
 	{"Robots",		1,1,	srv_rpl_bool_var},
 	{"RobotsPeriod",        1,1,    env_rpl_time_var},
 	{"SEASections",		1,1,	env_rpl_var},

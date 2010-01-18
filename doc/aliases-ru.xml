@@ -139,7 +139,7 @@ file:/home/john/htdocs/news/index.html
 			Иногда альтернативное расположение документов на локальном диске может быть слишком сложным,
 			чтобы описать его с помощью команд <command>Alias</command> или <command>Realm</command>.
 			<command>AliasProg</command> - это внешняя исполняемая программа, которая принимает 
-			в качестве аргумента URL, и возвразает его алиас на STDOUT. Использыйте $1 чтобы
+			в качестве аргумента URL, и возвращает его алиас на STDOUT. Используйте $1 чтобы
 			передать значение URL.
 		</para>
 
@@ -200,6 +200,17 @@ Server       http://name2.yourname.com/
 
 		</para>
 	</sect2>
+
+	<sect2 id="reversealias-prog">
+		<title>Команда ReverseAliasProg
+<indexterm><primary>Команда</primary><secondary>ReverseAliasProg</secondary></indexterm>
+</title>
+		<para>
+			<command>ReverseAliasProg</command> - команда, аналогичная обеим командам <command>AliasProg</command> и <command>ReverseAlias</command>. 
+Она получает параметры аналогично команде <command>AliasProg</command>, но преобразовывет URL перед вставкой в базу, аналогично команде <command>ReverseAlias</command>.
+</para>
+</sect2>
+
 	<sect2 id="alias-search">
 		<title>Алиасы в search.htm 
 <indexterm><primary>Команда</primary><secondary>Alias</secondary></indexterm>

@@ -57,7 +57,7 @@ typedef DPS_UNI_COMPO_MATRIX * DPS_UNI_COMPO_MATRIX_PLANE;
 
 /* Returns lower case of argument "uni "*/
 
-dpsunicode_t DpsUniToLower(dpsunicode_t uni){
+inline dpsunicode_t DpsUniToLower(dpsunicode_t uni) {
 	register unsigned int plane;
 
 	plane = ((uni) >> 8) & 0xFF;

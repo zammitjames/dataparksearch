@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -185,8 +185,8 @@ int main(int argc, char **argv) {
  
 	while((fgets(from_buf, DPCONV_BUF_SIZE, stdin)) != NULL) {
 	  DpsConv(&fc_uni, uni_buf, 4 * DPCONV_BUF_SIZE * sizeof(int), from_buf, DPCONV_BUF_SIZE);
-          if (NFC) uni_buf = DpsUniNormalizeNFC((dpsunicode_t*)uni_buf, (dpsunicode_t*)uni_buf);
-          if (NFD) uni_buf = DpsUniNormalizeNFD((dpsunicode_t*)uni_buf, (dpsunicode_t*)uni_buf);
+          if (NFC) uni_buf = (char*)DpsUniNormalizeNFC((dpsunicode_t*)uni_buf, (dpsunicode_t*)uni_buf);
+          if (NFD) uni_buf = (char*)DpsUniNormalizeNFD((dpsunicode_t*)uni_buf, (dpsunicode_t*)uni_buf);
 	  DpsConv(&uni_tc, to_buf, 16 * DPCONV_BUF_SIZE, uni_buf, 4 * DPCONV_BUF_SIZE * sizeof(int));
           if (fwrite(to_buf, uni_tc.obytes, 1, stdout) != 1) {
 /*	  if (fputs(to_buf, stdout) != 0) {*/

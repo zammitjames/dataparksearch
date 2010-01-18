@@ -458,6 +458,24 @@ char * DpsURLNormalizePath(char * str){
 	DPS_FREE(pathfile);
 
 	if (ReverseAliasFlag) {
+	  const char *alias_prog = DpsVarListFindStr(&Indexer->Vars, "ReverseAliasProg", NULL);
+	  
+	  if (alias_prog) {
+	    int		result;
+	    aliassize = 256 + 2 * dps_strlen(*str);
+	    alias = (char*)DpsRealloc(alias, aliassize);
+	    if (alias == NULL) {
+	      DpsLog(Indexer, DPS_LOG_ERROR, "No memory (%d bytes). %s line %d", aliassize, __FILE__, __LINE__);
+	      goto ret;
+	    }
+	    alias[0] = '\0';
+	    result = DpsAliasProg(Indexer, alias_prog, *str, alias, aliassize - 1);
+	    DpsLog(Indexer, DPS_LOG_EXTRA, "ReverseAliasProg result: '%s'", alias);
+	    if(result != DPS_OK) goto ret;
+	    DPS_FREE(*str);
+	    *str = (char*)DpsStrdup(alias);
+	  }
+
 	  for(cascade = 0; ((Alias=DpsMatchListFind(&Indexer->Conf->ReverseAliases,*str,nparts,Parts))) && (cascade < 1024); cascade++) {
 	        aliassize = dps_strlen(Alias->arg) + dps_strlen(Alias->pattern) + dps_strlen(*str) + 128;
 		alias = (char*)DpsRealloc(alias, aliassize);

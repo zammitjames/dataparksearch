@@ -30449,10 +30449,12 @@ if test "${enable_hashcompatible+set}" = set; then
 	hashcompatible="$enableval"
         { $as_echo "$as_me:$LINENO: result: $hashcompatible" >&5
 $as_echo "$hashcompatible" >&6; }
-	cat >>confdefs.h <<\_ACEOF
+  	if test "$enableval" != "no"; then
+		cat >>confdefs.h <<\_ACEOF
 #define WITH_OLDHASH 1
 _ACEOF
 
+  	fi
 
 else
 

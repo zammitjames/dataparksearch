@@ -48,7 +48,6 @@ langmap/bs.cp1250.lm \
 langmap/bs.latin2.lm \
 langmap/bs.utf-8.lm \
 langmap/ca.latin1.lm \
-langmap/ca.latin1.lit.lm \
 langmap/ce.utf-8.lm \
 langmap/cs.cp1250.lm \
 langmap/cs.iso-8859-1.lm \

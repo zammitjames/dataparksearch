@@ -137,8 +137,8 @@ file:/home/john/htdocs/news/index.html
 		<title><command>AliasProg</command> command</title>
 <indexterm><primary>Command</primary><secondary>AliasProg</secondary></indexterm>
 
-		<para>You may also specify "AliasProg" command for
-aliasing purposes. AliasProg is useful for major web hosting companies
+		<para>You may also specify <command>AliasProg</command> command for
+aliasing purposes. <command>AliasProg</command> is useful for major web hosting companies
 which want to index their web space taking documents directly from a
 disk without having to involve web server in indexing
 process. Documents layout may be very complex to describe it using
@@ -208,6 +208,16 @@ ReverseAlias regex  (http://.*)&amp;PHPSESSION=[^&amp;]*(.*)         $1$2
 </programlisting>
 		</para>
 	</sect2>
+
+	<sect2 id="reversealias-prog">
+		<title>ReverseAliasProg command
+<indexterm><primary>Command</primary><secondary>ReverseAliasProg</secondary></indexterm>
+</title>
+		<para>
+			<command>ReverseAliasProg</command> - is a command similar to both <command>AliasProg</command> command and <command>ReverseAlias</command> command. 
+It takes agruments as <command>AliasProg</command> but maps URL before inserting it into database, as <command>ReverseAlias</command> command.
+</para>
+</sect2>
 
 	<sect2 id="alias-search">
 		<title><command>Alias</command> command in <filename>search.htm</filename> search template</title>
