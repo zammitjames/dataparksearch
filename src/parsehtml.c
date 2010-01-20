@@ -644,6 +644,15 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 	
 	Item.href = NULL;
 	
+	if((Sec = DpsVarListFind(&Doc->Sections, "url"))) {
+		char sc[] = "url\0";
+		Item.str = DPS_NULL2EMPTY(dc_url);
+		Item.section = Sec->section;
+		Item.strict = Sec->strict;
+		Item.section_name = sc;
+		Item.len = 0;
+		DpsTextListAdd(&Doc->TextList, &Item);
+	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.proto"))) {
 		char sc[] = "url.proto\0";
 		Item.str = DPS_NULL2EMPTY(dcURL.schema);
