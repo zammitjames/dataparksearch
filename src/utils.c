@@ -1079,7 +1079,7 @@ void DpsTime_t2HttpStr(time_t t, char *str) {
    *str='\0';
 */
 
-  if (tim->tm_wday > 0 && tim->tm_wday < 7) {
+  if (tim->tm_wday >= 0 && tim->tm_wday < 7) {
     dps_strcpy(s, dps_wday[tim->tm_wday]); s += 3;
   } else {
     *s = '?'; s++;
