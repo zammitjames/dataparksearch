@@ -42,7 +42,7 @@
   <DT>1.<!-- DP_ID: 3-->
   <a href="http://site/test2.html" TARGET="_blank">
     Test2  </a>
-  <small>[<b>0,014%</b> Popularity: <b>0,25000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -57,9 +57,9 @@
            <small>
              <A HREF="http://site/test2.html" TARGET="_blank">http://site/test2.html</A>
              <font color="#008800">
-              - 180 bytes [text/html]
+              - 233 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=388628276&amp;wf=1000000000">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=614987914&amp;wf=1000000000">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -76,7 +76,7 @@
   <DT>2.<!-- DP_ID: 5-->
   <a href="http://site/test.xml" TARGET="_blank">
     http://site/test.xml  </a>
-  <small>[<b>0,014%</b> Popularity: <b>0,25000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -93,7 +93,7 @@
              <font color="#008800">
               - 2893 bytes [text/xml]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=388628276&amp;wf=1000000000">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=second&amp;site=614987914&amp;wf=1000000000">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

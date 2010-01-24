@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -146,7 +146,8 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 				DPS_VAR * var;
 				size_t len;
 				char name[100]="";
-				char *sem, *sem2, *sem3, *cs_name;
+				char *sem, *sem2, *sem3;
+				const char *cs_name;
 				
 				len=(vend-vbeg);
 				if(len>=sizeof(name))len=sizeof(name)-1;
@@ -579,7 +580,7 @@ static void TemplateCondition(DPS_AGENT *Agent,DPS_VARLIST *vars,const char *tok
 	}else if( !(strncasecmp(tok, "<!IFLIKE", 8)) || !(strncasecmp(tok, "<!ELIKE", 7)) || !(strncasecmp(tok, "<!ELSELIKE", 10)) ) {
 		it->condition = !DpsWildCaseCmp(var, val);
 	}else if( !(strncasecmp(tok, "<!IFREGEX", 9)) || !(strncasecmp(tok, "<!EREGEX", 8)) || !(strncasecmp(tok, "<!ELSEREGEX", 11)) ) {
-	  const char *eval = NULL, *eval2 = NULL;
+	  char *eval = NULL, *eval2 = NULL;
 
 		switch(*type) {
 		case '(': 

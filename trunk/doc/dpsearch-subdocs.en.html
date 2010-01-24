@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Clones</TITLE
+>Sub-documents</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -10,14 +10,14 @@ REL="HOME"
 TITLE="DataparkSearch Engine 4.53"
 HREF="index.en.html"><LINK
 REL="UP"
-TITLE="Indexing"
-HREF="dpsearch-indexing.en.html"><LINK
+TITLE="DataparkSearch HTML parser"
+HREF="dpsearch-htmlparser.en.html"><LINK
 REL="PREVIOUS"
-TITLE="Stopwords"
-HREF="dpsearch-stopwords.en.html"><LINK
+TITLE="Body patterns"
+HREF="dpsearch-htmlparser-bodypatterns.en.html"><LINK
 REL="NEXT"
-TITLE="Specifying WEB space to be indexed"
-HREF="dpsearch-follow.en.html"><LINK
+TITLE="Storing data"
+HREF="dpsearch-howstore.en.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="datapark.css"><META
@@ -52,7 +52,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-stopwords.en.html"
+HREF="dpsearch-htmlparser-bodypatterns.en.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,13 +60,16 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 3. Indexing</TD
+>Chapter 4. <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> HTML parser</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="dpsearch-follow.en.html"
+HREF="dpsearch-howstore.en.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -80,54 +83,35 @@ CLASS="SECT1"
 ><H1
 CLASS="SECT1"
 ><A
-NAME="CLONES"
->3.5. Clones</A
+NAME="SUBDOCS"
+>4.7. Sub-documents</A
 ></H1
 ><A
-NAME="AEN822"
+NAME="AEN3143"
+></A
+><A
+NAME="AEN3146"
 ></A
 ><P
-><TT
-CLASS="LITERAL"
->Clones</TT
-> -- are documents having equal values of Hash32 on all document sections. Indentical copies of the same
-document always have equal values of Hash32. This allow to eliminate duplicate documents in a collection.
-However, if only <TT
-CLASS="LITERAL"
->title</TT
-> section is defined in <TT
-CLASS="FILENAME"
->sections.conf</TT
->, all documents with different bodies but
-with identical titles will be considered as clones.</P
-><DIV
-CLASS="SECT2"
-><H2
-CLASS="SECT2"
-><A
-NAME="DETECTCLONES_CMD"
->3.5.1. <B
+>The sub-documents are: frames, iframes and embedded objects
+(flash tubes in general); temporary redirects (often used to place
+cookies or redirect to a page, depending on the language preferences
+of the user); versions of the same page in different languages
+obtained with Content negotiation.</P
+><P
+>The indexing of sub-documents is controlled by two commands: the
+<B
 CLASS="COMMAND"
->DetectClones</B
-> command</A
-></H2
-><A
-NAME="AEN831"
-></A
-><PRE
-CLASS="PROGRAMLISTING"
->DetectClones yes/no</PRE
-><P
->Allow/disallow clone detection and eliminating. If allowed, indexer will 
-detect the same documents under different location, such as
-mirrors, and will index only one document from the group of
-such equal documents. "DetectClones yes" also allows to reduce space usage.
-Default value is "yes".
-<PRE
-CLASS="PROGRAMLISTING"
->DetectClones no</PRE
-></P
-></DIV
+>SubDocLevel</B
+> command sets the maximum nesting level of a sub-document
+to be indexed. The default value is 0, which prohibits the
+sub-document indexing. The <B
+CLASS="COMMAND"
+>SubDocCnt</B
+> command sets the maximum number
+of sub-documents to be indexed at all nesting levels (this command is
+mainly to prevent endless cycles of pages nested into each
+others). The default value is 5.</P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -145,7 +129,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="dpsearch-stopwords.en.html"
+HREF="dpsearch-htmlparser-bodypatterns.en.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -163,7 +147,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="dpsearch-follow.en.html"
+HREF="dpsearch-howstore.en.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -173,13 +157,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Stopwords</TD
+>Body patterns</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="dpsearch-indexing.en.html"
+HREF="dpsearch-htmlparser.en.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -187,7 +171,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Specifying WEB space to be indexed</TD
+>Storing data</TD
 ></TR
 ></TABLE
 ></DIV

@@ -121,6 +121,102 @@ CLASS="COMMAND"
 CLASS="PROGRAMLISTING"
 >StopwordFile stopwords/en.sl</PRE
 ></P
+><P
+>Вы должны использовать один и тот же надор команд <B
+CLASS="COMMAND"
+>StopwordFile</B
+> в <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> и <TT
+CLASS="FILENAME"
+>search.htm</TT
+> (<TT
+CLASS="FILENAME"
+>searchd.conf</TT
+> если используется <B
+CLASS="COMMAND"
+>searchd</B
+>).</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="STOPWORDFILE_FORMAT"
+>3.4.2. Формат файла стопслов</A
+></H2
+><A
+NAME="AEN828"
+></A
+><P
+>Вы можете создавать свои файлы стоп-слов. В качестве примера, вы можете использовать файл английских стоп-слов <TT
+CLASS="FILENAME"
+>etc/stopwords/en.sl</TT
+>. 
+В начале листа поместите следующие две команды:
+	<PRE
+CLASS="PROGRAMLISTING"
+>Language: en
+Charset:  us-ascii</PRE
+></P
+><P
+></P
+><UL
+><LI
+><P
+>				<CODE
+CLASS="VARNAME"
+>Language</CODE
+> - стандартный (ISO 639) двух-буквенный код языка.</P
+></LI
+><LI
+><P
+>				<CODE
+CLASS="VARNAME"
+>Charset</CODE
+> - любая кодировка, поддерживаемая <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> (см. <A
+HREF="dpsearch-international.ru.html#CHARSET"
+>&#1056;&#1072;&#1079;&#1076;. 7.1</A
+>&#62;).</P
+></LI
+></UL
+><P
+>Затем следует список слов, по одному на строку. Каждое слово записывается в кодировке, указанной выше командой <B
+CLASS="COMMAND"
+>Charset:</B
+>.</P
+><P
+>Вы можете использовать дополнительную команду <B
+CLASS="COMMAND"
+>Match:</B
+> для задания шаблона, любое слово подпадающее под который будет считаться стоп-словом. Например:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>Match: regex ^\$##</PRE
+><P
+>По этой команде любое слово, начинающееся с <TT
+CLASS="LITERAL"
+>$##</TT
+> будет рассматриваться как стоп-слово.</P
+><P
+>Опции команды <B
+CLASS="COMMAND"
+>Match:</B
+> аналогичны опциям команды <B
+CLASS="COMMAND"
+>Allow</B
+> (см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;). Аргументы записываются в кодировке, указанной командой <B
+CLASS="COMMAND"
+>Charset:</B
+>. Регулярные выражения в данный момент ограничены (например, не поддерживаются интервалы).</P
 ></DIV
 ></DIV
 ><DIV

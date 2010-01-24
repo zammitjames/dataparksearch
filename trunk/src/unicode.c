@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 #include "dps_unidata.h"
 #include "dps_charsetutils.h"
 
+/*static const dpsunicode_t dps_uninullstr[] = {0};*/
 
 /* Calculates UNICODE string length */
 
@@ -212,7 +213,7 @@ int DpsUniStrNCmp(const dpsunicode_t *s1, const dpsunicode_t * s2, size_t len) {
 }
 
 
-dpsunicode_t *DpsUniAccentStrip(const dpsunicode_t *str) {
+dpsunicode_t *DpsUniAccentStrip(dpsunicode_t *str) {
   dpsunicode_t *nfd, *s, *d;
 
   s = d = nfd = DpsUniNormalizeNFD(NULL, str);
@@ -230,7 +231,7 @@ dpsunicode_t *DpsUniAccentStrip(const dpsunicode_t *str) {
 }
 
 
-dpsunicode_t *DpsUniGermanReplace(const dpsunicode_t *str) {
+dpsunicode_t *DpsUniGermanReplace(dpsunicode_t *str) {
   size_t l = DpsUniLen(str);
   dpsunicode_t *german = DpsMalloc((2 * l + 1) * sizeof(dpsunicode_t));
   if (german !=NULL) {

@@ -776,7 +776,7 @@ Usage: searchd [OPTIONS]\n\
 Options are:\n\
   -l		do not log to stderr\n\
   -v n          verbose level, 0-5\n\
-  -s n          sleep n seconds before starting\n\ 
+  -s n          sleep n seconds before starting\n\
   -w /path      choose alternative working /var directory\n\
   -f            run foreground, don't demonize\n\
   -h,-?         print this help page and exit\n\

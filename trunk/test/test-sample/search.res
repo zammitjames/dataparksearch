@@ -30,7 +30,7 @@
       <small>Search results: <b>this: 5 / 5</b>.</small>
     </td>
     <td>
-      <small>Results <b>1-5</b> of <B>5</B>.</small>
+      <small>Results <b>1-5</b> of <B>5 [5]</B>.</small>
       <small>Search took <b></b> seconds</small>
     </td>
   </tr>
@@ -42,12 +42,12 @@
   <DT>1.
   <a href="http://site/test1.html" TARGET="_blank">
     Test 1 title  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small><b>This</b> is the first test page. &#38; Here is the second ......</small>
+        <small><b>This</b> is the first test page. &#38; Here is the second ...</small>
       </td>
     </tr>
     <tr>
@@ -59,7 +59,7 @@
              <font color="#008800">
               - 168 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -76,12 +76,12 @@
   <DT>2.
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small><b>This</b> is a text file. No title available. ...</small>
+        <small><b>This</b> is a text file. No title available. </small>
       </td>
     </tr>
     <tr>
@@ -93,7 +93,7 @@
              <font color="#008800">
               - 41 bytes [text/plain]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -110,12 +110,12 @@
   <DT>3.
   <a href="http://site/test2.html" TARGET="_blank">
     Test 2 title  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small><b>This</b> is the second test page. Here is the third ......</small>
+        <small><b>This</b> is the second test page. Here is the third ...</small>
       </td>
     </tr>
     <tr>
@@ -127,7 +127,7 @@
              <font color="#008800">
               - 158 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -144,12 +144,12 @@
   <DT>4.
   <a href="http://site/test3.html" TARGET="_blank">
     Test 3 title  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small><b>This</b> is the third test. No more tests available. ......</small>
+        <small><b>This</b> is the third test. No more tests available.</small>
       </td>
     </tr>
     <tr>
@@ -161,7 +161,7 @@
              <font color="#008800">
               - 122 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -178,12 +178,12 @@
   <DT>5.
   <a href="http://site/test4.html" TARGET="_blank">
     Test 4 title  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.17000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,17000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small> ... is in the end of the body. The word is <b>THIS</b>. ...</small>
+        <small>... is in the end of the body. The word is <b>THIS</b>. </small>
       </td>
     </tr>
     <tr>
@@ -195,7 +195,7 @@
              <font color="#008800">
               - 225 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

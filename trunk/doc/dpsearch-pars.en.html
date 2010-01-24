@@ -84,13 +84,13 @@ NAME="PARS"
 >3.9. External parsers</A
 ></H1
 ><A
-NAME="AEN1244"
+NAME="AEN1279"
 ></A
 ><P
 ><SPAN
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
-> indexer can use external parsers to index various file types (mime types).</P
+> indexer can use external parsers to index various file types (MIME types).</P
 ><P
 >Parser is an executable program which converts one of
 the mime types to <TT
@@ -159,7 +159,7 @@ CLASS="FILENAME"
 defined there.</P
 ><P
 ><A
-NAME="AEN1271"
+NAME="AEN1306"
 ></A
 >
 If you want to index local files or via <TT
@@ -182,7 +182,7 @@ CLASS="PROGRAMLISTING"
 ><LI
 ><P
 ><A
-NAME="AEN1279"
+NAME="AEN1314"
 ></A
 >
 Add parsers</P
@@ -246,7 +246,7 @@ NAME="PARSERTIMEOUT"
 ></H2
 ><P
 ><A
-NAME="AEN1295"
+NAME="AEN1330"
 ></A
 >
 To avoid a indexer hang on parser execution, you may specify the amount of time in seconds for parser execution in your 
@@ -292,7 +292,7 @@ NAME="PARS-CHAR"
 >3.9.5. Charsets and parsers</A
 ></H2
 ><A
-NAME="AEN1308"
+NAME="AEN1343"
 ></A
 ><P
 >Some parsers can produce output in other charset
@@ -315,7 +315,7 @@ NAME="PARS-UDMURL"
 >3.9.6. DPS_URL environment variable</A
 ></H2
 ><A
-NAME="AEN1315"
+NAME="AEN1350"
 ></A
 ><P
 >When executing a parser <B
@@ -334,7 +334,7 @@ NAME="PARS-LINKS"
 >3.9.7. Some third-party parsers</A
 ></H2
 ><A
-NAME="AEN1321"
+NAME="AEN1356"
 ></A
 ><P
 ></P
@@ -576,6 +576,887 @@ Mime  image/vnd.djvu  text/plain  "/usr/local/bin/djvutxt $1 $2"</PRE
 ></P
 ></LI
 ></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="LIBEXTRACTOR"
+>3.9.8. libextractor library</A
+></H2
+><A
+NAME="AEN1437"
+></A
+><P
+><SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> can be build with <A
+HREF="http://gnunet.org/libextractor/"
+TARGET="_top"
+>libextractor library</A
+>. 
+Using this library, <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> can index keywords from files of the following formats: PDF, PS, OLE2 (DOC, XLS, PPT), OpenOffice (sxw), StarOffice (sdw), DVI, MAN, FLAC, MP3 (ID3v1 and ID3v2), NSF(E) (NES music), SID (C64 music), OGG, WAV, EXIV2, JPEG, GIF, PNG, TIFF, DEB, RPM, TAR(.GZ), ZIP, ELF, S3M (Scream Tracker 3), XM (eXtended Module), IT (Impulse Tracker), FLV, REAL, RIFF (AVI), MPEG, QT and ASF.</P
+><P
+>To build <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> with <SPAN
+CLASS="APPLICATION"
+>libextractor library</SPAN
+>, install the library, and then configure and compile <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+>.</P
+><P
+>Bellow the relationship between keyword types of <SPAN
+CLASS="APPLICATION"
+>libextractor</SPAN
+> and <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+>'s section names is given:</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN1450"
+></A
+><P
+><B
+>Table 3-1. Relationship between libextractor's keyword types and DataparkSearch section names</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Keyword Type</TH
+><TH
+>Section name</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>EXTRACTOR_FILENAME</TD
+><TD
+> 	Filename</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MIMETYPE</TD
+><TD
+> 	Mimetype</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_TITLE</TD
+><TD
+> 	Title</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_AUTHOR</TD
+><TD
+> 	Author</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_ARTIST 	</TD
+><TD
+>Artist</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_DESCRIPTION 	</TD
+><TD
+>Description</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_COMMENT 	</TD
+><TD
+>Comment</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_DATE 	</TD
+><TD
+>Date</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PUBLISHER 	</TD
+><TD
+>Publisher</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LANGUAGE 	</TD
+><TD
+>Content-Language</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_ALBUM 	</TD
+><TD
+>Album</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_GENRE 	</TD
+><TD
+>Genre</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LOCATION 	</TD
+><TD
+>Location</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_VERSIONNUMBER 	</TD
+><TD
+>VersionNumber</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_ORGANIZATION 	</TD
+><TD
+>Organization</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_COPYRIGHT 	</TD
+><TD
+>Copyright</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SUBJECT 	</TD
+><TD
+>Subject</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_KEYWORDS 	</TD
+><TD
+>Meta.Keywords</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CONTRIBUTOR 	</TD
+><TD
+>Contributor</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_RESOURCE_TYPE 	</TD
+><TD
+>Resource-Type</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FORMAT 	</TD
+><TD
+>Format</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_RESOURCE_IDENTIFIER 	</TD
+><TD
+>Resource-Idendifier</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SOURCE 	</TD
+><TD
+>Source</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_RELATION 	</TD
+><TD
+>Relation</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_COVERAGE 	</TD
+><TD
+>Coverage</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SOFTWARE 	</TD
+><TD
+>Software</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_DISCLAIMER 	</TD
+><TD
+>Disclaimer</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_WARNING 	</TD
+><TD
+>Warning</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_TRANSLATED 	</TD
+><TD
+>Translated</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CREATION_DATE 	</TD
+><TD
+>Creation-Date</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MODIFICATION_DATE 	</TD
+><TD
+>Modification-Date</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CREATOR 	</TD
+><TD
+>Creator</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PRODUCER 	</TD
+><TD
+>Producer</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PAGE_COUNT 	</TD
+><TD
+>Page-Count</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PAGE_ORIENTATION 	</TD
+><TD
+>Page-Orientation</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PAPER_SIZE 	</TD
+><TD
+>Paper-Size</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_USED_FONTS 	</TD
+><TD
+>Used-Fonts</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PAGE_ORDER 	</TD
+><TD
+>Page-Order</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CREATED_FOR 	</TD
+><TD
+>Created-For</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MAGNIFICATION 	</TD
+><TD
+>Magnification</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_RELEASE 	</TD
+><TD
+>Release</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_GROUP 	</TD
+><TD
+>Group</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SIZE 	</TD
+><TD
+>Size</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SUMMARY 	</TD
+><TD
+>Summary</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PACKAGER 	</TD
+><TD
+>Packager</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_VENDOR 	</TD
+><TD
+>Vendor</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LICENSE 	</TD
+><TD
+>License</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_DISTRIBUTION 	</TD
+><TD
+>Distribution</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_BUILDHOST 	</TD
+><TD
+>BuildHost</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_OS 	</TD
+><TD
+>OS</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_DEPENDENCY 	</TD
+><TD
+>Dependency</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_HASH_MD4 	</TD
+><TD
+>Hash-MD4</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_HASH_MD5 	</TD
+><TD
+>Hash-MD5</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_HASH_SHA0 	</TD
+><TD
+>Hash-SHA0</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_HASH_SHA1 	</TD
+><TD
+>Hash-SHA1</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_HASH_RMD160 	</TD
+><TD
+>Hash-RMD160</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_RESOLUTION 	</TD
+><TD
+>Resolution</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CATEGORY 	</TD
+><TD
+>Ext.Category</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_BOOKTITLE 	</TD
+><TD
+>BookTitle</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PRIORITY 	</TD
+><TD
+>Priority</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CONFLICTS 	</TD
+><TD
+>Conflicts</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_REPLACES 	</TD
+><TD
+>Replaces</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PROVIDES 	</TD
+><TD
+>Provides</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CONDUCTOR 	</TD
+><TD
+>Conductor</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_INTERPRET 	</TD
+><TD
+>Interpret</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_OWNER 	</TD
+><TD
+>Owner</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LYRICS 	</TD
+><TD
+>Lyrics</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MEDIA_TYPE 	</TD
+><TD
+>Media-Type</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CONTACT 	</TD
+><TD
+>Contact</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_THUMBNAIL_DATA 	</TD
+><TD
+>Thumbnail-Data</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PUBLICATION_DATE 	</TD
+><TD
+>Publication-Date</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CAMERA_MAKE 	</TD
+><TD
+>Camera-Make</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CAMERA_MODEL 	</TD
+><TD
+>Camera-Model</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_EXPOSURE 	</TD
+><TD
+>Exposure</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_APERTURE 	</TD
+><TD
+>Aperture</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_EXPOSURE_BIAS 	</TD
+><TD
+>Exposure-Bias</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FLASH 	</TD
+><TD
+>Flash</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FLASH_BIAS 	</TD
+><TD
+>Flash-Bias</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FOCAL_LENGTH 	</TD
+><TD
+>Focal-Length</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FOCAL_LENGTH_35MM 	</TD
+><TD
+>Focal-Length-35MM</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_ISO_SPEED 	</TD
+><TD
+>ISO-Speed</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_EXPOSURE_MODE 	</TD
+><TD
+>Exposure-Mode</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_METERING_MODE 	</TD
+><TD
+>Metering-Mode</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MACRO_MODE 	</TD
+><TD
+>Macro-Mode</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_IMAGE_QUALITY 	</TD
+><TD
+>Image-Quality</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_WHITE_BALANCE 	</TD
+><TD
+>White-Balance</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_ORIENTATION 	</TD
+><TD
+>Orientation</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_TEMPLATE 	</TD
+><TD
+>Template</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SPLIT 	</TD
+><TD
+>Split</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PRODUCTVERSION 	</TD
+><TD
+>ProductVersion</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LAST_SAVED_BY 	</TD
+><TD
+>Last-Saved-By</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LAST_PRINTED 	</TD
+><TD
+>Last-Printed</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_WORD_COUNT 	</TD
+><TD
+>Word-Count</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CHARACTER_COUNT 	</TD
+><TD
+>Character-Count</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_TOTAL_EDITING_TIME 	</TD
+><TD
+>Total-Editing-Time</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_THUMBNAILS 	</TD
+><TD
+>Thumbnails</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SECURITY 	</TD
+><TD
+>Security</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CREATED_BY_SOFTWARE 	</TD
+><TD
+>Created-By-Software</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MODIFIED_BY_SOFTWARE 	</TD
+><TD
+>Modified-By-Software</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_REVISION_HISTORY 	</TD
+><TD
+>Revision-History</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LOWERCASE 	</TD
+><TD
+>Lowercase</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_COMPANY 	</TD
+><TD
+>Company</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_GENERATOR 	</TD
+><TD
+>Generator</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CHARACTER_SET 	</TD
+><TD
+>Meta-Charset</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LINE_COUNT 	</TD
+><TD
+>Line-Count</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PARAGRAPH_COUNT 	</TD
+><TD
+>Paragraph-Count</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_EDITING_CYCLES 	</TD
+><TD
+>Editing-Cycles</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SCALE 	</TD
+><TD
+>Scale</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MANAGER 	</TD
+><TD
+>Manager</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MOVIE_DIRECTOR 	</TD
+><TD
+>Movie-Director</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_DURATION 	</TD
+><TD
+>Duration</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_INFORMATION 	</TD
+><TD
+>Information</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FULL_NAME 	</TD
+><TD
+>Full-Name</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CHAPTER 	</TD
+><TD
+>Chapter</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_YEAR 	</TD
+><TD
+>Year</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_LINK 	</TD
+><TD
+>Link</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MUSIC_CD_IDENTIFIER 	</TD
+><TD
+>Music-CD-Identifier</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_PLAY_COUNTER 	</TD
+><TD
+>Play-Counter</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_POPULARITY_METER 	</TD
+><TD
+>Popularity-Meter</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_CONTENT_TYPE 	</TD
+><TD
+>Ext.Content-Type</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_ENCODED_BY 	</TD
+><TD
+>Encoded-By</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_TIME 	</TD
+><TD
+>Time</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MUSICIAN_CREDITS_LIST 	</TD
+><TD
+>Musician-Credits-List</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_MOOD 	</TD
+><TD
+>Mood</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FORMAT_VERSION 	</TD
+><TD
+>Format-Version</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_TELEVISION_SYSTEM 	</TD
+><TD
+>Television-System</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_SONG_COUNT 	</TD
+><TD
+>Song-Count</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_STARTING_SONG 	</TD
+><TD
+>Strting-Song</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_HARDWARE_DEPENDENCY 	</TD
+><TD
+>Hardware-Dependency</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_RIPPER 	</TD
+><TD
+>Ripper</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_FILE_SIZE 	</TD
+><TD
+>File-Size</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_TRACK_NUMBER 	</TD
+><TD
+>Track-Number</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_ISRC 	</TD
+><TD
+>ISRC</TD
+></TR
+><TR
+><TD
+>EXTRACTOR_DISC_NUMBER 	</TD
+><TD
+>Disc-Number</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>If a section name from the list above doesn't specified in sections.conf, the value of corresponding keyword is written as <CODE
+CLASS="VARNAME"
+>body</CODE
+> section. 
+Keywords of unknown type are written as <CODE
+CLASS="VARNAME"
+>body</CODE
+> section as well.</P
 ></DIV
 ></DIV
 ><DIV

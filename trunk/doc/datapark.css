@@ -5,4 +5,4 @@ TABLE.CALSTABLE { margin-left: 4em; width: 86%; }
 .chapter, .CHAPTER{ text-align: center; } 
 .programlisting, .PROGRAMLISTING { text-align: left; color: #4444FF; }
 .synopsis, .SYNOPSIS { text-align: left; color: #4444FF; }
-
+.APPLICATION { font-style: italic;}

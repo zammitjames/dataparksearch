@@ -59,7 +59,7 @@
              <font color="#008800">
               - 986 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -93,7 +93,7 @@
              <font color="#008800">
               - 992 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

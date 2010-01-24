@@ -90,7 +90,7 @@ NAME="AEN770"
 ><TT
 CLASS="LITERAL"
 >Stopwords</TT
-> -- are most frequently used words, i.e. words which appear in almost every document searched. 
+> - are the most frequently used words, i.e. words which appear in almost every document searched. 
 Stopwords are filtered out prior to index construction, what is allow to reduce the total size of the index without any 
 significant loss in quality of search.</P
 ><DIV
@@ -124,6 +124,105 @@ CLASS="COMMAND"
 CLASS="PROGRAMLISTING"
 >StopwordFile stopwords/en.sl</PRE
 ></P
+><P
+>You must use the same set of <B
+CLASS="COMMAND"
+>StopwordFile</B
+> commands in <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> and <TT
+CLASS="FILENAME"
+>search.htm</TT
+> (<TT
+CLASS="FILENAME"
+>searchd.conf</TT
+> if <B
+CLASS="COMMAND"
+>searchd</B
+> is used).</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="STOPWORDFILE_FORMAT"
+>3.4.2. Format of stopword file</A
+></H2
+><A
+NAME="AEN793"
+></A
+><P
+>You may create your own stopword lists. As an example you may take the English stopword file <TT
+CLASS="FILENAME"
+>etc/stopwords/en.sl</TT
+>. 
+In the beginning of the list please specify the
+following two commands:
+	<PRE
+CLASS="PROGRAMLISTING"
+>Language: en
+Charset:  us-ascii</PRE
+></P
+><P
+></P
+><UL
+><LI
+><P
+>				<CODE
+CLASS="VARNAME"
+>Language</CODE
+> - standard
+(ISO 639) two-letter language abbreviation.</P
+></LI
+><LI
+><P
+>				<CODE
+CLASS="VARNAME"
+>Charset</CODE
+> - any
+charset supported by <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> (see <A
+HREF="dpsearch-international.en.html#CHARSET"
+>Section 7.1</A
+>&#62;).</P
+></LI
+></UL
+><P
+>Then the list of stopwords is follow, one word per line. Each word is written in character set specified above by <B
+CLASS="COMMAND"
+>Charset:</B
+> command.</P
+><P
+>You may use optional <B
+CLASS="COMMAND"
+>Match:</B
+> command to specify a pattern to treat any word match it as a stopword. E.g.:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>Match: regex ^\$##</PRE
+><P
+>According to this command, any word begins with <TT
+CLASS="LITERAL"
+>$##</TT
+> will be considered as a stopword.</P
+><P
+>Options of <B
+CLASS="COMMAND"
+>Match:</B
+> command are the same as for <B
+CLASS="COMMAND"
+>Allow</B
+> (see <A
+HREF="dpsearch-indexcmd.en.html#ALLOW_CMD"
+>Section 3.10.14</A
+>&#62;). Arguments are in character set specified by <B
+CLASS="COMMAND"
+>Charset:</B
+> command. Regular expressions are limited at the moment (e.g. intervals aren't supported).</P
 ></DIV
 ></DIV
 ><DIV

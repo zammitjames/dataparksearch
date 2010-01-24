@@ -259,6 +259,9 @@
 /* The number of bytes in a char*.  */
 #undef SIZEOF_CHARP
 
+/* The number of bytes in a void*.  */
+#undef SIZEOF_VOIDP
+
 /* The number of bytes in a int.  */
 #undef SIZEOF_INT
 
@@ -602,6 +605,16 @@ typedef unsigned long long dps_uint8;
 #define SDPALIGN short
 #else
 #define SDPALIGN long long
+#endif
+
+#if (SIZEOF_VOIDP == SIZEOF_INT)
+#define DPS_PNTYPE unsigned int
+#elif (SIZEOF_VOIDP == SIZEOF_LONG)
+#define DPS_PNTYPE unsigned long
+#elif (SIZEOF_VOIDP == SIZEOF_SHORT)
+#define DPS_PNTYPE short
+#else
+#define DPS_PNTYPE unsigned long long
 #endif
 
 

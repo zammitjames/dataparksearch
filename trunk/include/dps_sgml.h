@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,6 @@
 
 extern __C_LINK char * __DPSCALL DpsSGMLUnescape(char * str);
 extern void DpsSGMLUniUnescape(dpsunicode_t * ustr);
-extern dpsunicode_t DpsSgmlToUni(char *sgml);
+extern dpsunicode_t DpsSgmlToUni(const char *sgml);
 
 #endif

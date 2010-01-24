@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 #include "dps_charsetutils.h"
 #include "dps_log.h"
 #include "dps_match.h"
+#include "dps_vars.h"
 
 #include <stdio.h>
 #include <stdlib.h>

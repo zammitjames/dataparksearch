@@ -62,7 +62,7 @@ DPS_ROBOT* DpsRobotFind(DPS_ROBOTS *Robots,const char *hostinfo){
 	return r;
 }
 
-static DPS_ROBOT* DeleteRobotRules(DPS_AGENT *A, DPS_ROBOTS *Robots,char *hostinfo){
+static DPS_ROBOT* DeleteRobotRules(DPS_AGENT *A, DPS_ROBOTS *Robots, const char *hostinfo) {
 	DPS_ROBOT *robot;
 	size_t i;
 #ifdef WITH_PARANOIA

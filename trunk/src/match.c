@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #include "dps_vars.h"
 #include "dps_charsetutils.h"
 #include "dps_spell.h"
+#include "dps_unicode.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -453,7 +454,7 @@ int DpsUniMatchListAdd(DPS_AGENT *A, DPS_UNIMATCHLIST *L, DPS_UNIMATCH *M, char 
 	}
 	N=&L->Match[L->nmatches++];
 	DpsUniMatchInit(N);
-	N->pattern = DpsUniDup(DPS_NULL2EMPTY(M->pattern));
+	N->pattern = DpsUniDup(DPS_UNINULL2EMPTY(M->pattern));
 	N->match_type=M->match_type;
 	N->case_sense=M->case_sense;
 	N->nomatch=M->nomatch;
@@ -595,6 +596,7 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 			}
 			break;
 		case DPS_MATCH_SUBNET:
+#if 0  /* not implemented yet */
 			for(i = 0; i < nparts; i++) Parts[i].beg = Parts[i].end = -1;
 			{
 			  dps_uint4 net, mask, addr;
@@ -620,10 +622,11 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 #endif
 			  }
 			}
+#endif /* 0 */
 			break;
 		case DPS_MATCH_BEGIN:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
-			slen = DpsUniLen(DPS_NULL2EMPTY(Match->pattern));
+			slen = DpsUniLen(DPS_UNINULL2EMPTY(Match->pattern));
 			if(Match->case_sense){
 			  res = DpsUniStrNCaseCmp(Match->pattern, string, slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)

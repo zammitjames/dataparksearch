@@ -18,6 +18,7 @@
 
 #include "dps_config.h"
 #include <stdio.h>
+#include <strings.h>
 #include "dps_uniconv.h"
 #include "dps_charsetutils.h"
 #include "dps_unidata.h"

@@ -2034,7 +2034,6 @@ static int DpsStoreCrossWords(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 			return rc;
 		}
 	}
-	
 	/* Insert new words */
 	for(i=0;i<Doc->CrossWords.ncrosswords;i++){
 		if(Doc->CrossWords.CrossWord[i].weight && Doc->CrossWords.CrossWord[i].referree_id){
@@ -5142,8 +5141,8 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 			url_id = DpsVarListFindInt(&D->Sections, "DP_ID", 0);
 			for(i = 0; i < n; i++) {
 				if(url_id == DPS_ATOI(DpsSQLValue(&SQLres,i,0))){
-					const char *sname = DpsSQLValue(&SQLres,i,1);
-					const char *sval = DpsSQLValue(&SQLres,i,2);
+					char *sname = DpsSQLValue(&SQLres, i, 1);
+					char *sval = DpsSQLValue(&SQLres, i, 2);
 					Sec = DpsVarListFind(&query->Conf->Sections, sname);
 					if (Sec != NULL) {
 					  DPS_SEC = *Sec;
@@ -5177,8 +5176,8 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 			}
 			
 			for(row=0;row<DpsSQLNumRows(&SQLres);row++) {
-				const char *sname=DpsSQLValue(&SQLres,row,1);
-				const char *sval=DpsSQLValue(&SQLres,row,2);
+				char *sname = DpsSQLValue(&SQLres, row, 1);
+				char *sval = DpsSQLValue(&SQLres, row, 2);
 				Sec = DpsVarListFind(&query->Conf->Sections, sname);
 				if (Sec != NULL) {
 				  DPS_SEC = *Sec;

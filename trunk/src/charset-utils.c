@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2010 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -165,7 +165,7 @@ inline void dps_minimove_forward(char *dst, const char *src, size_t t) {
 }
 
 
-inline void dps_minimove_backward(char *dst, char *src, size_t t) {
+inline void dps_minimove_backward(char *dst, const char *src, size_t t) {
 	switch(t) {
 	case 31: dst[30] = src[30];
 	case 30: dst[29] = src[29];
@@ -208,7 +208,7 @@ void * dps_memcpy(void *dst0, const void *src0, size_t length) {
 
   if (length == 0 || dst0 == src0)		/* nothing to do */
     return dst0;
-  if ((unsigned long long)dst0 < (unsigned long long)src0) { /* copy forward */
+  if ((DPS_PNTYPE)dst0 < (DPS_PNTYPE)src0) { /* copy forward */
     register char *dst = (char*)dst0;
     register const char *src = (const char*)src0;
     t = (unsigned int)src & wmask;
@@ -346,7 +346,8 @@ void * dps_memcpy(void *dst0, const void *src0, size_t length) {
 #endif
 
 void * dps_strcpy(void *dst0, const void *src0) {
-  register char *dst = dst0, *src = src0;
+  register char *dst = dst0;
+  register const char *src = src0;
   while ((*dst++ = *src++));
   return dst0;
 #if 0
@@ -367,7 +368,8 @@ void * dps_strncpy(void *dst0, const void *src0, size_t length) {
   if (length) {
     register size_t n = length / 8;
     register size_t r = (length % 8);
-    register char *dst = dst0, *src = src0;
+    register char *dst = dst0;
+    register const char *src = src0;
     if (r == 0) r = 8; else n++;
     if (!(dst[0] = src[0])) return dst0;
     if (r > 1) { if (!(dst[1] = src[1])) return dst0;

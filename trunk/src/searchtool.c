@@ -950,7 +950,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 #if defined HAVE_ASPELL
 	AspellCanHaveError *ret;
 	AspellSpeller *speller;
-	AspellWordList *suggestions;
+	const AspellWordList *suggestions;
 	AspellStringEnumeration *elements;
 	char *asug = NULL;
 	DPS_DSTR suggest;

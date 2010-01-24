@@ -49,8 +49,8 @@ extern int DpsVarListInsInt(DPS_VARLIST * vars,const char * name,int val);
 extern DPS_VAR *DpsVarListFind(DPS_VARLIST * vars,const char * name);
 extern DPS_VAR *DpsVarListFindWithValue(DPS_VARLIST * vars,const char * name,const char * val);
 
-extern __C_LINK const char * __DPSCALL DpsVarListFindStr(DPS_VARLIST * vars,const char * name,const char * defval);
-extern const char * DpsVarListFindStrTxt(DPS_VARLIST * vars,const char * name,const char * defval);
+extern char *       DpsVarListFindStr(DPS_VARLIST * vars,const char * name,const char * defval);
+extern char *       DpsVarListFindStrTxt(DPS_VARLIST * vars,const char * name,const char * defval);
 extern int          DpsVarListFindInt(DPS_VARLIST * vars,const char * name,int defval);
 extern unsigned     DpsVarListFindUnsigned(DPS_VARLIST * vars, const char * name, unsigned defval);
 extern double       DpsVarListFindDouble(DPS_VARLIST * vars, const char * name, double defval);
