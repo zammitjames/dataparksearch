@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Категории&#13;</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="DataparkSearch Engine 4.53"
+HREF="index.ru.html"><LINK
+REL="UP"
+TITLE="Подсекции"
+HREF="dpsearch-subsections.ru.html"><LINK
+REL="PREVIOUS"
+TITLE="Подсекции"
+HREF="dpsearch-subsections.ru.html"><LINK
+REL="NEXT"
+TITLE="Поддержка языков"
+HREF="dpsearch-international.ru.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="datapark.css"><META
+NAME="Description"
+CONTENT="DataparkSearch - Полнофункциональная поисковая машина для Интернета и Интранета с открытым исходным кодом. Распространяется по лицензии GNU."><META
+NAME="Keywords"
+CONTENT="shareware, freeware, интернет, unix, поисковик, поисковая машина, поиск, поиск информации, интранет, open source, opensource, search, searching, software, udmsearch, engine, indexing, system, web, ftp, http, cgi, php, SQL, MySQL, database, php3, FreeBSD, Linux, Unix, DataparkSearch, MacOS X, Mac OS X, Windows, 2000, NT, 95, 98, GNU, GPL, url, grabbing"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000C4"
+VLINK="#1200B2"
+ALINK="#C40000"
+><!--#include virtual="body-before.html"--><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>DataparkSearch Engine 4.53: Справочное руководство</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dpsearch-subsections.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>&#1043;&#1083;&#1072;&#1074;&#1072; 6. Подсекции</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dpsearch-international.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="CATEGORIES"
+>6.2. Категории
+<A
+NAME="AEN4009"
+></A
+></A
+></H1
+><P
+>Существует редактор категорий, написаный на <SPAN
+CLASS="APPLICATION"
+>perl</SPAN
+>.
+Вы можете взять его в директории <TT
+CLASS="FILENAME"
+>perl/cat_ed/</TT
+>.</P
+><P
+>Категории похожи на тэги, но обладают свойство вложенности.
+Т.е. вы можете иметь некоторую категорию внутри другой категории.</P
+><P
+>Основные моменты:</P
+><P
+></P
+><UL
+><LI
+><P
+>Поддерживается до 6 уровней вложенности;</P
+></LI
+><LI
+><P
+>Каждому уровню соответсвует 2 шестнадцати- или 36-ричные цифры;</P
+></LI
+><LI
+><P
+>параметром категории является <CODE
+CLASS="PARAMETER"
+>path</CODE
+>,
+который может быть пустым (что обозначает корневую категорию) или иметь длину до 10 символов (для остальных категорий,
+вложенных отностительно корневой).</P
+></LI
+></UL
+><P
+>Также можно установить ссылку, т.е категорию, ссылающуюся на другую категорию.
+Для этого предназначено поле <TT
+CLASS="LITERAL"
+>link</TT
+> в базе данных. В ссылке последние два символа должны быть
+@@. В примере выше Moto-&gt;BMW - ссылка на Auto-&gt;BMW.</P
+><P
+>Категории могут разделяться на подкатегории произвольным образом, но для того, чтобы
+с ними можно было работать редактором категорий, необходимо использовать по два символа на каждый уровень.
+Если вы используете редактор категорий, вы можете выбрать для использования 16-ричные цифры 0-F или 36-ричные
+0-Z. Поэтому категория верхнего уровня 'Auto' будет обозначена 01. Если она будет иметь подкатегорию 'Ford', то мы получим
+01 для верхней категории и 01 мы присвоим для 'Ford', сложим вместе и получим 0101. Если 'Auto' имеет еще одну подкатегорию, например,
+'VW', её мы обозначили бы 02, т.к. 01 уже присвоено подкатегории 'Ford', т.е. в результате получим 0102. Если 'VW' имеет
+подкатегорию 'Engine', опять начнем с кода 01, а в результате получим 010201:  01 - 'Auto', 02 - 'VW', 01 - 'Engine'</P
+><P
+>Если вы хотите искать только среди сайтов этой категории, неободимо передать
+эту категорию в качестве параметра <TT
+CLASS="LITERAL"
+>cat=010201</TT
+> в URL...т.е. создайте раскладушку такого типа:
+	<PRE
+CLASS="PROGRAMLISTING"
+>&lt;OPTION value="01"&gt;AUTO
+&lt;OPTION value="0101"&gt;Ford</PRE
+>
+	</P
+><P
+>и т.д....</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;: </B
+>Для способа хранения cache вам нужно указать секцию category в вашем файле <TT
+CLASS="FILENAME"
+>sections.conf</TT
+> с ненулевой
+максимальной длиной:
+<PRE
+CLASS="PROGRAMLISTING"
+>Section category 0 64</PRE
+></P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dpsearch-subsections.ru.html"
+ACCESSKEY="P"
+>&#1055;&#1088;&#1077;&#1076;.</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.ru.html"
+ACCESSKEY="H"
+>&#1053;&#1072;&#1095;&#1072;&#1083;&#1086;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dpsearch-international.ru.html"
+ACCESSKEY="N"
+>&#1057;&#1083;&#1077;&#1076;.</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Подсекции</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="dpsearch-subsections.ru.html"
+ACCESSKEY="U"
+>&#1059;&#1088;&#1086;&#1074;&#1077;&#1085;&#1100; &#1074;&#1099;&#1096;&#1077;</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Поддержка языков</TD
+></TR
+></TABLE
+></DIV
+><!--#include virtual="body-after.html"--></BODY
+></HTML
+>

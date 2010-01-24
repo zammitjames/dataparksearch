@@ -1,0 +1,16 @@
+set quoted_identifier on;
+
+DROP TABLE "dict";
+DROP TABLE "url";
+DROP TABLE "urlinfo";
+DROP TABLE "server";
+DROP TABLE "srvinfo";
+DROP TABLE "links";
+DROP TABLE "categories";
+DROP TABLE "crossdict";
+DROP TABLE "qinfo";
+DROP TABLE "qtrack";
+DROP TABLE storedchk;
+DROP TABLE cachedchk;
+DROP TABLE cachedchk2;
+
