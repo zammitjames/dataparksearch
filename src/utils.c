@@ -402,7 +402,7 @@ cont:
 /* It understands: text 'text' "text"      */
 /* I.e. Words, tokens enclosed in ' and "  */
 /* Behavior is the same with strtok_r()    */
-char * DpsGetStrToken(char * s,char ** last){
+char * DpsGetStrToken(char * s, char ** last) {
 	char * tbeg,lch;
 	if (s == NULL && (s = *last) == NULL)
 		return NULL;
@@ -470,7 +470,7 @@ char * DpsUnescapeCGIQuery(char *d, const char *s) {
 	*d=0;return(dd);
 }
 
-char * __DPSCALL DpsEscapeURL(char *d, const char *s) {
+char * DpsEscapeURL(char *d, const char *s) {
 	char *dd;
 	unsigned const char *ss = (unsigned const char *)s;
 	if((d==NULL)||(s==NULL))return(0);

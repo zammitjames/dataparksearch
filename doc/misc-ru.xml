@@ -17,8 +17,49 @@
 StopwordFile stopwords/en.sl
 </programlisting>
 </para>
+<para>Вы должны использовать один и тот же надор команд <command>StopwordFile</command> в <filename>indexer.conf</filename> и <filename>search.htm</filename> (<filename>searchd.conf</filename> если используется <command>searchd</command>).
+</para>
 </sect2>
 
+<sect2 id="stopwordfile_format">
+<title>Формат файла стопслов</title>
+<indexterm><primary>Стопслова</primary><secondary>формат файла</secondary></indexterm>
+
+	<para>Вы можете создавать свои файлы стоп-слов. В качестве примера, вы можете использовать файл английских стоп-слов <filename>etc/stopwords/en.sl</filename>. 
+В начале листа поместите следующие две команды:
+	<programlisting>
+Language: en
+Charset:  us-ascii
+</programlisting>
+</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>
+				<varname>Language</varname> - стандартный (ISO 639) двух-буквенный код языка.</para>
+		</listitem>
+		<listitem>
+			<para>
+				<varname>Charset</varname> - любая кодировка, поддерживаемая <application>DataparkSearch</application> (см. <xref linkend="charset"/>).</para>
+		</listitem>
+	</itemizedlist>
+<para>
+Затем следует список слов, по одному на строку. Каждое слово записывается в кодировке, указанной выше командой <command>Charset:</command>.
+</para>
+
+<para>Вы можете использовать дополнительную команду <command>Match:</command> для задания шаблона, любое слово подпадающее под который будет считаться стоп-словом. Например:
+</para>
+	<programlisting>
+Match: regex ^\$##
+</programlisting>
+<para>
+По этой команде любое слово, начинающееся с <literal>$##</literal> будет рассматриваться как стоп-слово.
+</para>
+<para>
+Опции команды <command>Match:</command> аналогичны опциям команды <command>Allow</command> (см. <xref linkend="allow_cmd"/>). Аргументы записываются в кодировке, указанной командой <command>Charset:</command>. Регулярные выражения в данный момент ограничены (например, не поддерживаются интервалы).
+</para>
+
+</sect2>
 
 </sect1>
 

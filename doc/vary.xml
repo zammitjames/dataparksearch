@@ -14,7 +14,8 @@ These languages will used for indexing URL with multi-language versions.
 <para>Usage example:
 <programlisting>
 VaryLang "ru en fr"
-</programlisting>
+</programlisting></para>
+<para>
 <command>index</command> will fetch all document copies in Russian, English and French languages.
 </para>
 

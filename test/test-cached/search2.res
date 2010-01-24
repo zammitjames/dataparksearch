@@ -59,7 +59,7 @@
              <font color="#008800">
               - 1592 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -93,7 +93,7 @@
              <font color="#008800">
               - 2989 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -127,7 +127,7 @@
              <font color="#008800">
               - 813 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -161,7 +161,7 @@
              <font color="#008800">
               - 941 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -195,7 +195,7 @@
              <font color="#008800">
               - 828 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -229,7 +229,7 @@
              <font color="#008800">
               - 924 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -263,7 +263,7 @@
              <font color="#008800">
               - 987 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -297,7 +297,7 @@
              <font color="#008800">
               - 992 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -331,7 +331,7 @@
              <font color="#008800">
               - 894 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -365,7 +365,7 @@
              <font color="#008800">
               - 807 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=Wall&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

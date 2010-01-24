@@ -92,7 +92,7 @@ NAME="ISPELL"
 >8.8.1. Ispell</A
 ></H2
 ><A
-NAME="AEN5443"
+NAME="AEN5913"
 ></A
 ><P
 >When <SPAN
@@ -148,10 +148,10 @@ NAME="USING-ISPELL"
 >8.8.1.2. Using Ispell</A
 ></H3
 ><A
-NAME="AEN5456"
+NAME="AEN5926"
 ></A
 ><A
-NAME="AEN5459"
+NAME="AEN5929"
 ></A
 ><P
 >To make <SPAN
@@ -338,7 +338,7 @@ NAME="QUFFIX"
 >8.8.1.5. Query words modification</A
 ></H3
 ><A
-NAME="AEN5509"
+NAME="AEN5979"
 ></A
 ><P
 ><PRE
@@ -369,7 +369,7 @@ NAME="ASPELL"
 >8.8.2. Aspell</A
 ></H2
 ><A
-NAME="AEN5519"
+NAME="AEN5989"
 ></A
 ><P
 >With <SPAN
@@ -386,7 +386,7 @@ CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > build. Then you need to place
 <A
-NAME="AEN5526"
+NAME="AEN5996"
 ></A
 >
 <KBD
@@ -426,7 +426,7 @@ NAME="SYNONYMS"
 >8.8.3. Synonyms</A
 ></H2
 ><A
-NAME="AEN5539"
+NAME="AEN6009"
 ></A
 ><P
 ><SPAN
@@ -450,7 +450,7 @@ HREF="dpsearch-get.en.html"
 >&#62;.</P
 ><P
 ><A
-NAME="AEN5548"
+NAME="AEN6018"
 ></A
 >
 To enable synonyms, add to
@@ -539,10 +539,10 @@ NAME="ACCENT"
 >8.8.4. Accent insensitive search</A
 ></H2
 ><A
-NAME="AEN5576"
+NAME="AEN6046"
 ></A
 ><A
-NAME="AEN5578"
+NAME="AEN6048"
 ></A
 ><P
 >Since version 4.17 <SPAN
@@ -596,14 +596,14 @@ NAME="ACRONYM"
 >8.8.5. Acronyms and abbreviations</A
 ></H2
 ><A
-NAME="AEN5596"
+NAME="AEN6066"
 ></A
 ><P
 >Since version 4.30 <SPAN
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
-> also support an
-acronyms and abbreviation based fuzzy search.</P
+> also support search fuzzying based on 
+acronyms and abbreviation.</P
 ><P
 >Acronyms files are installed into
 <TT
@@ -616,7 +616,7 @@ CLASS="APPLICATION"
 installation.</P
 ><P
 ><A
-NAME="AEN5604"
+NAME="AEN6074"
 ></A
 >
 To enable acronyms, add to
@@ -653,9 +653,8 @@ CLASS="FILENAME"
 >searchd.conf</TT
 >.</P
 ><P
->You may create your own acronyms lists. 
-As an example you may take the
-English acronyms file. In the beginning of the list please specify the
+>You may create your own acronyms lists. As an example you may take the English acronyms file. 
+In the beginning of the list please specify the
 following two commands:
 	<PRE
 CLASS="PROGRAMLISTING"
@@ -688,6 +687,19 @@ HREF="dpsearch-international.en.html#CHARSET"
 >&#62;).</P
 ></LI
 ></UL
+><P
+>Also, you can extend queries by special comments specifying regular expression modifications. E.g.:
+	<PRE
+CLASS="PROGRAMLISTING"
+>#* regex last "([0-9]{2})[- \.]?([0-9]{2})[- \.]?([0-9]{2})" "+78622$1$2$3"</PRE
+></P
+><P
+>This specify a transformation from widely used format of local phone numbers, 99-99-99, into canonical format, +78622XXXXXX. 
+So the phone numbers become searchable regardless the format they were written.
+The <KBD
+CLASS="USERINPUT"
+>last</KBD
+> option here means that the process of regex application stops after applying this rule.</P
 ><P
 >Please send your own acronym files to <CODE
 CLASS="EMAIL"

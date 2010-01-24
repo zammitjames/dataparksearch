@@ -188,7 +188,7 @@ typedef struct dps_varlist_st {
 typedef struct {
 	char		*str;
 	char		*href;
-	char		*section_name;
+	const char	*section_name;
 	int		section;
         int             strict;
         int             marked;
@@ -530,7 +530,7 @@ typedef struct {
 
 /** Resolve stuff */
 typedef struct dps_host_addr_struct {
-	char		*hostname;
+	const char		*hostname;
 	struct sockaddr_in	addr[DPS_MAX_HOST_ADDR];
         size_t          naddr;
 	int		net_errors;
@@ -723,7 +723,7 @@ typedef struct{
 } DPS_ROBOT_RULE;
 
 typedef struct{
-	char		*hostinfo;
+	const char	*hostinfo;
 	size_t		nrules;
         size_t          crawl_delay;
         time_t          *last_crawled;

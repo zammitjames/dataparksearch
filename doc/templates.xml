@@ -331,7 +331,12 @@ symbols:</para>
 			<listitem>
 				<para>
 <indexterm><primary>Template variable</primary><secondary>$(total)</secondary></indexterm>
-					<literal>$(total)</literal> - total number of found documents</para>
+					<literal>$(total)</literal> - total number of documents found</para>
+			</listitem>
+			<listitem>
+				<para>
+<indexterm><primary>Template variable</primary><secondary>$(grand_total)</secondary></indexterm>
+					<literal>$(grand_total)</literal> - total number of documents found before grouping by site</para>
 			</listitem>
 			<!--listitem>
 				<para>
@@ -883,7 +888,7 @@ This is suitable, for example, for making search suggestions.(See also <xref lin
 
 <sect2 id="templates-if">
 <title>Conditional template operators</title>
-<para><application>DataparkSearch</application> is support conditional operators in search templates:
+<para><application>DataparkSearch</application> supports conditional operators in search templates: &lt;!IF, &lt;!ELSE, &lt;!ENDIF, &lt;!ELIF, &lt;!ELSEIF, &lt;!SET, &lt;!COPY, &lt;!IFLIKE, &lt;!IFREGEX, &lt;!ELIKE, &lt;!EREGEX, &lt;!ELSELIKE, &lt;!ELSEREGEX.
 <programlisting>
 &lt;!IF   NAME="Content-Type" Content="application/pdf"&gt;
 &lt;img src="pdf.png"&gt;
@@ -893,7 +898,7 @@ This is suitable, for example, for making search suggestions.(See also <xref lin
 </programlisting>
 </para>
 
-<para>It's possible to use nested conditional operators. This give much power for search template construction.
+<para>It's possible to use nested conditional operators. This gives more power for search template construction.
 See samples in <filename>etc/search.htm-dist</filename> file.
 </para>
 </sect2>

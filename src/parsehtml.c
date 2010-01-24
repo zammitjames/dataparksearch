@@ -136,7 +136,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
     register int ii;
     char          *utf_str = NULL, *asug = NULL;
     dpsunicode_t  *aword = NULL;
-    AspellWordList *suggestions;
+    const AspellWordList *suggestions;
     AspellStringEnumeration *elements;
     size_t tlen;
 
@@ -738,7 +738,7 @@ int DpsParseHeaders(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 	DPS_TEXTITEM	Item;
 	DPS_VAR		*BSec=DpsVarListFind(&Doc->Sections,"body");
-	const char      *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
+	char            *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
 	char savec;
 
 	DpsLog(Indexer, DPS_LOG_DEBUG, "Executing Text parser");
@@ -1149,7 +1149,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  lang = (char*)DpsStrdup(DpsTrim(y, " \t\r\n"));
 		  for(n = lang; *n; *n = dps_tolower(*n),n++);
 		  DPS_FREE(y);
-		} else {
+		} /*else*/ {
 		        if (tag->toks[i].nlen + 12 > seclen) {
 			  secname = (char*)DpsRealloc(secname, seclen = (tag->toks[i].nlen + 12));
 			  if (secname == NULL) {

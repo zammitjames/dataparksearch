@@ -2,7 +2,7 @@
 History
 -------
 
-Latest snapshot:
+24 Jan 2010: 4.53
 	* ReverseAliasProg command has been added.
 	* A faster hash function implemented. You need to configure with --enable-hashcompatible switch when upgrade without reindexing.
 	* Template meta-variables are now rounded on a space or a puntuation mark.

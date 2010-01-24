@@ -270,20 +270,20 @@ static int DpsVarListInsNamed(DPS_VARLIST *Lst, DPS_VAR *S, const char *name) {
 }
 
 
-const char *DpsVarListFindStrTxt(DPS_VARLIST * vars,const char * name,const char * defval){
+char * DpsVarListFindStrTxt(DPS_VARLIST *vars, const char *name, const char *defval) {
 	DPS_VAR * var;
 	if((var=DpsVarListFind(vars,name)) != NULL)
-		return((var->txt_val != NULL) ? var->txt_val : ((var->val != NULL) ? var->val : defval));
+	  return (var->txt_val != NULL) ? var->txt_val : ((var->val != NULL) ? var->val : (char*)defval);
 	else
-		return(defval);
+	  return (char*)defval;
 }
 
-__C_LINK const char * __DPSCALL DpsVarListFindStr(DPS_VARLIST * vars, const char * name, const char * defval){
+char * DpsVarListFindStr(DPS_VARLIST * vars, const char * name, const char * defval){
 	DPS_VAR * var;
 	if((var=DpsVarListFind(vars,name)) != NULL)
-		return((var->val != NULL)?var->val:defval);
+	  return (var->val != NULL) ? var->val : (char*)defval;
 	else
-		return(defval);
+	  return (char*)defval;
 }
 
 DPS_VARLIST * DpsVarListInit(DPS_VARLIST *l){

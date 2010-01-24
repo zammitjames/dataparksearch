@@ -274,6 +274,11 @@ ALT="[Powered by DataparkSearch search engine software]"&gt;
 <indexterm><primary>Переменная шаблона</primary><secondary>$(total)</secondary></indexterm>
 					<literal>$(total)</literal> - общее число документов найденых документов</para>
 			</listitem>
+			<listitem>
+				<para>
+<indexterm><primary>Переменная шаблона</primary><secondary>$(grand_total)</secondary></indexterm>
+					<literal>$(grand_total)</literal> - общее число документов найденых документов до группировки по сайтам</para>
+			</listitem>
 			<!--listitem>
 				<para>
 					<literal>$(W)</literal> - information about the number of word forms found, e.g. if your query was <literal>html template</literal> $(W) can be something 	like  <literal>html: 10  template: 20</literal> and about words that was excluded from search (e.g. <literal>if: stopword</literal>)</para>
@@ -816,7 +821,7 @@ URLs в страницу результатов поиска.</para>
 
 <sect2 id="templates-if">
 <title>Условные операторы в шаблонах</title>
-<para><application>DataparkSearch</application> поддерживет в шаблонах условные операторы:
+<para><application>DataparkSearch</application> поддерживет в шаблонах условные операторы: &lt;!IF, &lt;!ELSE, &lt;!ENDIF, &lt;!ELIF, &lt;!ELSEIF, &lt;!SET, &lt;!COPY, &lt;!IFLIKE, &lt;!IFREGEX, &lt;!ELIKE, &lt;!EREGEX, &lt;!ELSELIKE, &lt;!ELSEREGEX.
 <programlisting>
 &lt;!IF   NAME="Content-Type" Content="application/pdf"&gt;
 &lt;img src="pdf.png"&gt;

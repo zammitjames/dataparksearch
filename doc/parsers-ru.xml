@@ -4,7 +4,7 @@
 </title>
 
 	<para><application>DataparkSearch</application> <command>indexer</command> может использовать внешние парсеры для
-различных типов файлов (mime types).</para>
+различных типов файлов (MIME types).</para>
 
 	<para>Парсер - это программа, которая конвертирует один из типов файла (mime type) в <literal>text/plain</literal> или
 <literal>text/html</literal>. Например, если у вас есть PostScript файлы, Вы можете использовать парсер (фильтр)
@@ -300,4 +300,166 @@ Mime  image/vnd.djvu  text/plain  "/usr/local/bin/djvutxt $1 $2"
 <email>dataparksearch@datapark.ru</email>.</para>
 
 	</sect2>
+
+	<sect2 id="libextractor">
+		<title>Библиотека libextractor</title>
+<indexterm><primary>libextractor</primary></indexterm>
+
+<para><application>DataparkSearch</application> может быть собран с <ulink url="http://gnunet.org/libextractor/">библиотекой libextractor</ulink>. 
+При помощи этой бибилиотеки <application>DataparkSearch</application> может индексировать ключевые слова из файлов следующих форматов: PDF, PS, OLE2 (DOC, XLS, PPT), OpenOffice (sxw), StarOffice (sdw), DVI, MAN, FLAC, MP3 (ID3v1 and ID3v2), NSF(E) (NES music), SID (C64 music), OGG, WAV, EXIV2, JPEG, GIF, PNG, TIFF, DEB, RPM, TAR(.GZ), ZIP, ELF, S3M (Scream Tracker 3), XM (eXtended Module), IT (Impulse Tracker), FLV, REAL, RIFF (AVI), MPEG, QT и ASF.</para>
+
+<para>Чтобы собрать <application>DataparkSearch</application> с библиотекой <application>libextractor</application>, установите библиотеку, а затем сконфигурируйте и соберите <application>DataparkSearch</application>.
+</para>
+
+<para>Ниже приводится соответствие между типами keyword в <application>libextractor</application> и именами секций <application>DataparkSearch</application>:</para>
+	<table>
+		<title>Соответствие между типами keyword библиотеки libextractor и именами секций DataparkSearch</title>
+		<tgroup cols="2">
+<thead>
+	<row><entry>Тип Keyword</entry>
+	<entry>Имя секции</entry></row>
+</thead>
+			<tbody>
+<row><entry>EXTRACTOR_FILENAME</entry><entry> 	Filename</entry></row>
+<row><entry>EXTRACTOR_MIMETYPE</entry><entry> 	Mimetype</entry></row>
+<row><entry>EXTRACTOR_TITLE</entry><entry> 	Title</entry></row>
+<row><entry>EXTRACTOR_AUTHOR</entry><entry> 	Author</entry></row>
+<row><entry>EXTRACTOR_ARTIST 	</entry><entry>Artist</entry></row>
+<row><entry>EXTRACTOR_DESCRIPTION 	</entry><entry>Description</entry></row>
+<row><entry>EXTRACTOR_COMMENT 	</entry><entry>Comment</entry></row>
+<row><entry>EXTRACTOR_DATE 	</entry><entry>Date</entry></row>
+<row><entry>EXTRACTOR_PUBLISHER 	</entry><entry>Publisher</entry></row>
+<row><entry>EXTRACTOR_LANGUAGE 	</entry><entry>Content-Language</entry></row>
+<row><entry>EXTRACTOR_ALBUM 	</entry><entry>Album</entry></row>
+<row><entry>EXTRACTOR_GENRE 	</entry><entry>Genre</entry></row>
+<row><entry>EXTRACTOR_LOCATION 	</entry><entry>Location</entry></row>
+<row><entry>EXTRACTOR_VERSIONNUMBER 	</entry><entry>VersionNumber</entry></row>
+<row><entry>EXTRACTOR_ORGANIZATION 	</entry><entry>Organization</entry></row>
+<row><entry>EXTRACTOR_COPYRIGHT 	</entry><entry>Copyright</entry></row>
+<row><entry>EXTRACTOR_SUBJECT 	</entry><entry>Subject</entry></row>
+<row><entry>EXTRACTOR_KEYWORDS 	</entry><entry>Meta.Keywords</entry></row>
+<row><entry>EXTRACTOR_CONTRIBUTOR 	</entry><entry>Contributor</entry></row>
+<row><entry>EXTRACTOR_RESOURCE_TYPE 	</entry><entry>Resource-Type</entry></row>
+<row><entry>EXTRACTOR_FORMAT 	</entry><entry>Format</entry></row>
+<row><entry>EXTRACTOR_RESOURCE_IDENTIFIER 	</entry><entry>Resource-Idendifier</entry></row>
+<row><entry>EXTRACTOR_SOURCE 	</entry><entry>Source</entry></row>
+<row><entry>EXTRACTOR_RELATION 	</entry><entry>Relation</entry></row>
+<row><entry>EXTRACTOR_COVERAGE 	</entry><entry>Coverage</entry></row>
+<row><entry>EXTRACTOR_SOFTWARE 	</entry><entry>Software</entry></row>
+<row><entry>EXTRACTOR_DISCLAIMER 	</entry><entry>Disclaimer</entry></row>
+<row><entry>EXTRACTOR_WARNING 	</entry><entry>Warning</entry></row>
+<row><entry>EXTRACTOR_TRANSLATED 	</entry><entry>Translated</entry></row>
+<row><entry>EXTRACTOR_CREATION_DATE 	</entry><entry>Creation-Date</entry></row>
+<row><entry>EXTRACTOR_MODIFICATION_DATE 	</entry><entry>Modification-Date</entry></row>
+<row><entry>EXTRACTOR_CREATOR 	</entry><entry>Creator</entry></row>
+<row><entry>EXTRACTOR_PRODUCER 	</entry><entry>Producer</entry></row>
+<row><entry>EXTRACTOR_PAGE_COUNT 	</entry><entry>Page-Count</entry></row>
+<row><entry>EXTRACTOR_PAGE_ORIENTATION 	</entry><entry>Page-Orientation</entry></row>
+<row><entry>EXTRACTOR_PAPER_SIZE 	</entry><entry>Paper-Size</entry></row>
+<row><entry>EXTRACTOR_USED_FONTS 	</entry><entry>Used-Fonts</entry></row>
+<row><entry>EXTRACTOR_PAGE_ORDER 	</entry><entry>Page-Order</entry></row>
+<row><entry>EXTRACTOR_CREATED_FOR 	</entry><entry>Created-For</entry></row>
+<row><entry>EXTRACTOR_MAGNIFICATION 	</entry><entry>Magnification</entry></row>
+<row><entry>EXTRACTOR_RELEASE 	</entry><entry>Release</entry></row>
+<row><entry>EXTRACTOR_GROUP 	</entry><entry>Group</entry></row>
+<row><entry>EXTRACTOR_SIZE 	</entry><entry>Size</entry></row>
+<row><entry>EXTRACTOR_SUMMARY 	</entry><entry>Summary</entry></row>
+<row><entry>EXTRACTOR_PACKAGER 	</entry><entry>Packager</entry></row>
+<row><entry>EXTRACTOR_VENDOR 	</entry><entry>Vendor</entry></row>
+<row><entry>EXTRACTOR_LICENSE 	</entry><entry>License</entry></row>
+<row><entry>EXTRACTOR_DISTRIBUTION 	</entry><entry>Distribution</entry></row>
+<row><entry>EXTRACTOR_BUILDHOST 	</entry><entry>BuildHost</entry></row>
+<row><entry>EXTRACTOR_OS 	</entry><entry>OS</entry></row>
+<row><entry>EXTRACTOR_DEPENDENCY 	</entry><entry>Dependency</entry></row>
+<row><entry>EXTRACTOR_HASH_MD4 	</entry><entry>Hash-MD4</entry></row>
+<row><entry>EXTRACTOR_HASH_MD5 	</entry><entry>Hash-MD5</entry></row>
+<row><entry>EXTRACTOR_HASH_SHA0 	</entry><entry>Hash-SHA0</entry></row>
+<row><entry>EXTRACTOR_HASH_SHA1 	</entry><entry>Hash-SHA1</entry></row>
+<row><entry>EXTRACTOR_HASH_RMD160 	</entry><entry>Hash-RMD160</entry></row>
+<row><entry>EXTRACTOR_RESOLUTION 	</entry><entry>Resolution</entry></row>
+<row><entry>EXTRACTOR_CATEGORY 	</entry><entry>Ext.Category</entry></row>
+<row><entry>EXTRACTOR_BOOKTITLE 	</entry><entry>BookTitle</entry></row>
+<row><entry>EXTRACTOR_PRIORITY 	</entry><entry>Priority</entry></row>
+<row><entry>EXTRACTOR_CONFLICTS 	</entry><entry>Conflicts</entry></row>
+<row><entry>EXTRACTOR_REPLACES 	</entry><entry>Replaces</entry></row>
+<row><entry>EXTRACTOR_PROVIDES 	</entry><entry>Provides</entry></row>
+<row><entry>EXTRACTOR_CONDUCTOR 	</entry><entry>Conductor</entry></row>
+<row><entry>EXTRACTOR_INTERPRET 	</entry><entry>Interpret</entry></row>
+<row><entry>EXTRACTOR_OWNER 	</entry><entry>Owner</entry></row>
+<row><entry>EXTRACTOR_LYRICS 	</entry><entry>Lyrics</entry></row>
+<row><entry>EXTRACTOR_MEDIA_TYPE 	</entry><entry>Media-Type</entry></row>
+<row><entry>EXTRACTOR_CONTACT 	</entry><entry>Contact</entry></row>
+<row><entry>EXTRACTOR_THUMBNAIL_DATA 	</entry><entry>Thumbnail-Data</entry></row>
+<row><entry>EXTRACTOR_PUBLICATION_DATE 	</entry><entry>Publication-Date</entry></row>
+<row><entry>EXTRACTOR_CAMERA_MAKE 	</entry><entry>Camera-Make</entry></row>
+<row><entry>EXTRACTOR_CAMERA_MODEL 	</entry><entry>Camera-Model</entry></row>
+<row><entry>EXTRACTOR_EXPOSURE 	</entry><entry>Exposure</entry></row>
+<row><entry>EXTRACTOR_APERTURE 	</entry><entry>Aperture</entry></row>
+<row><entry>EXTRACTOR_EXPOSURE_BIAS 	</entry><entry>Exposure-Bias</entry></row>
+<row><entry>EXTRACTOR_FLASH 	</entry><entry>Flash</entry></row>
+<row><entry>EXTRACTOR_FLASH_BIAS 	</entry><entry>Flash-Bias</entry></row>
+<row><entry>EXTRACTOR_FOCAL_LENGTH 	</entry><entry>Focal-Length</entry></row>
+<row><entry>EXTRACTOR_FOCAL_LENGTH_35MM 	</entry><entry>Focal-Length-35MM</entry></row>
+<row><entry>EXTRACTOR_ISO_SPEED 	</entry><entry>ISO-Speed</entry></row>
+<row><entry>EXTRACTOR_EXPOSURE_MODE 	</entry><entry>Exposure-Mode</entry></row>
+<row><entry>EXTRACTOR_METERING_MODE 	</entry><entry>Metering-Mode</entry></row>
+<row><entry>EXTRACTOR_MACRO_MODE 	</entry><entry>Macro-Mode</entry></row>
+<row><entry>EXTRACTOR_IMAGE_QUALITY 	</entry><entry>Image-Quality</entry></row>
+<row><entry>EXTRACTOR_WHITE_BALANCE 	</entry><entry>White-Balance</entry></row>
+<row><entry>EXTRACTOR_ORIENTATION 	</entry><entry>Orientation</entry></row>
+<row><entry>EXTRACTOR_TEMPLATE 	</entry><entry>Template</entry></row>
+<row><entry>EXTRACTOR_SPLIT 	</entry><entry>Split</entry></row>
+<row><entry>EXTRACTOR_PRODUCTVERSION 	</entry><entry>ProductVersion</entry></row>
+<row><entry>EXTRACTOR_LAST_SAVED_BY 	</entry><entry>Last-Saved-By</entry></row>
+<row><entry>EXTRACTOR_LAST_PRINTED 	</entry><entry>Last-Printed</entry></row>
+<row><entry>EXTRACTOR_WORD_COUNT 	</entry><entry>Word-Count</entry></row>
+<row><entry>EXTRACTOR_CHARACTER_COUNT 	</entry><entry>Character-Count</entry></row>
+<row><entry>EXTRACTOR_TOTAL_EDITING_TIME 	</entry><entry>Total-Editing-Time</entry></row>
+<row><entry>EXTRACTOR_THUMBNAILS 	</entry><entry>Thumbnails</entry></row>
+<row><entry>EXTRACTOR_SECURITY 	</entry><entry>Security</entry></row>
+<row><entry>EXTRACTOR_CREATED_BY_SOFTWARE 	</entry><entry>Created-By-Software</entry></row>
+<row><entry>EXTRACTOR_MODIFIED_BY_SOFTWARE 	</entry><entry>Modified-By-Software</entry></row>
+<row><entry>EXTRACTOR_REVISION_HISTORY 	</entry><entry>Revision-History</entry></row>
+<row><entry>EXTRACTOR_LOWERCASE 	</entry><entry>Lowercase</entry></row>
+<row><entry>EXTRACTOR_COMPANY 	</entry><entry>Company</entry></row>
+<row><entry>EXTRACTOR_GENERATOR 	</entry><entry>Generator</entry></row>
+<row><entry>EXTRACTOR_CHARACTER_SET 	</entry><entry>Meta-Charset</entry></row>
+<row><entry>EXTRACTOR_LINE_COUNT 	</entry><entry>Line-Count</entry></row>
+<row><entry>EXTRACTOR_PARAGRAPH_COUNT 	</entry><entry>Paragraph-Count</entry></row>
+<row><entry>EXTRACTOR_EDITING_CYCLES 	</entry><entry>Editing-Cycles</entry></row>
+<row><entry>EXTRACTOR_SCALE 	</entry><entry>Scale</entry></row>
+<row><entry>EXTRACTOR_MANAGER 	</entry><entry>Manager</entry></row>
+<row><entry>EXTRACTOR_MOVIE_DIRECTOR 	</entry><entry>Movie-Director</entry></row>
+<row><entry>EXTRACTOR_DURATION 	</entry><entry>Duration</entry></row>
+<row><entry>EXTRACTOR_INFORMATION 	</entry><entry>Information</entry></row>
+<row><entry>EXTRACTOR_FULL_NAME 	</entry><entry>Full-Name</entry></row>
+<row><entry>EXTRACTOR_CHAPTER 	</entry><entry>Chapter</entry></row>
+<row><entry>EXTRACTOR_YEAR 	</entry><entry>Year</entry></row>
+<row><entry>EXTRACTOR_LINK 	</entry><entry>Link</entry></row>
+<row><entry>EXTRACTOR_MUSIC_CD_IDENTIFIER 	</entry><entry>Music-CD-Identifier</entry></row>
+<row><entry>EXTRACTOR_PLAY_COUNTER 	</entry><entry>Play-Counter</entry></row>
+<row><entry>EXTRACTOR_POPULARITY_METER 	</entry><entry>Popularity-Meter</entry></row>
+<row><entry>EXTRACTOR_CONTENT_TYPE 	</entry><entry>Ext.Content-Type</entry></row>
+<row><entry>EXTRACTOR_ENCODED_BY 	</entry><entry>Encoded-By</entry></row>
+<row><entry>EXTRACTOR_TIME 	</entry><entry>Time</entry></row>
+<row><entry>EXTRACTOR_MUSICIAN_CREDITS_LIST 	</entry><entry>Musician-Credits-List</entry></row>
+<row><entry>EXTRACTOR_MOOD 	</entry><entry>Mood</entry></row>
+<row><entry>EXTRACTOR_FORMAT_VERSION 	</entry><entry>Format-Version</entry></row>
+<row><entry>EXTRACTOR_TELEVISION_SYSTEM 	</entry><entry>Television-System</entry></row>
+<row><entry>EXTRACTOR_SONG_COUNT 	</entry><entry>Song-Count</entry></row>
+<row><entry>EXTRACTOR_STARTING_SONG 	</entry><entry>Strting-Song</entry></row>
+<row><entry>EXTRACTOR_HARDWARE_DEPENDENCY 	</entry><entry>Hardware-Dependency</entry></row>
+<row><entry>EXTRACTOR_RIPPER 	</entry><entry>Ripper</entry></row>
+<row><entry>EXTRACTOR_FILE_SIZE 	</entry><entry>File-Size</entry></row>
+<row><entry>EXTRACTOR_TRACK_NUMBER 	</entry><entry>Track-Number</entry></row>
+<row><entry>EXTRACTOR_ISRC 	</entry><entry>ISRC</entry></row>
+<row><entry>EXTRACTOR_DISC_NUMBER 	</entry><entry>Disc-Number</entry></row>
+			</tbody>
+		</tgroup>
+	</table>
+<para>Если секция из списка выше не указана в файле <filename>sections.conf</filename>, значение ключевого слова соответствующего типа будет записано как секция <varname>body</varname>.
+Тоже самое относится к ключевым словам неизвестно типа.
+</para>
+</sect2>
+
 </sect1>

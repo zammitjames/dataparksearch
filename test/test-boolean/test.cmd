@@ -11,8 +11,8 @@ fail !0 exec $(INDEXER) -Eindex  $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG)
 fail !0 exec $(INDEXER) -Esqlmon $(DPS_TEST_DIR)/indexer.conf < $(DPS_TEST_DIR)/query.tst > $(DPS_TEST_DIR)/query.rej 2>&1
 
 
-fail !0 exec $(SEARCH) "body1+NEAR+body2&m=bool" > $(DPS_TEST_DIR)/search.rej 2>&1
-fail !0 exec $(SEARCH) "body2+NEAR+body1&m=bool" > $(DPS_TEST_DIR)/search2.rej 2>&1
+fail !0 exec $(SEARCH) "body1+NEAR+body3&m=bool" > $(DPS_TEST_DIR)/search.rej 2>&1
+fail !0 exec $(SEARCH) "body3+NEAR+body1&m=bool" > $(DPS_TEST_DIR)/search2.rej 2>&1
 fail !0 mdiff $(DPS_TEST_DIR)/search.rej $(DPS_TEST_DIR)/search2.rej
 fail !0 exec rm -f $(DPS_TEST_DIR)/search2.rej
 

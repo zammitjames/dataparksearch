@@ -60,11 +60,11 @@ void dps_setproctitle(const char *fmt, ...);
 /* Misc functions */
 extern int    DpsInit(int argc, char **argv, char **envp);
 extern void   DpsDeInit(void);
-extern char * DpsGetStrToken(char * s,char ** last);
+extern char * DpsGetStrToken(char * s, char ** last);
 extern char * DpsTrim(char * p, const char * delim);
 extern char * DpsRTrim(char* p, const char * delim);
 extern char * DpsUnescapeCGIQuery(char *d, const char *s);
-extern __C_LINK char * __DPSCALL DpsEscapeURL(char *d,const char *s);
+extern char * DpsEscapeURL(char *d,const char *s);
 extern char * DpsEscapeURI(char *d,const char *s);
 extern char * DpsRemove2Dot(char *path);
 extern char * DpsBuildParamStr(char * dst,size_t len,const char * src,char ** argv,size_t argc);

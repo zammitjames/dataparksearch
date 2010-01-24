@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All right reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All right reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@ static dps_sgml_char SGMLChars[] = {
 };  
 
 
-dpsunicode_t DpsSgmlToUni(char *sgml) {
+dpsunicode_t DpsSgmlToUni(const char *sgml) {
 /*     int i;
      int res;*/
      dps_sgml_char k, *found;

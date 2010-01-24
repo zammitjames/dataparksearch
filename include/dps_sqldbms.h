@@ -21,17 +21,17 @@
 
 char            *DpsDBEscDoubleStr(char *from);
 char		*DpsDBEscStr(int DBType,char *to,const char *from,size_t len);
-extern __C_LINK int __DPSCALL _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *R, const char *query, const char *file, const int line);
+extern int       _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *R, const char *query, const char *file, const int line);
 #if defined(HAVE_DP_PGSQL) || defined(HAVE_DP_MYSQL)
-extern __C_LINK int __DPSCALL _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query, const char *file, const int line);
+extern int       _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query, const char *file, const int line);
 #endif
-extern __C_LINK size_t __DPSCALL DpsSQLNumRows(DPS_SQLRES *res);
+extern size_t   DpsSQLNumRows(DPS_SQLRES *res);
 size_t		DpsSQLNumCols(DPS_SQLRES *res);
-size_t		DpsSQLLen(DPS_SQLRES * res,size_t i,size_t j);
-extern __C_LINK const char * __DPSCALL DpsSQLValue(DPS_SQLRES * res,size_t i,size_t j);
-extern __C_LINK void __DPSCALL DpsSQLFree(DPS_SQLRES*);
+size_t		DpsSQLLen(DPS_SQLRES *res, size_t i, size_t j);
+extern char *   DpsSQLValue(DPS_SQLRES *res, size_t i, size_t j);
+extern void     DpsSQLFree(DPS_SQLRES*);
 void		DpsSQLClose(DPS_DB *db);
-extern int __DPSCALL DpsSQLBegin(DPS_DB *db);
+extern int      DpsSQLBegin(DPS_DB *db);
 extern int __DPSCALL DpsSQLEnd(DPS_DB *db);
 extern int __DPSCALL DpsSQLAbort(DPS_DB *db);
 extern void DpsSQLResInit(DPS_SQLRES *SQLRes);

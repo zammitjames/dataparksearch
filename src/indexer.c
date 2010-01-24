@@ -1395,7 +1395,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	     Item.href = NULL;
 	     nosections = 1;
 	     for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
-	      char *secname = DpsLibextractorMsgName(pmd->keywordType);
+	      const char *secname = DpsLibextractorMsgName(pmd->keywordType);
 	      nosections = 0;
 	      DpsLog(Indexer, DPS_LOG_DEBUG, "Libextracted %s: %s", secname, pmd->keyword);
 	      Sec = DpsVarListFind(&Doc->Sections, secname);
@@ -1460,7 +1460,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #endif
 	/* converting stuff */
 	{
-	  const char	*doccset, *loc_str;
+	  const char	*doccset;
+	  char          *loc_str;
 	  DPS_CHARSET	*doccs, *loccs;
 	  DPS_CONV	dc_lc;
 	  DPS_TEXTLIST	*tlist = &Doc->TextList;

@@ -42,12 +42,12 @@
   <DT>1.
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt  </a>
-  <small>[<b>0.202%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>34,466%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small> ... title available. abcdefghijklmnopqrstuvwxyz <b>Ford</b> motor company ...</small>
+        <small>... title available. abcdefghijklmnopqrstuvwxyz <b>Ford</b> motor company ...</small>
       </td>
     </tr>
     <tr>
@@ -59,7 +59,7 @@
              <font color="#008800">
               - 87 bytes [text/plain]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=ford+mot+co&amp;site=388628276&amp;wm=beg">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=ford+mot+co&amp;site=614987914&amp;wm=beg">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

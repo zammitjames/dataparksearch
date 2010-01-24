@@ -1268,18 +1268,9 @@ static int DpsIndex(DPS_AGENT *A) {
      return DPS_OK;
 }
 
-
 #ifdef __FreeBSD__
-#if __FreeBSD__ >= 7
- #if __FreeBSD_version < 701000
-     extern const char *_malloc_options = "axNNNH";
- #else
-     extern const char *_malloc_options = "ax3N";
- #endif
-#elif __FreeBSD__ >= 5
-     extern const char *_malloc_options = "axH>>R";
-#else
-     extern char *malloc_options;
+#if __FreeBSD__ < 5
+extern char *malloc_options = "axH>>>R";
 #endif
 #endif
 
@@ -1287,8 +1278,18 @@ int main(int argc, char **argv, char **envp) {
      char      *language=NULL,*affix=NULL,*dictionary=NULL, *env;
      int       pid_fd, cfg_res, cache_opened = 0;
      char      pidbuf[1024];
-#if defined(__FreeBSD__) && (__FreeBSD__ < 5)
+#ifdef __FreeBSD__
+#if __FreeBSD__ >= 7
+ #if __FreeBSD_version < 701000
+     _malloc_options = "axNNNH";
+ #else
+     _malloc_options = "ax3N";
+ #endif
+#elif __FreeBSD__ >= 5
+     _malloc_options = "axH>>R";
+#else
      malloc_options = "axH>>>R";
+#endif
 #endif
 
      bzero(&Conf, sizeof(Conf));

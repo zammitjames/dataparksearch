@@ -2802,6 +2802,7 @@ ret:
 
 int __DPSCALL _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * query, const char *file, const int line) {
   DPS_SQLRES *res = (SQLRes == NULL) ? &db->Res : SQLRes;
+  int rc;
 	
 #ifdef DEBUG_SQL
 	unsigned long ticks;
@@ -2836,7 +2837,7 @@ int __DPSCALL _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * que
 	}
 #endif
 
-	res = _DpsSQLQuery(db, res, query, file, line);
+	rc = _DpsSQLQuery(db, res, query, file, line);
 	
 asyncret:
 #ifdef DEBUG_SQL
@@ -2893,8 +2894,8 @@ size_t DpsSQLNumCols(DPS_SQLRES * res){
 	return(res?res->nCols:0);
 }
 
-const char * __DPSCALL DpsSQLValue(DPS_SQLRES * res,size_t i,size_t j){
-	const char * v = NULL;
+char * DpsSQLValue(DPS_SQLRES *res, size_t i, size_t j) {
+	char * v = NULL;
 #if HAVE_DP_MYSQL
 	if(res->DBDriver==DPS_DB_MYSQL){
 		if (i<res->nRows){

@@ -545,7 +545,7 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	}
 	
 /*	rc = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LUPDATE);*/
-	
+
 	/* Now store words and crosswords */
 	switch(Doc->method) {
 	case DPS_METHOD_UNKNOWN:

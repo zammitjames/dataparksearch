@@ -823,7 +823,8 @@ static DPS_LANGMAP *FindLangMap(DPS_LANGMAPLIST *L, const char *lang, const char
   ssize_t i, l, r;
   register int c;
   char savec;
-  char *lt, *language = DpsLanguageCanonicalName(dps_strtok_r(lang, ", ", &lt, &savec));
+  char *lt;
+  const char *language = DpsLanguageCanonicalName(dps_strtok_r(lang, ", ", &lt, &savec));
 
   if (L->nmaps) {
     while(language) {

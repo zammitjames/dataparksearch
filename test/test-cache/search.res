@@ -42,12 +42,12 @@
   <DT>1.
   <a href="http://site/testpage1.html" TARGET="_blank">
     TestPage1  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small> ... Street Journal Thu, 25 May 2006 23:06:00 EDT <b>BODY1</b> BODY2 BODY3 BODY4 BODY5 BODY6 BODY7 BODY8 ......</small>
+        <small>... Street Journal Thu, 25 May 2006 23:06:00 EDT <b>BODY1</b> BODY2 BODY3 BODY4 BODY5 BODY6 BODY7 BODY8 ......</small>
       </td>
     </tr>
     <tr>
@@ -59,7 +59,7 @@
              <font color="#008800">
               - 986 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
@@ -76,12 +76,12 @@
   <DT>2.
   <a href="http://site/testpage2.html" TARGET="_blank">
     TestPage2 Odd Number of BODY's until 30  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.38123</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,00000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small> ... Street Journal Thu, 25 May 2006 23:06:00 EDT <b>BODY1</b> BODY3 BODY5 BODY7 BODY9 BODY11 BODY13 BODY15 ......</small>
+        <small>... Street Journal Thu, 25 May 2006 23:06:00 EDT <b>BODY1</b> BODY3 BODY5 BODY7 BODY9 BODY11 BODY13 BODY15 ......</small>
       </td>
     </tr>
     <tr>
@@ -93,7 +93,7 @@
              <font color="#008800">
               - 992 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=body1&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

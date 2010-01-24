@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,11 @@
 #ifndef DPS_UNICODE_H
 #define DPS_UNICODE_H
 
-extern __C_LINK size_t __DPSCALL DpsUniLen(register const dpsunicode_t *u);
+static const dpsunicode_t dps_uninullstr[] = {0};
+
+#define DPS_UNINULL2EMPTY(x)	((x)?(x):dps_uninullstr)
+
+extern size_t __DPSCALL DpsUniLen(register const dpsunicode_t *u);
 int    DpsUniStrCmp(register const dpsunicode_t * s1, register const dpsunicode_t *s2);
 int    DpsUniStrCaseCmp(register const dpsunicode_t * s1, register const dpsunicode_t *s2);
 int    DpsUniStrBCmp(const dpsunicode_t *s1, const dpsunicode_t *s2);
@@ -34,8 +38,8 @@ dpsunicode_t  *DpsUniStrCat(dpsunicode_t *s, const dpsunicode_t *append);
 dpsunicode_t  *DpsUniDup(const dpsunicode_t *s);
 dpsunicode_t  *DpsUniRDup(const dpsunicode_t *s);
 dpsunicode_t  *DpsUniNDup(const dpsunicode_t *s, size_t len);
-dpsunicode_t  *DpsUniAccentStrip(const dpsunicode_t *s);
-dpsunicode_t  *DpsUniGermanReplace(const dpsunicode_t *s);
+dpsunicode_t  *DpsUniAccentStrip(dpsunicode_t *s);
+dpsunicode_t  *DpsUniGermanReplace(dpsunicode_t *s);
 dpsunicode_t  *DpsUniStrChr(const dpsunicode_t *p, dpsunicode_t ch);
 
 dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsunicode_t **last);

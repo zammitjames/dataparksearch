@@ -42,7 +42,7 @@
   <DT>1.
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt  </a>
-  <small>[<b>0.088%</b> Popularity: <b>0.25000</b>]</small>
+  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -59,7 +59,7 @@
              <font color="#008800">
               - 87 bytes [text/plain]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=abcdefghijklmnopqrstuvwxyz&amp;site=388628276">More result from this site
+	      	      	      <DD><small>[<a href="?np=0&amp;q=abcdefghijklmnopqrstuvwxyz&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>
