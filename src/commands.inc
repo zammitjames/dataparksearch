@@ -61,7 +61,7 @@
 	{"HTDBDoc",		1,1,	srv_rpl_var},
 	{"HTDBLimit",           1,1,    srv_rpl_var},
 	{"HTDBList",		1,1,	srv_rpl_var},
-	{"HTDBText",		2,2,	srv_rpl_var},
+	{"HTDBText",		1,2,	srv_rpl_var},
 	{"HTTPHeader",		1,2,	srv_rpl_hdr},
 	{"ImportEnv",		1,1,	env_rpl_env_var},
 	{"Include",		1,1,	do_include},
