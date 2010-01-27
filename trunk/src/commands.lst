@@ -116,7 +116,7 @@
 	{"HTDBAddr",		1,1,	srv_rpl_var},
 	{"HTDBList",		1,1,	srv_rpl_var},
 	{"HTDBDoc",		1,1,	srv_rpl_var},
-	{"HTDBText",		2,2,	srv_rpl_var},
+	{"HTDBText",		1,2,	srv_rpl_var},
 	{"HTDBLimit",           1,1,    srv_rpl_var},
 	{"DefaultLang",		1,1,	srv_rpl_var},
 	{"Category",		0,1,	srv_rpl_category},
