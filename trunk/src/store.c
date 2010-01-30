@@ -849,6 +849,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
       if ((end != uni + ulen) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
     }
     p = prevend = end;
+    prevlen = len;
     if (end == np) p++;
   }
 
