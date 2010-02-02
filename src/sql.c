@@ -5783,11 +5783,13 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	int		rc = DPS_OK, fd;
 	const char      *val0, *val1;
 
+#if 0
 	dps_snprintf(L->shm_name, PATH_MAX, "%s%sLINK.%d", var_dir, DPSSLASHSTR, A->handle);
 	if ((fd = DpsOpen3(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
 	  sprintf(db->errstr, "%s open failed: %d: %s", L->shm_name, errno, strerror(errno));
 	  return DPS_ERROR;
 	}
+#endif
 	DpsClose(fd);
 	if ((qbuf = (char*)DpsMalloc(qbuflen = 8192)) == NULL) {
 		return DPS_ERROR;
@@ -5810,7 +5812,7 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 
 	nrows = DpsSQLNumRows(&SQLres);
 	
-#ifdef HAVE_SHAREDMEM_POSIX
+#if 0 /* defined(HAVE_SHAREDMEM_POSIX) */
 	if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
 	  dps_snprintf(L->shm_name, PATH_MAX, "%sLINK.%d", DPSSLASHSTR, A->handle);
 	  if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
@@ -5826,7 +5828,7 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	ftruncate(fd, (off_t) (nrows + 1) * sizeof(DPS_UINT4URLID));
 	close(fd);
 	L->mapped = 1;
-#elif defined(HAVE_SHAREDMEM_SYSV)
+#elif 0 /* defined(HAVE_SHAREDMEM_SYSV) */
 	if ((fd = shmget(ftok(L->shm_name, 0), (nrows+1)*sizeof(DPS_UINT4URLID), IPC_CREAT|SHM_R|SHM_W|(SHM_R>>3)|(SHM_R>>6) )) < 0) {
 	  DpsLog(A, DPS_LOG_ERROR, "shmget (%s): %d: %s", L->shm_name, errno, strerror(errno));
 	  return DPS_ERROR;
