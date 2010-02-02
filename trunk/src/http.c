@@ -161,7 +161,10 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	/* Now lets parse response header lines */
 	token = dps_strtok_r(headers, "\r\n", &lt, &savec);
 	
-	if(!token)return;
+	if(!token) {
+	  DpsFree(headers);
+	  return;
+	}
 	
 	if(!strncmp(token,"HTTP/",5)){
 		int	status = atoi(token + 8);
