@@ -3208,6 +3208,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	Indexer->Conf->Targets.Doc = 
 	  (DPS_DOCUMENT*)DpsRealloc(Indexer->Conf->Targets.Doc, sizeof(DPS_DOCUMENT)*(Indexer->Conf->Targets.num_rows + 1));
 	if (Indexer->Conf->Targets.Doc == NULL) {
+	  DpsSQLFree(&SQLRes);
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory at realloc %s[%d], numrows: %d", __FILE__, __LINE__, 
 		 Indexer->Conf->Targets.num_rows );
 	  rc = DPS_ERROR;
@@ -3313,6 +3314,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 			       (Indexer->now + URL_LOCK_TIME), urlin);
 		  rc = DpsSQLAsyncQuery(db,NULL,qbuf);
 		  if (rc != DPS_OK) {
+		    DPS_FREE(urlin);
 		    goto unlock;
 		  }
 		}
