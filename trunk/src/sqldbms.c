@@ -260,7 +260,14 @@ static int DpsPgSQLQuery(DPS_DB *db, DPS_SQLRES *res, const char *q){
 	db->errcode=0;
 	if (db->connected /*&& db->async_in_process*/) {
 	  /* Wait async query in process */
-	  while ((res->pgsqlres = PQgetResult(db->pgsql))) PQclear(res->pgsqlres);
+	  while ((res->pgsqlres = PQgetResult(db->pgsql))) {
+	    if (PQstatus(db->pgsql) == CONNECTION_BAD) { 
+	      PQfinish(db->pgsql); /* db error occured, trying reconnect */
+	      db->connected=0;
+	      break;
+	    }
+	    PQclear(res->pgsqlres);
+	  }
 	  db->async_in_process = 0;
 	}
 
@@ -332,7 +339,14 @@ static int DpsPgSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *res, const char *q) {
   db->errcode = 0;
   if (db->connected /*&& db->async_in_process*/) {
     /* Wait async query in progress */
-    while ((res->pgsqlres = PQgetResult(db->pgsql))) PQclear(res->pgsqlres);
+    while ((res->pgsqlres = PQgetResult(db->pgsql))) {
+      if (PQstatus(db->pgsql) == CONNECTION_BAD) { 
+	PQfinish(db->pgsql); /* db error occured, trying reconnect */
+	db->connected=0;
+	break;
+      }
+      PQclear(res->pgsqlres);
+    }
     db->async_in_process = 0;
   }
   for (i = 0; i < 3; i++) {
