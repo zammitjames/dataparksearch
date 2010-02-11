@@ -1829,7 +1829,7 @@ Optional Packages:
                           base install directory, defaults to /usr/local/ssl.
   --without-zlib          disable HTTP Content-Encoding support
                             and cache mode indexes compression
-  --without-aspell        disable automatic words correction using aspell
+  --with-aspell           enable automatic words correction using aspell
   --with-readline       enable readline support for SQL monitor
   --with-extra-charsets=CHARSET,CHARSET,...
                           Use additional non-default charsets:
@@ -2806,7 +2806,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=dpsearch
- VERSION=4.53
+ VERSION=4.54-`date "+%d%m%Y"`
 
 
 cat >>confdefs.h <<_ACEOF
@@ -21712,9 +21712,10 @@ fi
 
 
 
+
 for ac_header in sys/types.h fcntl.h unistd.h sys/cdefs.h libutil.h \
 sys/ioctl.h sys/time.h sys/times.h sys/param.h sys/wait.h limits.h sched.h \
-syslog.h select.h sys/select.h sys/socket.h arpa/inet.h netdb.h sys/sysctl.h sys/mman.h sys/shm.h \
+syslog.h select.h sys/select.h sys/socket.h arpa/inet.h sys/un.h netdb.h sys/sysctl.h sys/mman.h sys/shm.h \
 netinet/in.h netinet/in_systm.h netinet/tcp.h arpa/nameser.h sys/ipc.h semaphore.h sys/sem.h sys/msg.h
 do
 as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
@@ -29972,8 +29973,162 @@ fi
   INCLUDES="$INCLUDES -I$zlib/include"
 fi
 
+aspell=no
+  LIBS_save="$LIBS"
+  case "$host" in
+	*-*-freebsd*)
+		LIBS="$LIBS -laspell -lstdc++ -lintl"
+		;;
+	*)
+		LIBS="$LIBS -laspell -lstdc++"
+		;;
+  esac
+  { $as_echo "$as_me:$LINENO: checking for new_aspell_config in -laspell" >&5
+$as_echo_n "checking for new_aspell_config in -laspell... " >&6; }
+if test "${ac_cv_lib_aspell_new_aspell_config+set}" = set; then
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-laspell  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 
-aspell=yes
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char new_aspell_config ();
+int
+main ()
+{
+return new_aspell_config ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
+$as_echo "$ac_try_echo") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext && {
+	 test "$cross_compiling" = yes ||
+	 $as_test_x conftest$ac_exeext
+       }; then
+  ac_cv_lib_aspell_new_aspell_config=yes
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_aspell_new_aspell_config=no
+fi
+
+rm -rf conftest.dSYM
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:$LINENO: result: $ac_cv_lib_aspell_new_aspell_config" >&5
+$as_echo "$ac_cv_lib_aspell_new_aspell_config" >&6; }
+if test $ac_cv_lib_aspell_new_aspell_config = yes; then
+  aspell=yes
+else
+  LIBS="$LIBS -L/usr/local/lib"
+      	{ $as_echo "$as_me:$LINENO: checking for new_aspell_config in -laspell" >&5
+$as_echo_n "checking for new_aspell_config in -laspell... " >&6; }
+if test "${ac_cv_lib_aspell_new_aspell_config+set}" = set; then
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-laspell  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char new_aspell_config ();
+int
+main ()
+{
+return new_aspell_config ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
+$as_echo "$ac_try_echo") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext && {
+	 test "$cross_compiling" = yes ||
+	 $as_test_x conftest$ac_exeext
+       }; then
+  ac_cv_lib_aspell_new_aspell_config=yes
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_aspell_new_aspell_config=no
+fi
+
+rm -rf conftest.dSYM
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:$LINENO: result: $ac_cv_lib_aspell_new_aspell_config" >&5
+$as_echo "$ac_cv_lib_aspell_new_aspell_config" >&6; }
+if test $ac_cv_lib_aspell_new_aspell_config = yes; then
+  aspell=yes LIBS="$LIBS -laspell" INCLUDES="$INCLUDES -I/usr/local/include"
+else
+  LIBS="$LIBS_save"
+		aspell=no
+
+fi
+
+
+fi
+
+
 { $as_echo "$as_me:$LINENO: checking for aspell" >&5
 $as_echo_n "checking for aspell... " >&6; }
 
@@ -29991,15 +30146,6 @@ $as_echo "$aspell" >&6; }
 if test "$aspell" = "no" ; then
     x=$x
 elif test "$aspell" = "yes" ; then
-  LIBS_save="$LIBS"
-  case "$host" in
-	*-*-freebsd*)
-		LIBS="$LIBS -laspell -lstdc++ -lintl"
-		;;
-	*)
-		LIBS="$LIBS -laspell -lstdc++"
-		;;
-  esac
   { $as_echo "$as_me:$LINENO: checking for new_aspell_config in -laspell" >&5
 $as_echo_n "checking for new_aspell_config in -laspell... " >&6; }
 if test "${ac_cv_lib_aspell_new_aspell_config+set}" = set; then
@@ -30144,8 +30290,8 @@ _ACEOF
  LIBS="$LIBS -laspell" INCLUDES="$INCLUDES -I/usr/local/include"
 else
   LIBS="$LIBS_save"
-		{ { $as_echo "$as_me:$LINENO: error: Unable to find working aspell library" >&5
-$as_echo "$as_me: error: Unable to find working aspell library" >&2;}
+		{ { $as_echo "$as_me:$LINENO: error: Unable to find working aspell library or stdc++ library" >&5
+$as_echo "$as_me: error: Unable to find working aspell library or stdc++ library" >&2;}
    { (exit 1); exit 1; }; }
 
 fi
@@ -30234,8 +30380,8 @@ if test $ac_cv_lib_aspell_new_aspell_config = yes; then
 _ACEOF
 
 else
-  { { $as_echo "$as_me:$LINENO: error: Unable to find working aspell library under $aspell" >&5
-$as_echo "$as_me: error: Unable to find working aspell library under $aspell" >&2;}
+  { { $as_echo "$as_me:$LINENO: error: Unable to find working aspell library under $aspell or stdc++ library" >&5
+$as_echo "$as_me: error: Unable to find working aspell library under $aspell or stdc++ library" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
@@ -31279,6 +31425,13 @@ if test "${with_pgsql+set}" = set; then
 	    PGSQL_CF_LIBS=`$PGCONFIG --libs 2>/dev/null`
   	fi
 
+    if test "x$PGSQL_INCDIR" = "x" ; then
+	{ $as_echo "$as_me:$LINENO: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:$LINENO: error: Unable to find libpq-fe.h" >&5
+$as_echo "$as_me: error: Unable to find libpq-fe.h" >&2;}
+   { (exit 1); exit 1; }; }
+    fi
 
     PGSQL_INCLUDE="-I$PGSQL_INCDIR"
     if test "$LINKING" != "dynamic"; then
