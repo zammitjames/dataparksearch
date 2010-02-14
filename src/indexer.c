@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -238,7 +238,9 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	}
 	
 	/* Check Allow/Disallow/CheckOnly stuff */
+	DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 	Href->method = DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, newhref, reason, DPS_METHOD_GET);
+	DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 	if(Href->method == DPS_METHOD_DISALLOW) {
 		DpsLog(Indexer, DPS_LOG_DEBUG, "%s, skip it", reason);
 		goto check_ret;
@@ -262,7 +264,9 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	  method = DpsVarListFindStr(&Srv->Vars, "Method", "Allow");
 	  if((Href->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {
 	    /* Check Allow/Disallow/CheckOnly stuff */
+	    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 	    Href->method = DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, newhref, reason, Href->method);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
 	  }
 	
@@ -698,8 +702,12 @@ static int DpsDocAlias(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 	/* Find alias when aliastr is empty, i.e.     */
 	/* when there is no alias in "Server" command */
 	/* and no AliasProg                           */
-	if( !alstr[0] && (Alias = DpsMatchListFind(&Indexer->Conf->Aliases, url, nparts, Parts))) {
+	if (!alstr[0]) {
+	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	  if((Alias = DpsMatchListFind(&Indexer->Conf->Aliases, url, nparts, Parts))) {
 		DpsMatchApply(alstr, alstrlen - 1, url, Alias->arg, Alias, nparts, Parts);
+	  }
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	}
 	if(alstr[0]){
 		DpsVarListReplaceStr(&Doc->Sections,"Alias",alstr);
@@ -741,7 +749,9 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 	
 	if((Doc->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {  /* was: == DPS_METHOD_GET */
 	  /* Check Allow/Disallow/CheckOnly stuff */
+	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 	  Doc->method=DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, DpsVarListFindStr(&Doc->Sections,"URL",""), reason,Doc->method);
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	  DpsLog(Indexer, DPS_LOG_DEBUG,"%s", reason);
 	}
 	
@@ -878,15 +888,20 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   for (i = 0; i < Indexer->Conf->SectionMatch.nmatches; i++) {
     Alias = &Indexer->Conf->SectionMatch.Match[i];
 
-/*    fprintf(stderr, " -- Alias:%s, before match  pattern:%s\n", Alias->section, Alias->pattern);*/
-    if (DpsMatchExec(Alias, buf_content, buf_content, NULL, nparts, Parts)) continue;
-
     Sec = DpsVarListFind(&Doc->Sections, Alias->section);
 /*    fprintf(stderr, " -- Alias:%s, Sec: %x\n", Alias->section, Sec);*/
     if (! Sec) continue;
 
+    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+/*    fprintf(stderr, " -- Alias:%s, before match  pattern:%s\n", Alias->section, Alias->pattern);*/
+    if (DpsMatchExec(Alias, buf_content, buf_content, NULL, nparts, Parts)) {
+      DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+      continue;
+    }
+
     DpsMatchApply(buf, buf_len - 1, buf_content, Alias->arg, Alias, nparts, Parts);
 /*    fprintf(stderr, " -- Alias:%s, after match apply: %s\n", Alias->section, buf);*/
+    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 
     Item.href = NULL;
     Item.section = Sec->section;
@@ -904,12 +919,17 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   for (i = 0; i < Indexer->Conf->HrefSectionMatch.nmatches; i++) {
     Alias = &Indexer->Conf->HrefSectionMatch.Match[i];
 
-    if (DpsMatchExec(Alias, buf_content, buf_content, NULL, nparts, Parts)) continue;
-
     Sec = DpsVarListFind(&Indexer->Conf->HrefSections, Alias->section);
     if (! Sec) continue;
 
+    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+    if (DpsMatchExec(Alias, buf_content, buf_content, NULL, nparts, Parts)) {
+      DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+      continue;
+    }
+
     DpsMatchApply(buf, buf_len - 1, buf_content, Alias->arg, Alias, nparts, Parts);
+    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 
     DpsHrefInit(&Href);
     Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
@@ -965,8 +985,13 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	Item = &tlist->Items[z];
 	if (Item->section != Sec->section) continue;
 	if (strcasecmp(Item->section_name, Alias->section)) continue;
-	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) continue;
+	DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) {
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	  continue;
+	}
 	DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
+	DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
 	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
@@ -1312,8 +1337,13 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    for (i = 0; i < Indexer->Conf->BodyPatterns.nmatches; i++) {
 	      Alias = &Indexer->Conf->BodyPatterns.Match[i];
 	      
-	      if (DpsMatchExec(Alias, Doc->Buf.content, Doc->Buf.content, NULL, nparts, Parts)) continue;
+	      DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	      if (DpsMatchExec(Alias, Doc->Buf.content, Doc->Buf.content, NULL, nparts, Parts)) {
+		DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+		continue;
+	      }
 	      DpsMatchApply(buf, buf_len - 1, Doc->Buf.content, Alias->arg, Alias, nparts, Parts);
+	      DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	      DPS_FREE(Doc->Buf.pattern);
 	      Doc->Buf.pattern = DpsRealloc(buf, dps_strlen(buf) + 1);
 	      DpsLog(Indexer, DPS_LOG_DEBUG, "%dth BodyPattern applied.", i);
@@ -1452,7 +1482,10 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #ifdef HAVE_ZLIB
 	if ((Doc->method != DPS_METHOD_HEAD) && (strncmp(real_content_type, "text/", 5) == 0)) {
 	  char reason[PATH_MAX+1];
-	  int m =  DpsStoreFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->StoreFilters, Doc, reason);
+	  int m;
+	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	  m =  DpsStoreFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->StoreFilters, Doc, reason);
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
 	  if (m == DPS_METHOD_STORE && !(Indexer->flags & DPS_FLAG_FROM_STORED)) DpsStoreDoc(Indexer, Doc, DpsVarListFindStr(&Doc->Sections, "ORIG_URL", NULL));
 	}
@@ -1979,16 +2012,23 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 /*			DpsParseHeaders(Indexer, Doc);*/
 			{
 			  int m;
-			  if ((m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason)) != DPS_METHOD_NOINDEX) {
+			  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+			  m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason);
+			  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+			  if (m != DPS_METHOD_NOINDEX) {
 			    char *subsection;
 			    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
 			    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
+
+			    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 			    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
 			    case DPS_METHOD_TAG:
 			      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
 			    case DPS_METHOD_CATEGORY:
 			      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
 			    }
+			    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+
 			    if (Doc->method != DPS_METHOD_HREFONLY) { DpsPrepareWords(Indexer, Doc); }
 			  } else Doc->method = m;
 			  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
@@ -2463,16 +2503,23 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		{
 		  char reason[PATH_MAX+1];
 		  int m;
-		  if ((m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason)) != DPS_METHOD_NOINDEX) {
+		  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+		  m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason);
+		  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+		  if (m != DPS_METHOD_NOINDEX) {
 		    char *subsection;
 		    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
 		    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
+
+		    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 		    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
 		    case DPS_METHOD_TAG:
 		      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
 		    case DPS_METHOD_CATEGORY:
 		      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
 		    }
+		    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+
 		    if (Doc->method != DPS_METHOD_HREFONLY) DpsPrepareWords(Indexer, Doc);
 		  } else Doc->method = m;
 		  DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
