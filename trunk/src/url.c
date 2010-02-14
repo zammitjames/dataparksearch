@@ -23,6 +23,7 @@
 #include "dps_log.h"
 #include "dps_match.h"
 #include "dps_vars.h"
+#include "dps_mutex.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -477,11 +478,13 @@ char * DpsURLNormalizePath(char * str){
 	    *str = (char*)DpsStrdup(alias);
 	  }
 
+	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 	  for(cascade = 0; ((Alias=DpsMatchListFind(&Indexer->Conf->ReverseAliases,*str,nparts,Parts))) && (cascade < 1024); cascade++) {
 	        aliassize = dps_strlen(Alias->arg) + dps_strlen(Alias->pattern) + dps_strlen(*str) + 128;
 		alias = (char*)DpsRealloc(alias, aliassize);
 		if (alias == NULL) {
 		  DpsLog(Indexer, DPS_LOG_ERROR, "No memory (%d bytes). %s line %d", aliassize, __FILE__, __LINE__);
+		  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 		  goto ret;
 		}
 		DpsMatchApply(alias,aliassize,*str,Alias->arg,Alias,nparts,Parts);
@@ -492,6 +495,7 @@ char * DpsURLNormalizePath(char * str){
 		} else break;
 		if (Alias->last) break;
 	  }
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	}
 
 ret:	
