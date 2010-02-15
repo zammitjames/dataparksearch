@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -54,6 +54,9 @@
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
+#ifdef HAVE_SYS_UN_H
+#include <sys/un.h>
+#endif
 #include <errno.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -100,7 +103,7 @@
 
 static	fd_set mask;
 static DPS_CHILD Children[DPS_CHILDREN_LIMIT];
-static int clt_sock;
+/*static*/ int clt_sock;
 static int my_generation = 0;
 static pid_t parent_pid = 0;
 static size_t MaxClients = 1;
@@ -248,63 +251,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 	Res=DpsResultInit(NULL);
 	if (Res == NULL) return DPS_ERROR;
 
-#ifdef WITH_REVERT_CONNECTION
-	/* revert connection */
-
-	bind_address.s_addr 	= htonl(INADDR_ANY);
-	server_addr.sin_family	= AF_INET;
-	server_addr.sin_addr	= bind_address;
-	server_addr.sin_port	= 0; /* any free port */
-	p = (unsigned char*) &server_addr.sin_port;
-
-	if ((pre_server = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "socket() ERR: %d %s", errno, strerror(errno));
-	  close(client);
-	  return DPS_ERROR;
-	}
-	DpsSockOpt(Agent, pre_server);
-	if (bind(pre_server, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "bind() ERR: %d %s", errno, strerror(errno));
-	  close(pre_server);
-	  close(client);
-	  return DPS_ERROR;
-	}
-	if (listen(pre_server, 1) < 0) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "listen() ERR: %d %s\n", errno, strerror(errno));
-	  close(pre_server);
-	  close(client);
-	  return DPS_ERROR;
-	}
-	addrlen = sizeof(server_addr);
-	if (getsockname(pre_server, (struct sockaddr *)&server_addr, &addrlen) == -1) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "getsockname ERR [%d] %s  %s:%d\n", errno, strerror(errno), __FILE__, __LINE__);
-	  close(pre_server);
-	  close(client);
-	  return DPS_ERROR;
-	}
-	dps_snprintf(port_str, 15, "%d,%d", p[0], p[1]);
-
-	nsent = DpsSend(client, port_str, sizeof(port_str), 0);
-
-	if (nsent != sizeof(port_str)) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "ERR port sent %d of %d bytes\n", nsent, sizeof(port_str));
-	  close(pre_server);
-	  close(client);
-	  return DPS_ERROR;
-	}
-		  
-	bzero((void*)&his_addr, addrlen = sizeof(his_addr));
-	if ((server = accept(pre_server, (struct sockaddr *)&his_addr, &addrlen)) <= 0) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "revert accept ERR on port %d error %d %s\n", ntohs(server_addr.sin_port), errno, strerror(errno));
-	  close(pre_server);
-	  close(client);
-	  return DPS_ERROR;
-	}
-	DpsLog(Agent, DPS_LOG_INFO, "[%s] Connected. PORT: %s", inet_ntoa(his_addr.sin_addr), port_str);
-	close(pre_server);
-#else
 	server = client;
-#endif
 
 	while(!done){
 	  size_t dlen = 0, ndocs, i, last_cmd;
@@ -1151,13 +1098,14 @@ int main(int argc, char **argv, char **envp) {
 
 	while(!done){
 		struct sockaddr_in server_addr;
+		struct sockaddr_un unix_addr;
 		int on = 1;
 		DPS_AGENT * Agent;
 		DPS_ENV * Conf=NULL;
 		int verb=-1;
 		dps_uint8 flags = DPS_FLAG_SPELL | DPS_FLAG_UNOCON | DPS_FLAG_ADD_SERV;
 		int res = 0, internaldone = 0;
-		const char *lstn;
+		const char *lstn, *unix_socket;
 
 		if (track_pid != 0) {
 		  kill(track_pid, SIGTERM);
@@ -1205,9 +1153,11 @@ int main(int argc, char **argv, char **envp) {
 		}
 		MaxClients = DpsVarListFindInt(&Agent->Conf->Vars, "MaxClients", 1);
 		if (MaxClients > DPS_CHILDREN_LIMIT) MaxClients = DPS_CHILDREN_LIMIT;
+		unix_socket = DpsVarListFindStr(&Agent->Conf->Vars, "Socket", NULL);
 		DpsLog(Agent, verb, "searchd started with '%s'", config_name);
 		DpsLog(Agent, verb, "VarDir: '%s'", DpsVarListFindStr(&Agent->Conf->Vars, "VarDir", DPS_VAR_DIR));
-		DpsLog(Agent, verb, "MaxClients: %d\n", MaxClients);
+		DpsLog(Agent, verb, "MaxClients: %d", MaxClients);
+		if (unix_socket != NULL) DpsLog(Agent, verb, "Unix socket: '%s'", unix_socket);
 		DpsLog(Agent, verb, "Affixes: %d, Spells: %d, Synonyms: %d, Acronyms: %d, Stopwords: %d",
 		       Conf->Affixes.naffixes,Conf->Spells.nspell,
 		       Conf->Synonyms.nsynonyms,
@@ -1262,7 +1212,7 @@ int main(int argc, char **argv, char **envp) {
 		}
 		server_addr.sin_port = htons((u_short)nport);
 
-		if (memcmp(&old_server_addr, &server_addr, sizeof(server_addr)) != 0) {
+/*		if (memcmp(&old_server_addr, &server_addr, sizeof(server_addr)) != 0) {*/
 
 		  FD_ZERO(&mask);
 		
@@ -1304,6 +1254,51 @@ int main(int argc, char **argv, char **envp) {
 		  }
 		  FD_SET(clt_sock, &mask);
 		  dps_memcpy(&old_server_addr, &server_addr, sizeof(server_addr));
+/*		}*/
+
+		if (unix_socket != NULL) {
+		  char unix_path[128];
+		  int sockfd, saddrlen;
+		  if (DpsRelVarName(Conf, unix_path, sizeof(unix_path), unix_socket) < 105) {
+		  } else {
+		    DpsLog(Agent, DPS_LOG_ERROR, "Unix socket name '%s' is too large", unix_path);
+		    DpsAgentFree(Agent);
+		    DpsEnvFree(Conf);
+		    unlink(dps_pid_name);
+		    exit(1);
+		  }
+		  if ((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
+			DpsLog(Agent, DPS_LOG_ERROR, "unix socket() error %d", errno);
+			DpsAgentFree(Agent);
+			DpsEnvFree(Conf);
+			unlink(dps_pid_name);
+			exit(1);
+		  }
+		  DpsSockOpt(Agent, sockfd);
+
+		  unlink(unix_path);
+		  bzero((void*)&unix_addr, sizeof(unix_addr));
+		  unix_addr.sun_family = AF_UNIX;
+		  dps_strncpy(unix_addr.sun_path, unix_path, sizeof(unix_addr.sun_path));
+		  saddrlen = sizeof(unix_addr.sun_family) + dps_strlen(unix_addr.sun_path);
+
+		  if (bind(sockfd, (struct sockaddr *)&unix_addr, saddrlen) == -1) {
+			DpsLog(Agent, DPS_LOG_ERROR, "Can't bind unix socket: error %d %s", errno, strerror(errno));
+			DpsAgentFree(Agent);
+			DpsEnvFree(Conf);
+			unlink(dps_pid_name);
+			exit(1);
+		  }
+		  /* Backlog 64 is enough? */
+		  if (listen(sockfd, 64) == -1) {
+			DpsLog(Agent, DPS_LOG_ERROR, "listen() unix socket error %d %s", errno, strerror(errno));
+			DpsAgentFree(Agent);
+			DpsEnvFree(Conf);
+			unlink(dps_pid_name);
+			exit(1);
+		  }
+		  FD_SET(sockfd, &mask);
+		  
 		}
 		
 		

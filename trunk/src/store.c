@@ -1344,12 +1344,12 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
     if (accept_lang != NULL && *accept_lang == '\0') accept_lang = NULL;
 /*    if (accept_lang == NULL) accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);*/
     dps_snprintf(str, str_len, "%s%s%s", (accept_lang == NULL) ? "" : accept_lang, (accept_lang == NULL) ? "" : ".", url);
-    url_id = DpsStrHash32(str);
-    DpsVarListAddInt(&Doc->Sections, "URL_ID", url_id);
 #ifdef WITH_OLDHASH
     url_id = DpsStrOldHash32(str);
     DpsVarListAddInt(&Doc->Sections, "URL_ID_OLD", url_id);
 #endif
+    url_id = DpsStrHash32(str);
+    DpsVarListAddInt(&Doc->Sections, "URL_ID", url_id);
     DPS_FREE(str);
   }
   return url_id;

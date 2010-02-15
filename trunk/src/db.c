@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1526,7 +1526,6 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 		sprintf(aliastr, "%s%s", Alias->arg, alcopy + dps_strlen(Alias->pattern));
 		DpsVarListReplaceStr(&D->Sections, "Alias-of", url);
 		DpsVarListReplaceStr(&D->Sections, "URL", url = aliastr);
-	    fprintf(stderr, " -- alias:%s\n", aliastr);
 	      }
 	    }
 	  }
@@ -2331,11 +2330,12 @@ int DpsURLDataDePreload(DPS_AGENT *Agent) {
 
 	TRACE_IN(Agent, "DpsURLDataPreload");
 
+	DPS_GETLOCK(Agent, DPS_LOCK_CONF);
 	if (Agent->Conf->Flags.PreloadURLData) {
 
-	  if (Agent->Conf->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Agent, DPS_LOCK_CONF);
+/*	  if (Agent->Conf->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Agent, DPS_LOCK_CONF);*/
 	  dbto =  (Agent->Conf->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
-	  if (Agent->Conf->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Agent, DPS_LOCK_CONF);
+/*	  if (Agent->Conf->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Agent, DPS_LOCK_CONF);*/
 
 	  for (i = dbfrom; i < dbto; i++) {
 
@@ -2348,6 +2348,7 @@ int DpsURLDataDePreload(DPS_AGENT *Agent) {
 	  }
 	  DPS_FREE(Agent->Conf->URLDataFile);
 	}
+	DPS_RELEASELOCK(Agent, DPS_LOCK_CONF);
 	TRACE_OUT(Agent);
 	return rc;
 }

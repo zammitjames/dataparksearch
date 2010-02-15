@@ -80,6 +80,7 @@
 	{"LogLevel",            1,1,    env_rpl_var},
 	{"Locale",              1,1,    env_rpl_var},
 	{"CharsToEscape",       1,1,    env_rpl_var},
+	{"Socket",		1,1,	env_rpl_var},
 	{"IspellCorrectFactor",	1,1,	env_rpl_num_var},
 	{"IspellInCorrectFactor",1,1,	env_rpl_num_var},
 	{"SubDocLevel",		1,1,	env_rpl_num_var},

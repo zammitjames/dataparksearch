@@ -2320,7 +2320,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
       if (nbytes > 0) {
 	dps_snprintf(fname, sizeof(fname), "%s%03X.log", db->log_dir, log_num);
 	
-	DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+/*	DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
 	if((fd = DpsOpen3(fname, open_flags, open_perm)) != -1) {
 	  nbytes = logd->wrd_buf[log_num].nrec * sizeof(DPS_LOGWORD);
 	  DpsWriteLock(fd);
@@ -2329,19 +2329,19 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
 	    DpsUnLock(fd);
 	    DpsClose(fd);
 	    DpsBaseClose(&P);
-	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+/*	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
 /*	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED);*/
 	    TRACE_OUT(Indexer);
 	    return DPS_ERROR;
 	  }
 	  DpsUnLock(fd);
 	  DpsClose(fd);
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+/*	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
 	  logd->wrd_buf[log_num].nrec = 0;
 	}else{
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't open '%s': %s\n", fname, strerror(errno));
 	  DpsBaseClose(&P);
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+/*	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
 /*	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED);*/
 	  TRACE_OUT(Indexer);
 	  return DPS_ERROR;
@@ -2365,7 +2365,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
       continue;
     }
 
-    if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+/*    if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
     /* Open del log file */
     del_buf = logd->wrd_buf[log_num].del_buf;
     del_count = logd->wrd_buf[log_num].ndel;
@@ -2384,7 +2384,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
     n = DpsRemoveOldWords(log_buf, n, del_buf, del_count);
     if (n > 1) DpsSort(log_buf, n, sizeof(DPS_LOGWORD), (qsort_cmp)DpsCmplog_wrd);
 
-    if (!(Indexer->flags & DPS_FLAG_UNOCON)) DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+/*    if (!(Indexer->flags & DPS_FLAG_UNOCON)) DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
     if (n || del_count) res = DpsProcessBuf(Indexer, &P, log_num, log_buf, n, del_buf, del_count);
 
     logd->wrd_buf[log_num].nrec = 0;
@@ -2396,7 +2396,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
 							but this slow down indexing. */
     }
     DpsBaseClose(&P);
-    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));
+/*    DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
   }
   
   TRACE_OUT(Indexer);
@@ -2432,14 +2432,14 @@ int DpsLogdSaveAllBufs(DPS_AGENT *Agent) {
 	  if (u) continue;
 	  shift = (Agent->handle * 321) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
 	  for(i = 0; i < ((db->WrdFiles) ? db->WrdFiles : NWrdFiles); i++) {
-/**	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));**/
+	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
 /*	    u = (db->LOGD.wrd_buf == NULL);*/
 	    pi = (shift + i) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
 	    /*if (u)*/ u = (db->LOGD.wrd_buf[pi].nrec || db->LOGD.wrd_buf[pi].ndel);
 	    if (u) {
 	      res = DpsLogdSaveBuf(Agent, Env, pi);
 	    }
-/**	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));**/
+	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
 	    if (res != DPS_OK) break;
 /*	    DPSSLEEP(0);*/
 	  }
@@ -3021,13 +3021,13 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	} else {
 	      
 	  for (i = 0; i < NWrdFiles; i++) {
-/**	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));**/
+	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
 	    nrec = logd->wrd_buf[i].ndel;
 	    if (nrec == CacheLogDels /*|| ( (nrec > CacheLogDels - DPS_INF_DEL) && (nrec + (rand() % DPS_INF_DEL) > CacheLogDels))*/ ) {
 	      DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
 		     i, logd->wrd_buf[i].nrec, logd->wrd_buf[i].ndel);
 	      if(DPS_OK != DpsLogdSaveBuf(Agent, Env, i)) {
-/**		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));**/
+		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
 		TRACE_OUT(Agent);
 		return DPS_ERROR;
 	      }
@@ -3035,7 +3035,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	    }
 	    logd->wrd_buf[i].del_buf[nrec] = logdel;
 	    logd->wrd_buf[i].ndel++;
-/**	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));**/
+	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
 /*	    DPSSLEEP(0);*/
 	  }
 	}
@@ -3050,12 +3050,12 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	  if (wrd[i].coord == 0) continue;
 	  num = DPS_FILENO(wrd[i].wrd_id, NWrdFiles);
 
-/**	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(num));**/
+	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(num));
 	  if(logd->wrd_buf[num].nrec == CacheLogWords) {
 	    DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
 		   num, logd->wrd_buf[num].nrec, logd->wrd_buf[num].ndel);
 	    if (DPS_OK != DpsLogdSaveBuf(Agent, Env, num)) {
-/**	      DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));**/
+	      DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));
 	      TRACE_OUT(Agent);
 	      return DPS_ERROR;
 	    }
@@ -3066,7 +3066,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	  logd->wrd_buf[num].data[nrec].wrd_id = wrd[i].wrd_id;
 	  logd->wrd_buf[num].data[nrec].coord = wrd[i].coord;
 	  logd->wrd_buf[num].nrec++;
-/**	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));**/
+	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(num));
 /*	  DPSSLEEP(0);*/
 	}
 	TRACE_OUT(Agent);

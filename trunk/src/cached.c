@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -283,10 +283,12 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 #endif
 	  if (DpsSend(client->send_fd, "O", 1, 0) != 1) {
 	    DpsLog(Agent, DPS_LOG_ERROR, "DpsSend error %s:%d ", __FILE__, __LINE__);  
+	    DPS_FREE(textbuf);
 	    return DPS_ERROR;
 	  }
 	  if (DpsRecvall(client->recv_fd, textbuf, tlen, 360) != (ssize_t)tlen) {
 	    DpsLog(Agent, DPS_LOG_ERROR, "DpsRecvall error %s:%d ", __FILE__, __LINE__);  
+	    DPS_FREE(textbuf);
 	    return DPS_ERROR;
 	  }
 #if defined(WITH_TRACE) && defined(DEBUG_LOGD)
@@ -607,9 +609,9 @@ static void * thread_optimize(void *arg) {
       P.rec_id = current_base;
 
       if (!Agent->Conf->logs_only) {
-/**	DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(current_base));**/
+	DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(current_base));
 	res = DpsLogdSaveBuf(Agent, Agent->Conf, current_base);
-/**	DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(current_base));**/
+	DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(current_base));
       }
       if (!Agent->Flags.OptimizeAtUpdate) DpsBaseOptimize(&P, current_base);
       DpsBaseClose(&P);

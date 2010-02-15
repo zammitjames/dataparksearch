@@ -555,11 +555,86 @@ URL http://localhost/path/to/page.html
 <para>
 This command inserts given <option>URL</option> into database. This is usefull to add
 several entry points to one server. Has no effect if an URL is already
-in the database. <!--When inserting indexer does not executes any checkings
-and this URL may be delated at first indexing attempt if URL has no 
-correspondent <command>Server</command> command or is disallowed by rules given in 
-<command>Allow/Disallow</command> commands. -->
+in the database. 
 </para>
+</sect2>
+
+<sect2 id="robots_txt">
+<title>Robots exclusion standard</title>
+<indexterm><primary>Robots exclustion standard</primary></indexterm>
+<indexterm><primary>robots.txt</primary></indexterm>
+<para><application>DataparkSearch</application> obeys <ulink url="http://www.robotstxt.org/">the robots.txt standard</ulink>. 
+<ulink url="http://www.robotstxt.org/robotstxt.html"><filename>robots.txt</filename></ulink> is a file that you place in your web server's root directory that tells search engines what pages you do not want to be indexed.</para>
+
+<para>
+<indexterm><primary>Robots exclustion standard</primary><secondary>meta tags</secondary></indexterm>
+<application>DataparkSearch</application> also obeys the <option>nofollow</option>, <option>noarchive</option> and <option>noindex</option> <ulink url="http://www.robotstxt.org/meta.html">meta tags</ulink>.</para>
+
+<para>
+<indexterm><primary>robots.txt</primary><secondary>Crawl-Delay</secondary></indexterm>
+<indexterm><primary>robots.txt</primary><secondary>Host</secondary></indexterm>
+<application>DataparkSearch</application> also supports the <ulink url="http://help.yahoo.com/l/us/yahoo/search/webcrawler/slurp-03.html"><option>Crawl-delay</option></ulink> and <ulink url="http://help.yandex.ru/webmaster/?id=996567#996574"><option>Host</option></ulink> directives in <filename>robots.txt</filename>.</para>
+
+<para>Below are commands in <filename>indexer.conf</filename> file related to the Robots exclusion standard.</para>
+
+<sect3 id="robots_cmd">
+<title><command>Robots</command> command</title>
+<indexterm><primary>Command</primary><secondary>Robots</secondary></indexterm>
+<programlisting>
+Robots yes/no
+</programlisting>
+<para>
+Allows/disallows using <filename>robots.txt</filename> and &lt;META NAME="robots" ...&gt;
+exclusions. Use <option>no</option>, for example for link validation of your server(s).
+Command may be used several times before <command>Server</command> command and
+takes effect till the end of config file or till next <command>Robots</command> command.
+Default value is "yes".
+<programlisting>
+Robots yes
+</programlisting>
+</para>
+</sect3>
+
+<sect3 id="robotsperiod_cmd">
+<title><command>RobotsPeriod</command> command</title>
+<para><indexterm><primary>Command</primary><secondary>RobotsPeriod</secondary></indexterm>
+By defaults, robots.txt data holds in SQL-database for one week. You may change this period using
+<command>RobotsPeriod</command> command:
+</para>
+<programlisting>
+RobotsPeriod &lt;time&gt;
+</programlisting>
+<para>For &lt;time&gt; format see description of <command>Period</command> command in <xref linkend="period_cmd"/>.</para>
+<programlisting>
+RobotsPeriod 30d
+</programlisting>
+</sect3>
+
+<sect3 id="crawldelay_cmd">
+<title><command>CrawlDelay</command> command</title>
+<para><indexterm><primary>Command</primary><secondary>CrawlDelay</secondary></indexterm>
+Use this command to specify default pause in seconds between consecutive fetches from same server. 
+This is similar to crawl-delay command in <filename>robots.txt</filename> file, but can specified in <filename>indexer.conf</filename> 
+file on per server basis. If no crawl-delay value is specified in <filename>robots.txt</filename>, 
+the value of <command>CrawlDelay</command> is used. 
+If crawl-delay is specified in robots.txt, then the maximum of <command>CrawlDelay</command> and crawl-delay is used as 
+interval between consecutive fetches.
+</para>
+</sect3>
+
+<sect3 id="maxcrawldelay_cmd">
+<title><command>MaxCrawlDelay</command> command</title>
+<para><indexterm><primary>Command</primary><secondary>MaxCrawlDelay</secondary></indexterm>
+When <application>indexer</application> is ready to index an URL from a server for which the Crawl-deley interval since previous access isn't expired yet, it waits until this period will be expired, 
+if waiting peiod is less than amount of time specified by <command>MaxCrawlDelay</command> command. If the waiting period is greater or equal to this value, selected URL is posponed in indexing for the time remained.
+</para>
+<programlisting>
+MaxCrawlDelay 60
+</programlisting>
+<para>Default value is 300 seconds.</para>
+</sect3>
+
+
 </sect2>
 
 

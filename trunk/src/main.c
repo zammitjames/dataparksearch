@@ -72,7 +72,7 @@
        int max_index_time = -1;
        int max_index_size = -1;
        int cfg_url_number = 0x7FFFFFFF;
-static char cname[1024] = "";
+static char cname[PATH_MAX + 1024] = "";
 static dps_uint8 add_servers = DPS_FLAG_ADD_SERV;
 static dps_uint8 add_server_urls = DPS_FLAG_ADD_SERVURL;
 static dps_uint8 load_langmaps = DPS_FLAG_LOAD_LANGMAP;
