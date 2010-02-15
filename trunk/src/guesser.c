@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1403,7 +1403,6 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        }
      
 #ifdef DEBUG_GUESSER
-     fprintf(stderr, "use_meta:%d  forte_lang:%d  forte_charset:%d\n", use_meta, forte_lang, forte_charset);
      if (DpsNeedLog(DPS_LOG_EXTRA))
        fprintf(stderr, "Guesser start: lang: %s, charset: %s\n", DPS_NULL2EMPTY(lang), DPS_NULL2EMPTY(charset));
 #endif
@@ -1473,7 +1472,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
 	     }
 	   }
 	   if (*charset != '\0') break;
-	   if ((i > 50) && (mapstat[i].miss > mapstat[0].miss + 2)) break;
+	   if ((i > 50) && (mapstat[i].miss > mapstat[0].miss + mapstat[0].miss/10)) break;
 	 }
           
        for(i=0;i<List->nmaps;i++){
