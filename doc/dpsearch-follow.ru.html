@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="DataparkSearch Engine 4.53"
+TITLE="DataparkSearch Engine 4.54"
 HREF="index.ru.html"><LINK
 REL="UP"
 TITLE="Индексирование"
@@ -44,7 +44,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->DataparkSearch Engine 4.53: Справочное руководство</TH
+>DataparkSearch Engine 4.54: Справочное руководство</TH
 ></TR
 ><TR
 ><TD
@@ -1062,6 +1062,245 @@ CLASS="PROGRAMLISTING"
 ><P
 >Эта команда добавляет указаный URL в базу. Это полезно когда нужно добавить несколько
 стартовых точек для одного сервера. Не имеет эффекта, если указываемый URL уже находится в базе.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="ROBOTS_TXT"
+>3.6.8. Стандарт исключений для роботов</A
+></H2
+><A
+NAME="AEN1186"
+></A
+><A
+NAME="AEN1188"
+></A
+><P
+><SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> соблюдает <A
+HREF="http://www.robotstxt.org/"
+TARGET="_top"
+>стандарт robots.txt</A
+>. 
+<A
+HREF="http://www.robotstxt.org/robotstxt.html"
+TARGET="_top"
+><TT
+CLASS="FILENAME"
+>robots.txt</TT
+></A
+> - файл, помещаемый в корневую директорию вашего веб сервера, указывающий поисковым машинам, какие страницы
+вы не хотите индексировать.</P
+><P
+><A
+NAME="AEN1196"
+></A
+>
+<SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> также соблюдает <A
+HREF="http://www.robotstxt.org/meta.html"
+TARGET="_top"
+>мета тэги</A
+>: <CODE
+CLASS="OPTION"
+>nofollow</CODE
+>, <CODE
+CLASS="OPTION"
+>noarchive</CODE
+> и <CODE
+CLASS="OPTION"
+>noindex</CODE
+>.</P
+><P
+><A
+NAME="AEN1205"
+></A
+>
+<A
+NAME="AEN1208"
+></A
+>
+<SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> также поддерживает директивы <A
+HREF="http://help.yahoo.com/l/us/yahoo/search/webcrawler/slurp-03.html"
+TARGET="_top"
+><CODE
+CLASS="OPTION"
+>Crawl-delay</CODE
+></A
+> и <A
+HREF="http://help.yandex.ru/webmaster/?id=996567#996574"
+TARGET="_top"
+><CODE
+CLASS="OPTION"
+>Host</CODE
+></A
+> в <TT
+CLASS="FILENAME"
+>robots.txt</TT
+>.</P
+><P
+>Ниже указаны команды в файле <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+>, относящиеся к стандарту исключений для роботов.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="ROBOTS_CMD"
+>3.6.8.1. Команда <B
+CLASS="COMMAND"
+>Robots</B
+></A
+></H3
+><A
+NAME="AEN1222"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>Robots yes/no</PRE
+><P
+>Разрешает или запрещает использование <TT
+CLASS="FILENAME"
+>robots.txt</TT
+> и &lt;META NAME="robots" ...&gt;
+для исключения страниц. Используйте <CODE
+CLASS="OPTION"
+>no</CODE
+>, например, для проверки ссылок на вашем сайте или сайтах.
+Имейте в виду, что игнорирование чужих <TT
+CLASS="FILENAME"
+>robots.txt</TT
+> не приветсвуется сетевым этикетом.
+Команда действует до конца файла, или до следующей команды <B
+CLASS="COMMAND"
+>Robots</B
+>.
+Значение по умолчанию: yes.
+<PRE
+CLASS="PROGRAMLISTING"
+>Robots yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="ROBOTSPERIOD_CMD"
+>3.6.8.2. Команда <B
+CLASS="COMMAND"
+>RobotsPeriod</B
+></A
+></H3
+><P
+><A
+NAME="AEN1236"
+></A
+>
+По умолчанию, данные из robots.txt хранятся в SQL-базе одну неделю. Вы можете изменить этот период используя команду
+<B
+CLASS="COMMAND"
+>RobotsPeriod</B
+>:
+<PRE
+CLASS="PROGRAMLISTING"
+>RobotsPeriod &lt;time&gt;</PRE
+>
+См. формат &lt;time&gt; в описании команды <B
+CLASS="COMMAND"
+>Period</B
+> из <A
+HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
+>&#62;.
+<PRE
+CLASS="PROGRAMLISTING"
+>RobotsPeriod 30d</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="CRAWLDELAY_CMD"
+>3.6.8.3. Команда <B
+CLASS="COMMAND"
+>CrawlDelay</B
+></A
+></H3
+><P
+><A
+NAME="AEN1248"
+></A
+>
+Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу. 
+Аналогична команде crawl-delay в файле <TT
+CLASS="FILENAME"
+>robots.txt</TT
+>, но может быть задана в <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> 
+файле для каждого сервера в отдельности. Если не задано значение crawl-delay value в <TT
+CLASS="FILENAME"
+>robots.txt</TT
+>, 
+используется значение, указаное в <B
+CLASS="COMMAND"
+>CrawlDelay</B
+>. 
+Если значение crawl-delay указано в <TT
+CLASS="FILENAME"
+>robots.txt</TT
+>, тогда используется максимальное значение из
+<B
+CLASS="COMMAND"
+>CrawlDelay</B
+> и crawl-delay.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="MAXCRAWLDELAY_CMD"
+>3.6.8.4. Команда <B
+CLASS="COMMAND"
+>MaxCrawlDelay</B
+></A
+></H3
+><P
+><A
+NAME="AEN1261"
+></A
+>
+Когда <SPAN
+CLASS="APPLICATION"
+>indexer</SPAN
+> готов индексировать очередной URL с сервера, для которого интервал Crawl-deley с предыдущего обращения к сайту еще не истек,
+он ожидает, пока этот период не истечет, если период ожидания в секундах меньше значения, указанного командой <B
+CLASS="COMMAND"
+>MaxCrawlDelay</B
+>. 
+Если период ожидания больше или равен этому значению, выбранный URL откладывается в индексировании на период ожидания.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxCrawlDelay 60</PRE
+><P
+>Значение по-умолчанию: 300 секунд.</P
+></DIV
 ></DIV
 ></DIV
 ><DIV

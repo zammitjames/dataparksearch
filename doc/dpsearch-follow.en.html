@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="DataparkSearch Engine 4.53"
+TITLE="DataparkSearch Engine 4.54"
 HREF="index.en.html"><LINK
 REL="UP"
 TITLE="Indexing"
@@ -44,7 +44,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->DataparkSearch Engine 4.53: Reference manual</TH
+>DataparkSearch Engine 4.54: Reference manual</TH
 ></TR
 ><TR
 ><TD
@@ -907,6 +907,239 @@ CLASS="OPTION"
 > into database. This is usefull to add
 several entry points to one server. Has no effect if an URL is already
 in the database. </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="ROBOTS_TXT"
+>3.6.9. Robots exclusion standard</A
+></H2
+><A
+NAME="AEN1108"
+></A
+><A
+NAME="AEN1110"
+></A
+><P
+><SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> obeys <A
+HREF="http://www.robotstxt.org/"
+TARGET="_top"
+>the robots.txt standard</A
+>. 
+<A
+HREF="http://www.robotstxt.org/robotstxt.html"
+TARGET="_top"
+><TT
+CLASS="FILENAME"
+>robots.txt</TT
+></A
+> is a file that you place in your web server's root directory that tells search engines what pages you do not want to be indexed.</P
+><P
+><A
+NAME="AEN1118"
+></A
+>
+<SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> also obeys the <CODE
+CLASS="OPTION"
+>nofollow</CODE
+>, <CODE
+CLASS="OPTION"
+>noarchive</CODE
+> and <CODE
+CLASS="OPTION"
+>noindex</CODE
+> <A
+HREF="http://www.robotstxt.org/meta.html"
+TARGET="_top"
+>meta tags</A
+>.</P
+><P
+><A
+NAME="AEN1127"
+></A
+>
+<A
+NAME="AEN1130"
+></A
+>
+<SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> also supports the <A
+HREF="http://help.yahoo.com/l/us/yahoo/search/webcrawler/slurp-03.html"
+TARGET="_top"
+><CODE
+CLASS="OPTION"
+>Crawl-delay</CODE
+></A
+> and <A
+HREF="http://help.yandex.ru/webmaster/?id=996567#996574"
+TARGET="_top"
+><CODE
+CLASS="OPTION"
+>Host</CODE
+></A
+> directives in <TT
+CLASS="FILENAME"
+>robots.txt</TT
+>.</P
+><P
+>Below are commands in <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> file related to the Robots exclusion standard.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="ROBOTS_CMD"
+>3.6.9.1. <B
+CLASS="COMMAND"
+>Robots</B
+> command</A
+></H3
+><A
+NAME="AEN1144"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>Robots yes/no</PRE
+><P
+>Allows/disallows using <TT
+CLASS="FILENAME"
+>robots.txt</TT
+> and &lt;META NAME="robots" ...&gt;
+exclusions. Use <CODE
+CLASS="OPTION"
+>no</CODE
+>, for example for link validation of your server(s).
+Command may be used several times before <B
+CLASS="COMMAND"
+>Server</B
+> command and
+takes effect till the end of config file or till next <B
+CLASS="COMMAND"
+>Robots</B
+> command.
+Default value is "yes".
+<PRE
+CLASS="PROGRAMLISTING"
+>Robots yes</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="ROBOTSPERIOD_CMD"
+>3.6.9.2. <B
+CLASS="COMMAND"
+>RobotsPeriod</B
+> command</A
+></H3
+><P
+><A
+NAME="AEN1158"
+></A
+>
+By defaults, robots.txt data holds in SQL-database for one week. You may change this period using
+<B
+CLASS="COMMAND"
+>RobotsPeriod</B
+> command:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>RobotsPeriod &lt;time&gt;</PRE
+><P
+>For &lt;time&gt; format see description of <B
+CLASS="COMMAND"
+>Period</B
+> command in <A
+HREF="dpsearch-indexcmd.en.html#PERIOD_CMD"
+>Section 3.10.26</A
+>&#62;.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>RobotsPeriod 30d</PRE
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="CRAWLDELAY_CMD"
+>3.6.9.3. <B
+CLASS="COMMAND"
+>CrawlDelay</B
+> command</A
+></H3
+><P
+><A
+NAME="AEN1171"
+></A
+>
+Use this command to specify default pause in seconds between consecutive fetches from same server. 
+This is similar to crawl-delay command in <TT
+CLASS="FILENAME"
+>robots.txt</TT
+> file, but can specified in <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> 
+file on per server basis. If no crawl-delay value is specified in <TT
+CLASS="FILENAME"
+>robots.txt</TT
+>, 
+the value of <B
+CLASS="COMMAND"
+>CrawlDelay</B
+> is used. 
+If crawl-delay is specified in robots.txt, then the maximum of <B
+CLASS="COMMAND"
+>CrawlDelay</B
+> and crawl-delay is used as 
+interval between consecutive fetches.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="MAXCRAWLDELAY_CMD"
+>3.6.9.4. <B
+CLASS="COMMAND"
+>MaxCrawlDelay</B
+> command</A
+></H3
+><P
+><A
+NAME="AEN1183"
+></A
+>
+When <SPAN
+CLASS="APPLICATION"
+>indexer</SPAN
+> is ready to index an URL from a server for which the Crawl-deley interval since previous access isn't expired yet, it waits until this period will be expired, 
+if waiting peiod is less than amount of time specified by <B
+CLASS="COMMAND"
+>MaxCrawlDelay</B
+> command. If the waiting period is greater or equal to this value, selected URL is posponed in indexing for the time remained.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>MaxCrawlDelay 60</PRE
+><P
+>Default value is 300 seconds.</P
+></DIV
 ></DIV
 ></DIV
 ><DIV

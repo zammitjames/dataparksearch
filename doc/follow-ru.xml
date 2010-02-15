@@ -456,6 +456,87 @@ URL http://localhost/path/to/page.html
 </para>
 </sect2>
 
+<sect2 id="robots_txt">
+<title>Стандарт исключений для роботов</title>
+<indexterm><primary>Стандарт исключений для роботов</primary></indexterm>
+<indexterm><primary>robots.txt</primary></indexterm>
+<para><application>DataparkSearch</application> соблюдает <ulink url="http://www.robotstxt.org/">стандарт robots.txt</ulink>. 
+<ulink url="http://www.robotstxt.org/robotstxt.html"><filename>robots.txt</filename></ulink> - файл, помещаемый в корневую директорию вашего веб сервера, указывающий поисковым машинам, какие страницы
+вы не хотите индексировать.</para>
+
+<para>
+<indexterm><primary>Robots exclustion standard</primary><secondary>meta tags</secondary></indexterm>
+<application>DataparkSearch</application> также соблюдает <ulink url="http://www.robotstxt.org/meta.html">мета тэги</ulink>: <option>nofollow</option>, <option>noarchive</option> и <option>noindex</option>.</para>
+
+<para>
+<indexterm><primary>robots.txt</primary><secondary>Crawl-Delay</secondary></indexterm>
+<indexterm><primary>robots.txt</primary><secondary>Host</secondary></indexterm>
+<application>DataparkSearch</application> также поддерживает директивы <ulink url="http://help.yahoo.com/l/us/yahoo/search/webcrawler/slurp-03.html"><option>Crawl-delay</option></ulink> и <ulink url="http://help.yandex.ru/webmaster/?id=996567#996574"><option>Host</option></ulink> в <filename>robots.txt</filename>.</para>
+
+<para>Ниже указаны команды в файле <filename>indexer.conf</filename>, относящиеся к стандарту исключений для роботов.</para>
+
+<sect3 id="robots_cmd">
+<title>Команда <command>Robots</command></title>
+<indexterm><primary>Команда</primary><secondary>Robots</secondary></indexterm>
+<programlisting>
+Robots yes/no
+</programlisting>
+<para>
+Разрешает или запрещает использование <filename>robots.txt</filename> и &lt;META NAME="robots" ...&gt;
+для исключения страниц. Используйте <option>no</option>, например, для проверки ссылок на вашем сайте или сайтах.
+Имейте в виду, что игнорирование чужих <filename>robots.txt</filename> не приветсвуется сетевым этикетом.
+Команда действует до конца файла, или до следующей команды <command>Robots</command>.
+Значение по умолчанию: yes.
+<programlisting>
+Robots yes
+</programlisting>
+</para>
+</sect3>
+
+<sect3 id="robotsperiod_cmd">
+<title>Команда <command>RobotsPeriod</command></title>
+<para><indexterm><primary>Команда</primary><secondary>RobotsPeriod</secondary></indexterm>
+По умолчанию, данные из robots.txt хранятся в SQL-базе одну неделю. Вы можете изменить этот период используя команду
+<command>RobotsPeriod</command>:
+<programlisting>
+RobotsPeriod &lt;time&gt;
+</programlisting>
+См. формат &lt;time&gt; в описании команды <command>Period</command> из <xref linkend="period_cmd"/>.
+<programlisting>
+RobotsPeriod 30d
+</programlisting>
+</para>
+</sect3>
+
+
+<sect3 id="crawldelay_cmd">
+<title>Команда <command>CrawlDelay</command></title>
+<para><indexterm><primary>Команда</primary><secondary>CrawlDelay</secondary></indexterm>
+Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу. 
+Аналогична команде crawl-delay в файле <filename>robots.txt</filename>, но может быть задана в <filename>indexer.conf</filename> 
+файле для каждого сервера в отдельности. Если не задано значение crawl-delay value в <filename>robots.txt</filename>, 
+используется значение, указаное в <command>CrawlDelay</command>. 
+Если значение crawl-delay указано в <filename>robots.txt</filename>, тогда используется максимальное значение из
+<command>CrawlDelay</command> и crawl-delay.
+</para>
+</sect3>
+
+<sect3 id="maxcrawldelay_cmd">
+<title>Команда <command>MaxCrawlDelay</command></title>
+<para><indexterm><primary>Команда</primary><secondary>MaxCrawlDelay</secondary></indexterm>
+Когда <application>indexer</application> готов индексировать очередной URL с сервера, для которого интервал Crawl-deley с предыдущего обращения к сайту еще не истек,
+он ожидает, пока этот период не истечет, если период ожидания в секундах меньше значения, указанного командой <command>MaxCrawlDelay</command>. 
+Если период ожидания больше или равен этому значению, выбранный URL откладывается в индексировании на период ожидания.
+</para>
+<programlisting>
+MaxCrawlDelay 60
+</programlisting>
+<para>Значение по-умолчанию: 300 секунд.</para>
+</sect3>
+
+
+
+</sect2>
 
 	
 </sect1>

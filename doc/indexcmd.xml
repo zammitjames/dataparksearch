@@ -811,51 +811,6 @@ Cookies yes
 
 
 
-<sect2 id="robots_cmd">
-<title><command>Robots</command> command</title>
-<indexterm><primary>Command</primary><secondary>Robots</secondary></indexterm>
-<programlisting>
-Robots yes/no
-</programlisting>
-<para>
-Allows/disallows using <filename>robots.txt</filename> and &lt;META NAME="robots" ...&gt;
-exclusions. Use <option>no</option>, for example for link validation of your server(s).
-Command may be used several times before <command>Server</command> command and
-takes effect till the end of config file or till next <command>Robots</command> command.
-Default value is "yes".
-<programlisting>
-Robots yes
-</programlisting>
-</para>
-</sect2>
-
-<sect2 id="robotsperiod_cmd">
-<title><command>RobotsPeriod</command> command</title>
-<para><indexterm><primary>Command</primary><secondary>RobotsPeriod</secondary></indexterm>
-By defaults, robots.txt data holds in SQL-database for one week. You may change this period using
-<command>RobotsPeriod</command> command:
-<programlisting>
-RobotsPeriod &lt;time&gt;
-</programlisting>
-For &lt;time&gt; format see description of <command>Period</command> command in <xref linkend="period_cmd"/>.
-<programlisting>
-RobotsPeriod 30d
-</programlisting>
-</para>
-</sect2>
-
-<sect2 id="crawldelay_cmd">
-<title><command>CrawlDelay</command> command</title>
-<para><indexterm><primary>Command</primary><secondary>CrawlDelay</secondary></indexterm>
-Use this command to specify default pause in seconds between consecutive fetches from same server. 
-This is similar to crawl-delay command in <filename>robots.txt</filename> file, but can specified in <filename>indexer.conf</filename> 
-file on per server basis. If no crawl-delay value is specified in <filename>robots.txt</filename>, 
-the value of <command>CrawlDelay</command> is used. 
-If crawl-delay is specified in robots.txt, then the maximum of <command>CrawlDelay</command> and crawl-delay is used as 
-interval between consecutive fetches.
-</para>
-</sect2>
-
 
 <sect2 id="section_cmd">
 <title><command>Section</command> command</title>

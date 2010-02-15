@@ -261,8 +261,8 @@ typedef struct struct_dps_db {
 	int	errcode;
 	char	errstr[2048];
 	
-	int		urld_fd;	/* URL server socket descriptor      */
-	int		searchd[2];	/* Searchd daemon descriptors         */
+/*	int		urld_fd;*/	/* URL server socket descriptor      */
+	int		searchd;	/* Searchd daemon descriptors         */
 	int		del_fd;		/* Cache mode dellog descriptor      */
         int             cat_fd;         /* Cache mode category log descriptor */
         int             tag_fd;         /* Cache mode tag log descriptor */

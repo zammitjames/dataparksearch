@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 #include "dpsearch.h"
 #include "dps_mkind.h"
 #include "dps_carry.h"
+#include "dps_sqldbms.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -278,6 +279,110 @@ err1:
 }
 
 
+static int MakeLinearIndexLinks(DPS_AGENT *Indexer, const char *lim_name, DPS_DB *db) {
+     char fname[PATH_MAX];
+     DPS_SQLRES     SQLres, Res;
+     DPS_ENV *Conf = Indexer->Conf;
+     const char	*vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Conf->Vars, "VarDir", DPS_VAR_DIR);
+     size_t i, j, offset = 0, nitems, nrows;
+     int  dat_fd=0, ind_fd=0, rc, u = 1;
+     urlid_t url_id, rec_id;
+     int recs = DpsVarListFindInt(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
+     DPS_UINT4_POS_LEN ind;
+     dps_uint8 prev;
+
+#ifdef HAVE_SQL
+     DpsSQLResInit(&SQLres);
+     DpsSQLResInit(&Res);
+
+     dps_snprintf(fname, sizeof(fname), "SELECT MIN(rec_id) FROM url");
+     if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
+     rc = DpsSQLQuery(db, &SQLres, fname);
+     if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+     if (rc != DPS_OK) {
+       goto err_IndexLinks;
+     }
+     rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) - 1;
+
+     dps_snprintf(fname,sizeof(fname),"%s%c%s%c%s.dat", vardir,DPSSLASH, DPS_TREEDIR, DPSSLASH, lim_name);
+     if((dat_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
+          fprintf(stderr,"Can't open '%s': %s\n",fname,strerror(errno));
+          goto err_IndexLinks;
+     }
+     DpsWriteLock(dat_fd);
+
+     dps_snprintf(fname,sizeof(fname),"%s%c%s%c%s.ind", vardir,DPSSLASH, DPS_TREEDIR, DPSSLASH, lim_name);
+     if((ind_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
+          fprintf(stderr,"Can't open '%s': %s\n",fname,strerror(errno));
+          goto err_IndexLinks;
+     }
+     DpsWriteLock(ind_fd);
+
+     prev = 0;
+     while(u) {
+       dps_snprintf(fname, sizeof(fname), "SELECT rec_id FROM url WHERE rec_id>%d AND status < 400 ORDER BY rec_id LIMIT %d", rec_id, recs);
+       if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
+       rc = DpsSQLQuery(db, &SQLres, fname);
+       if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+       if (rc != DPS_OK) {
+	 goto err_IndexLinks;
+       }
+       nitems = DpsSQLNumRows(&SQLres);
+
+       for (i = 0; i < nitems; i++) {
+	 ind.val = DPS_ATOI(DpsSQLValue(&SQLres, i, 0));
+	 ind.pos = prev * sizeof(urlid_t);
+	 dps_snprintf(fname, sizeof(fname), "SELECT ot FROM links WHERE k=%s ORDER by ot", DpsSQLValue(&SQLres, i, 0));
+	 if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
+	 rc = DpsSQLQuery(db, &Res, fname);
+	 if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+	 if (rc != DPS_OK) {
+	   goto err_IndexLinks;
+	 }
+	 nrows = DpsSQLNumRows(&Res);
+	 if (nrows == 0) continue;
+	 ind.len = nrows * sizeof(urlid_t);
+
+	 if((sizeof(DPS_UINT4_POS_LEN)) != (size_t)write(ind_fd, &ind, sizeof(DPS_UINT4_POS_LEN))) {
+	   DpsLog(Indexer, DPS_LOG_ERROR, "Can't write index of '%s': %s\n", lim_name, strerror(errno));
+	   goto err_IndexLinks;
+	 }
+	 prev += nrows;
+	 for (j = 0; j < nrows; j++) {
+	   url_id = DPS_ATOI(DpsSQLValue(&Res, j, 0));
+	   if((sizeof(urlid_t)) != (size_t)write(dat_fd, &url_id, sizeof(urlid_t))) {
+	     DpsLog(Indexer, DPS_LOG_ERROR, "Can't write data of '%s': %s\n", lim_name, strerror(errno));
+	     goto err_IndexLinks;
+	   }
+	 }
+	 DpsSQLFree(&Res);
+       }
+       offset += nitems;
+
+       /* To see the URL being indexed in "ps" output on xBSD */
+       dps_setproctitle("[%d] links data: %d records processed", Indexer->handle, offset);
+       DpsLog(Indexer, DPS_LOG_EXTRA, "%d records of links were written, at %d", offset, rec_id);
+       rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nitems - 1, 0));
+       u = (nitems == (size_t)recs);
+       DpsSQLFree(&SQLres);
+     }
+
+     DpsSQLFree(&SQLres);
+     DpsSQLFree(&Res);
+#endif
+     if(dat_fd) { DpsUnLock(dat_fd); DpsClose(dat_fd); }
+     if(ind_fd) { DpsUnLock(ind_fd); DpsClose(ind_fd); }
+
+     return 0;
+
+err_IndexLinks:
+     if(dat_fd) { DpsUnLock(dat_fd); DpsClose(dat_fd); }
+     if(ind_fd) { DpsUnLock(ind_fd); DpsClose(ind_fd); }
+     return 1;
+
+}
+
+
 __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
   DPS_UINT8URLIDLIST  L8;
   DPS_UINT4URLIDLIST  L4;
@@ -317,9 +422,10 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 	/* To see the URL being indexed in "ps" output on xBSD */
 	dps_setproctitle("[%d] Link index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating link index");
-	if (DPS_OK == DpsLimit4(Indexer, &L4, "link",  DPS_IFIELD_TYPE_INT, db)) {
+	MakeLinearIndexLinks(Indexer, DPS_LIMFNAME_LINK, db);
+/*	if (DPS_OK == DpsLimit4(Indexer, &L4, "link",  DPS_IFIELD_TYPE_INT, db)) {
 	  MakeLinearIndex(Indexer, &L4, DPS_LIMFNAME_LINK, db);
-	}
+	}*/
 
       } else if (!strcasecmp(ind, "time")) {
 

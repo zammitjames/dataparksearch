@@ -306,7 +306,7 @@ HlEnd	</b>
     <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title)<!ENDIF>
   </a>
   <small>[<b>$(Score)</b> Popularity: <b>$(Pop_Rank)</b>]</small>
-  <DD><small>$&(Body)...</small><!IFNOT NAME="sea" CONTENT=""><br><b>Summary:</b> $&(sea:312)<!ENDIF></DD>
+  <DD><small>$&(Body)</small><!IFNOT NAME="sea" CONTENT=""><br><b>Summary:</b> $&(sea:312)<!ENDIF></DD>
   <DD>
         <UL>
          <li>

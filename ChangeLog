@@ -2,6 +2,10 @@
 History
 -------
 
+Latset snapshot:
+	* Unicode data has been updated to 5.2.0 version.
+	* aspell checking has been improved, configure doesn't stop anymore if there is no aspell installed and aspell support hasn't been enabled explicitly.
+	
 24 Jan 2010: 4.53
 	* ReverseAliasProg command has been added.
 	* A faster hash function implemented. You need to configure with --enable-hashcompatible switch when upgrade without reindexing.

@@ -872,52 +872,6 @@ Cookies yes
 </para>
 </sect2>
 
-<sect2 id="robots_cmd">
-<title>Команда <command>Robots</command></title>
-<indexterm><primary>Команда</primary><secondary>Robots</secondary></indexterm>
-<programlisting>
-Robots yes/no
-</programlisting>
-<para>
-Разрешает или запрещает использование <filename>robots.txt</filename> и &lt;META NAME="robots" ...&gt;
-для исключения страниц. Используйте <option>no</option>, например, для проверки ссылок на вашем сайте или сайтах.
-Имейте в виду, что игнорирование чужих <filename>robots.txt</filename> не приветсвуется сетевым этикетом.
-Команда действует до конца файла, или до следующей команды <command>Robots</command>.
-Значение по умолчанию: yes.
-<programlisting>
-Robots yes
-</programlisting>
-</para>
-</sect2>
-
-<sect2 id="robotsperiod_cmd">
-<title>Команда <command>RobotsPeriod</command></title>
-<para><indexterm><primary>Команда</primary><secondary>RobotsPeriod</secondary></indexterm>
-По умолчанию, данные из robots.txt хранятся в SQL-базе одну неделю. Вы можете изменить этот период используя команду
-<command>RobotsPeriod</command>:
-<programlisting>
-RobotsPeriod &lt;time&gt;
-</programlisting>
-См. формат &lt;time&gt; в описании команды <command>Period</command> из <xref linkend="period_cmd"/>.
-<programlisting>
-RobotsPeriod 30d
-</programlisting>
-</para>
-</sect2>
-
-
-<sect2 id="crawldelay_cmd">
-<title>Команда <command>CrawlDelay</command></title>
-<para><indexterm><primary>Команда</primary><secondary>CrawlDelay</secondary></indexterm>
-Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу. 
-Аналогична команде crawl-delay в файле <filename>robots.txt</filename>, но может быть задана в <filename>indexer.conf</filename> 
-файле для каждого сервера в отдельности. Если не задано значение crawl-delay value в <filename>robots.txt</filename>, 
-используется значение, указаное в <command>CrawlDelay</command>. 
-Если значение crawl-delay указано в <filename>robots.txt</filename>, тогда используется максимальное значение из
-<command>CrawlDelay</command> и crawl-delay.
-</para>
-</sect2>
-
 
 <sect2 id="section_cmd">
 <title>Команда <command>Section</command></title>

@@ -873,7 +873,7 @@ typedef struct {
 } DPS_BOOLSTACK;
 
 typedef struct {
-  size_t		        total_found, grand_total;
+        size_t		        total_found, grand_total;
 	size_t			work_time;
 	size_t			first;
 	size_t			last;
