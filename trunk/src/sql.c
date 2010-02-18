@@ -2141,7 +2141,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			 e_url,
 			 qu, DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0), qu,
 			 DpsVarListFindInt(&Doc->Sections,"Hops",0),
-			 (int)Indexer->now,
+			 DpsVarListFindInt(&Doc->Sections, "Next-Index-Time", (int)Indexer->now),
 			 url_seed, (int)Indexer->now,
 			 qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			 qu, DpsVarListFindInt(&Doc->Sections, "Server_id", 0), qu,
@@ -2171,7 +2171,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
 			   next_url_id,
-			   (int)Indexer->now,
+			   DpsVarListFindInt(&Doc->Sections, "Next-Index-Time", (int)Indexer->now),
 			   url_seed, (int)Indexer->now,
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
@@ -2194,7 +2194,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   e_url,
 			   DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
-			   (int)Indexer->now,
+			   DpsVarListFindInt(&Doc->Sections, "Next-Index-Time", (int)Indexer->now),
 			   url_seed, (int)Indexer->now,
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
@@ -2209,7 +2209,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   e_url,
 			   DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
-			   (int)Indexer->now,
+			   DpsVarListFindInt(&Doc->Sections, "Next-Index-Time", (int)Indexer->now),
 			   url_seed, (int)Indexer->now,
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
@@ -2224,7 +2224,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   e_url,
 			   DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
-			   (int)Indexer->now,
+			   DpsVarListFindInt(&Doc->Sections, "Next-Index-Time", (int)Indexer->now),
 			   url_seed, (int)Indexer->now,
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
@@ -2241,7 +2241,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   e_url,
 			   qu, DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0), qu,
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
-			   (int)Indexer->now,
+			   DpsVarListFindInt(&Doc->Sections, "Next-Index-Time", (int)Indexer->now),
 			   url_seed, (int)Indexer->now,
 			   qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			   qu, DpsVarListFindInt(&Doc->Sections, "Server_id", 0), qu,
@@ -3145,12 +3145,12 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	} else if ( (Indexer->flags & (DPS_FLAG_SORT_HOPS | DPS_FLAG_SORT_EXPIRED | DPS_FLAG_SORT_POPRANK)) 
 	     || (Indexer->flags & DPS_FLAG_DONTSORT_SEED)  ) {
 	  int notfirst = 0;
-	  if (Indexer->flags & DPS_FLAG_SORT_HOPS) {
-	    sprintf(DPS_STREND(sortstr), "ORDER BY hops");
-	    notfirst = 1;
-	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
+	    notfirst = 1;
+	  }
+	  if (Indexer->flags & DPS_FLAG_SORT_HOPS) {
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",hops" : "ORDER BY hops");
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_EXPIRED) {
