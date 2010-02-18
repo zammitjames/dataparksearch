@@ -513,6 +513,7 @@ typedef struct {
         int     checked;
 	int	method;
         int     charset_id;
+        int     delay;
         urlid_t site_id;
         urlid_t server_id;
         float   weight;

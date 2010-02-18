@@ -307,6 +307,7 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	    }
 	  }
 
+	  Href->delay = Srv->crawl_delay;
 #if 0
 	  if (Srv->use_robots) {
 	    rule = DpsRobotRuleFind(Indexer, Srv, NULL, newURL, 0, 0);
@@ -326,9 +327,11 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 }
 
 __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT * Indexer) {
+        char            dbuf[64];
 	size_t		i, res;
 	DPS_HREF        *H;
 	DPS_DOCUMENT	Doc;
+	time_t next_index_time = Indexer->now;
 
 	DpsDocInit(&Doc);
 
@@ -371,6 +374,11 @@ __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT * Indexer) {
 	    DpsVarListDel(&Doc.Sections, "E_URL");
 	    DpsVarListDel(&Doc.Sections, "URL_ID");
 	    Doc.charset_id = H->charset_id;
+	    if (H->delay) {
+	      dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
+	      DpsVarListReplaceStr(&Doc.Sections, "Next-Index-Time", dbuf);
+	      next_index_time += H->delay;
+	    }
 	    if( H->method != DPS_METHOD_DISALLOW && H->method != DPS_METHOD_VISITLATER
 		/*dps_strlen(H->url) <= DPS_URLSIZE*/) { /* FIXME: replace this by config parameter chacking */
 				if(DPS_OK != (res = DpsURLAction(Indexer, &Doc, DPS_URL_ACTION_ADD))){
