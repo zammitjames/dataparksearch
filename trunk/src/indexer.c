@@ -307,7 +307,7 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	    }
 	  }
 
-	  Href->delay = Srv->crawl_delay;
+	  Href->delay = Srv->crawl_delay / 1000;
 #if 0
 	  if (Srv->use_robots) {
 	    rule = DpsRobotRuleFind(Indexer, Srv, NULL, newURL, 0, 0);
@@ -377,7 +377,7 @@ __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT * Indexer) {
 	    if (H->delay) {
 	      dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 	      DpsVarListReplaceStr(&Doc.Sections, "Next-Index-Time", dbuf);
-	      next_index_time += H->delay;
+	      next_index_time += (time_t)H->delay;
 	    }
 	    if( H->method != DPS_METHOD_DISALLOW && H->method != DPS_METHOD_VISITLATER
 		/*dps_strlen(H->url) <= DPS_URLSIZE*/) { /* FIXME: replace this by config parameter chacking */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -91,6 +91,7 @@ __C_LINK int __DPSCALL DpsHrefListAdd(DPS_AGENT *A, DPS_HREFLIST * HrefList,DPS_
 			HrefList->Href[c].server_id = Href->server_id;
 			HrefList->Href[c].charset_id = Href->charset_id;
 			HrefList->Href[c].weight = Href->weight;
+			HrefList->Href[c].delay = Href->delay;
 			DPS_FREE(ehref);
 			return(0);
 		}
@@ -112,6 +113,7 @@ __C_LINK int __DPSCALL DpsHrefListAdd(DPS_AGENT *A, DPS_HREFLIST * HrefList,DPS_
 			HrefList->Href[i].server_id = Href->server_id;
 			HrefList->Href[i].charset_id = Href->charset_id;
 			HrefList->Href[i].weight = Href->weight;
+			HrefList->Href[i].delay = Href->delay;
 			DPS_FREE(ehref);
 			return(0);
 		}
@@ -135,6 +137,7 @@ __C_LINK int __DPSCALL DpsHrefListAdd(DPS_AGENT *A, DPS_HREFLIST * HrefList,DPS_
 	HrefList->Href[HrefList->nhrefs].server_id = Href->server_id;
 	HrefList->Href[HrefList->nhrefs].charset_id = Href->charset_id;
 	HrefList->Href[HrefList->nhrefs].weight = Href->weight;
+	HrefList->Href[HrefList->nhrefs].delay = Href->delay;
 	HrefList->nhrefs++;
 
 	/* Sort unsorted part */
