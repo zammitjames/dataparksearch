@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 #include "dps_config.h"
 #include "dps_base.h"
 
-/* Database type */
+/* Database types and drivers */
 #define DPS_DB_UNK			0
 #define DPS_DB_MSQL			1
 #define DPS_DB_MYSQL			2
@@ -42,6 +42,7 @@
 #define DPS_DB_SEARCHD			200
 #define DPS_DB_CACHED                   400
 #define DPS_DB_CACHE                    401
+#define DPS_DB_ODBC                     500
 
 
 #define DPS_URL_ACTION_DELETE		1

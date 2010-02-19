@@ -180,8 +180,3 @@ CREATE TABLE "cachedchk2" (
 );
 CREATE UNIQUE INDEX cachedchk2_i ON cachedchk2 (url_id);
 
-CREATE TABLE "cachedchk2" (
-       url_id integer
-);
-CREATE UNIQUE INDEX cachedchk2_i ON cachedchk (url_id);
-

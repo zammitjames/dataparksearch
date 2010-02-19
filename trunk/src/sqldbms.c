@@ -2592,7 +2592,7 @@ char * DpsDBEscStr(int DBType,char *to,const char *from,size_t len){
 int __DPSCALL DpsSQLBegin(DPS_DB *db) {
   int rc = DPS_OK;
 
-  switch(db->DBType){
+  switch(db->DBDriver) {
 
   case DPS_DB_PGSQL:
     rc = DpsSQLAsyncQuery(db, NULL, "BEGIN WORK");
@@ -2621,7 +2621,7 @@ int __DPSCALL DpsSQLBegin(DPS_DB *db) {
 int __DPSCALL DpsSQLEnd(DPS_DB *db) {
   int rc = DPS_OK;
 
-  switch(db->DBType){
+  switch(db->DBDriver) {
 
   case DPS_DB_ORACLE7:
   case DPS_DB_ORACLE8:
@@ -2645,7 +2645,7 @@ int __DPSCALL DpsSQLEnd(DPS_DB *db) {
 int __DPSCALL DpsSQLAbort(DPS_DB *db) {
   int rc = DPS_OK;
 
-  switch(db->DBType){
+  switch(db->DBDriver) {
 
   case DPS_DB_ORACLE7:
   case DPS_DB_ORACLE8:
@@ -2778,7 +2778,7 @@ int __DPSCALL _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * query, c
 #endif
 
 #if (HAVE_IODBC || HAVE_UNIXODBC || HAVE_SOLID || HAVE_VIRT || HAVE_EASYSOFT || HAVE_SAPDB || HAVE_DB2)
-	{	/* FIXME: add driver checking */
+	if(db->DBDriver == DPS_DB_ODBC) {
 		res=DpsODBCQuery(db,query);
 		if(res)res->DBDriver=db->DBDriver;
 		goto ret;
