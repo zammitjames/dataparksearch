@@ -56,7 +56,7 @@ required. <application>PostgreSQL</application> 8.1 is recommended for better pe
 so it is possible to compile and use
 <application>DataparkSearch</application> on almost every modern UNIX
 system with a C compiler without any modifications. We develop the
-software on <application>FreeBSD 5.x</application> using <application>PostgreSQL 8.1</application>. </para>
+software on <application>FreeBSD 7.x</application> using <application>PostgreSQL 8.3</application>. </para>
 
 <para>Currently known systems where <application>DataparkSearch</application> has been successfully compiled and tested on 
 are:</para>
@@ -68,7 +68,7 @@ are:</para>
 				<para>Debian GNU/Linux (Lenny, Etch) (i386)</para>
 			</listitem>
 			<listitem>
-				<para>FreeBSD 2.2.5, 3.x, 4.x, 5.x, 6.x, 7.0</para>
+				<para>FreeBSD 2.2.5, 3.x, 4.x, 5.x, 6.x, 7.x</para>
 			</listitem>
 			<listitem>
 				<para>Linux Fedora Core-1, Kernel 2.4.22-1.2174</para>
@@ -90,6 +90,9 @@ are:</para>
 			</listitem>
 			<listitem>
 				<para>Gentoo Linux 2007.0 amd64</para>
+			</listitem>
+			<listitem>
+				<para>SUSE Linux</para>
 			</listitem>
 			<listitem>
 				<para>OpenBSD 4.5 (i386)</para>

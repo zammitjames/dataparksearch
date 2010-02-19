@@ -57,7 +57,7 @@
 		<title>Поддерживаемые операционные системы</title>
 		<para>Мы используем <application>GNU Autoconf</application>, что позволяет скомпилировать
 <application>DataparkSearch</application> почти на всех современных UNIX системах, имеющих копилятор C.
-Разработка ведётся на <application>FreeBSD 5.x</application> с использованием <application>PostgreSQL 8.1</application>. </para>
+Разработка ведётся на <application>FreeBSD 7.x</application> с использованием <application>PostgreSQL 8.3</application>. </para>
 
 <para>На даенный момент известно об успешных установках <application>DataparkSearch</application> на 
 следующих опреационных системах:</para>
@@ -69,7 +69,7 @@
 				<para>Debian GNU/Linux (Lenny, Etch) (i386)</para>
 			</listitem>
 			<listitem>
-				<para>FreeBSD 2.2.x, 3.x, 4.x, 5.x, 6.x, 7.0</para>
+				<para>FreeBSD 2.2.x, 3.x, 4.x, 5.x, 6.x, 7.x</para>
 			</listitem>
 			<listitem>
 				<para>Linux Fedora Core-1, Kernel 2.4.22-1.2174</para>
@@ -91,6 +91,9 @@
 			</listitem>
 			<listitem>
 				<para>Gentoo Linux 2007.0 amd64</para>
+			</listitem>
+			<listitem>
+				<para>SUSE Linux</para>
 			</listitem>
 			<listitem>
 				<para>OpenBSD 4.5 (i386)</para>

@@ -925,8 +925,8 @@ Include sections.conf
 
 #########################################################################
 #PopRankSkipSameSite yes|no
-# Skip links from same site for Popularity Rank calculation. Default value is "no".
-#PopRankSkipSameSite yes
+# Skip links from same site for Popularity Rank calculation. Default value is "yes".
+#PopRankSkipSameSite no
 
 
 #########################################################################

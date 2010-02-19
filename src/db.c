@@ -1703,24 +1703,36 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	  return DPS_ERROR;
 	}
 	if(!strcasecmp(db->addrURL.schema,"cached")){
-		db->DBType = DPS_DB_CACHED;
+		db->DBType   = DPS_DB_CACHED;
+		db->DBDriver = DPS_DB_CACHED;
 	}
 	else if(!strcasecmp(db->addrURL.schema,"cache")){
-		db->DBType = DPS_DB_CACHE;
+		db->DBType   = DPS_DB_CACHE;
+		db->DBDriver = DPS_DB_CACHE;
 	}
 	else if(!strcasecmp(db->addrURL.schema,"searchd")){
-		db->DBType=DPS_DB_SEARCHD;
-/*		if (DPS_OK != DpsSearchdConnect(db)) return DPS_ERROR;*/
+		db->DBType   = DPS_DB_SEARCHD;
+		db->DBDriver = DPS_DB_SEARCHD;
 	}
 #if (HAVE_DP_MSQL||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"msql")){
-		db->DBType=DPS_DB_MSQL;
+		db->DBType = DPS_DB_MSQL;
+#if defined(HAVE_DP_MSQL)
+		db->DBDriver = DPS_DB_MSQL;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_LIMIT=1;
 	}
 #endif
 #if (HAVE_SOLID||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"solid")){
 		db->DBType=DPS_DB_SOLID;
+#if defined(HAVE_SOLID)
+		db->DBDriver = DPS_DB_SOLID;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 	}
@@ -1728,6 +1740,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_ORACLE7||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"oracle7")){
 		db->DBType=DPS_DB_ORACLE7;
+#if defined(HAVE_ORACLE7)
+		db->DBDriver = DPS_DB_ORACLE7;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 		db->DBSQL_TRUNCATE=1;
@@ -1737,6 +1754,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_ORACLE8||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"oracle8")){
 		db->DBType=DPS_DB_ORACLE8;
+#if defined(HAVE_ORACLE8)
+		db->DBDriver = DPS_DB_ORACLE8;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 		db->DBSQL_TRUNCATE=1;
@@ -1744,6 +1766,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	}
 	else if(!strcasecmp(db->addrURL.schema,"oracle")){
 		db->DBType=DPS_DB_ORACLE8;
+#if defined(HAVE_ORACLE8)
+		db->DBDriver = DPS_DB_ORACLE8;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 		db->DBSQL_TRUNCATE=1;
@@ -1753,6 +1780,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_CTLIB||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"mssql")){
 		db->DBType=DPS_DB_MSSQL;
+#if defined(HAVE_CTLIB)
+		db->DBDriver = DPS_DB_MSSQL;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 		db->DBSQL_TRUNCATE=1;
@@ -1761,6 +1793,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_DP_MYSQL||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"mysql")){
 		db->DBType=DPS_DB_MYSQL;
+#if defined(HAVE_DP_MYSQL)
+		db->DBDriver = DPS_DB_MYSQL;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_LIMIT=1;
 		db->DBSQL_GROUP=1;
@@ -1769,6 +1806,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_DP_PGSQL||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"pgsql")){
 		db->DBType=DPS_DB_PGSQL;
+#if defined(HAVE_DP_PGSQL)
+		db->DBDriver = DPS_DB_PGSQL;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_LIMIT=1;
 		db->DBSQL_GROUP=1;
@@ -1779,7 +1821,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_IBASE||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"ibase")){
 		db->DBType=DPS_DB_IBASE;
-		
+#if defined(HAVE_IBASE)
+		db->DBDriver = DPS_DB_IBASE;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		/* 
 		while indexing large sites and using the SQL in statement 
 		interbase will fail when the items in the in IN statements
@@ -1810,6 +1856,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_SAPDB||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"sapdb")){
 		db->DBType=DPS_DB_SAPDB;
+#if defined(HAVE_SAPDB)
+		db->DBDriver = DPS_DB_SAPDB;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 	}
@@ -1817,6 +1868,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_DB2||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema,"db2")){
 		db->DBType=DPS_DB_DB2;
+#if defined(HAVE_DB2)
+		db->DBDriver = DPS_DB_DB2;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 	}
@@ -1824,6 +1880,11 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_DB_ACCESS||HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema, "access")) {
 		db->DBType=DPS_DB_ACCESS;
+#if defined(HAVE_DP_ACCESS)
+		db->DBDriver = DPS_DB_ACCESS;
+#else
+		db->DBDriver = DPS_DB_ODBC;
+#endif
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 		db->DBSQL_SUBSELECT = 1;
@@ -1831,7 +1892,8 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #endif
 #if (HAVE_ODBC)
 	else if(!strcasecmp(db->addrURL.schema, "mimer")) {
-		db->DBType=DPS_DB_MIMER;
+		db->DBType = DPS_DB_MIMER;
+		db->DBDriver = DPS_DB_ODBC;
 		db->DBSQL_IN=1;
 		db->DBSQL_GROUP=1;
 		db->DBSQL_SUBSELECT = 1;
@@ -1843,8 +1905,6 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #endif
 	  return DPS_ERROR;
 	}
-	
-	db->DBDriver=db->DBType;
 	
 	if((s = strchr(DPS_NULL2EMPTY(db->addrURL.query_string), '?'))) {
 		char * tok, *lt;
