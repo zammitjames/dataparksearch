@@ -552,6 +552,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 	int result, res, cnt_flag = 0;
 	DPS_URL *myurl;
 	DPS_HREF Href;
+	char *end;
 
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
@@ -567,7 +568,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 	/* Read lines and clear/insert/check URLs                     */
 	/* We've already tested in main.c to make sure it can be read */
 	/* FIXME !!! Checking should be done here surely              */
-	
+
 	if(!strcmp(fname,"-"))
 		url_file=stdin;
 	else
@@ -578,8 +579,20 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 	  Indexer->Conf->url_number = 0;
 	}
 
-	while(fgets(str1,sizeof(str1),url_file)){
-		char *end;
+	while(1) {
+	        if (fgets(str1, sizeof(str1), url_file) == NULL){
+		  if (feof(url_file)) break;
+		  if (ferror(url_file)) {
+		    if (errno == EAGAIN) continue;
+		    DpsLog(Indexer, DPS_LOG_ERROR, "Error reading URL file %s: '%s'", (strcmp(fname, "-")) ? "<STDIN>" : fname, strerror(errno));
+		    if(url_file != stdin) fclose(url_file);
+		    DpsURLFree(myurl);
+#ifdef WITH_PARANOIA
+		    DpsViolationExit(Indexer->handle, paran);
+#endif
+		    return(DPS_ERROR);
+		  }
+		}
 		if(!str1[0])continue;
 		end=str1+dps_strlen(str1)-1;
 		while((end>=str1)&&(*end==CR_CHAR||*end==NL_CHAR)){
