@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2010 Datapark corp. All rights reserved.
    Copyright (C) 2003 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -73,7 +73,7 @@ typedef struct {
   urlid_t rec_id;
   unsigned int NFiles, FileNo;
   int Ifd, Sfd;
-  int  mode, mishash, opened;
+  int  mode, mishash, opened, locked;
   int zlib_level, zlib_method, zlib_windowBits, zlib_memLevel, zlib_strategy;
 } DPS_BASE_PARAM;
 
