@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2003 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -148,6 +148,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
       DpsWriteLock(P->Ifd);
       break;
     }
+    P->locked = 1;
   }
 
   if ((P->Sfd = DpsOpen2(P->Sfilename, ((mode == DPS_READ_LOCK) ? O_RDONLY : O_RDWR) | DPS_BINARY
@@ -197,9 +198,11 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
       if (read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) != sizeof(DPS_BASEITEM)) {
 	DpsLog(P->A, DPS_LOG_ERROR, "{%s:%d} Can't read index for file %s seek:%ld hash: %u (%d)", 
 	       __FILE__, __LINE__, P->Ifilename, P->CurrentItemPos, hash, hash);
-	DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+	bzero(&P->Item, sizeof(P->Item));
+/*	DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
 	TRACE_OUT(P->A);
 	return DPS_ERROR;
+*/
       }
 
 #ifdef DEBUG_SEARCH
@@ -284,18 +287,19 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 
 __C_LINK int __DPSCALL DpsBaseClose(DPS_BASE_PARAM *P) {
   TRACE_IN(P->A, "DpsBaseClose");
-  if (P->opened) {
-    if (P->mode == DPS_WRITE_LOCK) {
+  if (P->opened && (P->mode == DPS_WRITE_LOCK) ) {
       fsync(P->Sfd);
       fsync(P->Ifd);
-    }
-    if (!P->A->Flags.cold_var) {
+  }
+  if (!P->A->Flags.cold_var && P->locked) {
       DpsUnLock(P->Sfd);
       DpsUnLock(P->Ifd); 
 #if 1
       DPS_RELEASELOCK(P->A, DPS_LOCK_BASE_N(P->FileNo));
 #endif
-    }
+      P->locked = 0;
+  }
+  if (P->opened){
     DpsClose(P->Sfd); 
     DpsClose(P->Ifd); 
     DPS_FREE(P->Ifilename);
@@ -754,6 +758,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
   int OptimizeRatio, res, error_cnt;
   char buffer[BUFSIZ];
   DPS_BASEITEM *hTable;
+  DPS_SORTBASEITEM *si = NULL;
 
   OptimizeRatio = DpsVarListFindInt(&P->A->Vars, "OptimizeRatio", 5);
 
@@ -808,7 +813,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 
     if ((dr >= (double)OptimizeRatio) || (ActualSize == 0 && SSize != 0)) {
 
-      DPS_SORTBASEITEM *si = (DPS_SORTBASEITEM*)DpsMalloc((nitems + 1) * sizeof(DPS_SORTBASEITEM));
+      si = (DPS_SORTBASEITEM*)DpsMalloc((nitems + 1) * sizeof(DPS_SORTBASEITEM));
 
       if (si == NULL) {
 	DpsLog(P->A, DPS_LOG_ERROR, "Can't alloc si (%d bytes) at {%s:%d}", (nitems + 1) * sizeof(DPS_SORTBASEITEM), __FILE__, __LINE__);
@@ -822,14 +827,14 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	return DPS_ERROR;
       }
 
-      i = 0;
-      while(read(P->Ifd, &si[i].Item, sizeof(DPS_BASEITEM)) == sizeof(DPS_BASEITEM)) {
-	if(si[i].Item.rec_id != 0 && ((long)si[i].Item.offset < (long)SSize) && (si[i].Item.size > 0)) {
+      for (i = 0; (i < nitems) && (read(P->Ifd, &si[i].Item, sizeof(DPS_BASEITEM)) == sizeof(DPS_BASEITEM)); ) {
+	if(si[i].Item.rec_id != 0 && ((dps_uint8)si[i].Item.offset < (dps_uint8)SSize) && (si[i].Item.size > 0) && (si[i].Item.size < ActualSize) ) {
 	  i++;
 	}
       }
 
-      if ((nitems = i) > 1) DpsSort((void*)si, (size_t)nitems, sizeof(DPS_SORTBASEITEM), cmpsi);
+      if (i < nitems) nitems = i;
+      if (nitems > 1) DpsSort((void*)si, (size_t)nitems, sizeof(DPS_SORTBASEITEM), cmpsi);
 
       gain = (dps_uint8)0;
       pos = (off_t)0;
