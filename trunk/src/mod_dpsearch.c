@@ -857,6 +857,7 @@ static int dpsearch_handler(request_rec *r) {
 		char		*clist;
 		const char	*u, *dm;
 		char		*eu, *edm;
+		char		*ct, *ctu;
 		size_t		cl, sc, ir, clistsize;
 		urlid_t		dc_url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 		urlid_t		dc_origin_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Origin-ID", 0);
@@ -983,16 +984,33 @@ static int dpsearch_handler(request_rec *r) {
 		}
 		DpsEscapeURL(edm, dm);
 
+		ct = DpsVarListFindStr(&Agent->Vars, "Content-Type", "");
+		ctu = (char*)DpsMalloc(dps_strlen(ct) * 10 + 10);
+		if (ctu == NULL) {
+		  DPS_FREE(old_tmplt);
+		  DPS_FREE(tmplt);
+		  
+		  DpsLog(Agent, DPS_LOG_ERROR, "Can't alloc ctu");
+
+		  return 
+#ifdef APACHE1
+			       SERVER_ERROR;
+#else
+			       HTTP_INTERNAL_SERVER_ERROR;
+#endif
+		}
+		DpsEscapeURL(ctu, ct);
+
 		dps_snprintf(storedstr, storedlen, "%s?rec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
 			     DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi"),
 			     DpsURL_ID(Doc, NULL),
 			     DpsVarListFindStr(&Agent->Vars, "label", ""),
-			     edm,
+			     edm, /* Last-Modified escaped */
 			     sc = DpsVarListFindInt(&Agent->Vars, "Content-Length", 0),
 			     DpsVarListFindStr(&Agent->Vars,"Content-Language",""),
 			     DpsVarListFindStr(&Agent->Vars,"Charset",""),
-			     eu,
-			     DpsVarListFindStr(&Doc->Sections,"Content-Type",""),
+			     eu, /* URL escaped */
+			     ctu, /* Content-Type escaped */
 			     searchwords
 			     );
 
@@ -1012,7 +1030,7 @@ static int dpsearch_handler(request_rec *r) {
 
 		DpsFree(eu);
 		DpsFree(edm);
-
+		DpsFree(ctu);
 
 #ifdef DEBUG
 		DpsLog(Agent, DPS_LOG_DEBUG, "body: %s", DpsVarListFindStr(&Agent->Vars,"body","(none)"));
