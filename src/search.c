@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -647,6 +647,7 @@ int main(int argc, char **argv, char **envp) {
 		char		*clist;
 		const char	*u, *dm;
 		char		*eu, *edm;
+		char		*ct, *ctu;
 		size_t		cl, sc, r, clistsize;
 		urlid_t		dc_url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 		urlid_t		dc_origin_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Origin-ID", 0);
@@ -739,6 +740,7 @@ int main(int argc, char **argv, char **envp) {
 		  exit(0);
 		}
 		DpsEscapeURL(eu, u);
+
 		dm = DpsVarListFindStr(&Agent->Vars, "Last-Modified", "");
 		edm = (char*)DpsMalloc(dps_strlen(dm)*10 + 10);
 		if (edm == NULL) {
@@ -750,16 +752,27 @@ int main(int argc, char **argv, char **envp) {
 		}
 		DpsEscapeURL(edm, dm);
 
+		ct = DpsVarListFindStr(&Agent->Vars, "Content-Type", "");
+		ctu = (char*)DpsMalloc(dps_strlen(ct) * 10 + 10);
+		if (ctu == NULL) {
+		  if(httpd){
+		    printf("Content-Type: text/plain\r\n\r\n");
+		  }
+		  printf("Can't alloc ctu\n");
+		  exit(0);
+		}
+		DpsEscapeURL(ctu, ct);
+
 		dps_snprintf(storedstr, storedlen, "%s?rec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
 			     DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi"),
 			     DpsURL_ID(Doc, NULL), 
 			     DpsVarListFindStr(&Agent->Vars, "label", ""),
-			     edm,
+			     edm, /* Last-Modified escaped */
 			     sc = DpsVarListFindInt(&Agent->Vars, "Content-Length", 0),
 			     DpsVarListFindStr(&Agent->Vars, "Content-Language", ""),
 			     DpsVarListFindStr(&Agent->Vars, "Charset", ""),
-			     eu,
-			     DpsVarListFindStr(&Doc->Sections,"Content-Type",""),
+			     eu, /* URL escaped */
+			     ctu, /* Content-Type escaped */
 			     searchwords
 			     );
 
@@ -779,6 +792,7 @@ int main(int argc, char **argv, char **envp) {
 
 		DpsFree(eu);
 		DpsFree(edm);
+		DpsFree(ctu);
 
 		if (/*DpsVarListFindInt(&Doc->Sections, "ST", 0) && */(DpsVarListFindStr(&Doc->Sections, "Z", NULL) == NULL)) {
 			DpsVarListReplaceInt(&Agent->Vars, "ST", 1);
