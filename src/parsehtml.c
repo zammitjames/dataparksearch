@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1405,7 +1405,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	tag.follow = Doc->Spider.follow;
 	tag.index = Doc->Spider.index;
 	tag.body = 1; /* for the case when the BodyPattern is applied */
-	tag.comment = (strstr(content, "<!-- google_ad_section_start -->") == NULL) ? 0 : 1;
+	tag.comment = (strstr(content, "<!-- google_ad_section_start -->") == NULL) ? 0 : 2;
 
 	htok=DpsHTMLToken(content, &last, &tag);
 	
@@ -1414,11 +1414,9 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	  const char *tmpbeg;
 	  const char *tmpend;
 
-
 	  switch(tag.type){
 			
 	  case DPS_HTML_COM:
-
 	    break;
 
 	  case DPS_HTML_TXT:
@@ -1447,7 +1445,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      DpsTextListAdd(&Doc->TextList,&Item);
 	    }
-	    if (TSec && !tag.comment && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
+	    if (TSec && (tag.comment != 1) && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
 	      Item.href=NULL;
 	      Item.str=tmp;
 	      Item.section = title_sec;
@@ -1460,7 +1458,6 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	    break;
 		
 	  case DPS_HTML_TAG:
-				
 	    DpsHTMLParseTag(Indexer, &tag, Doc);
 	    break;
 	  }
