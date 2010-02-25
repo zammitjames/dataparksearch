@@ -2777,8 +2777,8 @@ int __DPSCALL _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * query, c
 
 #if (HAVE_IODBC || HAVE_UNIXODBC || HAVE_SOLID || HAVE_VIRT || HAVE_EASYSOFT || HAVE_SAPDB || HAVE_DB2)
 	if(db->DBDriver == DPS_DB_ODBC) {
-	  res=DpsODBCQuery(db, res, query);
-		if(res)res->DBDriver=db->DBDriver;
+	        DpsODBCQuery(db, res, query);
+		if(res) res->DBDriver = db->DBDriver;
 		goto ret;
 	}
 #endif
