@@ -462,7 +462,8 @@ static int DpsODBCDisplayError(DPS_DB *db){
 	}
 	return(0);
 }
-static DPS_SQLRES * execDB(DPS_DB*db,const char* sqlstr){
+
+static void execDB(DPS_DB*db, DPS_SQLRES *result, const char* sqlstr) {
 	RETCODE rc;
 	SWORD iResColumns;
 	SDWORD iRowCount;
@@ -474,7 +475,6 @@ static DPS_SQLRES * execDB(DPS_DB*db,const char* sqlstr){
 	UDWORD pcbColDef;
 	SWORD pibScale;
 	SWORD pfNullable;
-	DPS_SQLRES *result=NULL;
 	SDWORD	pcbValue;
 	static char	bindbuf[(int)(32L * 1024L - 16L)];
 
@@ -490,38 +490,35 @@ static DPS_SQLRES * execDB(DPS_DB*db,const char* sqlstr){
 		rc=SQLTransact(db->hEnv,db->hDbc,SQL_COMMIT);
 		if(!SQL_OK(rc))	db->errcode=1;
 		else db->errcode=0;
-		return(NULL);
+		return;
 	}
 
 	rc=SQLAllocStmt(db->hDbc, &(db->hstmt));
 	if (!SQL_OK(rc)){
 		db->errcode=1;
-		return(NULL);
+		return;
 	}
 	rc=SQLExecDirect(db->hstmt,(SQLCHAR *)sqlstr, SQL_NTS);
 	if (!SQL_OK(rc)){
 		if(rc==SQL_NO_DATA) goto ND;
 		db->errcode=1;
-		return(NULL); 
+		return; 
 	}
 	rc=SQLNumResultCols(db->hstmt, &iResColumns);
 	if(!SQL_OK(rc)){
 		db->errcode=1;
-		return(NULL);
+		return;
 	}
 	if(!iResColumns) {
 		rc=SQLRowCount(db->hstmt, &iRowCount);
 		if (!SQL_OK(rc)){
 			db->errcode=1;
-			return(NULL);
+			return;
 		}
-		result=NULL;
 	}else{
-		result=(DPS_SQLRES*)DpsXmalloc(sizeof(DPS_SQLRES));
-		if (result == NULL) return NULL;
 		result->nRows = 0;
 		result->nCols = iResColumns;
-		result->items=NULL;
+/*		result->items=NULL;*/
 
 		rc = SQL_NO_DATA_FOUND;
 		for (res_count=0;(db->res_limit?(res_count<db->res_limit):1);res_count++){
@@ -534,10 +531,10 @@ static DPS_SQLRES * execDB(DPS_DB*db,const char* sqlstr){
 			}
 			if(!result->nRows){
 				result->items=(char **)DpsXmalloc(1*iResColumns*sizeof(char*) + 1);
-				if (result->items == NULL) return NULL;
+				if (result->items == NULL) return;
 			}else{
 				result->items=(char **)DpsXrealloc(result->items,((result->nRows+1)*iResColumns*sizeof(char*)));
-				if (result->items == NULL) return NULL;
+				if (result->items == NULL) return;
 			}
 			for (i = 0; i < iResColumns; i++) {
 				SQLDescribeCol(db->hstmt, i+1, szColName, sizeof(szColName),
@@ -556,7 +553,7 @@ ND:
 		rc=SQLTransact(db->hEnv,db->hDbc,SQL_COMMIT);
 		if(!SQL_OK(rc)){
 			db->errcode=1;
-			return(NULL);
+			return;
 		}
 	}
 	
@@ -564,7 +561,7 @@ ND:
 	
 	db->res_limit=0;
 	db->errcode=0;
-	return(result);
+	return;
 }
 static int DpsODBCInitDB(DPS_DB *db){
 	char DSN[512]="";
@@ -605,19 +602,20 @@ static void DpsODBCCloseDB(DPS_DB *db){
 		else	db->hEnv = SQL_NULL_HENV;
 	}
 }
-static DPS_SQLRES * DpsODBCQuery(DPS_DB *db,const char *qbuf){
-	DPS_SQLRES * res;
+
+static int DpsODBCQuery(DPS_DB *db, DPS_SQLRES *res, const char *qbuf) {
+	int rc = DPS_OK;
 
 	if(!db->connected){
 		DpsODBCInitDB(db);
 		if(db->errcode){
 			DpsODBCDisplayError(db);
-			return(0);
+			return DPS_ERROR;
 		}else{
 			db->connected=1;
 		}
 	}
-	res=execDB(db,qbuf);
+	execDB(db, res, qbuf);
 	if((db->errcode)){
 		DpsODBCDisplayError(db);
 		if(strstr(db->errstr,"uplicat")){ /* PgSQL,MySQL*/
@@ -630,11 +628,11 @@ static DPS_SQLRES * DpsODBCQuery(DPS_DB *db,const char *qbuf){
 			db->errcode=0;
 		}else{
 			db->errcode=1;
-			res=NULL;
+			rc = DPS_ERROR;
 		}
 		SQLFreeStmt(db->hstmt, SQL_DROP);
 	}
-	return(res);
+	return rc;
 }
 
 #endif
@@ -2779,7 +2777,7 @@ int __DPSCALL _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * query, c
 
 #if (HAVE_IODBC || HAVE_UNIXODBC || HAVE_SOLID || HAVE_VIRT || HAVE_EASYSOFT || HAVE_SAPDB || HAVE_DB2)
 	if(db->DBDriver == DPS_DB_ODBC) {
-		res=DpsODBCQuery(db,query);
+	  res=DpsODBCQuery(db, res, query);
 		if(res)res->DBDriver=db->DBDriver;
 		goto ret;
 	}
