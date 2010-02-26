@@ -2642,6 +2642,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	int rc = DPS_OK, u = 1, recs, status;
 	int NFiles;
 	int *FF = NULL;
+	int upper_status = (Indexer->Flags.SubDocLevel > 0) ? 400 : 300;
 	int max_shows, use_showcnt = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankUseShowCnt", "no"), "yes");
 	int min_weight, scale_weight;
 	const char	*vardir;
@@ -2695,11 +2696,11 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	while(u) {
 	  if (use_showcnt) {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight,u.shows FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id AND u.status>199 AND u.status<400 ORDER by u.rec_id LIMIT %d",
+ "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight,u.shows FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
 			 rec_id, recs);
 	  } else {
 	    dps_snprintf(str, sizeof(str), 
-    "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id AND u.status>199 AND u.status<400 ORDER by u.rec_id LIMIT %d",
+ "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
 			 rec_id, recs);
 	  }
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
@@ -2712,7 +2713,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  for (i = 0; i < nitems; i++) {
 	    status = DPS_ATOI(DpsSQLValue(&SQLres, i, 5));
 	    
-	    if ((status < 200 /*|| status >= 400*/) /*&& (status != 304)*/) continue;
+	    if ((status < 200 || status >= upper_status) && (status != 304)) continue;
 
 	    Item.url_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 0));
 	    Item.site_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
