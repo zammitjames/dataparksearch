@@ -85,7 +85,7 @@ CLASS="SECT1"
 NAME="REL"
 >8.5. Релевантность
 <A
-NAME="AEN5884"
+NAME="AEN5886"
 ></A
 ></A
 ></H1
@@ -148,7 +148,7 @@ CLASS="FILENAME"
 >search.htm</TT
 >) не предусмотрено указание секцией,
 используйте <A
-NAME="AEN5901"
+NAME="AEN5903"
 ></A
 > команду
 <B
@@ -160,7 +160,7 @@ CLASS="COMMAND"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN5905"
+NAME="AEN5907"
 ></A
 ><P
 ><B
@@ -177,11 +177,11 @@ CLASS="CALSTABLE"
 ><TD
 ><CODE
 CLASS="OPTION"
->--enable-fullrel</CODE
+>--enable-rel</CODE
 ></TD
 ><TD
 ><P
->Включает полный вариант расчёта релевантности. Значение по умолчанию: выключено (или быстрый расчёт релевантности).</P
+>Включает полный (full), быстрый (fast) или ультра (ultra) вариант расчёта релевантности. Значение по умолчанию: full (или полный расчёт релевантности).</P
 ></TD
 ></TR
 ><TR
@@ -342,13 +342,13 @@ CLASS="SECT2"
 ><A
 NAME="POPRANK"
 >8.5.3. Рейтинг популярности<A
-NAME="AEN5976"
+NAME="AEN5978"
 ></A
 ></A
 ></H2
 ><P
 ><A
-NAME="AEN5979"
+NAME="AEN5981"
 ></A
 >
 <SPAN
@@ -376,7 +376,7 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 ><A
-NAME="AEN5989"
+NAME="AEN5991"
 ></A
 >
 Для метода расчёта популярности <TT
@@ -404,7 +404,7 @@ CLASS="FILENAME"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN5999"
+NAME="AEN6001"
 ></A
 >PopRankSkipSameSite no</CODE
 >,
@@ -433,7 +433,7 @@ CLASS="OPTION"
 Эта сумма и является индексом популярности страницы.</P
 ><P
 ><A
-NAME="AEN6009"
+NAME="AEN6011"
 ></A
 >
 По умолчанию значение параметра <CODE
@@ -459,7 +459,7 @@ CLASS="FILENAME"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN6019"
+NAME="AEN6021"
 ></A
 >PopRankFeedBack yes</CODE
 >,
@@ -474,7 +474,7 @@ CLASS="FILENAME"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN6025"
+NAME="AEN6027"
 ></A
 >PopRankUseTracking yes</CODE
 >,
@@ -491,7 +491,7 @@ CLASS="FILENAME"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN6032"
+NAME="AEN6034"
 ></A
 >PopRankUseShowCnt yes</CODE
 >,
@@ -499,7 +499,7 @@ NAME="AEN6032"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN6036"
+NAME="AEN6038"
 ></A
 >PopRankShowCntRatio</CODE
 >
@@ -522,7 +522,7 @@ CLASS="LITERAL"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN6044"
+NAME="AEN6046"
 ></A
 >PopRankShowCntWeight</CODE
 >
@@ -551,14 +551,14 @@ TARGET="_top"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN6053"
+NAME="AEN6055"
 ></A
 >PopRankNeoIterations</CODE
 >
 для задания числа итераций при расчёте популярности методом  &quot;Neo&quot;. Значение по умолчанию: 3.</P
 ><P
 ><A
-NAME="AEN6057"
+NAME="AEN6059"
 ></A
 >
 По умолчанию, расчёт рейтинга популярности методом &quot;Neo&quot; ведётся одновременно с индексирования. Для ускорения индексирования,
@@ -581,7 +581,7 @@ CLASS="SECT2"
 NAME="REL-BOOL"
 >8.5.4. Булевы запросы
 <A
-NAME="AEN6065"
+NAME="AEN6067"
 ></A
 ></A
 ></H2
@@ -607,7 +607,7 @@ CLASS="SECT2"
 NAME="REL-CWORDS"
 >8.5.5. Crosswords
 <A
-NAME="AEN6074"
+NAME="AEN6076"
 ></A
 ></A
 ></H2
@@ -619,7 +619,7 @@ NAME="AEN6074"
 CLASS="COMMAND"
 >CrossWords yes
 <A
-NAME="AEN6078"
+NAME="AEN6080"
 ></A
 ></B
 > в <TT
@@ -646,16 +646,16 @@ NAME="SEA"
 >8.5.6. Алгоритм Построения Рефератов (SEA)</A
 ></H2
 ><A
-NAME="AEN6087"
-></A
-><A
 NAME="AEN6089"
 ></A
 ><A
-NAME="AEN6092"
+NAME="AEN6091"
 ></A
 ><A
-NAME="AEN6095"
+NAME="AEN6094"
+></A
+><A
+NAME="AEN6097"
 ></A
 ><P
 ><TT
@@ -691,7 +691,7 @@ CLASS="LITERAL"
 >Соответствующие команды конфигурирования:</P
 ><P
 ><A
-NAME="AEN6108"
+NAME="AEN6110"
 ></A
 >
 Команда <B
@@ -701,7 +701,7 @@ CLASS="COMMAND"
 Значение по умолчанию: 32.</P
 ><P
 ><A
-NAME="AEN6113"
+NAME="AEN6115"
 ></A
 >
 Команда <B
@@ -712,7 +712,7 @@ CLASS="COMMAND"
 производительности индексирования.</P
 ><P
 ><A
-NAME="AEN6118"
+NAME="AEN6120"
 ></A
 >
 При помощи команды <B
@@ -786,7 +786,7 @@ ALIGN="right"
 VALIGN="top"
 >Регистрация поисковых запросов
 <A
-NAME="AEN6125"
+NAME="AEN6127"
 ></A
 ></TD
 ></TR

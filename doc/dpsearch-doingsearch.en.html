@@ -666,15 +666,21 @@ CLASS="LITERALLAYOUT"
 query, all sections factors are 1, it means all sections have the same
 weight.</P
 ><P
->By default, <SPAN
+>If <SPAN
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
-> uses fast relevance calculation.
-In this case, only zero and non-zero values for "wf" variable takes an effect (this allows only include/exclude
-specified sections in search results).
-To enable full support for dynamic section weight, you need specify <CODE
+> has been built with fast relevance calculation (with <CODE
 CLASS="OPTION"
->--enable-fullrel</CODE
+>--enable-rel=fast</CODE
+>
+option for <B
+CLASS="COMMAND"
+>configure</B
+>), in this case, only zero and non-zero values for "wf" variable takes an effect (this allows only include/exclude
+specified sections in search results).
+To use full support for dynamic section weights, you need specify <CODE
+CLASS="OPTION"
+>--enable-rel=full</CODE
 >
 option for <B
 CLASS="COMMAND"
@@ -950,7 +956,7 @@ NAME="SEARCH-BOOL"
 >8.1.7. Advanced boolean search</A
 ></H2
 ><A
-NAME="AEN4888"
+NAME="AEN4890"
 ></A
 ><P
 >If you want more advanced results you may use

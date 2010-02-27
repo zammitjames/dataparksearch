@@ -41,8 +41,8 @@ By default, this value is 256. But note, <command>NumSections</command> do not a
 <table><title>Configure-time parameters to tune relevance calculation (switches for <command>configure</command>)</title>
 	<tgroup cols="2">
 	<tbody>
-<row><entry><option>--enable-fullrel</option></entry>
-<entry><para>This option enables full version of relevance calculation. Value by default: disabled (or fast relevance calculation).
+<row><entry><option>--enable-rel</option></entry>
+<entry><para>This option enables "full", "fast" or "ultra" version of relevance calculation. Value by default: full (i.e. full relevance calculation).
 </para></entry></row>
 
 <row><entry><option>--disable-reldistance</option></entry>

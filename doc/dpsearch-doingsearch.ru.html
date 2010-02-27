@@ -103,19 +103,19 @@ CLASS="LITERAL"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN5253"
-></A
->
-<A
 NAME="AEN5255"
 ></A
 >
 <A
-NAME="AEN5258"
+NAME="AEN5257"
 ></A
 >
 <A
-NAME="AEN5261"
+NAME="AEN5260"
+></A
+>
+<A
+NAME="AEN5263"
 ></A
 ></A
 ></DT
@@ -124,7 +124,7 @@ NAME="AEN5261"
 HREF="dpsearch-templates.ru.html"
 >Как создавать шаблоны результатов поиска
 <A
-NAME="AEN5311"
+NAME="AEN5313"
 ></A
 ></A
 ></DT
@@ -138,7 +138,7 @@ HREF="dpsearch-html.ru.html"
 HREF="dpsearch-rel.ru.html"
 >Релевантность
 <A
-NAME="AEN5884"
+NAME="AEN5886"
 ></A
 ></A
 ></DT
@@ -147,7 +147,7 @@ NAME="AEN5884"
 HREF="dpsearch-track.ru.html"
 >Регистрация поисковых запросов
 <A
-NAME="AEN6125"
+NAME="AEN6127"
 ></A
 ></A
 ></DT
@@ -156,7 +156,7 @@ NAME="AEN6125"
 HREF="dpsearch-srcache.ru.html"
 >Кэш результатов поиска
 <A
-NAME="AEN6156"
+NAME="AEN6158"
 ></A
 ></A
 ></DT
@@ -717,15 +717,21 @@ CLASS="LITERALLAYOUT"
 ><P
 >По умолчанию, все секции имеют вес 1.</P
 ><P
->По умолчанию, <SPAN
+>Если <SPAN
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
-> собирается с быстрым вариантом расчёта релевантности.
-В этом случае только нулевое или ненулевое значение веса имеет смысл (это позволяет только включать/исключать
-заданые секции из результатов поиска). Чтобы включить полную поддержку динамических весов секций, необходимо
+> собирается с быстрым вариантом расчёта релевантности (указана опция <CODE
+CLASS="OPTION"
+>--enable-rel=fast</CODE
+> для <B
+CLASS="COMMAND"
+>configure</B
+>),
+в этом случае только нулевое или ненулевое значение веса имеет смысл (это позволяет только включать/исключать
+заданные секции из результатов поиска). Чтобы использовать полную поддержку динамических весов секций, необходимо
 задать опцию <CODE
 CLASS="OPTION"
->--enable-fullrel</CODE
+>--enable-rel=full</CODE
 > для <B
 CLASS="COMMAND"
 >configure</B
@@ -1039,7 +1045,7 @@ CLASS="SECT2"
 NAME="SEARCH-BOOL"
 >8.1.7. Булев поиск
 <A
-NAME="AEN5168"
+NAME="AEN5170"
 ></A
 ></A
 ></H2
@@ -1339,19 +1345,19 @@ CLASS="LITERAL"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN5253"
-></A
->
-<A
 NAME="AEN5255"
 ></A
 >
 <A
-NAME="AEN5258"
+NAME="AEN5257"
 ></A
 >
 <A
-NAME="AEN5261"
+NAME="AEN5260"
+></A
+>
+<A
+NAME="AEN5263"
 ></A
 ></TD
 ></TR
