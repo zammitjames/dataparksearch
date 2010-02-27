@@ -32,8 +32,8 @@
 <table><title>Параметры расчёта релевантности, задаваемые при компиляции (ключи для <command>configure</command>)</title>
 	<tgroup cols="2">
 	<tbody>
-<row><entry><option>--enable-fullrel</option></entry>
-<entry><para>Включает полный вариант расчёта релевантности. Значение по умолчанию: выключено (или быстрый расчёт релевантности).
+<row><entry><option>--enable-rel</option></entry>
+<entry><para>Включает полный (full), быстрый (fast) или ультра (ultra) вариант расчёта релевантности. Значение по умолчанию: full (или полный расчёт релевантности).
 </para></entry></row>
 
 <row><entry><option>--disable-reldistance</option></entry>

@@ -280,10 +280,10 @@ configuration:</para>
 query, all sections factors are 1, it means all sections have the same
 weight.</para>
 
-<para>By default, <application>DataparkSearch</application> uses fast relevance calculation.
-In this case, only zero and non-zero values for "wf" variable takes an effect (this allows only include/exclude
+<para>If <application>DataparkSearch</application> has been built with fast relevance calculation (with <option>--enable-rel=fast</option>
+option for <command>configure</command>), in this case, only zero and non-zero values for "wf" variable takes an effect (this allows only include/exclude
 specified sections in search results).
-To enable full support for dynamic section weight, you need specify <option>--enable-fullrel</option>
+To use full support for dynamic section weights, you need specify <option>--enable-rel=full</option>
 option for <command>configure</command> when configuring <application>DataparkSearch</application>.
 </para>
 

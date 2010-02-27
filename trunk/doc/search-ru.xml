@@ -244,10 +244,10 @@ dd/mm/yyyy, где dd - день, mm - месяц, а yyyy - четырёхцифровой год.</entry>
 </para>
 		<para>По умолчанию, все секции имеют вес 1.</para>
 
-<para>По умолчанию, <application>DataparkSearch</application> собирается с быстрым вариантом расчёта релевантности.
-В этом случае только нулевое или ненулевое значение веса имеет смысл (это позволяет только включать/исключать
-заданые секции из результатов поиска). Чтобы включить полную поддержку динамических весов секций, необходимо
-задать опцию <option>--enable-fullrel</option> для <command>configure</command> во время сборки <application>DataparkSearch</application>.
+<para>Если <application>DataparkSearch</application> собирается с быстрым вариантом расчёта релевантности (указана опция <option>--enable-rel=fast</option> для <command>configure</command>),
+в этом случае только нулевое или ненулевое значение веса имеет смысл (это позволяет только включать/исключать
+заданные секции из результатов поиска). Чтобы использовать полную поддержку динамических весов секций, необходимо
+задать опцию <option>--enable-rel=full</option> для <command>configure</command> во время сборки <application>DataparkSearch</application>.
 </para>
 
 	</sect2>
