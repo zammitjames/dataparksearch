@@ -29,9 +29,9 @@
 /*
 #define DEBUG_SQL
 */
-/*
+
 #define DEBUG_ERR_QUERY
-*/
+
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -2651,6 +2651,7 @@ static int DpsMarkForReindex(DPS_AGENT *Indexer,DPS_DB *db){
 	unsigned long offset;
 	int             rc, u;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
+	urlid_t         rec_id;
 
 	DpsSQLResInit(&SQLRes);
 
@@ -2668,17 +2669,54 @@ static int DpsMarkForReindex(DPS_AGENT *Indexer,DPS_DB *db){
 	  return DPS_ERROR;
 	}
 
-	u = 1;
-	offset = 0;
-	while (u) {
-	  dps_snprintf(qbuf, sizeof(qbuf), "SELECT url.rec_id FROM url%s %s %s LIMIT %d OFFSET %ld", 
-		       db->from, (where[0]) ? "WHERE" : "", where, dump_num, offset);
-	  if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
+	if (!db->DBSQL_LIMIT) {
+	  dps_snprintf(qbuf, sizeof(qbuf), "SELECT MIN(rec_id) FROM url");
+	  rc = DpsSQLQuery(db, &SQLRes, qbuf);
+	  if(DPS_OK != rc) {
 	    DPS_FREE(ubuf);
 	    return rc;
 	  }
+	  if (DpsSQLNumRows(&SQLRes) < 1) {
+	    DpsSQLFree(&SQLRes);
+	    DPS_FREE(ubuf);
+	    return DPS_OK;
+	  }
+	  rec_id = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0)) - 1;
+	}
 
-	  nrec = DpsSQLNumRows(&SQLRes);
+	u = 1;
+	offset = 0;
+	while (u) {
+
+	  if (db->DBSQL_LIMIT) {
+
+	    dps_snprintf(qbuf, sizeof(qbuf), "SELECT url.rec_id FROM url%s %s %s ORDER BY url.rec_id LIMIT %d OFFSET %ld", 
+			 db->from, (where[0]) ? "WHERE" : "", where, dump_num, offset);
+	    if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
+	      DPS_FREE(ubuf);
+	      return rc;
+	    }
+	  } else { /* DBSQL_LIMIT */
+
+	    dps_snprintf(qbuf, sizeof(qbuf), "SELECT MIN(rec_id),COUNT(*) FROM url WHERE rec_id>%d", rec_id);
+	    rc = DpsSQLQuery(db, &SQLRes, qbuf);
+	    if(DPS_OK != rc) {
+	      DPS_FREE(ubuf);
+	      return rc;
+	    }
+	    if ( ( u = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 1))) > 0) {
+	      rec_id = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
+	      dps_snprintf(qbuf, sizeof(qbuf), "SELECT url.rec_id FROM url%s %s %s %s url.rec_id>=%d AND url.rec_id<=(%d+%d) ORDER BY url.rec_id", 
+			   db->from, (where[0]) ? "WHERE" : "", where, (where[0]) ? "AND" : "WHERE", rec_id, rec_id, dump_num);
+	      if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
+		DPS_FREE(ubuf);
+		return rc;
+	      }
+	    }
+	    
+	  }
+
+	  nrec = (u) ? DpsSQLNumRows(&SQLRes) : 0;
 
 	  if (db->DBSQL_IN) {
 	    for (i = 0; i < nrec; i += 512) {
@@ -2703,10 +2741,16 @@ static int DpsMarkForReindex(DPS_AGENT *Indexer,DPS_DB *db){
 	      }
 	    }
 	  }
+	  if (db->DBSQL_LIMIT) {
+	    u = (nrec == dump_num);
+	  } else {
+	    if (u) {
+	      u = (rec_id != DPS_ATOI(DpsSQLValue(&SQLRes, nrec - 1, 0)));
+	      rec_id = DPS_ATOI(DpsSQLValue(&SQLRes, nrec - 1, 0));
+	    }
+	  }
 	  DpsSQLFree(&SQLRes);
-	  u = (nrec == dump_num);
 	  offset += nrec;
-	  if (u) DPSSLEEP(0);
 	}
 	DPS_FREE(ubuf);
 	return DPS_OK;
@@ -3201,6 +3245,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		if (Indexer->flags & DPS_FLAG_DONTSORT_SEED && ntry++ < 3) goto one_try;
 		goto unlock;
 	}
+	if (!db->DBSQL_LIMIT && nrows > url_num) nrows = url_num;
 
 /*	DpsResultFree(&Indexer->Conf->Targets);*/
 	Indexer->Conf->Targets.num_rows += nrows;
