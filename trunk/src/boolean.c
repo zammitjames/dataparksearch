@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -86,6 +86,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
       DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes for %d mitems", Res->mitems * sizeof(DPS_STACK_ITEM), Res->mitems);
       return DPS_ERROR;
     }
+    bzero(Res->items + Res->nitems, (Res->mitems - Res->nitems) * sizeof(Res->items[0]));
   }
       
   if (Res->nitems > 0) {
@@ -112,6 +113,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
       Res->items[Res->nitems].ulen = 0;
       Res->items[Res->nitems].uword = NULL;
       Res->items[Res->nitems].pbegin = NULL;
+      Res->items[Res->nitems].db_pbegin = NULL;
       Res->items[Res->nitems].order_origin = 0;
       Res->items[Res->nitems].secno = state->secno[state->p_secno];
       Res->nitems++;
@@ -135,6 +137,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
       Res->items[Res->nitems].ulen = 0;
       Res->items[Res->nitems].uword = NULL;
       Res->items[Res->nitems].pbegin = NULL;
+      Res->items[Res->nitems].db_pbegin = NULL;
       Res->items[Res->nitems].order_origin = 0;
       Res->items[Res->nitems].secno = state->secno[state->p_secno];
       Res->nitems++;
@@ -156,6 +159,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
   Res->items[Res->nitems].ulen = wlen;
   Res->items[Res->nitems].uword = (uword == NULL) ? NULL : DpsUniDup(uword);
   Res->items[Res->nitems].pbegin = NULL;
+  Res->items[Res->nitems].db_pbegin = NULL;
   Res->items[Res->nitems].order_origin = 0;
   Res->items[Res->nitems].wordnum = Res->nitems;
   Res->items[Res->nitems].secno = state->secno[state->p_secno];
@@ -179,6 +183,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
 void DpsStackItemFree(DPS_STACK_ITEM *item) {
   if (item == NULL) return;
   DPS_FREE(item->pbegin); item->pbegin = item->plast = item->pcur = NULL;
+  DPS_FREE(item->db_pbegin); item->db_pbegin = NULL;
 /*  item->count = 0;*/
 /*  DPS_FREE(item->word); item->word = NULL;
   DPS_FREE(item->uword); item->uword = NULL;*/
