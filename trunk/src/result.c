@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -53,7 +53,7 @@ void __DPSCALL DpsResultFree(DPS_RESULT *Res) {
 	size_t i;
 	
 	if(!Res)return;
-	for (i = 0; i < /*DPS_MAXSTACK*/ Res->nitems; i++) {
+	for (i = 0; i < /*DPS_MAXSTACK*/ Res->mitems; i++) {
 	  DPS_FREE(Res->items[i].word);
 	  DPS_FREE(Res->items[i].uword);
 	  DPS_FREE(Res->items[i].pbegin);
