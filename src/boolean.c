@@ -1034,6 +1034,7 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
 	return DPS_STACK_ERR;
       }
       items[i].pbegin = items[i].plast = NULL; /*items[i].word = NULL; items[i].uword = NULL;*/
+      items[i].db_pbegin = items[i].db_plast = NULL;
 /*      items[i].count = 0;*/
 
 /*				DpsStackItemFree(&items[i]);*/
