@@ -3055,13 +3055,13 @@ static int DpsDeleteAllFromUrl(DPS_AGENT *Indexer,DPS_DB *db){
 
 /************************ Clones stuff ***************************/
 static int DpsFindOrigin(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db){
-	size_t		i=0;
 	char		qbuf[256]="";
 	DPS_SQLRES	SQLRes;
 	urlid_t		origin_id = 0;
 	int		crc32 = DpsVarListFindInt(&Doc->Sections, "crc32", 0);
 	int             docsize  = DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
 	int		rc;
+	static const char *limit = "LIMIT 1";
 	
 	if (crc32==0)return DPS_OK;
 	
@@ -3069,23 +3069,23 @@ static int DpsFindOrigin(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db){
 
 	if (docsize) {
 	  if (db->DBSQL_IN)
-		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND docsize>%d AND docsize<%d AND status IN (200,206,304) LIMIT 1", 
-			crc32, docsize - docsize/10, docsize + docsize/10);
+		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND docsize>%d AND docsize<%d AND status IN (200,206,304) %s", 
+			crc32, docsize - docsize/10, docsize + docsize/10, (db->DBSQL_LIMIT) ? limit : "");
 	  else
-		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND docsize>%d AND docsize<%d AND (status=200 OR status=304 OR status=206) LIMIT 1", 
-			crc32, docsize - docsize/10, docsize + docsize/10);
+		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND docsize>%d AND docsize<%d AND (status=200 OR status=304 OR status=206) %s", 
+			crc32, docsize - docsize/10, docsize + docsize/10, (db->DBSQL_LIMIT) ? limit : "");
 	} else {
 	  if (db->DBSQL_IN)
-		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND status IN (200,206,304) LIMIT 1", crc32);
+		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND status IN (200,206,304) %s", crc32, (db->DBSQL_LIMIT) ? limit : "");
 	  else
-		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND (status=200 OR status=304 OR status=206) LIMIT 1", crc32);
+		sprintf(qbuf,"SELECT rec_id FROM url WHERE crc32=%d AND (status=200 OR status=304 OR status=206) %s", crc32, (db->DBSQL_LIMIT) ? limit : "");
 	}
 	if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes,qbuf)))
 		return rc;
-	
-	for(i=0;i<DpsSQLNumRows(&SQLRes);i++){
+
+	if (DpsSQLNumRows(&SQLRes)) {
 		const char *o;
-		if((o=DpsSQLValue(&SQLRes,i,0)))
+		if((o = DpsSQLValue(&SQLRes, 0, 0)))
 				origin_id = DPS_ATOI(o);
 	}
 	DpsSQLFree(&SQLRes);
