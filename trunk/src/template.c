@@ -36,6 +36,11 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#if defined(WITH_IDN) && !defined(APACHE1) && !defined(APACHE2)
+#include <idna.h>
+#elif defined(WITH_IDNKIT) && !defined(APACHE1) && !defined(APACHE2)
+#include <idn/api.h>
+#endif
 
 /******************* Template functions ********************/
 
@@ -101,7 +106,10 @@ static char * HiLightDup(const char *src, const char *beg, const char *end, cons
 
 enum {
   DPS_VAR_ALIGN_LEFT  = 0,
-  DPS_VAR_ALIGN_RIGHT = 1
+  DPS_VAR_ALIGN_RIGHT = 1,
+  DPS_VAR_IDN_NONE = 2,
+  DPS_VAR_IDN_DECODE = 3,
+  DPS_VAR_IDN_ENCODE = 4
 };
 
 size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * stream, char * dst, size_t dst_len, 
@@ -111,8 +119,12 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 	DPS_CHARSET *vcs = NULL;
 	const char * s;
 	char *newvalue = NULL;
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	char *idn_value = NULL;
+#endif
 	size_t dlen=0;
 	int align = DPS_VAR_ALIGN_LEFT;
+	int idn = DPS_VAR_IDN_NONE;
 
 	DpsConvInit(&bc_bc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&bc_bc_txt, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_TEXT);
@@ -130,6 +142,8 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 
 			vcs = NULL;
 			align = DPS_VAR_ALIGN_LEFT;
+			idn = DPS_VAR_IDN_NONE;
+
 			if(!strncmp(s,"$&(",3)){vbeg=s+3;type='&';}
 			else    if(!strncmp(s,"$(",2)){vbeg=s+2;type='(';}
 			else	if(!strncmp(s,"$%(",3)){vbeg=s+3;type='%';}
@@ -162,6 +176,8 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					      cs_name = DpsCharsetCanonicalName(sem3 + 1);
 					      if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
 					      else if (!strcasecmp(sem3 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
+					      else if (!strcasecmp(sem3 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
+					      else if (!strcasecmp(sem3 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					    } else {
 					      maxlen = DPS_ATOI(sem2 + 1);
 					    }
@@ -172,6 +188,8 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					    cs_name = DpsCharsetCanonicalName(sem2 + 1);
 					    if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
 					    else if (!strcasecmp(sem2 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
+					    else if (!strcasecmp(sem2 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
+					    else if (!strcasecmp(sem2 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					  } else {
 					    maxlen = DPS_ATOI(sem2 + 1);
 					  }
@@ -180,6 +198,8 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					  cs_name = DpsCharsetCanonicalName(sem + 1);
 					  if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
 					  else if (!strcasecmp(sem + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
+					  else if (!strcasecmp(sem + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
+					  else if (!strcasecmp(sem + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					} else {
 					  maxlen = DPS_ATOI(sem + 1);
 					}
@@ -208,6 +228,42 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					  } else cnv = &bc_bc_txt;
 					}
 					if(!value)value=empty;
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+					else if (idn == DPS_VAR_IDN_DECODE) {
+					  DPS_CHARSET *uni_cs;
+					  DPS_CONV  bc_utf8, utf8_bc;
+					  char    *uni = NULL, *q, *start, *end;
+					  size_t len = 48 * dps_strlen(value);
+					  int rc;
+
+					  uni_cs = DpsGetCharSet("UTF-8");
+					  DpsConvInit(&bc_utf8, A->Conf->bcs, uni_cs, A->Conf->CharsToEscape, DPS_RECODE_URL);
+					  DpsConvInit(&utf8_bc, uni_cs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_URL);
+					  if ((uni = (char*)DpsMalloc(len + 1)) != NULL) {
+					    DpsConv(&bc_utf8, (char*)uni, len, value, len);
+					    start = strstr(uni, "xn--");
+					    if (start) {
+					      end = strchr(start, (int)'/');
+					      if (end) *end = '\0';
+					      if ( (rc = idna_to_unicode_8z8z((const char*)uni + (start - uni), &q, 0)) == IDNA_SUCCESS) {
+						if ((idn_value = (char*)DpsRealloc(idn_value, len + 1)) != NULL) {
+						  if (start != uni) {
+						    dps_memcpy(idn_value, uni, (start - uni) * sizeof(char));
+						  }
+						  DpsConv(&utf8_bc, (char*)idn_value + (start - uni), len, q, len);
+						  if (end) {
+						    idn_value[utf8_bc.obytes] = '/';
+						    dps_strcpy(idn_value + utf8_bc.obytes + 1, end + 1);
+						  }
+						  value = idn_value;
+						}
+						DPS_FREE(q);
+					      }
+					    }
+					  }
+					  DPS_FREE(uni);
+					}
+#endif
 				}else{	
 					value=empty;
 				}
@@ -293,6 +349,9 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 		}
 	}
 	DPS_FREE(newvalue);
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	DPS_FREE(idn_value);
+#endif
 	return dlen;
 }
 
