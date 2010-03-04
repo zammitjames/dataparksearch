@@ -3453,9 +3453,13 @@ int DpsStatActionSQL(DPS_AGENT *Indexer,DPS_STATLIST *Stats,DPS_DB *db){
 			  dps_snprintf(qbuf,sizeof(qbuf)-1,"SELECT status,sum(next_index_time<=%u),count(*),sum(docsize), 0 FROM url%s %s %s GROUP BY status ORDER BY status",
 				       curtime, db->from, where[0] ? "WHERE" : "", where);
 				break;
+
+			case DPS_DB_MSSQL:
+			  dps_snprintf(qbuf,sizeof(qbuf)-1,"SELECT status,sum(case when next_index_time<=%u then 1 else 0 end),count(*),sum(cast(docsize as bigint)),sum(case when next_index_time<=%u then cast(docsize as bigint) else 0 end) FROM url%s %s %s GROUP BY status ORDER BY status",
+				       curtime, curtime, db->from, where[0] ? "WHERE" : "", where);
+				break;
 		
 			case DPS_DB_PGSQL:
-			case DPS_DB_MSSQL:
 			case DPS_DB_DB2:
 			case DPS_DB_SQLITE:
 			case DPS_DB_SQLITE3:
