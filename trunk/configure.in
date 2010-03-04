@@ -2486,9 +2486,13 @@ AC_ARG_WITH(oracle8,
 [
 	if test "$withval" = "yes"; then
 		withval="$ORACLE_HOME"
-		if test "$withval" = ""; then
-			withval=/oracle8/app/oracle/product/8.0.5
-		fi
+	    	DIRS="$ORACLE_HOME /usr/oracle8-client /usr/local/oracle8-client"
+		for DIR in $DIRS; do
+			if test -f $DIR/rdbms/demo/oci.h; then
+				withval=$DIR
+				break;
+			fi
+		done
 	fi
 
 	if test "$withval" != "no"; then
@@ -2533,6 +2537,13 @@ AC_ARG_WITH(oracle8i,
 [
 	if test "$withval" = "yes"; then
 		withval="$ORACLE_HOME"
+	    	DIRS="$ORACLE_HOME /usr/oracle8-client /usr/local/oracle8-client"
+		for DIR in $DIRS; do
+			if test -f $DIR/rdbms/demo/oci.h; then
+				withval=$DIR
+				break;
+			fi
+		done
 	fi
 
 	if test "$withval" != "no"; then
@@ -2572,24 +2583,38 @@ AC_ARG_WITH(oracle-instantclient,
                           home directory, defaults to /usr],
 [
        if test "$withval" = "yes"; then
-               withval="/usr"
-       fi
-
-       if test "$withval" != "no"; then
+            	withval="/usr"
+	    	DIRS="$ORACLE_HOME /usr/oracle8-client /usr/local/oracle8-client"
+		for DIR in $DIRS; do
+			if test -f $DIR/rdbms/demo/oci.h; then
+				withval=$DIR
+                       		ORACLE8_INCDIR="$withval/rdbms/demo -I$withval/rdbms/public"
+                       		ORACLE8_LIBDIR=$withval/lib
+				break;
+			elif test -f $DIR/include/oracle/oci.h; then
+				withval=$DIR
+                       		ORACLE8_INCDIR=$withval/include/oracle
+                       		ORACLE8_LIBDIR=$withval/lib
+				break;
+			fi
+		done
+       elif test "$withval" != "no"; then
                if test -f $withval/include/oracle/oci.h; then
-                       ORACLE8_INCDIR=$withval/include/oracle/
+                       ORACLE8_INCDIR=$withval/include/oracle
                        ORACLE8_LIBDIR=$withval/lib
                else
                        AC_MSG_RESULT(no)
                        AC_MSG_ERROR(Invalid ORACLE directory - unable to find oci.h)
                fi
-               ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm"
-               ORACLE8_INCLUDE="-I$ORACLE8_INCDIR"
-               AC_DEFINE(HAVE_ORACLE8)
-               AC_MSG_RESULT(yes)
-               have_db=yes
        fi
-    if test "x$DBTYPE" = "x" ; then
+
+       ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm"
+       ORACLE8_INCLUDE="-I$ORACLE8_INCDIR"
+       AC_DEFINE(HAVE_ORACLE8)
+       AC_MSG_RESULT(yes)
+       have_db=yes
+ 
+   if test "x$DBTYPE" = "x" ; then
        DBTYPE="oracle8i"
     else
        DBTYPE="$DBTYPE-oracle8i"
