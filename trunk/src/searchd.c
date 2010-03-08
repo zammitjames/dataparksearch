@@ -865,6 +865,8 @@ static int client_main(DPS_ENV *Env, size_t handle) {
     close(ns);
 
   }
+  if (clt_sock > 0) dps_closesocket(clt_sock);
+
   return res;
 }
 
@@ -1167,6 +1169,11 @@ int main(int argc, char **argv, char **envp) {
 		DpsLog(Agent,verb,"Korean dictionary with %d entries", Conf->Korean.nwords);
 		DpsLog(Agent,verb,"Thai dictionary with %d entries", Conf->Thai.nwords);
 
+		for (i = 0; i < DPS_CHILDREN_LIMIT; i++) {
+		  if (Children[i].pid) kill(Children[i].pid, SIGTERM);
+/*		  Children[i].pid = 0;*/
+		}
+
 		if ((track_pid = fork() ) == -1) {
 		  DpsLog(Agent, DPS_LOG_ERROR, "fork() error %d %s", errno, strerror(errno));
 		  DpsAgentFree(Agent);
@@ -1212,10 +1219,15 @@ int main(int argc, char **argv, char **envp) {
 		}
 		server_addr.sin_port = htons((u_short)nport);
 
-/*		if (memcmp(&old_server_addr, &server_addr, sizeof(server_addr)) != 0) {*/
+		for (i = 0; i < DPS_CHILDREN_LIMIT; i++) {
+		  if (Children[i].pid) kill(Children[i].pid, SIGKILL);
+/*		  Children[i].pid = 0;*/
+		}
 
-		  FD_ZERO(&mask);
+		FD_ZERO(&mask);
 		
+		if (memcmp(&old_server_addr, &server_addr, sizeof(server_addr)) != 0) {
+
 		  if (clt_sock > 0) dps_closesocket(clt_sock);
 
 		  if ((clt_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -1233,15 +1245,31 @@ int main(int argc, char **argv, char **envp) {
 			unlink(dps_pid_name);
 			exit(1);
 		  }
-		  DpsSockOpt(Agent, clt_sock);
-
-
-		  if (bind(clt_sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
-			DpsLog(Agent, DPS_LOG_ERROR, "Can't bind: error %d %s", errno, strerror(errno));
+#ifdef SO_REUSEPORT
+		  if (setsockopt(clt_sock, SOL_SOCKET, SO_REUSEPORT, (char *)&on, sizeof(on)) != 0){
+			DpsLog(Agent, DPS_LOG_ERROR, "setsockopt() error %d", errno);
 			DpsAgentFree(Agent);
 			DpsEnvFree(Conf);
 			unlink(dps_pid_name);
 			exit(1);
+		  }
+#endif
+		  DpsSockOpt(Agent, clt_sock);
+
+		  for (i = 0; ;i++) {
+
+		    if (bind(clt_sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
+		      DpsLog(Agent, DPS_LOG_ERROR, "Can't bind: error %d %s", errno, strerror(errno));
+		      if (i < 15) {
+			DPSSLEEP(1 + i * 3);
+			continue;
+		      }
+		      DpsAgentFree(Agent);
+		      DpsEnvFree(Conf);
+		      unlink(dps_pid_name);
+		      exit(1);
+		    }
+		    break;
 		  }
 
 		  /* Backlog 64 is enough? */
@@ -1252,9 +1280,9 @@ int main(int argc, char **argv, char **envp) {
 			unlink(dps_pid_name);
 			exit(1);
 		  }
-		  FD_SET(clt_sock, &mask);
 		  dps_memcpy(&old_server_addr, &server_addr, sizeof(server_addr));
-/*		}*/
+		}
+		FD_SET(clt_sock, &mask);
 
 		if (unix_socket != NULL) {
 		  char unix_path[128];
@@ -1306,11 +1334,6 @@ int main(int argc, char **argv, char **envp) {
 		
 		init_signals();
 
-		for (i = 0; i < DPS_CHILDREN_LIMIT; i++) {
-		  if (Children[i].pid) kill(Children[i].pid, SIGTERM);
-		  Children[i].pid = 0;
-		}
-
 		if(DpsSearchCacheClean(Agent) != DPS_OK) {
 			DpsLog(Agent, DPS_LOG_ERROR, "Error in search cache cleaning");
 			DpsAgentFree(Agent);
@@ -1322,6 +1345,7 @@ int main(int argc, char **argv, char **envp) {
 
 		for (i = 0; i < MaxClients; i++) {
 		  pid_t pid;
+		  if (Children[i].pid) continue;
 /*		  if (Children[i].pid) kill(Children[i].pid, SIGTERM);*/
 		  pid = fork();
 		  if(pid == 0){
