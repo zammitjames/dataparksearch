@@ -530,8 +530,8 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 		wrd[curwrd].wrd_id = DpsStrHash32(lcsword);
 
-/*		DpsLog(Indexer, DPS_LOG_DEBUG, "url_id: %d  %s  %d(%x)  0x%x", 
-		       url_id,
+/*		DpsLog(Indexer, DPS_LOG_DEBUG, "url_id:%d coord:%x - %s %d(%x) 0x%x", 
+		       url_id, wrd[curwrd].coord,
 		       lcsword, wrd[curwrd].wrd_id, wrd[curwrd].wrd_id,
 		       DPS_FILENO(wrd[curwrd].wrd_id, 0x300));*/
 		curwrd++;
@@ -1929,6 +1929,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	  pmerg[0] = &Res->items[0];
 	  pmerg[0]->pcur = pmerg[0]->pbegin = pmerg[0]->pchecked = (DPS_URL_CRD_DB*)DpsMalloc((lims[0].size + 1) * sizeof(DPS_URL_CRD_DB));
 	  pmerg[0]->db_pcur = pmerg[0]->db_pbegin = pmerg[0]->db_pchecked = p = (DPS_URL_CRD*)DpsMalloc((lims[0].size + 1) * sizeof(DPS_URL_CRD));
+
 	  if (pmerg[0]->db_pbegin != NULL) {
 	    for (i = 0; i < lims[0].size; i++) {
 	      p[i].url_id = lims[0].data[i];
