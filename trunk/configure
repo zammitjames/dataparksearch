@@ -31884,6 +31884,7 @@ fi
 
 
 
+
 { $as_echo "$as_me:$LINENO: checking for OpenLink ODBC support" >&5
 $as_echo_n "checking for OpenLink ODBC support... " >&6; }
 
@@ -33031,6 +33032,7 @@ fi
 
 
 
+
 { $as_echo "$as_me:$LINENO: checking for Oracle8 support" >&5
 $as_echo_n "checking for Oracle8 support... " >&6; }
 
@@ -33155,6 +33157,7 @@ fi
 
 
 
+oracle-instantclient=no
 { $as_echo "$as_me:$LINENO: checking for Oracle Instant Client support" >&5
 $as_echo_n "checking for Oracle Instant Client support... " >&6; }
 
@@ -33190,21 +33193,32 @@ $as_echo "$as_me: error: Invalid ORACLE directory - unable to find oci.h" >&2;}
                fi
        fi
 
-       ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm"
-       ORACLE8_INCLUDE="-I$ORACLE8_INCDIR"
-       cat >>confdefs.h <<\_ACEOF
+       if test "$withval" != "no"; then
+       	case "$host" in
+		*-*-freebsd*)
+	        	ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm -lcompat"
+			;;
+		*)
+	        	ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm"
+			;;
+       	esac
+       	ORACLE8_INCLUDE="-I$ORACLE8_INCDIR"
+       	cat >>confdefs.h <<\_ACEOF
 #define HAVE_ORACLE8 1
 _ACEOF
 
-       { $as_echo "$as_me:$LINENO: result: yes" >&5
+       	{ $as_echo "$as_me:$LINENO: result: yes" >&5
 $as_echo "yes" >&6; }
-       have_db=yes
-
-   if test "x$DBTYPE" = "x" ; then
-       DBTYPE="oracle8i"
-    else
-       DBTYPE="$DBTYPE-oracle8i"
-    fi
+       	have_db=yes
+   	if test "x$DBTYPE" = "x" ; then
+       		DBTYPE="oracle8i"
+    	else
+       		DBTYPE="$DBTYPE-oracle8i"
+    	fi
+       else
+       	{ $as_echo "$as_me:$LINENO: result: no" >&5
+$as_echo "no" >&6; }
+       fi
 
 
 else
