@@ -2080,6 +2080,7 @@ AC_ARG_WITH(solid,
 AC_SUBST(SOLID_LFLAGS)
 AC_SUBST(SOLID_INCLUDE)
 
+
 AC_MSG_CHECKING(for OpenLink ODBC support)
 AC_ARG_WITH(openlink,
 [  --with-openlink[=DIR]   Include OpenLink ODBC support. 
@@ -2478,6 +2479,7 @@ AC_ARG_WITH(oracle7,
 AC_SUBST(ORACLE7_LFLAGS)
 AC_SUBST(ORACLE7_INCLUDE)
 
+
 AC_MSG_CHECKING(for Oracle8 support)
 AC_ARG_WITH(oracle8,
 [  --with-oracle8[=DIR]    Include Oracle8 support.  DIR is the Oracle
@@ -2577,6 +2579,7 @@ AC_SUBST(ORACLE8_LFLAGS)
 AC_SUBST(ORACLE8_INCLUDE)
 
 
+oracle-instantclient=no
 AC_MSG_CHECKING(for Oracle Instant Client support)
 AC_ARG_WITH(oracle-instantclient,
 [  --with-oracle-instantclient[=DIR]   Include Oracle Instant Client support.  DIR is the Oracle
@@ -2608,17 +2611,27 @@ AC_ARG_WITH(oracle-instantclient,
                fi
        fi
 
-       ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm"
-       ORACLE8_INCLUDE="-I$ORACLE8_INCDIR"
-       AC_DEFINE(HAVE_ORACLE8)
-       AC_MSG_RESULT(yes)
-       have_db=yes
- 
-   if test "x$DBTYPE" = "x" ; then
-       DBTYPE="oracle8i"
-    else
-       DBTYPE="$DBTYPE-oracle8i"
-    fi
+       if test "$withval" != "no"; then
+       	case "$host" in
+		*-*-freebsd*)
+	        	ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm -lcompat"
+			;;
+		*)
+	        	ORACLE8_LFLAGS="-L$ORACLE8_LIBDIR -lclntsh -lm"
+			;;
+       	esac
+       	ORACLE8_INCLUDE="-I$ORACLE8_INCDIR"
+       	AC_DEFINE(HAVE_ORACLE8)
+       	AC_MSG_RESULT(yes)
+       	have_db=yes
+   	if test "x$DBTYPE" = "x" ; then
+       		DBTYPE="oracle8i"
+    	else
+       		DBTYPE="$DBTYPE-oracle8i"
+    	fi
+       else
+       	AC_MSG_RESULT(no)
+       fi
 
 ],[
        AC_MSG_RESULT(no)
