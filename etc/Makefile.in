@@ -278,6 +278,9 @@ langmap/ar.arabic.lm \
 langmap/ar.arabic.quran.lm \
 langmap/ar.cp1256.lm \
 langmap/ar.cp1256.quran.lm \
+langmap/ar.utf-8.lm \
+langmap/ar.utf-16be.lm \
+langmap/ar.utf-16le.lm \
 langmap/ast.utf-8.lm \
 langmap/az.utf8.lm \
 langmap/ba.cp1251.lm \
@@ -311,6 +314,8 @@ langmap/cy.utf-8.lm \
 langmap/da.cp1252.lm \
 langmap/da.latin1.lm \
 langmap/da.latin1.bible.lm \
+langmap/de.cp1252.lm \
+langmap/de.iso-8859-15.lm \
 langmap/de.latin1.lm \
 langmap/de.latin1.bible.lm \
 langmap/de.utf8.lm \

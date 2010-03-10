@@ -1,8 +1,8 @@
 set quoted_identifier on;
 
-DROP TABLE "dict";
 DROP TABLE "url";
 DROP TABLE "urlinfo";
+DROP TABLE "dict";
 DROP TABLE "server";
 DROP TABLE "srvinfo";
 DROP TABLE "links";

@@ -9,16 +9,6 @@ set quoted_identifier on;
 -- We use VARCHAR() instead.
 --
 
-CREATE TABLE "dict" (
-	"url_id" int  NOT NULL ,
-	"word"   varchar(4096) NOT NULL ,
-	"intag"  int  NOT NULL 
-);
-CREATE INDEX "dict_word" ON "dict" ( "word" );
-CREATE INDEX "dict_url_id" ON "dict" ("url_id");
-CREATE INDEX "dict_word_url_id" ON "dict" ("word", "url_id");
-
-
 CREATE TABLE "url" (
         "rec_id"          int IDENTITY(1,1) NOT NULL PRIMARY KEY,
         "status"          int NOT NULL DEFAULT 0,
@@ -34,7 +24,7 @@ CREATE TABLE "url" (
         "site_id"         int     NULL,
         "server_id"       int     NULL,
 	"charset_id"      numeric (6,0) NULL,
-        "shows"           "int" NOT NULL DEFAULT 0,
+        "shows"           int   NOT NULL DEFAULT 0,
         "pop_rank"        float NOT NULL DEFAULT 1,
         "url"             varchar(4096)  NOT NULL,
         CONSTRAINT "UQ_url_url" UNIQUE ("url")
@@ -60,6 +50,16 @@ CREATE TABLE "urlinfo" (
 CREATE INDEX "urlinfo_id"  ON "urlinfo" ( "url_id" );
 CREATE INDEX "uinfo_sname" ON "urlinfo" ( "sname" );
 CREATE INDEX "uinfo_sval"  ON "urlinfo" ( "sval" );
+
+
+CREATE TABLE "dict" (
+	"url_id" int  NOT NULL ,
+	"word"   varchar(4096) NOT NULL ,
+	"intag"  int  NOT NULL 
+);
+CREATE INDEX "dict_word" ON "dict" ( "word" );
+CREATE INDEX "dict_url_id" ON "dict" ("url_id");
+CREATE INDEX "dict_word_url_id" ON "dict" ("word", "url_id");
 
 
 CREATE TABLE "server" (
