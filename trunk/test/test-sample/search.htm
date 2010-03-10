@@ -269,7 +269,10 @@ DetectClones yes
   <DT>$(Order).
   <a href="$(URL)" TARGET="_blank">
     <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title)<!ENDIF>
-  </a>
+  </a> 
+  [$&(URL.host:idnd)]
+  [$(URL.host:idnd)]
+  [$&(URL:idnd)]
   <small>[<b>$(Score)</b> Popularity: <b>$(Pop_Rank)</b>]</small>
   <DD>
   <table width=60%>

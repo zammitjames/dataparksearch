@@ -851,7 +851,10 @@ typedef struct {
         int             origin, order_origin;
 /*	unsigned long	arg;          .order now */
   DPS_URL_CRD_DB        *pbegin, *pcur, *plast, *pchecked;
-  DPS_URL_CRD           *db_pbegin, *db_pcur, *db_plast, *db_pchecked;
+  char gap[8192];
+  DPS_URL_CRD           *db_pbegin;
+  char gap2[8192];
+  DPS_URL_CRD *db_pcur, *db_plast, *db_pchecked;
         size_t          order, order_inquery;
         size_t          wordnum;
         size_t          count;

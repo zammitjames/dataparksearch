@@ -56,8 +56,8 @@ void __DPSCALL DpsResultFree(DPS_RESULT *Res) {
 	for (i = 0; i < /*DPS_MAXSTACK*/ Res->mitems; i++) {
 	  DPS_FREE(Res->items[i].word);
 	  DPS_FREE(Res->items[i].uword);
-	  DPS_FREE(Res->items[i].pbegin);
 	  DPS_FREE(Res->items[i].db_pbegin);
+	  DPS_FREE(Res->items[i].pbegin);
 	}
 	DPS_FREE(Res->items);
 	DPS_FREE(Res->PerSite);

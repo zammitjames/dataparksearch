@@ -600,7 +600,7 @@ __C_LINK int __DPSCALL DpsBaseRead(DPS_BASE_PARAM *P, void *buf, size_t len) {
 
 __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len) {
   int res = DPS_OK;
-  char *buf;
+  char *buf = NULL;
 #ifdef HAVE_ZLIB
   Byte *CDoc = NULL;
   z_stream zstream;
