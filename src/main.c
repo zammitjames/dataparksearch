@@ -285,6 +285,23 @@ static void display_charsets(void){
 
 static void DpsFeatures(DPS_VARLIST *V){
 
+#ifdef WITH_SYSLOG
+     DpsVarListReplaceStr(V,"WITH_SYSLOG","yes");
+#else
+     DpsVarListReplaceStr(V,"WITH_SYSLOG","no");
+#endif
+#ifdef WITH_TRACE
+     DpsVarListReplaceStr(V, "WITH_TRACE", "yes");
+#else
+     DpsVarListReplaceStr(V, "WITH_TRACE", "no");
+#endif
+#ifdef WITH_TRACE
+     DpsVarListReplaceStr(V, "WITH_GOOGLEGRP", "yes");
+#else
+     DpsVarListReplaceStr(V, "WITH_GOOGLEGRP", "no");
+#endif
+
+
 #ifdef HAVE_PTHREAD
      DpsVarListReplaceStr(V,"HAVE_PTHREAD","yes");
 #else
@@ -319,11 +336,6 @@ static void DpsFeatures(DPS_VARLIST *V){
      DpsVarListReplaceStr(V,"HAVE_ZLIB","yes");
 #else
      DpsVarListReplaceStr(V,"HAVE_ZLIB","no");
-#endif
-#ifdef WITH_SYSLOG
-     DpsVarListReplaceStr(V,"WITH_SYSLOG","yes");
-#else
-     DpsVarListReplaceStr(V,"WITH_SYSLOG","no");
 #endif
 #ifdef WITH_PARSER
      DpsVarListReplaceStr(V,"WITH_PARSER","yes");
@@ -450,6 +462,13 @@ static void DpsFeatures(DPS_VARLIST *V){
 #else
      DpsVarListReplaceStr(V,"HAVE_CHARSET_tscii","no");
 #endif
+
+#ifdef HAVE_LIBEXTRACTOR
+     DpsVarListReplaceStr(V, "HAVE_LIBEXTRACTOR", "yes");
+#else
+     DpsVarListReplaceStr(V, "HAVE_LIBEXTRACTOR", "no");
+#endif
+
 
 }
 
@@ -644,9 +663,10 @@ static void DpsParseCmdLine(void) {
                DpsVarListInit(&W);
                DpsFeatures(&V);
                DpsVarListAddLst(&W,&V,NULL,optarg);
-	       for (r = 0; r < 256; r++)
+	       for (r = 0; r < 256; r++) {
                for (i = 0; i < W.Root[r].nvars; i++)
                     printf("%s:%s\n", W.Root[r].Var[i].name, W.Root[r].Var[i].val);
+	       }
                exit(0);
           }
 	  case 'O': cmd = DPS_IND_CONVERT; add_servers = 0; load_langmaps = 0; load_spells = 0; break;
