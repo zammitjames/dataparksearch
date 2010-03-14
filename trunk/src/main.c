@@ -295,11 +295,45 @@ static void DpsFeatures(DPS_VARLIST *V){
 #else
      DpsVarListReplaceStr(V, "WITH_TRACE", "no");
 #endif
-#ifdef WITH_TRACE
+#ifdef WITH_GOOGLEGRP
      DpsVarListReplaceStr(V, "WITH_GOOGLEGRP", "yes");
 #else
      DpsVarListReplaceStr(V, "WITH_GOOGLEGRP", "no");
 #endif
+#ifdef FULL_RELEVANCE
+     DpsVarListReplaceStr(V, "RELEVANCE", "full");
+#elif defined(FAST_RELEVANCE)
+     DpsVarListReplaceStr(V, "RELEVANCE", "fast");
+#else
+     DpsVarListReplaceStr(V, "RELEVANCE", "ultra");
+#endif
+#ifdef WITH_POPHOPS
+     DpsVarListReplaceStr(V,"WITH_POPHOPS","yes");
+#else
+     DpsVarListReplaceStr(V,"WITH_POPHOPS","no");
+#endif
+     DpsVarListReplaceDouble(V,"DPS_POPHOPS_FACTOR", DPS_POPHOPS_FACTOR);
+#ifdef WITH_REL_DISTANCE
+     DpsVarListReplaceStr(V,"WITH_REL_DISTANCE","yes");
+#else
+     DpsVarListReplaceStr(V,"WITH_REL_DISTANCE","no");
+#endif
+#ifdef WITH_REL_POSITION
+     DpsVarListReplaceStr(V,"WITH_REL_POSITION","yes");
+#else
+     DpsVarListReplaceStr(V,"WITH_REL_POSITION","no");
+#endif
+#ifdef WITH_REL_WRDCOUNT
+     DpsVarListReplaceStr(V,"WITH_REL_WRDCOUNT","yes");
+#else
+     DpsVarListReplaceStr(V,"WITH_REL_WRDCOUNT","no");
+#endif
+#ifdef WITH_REL_TRACK
+     DpsVarListReplaceStr(V,"WITH_REL_TRACK","yes");
+#else
+     DpsVarListReplaceStr(V,"WITH_REL_TRACK","no");
+#endif
+     DpsVarListReplaceDouble(V,"DPS_BEST_POSITION", DPS_BEST_POSITION);
 
 
 #ifdef HAVE_PTHREAD
@@ -692,7 +726,7 @@ static void DpsParseCmdLine(void) {
           case 'e': flags |= DPS_FLAG_SORT_EXPIRED; break;
           case 'z': DpsVarListAddStr(&Conf.Vars, "maxhop", optarg);break;
 	  case 'o': flags |= DPS_FLAG_SORT_HOPS; break;
-          case 'r': flags |= DPS_FLAG_DONTSORT_SEED; break;
+          case 'r': if (flags & DPS_FLAG_SORT_SEED) flags |= DPS_FLAG_SORT_SEED2; else flags |= DPS_FLAG_SORT_SEED; break;
           case 'm': flags |= DPS_FLAG_REINDEX; break;
           case 'n': cfg_url_number = Conf.url_number = atoi(optarg);break;
           case 'c': max_index_time = atoi(optarg);break;
