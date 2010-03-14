@@ -3187,7 +3187,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {
 	  sprintf(sortstr, " ORDER BY url.next_index_time");
 	} else if ( (Indexer->flags & (DPS_FLAG_SORT_HOPS | DPS_FLAG_SORT_EXPIRED | DPS_FLAG_SORT_POPRANK)) 
-	     || (Indexer->flags & DPS_FLAG_DONTSORT_SEED)  ) {
+	     || (Indexer->flags & DPS_FLAG_SORT_SEED)  ) {
 	  int notfirst = 0;
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
@@ -3201,7 +3201,8 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",next_index_time" : "ORDER BY next_index_time");
 	    notfirst = 1;
 	  }
-	  if (Indexer->flags & DPS_FLAG_DONTSORT_SEED) {
+	  if (Indexer->flags & DPS_FLAG_SORT_SEED) {
+	    int dir = rand()%2;
 	    if(db->DBSQL_LIMIT){
 	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%u %s %s %s LIMIT 10", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
@@ -3216,7 +3217,13 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 
 	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
 	    if ((nrows = DpsSQLNumRows(&SQLRes)) > 0) {
-	      dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes,rand()%nrows,0));
+	      if (Indexer->flags & DPS_FLAG_SORT_SEED2) {
+		dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed%c=%s", (dir) ? '>' : '<', DpsSQLValue(&SQLRes, rand()%nrows, 0));
+		sprintf(DPS_STREND(sortstr), "%s %s", (notfirst) ? ",seed" : "ORDER BY seed", (dir) ? "" : "DESC");
+		notfirst = 1;
+	      } else {
+		dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes, rand()%nrows, 0));
+	      }
 	    }
 	    DpsSQLFree(&SQLRes);
 	  }
@@ -3242,7 +3249,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 
 	if(!(nrows = DpsSQLNumRows(&SQLRes))) {
 		DpsSQLFree(&SQLRes);
-		if (Indexer->flags & DPS_FLAG_DONTSORT_SEED && ntry++ < 3) goto one_try;
+		if (Indexer->flags & DPS_FLAG_SORT_SEED && ntry++ < 3) goto one_try;
 		goto unlock;
 	}
 	if (!db->DBSQL_LIMIT && nrows > url_num) nrows = url_num;
