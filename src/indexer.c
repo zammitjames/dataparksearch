@@ -1245,9 +1245,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	const char	*ct=DpsVarListFindStr(&Doc->Sections,"Content-Type","");
 	const char	*ce=DpsVarListFindStr(&Doc->Sections,"Content-Encoding","");
 	const char	*te=DpsVarListFindStr(&Doc->Sections,"Transfer-Encoding","");
-#ifdef HAVE_LIBEXTRACTOR
-	int             nosections = 0;
-#endif
+	int             nosections = 1;
 	int		result = DPS_OK;
 	size_t          i, r;
 
@@ -1398,19 +1396,23 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  if(Doc->method == DPS_METHOD_CHECKMP3ONLY ||
 	     !strncasecmp(real_content_type, "audio/mpeg",10) || !strncasecmp(real_content_type, "audio/x-mpeg",12)) {
 			DpsMP3Parse(Indexer,Doc);
+			nosections = 0;
 	  } else
 #endif
 	  if(!strncasecmp(real_content_type,"text/plain",10)){
 			DpsParseText(Indexer, Doc);
 			DpsParseSections(Indexer, Doc);
+			nosections = 0;
 	  }else
 	  if(!strncasecmp(real_content_type,"text/tab-separated-values",25)){
 			DpsParseText(Indexer, Doc);
 			DpsParseSections(Indexer, Doc);
+			nosections = 0;
 	  }else
 	  if(!strncasecmp(real_content_type,"text/css",8)){
 			DpsParseText(Indexer, Doc);
 			DpsParseSections(Indexer, Doc);
+			nosections = 0;
 	  }else	
 	  if(!strncasecmp(real_content_type,"text/html",9)
 	     || !strncasecmp(real_content_type, "application/xhtml+xml", 21)
@@ -1419,6 +1421,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 			DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "bf_html");
 			DpsHTMLParse(Indexer,Doc);
 			DpsParseSections(Indexer, Doc);
+			nosections = 0;
 	  }else
 	  if(!strncasecmp(real_content_type, "text/xml", 8) 
 	     || !strncasecmp(real_content_type, "application/xml", 15)
@@ -1429,22 +1432,27 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	     || !strncasecmp(real_content_type, "application/rss+xml", 19) ) {
 			DpsXMLParse(Indexer, Doc);
 			DpsParseSections(Indexer, Doc);
+			nosections = 0;
+	  }else
+	  if(!strncasecmp(real_content_type, "image/gif", 9)) {
+			DpsGIFParse(Indexer, Doc);
+			nosections = 0;
+	  }
 #ifdef HAVE_LIBEXTRACTOR
-	  } else {
+	  {
 	    DPS_TEXTITEM  Item;
 	    DPS_VAR       *Sec;
 	    DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
 	    EXTRACTOR_ExtractorList *plugins;
 	    EXTRACTOR_KeywordList   *md_list, *pmd;
 
-	    DpsLog(Indexer, DPS_LOG_DEBUG, "Executing Libextractor parser");
+	    DpsLog(Indexer, DPS_LOG_EXTRA, "Executing Libextractor parser");
 
 	    DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
 	     plugins = EXTRACTOR_loadDefaultLibraries();
 	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf));
 
 	     Item.href = NULL;
-	     nosections = 1;
 	     for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
 	      const char *secname = DpsLibextractorMsgName(pmd->keywordType);
 	      nosections = 0;
@@ -1464,13 +1472,9 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	     EXTRACTOR_removeAll(plugins);
 	    DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
 	  }
-	  if (nosections && status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
-#else
-	  }else
-	  if(!strncasecmp(real_content_type, "image/gif", 9)) {
-			DpsGIFParse(Indexer, Doc);
-	  } else if (status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
 #endif
+	  if (nosections && status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
+
 			/* Unknown Content-Type  */
 			DpsLog(Indexer,DPS_LOG_ERROR,"Unsupported Content-Type '%s'",real_content_type);
 			DpsVarListReplaceInt(&Doc->Sections,"Status",DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);
