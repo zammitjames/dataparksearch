@@ -110,7 +110,7 @@ CREATE TABLE dict16 (
 
 CREATE TABLE dict32 (
   url_id int(11)  DEFAULT '0' NOT NULL,
-  word varchar(32)     DEFAULT '' NOT NULL,
+  word varchar(4096)     DEFAULT '' NOT NULL,
   intag int(11) DEFAULT '0' NOT NULL,
   KEY url_id (url_id),
   KEY word_url (word)

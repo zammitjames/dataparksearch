@@ -137,7 +137,7 @@ CREATE INDEX dict3_word_ind ON dict3
 
 
 CREATE TABLE dict32 (
-       word                 VARCHAR2(32) NOT NULL,
+       word                 VARCHAR2(4096) NOT NULL,
        url_id               NUMBER(12) NOT NULL,
        intag                NUMBER(12) NOT NULL
 )
