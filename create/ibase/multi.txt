@@ -84,7 +84,7 @@ CREATE TABLE dict16 (
 
 CREATE TABLE dict32 (
   url_id int        NOT NULL,
-  word varchar(32)  NOT NULL,
+  word varchar(4096)  NOT NULL,
   intag int         NOT NULL
 );
 
