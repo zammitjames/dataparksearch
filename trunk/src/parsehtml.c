@@ -403,6 +403,10 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   DPS_CHARSET	*loccs;
   DPS_CHARSET	*sys_int;
   DPS_CONV	dc_uni;
+#ifdef HAVE_LIBEXTRACTOR
+  DPS_CONV      utf8_uni;
+  DPS_TEXTLIST	*extractor_tlist = &Doc->ExtractorList;
+#endif
   DPS_TEXTLIST	*tlist = &Doc->TextList;
   DPS_VAR	*Sec;
   int		res = DPS_OK;
@@ -467,7 +471,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   sys_int=DpsGetCharSet("sys-int");
 
   DpsConvInit(&dc_uni, loccs /*doccs*/, sys_int, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
-
+#ifdef HAVE_LIBEXTRACTOR
+  DpsConvInit(&utf8_uni, DpsGetCharSet("utf-8"), sys_int, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
+#endif
   max_word_len = Indexer->WordParam.max_word_len;
   min_word_len = Indexer->WordParam.min_word_len;
 	
@@ -584,6 +590,94 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
     DPS_FREE(UStr);
     if (res != DPS_OK) break;
   }
+
+ /* do the same for libextrated meta-data, which is always encoded in UTF-8 */
+#ifdef HAVE_LIBEXTRACTOR
+  for(i = 0; i < extractor_tlist->nitems; i++) {
+    size_t		srclen;
+    size_t		dstlen;
+    size_t		reslen;
+    char		*src,*dst;
+    dpsunicode_t	*ustr = NULL, *UStr = NULL;
+    DPS_TEXTITEM	*Item = &extractor_tlist->Items[i];
+
+    srclen = ((Item->len) ? Item->len : (dps_strlen(Item->str)) + 1);	/* with '\0' */
+    dstlen = (16 * (srclen + 1)) * sizeof(dpsunicode_t);	/* with '\0' */
+		
+    if ((ustr = (dpsunicode_t*)DpsMalloc(dstlen + 1)) == NULL) {
+      DpsLog(Indexer, DPS_LOG_ERROR, "%s:%d Can't alloc %u bytes", __FILE__, __LINE__, dstlen);
+      DPS_FREE(uword); DPS_FREE(lcsword); 
+      DpsDSTRFree(&exrpt);
+      TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
+#endif
+      return DPS_ERROR;
+    }
+		
+    src = Item->str;
+    dst = (char*)ustr;
+
+    DpsConv(&utf8_uni, dst, dstlen, src, srclen);
+    DpsUniRemoveDoubleSpaces(ustr);
+    if ((UStr = DpsUniDup(ustr)) == NULL) {
+      DpsLog(Indexer, DPS_LOG_ERROR, "%s:%d Can't DpsUniDup", __FILE__, __LINE__);
+      DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); 
+      DpsDSTRFree(&exrpt);
+      TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
+#endif
+      return DPS_ERROR;
+    }
+    reslen = DpsUniLen(ustr);
+		
+    /*
+      TODO for clones detection:
+      Replace any separators into space to ignore 
+      various pseudo-graphics, commas, semicolons
+      and so on to improve clone detection quality
+    */
+    if (strncasecmp(DPS_NULL2EMPTY(Item->section_name), "url", 3) != 0) /* do not calculate crc32  on url* sections */
+      crc32 = DpsHash32Update(crc32, (char*)ustr, reslen * sizeof(dpsunicode_t));
+
+    /* Collect links from HrefSections */
+    if((Sec = DpsVarListFind(&Indexer->Conf->HrefSections, Item->section_name))) {
+      DPS_HREF	Href;
+      DpsHrefInit(&Href);
+      Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
+      Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
+      Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
+      Href.url = Item->str;
+      Href.method = DPS_METHOD_GET;
+      DpsHrefListAdd(Indexer, &Doc->Hrefs, &Href);
+    }
+
+    if (seasec && strstr(SEASections, Item->section_name)) {
+      DpsDSTRAppendUniWithSpace(&exrpt, UStr);
+    }
+
+    if (DPS_OK != DpsPrepareItem(Indexer, Doc, Item, ustr, UStr, 
+				 content_lang, &indexed_size, &indexed_limit, max_word_len, min_word_len, crossec
+#ifdef HAVE_ASPELL
+				 , have_speller, speller
+#endif
+				 )) {
+      DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
+      DpsDSTRFree(&exrpt);
+      TRACE_OUT(Indexer);
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
+#endif
+      return DPS_ERROR;
+    }
+		
+		
+    DPS_FREE(ustr);
+    DPS_FREE(UStr);
+    if (res != DPS_OK) break;
+  }
+#endif
 
   DpsVarListReplaceInt(&Doc->Sections,"crc32", (int)crc32);
 

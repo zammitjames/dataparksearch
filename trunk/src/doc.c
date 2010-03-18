@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -96,6 +96,9 @@ void __DPSCALL DpsDocFree(DPS_DOCUMENT *Result) {
 	DpsVarListFree(&Result->RequestHeaders);
 	DpsVarListFree(&Result->Sections);
 	DpsTextListFree(&Result->TextList);
+#ifdef HAVE_LIBEXTRACTOR
+	DpsTextListFree(&Result->ExtractorList);
+#endif
 	
 	DpsURLFree(&Result->CurURL);
 

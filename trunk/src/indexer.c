@@ -1304,6 +1304,42 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 	  DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "before");
 	
+#ifdef HAVE_LIBEXTRACTOR
+	  {
+	    DPS_TEXTITEM  Item;
+	    DPS_VAR       *Sec;
+	    DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
+	    EXTRACTOR_ExtractorList *plugins;
+	    EXTRACTOR_KeywordList   *md_list, *pmd;
+
+	    DpsLog(Indexer, DPS_LOG_EXTRA, "Executing Libextractor parser");
+
+	    DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
+	     plugins = EXTRACTOR_loadDefaultLibraries();
+	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf));
+
+	     Item.href = NULL;
+	     for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
+	      const char *secname = DpsLibextractorMsgName(pmd->keywordType);
+	      nosections = 0;
+	      DpsLog(Indexer, DPS_LOG_DEBUG, "Libextracted %s: %s", secname, pmd->keyword);
+	      Sec = DpsVarListFind(&Doc->Sections, secname);
+	      if (Sec || BSec) {
+		Item.section = (Sec) ? Sec->section : BSec->section;
+		Item.strict = (Sec) ? Sec->strict : BSec->strict;
+		Item.str = pmd->keyword;
+		Item.section_name = (Sec) ? Sec->name : BSec->name;
+		Item.len = dps_strlen(Item.str);
+		DpsTextListAdd(&Doc->ExtractorList, &Item);
+	      }
+	     }
+
+	     EXTRACTOR_freeKeywords(md_list);
+	     EXTRACTOR_removeAll(plugins);
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
+	  }
+#endif
+
 #ifdef WITH_PARSER
 	  /* Let's try to start external parser for this Content-Type */
 
@@ -1399,17 +1435,10 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 			nosections = 0;
 	  } else
 #endif
-	  if(!strncasecmp(real_content_type,"text/plain",10)){
-			DpsParseText(Indexer, Doc);
-			DpsParseSections(Indexer, Doc);
-			nosections = 0;
-	  }else
-	  if(!strncasecmp(real_content_type,"text/tab-separated-values",25)){
-			DpsParseText(Indexer, Doc);
-			DpsParseSections(Indexer, Doc);
-			nosections = 0;
-	  }else
-	  if(!strncasecmp(real_content_type,"text/css",8)){
+	  if(!strncasecmp(real_content_type, "text/plain", 10)
+	     || !strncasecmp(real_content_type, "text/tab-separated-values", 25)
+	     || !strncasecmp(real_content_type, "text/css", 8)
+	     ){
 			DpsParseText(Indexer, Doc);
 			DpsParseSections(Indexer, Doc);
 			nosections = 0;
@@ -1438,41 +1467,6 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 			DpsGIFParse(Indexer, Doc);
 			nosections = 0;
 	  }
-#ifdef HAVE_LIBEXTRACTOR
-	  {
-	    DPS_TEXTITEM  Item;
-	    DPS_VAR       *Sec;
-	    DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
-	    EXTRACTOR_ExtractorList *plugins;
-	    EXTRACTOR_KeywordList   *md_list, *pmd;
-
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "Executing Libextractor parser");
-
-	    DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
-	     plugins = EXTRACTOR_loadDefaultLibraries();
-	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf));
-
-	     Item.href = NULL;
-	     for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
-	      const char *secname = DpsLibextractorMsgName(pmd->keywordType);
-	      nosections = 0;
-	      DpsLog(Indexer, DPS_LOG_DEBUG, "Libextracted %s: %s", secname, pmd->keyword);
-	      Sec = DpsVarListFind(&Doc->Sections, secname);
-	      if (Sec || BSec) {
-		Item.section = (Sec) ? Sec->section : BSec->section;
-		Item.strict = (Sec) ? Sec->strict : BSec->strict;
-		Item.str = pmd->keyword;
-		Item.section_name = (Sec) ? Sec->name : BSec->name;
-		Item.len = dps_strlen(Item.str);
-		DpsTextListAdd(&Doc->TextList, &Item);
-	      }
-	     }
-
-	     EXTRACTOR_freeKeywords(md_list);
-	     EXTRACTOR_removeAll(plugins);
-	    DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
-	  }
-#endif
 	  if (nosections && status != DPS_HTTP_STATUS_MOVED_PARMANENTLY && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
 
 			/* Unknown Content-Type  */
