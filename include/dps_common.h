@@ -624,6 +624,9 @@ typedef struct {
 	DPS_VARLIST		Sections;	/**< User sections*/
 	
 	DPS_TEXTLIST		TextList;	/**< Text list    */
+#ifdef HAVE_LIBEXTRACTOR
+	DPS_TEXTLIST		ExtractorList;	/**< Text list    */
+#endif
 	DPS_URL			CurURL;		/**< Parsed URL   */
 	DPS_CHARSET		*lcs;		/**< LocalCharser */
 	DPS_SPIDERPARAM		Spider;		/**< Spider prms  */
