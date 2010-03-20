@@ -694,45 +694,36 @@ static int add_parser(void *Cfg, size_t ac,char **av){
 
 
 static int add_section(void *Cfg, size_t ac,char **av){
+	char err[128] = "";
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	DPS_VAR S;
 	DPS_MATCH M;
-	char err[128] = "";
+	int shift = 0;
 
 	bzero((void*)&S, sizeof(S));
-
-	if (ac == 5) {
-	  if (strcasecmp(av[4], "strict")) {
-	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments should be only the \"strict\" for Section command");
-	    return DPS_ERROR;
-	  }
-	  S.strict = 1;
-	}
-
 	S.name = av[1];
 	S.section = atoi(av[2]);
 	S.maxlen = ((ac > 2) && av[3]) ? atoi(av[3]) : 0;
-	if (ac > 4 && !strcasecmp(av[4], "strict")) S.strict = 1;
 
-	if (ac == 6 || ac == 7) {
-	  int shift = 0;
+	if (ac >= 4) {
+	  while(shift + 4 < ac) {
+	    if (!strcasecmp(av[4 + shift], "strict")) S.strict = 1;
+	    else if (!strcasecmp(av[4 + shift], "single")) S.single = 1;
+	    else if (shift + 4 < ac - 2) {
+	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "unknown option %s in arguments of for Section command", av[shift + 4]);
+	      return DPS_ERROR;
+	    }
+	    shift++;
+	  }
+	}
+
+	if (ac - shift == 6) {
 
 	  if(!(C->flags & DPS_FLAG_ADD_SERV))
 	    return DPS_OK;
 
 	  DpsMatchInit(&M);
-
-	  if (ac == 7) {
-	    if (!strcasecmp(av[4], "strict")) {
-	      shift = 1;
-	      S.strict = 1;
-	    } else {
-	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "fourth arguments should be only the \"strict\" for Section command");
-	      return DPS_ERROR;
-	    }
-	  }
-
 	  M.match_type = DPS_MATCH_REGEX;
 	  M.case_sense = 1;
 	  M.section = av[1];
@@ -742,6 +733,9 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "SectionMatch Add: %s", err);
 	    return DPS_ERROR;
 	  }
+	} else if (ac > 4 + shift) {
+	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "wrong number of arguments for Section command");
+	      return DPS_ERROR;
 	}
 
 	DpsVarListReplace(&Conf->Sections, &S);

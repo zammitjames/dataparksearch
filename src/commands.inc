@@ -153,7 +153,7 @@
 	{"SEASections",		1,1,	env_rpl_var},
 	{"SEASentenceMinLength",1,1,    env_rpl_num_var},
 	{"SEASentences",        1,1,    env_rpl_num_var},
-	{"Section",		2,5,	add_section},
+	{"Section",		2,7,	add_section},
 	{"SectionSQL",		4,7,	add_sectionsql},
 	{"Server",		1,100,	add_srv},
 	{"ServerDB",            1,100,  add_srv_db},

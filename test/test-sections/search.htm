@@ -1,9 +1,13 @@
 <!--variables
 ImportEnv DPS_TEST_DBADDR0
+ImportEnv DPS_TEST_DIR
 DBAddr $(DPS_TEST_DBADDR0)?dbmode=single
+VarDir $(DPS_TEST_DIR)/var
 
 CrossWords yes
-#LogLevel 5
+DoStore yes
+StoredFiles 1
+LogLevel 5
 
 # Uncomment this line to enable search result cache
 #Cache yes
@@ -283,7 +287,7 @@ Section meta.source 16 0
               - $(Content-Length) bytes [$(Content-Type)] 
               - $(Last-Modified-Cannot-Use-In-Test) 
 	      <!IFNOT NAME="stored_href" CONTENT="">
-	      <DD><small>[<a href="$(stored_href-cannot-be-used)">Cached copy</a>]</small></DD>
+	      <DD><small>[<a href="$(stored_href)">Cached copy</a>]</small></DD>
 	      <!ENDIF>
 	      <!IFNOT NAME="sitelimit_href" CONTENT="">
 	      <DD><small>[<a href="$(self)$(sitelimit_href)">More result from this site

@@ -1916,8 +1916,17 @@ CLASS="OPTION"
 CLASS="OPTION"
 >strict</CODE
 > для задания строгой токенизации секции, что означает разбиение на слова
-на любом знаке, не являющемся буквой, независимо от контекста. Например, полезно для индексирования URL.
-<PRE
+на любом знаке, не являющемся буквой, независимо от контекста. Например, полезно для индексирования URL.</P
+><P
+>Вы можете указать параметр <CODE
+CLASS="OPTION"
+>single</CODE
+> для секций с одним значением, любое следующее значение обрабатываться не будет. Это полезно, напрмер,
+для подавления двоящихся заголовком при использовании библиотеки <SPAN
+CLASS="APPLICATION"
+>libextractor</SPAN
+>, или для сохранения в чистоте заголовков страниц, использующих фреймы, при индексировании поддокументов.</P
+><PRE
 CLASS="PROGRAMLISTING"
 ># Standard HTML sections: body, title
 Section	body			1	256
@@ -1926,7 +1935,6 @@ Section title			2	128
 Section url                     3       0 strict
 # шаблон регулярного выражения для секции
 Section GoodName                3       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"</PRE
-></P
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -1940,7 +1948,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2645"
+NAME="AEN2648"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1978,7 +1986,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2657"
+NAME="AEN2660"
 ></A
 ><P
 >Команда "<B
@@ -2002,7 +2010,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2666"
+NAME="AEN2669"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2033,7 +2041,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2676"
+NAME="AEN2679"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2066,7 +2074,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2687"
+NAME="AEN2690"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2106,7 +2114,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2698"
+NAME="AEN2701"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2142,7 +2150,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2708"
+NAME="AEN2711"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2170,7 +2178,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2718"
+NAME="AEN2721"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2199,7 +2207,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2728"
+NAME="AEN2731"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2223,7 +2231,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2737"
+NAME="AEN2740"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2243,7 +2251,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2745"
+NAME="AEN2748"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2266,7 +2274,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2754"
+NAME="AEN2757"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2286,7 +2294,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2760"
+NAME="AEN2763"
 ></A
 ><P
 >При помощи команды <B

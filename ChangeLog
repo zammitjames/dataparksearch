@@ -2,7 +2,9 @@
 History
 -------
 
-Latset snapshot:
+Latest snapshot:
+	* The "single" option for Section command has been added.
+	* Another URL randomazing for indexing algorithm has been implemented. Use -rr switch to indexer to activate.
 	* Unicode data has been updated to 5.2.0 version.
 	* aspell checking has been improved, configure doesn't stop anymore if there is no aspell installed and aspell support hasn't been enabled explicitly.
 	

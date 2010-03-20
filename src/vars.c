@@ -57,6 +57,7 @@ static int DpsVarCopy(DPS_VAR *D, DPS_VAR *S) {
 	if (S->section) D->section = S->section;
 	if (S->maxlen) D->maxlen = S->maxlen;
 	D->strict = S->strict;
+	D->single = S->single;
 	D->curlen = S->curlen;
 	D->name = (char*)DpsStrdup(S->name);
 	if (S->maxlen == 0) {
@@ -105,6 +106,7 @@ static int DpsVarCopyNamed(DPS_VAR *D, DPS_VAR *S, const char *name) {
 	if (S->maxlen) D->maxlen = S->maxlen;
 	D->curlen = S->curlen;
 	D->strict = S->strict;
+	D->single = S->single;
 	if(name){
 		size_t len = dps_strlen(name) + dps_strlen(S->name) + 3;
 		D->name = (char*)DpsMalloc(len);
@@ -328,6 +330,7 @@ int DpsVarListAddStr(DPS_VARLIST * vars, const char * name, const char * val) {
 	vars->Root[r].Var[vars->Root[r].nvars].section=0;
 	vars->Root[r].Var[vars->Root[r].nvars].maxlen=0;
 	vars->Root[r].Var[vars->Root[r].nvars].strict=0;
+	vars->Root[r].Var[vars->Root[r].nvars].single=0;
 	vars->Root[r].Var[vars->Root[r].nvars].curlen = (val != NULL) ? dps_strlen(val) : 0;	
 	vars->Root[r].Var[vars->Root[r].nvars].name = name ? (char*)DpsStrdup(name) : NULL;
 	vars->Root[r].Var[vars->Root[r].nvars].val = val ? (char*)DpsStrdup(val) : NULL;
@@ -613,7 +616,7 @@ int DpsVarListLog(DPS_AGENT *A, DPS_VARLIST *V, int l, const char *pre) {
 	  for (r = 0; r < 256; r++)
 	    for(h=0; h < V->Root[r].nvars; h++) {
 		DPS_VAR *v = &V->Root[r].Var[h];
-		if (v->section || v->maxlen) DpsLog(A, l, "%s.%s [%d,%d]: %s", pre, v->name, v->section, v->maxlen, DPS_NULL2STR(v->val));
+		if (v->section || v->maxlen) DpsLog(A, l, "%s.%s [%d,%d:%d]: %s", pre, v->name, v->section, v->maxlen, v->single, DPS_NULL2STR(v->val));
 		else DpsLog(A, l, "%s.%s: %s", pre, v->name, DPS_NULL2STR(v->val));
 	    }
 	}

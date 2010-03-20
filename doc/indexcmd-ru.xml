@@ -890,6 +890,10 @@ Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [strict] [ &lt;pattern&gt; 
 для извления значения секции из тела документа.</para>
 <para>Вы можете указать параметр <option>strict</option> для задания строгой токенизации секции, что означает разбиение на слова
 на любом знаке, не являющемся буквой, независимо от контекста. Например, полезно для индексирования URL.
+</para>
+<para>Вы можете указать параметр <option>single</option> для секций с одним значением, любое следующее значение обрабатываться не будет. Это полезно, напрмер,
+для подавления двоящихся заголовком при использовании библиотеки <application>libextractor</application>, или для сохранения в чистоте заголовков страниц, использующих фреймы, при индексировании поддокументов.
+</para>
 <programlisting>
 # Standard HTML sections: body, title
 Section	body			1	256
@@ -899,7 +903,6 @@ Section url                     3       0 strict
 # шаблон регулярного выражения для секции
 Section GoodName                3       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"
 </programlisting>
-</para>
 </sect2>
 
 
