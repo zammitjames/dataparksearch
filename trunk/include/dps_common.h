@@ -168,6 +168,7 @@ typedef struct {
 typedef struct dps_var_st {
 	int			section;	/**< Number 0..255   */
         int                     strict;         /**< strict word splitting */
+        int                     single;         /**< single valued section, we will drop any second occurence to be processed.*/
 	size_t			maxlen;		/**< Max length      */
 	size_t			curlen;		/**< Cur length      */
 	char			*val;		/**< Field Value     */

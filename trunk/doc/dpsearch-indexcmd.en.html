@@ -1707,8 +1707,17 @@ CLASS="OPTION"
 >strict</CODE
 > option to set strict string tokenization for a section, which mean word break 
 at any non-character symbol despite the context. It's useful, for example, in indexing of URL, where hyphen, the character, 
-uses as delimiter between words.
-<PRE
+uses as delimiter between words.</P
+><P
+>You can specify <CODE
+CLASS="OPTION"
+>single</CODE
+> option for a single value section, for which any second value will be skipped in processing. This is useful, for example, to clean up
+titles of pages with frames or to remove doubled titles when <SPAN
+CLASS="APPLICATION"
+>libextractor</SPAN
+> is used.</P
+><PRE
 CLASS="PROGRAMLISTING"
 ># Standard HTML sections: body, title
 Section	body			1	256
@@ -1717,7 +1726,6 @@ Section title			2	128
 Section url                     3       0 strict
 # regex-pattern for a section
 Section GoodName                4       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"</PRE
-></P
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -1731,7 +1739,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2464"
+NAME="AEN2467"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1769,7 +1777,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2476"
+NAME="AEN2479"
 ></A
 ><P
 >The "<B
@@ -1793,7 +1801,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2485"
+NAME="AEN2488"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1827,7 +1835,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2496"
+NAME="AEN2499"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1864,7 +1872,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2508"
+NAME="AEN2511"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1909,7 +1917,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2520"
+NAME="AEN2523"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1949,7 +1957,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2531"
+NAME="AEN2534"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1976,7 +1984,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2541"
+NAME="AEN2544"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2004,7 +2012,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2551"
+NAME="AEN2554"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2029,7 +2037,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2560"
+NAME="AEN2563"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2049,7 +2057,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2568"
+NAME="AEN2571"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2072,7 +2080,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2577"
+NAME="AEN2580"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2092,7 +2100,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2583"
+NAME="AEN2586"
 ></A
 ><P
 >With <B

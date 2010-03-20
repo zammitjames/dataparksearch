@@ -832,6 +832,11 @@ pattern and replacement to extract section value from document content.</para>
 <para>You can specify <option>strict</option> option to set strict string tokenization for a section, which mean word break 
 at any non-character symbol despite the context. It's useful, for example, in indexing of URL, where hyphen, the character, 
 uses as delimiter between words.
+</para>
+<para>
+You can specify <option>single</option> option for a single value section, for which any second value will be skipped in processing. This is useful, for example, to clean up
+titles of pages with frames or to remove doubled titles when <application>libextractor</application> is used.
+</para>
 <programlisting>
 # Standard HTML sections: body, title
 Section	body			1	256
@@ -841,7 +846,6 @@ Section url                     3       0 strict
 # regex-pattern for a section
 Section GoodName                4       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"
 </programlisting>
-</para>
 </sect2>
 
 

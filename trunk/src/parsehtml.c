@@ -271,6 +271,13 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 
   TRACE_IN(Indexer, "DpsPrepareItem");
 
+  Sec = DpsVarListFind(&Doc->Sections, Item->section_name);
+  if (Sec) {
+    if (Sec->single && (Sec->val != NULL) && (Sec->curlen != 0)) { /* Already have single valued section, skip the rest from processing */
+      TRACE_OUT(Indexer);
+      return DPS_OK;
+    }
+  }
   DpsUniStrToLower(ustr);
   nfc = DpsUniNormalizeNFC(NULL, ustr);
 /*  DPS_FREE(ustr);*/
@@ -337,8 +344,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
       }
     }
 
-    if((Sec = DpsVarListFind(&Doc->Sections, Item->section_name))
-       && (strncasecmp(Item->section_name, "url.", 4) != 0) && (strcasecmp(Item->section_name, "url") != 0) ) {
+    if((Sec) && (strncasecmp(Item->section_name, "url.", 4) != 0) && (strcasecmp(Item->section_name, "url") != 0) ) {
       int cnvres;
 			
       /* +4 to avoid attempts to fill the only one  */
