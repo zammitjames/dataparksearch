@@ -806,6 +806,13 @@ int main(int argc, char **argv, char **envp) {
 		  DpsVarListReplaceUnsigned(&Agent->Vars, "PerSite", Res->PerSite[i + Res->offset * (Res->first - 1)]);
 		}
 
+		/* put Xres sections if any */
+		for (r = 2; r <= Res->num_rows; r++) {
+		  if ((i + 1) % r == 0) {
+		    dps_snprintf(template_name, sizeof(template_name), "%dres", r);
+		    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, template_name);
+		  }
+		}
 		if ( (sc = DpsVarListFindInt(&Agent->Vars, "site", 0)) == 0) {
 		  DpsVarListReplaceInt(&query_vars, (have_p) ? "p" : "np", have_p);
 		  DpsVarListReplaceInt(&query_vars, "site", 
@@ -831,6 +838,15 @@ int main(int argc, char **argv, char **envp) {
 		}
 		prev_site_id = site_id;
 #endif
+		/* put resX sections if any */
+		for (r = 2; r <= Res->num_rows; r++) {
+		  if ((i + 1) % r == 0) {
+		    dps_snprintf(template_name, sizeof(template_name), "res%d", r);
+		    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, template_name);
+		  }
+		}
+
+
 		/* Revoke all found user-defined sections */
 		for (r = 0; r < 256; r++)
 		for(sc = 0; sc < Doc->Sections.Root[r].nvars; sc++){

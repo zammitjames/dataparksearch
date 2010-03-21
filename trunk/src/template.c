@@ -807,7 +807,7 @@ void __DPSCALL DpsTemplatePrint(DPS_AGENT * Agent, DPS_OUTPUTFUNCTION dps_out, v
 	size_t	format=(size_t)DpsVarListFindInt(vars,"o",0);
 	
 	if(dst)*dst='\0';
-	for (r = 0; r < 256; r++)
+	r = (size_t)w[0];
 	for(t = 0; t < tm->Root[r].nvars; t++) {
 		if(!strcasecmp(w, tm->Root[r].Var[t].name)){
 			if(!First)First = &tm->Root[r].Var[t];

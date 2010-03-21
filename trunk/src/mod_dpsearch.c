@@ -1053,6 +1053,14 @@ static int dpsearch_handler(request_rec *r) {
 		  DpsVarListReplaceUnsigned(&Agent->Vars, "PerSite", Res->PerSite[i + Res->offset  * (Res->first - 1)]);
 		}
 
+		/* put Xres sections if any */
+		for (ir = 2; ir <= Res->num_rows; ir++) {
+		  if ((i + 1) % ir == 0) {
+		    char template_name[32];
+		    dps_snprintf(template_name, sizeof(template_name), "%dres", r);
+		    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, template_name);
+		  }
+		}
 		if ( (sc = DpsVarListFindInt(&Agent->Vars, "site", 0)) == 0) {
 		  DpsVarListReplaceInt(&query_vars, (have_p) ? "p" : "np", have_p);
 		  DpsVarListReplaceInt(&query_vars, "site", 
@@ -1078,6 +1086,14 @@ static int dpsearch_handler(request_rec *r) {
 		}
 		prev_site_id = site_id;
 #endif
+		/* put resX sections if any */
+		for (ir = 2; ir <= Res->num_rows; ir++) {
+		  if ((i + 1) % ir == 0) {
+		    char template_name[32];
+		    dps_snprintf(template_name, sizeof(template_name), "res%d", r);
+		    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, template_name);
+		  }
+		}
 		
 		/* Revoke all found user-defined sections */
 		for (ir = 0; ir < 256; ir++)
