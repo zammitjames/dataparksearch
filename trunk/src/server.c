@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -208,8 +208,10 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  new->Match.match_type = srv->Match.match_type;
 	  new->Match.reg = srv->Match.reg;
 	  new->Match.arg = srv->Match.arg;
+	  new->Match.compiled = srv->Match.compiled;
 	  srv->Match.reg = NULL;
 	  srv->Match.arg = NULL;
+	  srv->Match.compiled = 0;
 	  new->command = srv->command;
 	  new->ordre = srv->ordre;
 	  new->weight = srv->weight;
