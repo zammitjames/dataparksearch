@@ -236,7 +236,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  if (List->nservers == 0) List->min_ordre = srv->ordre;
 	  new->crawl_delay = srv->crawl_delay;
 	  if (srv->last_crawled == NULL) {
-	    new->last_crawled = (time_t*)DpsMalloc(sizeof(time_t));
+	    new->last_crawled = (time_t*)DpsXmalloc(sizeof(time_t));
 	    if (new->last_crawled == NULL) {
 	      DpsLog(A, DPS_LOG_ERROR, "Can't alloc %d bytes at "__FILE__":%d", sizeof(time_t), __LINE__);
 #ifdef WITH_PARANOIA
