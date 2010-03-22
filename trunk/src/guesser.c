@@ -1394,7 +1394,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        DpsPrepareLangMap(LangMap);
 
        /* Allocate memory for comparison statistics */
-       if ((mapstat=(DPS_MAPSTAT *)DpsMalloc((List->nmaps + 1) * sizeof(DPS_MAPSTAT))) == NULL) {
+       if ((mapstat=(DPS_MAPSTAT *)DpsXmalloc((List->nmaps + 1) * sizeof(DPS_MAPSTAT))) == NULL) {
 	 DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 	 DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc momory for DpsGuessCharSet (%d bytes)", List->nmaps*sizeof(DPS_MAPSTAT));
 	 DPS_FREE(server_lang); DPS_FREE(meta_lang);
