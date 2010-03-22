@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2010 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -265,6 +265,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
     DpsConv(&Indexer->uni_lc, lcstr, sizeof(lcstr), (char*)List.Sent[4].sentence, sizeof(dpsunicode_t) * (DpsUniLen(List.Sent[4].sentence) + 1));
     fprintf(stderr, "Sent.4: %f %f -- %s\n", List.Sent[4].di, List.Sent[4].Oi, lcstr);
 #endif
+    bzero(&Item, sizeof(Item));
     Item.section = seasec;
     Item.href = NULL;
     Item.section_name = "sea";
