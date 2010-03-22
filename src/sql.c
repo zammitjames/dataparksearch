@@ -2293,7 +2293,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 /*	    urlid_t k = rec_id;*/
 
 	    DpsVarListReplaceInt(&Doc->Sections, "DP_ID", rec_id);
-	    if (skip_same_site) {
+	    if (skip_same_site && !is_not_same_site) {
 	      urlid_t site_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Site_id", 0);
 	      urlid_t ot_site_id = 0;
 	      if (site_id == 0) {
@@ -2314,9 +2314,8 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		if (DpsSQLNumRows(&SQLRes)) ot_site_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 		DpsSQLFree(&SQLRes);
 		is_not_same_site = (site_id != ot_site_id);
-	      } else is_not_same_site = 0;
+	      } else is_not_same_site = 1; /* treat any new doc as one from different site */
 	    } else is_not_same_site = 1;
-
 #if 1
 	      if (1 /*ot != rec_id*/ /*k*/) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  
@@ -2448,7 +2447,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		if (DpsSQLNumRows(&SQLRes)) ot_site_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 		DpsSQLFree(&SQLRes);
 		is_not_same_site = (site_id != ot_site_id);
-	      } else is_not_same_site = 0;
+	      } else is_not_same_site = 1; /* treat any new doc as one from different site */
 	    } else is_not_same_site = 1;
 #if 1
 	    if (ot != k) {
