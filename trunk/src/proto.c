@@ -111,7 +111,23 @@ int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigne
 	if (!to)return(connect(s,name, namelen));
 
 #ifdef DEBUG
-	fprintf(stderr, "Trying connect to: %s with timeout %d\n", inet_ntoa(inet->sin_addr), to);
+	{
+#if INET_ADDRSTRLEN > INET6_ADDRSTRLEN
+	  char abuf[INET_ADDRSTRLEN];
+#else
+	  char abuf[INET6_ADDRSTRLEN];
+#endif
+	  if (name->type.sa.sa_family == AF_INET) {
+	    if (inet_ntop(AF_INET, &inet->sin_addr, abuf, sizeof(abuf)) == NULL) {
+	      dps_snprintf(abuf, sizeof(anet), "<unknow>");
+	    }
+	  } else if (name->type.sa.sa_family == AF_INET6) {
+	    if (inet_ntop(AF_INET6, &name->type.sin6.sin6_addr, abuf, sizeof(abuf)) == NULL) {
+	      dps_snprintf(abuf, sizeof(anet), "<unknow>");
+	    }
+	  } else dps_snprintf(abuf, sizeof(anet), "<unknow>");
+	  fprintf(stderr, "Trying connect to: %s with timeout %d\n", abuf, to);
+	}
 #endif
 
 
@@ -172,14 +188,24 @@ static int open_host(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	net = socket(AF_INET, SOCK_STREAM, 0);
 	DpsSockOpt(Agent, net);
 	if (bind(net, (struct sockaddr *)&Agent->Flags.bind_addr, sizeof(Agent->Flags.bind_addr)) == -1) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "bind() to %s error %d %s", inet_ntoa(Agent->Flags.bind_addr.sin_addr), errno, strerror(errno));
+	  char abuf[INET_ADDRSTRLEN];
+	  if (inet_ntop(AF_INET, &Agent->Flags.bind_addr.sin_addr, abuf, sizeof(abuf)) == NULL) {
+	    dps_snprintf(abuf, sizeof(abuf), "<unknow>");
+	  }
+	  DpsLog(Agent, DPS_LOG_ERROR, "bind() to %s error %d %s", abuf, errno, strerror(errno));
 	  dps_closesocket(net);
 	  return DPS_NET_CANT_CONNECT;
 	} 
 	Doc->connp.sin.sin_family=AF_INET;
 	for (i = 0; i < Doc->connp.n_sinaddr; i++) {
 	  dps_memmove(&Doc->connp.sin.sin_addr, &Doc->connp.sinaddr[i].sin_addr, sizeof(Doc->connp.sin.sin_addr));
-	  DpsLog(Agent, DPS_LOG_DEBUG, "connecting %dth addr for %s", i, inet_ntoa(Doc->connp.sinaddr[i].sin_addr));
+	  if (DpsNeedLog(DPS_LOG_DEBUG)) {
+	        char abuf[INET_ADDRSTRLEN];
+		if (inet_ntop(AF_INET, &Agent->Flags.bind_addr.sin_addr, abuf, sizeof(abuf)) == NULL) {
+		  dps_snprintf(abuf, sizeof(abuf), "<unknow>");
+		}
+		DpsLog(Agent, DPS_LOG_DEBUG, "connecting %dth addr for %s", i, abuf);
+	  }
 	  if(!connect_tm(net, (struct sockaddr *)&Doc->connp.sin, sizeof (struct sockaddr_in),(unsigned int)Doc->Spider.read_timeout)) {
 	    return(net);
 	  }
