@@ -280,17 +280,16 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
   }
   DpsUniStrToLower(ustr);
   nfc = DpsUniNormalizeNFC(NULL, ustr);
-/*  DPS_FREE(ustr);*/
   if (dps_need2segment(nfc)) {
     if      ((Indexer->Flags.Resegment & DPS_RESEGMENT_CHINESE)  && !strncasecmp(content_lang, "zh", 2)) DpsUniDesegment(nfc);
     else if ((Indexer->Flags.Resegment & DPS_RESEGMENT_JAPANESE) && !strncasecmp(content_lang, "ja", 2)) DpsUniDesegment(nfc);
     else if ((Indexer->Flags.Resegment & DPS_RESEGMENT_KOREAN)   && !strncasecmp(content_lang, "ko", 2)) DpsUniDesegment(nfc);
     else if ((Indexer->Flags.Resegment & DPS_RESEGMENT_THAI)     && !strncasecmp(content_lang, "th", 2)) DpsUniDesegment(nfc);
     ustr = DpsUniSegment(Indexer, nfc, content_lang);
+    DPS_FREE(nfc);
   } else {
     ustr = nfc;
   }
-/*  ustr = (dps_need2segment(nfc)) ? DpsUniSegment(Indexer, nfc, content_lang) : nfc;*/
 
   TRACE_LINE(Indexer);
   if (ustr != NULL && Item->section && ((Indexer->Flags.LongestTextItems == 0) || (Item->marked)) )
@@ -343,6 +342,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 			
       }
     }
+    DPS_FREE(uword);
 
     if((Sec) && (strncasecmp(Item->section_name, "url.", 4) != 0) && (strcasecmp(Item->section_name, "url") != 0) ) {
       int cnvres;
@@ -360,7 +360,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  Sec->val = (char*)DpsMalloc( dstlen + 32 );
 	  if (Sec->val == NULL) {
 	    Sec->curlen = 0;
-	    DPS_FREE(uword);
 	    TRACE_OUT(Indexer);
 	    return DPS_ERROR;
 	  }
@@ -370,7 +369,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  else dstlen = 24 * srclen;
 	  if ((Sec->val = DpsRealloc(Sec->val, Sec->curlen + dstlen + 32)) == NULL) {
 	      Sec->curlen = 0;
-	      DPS_FREE(uword);
 	      TRACE_OUT(Indexer);
 	      return DPS_ERROR;
 	  }
@@ -389,7 +387,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
       }
     }
     DPS_FREE(ustr);
-    DPS_FREE(uword);
     TRACE_OUT(Indexer);
     return DPS_OK;
 }
@@ -418,8 +415,8 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   int		res = DPS_OK;
   dpshash32_t	crc32 = 0;
   int		crossec, seasec;
-  dpsunicode_t    *uword;    /* Word in UNICODE      */
-  char            *lcsword;  /* Word in LocalCharset */
+  dpsunicode_t    *uword = NULL;    /* Word in UNICODE      */
+  char            *lcsword = NULL;  /* Word in LocalCharset */
   size_t          max_word_len, min_word_len, uwordlen = DPS_MAXWORDSIZE;
   size_t          indexed_size = 0, indexed_limit = (size_t)DpsVarListFindInt(&Doc->Sections, "IndexDocSizeLimit", 0);
   const char      *content_lang = DpsVarListFindStr(&Doc->Sections, "Content-Language", "");
@@ -582,7 +579,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 				 , have_speller, speller
 #endif
 				 )) {
-      DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
+      DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
@@ -669,7 +666,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 				 , have_speller, speller
 #endif
 				 )) {
-      DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
+      DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
