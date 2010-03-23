@@ -1105,7 +1105,6 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	DpsLog(query, DPS_LOG_EXTRA, "Segment lang: %s", lang);
 
 	ustr = nfc;
-/*	ustr = DpsUniSegment(query, nfc, lang);*/
 
 	lex = (ustr != NULL) ? DpsUniGetSepToken(ustr, &lt , &ctype, &have_bukva_forte, 1) : NULL;
 	while(lex) {
@@ -1290,7 +1289,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 	    } else {
 
-	      seg_ustr = (dps_need2segment(uwrd)) ? DpsUniSegment(query, DpsUniDup(uwrd), lang) : DpsUniDup(uwrd);
+	      seg_ustr = (dps_need2segment(uwrd)) ? DpsUniSegment(query, uwrd, lang) : DpsUniDup(uwrd);
 
 	      seg_lex = (seg_ustr != NULL) ? DpsUniGetSepToken(seg_ustr, &seg_lt , &seg_ctype, &seg_have_bukva_forte, 0) : NULL;
 
@@ -3518,7 +3517,6 @@ dpsunicode_t *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *ustr, const char *
 	  DpsDSTRAppendUniWithSpace(&S, toseg);
 	  DPS_FREE(toseg)
 	}
-	DPS_FREE(ustr);
 	return (dpsunicode_t *)S.data;
 }
 
