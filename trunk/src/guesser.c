@@ -27,6 +27,7 @@
 #include "dps_vars.h"
 #include "dps_mutex.h"
 #include "dps_charsetutils.h"
+#include "dps_xmalloc.h"
 
 #include <stdio.h>
 #include <stdlib.h>
