@@ -45,6 +45,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #if defined(WITH_IDN) && !defined(APACHE1) && !defined(APACHE2)
 #include <idna.h>
 #elif defined(WITH_IDNKIT) && !defined(APACHE1) && !defined(APACHE2)

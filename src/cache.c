@@ -46,6 +46,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <errno.h>
 #include <math.h>
 #include <sys/types.h>
@@ -2349,16 +2350,17 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
 	}
       }
       DpsWriteLock(db->del_fd);
-      if(logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL) != 
-	 write(db->del_fd, logd->wrd_buf[log_num].del_buf, logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL))) {
-	DpsLog(Indexer, DPS_LOG_ERROR, "Can't write to del.log: %s\n", strerror(errno));
-	db->errcode = 1;
-	DpsUnLock(db->del_fd);
-	DpsBaseClose(&P);
-/*	DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);*/
-	TRACE_OUT(Indexer);
-	return DPS_ERROR;
-      }
+      if (logd->wrd_buf[log_num].ndel) 
+	if(logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL) != 
+	   write(db->del_fd, logd->wrd_buf[log_num].del_buf, logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL))) {
+	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't write to del.log: %s\n", strerror(errno));
+	  db->errcode = 1;
+	  DpsUnLock(db->del_fd);
+	  DpsBaseClose(&P);
+/*	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);*/
+	  TRACE_OUT(Indexer);
+	  return DPS_ERROR;
+	}
       logd->wrd_buf[log_num].ndel = 0;
       DpsUnLock(db->del_fd);
       
@@ -2433,14 +2435,13 @@ int DpsLogdSaveAllBufs(DPS_AGENT *Agent) {
 	  if (u) continue;
 	  shift = (Agent->handle * 321) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
 	  for(i = 0; i < ((db->WrdFiles) ? db->WrdFiles : NWrdFiles); i++) {
-	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
-/*	    u = (db->LOGD.wrd_buf == NULL);*/
 	    pi = (shift + i) % ((db->WrdFiles) ? db->WrdFiles : NWrdFiles);
-	    /*if (u)*/ u = (db->LOGD.wrd_buf[pi].nrec || db->LOGD.wrd_buf[pi].ndel);
+	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(pi));
+	    u = (db->LOGD.wrd_buf[pi].nrec || db->LOGD.wrd_buf[pi].ndel);
 	    if (u) {
 	      res = DpsLogdSaveBuf(Agent, Env, pi);
 	    }
-	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
+	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(pi));
 	    if (res != DPS_OK) break;
 /*	    DPSSLEEP(0);*/
 	  }
@@ -2535,7 +2536,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 
 
 	} else {
-	  if ((db->LOGD.wrd_buf = (dps_wrd_buf*)DpsMalloc(WrdBufSize + 1)) == NULL) {
+	  if ((db->LOGD.wrd_buf = (dps_wrd_buf*)DpsXmalloc(WrdBufSize + 1)) == NULL) {
 		dps_strcpy(Env->errstr, "Out of memory");
 		return DPS_ERROR;
 	  }
@@ -3001,8 +3002,8 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 
 	    DpsWriteLock(db->del_fd);
 	    for (i = 0; i < NWrdFiles; i++) {
-
-	      if(CacheLogDels * sizeof(DPS_LOGDEL) != write(db->del_fd, logd->wrd_buf[i].del_buf, CacheLogDels * sizeof(DPS_LOGDEL))) {
+	      if (logd->wrd_buf[i].ndel == 0) continue;
+	      if(logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL) != write(db->del_fd, logd->wrd_buf[i].del_buf, logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL))) {
 		sprintf(db->errstr, "Can't write to del.log: %s\n", strerror(errno));
 		db->errcode = 1;
 		DpsUnLock(db->del_fd);

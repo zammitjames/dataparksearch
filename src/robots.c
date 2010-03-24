@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 #include <sys/types.h>
 
@@ -417,7 +418,7 @@ static DPS_ROBOT_RULE dps_host_crawldelay = {DPS_METHOD_CRAWLDELAY, "Too big Cra
 
 DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOCUMENT *Doc, DPS_URL *pURL, int make_pause, int aliased) {
         char l_rurl[PATH_MAX];
-	DPS_DOCUMENT HostDoc;
+	DPS_DOCUMENT *HostDoc;
         DPS_ROBOT_RULE *r;
 	DPS_ROBOT *robot;
 	DPS_URL *URL;
@@ -439,7 +440,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	  return NULL;
 	}
 	
-	DpsDocInit(&HostDoc);
+	HostDoc = DpsDocInit(NULL);
 
 	rurlen = URL->len + 32;
 /*	rurlen = 32 + dps_strlen(DPS_NULL2EMPTY(URL->schema)) + dps_strlen(DPS_NULL2EMPTY(URL->hostinfo)) +
@@ -449,7 +450,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	  rurl = (char*)DpsMalloc(rurlen);
 	}
 	if ( rurl == NULL) {
-	  DpsDocFree(&HostDoc);
+	  DpsDocFree(HostDoc);
 #ifdef WITH_PARANOIA
 	  DpsViolationExit(Indexer->handle, paran);
 #endif
@@ -489,7 +490,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 		  next_index_time = Indexer->now + diff;
 		  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 		  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
-		  DpsDocFree(&HostDoc);
+		  DpsDocFree(HostDoc);
 #ifdef WITH_PARANOIA
 		  DpsViolationExit(Indexer->handle, paran);
 #endif
@@ -522,7 +523,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 		  next_index_time = Indexer->now + diff;
 		  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 		  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
-		  DpsDocFree(&HostDoc);
+		  DpsDocFree(HostDoc);
 #ifdef WITH_PARANOIA
 		  DpsViolationExit(Indexer->handle, paran);
 #endif
@@ -549,7 +550,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 				 robot->Rule[j].path, robot->Rule[j].len, rurl, DpsMethodStr(robot->Rule[j].cmd));
 			  r = &robot->Rule[j];
 			  if (rurlen > PATH_MAX) DPS_FREE(rurl);
-			  DpsDocFree(&HostDoc);
+			  DpsDocFree(HostDoc);
 #ifdef WITH_PARANOIA
 			  DpsViolationExit(Indexer->handle, paran);
 #endif
@@ -557,18 +558,18 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 			} else if (robot->Rule[j].cmd == DPS_METHOD_HOST) {
 			  char robohost[512];
 			  dps_snprintf(robohost, sizeof(robohost), "http://%s/", robot->Rule[j].path);
-			  DpsVarListReplaceStr(&HostDoc.Sections, "URL", robohost);
-			  DpsVarListDel(&HostDoc.Sections, "E_URL");
-			  DpsVarListReplaceStr(&HostDoc.Sections, "DP_ID", "0");
-			  if (DPS_OK == DpsURLAction(Indexer, &HostDoc, DPS_URL_ACTION_FINDBYURL)) {
-			    urlid_t host_url_id = DpsVarListFindInt(&HostDoc.Sections, "DP_ID", 0);
+			  DpsVarListReplaceStr(&HostDoc->Sections, "URL", robohost);
+			  DpsVarListDel(&HostDoc->Sections, "E_URL");
+			  DpsVarListReplaceStr(&HostDoc->Sections, "DP_ID", "0");
+			  if (DPS_OK == DpsURLAction(Indexer, HostDoc, DPS_URL_ACTION_FINDBYURL)) {
+			    urlid_t host_url_id = DpsVarListFindInt(&HostDoc->Sections, "DP_ID", 0);
 			    if (host_url_id != 0) have_host = 1;
 			  }
 /*			  have_host = 1;*/
 			  if (!strncmp(DPS_NULL2EMPTY(URL->hostinfo), robot->Rule[j].path, robot->Rule[j].len)) {
 			    DpsLog(Indexer, DPS_LOG_DEBUG, "ROBOTS host: %s allowed", robot->Rule[j].path);
 			    if (rurlen > PATH_MAX) DPS_FREE(rurl);
-			    DpsDocFree(&HostDoc);
+			    DpsDocFree(HostDoc);
 #ifdef WITH_PARANOIA
 			    DpsViolationExit(Indexer->handle, paran);
 #endif
@@ -578,7 +579,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 		}
 	}
 	if (rurlen > PATH_MAX) DPS_FREE(rurl);
-	DpsDocFree(&HostDoc);
+	DpsDocFree(HostDoc);
 	if (have_host && !aliased) {
 #ifdef WITH_PARANOIA
 	  DpsViolationExit(Indexer->handle, paran);

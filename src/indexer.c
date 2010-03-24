@@ -69,6 +69,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <string.h>
+#include <strings.h>
 #include <errno.h>
 #include <ctype.h>
 #include <signal.h>

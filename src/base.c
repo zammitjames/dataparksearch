@@ -35,6 +35,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <strings.h>
 #include <math.h>
 #include <errno.h>
 #ifdef HAVE_ZLIB

@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <string.h>
+#include <strings.h>
 
 /*
 #define DEBUG_BOOL

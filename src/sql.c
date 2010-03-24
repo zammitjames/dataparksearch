@@ -53,6 +53,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -6404,7 +6405,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   DPS_LNK /**IN = NULL,*/ *OUT = NULL;
   double pr, nPR;
   const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
-  double di = 0.0, Oi = 0.0, delta, pas, pdiv, cur_div, dw, PopRank;
+  double di = 0.0, Oi = 0.0, delta, pas, pdiv, cur_div, dw, PopRank = 0.5;
   size_t j, jrows;
   size_t n_di, n_Oi;
   int  rc = DPS_ERROR, it, u_it, to_update = 0;
