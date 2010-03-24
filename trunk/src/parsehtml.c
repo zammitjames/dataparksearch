@@ -261,14 +261,14 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 		   ) {
   dpsunicode_t	uspace[2] = {0x20, 0};
   DPS_VAR	*Sec;
-  dpsunicode_t *nfc;
+  dpsunicode_t *nfc = NULL;
   dpsunicode_t *lt, *tok;
-  int have_bukva_forte, res = DPS_OK;
   dpsunicode_t    *uword = NULL;    /* Word in UNICODE      */
+  char		*src;
+  int have_bukva_forte, res = DPS_OK;
   size_t uwordlen = 0/*DPS_MAXWORDSIZE*/;
   size_t	srclen;
   size_t	dstlen;
-  char		*src;
 
   TRACE_IN(Indexer, "DpsPrepareItem");
 
@@ -286,15 +286,14 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
     else if ((Indexer->Flags.Resegment & DPS_RESEGMENT_JAPANESE) && !strncasecmp(content_lang, "ja", 2)) DpsUniDesegment(nfc);
     else if ((Indexer->Flags.Resegment & DPS_RESEGMENT_KOREAN)   && !strncasecmp(content_lang, "ko", 2)) DpsUniDesegment(nfc);
     else if ((Indexer->Flags.Resegment & DPS_RESEGMENT_THAI)     && !strncasecmp(content_lang, "th", 2)) DpsUniDesegment(nfc);
-    ustr = DpsUniSegment(Indexer, nfc, content_lang);
+    lt = DpsUniSegment(Indexer, nfc, content_lang);
     DPS_FREE(nfc);
-  } else {
-    ustr = nfc;
+    nfc = lt;
   }
 
   TRACE_LINE(Indexer);
-  if (ustr != NULL && Item->section && ((Indexer->Flags.LongestTextItems == 0) || (Item->marked)) )
-    for(tok = DpsUniGetToken(ustr, &lt, &have_bukva_forte, Item->strict); 
+  if (nfc != NULL && Item->section && ((Indexer->Flags.LongestTextItems == 0) || (Item->marked)) )
+    for(tok = DpsUniGetToken(nfc, &lt, &have_bukva_forte, Item->strict); 
 	tok ; 
 	tok = DpsUniGetToken(NULL, &lt, &have_bukva_forte, Item->strict) ) {
 
@@ -321,7 +320,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	
 	Word.uword = uword;
 	Word.ulen = tlen;
-				
+
 	res = DpsWordListAdd(Doc, &Word, Item->section);
 	if(res!=DPS_OK)break;
 
@@ -343,7 +342,8 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 			
       }
     }
-    DPS_FREE(uword);
+  DPS_FREE(nfc);
+  DPS_FREE(uword);
 
     if((Sec) && (strncasecmp(Item->section_name, "url.", 4) != 0) && (strcasecmp(Item->section_name, "url") != 0) ) {
       int cnvres;
@@ -387,7 +387,6 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	}
       }
     }
-    DPS_FREE(ustr);
     TRACE_OUT(Indexer);
     return DPS_OK;
 }

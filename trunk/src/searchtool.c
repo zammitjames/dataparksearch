@@ -3408,7 +3408,7 @@ dpsunicode_t *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *ustr, const char *
 	dpsunicode_t    *lt, *tok;
 	int             have_bukva_forte;
 
-	if (dstlen < 2) return ustr;
+	if (dstlen < 2) return DpsUniDup(ustr);
 
 	sys_int = DpsGetCharSet("sys-int");
 
