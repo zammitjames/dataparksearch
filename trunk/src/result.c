@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 
 DPS_RESULT *DpsResultInit(DPS_RESULT *Res){

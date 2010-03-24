@@ -27,6 +27,7 @@
 #include "dps_vars.h"
 
 #include <string.h>
+#include <strings.h>
 #include <math.h>
 
 #define f(x) (1.0 / (1.0 + exp(-1.0 * (x))))

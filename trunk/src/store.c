@@ -42,6 +42,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <errno.h>
 
 #include <sys/types.h>
@@ -81,6 +82,8 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
   Byte *CDoc = NULL;
   size_t dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
   DPS_DB *db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[dbnum] : &Agent->dbl.db[dbnum];
+
+  bzero(&zstream, sizeof(zstream));
 
             zstream.zalloc = Z_NULL;
             zstream.zfree = Z_NULL;

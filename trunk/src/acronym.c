@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2009 Datapark corp. All right reserved.
+/* Copyright (C) 2005-2010 Datapark corp. All right reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/types.h>
 #include <errno.h>
 #include <ctype.h>

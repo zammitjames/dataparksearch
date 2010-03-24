@@ -41,6 +41,7 @@
 #ifdef HAVE_ZLIB
 #include <zlib.h>
 
+#include <strings.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
