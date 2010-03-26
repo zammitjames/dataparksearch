@@ -117,7 +117,7 @@ static int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, c
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
 #endif
-	if( (default_method != DPS_METHOD_DISALLOW) && (M = DpsMatchListFind(L, newhref, NS, P))) {
+	if( (default_method != DPS_METHOD_DISALLOW) && (M = DpsMatchListFind(L, newhref, NS, P)) == NULL) {
 	  if (DpsNeedLog(log_level))
 	    dps_snprintf(reason, PATH_MAX, "%s %s %s '%s'", DPS_NULL2EMPTY(M->arg), DpsMatchTypeStr(M->match_type),
 			 M->case_sense ? "Sensitive" : "InSensitive", M->pattern);
@@ -925,6 +925,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 /*    fprintf(stderr, " -- Alias:%s, after match apply: %s\n", Alias->section, buf);*/
     DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 
+    bzero((void*)&Item, sizeof(Item));
     Item.href = NULL;
     Item.section = Sec->section;
     Item.strict = Sec->strict;
@@ -1053,6 +1054,7 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     t.Env_Vars = &Doc->Sections;
 
     DpsSQLResInit(&SQLres);
+    bzero((void*)&Item, sizeof(Item));
     Item.href = NULL;
 
     for (i = 0; i < Indexer->Conf->SectionSQLMatch.nmatches; i++) {
@@ -1319,6 +1321,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	     plugins = EXTRACTOR_loadDefaultLibraries();
 	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf));
 
+	     bzero((void*)&Item, sizeof(Item));
 	     Item.href = NULL;
 	     for (pmd = md_list; pmd != NULL; pmd = pmd->next) {
 	      const char *secname = DpsLibextractorMsgName(pmd->keywordType);
@@ -1418,6 +1421,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		  DPS_VAR *Dsec = DpsVarListFind(&Doc->Sections, Sec->name);
 		  if (Dsec && Dsec->val) {
 		        DPS_TEXTITEM	Item;
+			bzero((void*)&Item, sizeof(Item));
 			Item.section = Sec->section;
 			Item.strict = Sec->strict;
 			Item.str = Dsec->val;

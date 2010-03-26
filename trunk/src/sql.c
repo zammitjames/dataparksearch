@@ -5368,6 +5368,7 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		dps_snprintf(real_path,sizeof(real_path)-1,"%s%s",realURL.path,realURL.filename);
 		real_path[sizeof(real_path)-1]='\0';
 
+                bzero((void*)&Item, sizeof(Item));
 		if (have_htdbtext) {
 		  Item.href = NULL;
 		  r = (size_t) 'h';
