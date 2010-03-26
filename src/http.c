@@ -108,10 +108,12 @@ static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *
   dps_snprintf(secname,sizeof(secname),"header.%s", header_name);
   secname[sizeof(secname)-1]='\0';
   if((Sec = DpsVarListFind(&Doc->Sections, secname)) && val ) {
+    bzero((void*)&Item, sizeof(Item));
     Item.href = NULL;
     Item.str = val;
     Item.section = Sec->section;
     Item.section_name = secname;
+    Item.strict = Sec->strict;
     Item.len = 0;
     DpsTextListAdd(&Doc->TextList, &Item);
   }

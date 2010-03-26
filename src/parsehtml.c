@@ -739,6 +739,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 	DpsURLInit(&dcURL);
 	if (DpsURLParse(&dcURL, dc_url)) { DPS_FREE(dc_url); return DPS_ERROR; }
 	
+	bzero((void*)&Item, sizeof(Item));
 	Item.href = NULL;
 	
 	if((Sec = DpsVarListFind(&Doc->Sections, "url"))) {
@@ -815,6 +816,7 @@ int DpsParseHeaders(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 	size_t i;
 	DPS_TEXTITEM Item;
 	
+	bzero((void*)&Item, sizeof(Item));
 	Item.href=NULL;
 	for(i=0;i<Doc->Sections.nvars;i++){
 		char	secname[128];
@@ -845,6 +847,7 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 	
 	if(BSec && buf_content && Doc->Spider.index){
 		char *lt;
+                bzero((void*)&Item, sizeof(Item));
 		Item.section = BSec->section;
 		Item.strict = BSec->strict;
 		Item.str = dps_strtok_r(buf_content, "\r\n", &lt, &savec);
@@ -1263,6 +1266,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 
 			if ((Sec = DpsVarListFind(&Doc->Sections, secname)) && Doc->Spider.index && visible) {
 			  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
+			  bzero((void*)&Item, sizeof(Item));
 			  Item.str = y;
 			  Item.section = Sec->section;
 			  Item.strict = Sec->strict;
@@ -1299,6 +1303,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		
 		if((!tag->comment) && (Sec=DpsVarListFind(&Doc->Sections,secname)) && Doc->Spider.index && visible) {
 /*			DpsSGMLUnescape(metacont);   we do this later */
+		        bzero((void*)&Item, sizeof(Item));
 			Item.str=metacont;
 			Item.section = Sec->section;
 			Item.strict = Sec->strict;
@@ -1528,6 +1533,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 		&& tag.visible[tag.level]) {
 	      int z;
 	      for(z = tag.level - 1; z >= 0 && tag.section[z] == 0; z--);
+	      bzero((void*)&Item, sizeof(Item));
 	      Item.href=tag.lasthref;
 	      Item.str=tmp;
 	      if (z >= 0) {
@@ -1543,6 +1549,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      DpsTextListAdd(&Doc->TextList,&Item);
 	    }
 	    if (TSec && (tag.comment != 1) && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
+	      bzero((void*)&Item, sizeof(Item));
 	      Item.href=NULL;
 	      Item.str=tmp;
 	      Item.section = title_sec;
