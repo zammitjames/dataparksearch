@@ -111,13 +111,13 @@
 #define NS 10
 static int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, char *reason, int default_method) {
 	DPS_MATCH_PART	P[NS];
-	DPS_MATCH	*M;
+	DPS_MATCH	*M = NULL;
 	int		res = default_method;
 	
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
 #endif
-	if( (default_method != DPS_METHOD_DISALLOW) && (M = DpsMatchListFind(L, newhref, NS, P)) == NULL) {
+	if( (default_method != DPS_METHOD_DISALLOW) && (M = DpsMatchListFind(L, newhref, NS, P)) != NULL) {
 	  if (DpsNeedLog(log_level))
 	    dps_snprintf(reason, PATH_MAX, "%s %s %s '%s'", DPS_NULL2EMPTY(M->arg), DpsMatchTypeStr(M->match_type),
 			 M->case_sense ? "Sensitive" : "InSensitive", M->pattern);
