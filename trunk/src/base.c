@@ -34,8 +34,8 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <string.h>
 #include <strings.h>
+#include <string.h>
 #include <math.h>
 #include <errno.h>
 #ifdef HAVE_ZLIB
@@ -437,9 +437,9 @@ __C_LINK int __DPSCALL DpsBaseWrite(DPS_BASE_PARAM *P, void *buffer, size_t len)
 #ifdef HAVE_ZLIB
   z_stream zstream;
   Byte *CData = NULL;
-#endif
 
-#ifdef HAVE_ZLIB
+  bzero(&zstream, sizeof(zstream));
+
   zstream.zalloc = Z_NULL;
   zstream.zfree = Z_NULL;
   zstream.opaque = Z_NULL;
@@ -449,7 +449,7 @@ __C_LINK int __DPSCALL DpsBaseWrite(DPS_BASE_PARAM *P, void *buffer, size_t len)
        && (deflateInit2(&zstream, P->zlib_level, Z_DEFLATED, P->zlib_windowBits, P->zlib_memLevel, P->zlib_strategy) == Z_OK) ) {
     
     zstream.avail_in = len;
-    zstream.avail_out = 4096 + 2 * len;
+    zstream.avail_out = sizeof(gz_header) + 4096 + 2 * len;
     CData = zstream.next_out = (Byte *) DpsMalloc(zstream.avail_out);
     if (zstream.next_out == NULL) {
       return DPS_ERROR;
@@ -560,6 +560,8 @@ __C_LINK int __DPSCALL DpsBaseRead(DPS_BASE_PARAM *P, void *buf, size_t len) {
       return DPS_ERROR;
     }
 #ifdef HAVE_ZLIB
+    bzero(&zstream, sizeof(zstream));
+
     if ((P->zlib_method == Z_DEFLATED) && (P->Item.orig_size != 0)) {
       zstream.avail_in = P->Item.size;
       zstream.avail_out = len;
@@ -618,6 +620,9 @@ __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len) {
       return NULL;
     }
 #ifdef HAVE_ZLIB
+
+    bzero(&zstream, sizeof(zstream));
+
     if ((P->zlib_method == Z_DEFLATED) && (P->Item.orig_size != 0)) {
       zstream.avail_in = P->Item.size;
       *len = zstream.avail_out = (2 * P->Item.size + P->Item.orig_size);
