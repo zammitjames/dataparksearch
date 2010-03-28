@@ -669,10 +669,11 @@ libdpcharset_la_LDFLAGS = -release @DPS_BASE_VERSION@
 @PHPMODULE_TRUE@dpsearch_so_LDFLAGS = -shared -L/usr/local/lib -rdynamic
 @PHPMODULE_TRUE@dpsearch_so_LDADD = libdpsearch.la libdpcharset.la
 gcov_FILES = ${libdpsearch_la_SOURCES} ${indexer_SOURCES}
+lint_FILES = ${libdpsearch_la_SOURCES} ${indexer_SOURCES}
 all: all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .lo .o .obj .splint
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -2396,6 +2397,15 @@ gcov-gen:
 
 gcov-clean:
 	list='${gcov_FILES}'; for p in $$list; do rm -f $$p.gcov; done
+
+lint-gen:
+	list='${lint_FILES}'; for p in $$list; do splint +posixlib +trytorecover -mustfreefresh ${INCLUDES} $$p; done
+
+lint-clean:
+	list='${lint_FILES}'; for p in $$list; do rm -f $$p.ln; done
+
+.c.splint:
+	splint +posixlib -mustfreefresh ${INCLUDES} $< 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

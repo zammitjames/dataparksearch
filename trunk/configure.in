@@ -1157,6 +1157,7 @@ if test "$chasen" != no; then
 	CFLAGS_SAVE="$CFLAGS"
 	LIBS="$LIBS -L/usr/local/lib -lchasen"
 	CFLAGS="$CFLAGS -I/usr/local/include"
+	INCLUDES="$INCLUDES -I/usr/local/include"
 
 AC_TRY_LINK([#include <stdio.h>
 #include <chasen.h>
@@ -1657,8 +1658,10 @@ AC_ARG_ENABLE(idn,
 				if test -f /usr/local/include/idn-int.h; then
 					IDN_CFLAGS="-I/usr/local/include"
 					IDN_LIBS="-L/usr/local/lib -lidn -liconv"
+					IDN_INCLUDES="$IDN_CFLAGS"
 				else
 					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_INCLUDES=`pkg-config libidn --cflags-only-I`
 					IDN_LIBS=`pkg-config libidn --libs`
 				fi
 				AC_DEFINE(WITH_IDN)
@@ -1669,6 +1672,7 @@ AC_ARG_ENABLE(idn,
 					IDN_LIBS="-lidn"
 				else
 					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_INCLUDES=`pkg-config libidn --cflags-only-I`
 					IDN_LIBS=`pkg-config libidn --libs`
 				fi
 				AC_DEFINE(WITH_IDN)
@@ -1677,8 +1681,10 @@ AC_ARG_ENABLE(idn,
 				if test -f /usr/local/include/idn-int.h; then
 					IDN_CFLAGS="-I/usr/local/include"
 					IDN_LIBS="-L/usr/local/lib -lidn"
+					IDN_INCLUDES="$IDN_CFLAGS"
 				else
 					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_INCLUDES=`pkg-config libidn --cflags-only-I`
 					IDN_LIBS=`pkg-config libidn --libs`
 				fi
 				AC_DEFINE(WITH_IDN)
@@ -1686,9 +1692,11 @@ AC_ARG_ENABLE(idn,
 			esac
 			CFLAGS="$CFLAGS $IDN_CFLAGS"
 			LIBS="$LIBS $IDN_LIBS"
+			INCLUDES="$INCLUDES $IDN_INCLUDES"
 		else
 			if test -f $enableval/include/idn-int.h; then
 				CFLAGS="$CFLAGS -I$withval/include"
+				INCLUDES="$INCLUDES -I$withval/include"
 			else
 				AC_MSG_RESULT(no)
 				AC_MSG_ERROR(Invalid GNU libidn directory - unable to find idn-int.h under $enableval)

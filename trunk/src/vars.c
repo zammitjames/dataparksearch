@@ -29,7 +29,6 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <ctype.h>
-#include <assert.h>
 
 #define DPS_VARS_PAS 32
 
@@ -48,15 +47,14 @@ void DpsVarFree(DPS_VAR *S){
 	DPS_FREE(S->name);
 	DPS_FREE(S->val);
 	DPS_FREE(S->txt_val);
-	return;
 }
 
 static int DpsVarCopy(DPS_VAR *D, DPS_VAR *S) {
 #ifdef WITH_PARANOIA
 	void * paran = DpsViolationEnter(paran);
 #endif
-	if (S->section) D->section = S->section;
-	if (S->maxlen) D->maxlen = S->maxlen;
+	if (S->section != 0) D->section = S->section;
+	if (S->maxlen != 0) D->maxlen = S->maxlen;
 	D->strict = S->strict;
 	D->single = S->single;
 	D->curlen = S->curlen;
@@ -177,9 +175,8 @@ static void DpsVarSortForLast(DPS_VAR *Var, size_t n) {
 
 int DpsVarListAdd(DPS_VARLIST * Lst, DPS_VAR * S) {
   unsigned int r;
-        assert(S);
 
-	r = dps_tolower(S->name[0]) & 0xFF;
+  r = dps_tolower((int)S->name[0]) & 0xFF;
         if (Lst->Root[r].nvars + 1 > Lst->Root[r].mvars) {
 	  Lst->Root[r].mvars += DPS_VARS_PAS;
 	  Lst->Root[r].Var = (DPS_VAR*)DpsRealloc(Lst->Root[r].Var, (Lst->Root[r].mvars) * sizeof(*Lst->Root[r].Var));
@@ -192,7 +189,6 @@ int DpsVarListAdd(DPS_VARLIST * Lst, DPS_VAR * S) {
 	DpsVarCopy(&Lst->Root[r].Var[Lst->Root[r].nvars], S);
 	Lst->Root[r].nvars++;
 	if(Lst->Root[r].nvars > 1) DpsVarSortForLast(Lst->Root[r].Var, Lst->Root[r].nvars);
-	  /*qsort(Lst->Root[r].Var, Lst->Root[r].nvars, sizeof(DPS_VAR), (qsort_cmp)varcmp);*/
 	return DPS_OK;
 }
 
@@ -213,6 +209,7 @@ DPS_VAR * DpsVarListFind(DPS_VARLIST * vars, const char * name) {
 /*	fprintf(stderr, "VarListFind: %s\n", name);*/
 	
 	if (!vars->Root[r].nvars) return NULL;
+	bzero(&key, sizeof(key));
 	key.name = (char *)name;
 	return (DPS_VAR*) bsearch(&key, vars->Root[r].Var, vars->Root[r].nvars, sizeof(DPS_VAR), (qsort_cmp)varcmp);
 }
@@ -290,7 +287,7 @@ char * DpsVarListFindStr(DPS_VARLIST * vars, const char * name, const char * def
 }
 
 DPS_VARLIST * DpsVarListInit(DPS_VARLIST *l){
-	if(!l){
+	if(l == NULL) {
 		l=(DPS_VARLIST*)DpsMalloc(sizeof(*l));
 		if (l == NULL) return NULL;
 		bzero((void*)l,sizeof(*l));
@@ -617,7 +614,7 @@ int DpsVarListLog(DPS_AGENT *A, DPS_VARLIST *V, int l, const char *pre) {
 	  for (r = 0; r < 256; r++)
 	    for(h=0; h < V->Root[r].nvars; h++) {
 		DPS_VAR *v = &V->Root[r].Var[h];
-		if (v->section || v->maxlen) DpsLog(A, l, "%s.%s [%d,%d:%d]: %s", pre, v->name, v->section, v->maxlen, v->single, DPS_NULL2STR(v->val));
+		if (v->section != 0 || v->maxlen != 0) DpsLog(A, l, "%s.%s [%d,%d:%d]: %s", pre, v->name, v->section, v->maxlen, v->single, DPS_NULL2STR(v->val));
 		else DpsLog(A, l, "%s.%s: %s", pre, v->name, DPS_NULL2STR(v->val));
 	    }
 	}

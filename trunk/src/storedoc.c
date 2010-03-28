@@ -293,13 +293,6 @@ int main(int argc, char **argv, char **envp) {
 	if (content_type != NULL) DpsVarListReplaceStr(&Env->Vars, "Charset", content_type);
 	content_type = DpsVarListFindStr(&Env->Vars, "CT", "text/html");
 
-#ifdef WITH_PARSER
-	Parser = DpsParserFind(&Env->Parsers, content_type);
-	if (Parser) {
-		content_type = Parser->to_mime ? Parser->to_mime : "text/html";
-	}
-#endif
-
 	DpsAgentStoredConnect(Agent);
 	
 	DpsUnStoreDoc(Agent, Doc, NULL);
@@ -353,6 +346,33 @@ int main(int argc, char **argv, char **envp) {
 		DpsLog(Agent, DPS_LOG_ERROR, "Unsupported Content-Encoding");
 	      }
 
+#ifdef WITH_PARSER
+	      /* Let's try to start external parser for this Content-Type */
+
+	      if((Parser = DpsParserFind(&Agent->Conf->Parsers, content_type))) {
+		DpsLog(Agent, DPS_LOG_DEBUG, "Found external parser '%s' -> '%s'", Parser->from_mime ? Parser->from_mime : "NULL", Parser->to_mime ? Parser->to_mime : "NULL");
+	      }
+	      if(Parser) {
+		if (status == DPS_HTTP_STATUS_OK) {
+		  if (DpsParserExec(Agent, Parser, Doc)) {
+		    char *to_charset;
+		    content_type = Parser->to_mime ? Parser->to_mime : "unknown";
+		    DpsLog(Agent, DPS_LOG_DEBUG, "Parser-Content-Type: %s", content_type);
+		    if((to_charset = strstr(content_type, "charset="))){
+		      const char *cs = DpsCharsetCanonicalName(DpsTrim(to_charset + 8, " \t;\"'"));
+		      DpsVarListReplaceStr(&Doc->Sections, "Server-Charset", cs);
+		      DpsLog(Agent, DPS_LOG_DEBUG, "to_charset='%s'", cs);
+		    }
+#ifdef DEBUG_PARSER
+		    fprintf(stderr, "content='%s'\n", Doc->content);
+#endif
+		  }
+		} else {
+		  DpsLog(Agent, DPS_LOG_WARN, "Parser is not executed, document status: %d", status);
+		  goto fin;
+		}
+	      }
+#endif
 	    }
 	  }
 	  else goto fin;
@@ -370,7 +390,7 @@ int main(int argc, char **argv, char **envp) {
 	  if (HDoc == NULL) goto fin;
 	  *HEnd = '\0';
 	
-	  if (strncasecmp(content_type, "text/plain", 10) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0) {
 	    sprintf(HEnd, "<pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }
@@ -408,7 +428,7 @@ int main(int argc, char **argv, char **envp) {
 		htok = DpsHTMLToken(NULL, (const char **)&last, &tag);
 	  }
 	
-	  if (strncasecmp(content_type, "text/plain", 10) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0) {
 	    sprintf(HEnd, "</pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }
