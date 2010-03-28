@@ -283,13 +283,6 @@ static int dpstoredoc_handler(request_rec *r) {
 	if (content_type != NULL) DpsVarListReplaceStr(&Env->Vars, "Charset", content_type);
 	content_type = DpsVarListFindStr(&Agent->Vars, "CT", "text/html");
 
-#ifdef WITH_PARSER
-	Parser = DpsParserFind(&Env->Parsers, content_type);
-	if (Parser) {
-		content_type = Parser->to_mime ? Parser->to_mime : "text/html";
-	}
-#endif
-
 	DpsAgentStoredConnect(Agent);
 	
 	DpsUnStoreDoc(Agent, Doc, NULL);
@@ -305,6 +298,70 @@ static int dpstoredoc_handler(request_rec *r) {
 	    DpsDocAddDocExtraHeaders(Agent, Doc);
 	    DpsDocLookupConn(Agent, Doc);
 	    if (DpsGetURL(Agent, Doc, origurl) != DPS_OK) goto fin;
+	    {
+	      const char   *ce = DpsVarListFindStr(&Doc->Sections,"Content-Encoding","");
+	      const int status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
+#ifdef HAVE_ZLIB
+	      if((!strcasecmp(ce, "gzip")) || (!strcasecmp(ce, "x-gzip"))) {
+		if (status == 206) {
+		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't ungzip it.");
+		  goto fin;
+		}
+		DpsUnGzip(Agent, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
+	      } else if(!strcasecmp(ce,"deflate")){
+		if (status == 206) {
+		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't inflate it.");
+		  goto fin;
+		}
+		DpsInflate(Agent, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
+	      } else if((!strcasecmp(ce, "compress")) || (!strcasecmp(ce, "x-compress"))) {
+		if (status == 206) {
+		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't uncomress it.");
+		  goto fin;
+		}
+		DpsUncompress(Agent, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", 
+				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
+	      }else 
+#endif	
+	      if((!strcasecmp(ce,"identity")) || (!strcasecmp(ce,""))) {
+		/* Nothing to do*/
+	      }else{
+		DpsLog(Agent, DPS_LOG_ERROR, "Unsupported Content-Encoding");
+	      }
+
+#ifdef WITH_PARSER
+	      /* Let's try to start external parser for this Content-Type */
+
+	      if((Parser = DpsParserFind(&Agent->Conf->Parsers, content_type))) {
+		DpsLog(Agent, DPS_LOG_DEBUG, "Found external parser '%s' -> '%s'", Parser->from_mime ? Parser->from_mime : "NULL", Parser->to_mime ? Parser->to_mime : "NULL");
+	      }
+	      if(Parser) {
+		if (status == DPS_HTTP_STATUS_OK) {
+		  if (DpsParserExec(Agent, Parser, Doc)) {
+		    char *to_charset;
+		    content_type = Parser->to_mime ? Parser->to_mime : "unknown";
+		    DpsLog(Agent, DPS_LOG_DEBUG, "Parser-Content-Type: %s", content_type);
+		    if((to_charset = strstr(content_type, "charset="))){
+		      const char *cs = DpsCharsetCanonicalName(DpsTrim(to_charset + 8, " \t;\"'"));
+		      DpsVarListReplaceStr(&Doc->Sections, "Server-Charset", cs);
+		      DpsLog(Agent, DPS_LOG_DEBUG, "to_charset='%s'", cs);
+		    }
+#ifdef DEBUG_PARSER
+		    fprintf(stderr, "content='%s'\n", Doc->content);
+#endif
+		  }
+		} else {
+		  DpsLog(Agent, DPS_LOG_WARN, "Parser is not executed, document status: %d", status);
+		  goto fin;
+		}
+	      }
+#endif
+	    }
 	  }
 	  else goto fin;
 	}
@@ -321,7 +378,7 @@ static int dpstoredoc_handler(request_rec *r) {
 	  if (HDoc == NULL) goto fin;
 	  *HEnd = '\0';
 	
-	  if (strncasecmp(content_type, "text/plain", 10) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0) {
 	    sprintf(HEnd, "<pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }
@@ -358,7 +415,7 @@ static int dpstoredoc_handler(request_rec *r) {
 		htok = DpsHTMLToken(NULL, (const char **)&last, &tag);
 	  }
 	
-	  if (strncasecmp(content_type, "text/plain", 10) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0) {
 	    sprintf(HEnd, "</pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }

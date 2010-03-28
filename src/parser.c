@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -89,7 +89,7 @@ static void init_signals(void){
 static void sighandler(int sign){
 	switch(sign){
 	        case SIGALRM:
-		        _exit(0);
+		        _Exit(0);
 			break;
 		default:
 			break;
@@ -173,7 +173,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
 			write(wr[1], Doc->Buf.content, Doc->Buf.size - gap);
 			close(wr[1]);
 
-			exit(0);
+			_Exit(0);
 		}else{
 			/* Child process */
 			/* Close other pipe ends */
@@ -190,7 +190,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
 			init_signals();
 
 			system(cmd);
-			exit(0);
+			_Exit(0);
 		}
 	}
 	Doc->Buf.content = Doc->Buf.buf + gap;
@@ -244,17 +244,30 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
 		close(rd[0]);
 		wait(NULL);
 	} else {
+	        int fd, rc = 0;;
+
+		if (setsid() == -1) rc = 128;
+
 		/* Child process */
 	        close (rd[0]);
 			
 		/* Connect pipe to stdout */
-		dup2(rd[1], STDOUT_FILENO);
+		if (dup2(rd[1], STDOUT_FILENO) == -1) rc |= 1;
 
+		if ((fd = open("/dev/null", O_RDONLY)) == -1)    rc |= 2;
+		if (dup2(fd, STDIN_FILENO) == -1)    rc |= 4;
+		if (close(fd) == -1)    rc |= 8;
+
+		if ((fd = open("/dev/null", O_WRONLY)) == -1)    rc |= 16;
+		if (dup2(fd, STDERR_FILENO) == -1)    rc |= 32;
+		if (close(fd) == -1)    rc |= 64;
+		
 		alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 		init_signals();
 
 		system(cmd);
-		exit(0);
+		close (rd[1]);
+		_Exit(rc);
 	}
 
 	Doc->Buf.buf[Doc->Buf.size] = '\0';
@@ -285,7 +298,7 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_fi
 	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 	  init_signals();
 	  system(cmd);
-	  exit(0);
+	  _Exit(0);
 	}
 	
 	if((fd = DpsOpen2(to_file, O_RDONLY | DPS_BINARY))) {
@@ -357,7 +370,7 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_fi
 	  init_signals();
 
 	  system(cmd);
-	  exit(0);
+	  _Exit(0);
 	}
 
 	if((fd = DpsOpen2(to_file, O_RDONLY | DPS_BINARY))) {

@@ -29435,6 +29435,7 @@ if test "$chasen" != no; then
 	CFLAGS_SAVE="$CFLAGS"
 	LIBS="$LIBS -L/usr/local/lib -lchasen"
 	CFLAGS="$CFLAGS -I/usr/local/include"
+	INCLUDES="$INCLUDES -I/usr/local/include"
 
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -30860,8 +30861,10 @@ _ACEOF
 				if test -f /usr/local/include/idn-int.h; then
 					IDN_CFLAGS="-I/usr/local/include"
 					IDN_LIBS="-L/usr/local/lib -lidn -liconv"
+					IDN_INCLUDES="$IDN_CFLAGS"
 				else
 					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_INCLUDES=`pkg-config libidn --cflags-only-I`
 					IDN_LIBS=`pkg-config libidn --libs`
 				fi
 				cat >>confdefs.h <<\_ACEOF
@@ -30875,6 +30878,7 @@ _ACEOF
 					IDN_LIBS="-lidn"
 				else
 					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_INCLUDES=`pkg-config libidn --cflags-only-I`
 					IDN_LIBS=`pkg-config libidn --libs`
 				fi
 				cat >>confdefs.h <<\_ACEOF
@@ -30886,8 +30890,10 @@ _ACEOF
 				if test -f /usr/local/include/idn-int.h; then
 					IDN_CFLAGS="-I/usr/local/include"
 					IDN_LIBS="-L/usr/local/lib -lidn"
+					IDN_INCLUDES="$IDN_CFLAGS"
 				else
 					IDN_CFLAGS=`pkg-config libidn --cflags`
+					IDN_INCLUDES=`pkg-config libidn --cflags-only-I`
 					IDN_LIBS=`pkg-config libidn --libs`
 				fi
 				cat >>confdefs.h <<\_ACEOF
@@ -30898,9 +30904,11 @@ _ACEOF
 			esac
 			CFLAGS="$CFLAGS $IDN_CFLAGS"
 			LIBS="$LIBS $IDN_LIBS"
+			INCLUDES="$INCLUDES $IDN_INCLUDES"
 		else
 			if test -f $enableval/include/idn-int.h; then
 				CFLAGS="$CFLAGS -I$withval/include"
+				INCLUDES="$INCLUDES -I$withval/include"
 			else
 				{ $as_echo "$as_me:$LINENO: result: no" >&5
 $as_echo "no" >&6; }

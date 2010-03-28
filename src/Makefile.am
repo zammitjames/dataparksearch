@@ -299,3 +299,14 @@ LIBS = @LIBS@ @STATIC_LFLAGS@ \
 @BOEHMGC_LFLAGS@ \
 @MECAB_LFLAGS@ 
 
+
+lint_FILES = ${libdpsearch_la_SOURCES} ${indexer_SOURCES}
+
+lint-gen:
+	list='${lint_FILES}'; for p in $$list; do splint +posixlib +trytorecover -mustfreefresh ${INCLUDES} $$p; done
+
+lint-clean:
+	list='${lint_FILES}'; for p in $$list; do rm -f $$p.ln; done
+
+.c.splint:
+	splint +posixlib -mustfreefresh ${INCLUDES} $< 

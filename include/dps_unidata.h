@@ -68,7 +68,7 @@
 #define DPS_UNI_CTYPECLASS(type)   (((type) > DPS_UNI_BUKVA) ? DPS_UNI_RAZDEL : DPS_UNI_BUKVA) 
 
 
-inline extern dpsunicode_t DpsUniToLower(dpsunicode_t uni);
+extern dpsunicode_t DpsUniToLower(dpsunicode_t uni);
 extern __C_LINK void __DPSCALL DpsUniStrToLower(dpsunicode_t * unistr);
 extern int  DpsUniCType(dpsunicode_t u);
 
