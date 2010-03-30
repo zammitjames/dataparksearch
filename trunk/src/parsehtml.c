@@ -54,7 +54,7 @@
 
 static void DpsUniDesegment(dpsunicode_t *s) {
   register dpsunicode_t *d = s;
-  while(*++s) {
+  while(*s != 0) {
     switch(*s) {
     case 0x0008:
     case 0x000A:
@@ -68,8 +68,9 @@ static void DpsUniDesegment(dpsunicode_t *s) {
     case 0x303F:
     case 0xFeFF: break;
     default: if ((*s >= 0x2000) && (*s <= 0x200B)) break;
-      *d = *s;
+      *d++ = *s;
     }
+    s++;
   }
   *d = *s;
 }
@@ -89,7 +90,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 
   TRACE_IN(Indexer, "DpsProcessFantoms");
 
-  if (Indexer->Flags.use_accentext) {
+  if (Indexer->Flags.use_accentext != 0) {
     af_uword = DpsUniAccentStrip(uword);
     if (DpsUniStrCmp(af_uword, uword) != 0) {
 
@@ -97,11 +98,14 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
       Word.ulen = (uwlen = DpsUniLen(af_uword));
 
       res = DpsWordListAddFantom(Doc, &Word, Item->section);
-      if (res != DPS_OK) { TRACE_OUT(Indexer); return; }
-      if(Item->href && crossec){
+      if (res != DPS_OK) { 
+	DPS_FREE(af_uword);
+	TRACE_OUT(Indexer); return; 
+      }
+      if(Item->href != NULL && crossec != 0) {
 	DPS_CROSSWORD cw;
 	cw.url = Item->href;
-	cw.weight = crossec;
+	cw.weight = (short)(crossec & 255);
 	cw.pos = Doc->CrossWords.wordpos;
 	cw.uword = af_uword;
 	cw.ulen = uwlen;
@@ -116,11 +120,14 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
       Word.ulen = DpsUniLen(de_uword);
 
       res = DpsWordListAddFantom(Doc, &Word, Item->section);
-      if (res != DPS_OK) { TRACE_OUT(Indexer); return; }
-      if(Item->href && crossec){
+      if (res != DPS_OK) { 
+	DPS_FREE(de_uword);
+	TRACE_OUT(Indexer); return; 
+      }
+      if(Item->href != NULL && crossec != 0) {
 	DPS_CROSSWORD cw;
 	cw.url = Item->href;
-	cw.weight = crossec;
+	cw.weight = (short)(crossec & 255);
 	cw.pos = Doc->CrossWords.wordpos;
 	cw.uword = de_uword;
 	cw.ulen = Word.ulen;
@@ -167,7 +174,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 
 	res = DpsWordListAddFantom(Doc, &Word, Item->section);
 	if (res != DPS_OK) break;
-	if(Item->href && crossec){
+	if(Item->href != NULL && crossec != 0) {
 	  DPS_CROSSWORD cw;
 	  cw.url = Item->href;
 	  cw.weight = crossec;
@@ -183,7 +190,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
   }
 #endif	
 
-  if (!strict) {
+  if (strict == 0) {
     dpsunicode_t *dword = DpsUniDup(uword);
     dpsunicode_t *nword = NULL;
     dpsunicode_t *lt, *tok;
