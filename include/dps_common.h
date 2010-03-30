@@ -421,13 +421,11 @@ typedef struct {
 
 /** Cross-word list unit */
 typedef struct {
-	short	pos;
 	short	weight;
-/*	char	*word;*/
+	size_t	pos;
 	char	*url;
 	urlid_t	referree_id;
 	dpsunicode_t	*uword;
-/*        size_t		len;*/
         size_t          ulen;
 } DPS_CROSSWORD;
 
