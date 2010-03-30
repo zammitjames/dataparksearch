@@ -378,7 +378,7 @@ static int dpstoredoc_handler(request_rec *r) {
 	  if (HDoc == NULL) goto fin;
 	  *HEnd = '\0';
 	
-	  if (strncasecmp(content_type, "text/", 5) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0 && strncasecmp(content_type, "text/html", 9) != 0 && strncasecmp(content_type, "text/xml", 8) != 0) {
 	    sprintf(HEnd, "<pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }
@@ -415,7 +415,7 @@ static int dpstoredoc_handler(request_rec *r) {
 		htok = DpsHTMLToken(NULL, (const char **)&last, &tag);
 	  }
 	
-	  if (strncasecmp(content_type, "text/", 5) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0 && strncasecmp(content_type, "text/html", 9) != 0 && strncasecmp(content_type, "text/xml", 8) != 0) {
 	    sprintf(HEnd, "</pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }

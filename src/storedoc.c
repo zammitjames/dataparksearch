@@ -390,7 +390,7 @@ int main(int argc, char **argv, char **envp) {
 	  if (HDoc == NULL) goto fin;
 	  *HEnd = '\0';
 	
-	  if (strncasecmp(content_type, "text/", 5) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0 && strncasecmp(content_type, "text/html", 9) != 0 && strncasecmp(content_type, "text/xml", 8) != 0) {
 	    sprintf(HEnd, "<pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }
@@ -428,7 +428,7 @@ int main(int argc, char **argv, char **envp) {
 		htok = DpsHTMLToken(NULL, (const char **)&last, &tag);
 	  }
 	
-	  if (strncasecmp(content_type, "text/", 5) == 0) {
+	  if (strncasecmp(content_type, "text/", 5) == 0 && strncasecmp(content_type, "text/html", 9) != 0 && strncasecmp(content_type, "text/xml", 8) != 0) {
 	    sprintf(HEnd, "</pre>\n");
 	    HEnd += dps_strlen(HEnd);
 	  }
