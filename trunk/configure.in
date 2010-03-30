@@ -250,6 +250,7 @@ then
   AC_MSG_RESULT(yes)
 else
   # Optimized version. No debug
+  CFLAGS="-O2 $CFLAGS"
   AC_MSG_RESULT(no)
 fi
 

@@ -27276,6 +27276,7 @@ then
 $as_echo "yes" >&6; }
 else
   # Optimized version. No debug
+  CFLAGS="-O2 $CFLAGS"
   { $as_echo "$as_me:$LINENO: result: no" >&5
 $as_echo "no" >&6; }
 fi
