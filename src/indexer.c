@@ -1606,6 +1606,7 @@ static int DpsNextTarget(DPS_AGENT * Indexer, DPS_DOCUMENT *Result) {
 int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server) {
   DPS_SPIDERPARAM *S = &Doc->Spider;
   DPS_VARLIST *V = &Server->Vars;
+  const char *value;
 /*  char str[64];
   size_t i;
   time_t default_period = (time_t)DpsVarListFindUnsigned(V, "Period", DPS_DEFAULT_REINDEX_TIME);*/
@@ -1621,9 +1622,16 @@ int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server) {
 	S->use_clones		= DpsVarListFindInt(V, "DetectClones",	1);
 	S->use_cookies		= DpsVarListFindInt(V, "Cookies",	0);
 	S->Server               = Server;
-	DpsVarListReplaceStr(&Doc->Sections, "HoldBadHrefs", DpsVarListFindStr(V, "HoldBadHrefs", 0));
+
+	value =  DpsVarListFindStr(V, "HoldBadHrefs", NULL);
+	if (value != NULL) DpsVarListReplaceStr(&Doc->Sections, "HoldBadHrefs", value);
+
 	DpsVarListReplaceInt(&Doc->Sections, "Follow", S->follow);
 	DpsVarListReplaceInt(&Doc->Sections, "Index", S->index);
+
+	value = DpsVarListFindStr(V, "Category", NULL);
+	if (value != NULL) DpsVarListReplaceStr(&Doc->Sections, "Category", value);
+
 /*
 	for (i = 0; i < DPS_DEFAULT_MAX_HOPS; i++) {
 	  dps_snprintf(str, sizeof(str), "Period%u", i);
@@ -2275,7 +2283,6 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 
 			DpsVarListReplaceLst(&Doc->Sections, &Server->Vars,NULL,"*");
-/*			DpsVarListReplaceInt(&Doc->Sections, "Site_id", DpsServerGetSiteId(Indexer, Server, Doc));*/
 			DpsVarListReplaceInt(&Doc->Sections, "Server_id", Server->site_id);
 			DpsVarListReplaceInt(&Doc->Sections, "MaxHops", Doc->Spider.maxhops);
 			
