@@ -56,7 +56,7 @@ static int DpsVarCopy(DPS_VAR *D, DPS_VAR *S) {
 	if (S->section != 0) D->section = S->section;
 	if (S->maxlen != 0) D->maxlen = S->maxlen;
 	D->strict = S->strict;
-	D->single = S->single;
+	if (D->single == 0) D->single = S->single;
 	D->curlen = S->curlen;
 	D->name = (char*)DpsStrdup(S->name);
 	if (S->maxlen == 0) {
@@ -105,7 +105,7 @@ static int DpsVarCopyNamed(DPS_VAR *D, DPS_VAR *S, const char *name) {
 	if (S->maxlen) D->maxlen = S->maxlen;
 	D->curlen = S->curlen;
 	D->strict = S->strict;
-	D->single = S->single;
+	if (D->single == 0) D->single = S->single;
 	if(name){
 		size_t len = dps_strlen(name) + dps_strlen(S->name) + 3;
 		D->name = (char*)DpsMalloc(len);
