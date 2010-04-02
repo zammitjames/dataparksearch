@@ -714,7 +714,7 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	    else if (shift + 4 < ac - 2) {
 	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "unknown option %s in arguments of for Section command", av[shift + 4]);
 	      return DPS_ERROR;
-	    }
+	    } else break;
 	    shift++;
 	  }
 	}
