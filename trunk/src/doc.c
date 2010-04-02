@@ -97,9 +97,7 @@ void __DPSCALL DpsDocFree(DPS_DOCUMENT *Result) {
 	DpsVarListFree(&Result->RequestHeaders);
 	DpsVarListFree(&Result->Sections);
 	DpsTextListFree(&Result->TextList);
-#ifdef HAVE_LIBEXTRACTOR
 	DpsTextListFree(&Result->ExtractorList);
-#endif
 	
 	DpsURLFree(&Result->CurURL);
 

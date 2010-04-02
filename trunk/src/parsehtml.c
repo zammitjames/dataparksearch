@@ -363,7 +363,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 				
 	src = (char*)UStr;
 	srclen = DpsUniLen(UStr) * sizeof(dpsunicode_t);
-	if(!Sec->val) {
+	if(Sec->val == NULL) {
 	  dstlen = dps_min(Sec->maxlen, 24 * srclen);
 	  Sec->val = (char*)DpsMalloc( dstlen + 32 );
 	  if (Sec->val == NULL) {
@@ -373,6 +373,10 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  }
 	  Sec->curlen = 0;
 	} else {
+	  if (Sec->single != 0) {
+	    TRACE_OUT(Indexer);
+	    return DPS_OK;
+	  }
 	  if (Sec->maxlen) dstlen = Sec->maxlen - Sec->curlen;
 	  else dstlen = 24 * srclen;
 	  if ((Sec->val = DpsRealloc(Sec->val, Sec->curlen + dstlen + 32)) == NULL) {
@@ -413,10 +417,8 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   DPS_CHARSET	*loccs;
   DPS_CHARSET	*sys_int;
   DPS_CONV	dc_uni;
-#ifdef HAVE_LIBEXTRACTOR
   DPS_CONV      utf8_uni;
   DPS_TEXTLIST	*extractor_tlist = &Doc->ExtractorList;
-#endif
   DPS_TEXTLIST	*tlist = &Doc->TextList;
   DPS_VAR	*Sec;
   int		res = DPS_OK;
@@ -481,9 +483,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   sys_int=DpsGetCharSet("sys-int");
 
   DpsConvInit(&dc_uni, loccs /*doccs*/, sys_int, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
-#ifdef HAVE_LIBEXTRACTOR
   DpsConvInit(&utf8_uni, DpsGetCharSet("utf-8"), sys_int, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
-#endif
   max_word_len = Indexer->WordParam.max_word_len;
   min_word_len = Indexer->WordParam.min_word_len;
 	
@@ -602,7 +602,6 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   }
 
  /* do the same for libextrated meta-data, which is always encoded in UTF-8 */
-#ifdef HAVE_LIBEXTRACTOR
   for(i = 0; i < extractor_tlist->nitems; i++) {
     size_t		srclen;
     size_t		dstlen;
@@ -641,7 +640,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       return DPS_ERROR;
     }
     reslen = DpsUniLen(ustr);
-		
+
     /*
       TODO for clones detection:
       Replace any separators into space to ignore 
@@ -687,7 +686,8 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
     DPS_FREE(UStr);
     if (res != DPS_OK) break;
   }
-#endif
+
+
 
   DpsVarListReplaceInt(&Doc->Sections,"crc32", (int)crc32);
 
