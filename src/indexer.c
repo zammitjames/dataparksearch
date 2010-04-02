@@ -1308,7 +1308,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "before");
 	
 #ifdef HAVE_LIBEXTRACTOR
-	  {
+	  if (strncasecmp(ct, "text/", 5) != 0) {
 	    DPS_TEXTITEM  Item;
 	    DPS_VAR       *Sec;
 	    DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
@@ -1319,7 +1319,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 	    DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
 	     plugins = EXTRACTOR_loadDefaultLibraries();
-	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf));
+/*	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.content, Doc->Buf.size - (Doc->Buf.content - Doc->Buf.buf));*/
+	     md_list = EXTRACTOR_getKeywords2(plugins, Doc->Buf.buf, Doc->Buf.size);
 
 	     bzero((void*)&Item, sizeof(Item));
 	     Item.href = NULL;
@@ -1328,9 +1329,9 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	      nosections = 0;
 	      DpsLog(Indexer, DPS_LOG_DEBUG, "Libextracted %s: %s", secname, pmd->keyword);
 	      Sec = DpsVarListFind(&Doc->Sections, secname);
-	      if (Sec || BSec) {
-		Item.section = (Sec) ? Sec->section : BSec->section;
-		Item.strict = (Sec) ? Sec->strict : BSec->strict;
+	      if (Sec != NULL || BSec != NULL) {
+		Item.section = (Sec != NULL) ? Sec->section : BSec->section;
+		Item.strict = (Sec != NULL) ? Sec->strict : BSec->strict;
 		Item.str = pmd->keyword;
 		Item.section_name = (Sec) ? Sec->name : BSec->name;
 		Item.len = dps_strlen(Item.str);
@@ -2124,14 +2125,14 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		}
 
 		if(status == DPS_HTTP_STATUS_OK || status == DPS_HTTP_STATUS_PARTIAL_OK) {
-		  DPS_CHARSET *parent_cs = DpsGetCharSetByID(Parent->charset_id), *doc_cs = Doc->lcs; /*DpsGetCharSetByID(Doc->charset_id);*/
+		  DPS_CHARSET *parent_cs = DpsGetCharSet("utf-8"), *doc_cs = Indexer->Conf->lcs;
 		  DPS_CONV     dc_parent;
 		  DPS_TEXTLIST *tlist = &Doc->TextList;
+		  DPS_TEXTLIST *extractor_tlist = &Doc->ExtractorList;
 		  char *src, *dst = NULL;
 		  size_t srclen = (size_t)DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
 		  size_t dstlen = (size_t)DpsVarListFindInt(&Parent->Sections, "Content-Length", 0);
 
-		  if (!doc_cs) doc_cs = Indexer->Conf->lcs;
 		  if (!doc_cs) doc_cs = DpsGetCharSet("iso-8859-1");
 
 		  DpsVarListReplaceInt(&Parent->Sections, "Content-Length", (int)(srclen + dstlen));
@@ -2154,11 +2155,17 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		    DpsConv(&dc_parent, dst, dstlen, src, srclen);
 		    Item->str = dst;
 		    Item->len = dc_parent.obytes;
-/*	    fprintf(stderr, "Section: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
-		    DpsTextListAdd(&Parent->TextList, Item);
+/*	    fprintf(stderr, " -- Section: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
+		    DpsTextListAdd(&Parent->ExtractorList, Item);
 		    Item->str = src;
+		    Item->len = srclen;
 		  }
 		  DPS_FREE(dst);
+		  for(i = 0; i < extractor_tlist->nitems; i++) {
+		    DPS_TEXTITEM *Item = &extractor_tlist->Items[i];
+		    DpsTextListAdd(&Parent->ExtractorList, Item);
+/*	    fprintf(stderr, " -- ExtrSection: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
+		  }
 		} 
 	}
 	Parent->sd_cnt += 1 + Doc->sd_cnt;
