@@ -968,68 +968,6 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 }
 
 
-static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
-  DPS_MATCH       *Alias;
-  DPS_MATCH_PART  Parts[10];
-  size_t nparts = 10;
-  DPS_VAR *Sec;
-  char *buf;
-  DPS_TEXTITEM *Item;
-  size_t i, z, buf_len;
-
-  if (Indexer->Conf->ActionSQLMatch.nmatches == 0) return DPS_OK;
-
-  buf = (char*)DpsMalloc(buf_len = (Doc->Buf.size + 1024));
-  if (buf == NULL) return DPS_OK;
-
-  {
-    char qbuf[16384];
-    DPS_TEMPLATE t;
-    DPS_DBLIST      dbl;
-    DPS_DB *db;
-    bzero(&t, sizeof(t));
-    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
-    t.Env_Vars = &Doc->Sections;
-
-    for (i = 0; i < Indexer->Conf->ActionSQLMatch.nmatches; i++) {
-      DPS_TEXTLIST	*tlist = &Doc->TextList;
-      Alias = &Indexer->Conf->ActionSQLMatch.Match[i];
-
-      Sec = DpsVarListFind(&Indexer->Conf->Sections, Alias->section);
-      if (! Sec) continue;
-      if (Alias->dbaddr != NULL) {
-	DpsDBListInit(&dbl);
-	DpsDBListAdd(&dbl, Alias->dbaddr, DPS_OPEN_MODE_READ);
-	db = &dbl.db[0];
-      } else {
-	db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[0] :  &Indexer->dbl.db[0];
-      }
-      for(z = 0; z < tlist->nitems; z++) {
-	Item = &tlist->Items[z];
-	if (Item->section != Sec->section) continue;
-	if (strcasecmp(Item->section_name, Alias->section)) continue;
-	DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-	if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) {
-	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	  continue;
-	}
-	DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
-	DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
-	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
-	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
-	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
-      }
-      if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
-    }  
-    DpsTemplateFree(&t);
-  }
-
-  DPS_FREE(buf);
-  return DPS_OK;
-}
-
-
 static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_MATCH       *Alias;
   DPS_MATCH_PART  Parts[10];
@@ -2103,7 +2041,6 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			    return result;
 			  }
 		}
-/*		DpsExecActions(Indexer, Doc);*/
 		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	
 
@@ -2187,6 +2124,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 #endif
 	return result;
 }
+
 
 
 __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
@@ -2602,7 +2540,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		    }
 		}
 
-		DpsExecActions(Indexer, Doc);
+/*		DpsExecActions(Indexer, Doc);*/
 		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
 	
 

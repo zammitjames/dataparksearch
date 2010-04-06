@@ -303,7 +303,9 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	size_t i;
 
 	for (i = 0; i < L->nmatches; i++) {
-	  if ((strcmp(L->Match[i].pattern, M->pattern) == 0) &&
+	  if ((strcmp(L->Match[i].pattern, M->pattern) == 0) && 
+	      (strcmp(DPS_NULL2EMPTY(L->Match[i].subsection), DPS_NULL2EMPTY(M->subsection)) == 0) && 
+	      (strcmp(DPS_NULL2EMPTY(L->Match[i].arg), DPS_NULL2EMPTY(M->arg)) == 0) &&
 	      (L->Match[i].match_type == M->match_type) &&
 	      (L->Match[i].case_sense == M->case_sense) &&
 	      (L->Match[i].nomatch == M->nomatch)) {

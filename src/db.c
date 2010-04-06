@@ -277,11 +277,98 @@ __C_LINK int __DPSCALL DpsClearDatabase(DPS_AGENT *A) {
 }
 
 
+static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
+  DPS_MATCH       *Alias;
+  DPS_MATCH_PART  Parts[10];
+  size_t nparts = 10;
+  DPS_VAR *Sec, *dSec;
+  char *buf;
+  DPS_TEXTITEM *Item;
+  size_t i, z, buf_len;
+  int notdone;
+
+  if (Indexer->Conf->ActionSQLMatch.nmatches == 0) return DPS_OK;
+
+  buf = (char*)DpsMalloc(buf_len = (Doc->Buf.size + 1024));
+  if (buf == NULL) return DPS_OK;
+
+  {
+    char qbuf[16384];
+    DPS_TEMPLATE t;
+    DPS_DBLIST      dbl;
+    DPS_DB *db;
+    bzero(&t, sizeof(t));
+    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
+    t.Env_Vars = &Doc->Sections;
+
+    for (i = 0; i < Indexer->Conf->ActionSQLMatch.nmatches; i++) {
+      DPS_TEXTLIST	*tlist = &Doc->TextList;
+      Alias = &Indexer->Conf->ActionSQLMatch.Match[i];
+
+      if (Alias->subsection[0] != action) continue; 
+
+      dSec = DpsVarListFind(&Doc->Sections, Alias->section);
+      Sec = DpsVarListFind(&Indexer->Conf->Sections, Alias->section);
+      if (Sec == NULL && dSec == NULL) continue;
+
+      if (Alias->dbaddr != NULL) {
+	DpsDBListInit(&dbl);
+	DpsDBListAdd(&dbl, Alias->dbaddr, DPS_OPEN_MODE_READ);
+	db = &dbl.db[0];
+      } else {
+	db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[0] :  &Indexer->dbl.db[0];
+      }
+
+      notdone = 1;
+
+      if (Sec != NULL) {
+	for(z = 0; z < tlist->nitems; z++) {
+	  Item = &tlist->Items[z];
+	  if (Item->section != Sec->section) continue;
+	  if (strcasecmp(Item->section_name, Alias->section)) continue;
+	  notdone = 0;
+	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	  if (DpsMatchExec(Alias, Item->str, Item->str, NULL, nparts, Parts)) {
+	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	    continue;
+	  }
+	  DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	  DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
+	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
+	  if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
+	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+	}
+      }
+      if (notdone && dSec != NULL && dSec->val != NULL) {
+	DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	if (DpsMatchExec(Alias, dSec->val, dSec->val, NULL, nparts, Parts)) {
+	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	  continue;
+	}
+	DpsMatchApply(buf, buf_len - 1, dSec->val, Alias->arg, Alias, nparts, Parts);
+	DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
+	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
+	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
+	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+      }
+
+      if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
+    }  
+    DpsTemplateFree(&t);
+  }
+
+  DPS_FREE(buf);
+  return DPS_OK;
+}
+
 
 static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
   int		result = DPS_OK, rc = DPS_OK;
 	const char	*c;
 	int		status=DpsVarListFindInt(&Doc->Sections,"Status",0);
+	int		prev_status = DpsVarListFindInt(&Doc->Sections, "PrevStatus", 0);
 	int		hops=DpsVarListFindInt(&Doc->Sections,"Hops",0);
 	urlid_t		origin_id = 0;
 	urlid_t		url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
@@ -299,6 +386,7 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	
 	if(Doc->method==DPS_METHOD_DISALLOW){
 		DpsLog(Indexer,DPS_LOG_ERROR,"Deleting %s", DpsVarListFindStr(&Doc->Sections, "URL", ""));
+		DpsExecActions(Indexer, Doc, 'd');
 		result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_DELETE);
 		TRACE_OUT(Indexer);
 		return result;
@@ -545,6 +633,11 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 		}
 	}
 	
+	if (prev_status != 0) {
+		DpsExecActions(Indexer, Doc, 'u');
+	} else {
+		DpsExecActions(Indexer, Doc, 'i');
+	}
 /*	rc = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LUPDATE);*/
 
 	/* Now store words and crosswords */
