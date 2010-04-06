@@ -182,25 +182,31 @@ dps_uint4 DpsHrefFrom(const char *str) {
 int DpsWeightFactorsInit(const char *wf, int *res){
 	size_t len;
 	register size_t sn;
-	int flag = 0;
+	int flag = 0, last;
 	
-	for(sn=0;sn<256;sn++){
+	len = dps_strlen(wf);
+
+	if (len == 0) {
+	  for(sn = 0; sn < 256; sn++) {
 /*#ifdef FULL_RELEVANCE
 		res[sn] = 0x10;
 #else*/
 		res[sn] = 1;
 /*#endif*/
-	}
-	
-	len = dps_strlen(wf);
-	if((len > 0) && (len <= 256)) {
-		for (sn = 0; sn < len; sn++) {
+	  }
+	} else {
+	  if (len > 255) len = 255;
+	  for (sn = 1; sn < len; sn++) {
 /*#ifdef FULL_RELEVANCE
-                  if ((res[(len - sn)%256] = (DpsHex2Int(wf[sn]) << 4)) == 0) flag = 1;
+          if ((res[(len - sn)%256] = (DpsHex2Int(wf[sn]) << 4)) == 0) flag = 1;
 #else*/
-		  if ((res[(len - sn)%256] = DpsHex2Int(wf[sn])) == 0) flag = 1;
+	    if ((res[(len - sn)%256] = DpsHex2Int(wf[sn])) == 0) flag = 1;
 /*#endif*/
-		}
+	  }
+	  last = DpsHex2Int(wf[0]);
+	  for ( ; sn < 256; sn++) {
+	    res[sn] = last;
+	  }
 	}
 	return flag;
 }
@@ -859,6 +865,7 @@ static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	DPS_MATCH M;
+	int shift = 0;
 	char err[128] = "";
 
 	if (ac < 4 || ac > 5) {
@@ -871,10 +878,24 @@ static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	DpsMatchInit(&M);
 	M.match_type = DPS_MATCH_REGEX;
 	M.case_sense = 1;
-	M.section = av[1];
-	M.pattern = av[2];
-	M.arg = av[3];
-	M.dbaddr = (ac == 4) ? NULL : av[4];
+	M.subsection = "i";
+	if (strcasecmp(av[1], "delete") == 0) {
+	  shift = 1;
+	  M.subsection = "d";
+	} else if (strcasecmp(av[1], "insert") == 0) {
+	  shift = 1;
+	  M.subsection = "i";
+	} else if (strcasecmp(av[1], "add") == 0) {
+	  shift = 1;
+	  M.subsection = "i";
+	} else if (strcasecmp(av[1], "update") == 0) {
+	  shift = 1;
+	  M.subsection = "u";
+	}
+	M.section = av[1 + shift];
+	M.pattern = av[2 + shift];
+	M.arg = av[3 + shift];
+	M.dbaddr = (ac == 4 + shift) ? NULL : av[4 + shift];
 	if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->ActionSQLMatch, &M, err, sizeof(err), ++C->ordre)) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "%s", err);
 	  return DPS_ERROR;
