@@ -29,6 +29,17 @@
 директории установки <application>DataparkSearch</application>.
 Вспомогательная информация о документах храниится в файлах, расположенных в поддиректории 
 <filename>/var/url</filename> относительно корневой  директории установки <application>DataparkSearch</application>. </para>
+
+<para><indexterm><primary>Команда</primary><secondary>CacheLogWords</secondary></indexterm><indexterm><primary>Команда</primary><secondary>CacheLogDels</secondary></indexterm>
+<application>indexer</application> и <application>cached</application> используют буферы в памяти для кэширования данных cache mode перед записью их на диск.
+Размер таких буферов может быть изменен при помощи команд <command>CacheLogWords</command> и <command>CacheLogDels</command> в файлах конфигурации <filename>indexer.conf</filename> и <filename>cached.conf</filename>
+соответственно. Значения по умолчанию: 1024 для <command>CacheLogWords</command> и 10240 для <command>CacheLogDels</command>.
+Оценка объема памяти, используемой под эти буферы может быть вычислена как:
+</para>
+<programlisting>
+Volume = WrdFiles * (16 + 16 * CacheLogWords + 8 * CacheLogDels), для 32-битных систем
+Volume = WrdFiles * (32 + 20 * CacheLogWords + 12 * CacheLogDels), для 64-битных систем
+</programlisting>
 	</sect2>
 
 	<sect2 id="cachemode-tools">

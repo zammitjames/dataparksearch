@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -8078,6 +8078,7 @@ dps_mb_wc_euc_jp(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsig
   const unsigned char *p;
   unsigned char *e, z;
   unsigned int sw;
+  int n;
 
   conv->icodes = conv->ocodes = 1;
   
@@ -8103,7 +8104,9 @@ dps_mb_wc_euc_jp(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsig
 		if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*e == ';')) {
 		  z = *e;
 		  *e = '\0';
-		  *pwc = DpsSgmlToUni(s + 1);
+		  n = DpsSgmlToUni(s + 1, pwc);
+		  if (n == 0) *pwc = 0;
+		  else conv->ocodes = n;
 		  *e = z;
 		} else *pwc = 0;
 	      } else *pwc = 0;
@@ -8294,7 +8297,7 @@ dps_wc_mb_euc_jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, unsigne
 int dps_mb_wc_iso2022jp(DPS_CONV *conv, DPS_CHARSET *c, dpsunicode_t *pwc, const unsigned char *s, const unsigned char *e) {
   const unsigned char *p = s, *pp;
   unsigned char *ee, z;
-  int code;
+  int code, n;
 
   switch(*s) {
   case 27:  /* ESC */
@@ -8344,7 +8347,9 @@ int dps_mb_wc_iso2022jp(DPS_CONV *conv, DPS_CHARSET *c, dpsunicode_t *pwc, const
 		if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*ee == ';')) {
 		  z = *ee;
 		  *ee = '\0';
-		  *pwc = DpsSgmlToUni(p + 1);
+		  n = DpsSgmlToUni(p + 1, pwc);
+		  if (n == 0) *pwc = 0;
+		  else conv->ocodes = n;
 		  *ee = z;
 		} else *pwc = 0;
 	      } else *pwc = 0;

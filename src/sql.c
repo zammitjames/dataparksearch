@@ -164,6 +164,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			if(catstr[0])dps_strcpy(DPS_STREND(catstr)-1," OR ");
 			else	dps_strcat(catstr,"(");
 			sprintf(DPS_STREND(catstr),"c.path LIKE '%s%%')",val);
+
 			if (Agent->Flags.URLInfoSQL) {
 			  if (fromurlinfo_cat) {
 			    fromurlinfo_cat = 0;

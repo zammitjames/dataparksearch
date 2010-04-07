@@ -43,7 +43,6 @@ typedef struct {
 typedef struct {
 	time_t	stamp;
 	urlid_t	url_id; 
-/*        int     flag;*/
 } DPS_LOGDEL;
 
 /************************** Logd stuff **************************/

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -7161,6 +7161,7 @@ int dps_mb_wc_gbk(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsi
   int hi;
   const unsigned char *p;
   unsigned char *e, z;
+  int n;
   
   hi=s[0];
   conv->icodes = conv->ocodes = 1;
@@ -7182,7 +7183,9 @@ int dps_mb_wc_gbk(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsi
 		if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*e == ';')) {
 		  z = *e;
 		  *e = '\0';
-		  *pwc = DpsSgmlToUni(s + 1);
+		  n = DpsSgmlToUni(s + 1, pwc);
+		  if (n == 0) *pwc = 0;
+		  else conv->ocodes = n;
 		  *e = z;
 		} else *pwc = 0;
 	      } else *pwc = 0;
@@ -7660,6 +7663,7 @@ int dps_mb_wc_gb18030(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const 
   int hi, ret;
   const unsigned char *p;
   unsigned char *e, z;
+  int n;
   
   hi=s[0];
   conv->icodes = conv->ocodes = 1;
@@ -7681,7 +7685,9 @@ int dps_mb_wc_gb18030(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const 
 		if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*e == ';')) {
 		  z = *e;
 		  *e = '\0';
-		  *pwc = DpsSgmlToUni(s + 1);
+		  n = DpsSgmlToUni(s + 1, pwc);
+		  if (n == 0) *pwc = 0;
+		  else conv->ocodes = n;
 		  *e = z;
 		} else *pwc = 0;
 	      } else *pwc = 0;

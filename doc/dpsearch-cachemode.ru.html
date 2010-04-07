@@ -82,7 +82,7 @@ CLASS="SECT1"
 ><A
 NAME="CACHEMODE"
 >5.2. <A
-NAME="AEN3513"
+NAME="AEN3518"
 ></A
 >
 Способ хранения Cache</A
@@ -135,7 +135,7 @@ CLASS="APPLICATION"
 > базе данных.
 Индекс слов разделён на несколько файлов, число которых может быть задано при помощи команды
 <A
-NAME="AEN3529"
+NAME="AEN3534"
 ></A
 >
 <B
@@ -143,7 +143,7 @@ CLASS="COMMAND"
 >WrdFiles</B
 > (по умолчанию - 0x300).
 <A
-NAME="AEN3533"
+NAME="AEN3538"
 ></A
 >
 Число файлов хранения дополнительной информации о документах задаётся командой <B
@@ -182,6 +182,46 @@ CLASS="FILENAME"
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
 >. </P
+><P
+><A
+NAME="AEN3551"
+></A
+><A
+NAME="AEN3554"
+></A
+>
+<SPAN
+CLASS="APPLICATION"
+>indexer</SPAN
+> и <SPAN
+CLASS="APPLICATION"
+>cached</SPAN
+> используют буферы в памяти для кэширования данных cache mode перед записью их на диск.
+Размер таких буферов может быть изменен при помощи команд <B
+CLASS="COMMAND"
+>CacheLogWords</B
+> и <B
+CLASS="COMMAND"
+>CacheLogDels</B
+> в файлах конфигурации <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> и <TT
+CLASS="FILENAME"
+>cached.conf</TT
+>
+соответственно. Значения по умолчанию: 1024 для <B
+CLASS="COMMAND"
+>CacheLogWords</B
+> и 10240 для <B
+CLASS="COMMAND"
+>CacheLogDels</B
+>.
+Оценка объема памяти, используемой под эти буферы может быть вычислена как:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>Volume = WrdFiles * (16 + 16 * CacheLogWords + 8 * CacheLogDels), для 32-битных систем
+Volume = WrdFiles * (32 + 20 * CacheLogWords + 12 * CacheLogDels), для 64-битных систем</PRE
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -337,7 +377,7 @@ CLASS="USERINPUT"
 ></P
 ><P
 >Или укажите команду <A
-NAME="AEN3594"
+NAME="AEN3615"
 ></A
 >
 <B
@@ -671,7 +711,7 @@ NAME="LIMITS"
 ></H2
 ><P
 ><A
-NAME="AEN3697"
+NAME="AEN3718"
 ></A
 >
 Для применения лимитов при поиске с использование способа хранения cache,
@@ -723,7 +763,7 @@ CLASS="LITERAL"
 <DIV
 CLASS="TABLE"
 ><A
-NAME="AEN3714"
+NAME="AEN3735"
 ></A
 ><P
 ><B
@@ -803,7 +843,7 @@ CLASS="PROGRAMLISTING"
 <DIV
 CLASS="TABLE"
 ><A
-NAME="AEN3746"
+NAME="AEN3767"
 ></A
 ><P
 ><B

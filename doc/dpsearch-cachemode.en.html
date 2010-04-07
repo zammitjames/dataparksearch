@@ -84,7 +84,7 @@ NAME="CACHEMODE"
 >5.2. Cache mode storage</A
 ></H1
 ><A
-NAME="AEN3262"
+NAME="AEN3267"
 ></A
 ><DIV
 CLASS="SECT2"
@@ -111,7 +111,7 @@ NAME="CACHEMODE-STR"
 ></H2
 ><P
 >The main idea of cache storage mode is that word
-index and URLs sorting information is stored on disk rather than in <SPAN
+index and data for URL sorting is stored on disk rather than in a <SPAN
 CLASS="APPLICATION"
 >SQL</SPAN
 > database. Full URL information
@@ -126,7 +126,7 @@ CLASS="LITERAL"
 >urlinfo</TT
 >). 
 <A
-NAME="AEN3276"
+NAME="AEN3281"
 ></A
 >
 Word index is divided into number of files specified by <B
@@ -134,7 +134,7 @@ CLASS="COMMAND"
 >WrdFiles</B
 > command (default value is 0x300).
 <A
-NAME="AEN3280"
+NAME="AEN3285"
 ></A
 >
 URLs sorting information is divided into number of files specified by <B
@@ -175,6 +175,46 @@ CLASS="FILENAME"
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > installation. </P
+><P
+><A
+NAME="AEN3299"
+></A
+><A
+NAME="AEN3302"
+></A
+>
+<SPAN
+CLASS="APPLICATION"
+>indexer</SPAN
+> and <SPAN
+CLASS="APPLICATION"
+>cached</SPAN
+> use memory buffers to cache some portion of cache mode data before flushing it to the disk.
+The size of such buffers can be adjusted by <B
+CLASS="COMMAND"
+>CacheLogWords</B
+> and <B
+CLASS="COMMAND"
+>CacheLogDels</B
+> commands in <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> and <TT
+CLASS="FILENAME"
+>cached.conf</TT
+> 
+config files respectively. Default values are 1024 for <B
+CLASS="COMMAND"
+>CacheLogWords</B
+> and 10240 for <B
+CLASS="COMMAND"
+>CacheLogDels</B
+>.
+An estimation of total memory used for such buffers can be calculated as follow:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>Volume = WrdFiles * (16 + 16 * CacheLogWords + 8 * CacheLogDels), for 32-bit systems
+Volume = WrdFiles * (32 + 20 * CacheLogWords + 12 * CacheLogDels), for 64-bit systems</PRE
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -307,7 +347,7 @@ CLASS="USERINPUT"
 ></P
 ><P
 >Or by specify <A
-NAME="AEN3334"
+NAME="AEN3355"
 ></A
 >
 <B
@@ -637,7 +677,7 @@ NAME="LIMITS"
 ></H2
 ><P
 ><A
-NAME="AEN3432"
+NAME="AEN3453"
 ></A
 >
 To use search limits in cache mode, you should add appropriate
@@ -704,7 +744,7 @@ CLASS="LITERAL"
 <DIV
 CLASS="TABLE"
 ><A
-NAME="AEN3453"
+NAME="AEN3474"
 ></A
 ><P
 ><B
@@ -784,7 +824,7 @@ Instead of strcrc32 it's possible to use any of the following limit types:
 <DIV
 CLASS="TABLE"
 ><A
-NAME="AEN3485"
+NAME="AEN3506"
 ></A
 ><P
 ><B

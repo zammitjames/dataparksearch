@@ -232,10 +232,10 @@ Each date is string in the form dd/mm/yyyy, there dd is day, mm is month and yyy
 	</sect2>
 	<sect2 id="search-changeweight">
 		<title>Changing different document parts weights at search time</title>
-		<para>It is possible to pass "wf" HTML form variable
-to <filename>search.cgi</filename>. "wf" variable represents weight
+		<para>It is possible to pass <option>wf</option> HTML form variable
+to <filename>search.cgi</filename>. <option>wf</option> variable represents weight
 factors for specific document parts. Currently
-body,title,keywords,description,url parts, crosswords as well as user
+body, title, keywords, description, url parts, crosswords as well as user
 defined META and HTTP headers are supported. Take a look into
 "Section" part of <filename>indexer.conf-dist</filename>.</para>
 
@@ -252,7 +252,7 @@ different sections are supported.</para>
   Section description 4  128
 </programlisting>
 		</para>
-		<para>"wf" value is a string of hex digits ABCD. Each
+		<para><option>wf</option> value is a string of hex digits ABCD. Each
 digit is a factor for corresponding section weight. The most right
 digit corresponds to section 1. For the given above sections
 configuration:</para>
@@ -276,12 +276,15 @@ configuration:</para>
           Title with factor  2
           Body with factor 1
 </literallayout>
-		<para>By default, if "wf" variable is omitted in the
-query, all sections factors are 1, it means all sections have the same
-weight.</para>
+		<para>By default, if <option>wf</option> variable is omitted in the
+query, all section factors are 1, it means all sections have the same
+weight. If the number of sections in <option>wf</option> is less than the number of sections defined, then the rest sections are initialized by the value of highest section weight defined in <option>wf</option>. E.g.:</para>
+		<literallayout>
+   wf=01 will also search through body only.
+</literallayout>
 
 <para>If <application>DataparkSearch</application> has been built with fast relevance calculation (with <option>--enable-rel=fast</option>
-option for <command>configure</command>), in this case, only zero and non-zero values for "wf" variable takes an effect (this allows only include/exclude
+option for <command>configure</command>), in this case, only zero and non-zero values for <option>wf</option> variable take an effect (this allows only include/exclude
 specified sections in search results).
 To use full support for dynamic section weights, you need specify <option>--enable-rel=full</option>
 option for <command>configure</command> when configuring <application>DataparkSearch</application>.

@@ -3,6 +3,9 @@ History
 -------
 
 Latest snapshot:
+	* XML Entity Definitions for Characters have been updated to the W3C Recommendation 01 April 2010.
+	* Options "add", "update" or "delete" has been added the the ActionSQL command.
+	* Initialization of wf has been changed so the weight for highest section number specified is propagated for the rest sections.
 	* The "single" option for Section command has been added.
 	* Another URL randomazing for indexing algorithm has been implemented. Use -rr switch to indexer to activate.
 	* Unicode data has been updated to 5.2.0 version.
