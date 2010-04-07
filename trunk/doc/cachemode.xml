@@ -11,7 +11,7 @@ quickly through several millions of documents.</para>
 	<sect2 id="cachemode-str">
 		<title>Cache mode word indexes structure</title>
 		<para>The main idea of cache storage mode is that word
-index and URLs sorting information is stored on disk rather than in <application>SQL</application> database. Full URL information
+index and data for URL sorting is stored on disk rather than in a <application>SQL</application> database. Full URL information
 however is kept in <application>SQL</application> database (tables <literal>url</literal> and <literal>urlinfo</literal>). 
 <indexterm><primary>Command</primary><secondary>WrdFiles</secondary></indexterm>
 Word index is divided into number of files specified by <command>WrdFiles</command> command (default value is 0x300).
@@ -26,6 +26,18 @@ in all your configs.</para>
 installation. URLs sorting information is located in files under <filename>/var/url</filename> directory of 
 <application>DataparkSearch</application> installation. 
 </para>
+
+<para><indexterm><primary>Command</primary><secondary>CacheLogWords</secondary></indexterm><indexterm><primary>Command</primary><secondary>CacheLogDels</secondary></indexterm>
+<application>indexer</application> and <application>cached</application> use memory buffers to cache some portion of cache mode data before flushing it to the disk.
+The size of such buffers can be adjusted by <command>CacheLogWords</command> and <command>CacheLogDels</command> commands in <filename>indexer.conf</filename> and <filename>cached.conf</filename> 
+config files respectively. Default values are 1024 for <command>CacheLogWords</command> and 10240 for <command>CacheLogDels</command>.
+An estimation of total memory used for such buffers can be calculated as follow:
+</para>
+<programlisting>
+Volume = WrdFiles * (16 + 16 * CacheLogWords + 8 * CacheLogDels), for 32-bit systems
+Volume = WrdFiles * (32 + 20 * CacheLogWords + 12 * CacheLogDels), for 64-bit systems
+</programlisting>
+
 
 	</sect2>
 	<sect2 id="cachemode-tools">

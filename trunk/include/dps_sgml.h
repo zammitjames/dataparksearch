@@ -19,10 +19,10 @@
 #ifndef _DPS_SGML_H
 #define _DPS_SGML_H
 
-#define DPS_MAX_SGML_LEN 20
+#define DPS_MAX_SGML_LEN 32
 
 extern __C_LINK char * __DPSCALL DpsSGMLUnescape(char * str);
 extern void DpsSGMLUniUnescape(dpsunicode_t * ustr);
-extern dpsunicode_t DpsSgmlToUni(const char *sgml);
+extern int DpsSgmlToUni(const char *sgml, dpsunicode_t *wc);
 
 #endif

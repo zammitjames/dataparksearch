@@ -67,7 +67,7 @@ select box and give like that:
 <note><para>For dbmode cache you need to have the following section defined in your
 <filename>sections.conf</filename> file:
 <programlisting>
-Section category 0 64
+Section category 0 32 single
 </programlisting>
 i.e. in overall you need to have the section 'category' defined with non-zero maximum length.
 </para>

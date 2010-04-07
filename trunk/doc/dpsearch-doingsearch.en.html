@@ -187,7 +187,7 @@ NAME="SEARCH_PARAMS"
 >8.1.2. Search parameters</A
 ></H2
 ><A
-NAME="AEN4661"
+NAME="AEN4682"
 ></A
 ><P
 ><SPAN
@@ -603,13 +603,19 @@ NAME="SEARCH-CHANGEWEIGHT"
 >8.1.3. Changing different document parts weights at search time</A
 ></H2
 ><P
->It is possible to pass "wf" HTML form variable
+>It is possible to pass <CODE
+CLASS="OPTION"
+>wf</CODE
+> HTML form variable
 to <TT
 CLASS="FILENAME"
 >search.cgi</TT
->. "wf" variable represents weight
+>. <CODE
+CLASS="OPTION"
+>wf</CODE
+> variable represents weight
 factors for specific document parts. Currently
-body,title,keywords,description,url parts, crosswords as well as user
+body, title, keywords, description, url parts, crosswords as well as user
 defined META and HTTP headers are supported. Take a look into
 "Section" part of <TT
 CLASS="FILENAME"
@@ -637,7 +643,10 @@ CLASS="PROGRAMLISTING"
 >
 		</P
 ><P
->"wf" value is a string of hex digits ABCD. Each
+><CODE
+CLASS="OPTION"
+>wf</CODE
+> value is a string of hex digits ABCD. Each
 digit is a factor for corresponding section weight. The most right
 digit corresponds to section 1. For the given above sections
 configuration:</P
@@ -662,9 +671,21 @@ CLASS="LITERALLAYOUT"
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Title&nbsp;with&nbsp;factor&nbsp;&nbsp;2<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Body&nbsp;with&nbsp;factor&nbsp;1</P
 ><P
->By default, if "wf" variable is omitted in the
-query, all sections factors are 1, it means all sections have the same
-weight.</P
+>By default, if <CODE
+CLASS="OPTION"
+>wf</CODE
+> variable is omitted in the
+query, all section factors are 1, it means all sections have the same
+weight. If the number of sections in <CODE
+CLASS="OPTION"
+>wf</CODE
+> is less than the number of sections defined, then the rest sections are initialized by the value of highest section weight defined in <CODE
+CLASS="OPTION"
+>wf</CODE
+>. E.g.:</P
+><P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;&nbsp;wf=01&nbsp;will&nbsp;also&nbsp;search&nbsp;through&nbsp;body&nbsp;only.</P
 ><P
 >If <SPAN
 CLASS="APPLICATION"
@@ -676,7 +697,10 @@ CLASS="OPTION"
 option for <B
 CLASS="COMMAND"
 >configure</B
->), in this case, only zero and non-zero values for "wf" variable takes an effect (this allows only include/exclude
+>), in this case, only zero and non-zero values for <CODE
+CLASS="OPTION"
+>wf</CODE
+> variable take an effect (this allows only include/exclude
 specified sections in search results).
 To use full support for dynamic section weights, you need specify <CODE
 CLASS="OPTION"
@@ -956,7 +980,7 @@ NAME="SEARCH-BOOL"
 >8.1.7. Advanced boolean search</A
 ></H2
 ><A
-NAME="AEN4893"
+NAME="AEN4922"
 ></A
 ><P
 >If you want more advanced results you may use

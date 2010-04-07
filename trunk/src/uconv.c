@@ -62,7 +62,7 @@ int __DPSCALL DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t s
 #endif
   size_t	i, codes;
   int           res;
-  dpsunicode_t  wc[32]; /* Are 32 is enough? */
+  dpsunicode_t  wc[32]; /* Is 32 enough? */
   dpsunicode_t  zero = 0;
   char		*d_o=d;
   const char	*s_e=s+slen;

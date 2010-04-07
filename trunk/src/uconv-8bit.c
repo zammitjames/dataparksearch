@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
   const unsigned char *p;
   unsigned char *e, z;
   unsigned int sw;
+  int n;
 
   conv->ocodes = 1;
 
@@ -54,7 +55,9 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
 	  if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*e == ';')) {
 	    z = *e;
 	    *e = '\0';
-	    *wc = DpsSgmlToUni(str + 1);
+	    n = DpsSgmlToUni(str + 1, wc);
+	    if (n == 0) *wc = 0;
+	    else conv->ocodes = n;
 	    *e = z;
 	  } else *wc = 0;
 	} else *wc = 0;

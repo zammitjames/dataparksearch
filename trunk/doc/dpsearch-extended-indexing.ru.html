@@ -1029,20 +1029,39 @@ CLASS="COMMAND"
 > имеет следующий синтаксис:
 <PRE
 CLASS="PROGRAMLISTING"
->ActionSQL &lt;section&gt; &lt;pattern&gt; &lt;sql-template&gt; [&lt;dbaddr&gt;]</PRE
+>ActionSQL [add | update | delete] &lt;section&gt; &lt;pattern&gt; &lt;sql-template&gt; [&lt;dbaddr&gt;]</PRE
 >
 где &lt;section&gt; - имя секции, содержимое которой будет проверяться на соответствие шаблону регулярного выражения &lt;pattern&gt;, если соответствие будет найдено, то будет заполнен шаблон sql-запроса &lt;sql-template&gt;, в котором наряду с мета-переменными регулярного выражения $1-$9 можно использовать и мета-переменные шаблона страницы выдачи (например, $(title), $(Last-Modified)). Заполненый sql-запрос будет выполнен в первом <B
 CLASS="COMMAND"
 >DBAddr</B
 >, указанном в файле конфигурации, или в новом соединении с sql-базой, задаваемой необязательным параметром &lt;dbaddr&gt;.</P
 ><P
+>Одина из опций <CODE
+CLASS="OPTION"
+>add</CODE
+>, <CODE
+CLASS="OPTION"
+>update</CODE
+> или <CODE
+CLASS="OPTION"
+>delete</CODE
+> задает когда эта команда выполняется, при индексировании нового документа, при переиндексировании,
+или при удалении документа.
+Если не указана ни одна опция, подразумеваетя опция <CODE
+CLASS="OPTION"
+>add</CODE
+> по умолчанию.</P
+><P
 >Таким образом, команда <B
 CLASS="COMMAND"
 >ActionSQL</B
-> предназначена для поиска и сбора различной информации с индексируемых страниц. Например, следующая команда будет собирать в таблицу phonedata все найденные номера телефонов и заголовки страниц, на которых эти номера указаны:
+> предназначена для поиска и сбора различной информации с индексируемых страниц. 
+Например, следующие команды будет собирать в таблицу phonedata все найденные номера телефонов и заголовки страниц, на которых эти номера указаны:
 <PRE
 CLASS="PROGRAMLISTING"
->ActionSQL body "\(([0-9]{3})\)[ ]*([0-9]{3})[- \.]*([0-9]{2})[- \.]*([0-9]{2})" "INSERT INTO phonedata(phone,title)VALUES('+7$1$2$3$4','$(title)')"</PRE
+>ActionSQL add body "\(([0-9]{3})\)[ ]*([0-9]{3})[- \.]*([0-9]{2})[- \.]*([0-9]{2})" "INSERT INTO phonedata(phone,title,id)VALUES('+7$1$2$3$4','$(title)',$(dp_id))"
+ActionSQL update body "\(([0-9]{3})\)[ ]*([0-9]{3})[- \.]*([0-9]{2})[- \.]*([0-9]{2})" "UPDATE phonedata SET phone='+7$1$2$3$4',title='$(title)' WHERE id=$(dp_id)"
+ActionSQL delete url "." "DELETE FROM phonedata WHERE id=$(dp_id)"</PRE
 ></P
 ></DIV
 ></DIV
