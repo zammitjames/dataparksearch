@@ -758,7 +758,7 @@ static int add_sectionsql(void *Cfg, size_t ac,char **av){
 	DPS_MATCH M;
 	int shift = 0;
 
-	if (ac < 4 || ac > 7) {
+	if (ac < 4 || ac > 8) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "wrong number (%d) of arguments for SectionSQL command", ac);
 	  return DPS_ERROR;
 	}
@@ -775,12 +775,20 @@ static int add_sectionsql(void *Cfg, size_t ac,char **av){
 	S.name = av[1];
 	S.section = atoi(av[2]);
 	S.maxlen = ((ac > 2) && av[3]) ? atoi(av[3]) : 0;
-	if (ac > 4 && !strcasecmp(av[4], "strict")) {
-	  S.strict = 1;
-	  shift = 1;
+
+	if (ac >= 4) {
+	  while(shift + 4 < ac) {
+	    if (!strcasecmp(av[4 + shift], "strict")) S.strict = 1;
+	    else if (!strcasecmp(av[4 + shift], "single")) S.single = 1;
+	    else if (shift + 4 < ac - 2) {
+	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "unknown option %s in arguments of for SectionSQL command", av[shift + 4]);
+	      return DPS_ERROR;
+	    } else break;
+	    shift++;
+	  }
 	}
 
-	if (ac == 5 || ac == 6) {
+	if (ac - shift == 6 || ac - shift == 5) {
 
 	  if(!(C->flags & DPS_FLAG_ADD_SERV))
 	    return DPS_OK;
@@ -791,11 +799,14 @@ static int add_sectionsql(void *Cfg, size_t ac,char **av){
 	  M.section = av[1];
 	  M.pattern = ".";
 	  M.arg = av[shift + 4];
-	  M.dbaddr = (ac == 5 + shift) ? NULL : av[5]; 
+	  M.dbaddr = (ac == 5 + shift) ? NULL : av[5 + shift]; 
 	  if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->SectionSQLMatch, &M, err, sizeof(err), ++C->ordre)) {
 	    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "SectionSQLMatch Add: %s", err);
 	    return DPS_ERROR;
 	  }
+	} else if (ac > 4 + shift) {
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "wrong number (%d,%d) of arguments for SectionSQL command", ac, shift);
+	      return DPS_ERROR;
 	}
 
 	DpsVarListReplace(&Conf->Sections, &S);

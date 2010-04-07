@@ -995,21 +995,21 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     bzero((void*)&Item, sizeof(Item));
     Item.href = NULL;
 
-    for (i = 0; i < Indexer->Conf->SectionSQLMatch.nmatches; i++) {
+    for (z = 0; z < Indexer->Conf->SectionSQLMatch.nmatches; z++) {
       DPS_TEXTLIST	*tlist = &Doc->TextList;
-      Alias = &Indexer->Conf->SectionSQLMatch.Match[i];
+      Alias = &Indexer->Conf->SectionSQLMatch.Match[z];
 
       Sec = DpsVarListFind(&Indexer->Conf->Sections, Alias->section);
       if (! Sec) continue;
+      DpsPrintTextTemplate(Indexer, NULL, NULL, buf, buf_len, &t, Alias->arg);
       if (Alias->dbaddr != NULL) {
 	DpsDBListInit(&dbl);
 	DpsDBListAdd(&dbl, Alias->dbaddr, DPS_OPEN_MODE_READ);
 	db = &dbl.db[0];
       } else {
 	db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[0] :  &Indexer->dbl.db[0];
+	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
       }
-      DpsPrintTextTemplate(Indexer, NULL, NULL, buf, buf_len, &t, Alias->arg);
-      if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
       if (DPS_OK != DpsSQLQuery(db, &SQLres, buf)) DpsLog(Indexer, DPS_ERROR, "SectionSQL error");
       for (i = 0; i < DpsSQLNumRows(&SQLres); i++) {
 	Item.str = DpsSQLValue(&SQLres, i, 0);
@@ -1019,8 +1019,8 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	Item.len = 0;
 	DpsTextListAdd(&Doc->TextList, &Item);
       }
-      if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
       if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
+      else if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
     }  
     DpsTemplateFree(&t);
   }

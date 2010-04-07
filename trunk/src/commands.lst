@@ -184,7 +184,7 @@
 	{"Mime",		2,3,	add_parser},
 	{"Section",		2,7,	add_section},
 	{"HrefSection",         1,3,    add_hrefsection},
-	{"SectionSQL",		4,7,	add_sectionsql},
+	{"SectionSQL",		4,8,	add_sectionsql},
 	{"BodyPattern",         2,2,    add_body_pattern},
 	{"ActionSQL",	        3,5,    add_actionsql},
 	{"Affix",		3,3,	add_affix},
