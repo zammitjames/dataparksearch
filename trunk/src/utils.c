@@ -2053,7 +2053,7 @@ void DpsDeInit(void) {
 void dps_setproctitle( const char *fmt, ... ) {
   char	*s;
   int		i;
-  char	buf[ 1024 ];
+  char	buf[ PATH_MAX + 1024 ];
   va_list	ap;
 
   if (!ARGC) return;
@@ -2070,7 +2070,7 @@ void dps_setproctitle( const char *fmt, ... ) {
     }
     for (i = 0; ENVP[i]; i++) {
       if (!beginargv) beginargv = ENVP[i];
-      if (!endargv || endargv + 1 == ENVP[i]) endargv = ENVP[i] + dps_strlen(ARGV[i]);
+      if (!endargv || endargv + 1 == ENVP[i]) endargv = ENVP[i] + dps_strlen(ENVP[i]);
     }
     new_environ = (char**)DpsMalloc((i + 1) * sizeof(ENVP[0]));
     if (!new_environ) return;
