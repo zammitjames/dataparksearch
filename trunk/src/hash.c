@@ -37,7 +37,7 @@ static dpshash32_t hash32(const void *key, size_t len, const dpshash32_t initval
 {
 	const dpshash32_t m = 0x5bd1e995;
 	const int r = 24;
-	size_t l = len;
+	unsigned int l = (unsigned int)len;
 
 	const unsigned char *data = (const unsigned char *)key;
 
