@@ -229,7 +229,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 	char port_str[16];
 	char *words = NULL;
 	ssize_t nrecv,nsent;
-	int verb=-1;
+	int verb = DPS_LOG_EXTRA;
 	int done=0;
 	int		page_number;
 	int		page_size;
@@ -879,8 +879,8 @@ static int client_main(DPS_ENV *Env, size_t handle) {
 static void SearchdTrack(DPS_AGENT *Agent) {
   DPS_SQLRES      sqlRes;
   DPS_DBLIST      dbl;
-  DPS_DB *db;
-  DPS_DBLIST      *DBL;
+  DPS_DB          *db, *tr_db;
+  DPS_DBLIST      *DBL, *TrL = NULL;
   DIR * dir;
   struct dirent * item;
   int fd, rec_id, res = DPS_OK;
@@ -890,8 +890,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
   char qbuf[4096 + MAXMSG];
   char fullname[PATH_MAX]="";
   char *IP, *qwords, *qtime, *total_found, *wtime, *var, *val;
-  size_t i, dbfrom = 0, dbto; /*=  (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;*/ 
-  const char      *vardir = DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
+  size_t i, dbfrom = 0, dbto;
   const char      *TrackDBAddr = DpsVarListFindStr(&Agent->Vars, "TrackDBAddr", NULL);
   size_t to_sleep, to_delete;
 
@@ -899,15 +898,14 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 
   DpsSQLResInit(&sqlRes);
   if (TrackDBAddr) {
-    DBL = &dbl;
-    bzero((void*)DBL, sizeof(dbl));
-    if(DPS_OK != DpsDBListAdd(DBL, TrackDBAddr, DPS_OPEN_MODE_WRITE)){
+    TrL = &dbl;
+    bzero((void*)TrL, sizeof(dbl));
+    if(DPS_OK != DpsDBListAdd(TrL, TrackDBAddr, DPS_OPEN_MODE_WRITE)) {
       DpsLog(Agent,  DPS_LOG_ERROR, "Invalid TrackDBAddr: '%s'", TrackDBAddr);
       return;
     }
-  } else {
-    DBL = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl : &Agent->dbl;
   }
+  DBL = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl : &Agent->dbl;
   dbto = DBL->nitems;
 
   /* To see the URL being indexed in "ps" output on xBSD */
@@ -944,30 +942,37 @@ static void SearchdTrack(DPS_AGENT *Agent) {
     }
     DpsLog(Agent, DPS_LOG_DEBUG, "Query Track: starting directory reading");
 
-    dir = opendir(vardir);
-    if (dir) {
-      while((item = readdir(dir))) {
-	if (strncmp(item->d_name, "track.", 6) && strncmp(item->d_name, "query.", 6)) continue;
-	to_delete = 0;
-	dps_snprintf(fullname, sizeof(fullname), "%s%s%s", vardir, DPSSLASHSTR, item->d_name);
-	if ((fd = DpsOpen2(fullname, O_RDONLY | DPS_BINARY)) > 0) {
-	  n = read(fd, query, sizeof(query) - 1);
-	  DpsClose(fd);
 
-	  if (n > 0) {
-	    query[n] = '\0';
+    for (i = dbfrom; (i < dbto); i++) {
+      db = &DBL->db[i];
+      tr_db = (TrackDBAddr!=NULL) ? &TrL->db[0] : db;
+      
+      fprintf(stderr, " -- %d TrackDBAddr:%s  TrackQuery:%d\n", i, DPS_NULL2EMPTY(TrackDBAddr), db->TrackQuery);
 
+      if(TrackDBAddr || db->TrackQuery) {
+	const char      *qu = (tr_db->DBType == DPS_DB_PGSQL) ? "'" : "";
+	const char      *vardir = (db->vardir != NULL) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
 
-	    DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: query[%d]: %s", dps_strlen(query + sizeof(long)), query + sizeof(long) );
-	      
-	    to_delete = 1;
-	    for (i = dbfrom; (i < dbto); i++) {
-	      db = &DBL->db[i];
-	      if(TrackDBAddr || db->TrackQuery) {
-		const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
+	dir = opendir(vardir);
+	fprintf(stderr, " -- opendir: %s\n", dir);
+	if (dir) {
+	  while((item = readdir(dir))) {
+	    if (strncmp(item->d_name, "track.", 6) && strncmp(item->d_name, "query.", 6)) continue;
+	    to_delete = 0;
+	    dps_snprintf(fullname, sizeof(fullname), "%s%s%s", vardir, DPSSLASHSTR, item->d_name);
+	    if ((fd = DpsOpen2(fullname, O_RDONLY | DPS_BINARY)) > 0) {
+	      n = read(fd, query, sizeof(query) - 1);
+	      DpsClose(fd);
+
+	      if (n > 0) {
+		query[n] = '\0';
+
+		DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: query[%d]: %s", dps_strlen(query + sizeof(long)), query + sizeof(long) );
+
+		to_delete = 1;
 
 		if (strncmp(item->d_name, "track.", 6)) {
-		  res = DpsSQLAsyncQuery(db, NULL, query);
+		  res = DpsSQLAsyncQuery(tr_db, NULL, query);
 		  if (res != DPS_OK) {to_delete = 0; continue; }
 		} else {
 		  IP = dps_strtok_r(query + sizeof(long), "\2", &lt, NULL);
@@ -984,11 +989,11 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qtrack (ip,qwords,qtime,found,wtime) VALUES ('%s','%s',%s,%s,%s)",
 			       IP, qwords, qtime, total_found, wtime );
  
-		  res = DpsSQLAsyncQuery(db, NULL, qbuf);
+		  res = DpsSQLAsyncQuery(tr_db, NULL, qbuf);
 		  if (res != DPS_OK) {to_delete = 0; continue; }
 
 		  dps_snprintf(qbuf, sizeof(qbuf), "SELECT rec_id FROM qtrack WHERE ip='%s' AND qtime=%s", IP, qtime);
-		  res = DpsSQLQuery(db, &sqlRes, qbuf);
+		  res = DpsSQLQuery(tr_db, &sqlRes, qbuf);
 		  if (res != DPS_OK) { to_delete = 0; continue; }
 		  if (DpsSQLNumRows(&sqlRes) == 0) { DpsSQLFree(&sqlRes); res = DPS_ERROR; continue; }
 		  rec_id = DPS_ATOI(DpsSQLValue(&sqlRes, 0, 0));
@@ -1000,30 +1005,35 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		      val = dps_strtok_r(NULL, "\2", &lt, NULL); 
 		      dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qinfo (q_id,name,value) VALUES (%s%i%s,'%s','%s')", 
 				   qu, rec_id, qu, var, val);
-		      res = DpsSQLAsyncQuery(db, NULL, qbuf);
+		      res = DpsSQLAsyncQuery(tr_db, NULL, qbuf);
 		      if (res != DPS_OK) continue;
 		    }
 		  } while (var != NULL);
 		}
+
 	      }
+
+	      if (to_delete) unlink(fullname);
 	    }
 	  }
+	  closedir(dir);
 
-	  if (to_delete) unlink(fullname);
+	  if (to_delete) {
+	    to_sleep = 10;
+	  } else if (to_sleep < 3600) {
+	    to_sleep += 10;
+	  }
+	} else {
+	  DpsLog(Agent, DPS_LOG_ERROR, "Can't open directory: %s, [%d:%s]", vardir, errno, strerror(errno));
+	  if (to_sleep < 3600) {
+	    to_sleep += 10;
+	  }
 	}
-      }
-      closedir(dir);
-      if (to_delete) {
-	to_sleep = 10;
-      } else if (to_sleep < 3600) {
-	to_sleep += 10;
-      }
-    } else {
-      DpsLog(Agent, DPS_LOG_ERROR, "Can't open directory: %s, [%d:%s]", vardir, errno, strerror(errno));
-      if (to_sleep < 3600) {
-	to_sleep += 10;
+
+
       }
     }
+
 
     DPSSLEEP(to_sleep);
 
@@ -1105,7 +1115,7 @@ int main(int argc, char **argv, char **envp) {
 		int on = 1;
 		DPS_AGENT * Agent;
 		DPS_ENV * Conf=NULL;
-		int verb=-1;
+		int verb = DPS_LOG_EXTRA;
 		dps_uint8 flags = DPS_FLAG_SPELL | DPS_FLAG_UNOCON | DPS_FLAG_ADD_SERV;
 		int res = 0, internaldone = 0;
 		const char *lstn, *unix_socket;

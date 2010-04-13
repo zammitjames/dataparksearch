@@ -333,6 +333,7 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
 	    continue;
 	  }
 	  DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
+
 	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	  DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
@@ -347,6 +348,7 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
 	  continue;
 	}
 	DpsMatchApply(buf, buf_len - 1, dSec->val, Alias->arg, Alias, nparts, Parts);
+
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
 	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
@@ -2216,7 +2218,6 @@ int DpsTrackSearchd(DPS_AGENT * query, DPS_RESULT *Res) {
   const char      *IP = DpsVarListFindStr(&query->Vars, "IP", "localhost");
   size_t r, escaped_len, qbuf_len;
   char		*qbuf, *text_escaped, *z;
-  const char      *vardir = DpsVarListFindStr(&query->Vars, "VarDir", DPS_VAR_DIR);
   char fullname[PATH_MAX]="";
 
 #ifdef HAVE_SQL
@@ -2246,6 +2247,7 @@ int DpsTrackSearchd(DPS_AGENT * query, DPS_RESULT *Res) {
   for (i = dbfrom; (i < dbto); i++) {
     db = (query->flags & DPS_FLAG_UNOCON) ? &query->Conf->dbl.db[i] : &query->dbl.db[i];
     if(db->TrackQuery) {
+      const char      *vardir = (db->vardir != NULL) ? db->vardir : DpsVarListFindStr(&query->Vars, "VarDir", DPS_VAR_DIR);
 
       dps_snprintf(fullname, sizeof(fullname), "%s%strack.%d.%d.%d", vardir, DPSSLASHSTR, query->handle, i, time(NULL));
       if ((fd = open(fullname, O_WRONLY | O_CREAT | DPS_BINARY, DPS_IWRITE)) <= 0) {
