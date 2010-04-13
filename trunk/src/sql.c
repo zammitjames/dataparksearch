@@ -2601,10 +2601,10 @@ static int DpsDeleteURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db){
 	  if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) return rc;
 	}
 
-	if (Indexer->Flags.URLInfoSQL) {
+/*	if (Indexer->Flags.URLInfoSQL) {*/
 	  sprintf(qbuf,"DELETE FROM urlinfo WHERE url_id=%s%i%s", qu, url_id, qu);
 	  if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf)))return rc;
-	}
+/*	}*/
 
 	sprintf(qbuf,"DELETE FROM url WHERE rec_id=%s%i%s", qu, url_id, qu);
 	if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf)))return rc;
@@ -2940,13 +2940,13 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 	if (Indexer->Flags.URLInfoSQL) DpsSQLBegin(db);
 	
-	if (Indexer->Flags.URLInfoSQL) {
+/*	if (Indexer->Flags.URLInfoSQL) {*/
 	  sprintf(qsmall,"DELETE FROM urlinfo WHERE url_id=%s%i%s", qu, url_id, qu);
 	  if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qsmall))) {
 	    DpsSQLEnd(db);
 	    return rc;
 	  }
-	}
+/*	}*/
 
 /* No need delete from links here, it has been done before */
 	
@@ -2992,7 +2992,6 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	    for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
-/*		fprintf(stderr, " -u: %d, Section: %d, qbuf: %s\n", u, Sec->section, qbuf);*/
 		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
 		if (
 		   !strcasecmp(Sec->name, "URL") ||
@@ -3016,7 +3015,24 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
 		sprintf(qbuf, "INSERT INTO urlinfo (url_id,sname,sval) VALUES (%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
-/*		fprintf(stderr, " +u: %d, Section[%d,%d]: %d, qbuf: %s\n", u, Sec->section, Sec->maxlen, Sec->section, qbuf);*/
+	    }
+	} else {
+	  for (r = 0; r < 256; r++)
+	    for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
+		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
+
+		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
+		if( (u || Sec->maxlen == 0) || (
+		   strcasecmp(Sec->name, "Charset") &&
+		   strcasecmp(Sec->name, "Content-Type") &&
+		   strcasecmp(Sec->name, "Tag") &&
+		   strcasecmp(Sec->name, "Category") &&
+		   strcasecmp(Sec->name, "Content-Language")
+		   )) continue;
+
+		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		sprintf(qbuf, "INSERT INTO urlinfo (url_id,sname,sval) VALUES (%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
 	    }
 	}
 	if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
