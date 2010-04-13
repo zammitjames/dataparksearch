@@ -1590,7 +1590,7 @@ int DpsGetURL(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc, const char *origurl) {
 	  }*/
 	  res = DpsUnStoreDoc(Indexer, Doc, origurl);
 	  status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
-	  if ((status > 0) || (!(Indexer->flags & DPS_FLAG_REINDEX))) return (res == -1) ? DPS_OK : res;
+	  if ((status > 0) || (!(Indexer->flags & DPS_FLAG_REINDEX))) return (res == DPS_OK) ? DPS_OK : DPS_ERROR;
 	}
 
 	proxy = DpsVarListFindStr(&Doc->RequestHeaders, "Proxy", NULL);
