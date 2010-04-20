@@ -113,7 +113,7 @@ compose relative links.</para>
 <para><indexterm><primary>Command</primary><secondary>SkipHrefIn</secondary></indexterm>
 However, you can specify the list of HTML which would be omitted in new href lookup with <command>SkipHrefIn</command> command.
 <programlisting>
-HrefSkipIn "img, link, script"
+SkipHrefIn "img, link, script"
 </programlisting>
 </para>
 	</sect1>

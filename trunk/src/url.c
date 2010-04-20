@@ -33,7 +33,7 @@
 #include <sys/types.h>
 
 DPS_URL * __DPSCALL DpsURLInit(DPS_URL *url) {
-  if (!url) {
+  if (url == NULL) {
     url = (DPS_URL*)DpsMalloc(sizeof(DPS_URL));
     if (url == NULL) return NULL;
     bzero((void*)url, sizeof(DPS_URL));
@@ -253,7 +253,7 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	/* If path is not full just copy it to filename    */
 	/* i.e. neither  /usr/local/ nor  c:/windows/temp/ */
 
-	if((url->path != NULL) && (url->path[0]!='/') && (url->path[0]!='?') && (url->path[1]!=':')) { 
+	if((url->path != NULL) && (url->path[0] != '\0') && (url->path[0] != '/') && (url->path[0] != '?') && (url->path[1] != ':')) { 
 		/* Relative path */
 		if(!strncmp(url->path,"./",2))
 			url->filename = (char*)DpsStrdup(url->path + 2);

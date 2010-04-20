@@ -1141,13 +1141,15 @@ void DpsBuildLangMap(DPS_LANGMAP * map, const char * text, size_t textlen, size_
   const char * end1 = text + maplen - DPS_LM_MAXGRAM1;
   const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
   register const char *p;
+  size_t pas1 = (textlen < 2048) ? 1 : DPS_LM_MAXGRAM1;
+  size_t pas2 = (textlen < 2048) ? 1 : DPS_LM_MAXGRAM2;
 
-  for(p = text; p < end1; p += DPS_LM_MAXGRAM1) {
+  for(p = text; p < end1; p += pas1) {
     register unsigned int hindex;
     hindex = DpsHash32(p, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
     map->memb3[hindex].count++;
   }
-  for(p = text; p < end2; p += DPS_LM_MAXGRAM2) {
+  for(p = text; p < end2; p += pas2) {
     register unsigned int hindex;
     hindex = DpsHash32(p, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
     map->memb6[hindex].count++;
@@ -1159,8 +1161,9 @@ void DpsBuildLangMap6(DPS_LANGMAP * map, const char * text, size_t textlen, size
   size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
   const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
   register const char *p;
+  size_t pas2 = (textlen < 2048) ? 1 : DPS_LM_MAXGRAM2;
   
-  for(p = text; p < end2; p += DPS_LM_MAXGRAM2) {
+  for(p = text; p < end2; p += pas2) {
     register unsigned int hindex;
     hindex = DpsHash32(p, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
     map->memb6[hindex].count++;
@@ -1174,12 +1177,16 @@ int DpsLMstatcmp(const void * i1, const void * i2) {
   register const DPS_MAPSTAT *s1 = (const DPS_MAPSTAT *)i1;
   register const DPS_MAPSTAT *s2 = (const DPS_MAPSTAT *)i2;
 
-  if (DPS_LM_TOPCNT * s1->miss + s1->hits < DPS_LM_TOPCNT * s2->miss + s2->hits) return -1;
-  if (DPS_LM_TOPCNT * s1->miss + s1->hits > DPS_LM_TOPCNT * s2->miss + s2->hits) return 1;
+/*  if (DPS_LM_TOPCNT * s1->miss + s1->hits < DPS_LM_TOPCNT * s2->miss + s2->hits) return -1;
+  if (DPS_LM_TOPCNT * s1->miss + s1->hits > DPS_LM_TOPCNT * s2->miss + s2->hits) return 1;*/
   if (s1->miss < s2->miss) return -1;
   if (s1->miss > s2->miss) return 1;
-  if (s1->hits < s2->hits) return -1;
-  if (s1->hits > s2->hits) return 1;
+
+  if (s1->hits < s2->hits) return 1;
+  if (s1->hits > s2->hits) return -1;
+
+  if (s1->diff < s2->diff) return -1;
+  if (s1->diff > s2->diff) return 1;
 
   return 0;
 
@@ -1190,6 +1197,8 @@ int DpsLMcmpCount(const void * i1, const void * i2) {
      register const DPS_LANGITEM *m2 = i2;
      if (m2->count < m1->count) return -1;
      if (m2->count > m1->count) return 1;
+     if (m2->index < m1->index) return 1;
+     if (m2->index > m1->index) return -1;
      return 0;
 }
 
@@ -1240,20 +1249,20 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
 	 Stat->hits++;
        }
        if ( (HIT = bsearch(&map1->memb6[i], map0->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
-	 Stat->miss += 2;
+	 Stat->miss += 1;
        } else {
 	 register int p = (HIT - map0->memb6);
 	 Stat->diff += (i >= p) ? (i - p) : (p - i);
-	 Stat->hits += 2;
+/*	 Stat->hits += 1;*/
        }
-
+#if 1
        if ( (HIT = bsearch(&map0->memb3[i], map1->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        }
        if ( (HIT = bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        }
-
+#endif
 /*       if (Stat->miss > InfMiss) break;*/
      }
 }
@@ -1443,7 +1452,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        for (i = 0; i < 15; i++) {
 	 if (i >= List->nmaps) break;
 	 if (DpsNeedLog(DPS_LOG_EXTRA))
-	   fprintf(stderr, "Guesser: %dh:%dm %s-%s\n", mapstat[i].hits, mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);
+	   fprintf(stderr, "Guesser: %dh:%dm:%dd %s-%s\n", mapstat[i].hits, mapstat[i].miss, mapstat[i].diff, mapstat[i].map->lang, mapstat[i].map->charset);
        }
 #endif
 

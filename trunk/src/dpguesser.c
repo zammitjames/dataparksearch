@@ -62,7 +62,7 @@ static void DpsPrintLangMap(DPS_LANGMAP * map){
 	DpsSort(map->memb3, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), &DpsLMcmpCount);
 	minv = (map->memb3[DPS_LM_TOPCNT - 1].count > 8000) ? 8000 : map->memb3[DPS_LM_TOPCNT - 1].count;
 	ratio = ((double) map->memb3[DPS_LM_TOPCNT - 1].count) / minv;
-	if (ratio > 0.0) {
+	if (minv > 0 && ratio > 0.0) {
 	  for(i = 0; i < DPS_LM_TOPCNT; i++) {
 	    map->memb3[i].count = (size_t) ((double)map->memb3[i].count / ratio);
 	  }
@@ -77,8 +77,10 @@ static void DpsPrintLangMap(DPS_LANGMAP * map){
 	DpsSort(map->memb6, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), &DpsLMcmpCount);
 	minv = (map->memb6[DPS_LM_TOPCNT - 1].count > 8000) ? 8000 : map->memb6[DPS_LM_TOPCNT - 1].count;
 	ratio = ((double) map->memb6[DPS_LM_TOPCNT - 1].count) / minv;
-	for(i = 0; i < DPS_LM_TOPCNT; i++) {
-	  map->memb6[i].count = (size_t) ((double)map->memb6[i].count / ratio);
+	if (minv > 0 && ratio > 0.0) {
+	  for(i = 0; i < DPS_LM_TOPCNT; i++) {
+	    map->memb6[i].count = (size_t) ((double)map->memb6[i].count / ratio);
+	  }
 	}
 	for(i = 0; i < DPS_LM_TOPCNT; i++) {
 		char * s;

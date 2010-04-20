@@ -3016,13 +3016,13 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		sprintf(qbuf, "INSERT INTO urlinfo (url_id,sname,sval) VALUES (%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
 	    }
-	} else {
+	} else if (u == 0) {
 	  for (r = 0; r < 256; r++)
 	    for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
 		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
-		if( (u || Sec->maxlen == 0) || (
+		if( (Sec->maxlen == 0) || (
 		   strcasecmp(Sec->name, "Charset") &&
 		   strcasecmp(Sec->name, "Content-Type") &&
 		   strcasecmp(Sec->name, "Tag") &&
