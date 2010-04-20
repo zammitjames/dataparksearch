@@ -88,10 +88,10 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
             zstream.zalloc = Z_NULL;
             zstream.zfree = Z_NULL;
             zstream.opaque = Z_NULL;
-            zstream.next_in = Doc;
           
             if (deflateInit2(&zstream, 9, Z_DEFLATED, 15, 9, Z_DEFAULT_STRATEGY) == Z_OK) {
           
+	      zstream.next_in = Doc;
               zstream.avail_in = DocSize;
               zstream.avail_out = 2 * DocSize + sizeof(gz_header);
               CDoc = zstream.next_out = (Byte *) DpsMalloc(2 * DocSize + sizeof(gz_header) + 1);

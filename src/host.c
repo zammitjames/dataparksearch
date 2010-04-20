@@ -549,6 +549,7 @@ int DpsHostLookup(DPS_AGENT *Indexer, DPS_CONN *connp) {
 		  }
 #endif
 		  DpsLog(Indexer, DPS_LOG_DEBUG, "IDN: %s [%s] -> %s", connp->hostname, url_cs->name, ascii);
+		  DPS_FREE(uni);
 		}
 #else
 		ascii = connp->hostname;
@@ -567,7 +568,7 @@ int DpsHostLookup(DPS_AGENT *Indexer, DPS_CONN *connp) {
 
 		if (connp->err != 0) {
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
-		  DPS_FREE(uni); DPS_FREE(ascii);
+		  DPS_FREE(ascii);
 #endif
 		  TRACE_OUT(Indexer);
 		  return rc;
@@ -575,7 +576,6 @@ int DpsHostLookup(DPS_AGENT *Indexer, DPS_CONN *connp) {
 
 		host_addr_add(Indexer, List, connp->hostname, connp);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
-		DPS_FREE(uni); 
 		DPS_FREE(ascii);
 #endif
 	}else{

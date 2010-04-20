@@ -907,6 +907,7 @@ static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	M.pattern = av[2 + shift];
 	M.arg = av[3 + shift];
 	M.dbaddr = (ac == 4 + shift) ? NULL : av[4 + shift];
+
 	if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->ActionSQLMatch, &M, err, sizeof(err), ++C->ordre)) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "%s", err);
 	  return DPS_ERROR;

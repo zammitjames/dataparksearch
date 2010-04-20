@@ -114,7 +114,7 @@ char * _DpsStrndup(const char * str, size_t len) {
 	char * res;
 	res=(char*)DpsMalloc(len+1);
 	if (res == NULL) return NULL;
-	/*if (len)*/ dps_strncpy(res, str, len);
+	dps_strncpy(res, DPS_NULL2EMPTY(str), len);
 	res[len]='\0';
 	return res;
 }
@@ -125,10 +125,9 @@ char * _DpsStrdup(const char *str) {
         size_t len;
         char *copy;
 
-        len = dps_strlen(str) + 1;
-        if ((copy = DpsMalloc(len)) == NULL)
-                return (NULL);
-        dps_memcpy(copy, str, len); /* was: dps_memmove */
+        len = dps_strlen(DPS_NULL2EMPTY(str)) + 1;
+        if ((copy = DpsMalloc(len)) == NULL) return NULL;
+        dps_memcpy(copy, DPS_NULL2EMPTY(str), len); /* was: dps_memmove */
 /*	fprintf(stderr, " -- dup len:%d copy:%s -- str:%s\n", len, copy, str);*/
         return (copy);
 }
@@ -2094,7 +2093,7 @@ void dps_setproctitle( const char *fmt, ... ) {
   }
   dps_strcpy( s, buf );
   s += i;
-  while ( s <= endargv ) *s++ = ' ';
+  while ( s <= endargv ) *s++ = '\0';
 }
 #endif
 
