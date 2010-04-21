@@ -5077,6 +5077,8 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 				  DpsVarListFindInt(&Res->Doc[i].Sections, "DP_ID", 0));
 			notfirst = 1;
 		}
+
+		if (notfirst == 0) goto lite_exit;
 		
 		dps_snprintf(qbuf, qbuflen, "SELECT rec_id,url,last_mod_time,docsize,next_index_time,referrer,crc32,site_id,pop_rank,charset_id FROM url WHERE rec_id IN (%s)", instr);
 		if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLres,qbuf))) {
@@ -5198,6 +5200,8 @@ int DpsResAddDocInfoSQL(DPS_AGENT *query, DPS_DB *db, DPS_RESULT *Res, size_t db
 			notfirst = 1;
 		}
 		
+		if (notfirst == 0) goto lite_exit;
+
 		dps_snprintf(qbuf, qbuflen, "SELECT url_id,sname,sval FROM urlinfo WHERE url_id IN (%s)", instr);
 		if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLres,qbuf))) {
 		        DPS_FREE(qbuf);
