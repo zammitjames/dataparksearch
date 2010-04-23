@@ -2013,7 +2013,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				
 				if(wlen > Indexer->WordParam.max_word_len ||
 				   wlen < Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords, w, cont_lang ) != NULL)
+				   DpsStopListFind(&Indexer->Conf->StopWords, w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL)
 				{
 					Doc->Words.Word[wordnum].coord=0;
 				}	
@@ -2024,7 +2024,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 				
 				if(wlen>Indexer->WordParam.max_word_len ||
 				   wlen<Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords,w, cont_lang) != NULL)
+				   DpsStopListFind(&Indexer->Conf->StopWords,w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "") != NULL)
 				{
 					Doc->CrossWords.CrossWord[wordnum].weight=0;
 				}	
@@ -2512,7 +2512,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 				
 		    if(wlen > Indexer->WordParam.max_word_len ||
 		       wlen < Indexer->WordParam.min_word_len ||
-		       DpsStopListFind(&Indexer->Conf->StopWords, w, lang ) != NULL)
+		       DpsStopListFind(&Indexer->Conf->StopWords, w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL)
 		      {
 			Doc->Words.Word[wordnum].coord=0;
 		      }	
@@ -2523,7 +2523,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	    
 		    if(wlen>Indexer->WordParam.max_word_len ||
 		       wlen<Indexer->WordParam.min_word_len ||
-		       DpsStopListFind(&Indexer->Conf->StopWords,w, lang) != NULL)
+		       DpsStopListFind(&Indexer->Conf->StopWords,w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "") != NULL)
 		      {
 			Doc->CrossWords.CrossWord[wordnum].weight=0;
 		      }	

@@ -55,7 +55,7 @@ static char item_type(int cmd) {
 
 
 int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state, char *word, dpsunicode_t *uword) {
-  int origin;
+  int origin, loose = (query->flags & DPS_FLAG_STOPWORDS_LOOSE);
   size_t      i; 
   size_t wlen = (uword == NULL) ? 0 : DpsUniLen(uword);
   dpshash32_t crcword = (word == NULL) ? 0 : DpsStrHash32(word);
@@ -65,7 +65,7 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
 	 (word == NULL) ? "<NULL>" : word, crcword, state->secno[state->p_secno], wlen);
 #endif
 
-  if((uword != NULL) && ( DpsStopListFind(&query->Conf->StopWords, uword, state->qlang) ||
+  if((uword != NULL) && ( DpsStopListFind(&query->Conf->StopWords, uword, (loose) ? state->qlang : "") ||
 			  (query->WordParam.min_word_len > wlen) ||
 			  (query->WordParam.max_word_len < wlen)) ) {
 
