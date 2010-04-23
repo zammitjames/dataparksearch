@@ -1609,7 +1609,12 @@ static int env_rpl_bool_var(void *Cfg, size_t ac,char **av){
 	else if(!strcasecmp(av[0], "UseDateHeader")) Conf->Flags.use_date_header = res;
 	else if(!strcasecmp(av[0], "ProvideReferer")) Conf->Flags.provide_referer = res;
 	else if(!strcasecmp(av[0], "MakePrefixes")) Conf->Flags.make_prefixes = res;
-	else if(!strcasecmp(av[0], "FastHrefCheck")) Conf->flags |= DPS_FLAG_FAST_HREF_CHECK;
+	else if(!strcasecmp(av[0], "FastHrefCheck")) { if (res) Conf->flags |= DPS_FLAG_FAST_HREF_CHECK;
+	                                               else Conf->flags &= ~(DPS_FLAG_FAST_HREF_CHECK);
+	                                             }
+	else if(!strcasecmp(av[0], "StopWordsLoose")) { if (res) Conf->flags |= DPS_FLAG_STOPWORDS_LOOSE;
+	                                                else Conf->flags &= ~(DPS_FLAG_STOPWORDS_LOOSE);
+						      }
 	else if(!strcasecmp(av[0], "DisableRelNoFollow")) Conf->Flags.rel_nofollow = !res;
 	else if(!strcasecmp(av[0], "ResegmentChinese"))  if (res) { Conf->Flags.Resegment |= DPS_RESEGMENT_CHINESE;
 	                                                 } else Conf->Flags.Resegment &= ~DPS_RESEGMENT_CHINESE;

@@ -36,6 +36,7 @@
 	{"ResegmentJapanese",	1,1,	env_rpl_bool_var},
 	{"ResegmentKorean",	1,1,	env_rpl_bool_var},
 	{"ResegmentThai",	1,1,	env_rpl_bool_var},
+	{"StopwordsLoose",      1,1,    env_rpl_bool_var},
 	{"SyslogFacility",	1,1,	env_rpl_var},
 	{"AliasProg",		1,1,	env_rpl_var},
 	{"ReverseAliasProg",	1,1,	env_rpl_var},

@@ -654,7 +654,7 @@ static int DpsExpandWord(DPS_AGENT *query, DPS_RESULT *Res, DPS_WIDEWORD *OWord,
 		return DPS_ERROR;
 	      }
 #else
-	      if(DpsStopListFind(&query->Conf->StopWords, first->unroll.Word[z].uword, state->qlang) ||
+	      if(DpsStopListFind(&query->Conf->StopWords, first->unroll.Word[z].uword, (query->flags & DPS_FLAG_STOPWORDS_LOOSE) ? state->qlang : "") ||
 		 (query->WordParam.min_word_len > first->unroll.Word[z].ulen) ||
 		 (query->WordParam.max_word_len < first->unroll.Word[z].ulen)) {
 		local.cmd = DPS_STACK_WORD;
@@ -1401,7 +1401,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		if(word_match==DPS_MATCH_FULL){
 		  /* Check stopword only when full word         */
 		  /* Substring searches should not exclude them */
-		  if(DpsStopListFind(&query->Conf->StopWords, uwrd, state.qlang) ||
+		  if(DpsStopListFind(&query->Conf->StopWords, uwrd, (query->flags & DPS_FLAG_STOPWORDS_LOOSE) ? state.qlang : "") ||
 		     (query->WordParam.min_word_len > seg_wlen) ||
 		     (query->WordParam.max_word_len < seg_wlen)) {
 

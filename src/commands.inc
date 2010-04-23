@@ -164,6 +164,7 @@
 	{"Socket",		1,1,	env_rpl_var},
 	{"Spell",		3,3,	add_spell},
 	{"StopwordFile",	1,1,	add_stoplist},
+	{"StopwordsLoose",      1,1,    env_rpl_bool_var},
 	{"Store",               1,100,  add_store_filter},
 	{"StoredFiles",		1,1,	env_rpl_var},
 	{"SubDocCnt",		1,1,	env_rpl_num_var},
