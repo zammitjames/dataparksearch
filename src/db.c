@@ -1577,7 +1577,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 
 	num = Res->num_rows;
 
-	if(!strcasecmp(DpsVarListFindStr(&A->Vars, "DetectClones", "yes"), "yes")) {
+	if(!strcasecmp(DpsVarListFindStr(&A->Vars, "DetectClones", "no"), "yes")) {
 	        ticks_=DpsStartTimer();
 		DpsLog(A, DPS_LOG_DEBUG, "Start Clones");
 		for(i=0;i<num;i++){
