@@ -993,7 +993,8 @@ typedef struct dps_config_struct {
 	DPS_CHARSET	*bcs;
 	DPS_CHARSET	*lcs;
 	
-	int		url_number;	/**< For indexer -nXXX          */
+        int	        url_number;	/**< For indexer -nXXX          */
+        int             url_size;       /**< For indexer -GXXX          */
 	
 	DPS_SERVERLIST	Servers[DPS_MATCH_max];	/**< List of servers and realms */
         DPS_SERVER      *Cfg_Srv;
