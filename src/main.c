@@ -731,7 +731,7 @@ static void DpsParseCmdLine(void) {
           case 'm': flags |= DPS_FLAG_REINDEX; break;
           case 'n': cfg_url_number = Conf.url_number = atoi(optarg);break;
           case 'c': max_index_time = atoi(optarg);break;
-          case 'G': max_index_size = atoi(optarg);break;
+          case 'G': max_index_size = Conf.url_size = atoi(optarg); Conf.url_size *= 1048576; break;
           case 'v': DpsSetLogLevel(NULL, atoi(optarg)); break;
           case 'p': milliseconds = atoi(optarg); break;
           case 't': DpsVarListAddStr(&Conf.Vars,"tag" , optarg);break;
@@ -774,6 +774,7 @@ static void * thread_main(void *arg){
      int i_sleep=0;
      int notfound = 0;
      int notarget = 0;
+     int URLSize;
      time_t now;
 
      TRACE_IN(Indexer, "thread_main");
@@ -792,7 +793,7 @@ static void * thread_main(void *arg){
      if(DPS_OK != DpsOpenCache(Indexer, 0/*1*/, (Indexer->flags & DPS_FLAG_UNOCON)) ) {
           fprintf(stderr,"Cache mode initializing error: '%s'\n",DpsEnvErrMsg(&Conf));
 	  done = 1;
-       }
+     }
 /*     }*/
      while(!done){
      
@@ -816,9 +817,10 @@ static void * thread_main(void *arg){
 #endif
 		 DpsLog(Indexer, DPS_LOG_EXTRA, "Maximum time limit exceeded (%d > %d)", now - Indexer->start_time, max_index_time);
 	       }
-          }
+	  }
+
 	  if (max_index_size > 0) {
-	    if (Indexer->nbytes >= max_index_size * 1048576) {
+	    if (Indexer->Conf->url_size <= 0 /*Indexer->nbytes >= max_index_size * 1048576 */) {
 	      res = DPS_TERMINATED;
 #ifdef HAVE_PTHREAD
 	      if(!i_sleep){
@@ -834,7 +836,7 @@ static void * thread_main(void *arg){
 #else
 	      done = 1;
 #endif
-	      DpsLog(Indexer, DPS_LOG_EXTRA, "Maximum size limit exceeded (%d > %d)", Indexer->nbytes, max_index_size * 1048576);
+	      DpsLog(Indexer, DPS_LOG_EXTRA, "Maximum size limit of %d exceeded", max_index_size * 1048576);
 	    }
 	  }
 
@@ -916,6 +918,7 @@ static void * thread_main(void *arg){
 	    Indexer->flags &= (~DPS_FLAG_ADD_SERVURL);
 	    Indexer->WordParam = Indexer->Conf->WordParam;
 	    Indexer->Conf->url_number = cfg_url_number;
+	    Indexer->Conf->url_size = max_index_size * 1048576;
 
 	    loccs = Indexer->Conf->lcs;
 	    if (!loccs) loccs = DpsGetCharSet(DpsVarListFindStr(&Indexer->Conf->Vars, "LocalCharset", "iso-8859-1"));
@@ -940,7 +943,16 @@ static void * thread_main(void *arg){
           }
 
           if(res == DPS_OK || res == DPS_NOTARGET) {  /* Possible after bad startup */
+	       if (max_index_size > 0) URLSize = Indexer->nbytes;
+
                res = DpsIndexNextURL(Indexer);
+
+	       if (max_index_size > 0) {
+		 URLSize = Indexer->nbytes - URLSize;
+		 DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+		 Indexer->Conf->url_size -= URLSize;
+		 DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	       }
 	  }
 	  DpsAgentSetAction(Indexer, res);
 
