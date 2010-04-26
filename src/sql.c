@@ -4988,6 +4988,9 @@ static int DpsStoredRehash(DPS_AGENT *A, DPS_DB *db) {
 static int DpsDocPostponeSite(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
   char qbuf[512];
   int i, site_id = DpsVarListFindInt(&Doc->Sections, "site_id", 0);
+  char *already;
+
+  if (site_id == 0) return DPS_OK;
 
   for (i = 0; i < DPS_SERVERID_CACHE_SIZE; i++) {
     if (A->ServerIdCache[i].Id == site_id) {
@@ -4996,8 +4999,17 @@ static int DpsDocPostponeSite(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
       break;
     }
   }
-  dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET next_index_time=%lu WHERE site_id=%d", A->now + Doc->Spider.net_error_delay_time, site_id);
-  return DpsSQLAsyncQuery(db, NULL, qbuf);
+  dps_snprintf(qbuf, sizeof(qbuf), "%dpp", site_id);
+  DPS_GETLOCK(A, DPS_LOCK_CONF);
+  already = DpsVarListFindStr(&A->Conf->Vars, qbuf, NULL);
+  if (already == NULL) {
+    DpsVarListReplaceStr(&A->Conf->Vars, qbuf, "");
+    DPS_RELEASELOCK(A, DPS_LOCK_CONF);
+    dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET next_index_time=%lu WHERE site_id=%d", A->now + Doc->Spider.net_error_delay_time, site_id);
+    return DpsSQLAsyncQuery(db, NULL, qbuf);
+  }
+  DPS_RELEASELOCK(A, DPS_LOCK_CONF);
+  return DPS_OK;
 }
 
 
