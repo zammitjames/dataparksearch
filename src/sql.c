@@ -5494,9 +5494,6 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			DPS_FREE(Href.url);
 		  }
 		  DpsSQLFree(&SQLres);
-		  DpsDocStoreHrefs(Indexer, Doc);
-		  DpsHrefListFree(&Doc->Hrefs);
-		  DpsStoreHrefs(Indexer);
 		}
 	}
 	end = DPS_STREND(Doc->Buf.buf);
