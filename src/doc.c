@@ -390,14 +390,14 @@ int DpsDocAddConfExtraHeaders(DPS_ENV *Conf,DPS_DOCUMENT *Doc) {
 
 int DpsDocAddServExtraHeaders(DPS_SERVER *Server,DPS_DOCUMENT *Doc) {
 	char	arg[128]="";
-	char    bu[] = "apr\0";
+	char    bu[] = "aprv\0";
 	size_t	i, j, r;
 	
 	for (j = 0; bu[j] != 0; j++) {
 	  r = (size_t) bu[j];
 	  for(i = 0; i < Server->Vars.Root[r].nvars; i++) {
 		DPS_VAR *Hdr = &Server->Vars.Root[r].Var[i];
-		
+
 		if(!strcasecmp(Hdr->name,"AuthBasic")){
 			/* HTTP and FTP specific stuff */
 			if((!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "http")) ||
@@ -434,6 +434,11 @@ int DpsDocAddServExtraHeaders(DPS_SERVER *Server,DPS_DOCUMENT *Doc) {
 			if(Hdr->val && Hdr->val[0]){
 				DpsVarListReplaceStr(&Doc->RequestHeaders, Hdr->name, Hdr->val);
 			}
+		}else
+		  if(!strcasecmp(Hdr->name, "VaryLang") && DpsVarListFind(&Doc->RequestHeaders, "Accept-Language") == NULL) {
+			if(Hdr->val && Hdr->val[0]){
+				DpsVarListReplaceStr(&Doc->RequestHeaders, "Accept-Language", Hdr->val);
+			}
 		}else{
 			if(!strncmp(Hdr->name,"Request.",8))
 				DpsVarListReplaceStr(&Doc->RequestHeaders,Hdr->name+8,Hdr->val);
@@ -448,55 +453,9 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	DPS_VAR		*var;
 	DPS_MATCH_PART	P[10];
 	const char      *content_type = DpsVarListFindStr(&Doc->Sections, "Content-Type", NULL);
-	const char      *vary = DpsVarListFindStr(&Doc->Sections, "Vary", NULL);
 	const int       content_length = DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
-	const int       parent = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 	const int       status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
-	char savec;
 
-	if ((vary != NULL) && (Doc->fetched == 0)) {
-	  if (strcasestr(vary, "accept-language") != NULL) {
-	    DPS_HREF Href;
-	    DPS_URL *newURL = DpsURLInit(NULL);
-	    char *url; const char *ourl;
-	    const char *VaryLang = DpsVarListFindStr(&Doc->Sections, "VaryLang", "en"), *CL;
-	    const int       hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
-	    char *tok, *lt;
-	    size_t urlen;
-
-	    if (newURL == NULL) return DPS_ERROR;
-	    DpsHrefInit(&Href);
-	    Href.referrer = parent;
-	    Href.hops = hops;
-	    Href.site_id = 0;
-	    Href.method = DPS_METHOD_GET;
-	    Href.charset_id = Doc->charset_id;
-	    Href.weight = 0.5;
-	    DpsURLParse(newURL, ourl = DpsVarListFindStr(&Doc->Sections, "URL", ""));
-	    if ((status < 400) && (strcmp(DPS_NULL2EMPTY(newURL->filename), "robots.txt") != 0)) {
-/*	      if (status == 200 || status == 206 || status == 304) DpsVarListReplaceStr(&Doc->Sections, "Status", "300");*/
-	      CL = DpsVarListFindStr(&Doc->Sections, "Content-Location", DPS_NULL2EMPTY(newURL->filename));
-	      urlen = 128 + dps_strlen(DPS_NULL2EMPTY(newURL->hostinfo)) + dps_strlen(DPS_NULL2EMPTY(newURL->path)) + dps_strlen(CL);
-	      if ((url = (char*)DpsMalloc(urlen)) != NULL) {
-		dps_snprintf(url, urlen, "%s://%s%s%s", DPS_NULL2EMPTY(newURL->schema), DPS_NULL2EMPTY(newURL->hostinfo), 
-			     DPS_NULL2EMPTY(newURL->path), CL );
-		Href.url = url;
-		DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
-/*		DpsAppendTarget(Indexer,  url, "", hops, parent);*/
-		if (Doc->subdoc < Indexer->Flags.SubDocLevel) {
-		  tok = dps_strtok_r((char*)VaryLang, " ,\t", &lt, &savec);
-		  while (tok != NULL) {
-/*		    DpsAppendTarget(Indexer, ourl, tok, hops, parent );*/
-		    DpsIndexSubDoc(Indexer, Doc, NULL, tok, ourl);
-		    tok = dps_strtok_r(NULL, " ,\t", &lt, &savec);
-		  }
-		}
-		DPS_FREE(url);
-	      }
-	    }
-	    DpsURLFree(newURL);
-	  }
-	}
 
 	if ((size_t)content_length > Doc->Buf.max_size) {
 	  DpsVarListReplaceInt(&Doc->Sections, "Status", DPS_HTTP_STATUS_PARTIAL_OK);
