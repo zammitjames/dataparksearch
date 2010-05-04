@@ -53,6 +53,7 @@
 #include <strings.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <ctype.h>
 #include <sys/stat.h>
 #if defined(WITH_IDN) && !defined(APACHE1) && !defined(APACHE2)
 #include <idna.h>
@@ -1532,7 +1533,24 @@ static int srv_rpl_var(void *Cfg, size_t ac,char **av){
 	} else if (ac == 1) {
 	  DpsVarListDel(&C->Srv->Vars, av[0]);
 	} else if (ac == 2) {
-	  if (strcasecmp(av[0], "HTDBText") == 0) {
+	  if (strcasecmp(av[0], "VaryLang") == 0) {
+	    int hascomas = 0;
+	    char *varylang = DpsStrdup(av[1]), *s;
+	    for(s = varylang; *s != '\0'; s++) {
+	      if(isalpha((int)*s)) {
+		hascomas = 0;
+	      } else
+	      if (*s == ' ' && hascomas == 0) {
+		*s = ','; hascomas = 1;
+	      } else
+	      if (*s == ',') {
+		if (hascomas == 1) *s = ' ';
+		else hascomas = 1;
+	      }
+	    }
+	    DpsVarListReplaceStr(&C->Srv->Vars, av[0], varylang);
+	    DpsFree(varylang);
+	  } else if (strcasecmp(av[0], "HTDBText") == 0) {
 	    char name[PATH_MAX];
 	    dps_snprintf(name, PATH_MAX, "HTDBText-%s", av[1]);
 	    DpsVarListDel(&C->Srv->Vars, name);

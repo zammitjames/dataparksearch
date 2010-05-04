@@ -1454,6 +1454,56 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	}
 	
 #endif
+	{
+	const char      *vary = DpsVarListFindStr(&Doc->Sections, "Vary", NULL);
+	const int       parent = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
+	char savec;
+
+	if ((vary != NULL) && (Doc->fetched == 0)) {
+	  if (strcasestr(vary, "accept-language") != NULL) {
+	    DPS_HREF Href;
+	    DPS_URL *newURL = DpsURLInit(NULL);
+	    char *url; const char *ourl;
+	    const char *VaryLang = DpsVarListFindStr(&Doc->Sections, "VaryLang", "en"), *CL;
+	    const char *ContentLanguage = DpsVarListFindStr(&Doc->Sections, "Content-Language", "en");
+	    const int       hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
+	    char *tok, *lt;
+	    size_t urlen;
+	    size_t cl_len = dps_strlen(ContentLanguage);
+
+	    if (newURL == NULL) return DPS_ERROR;
+	    DpsHrefInit(&Href);
+	    Href.referrer = parent;
+	    Href.hops = hops;
+	    Href.site_id = 0;
+	    Href.method = DPS_METHOD_GET;
+	    Href.charset_id = Doc->charset_id;
+	    Href.weight = 0.5;
+	    DpsURLParse(newURL, ourl = DpsVarListFindStr(&Doc->Sections, "URL", ""));
+	    if ((status < 400) && (strcmp(DPS_NULL2EMPTY(newURL->filename), "robots.txt") != 0)) {
+	      CL = DpsVarListFindStr(&Doc->Sections, "Content-Location", DPS_NULL2EMPTY(newURL->filename));
+	      urlen = 128 + dps_strlen(DPS_NULL2EMPTY(newURL->hostinfo)) + dps_strlen(DPS_NULL2EMPTY(newURL->path)) + dps_strlen(CL);
+	      if ((url = (char*)DpsMalloc(urlen)) != NULL) {
+		dps_snprintf(url, urlen, "%s://%s%s%s", DPS_NULL2EMPTY(newURL->schema), DPS_NULL2EMPTY(newURL->hostinfo), 
+			     DPS_NULL2EMPTY(newURL->path), CL );
+		Href.url = url;
+		DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
+		if (Doc->subdoc < Indexer->Flags.SubDocLevel) {
+		  tok = dps_strtok_r((char*)VaryLang, " ,\t", &lt, &savec);
+		  while (tok != NULL) {
+		    size_t min_len = dps_min(cl_len, dps_strlen(tok));
+		    if (strncasecmp(ContentLanguage, tok, min_len) != NULL)
+		      DpsIndexSubDoc(Indexer, Doc, NULL, tok, ourl);
+		    tok = dps_strtok_r(NULL, " ,\t", &lt, &savec);
+		  }
+		}
+		DPS_FREE(url);
+	      }
+	    }
+	    DpsURLFree(newURL);
+	  }
+	}
+	}
 	/* converting stuff */
 	{
 	  const char	*doccset;
@@ -1866,7 +1916,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			  DpsURLParse(&Doc->CurURL, alias);
 			}
 				
-			DpsVarListLog(Indexer,&Doc->RequestHeaders, DPS_LOG_DEBUG, "Request");
+			DpsVarListLog(Indexer,&Doc->RequestHeaders, DPS_LOG_DEBUG, "SubDoc.Request");
 				
 			if(hdr) {
 			        DpsVarListAddStr(&Doc->RequestHeaders, "Range", hdr);
@@ -2041,7 +2091,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			    return result;
 			  }
 		}
-		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "Response");
+		DpsVarListLog(Indexer, &Doc->Sections, DPS_LOG_DEBUG, "SubDoc.Response");
 	
 
 		if (DPS_OK == (result = DpsDocStoreHrefs(Indexer, Doc))) {
