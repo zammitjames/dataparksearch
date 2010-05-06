@@ -771,7 +771,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
   for (len = 0; (len < (size_t)(8 * maxwlen + 16 * padding + 1)) && htok; ) {
     switch(tag.type) {
     case DPS_HTML_TXT:
-      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0) {
+      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && tag.body == 1) {
 	dps_memmove(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
@@ -816,7 +816,7 @@ __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_D
       while(htok && ((len - prevlen) < (size_t)(8 * maxwlen + 16 * padding + 1)) ) {
 	switch(tag.type) {
 	case DPS_HTML_TXT:
-	  if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0) {
+	  if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && tag.body == 1) {
 	    dps_memmove(HEnd, htok, (size_t)(last-htok));
 	    HEnd += (size_t)(last - htok);
 	    HEnd[0] = ' ';
