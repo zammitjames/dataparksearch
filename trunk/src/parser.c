@@ -404,7 +404,7 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_fi
 static char *parse_file (DPS_AGENT * Agent, DPS_PARSER * parser, DPS_DOCUMENT *Doc, const char * url) {
 	char cmd[1024 + 2 * PATH_MAX]="";
 	char *result=NULL;
-	char *arg1pos,*arg2pos;
+	char *arg1pos, *arg2pos, *p;
 	int parser_type;
 	char fn0[PATH_MAX]="";
 	char fn1[PATH_MAX]="";
@@ -418,6 +418,10 @@ static char *parse_file (DPS_AGENT * Agent, DPS_PARSER * parser, DPS_DOCUMENT *D
 	dps_snprintf(fn0, sizeof(fn0) - 4, "/tmp/ind.%d.%d", Agent->handle, getpid());
 	dps_strcpy(fn1, fn0);
 	fnames[0] = dps_strcat(fn0, ".in");
+	p = strrchr(Doc->CurURL.filename, (int)'.');
+	if (p != NULL) {
+	  fnames[0] = dps_strcat(fn0, p);
+	}
 	fnames[1] = dps_strcat(fn1, ".out");
 	DpsBuildParamStr(cmd,sizeof(cmd),parser->cmd,fnames,2);
 
