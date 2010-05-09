@@ -1632,6 +1632,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	      DpsVarListInsStr(&D->Sections, "url.path", DPS_NULL2EMPTY(D->CurURL.path));
 	      DpsVarListInsStr(&D->Sections, "url.directory", DPS_NULL2EMPTY(D->CurURL.directory));
 	      DpsVarListInsStr(&D->Sections, "url.file", DPS_NULL2EMPTY(D->CurURL.filename));
+	      DpsVarListInsStr(&D->Sections, "url.query_string", DPS_NULL2EMPTY(D->CurURL.query_string));
 	      D->fetched = 1;
 	      Res->fetched++;
 	    }
