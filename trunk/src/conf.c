@@ -885,8 +885,6 @@ static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	  return DPS_ERROR;
 	}
 
-	if(!(C->flags & DPS_FLAG_ADD_SERV)) return DPS_OK;
-
 	DpsMatchInit(&M);
 	M.match_type = DPS_MATCH_REGEX;
 	M.case_sense = 1;
