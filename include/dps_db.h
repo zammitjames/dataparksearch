@@ -231,4 +231,6 @@ extern int DpsURLDataLoadCache(DPS_AGENT *Indexer, DPS_RESULT *Res, DPS_DB *db);
 extern __C_LINK const char* __DPSCALL DpsDBTypeToStr(int dbtype);
 extern __C_LINK const char* __DPSCALL DpsDBModeToStr(int dbmode);
 
+extern int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action);
+
 #endif

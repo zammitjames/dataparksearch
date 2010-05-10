@@ -2576,7 +2576,7 @@ static int DpsDeleteBadHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) 
 	return rc;
 }
 
-static int DpsDeleteURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db){
+static int DpsDeleteURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	char	qbuf[128];
 	int	rc;
 	urlid_t	url_id  =DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
@@ -2585,6 +2585,8 @@ static int DpsDeleteURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db){
 	
 	use_crosswords = ((Indexer->Flags.use_crosswords > 0) && (db->DBMode != DPS_DBMODE_CACHE));
 	collect_links  = Indexer->Flags.collect_links;
+
+	if (DPS_OK != (rc = DpsExecActions(Indexer, Doc, 'd'))) return rc;
 
 	if(use_crosswords /*&& db->DBMode!=DPS_DBMODE_CACHE*/)
 		if(DPS_OK!=(rc=DpsDeleteCrossWordFromURL(Indexer,Doc,db)))return(rc);
@@ -4655,12 +4657,6 @@ static void SQLResToDoc(DPS_ENV *Conf, DPS_DOCUMENT *D, DPS_SQLRES *sqlres, size
 	/* Convert URL from LocalCharset */
 	DpsConv(&lc_dc, dc_url, (size_t)24 * len,  url, (size_t)(len + 1));
 	DpsVarListReplaceStr(&D->Sections, "URL", dc_url);
-/*	if (!DpsURLParse(&D->CurURL, dc_url)) {
-	  DpsVarListInsStr(&D->Sections, "url.host", DPS_NULL2EMPTY(D->CurURL.hostname));
-	  DpsVarListInsStr(&D->Sections, "url.path", DPS_NULL2EMPTY(D->CurURL.path));
-	  DpsVarListInsStr(&D->Sections, "url.directory", DPS_NULL2EMPTY(D->CurURL.directory));
-	  DpsVarListInsStr(&D->Sections, "url.file", DPS_NULL2EMPTY(D->CurURL.filename));
-	}*/
 
 	DpsVarListDel(&D->Sections, "URL_ID");
 	DPS_FREE(dc_url);

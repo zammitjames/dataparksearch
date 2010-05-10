@@ -277,7 +277,7 @@ __C_LINK int __DPSCALL DpsClearDatabase(DPS_AGENT *A) {
 }
 
 
-static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
+int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
   DPS_MATCH       *Alias;
   DPS_MATCH_PART  Parts[10];
   size_t nparts = 10;
@@ -286,6 +286,8 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
   DPS_TEXTITEM *Item;
   size_t i, z, buf_len;
   int notdone;
+
+#ifdef HAVE_SQL
 
   if (Indexer->Conf->ActionSQLMatch.nmatches == 0) return DPS_OK;
 
@@ -362,6 +364,7 @@ static int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
   }
 
   DPS_FREE(buf);
+#endif
   return DPS_OK;
 }
 
