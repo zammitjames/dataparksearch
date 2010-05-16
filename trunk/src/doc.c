@@ -488,15 +488,6 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	  }
 	}
 	
-	if((strcasecmp(DpsVarListFindStr(&Indexer->Vars,"UseRemoteContentType","yes"),"yes") != 0) || (content_type == NULL) ) {
-	   	DPS_MATCH	*M;
-	   	const char	*fn = (Doc->CurURL.filename && Doc->CurURL.filename[0]) ? Doc->CurURL.filename : "index.html";
-		
-		DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-		if((M=DpsMatchListFind(&Indexer->Conf->MimeTypes,fn,10,P)))
-			DpsVarListReplaceStr(&Doc->Sections,"Content-Type",M->arg);
-		DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	}
 	if ((var=DpsVarListFind(&Doc->Sections,"Server"))){
 		if(!strcasecmp("yes",DpsVarListFindStr(&Indexer->Vars,"ForceIISCharset1251","no"))){
 			if (!DpsWildCmp(var->val,"*Microsoft*")||!DpsWildCmp(var->val,"*IIS*")){
@@ -505,6 +496,16 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 					DpsVarListReplaceStr(&Doc->Sections, "Server-Charset", cs);
 			}
 		}
+	}
+	if((strcasecmp(DpsVarListFindStr(&Indexer->Vars,"UseRemoteContentType","yes"),"yes") != 0) || (content_type == NULL) ||
+	   (strcasecmp(content_type, "application/octet-stream") == 0) ) {
+	   	DPS_MATCH	*M;
+	   	const char	*fn = (Doc->CurURL.filename && Doc->CurURL.filename[0]) ? Doc->CurURL.filename : "index.html";
+		
+		DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+		if((M=DpsMatchListFind(&Indexer->Conf->MimeTypes,fn,10,P)))
+			DpsVarListReplaceStr(&Doc->Sections,"Content-Type",M->arg);
+		DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	}
 	if(!DpsVarListFind(&Doc->Sections,"Content-Type")) {
 		DpsVarListAddStr(&Doc->Sections,"Content-Type","application/octet-stream");
