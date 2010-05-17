@@ -163,10 +163,11 @@ dpsunicode_t *DpsUniStrNCpy(dpsunicode_t *dst, const dpsunicode_t *src, size_t l
 }
 
 dpsunicode_t *DpsUniStrRCpy(dpsunicode_t *dst, const dpsunicode_t *src) {
-  register size_t i = 0; dpsunicode_t *d = dst; register size_t l = DpsUniLen(src);
-  if (l) for (l--; i <= l; i++)
-    d[i] = src[l - i];
-  d[i] = 0;
+  register size_t l = DpsUniLen(src);
+  register size_t i; 
+  dpsunicode_t *d = dst + l; 
+  *d = 0; 
+  for (i = 0; i < l; i++) *--d = src[i];
   return dst;
 }
 
@@ -233,7 +234,7 @@ dpsunicode_t *DpsUniAccentStrip(dpsunicode_t *str) {
 
 dpsunicode_t *DpsUniGermanReplace(dpsunicode_t *str) {
   size_t l = DpsUniLen(str);
-  dpsunicode_t *german = DpsMalloc((2 * l + 1) * sizeof(dpsunicode_t));
+  dpsunicode_t *german = DpsMalloc((3 * l + 1) * sizeof(dpsunicode_t));
   if (german !=NULL) {
     dpsunicode_t *s = str, *d = german;
     while(*s) {
