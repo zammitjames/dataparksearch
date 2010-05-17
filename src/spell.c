@@ -1729,7 +1729,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 
       w.len = DpsUniLen((*cur)->word);
       if ( ( (w.word = DpsRealloc(w.word, 14 * w.len + 1)) == NULL) ||
-	   ( (w.uword = DpsRealloc(w.uword, (w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
+	   ( (w.uword = DpsRealloc(w.uword, (3 * w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
 	DPS_FREE(w.word); DPS_FREE(w.uword); DPS_FREE(s_p.word);
 	return NULL;
       }
@@ -1791,6 +1791,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    aw = DpsUniGermanReplace((*cur)->word);
 	  }
 	}
+	DPS_FREE(aw);
       }
       cur++;
     }
@@ -1798,7 +1799,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 
       w.len = DpsUniLen(s_p.word);
       if ( ( (w.word = DpsRealloc(w.word, 14 * w.len + 1)) == NULL) ||
-	   ( (w.uword = DpsRealloc(w.uword, (w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
+	   ( (w.uword = DpsRealloc(w.uword, (3 * w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
 	DPS_FREE(w.word); DPS_FREE(w.uword); DPS_FREE(s_p.word);
 	return NULL;
       }
@@ -1863,6 +1864,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    aw = DpsUniGermanReplace(p_sp->word);
 	  }
 	}
+	DPS_FREE(aw);
       }
   } else {
 
