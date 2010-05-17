@@ -497,8 +497,10 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 			}
 		}
 	}
-	if((strcasecmp(DpsVarListFindStr(&Indexer->Vars,"UseRemoteContentType","yes"),"yes") != 0) || (content_type == NULL) ||
-	   (strcasecmp(content_type, "application/octet-stream") == 0) ) {
+	if((strcasecmp(DpsVarListFindStr(&Indexer->Vars,"UseRemoteContentType","yes"),"yes") != 0) || (content_type == NULL) 
+	   || (strcasecmp(content_type, "application/octet-stream") == 0)
+	   || (strcasecmp(content_type, "unknown") == 0)
+	   ) {
 	   	DPS_MATCH	*M;
 	   	const char	*fn = (Doc->CurURL.filename && Doc->CurURL.filename[0]) ? Doc->CurURL.filename : "index.html";
 		
