@@ -288,10 +288,10 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 
 __C_LINK int __DPSCALL DpsBaseClose(DPS_BASE_PARAM *P) {
   TRACE_IN(P->A, "DpsBaseClose");
-  if (P->opened && (P->mode == DPS_WRITE_LOCK) ) {
+/*  if (P->opened && (P->mode == DPS_WRITE_LOCK) ) {
       fsync(P->Sfd);
       fsync(P->Ifd);
-  }
+  }*/
   if (!P->A->Flags.cold_var && P->locked) {
       DpsUnLock(P->Sfd);
       DpsUnLock(P->Ifd); 
