@@ -3637,7 +3637,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
   TRACE_IN(A, "DpsAddURLCache");
 
-  textbuf = DpsDocToTextBuf(Doc, 0);
+  textbuf = DpsDocToTextBuf(Doc, 0, 1);
   if (textbuf == NULL) { TRACE_OUT(A); return DPS_ERROR; }
   tlen = dps_strlen(textbuf) + 1;
 
