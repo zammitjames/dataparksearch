@@ -122,7 +122,7 @@ void DpsURLCRDListListFree(DPS_URLCRDLISTLIST *Lst){
 
 #define nonul(x)	((x)?(x):"")
 
-char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag) {
+char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag, int e_url_flag) {
 	size_t	i, r, l, len;
 	char	*end, *textbuf;
 	int u;
@@ -204,7 +204,16 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag) {
 
 		l = (end - textbuf);
 		if (l + 2 < len) {
-		  dps_snprintf(end, len-l, "\t%s=\"%s\"",S->name, strcasecmp(S->name,"URL") ? S->val : (S->txt_val ? S->txt_val : S->val) );
+		  if (strcasecmp(S->name,"URL")) {
+		    dps_snprintf(end, len-l, "\t%s=\"%s\"", S->name, S->val );
+		  } else {
+		    DPS_VAR *ES = (e_url_flag) ? DpsVarListFind(&Doc->Sections, "E_URL") : NULL;
+		    if (ES != NULL) {
+		      dps_snprintf(end, len-l, "\tURL=\"%s\"", ES->txt_val ? ES->txt_val : ES->val );
+		    } else {
+		      dps_snprintf(end, len-l, "\tURL=\"%s\"", S->txt_val ? S->txt_val : S->val );
+		    }
+		  }
 		  end = end + dps_strlen(end);
 		}
 	}
@@ -214,7 +223,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag) {
 	}
 /*	dps_snprintf(end, len - (end - textbuf), ">\0");*/
 
-/*	fprintf(stderr, "textbuf: %s\n", textbuf);*/
+/*	fprintf(stderr, " -- textbuf: %s\n", textbuf);*/
 	return textbuf;
 }
 
