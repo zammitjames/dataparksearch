@@ -149,6 +149,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag, int e_url_flag) {
 /*		fprintf(stderr, "-Sec.name: %s  .section:%d  .maxlen: %d\n", S->name, S->section, S->maxlen);*/
 		if(!(((numsection_flag && S->section != 0) || S->maxlen) && u) && 
 		   strcasecmp(S->name, "DP_ID") &&
+		   strcasecmp(S->name, "URL_ID") &&
 		   strcasecmp(S->name, "URL") &&
 		   strcasecmp(S->name, "Title") &&
 		   strcasecmp(S->name, "Status") &&
@@ -186,6 +187,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag, int e_url_flag) {
 /*		fprintf(stderr, "u:%d section: %d  name: %s  value: %s\n", u, S->section, S->name, S->val);*/
 		if(!(((numsection_flag && S->section != 0) || S->maxlen) && u) && 
 		   strcasecmp(S->name,"DP_ID") &&
+		   strcasecmp(S->name,"URL_ID") &&
 		   strcasecmp(S->name,"URL") &&
 		   strcasecmp(S->name,"Title") &&
 		   strcasecmp(S->name,"Status") &&
