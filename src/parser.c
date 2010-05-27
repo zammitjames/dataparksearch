@@ -98,7 +98,7 @@ static void sighandler(int sign){
 }
 
 /* Parser1: from STDIN to STDOUT */
-static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
+static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const char *cmd) {
 	int wr[2];
 	int rd[2];    
 	pid_t pid;    
@@ -186,10 +186,12 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
 			/* Connect pipe to stdin */
 			dup2(wr[0], STDIN_FILENO);
 
+			DpsSetEnv("DPS_URL",url);
 			alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 			init_signals();
 
 			system(cmd);
+			DpsUnsetEnv("DPS_URL");
 			_Exit(0);
 		}
 	}
@@ -198,7 +200,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
 }
 
 /* Parser2: from FILE to STDOUT */
-static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
+static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const char *cmd) {
 	size_t gap = Doc->Buf.content - Doc->Buf.buf;
 	ssize_t rs;
 	int rd[2];    
@@ -262,10 +264,12 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
 		if (dup2(fd, STDERR_FILENO) == -1)    rc |= 32;
 		if (close(fd) == -1)    rc |= 64;
 		
+		DpsSetEnv("DPS_URL",url);
 		alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 		init_signals();
 
 		system(cmd);
+		DpsUnsetEnv("DPS_URL");
 		close (rd[1]);
 		_Exit(rc);
 	}
@@ -276,7 +280,7 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd) {
 }
 
 /* Parser3: from FILE to FILE */
-static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_file) {
+static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const char *cmd, const char *to_file) {
 	int fd;
 	pid_t pid;    
 	size_t gap = Doc->Buf.content - Doc->Buf.buf;
@@ -295,9 +299,11 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_fi
 	if (pid > 0) {
 	  waitpid(pid, &status, 0);
 	} else {
+	  DpsSetEnv("DPS_URL",url);
 	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 	  init_signals();
 	  system(cmd);
+	  DpsUnsetEnv("DPS_URL");
 	  _Exit(0);
 	}
 	
@@ -330,7 +336,7 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_fi
 }
 
 /* Parser4: from STDIN to FILE */
-static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_file) {
+static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const char *cmd, const char *to_file) {
 	size_t gap = Doc->Buf.content - Doc->Buf.buf;
 	ssize_t rs;
 	int wr[2], fd;
@@ -366,10 +372,12 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, char *cmd, char *to_fi
 	  /* Connect pipe to stdin */
 	  dup2(wr[0], STDIN_FILENO);
 	  
+	  DpsSetEnv("DPS_URL",url);
 	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 	  init_signals();
 
 	  system(cmd);
+	  DpsUnsetEnv("DPS_URL");
 	  _Exit(0);
 	}
 
@@ -448,14 +456,12 @@ static char *parse_file (DPS_AGENT * Agent, DPS_PARSER * parser, DPS_DOCUMENT *D
 	
 	/*fprintf(stderr,"cmd='%s' parser_type=%d\n",cmd,parser_type);*/
 	DpsLog(Agent, DPS_LOG_EXTRA, "Starting external parser: '%s'", cmd);
-	DpsSetEnv("DPS_URL",url);
 	switch(parser_type){
-		case 1: result = parse1(Agent, Doc, cmd); break;
-		case 2: result = parse2(Agent, Doc, cmd); break;
-		case 3: result = parse3(Agent, Doc, cmd, fnames[1]); break;
-		case 4: result = parse4(Agent, Doc, cmd, fnames[1]); break;
+	case 1: result = parse1(Agent, Doc, url, cmd); break;
+	case 2: result = parse2(Agent, Doc, url, cmd); break;
+	case 3: result = parse3(Agent, Doc, url, cmd, fnames[1]); break;
+	case 4: result = parse4(Agent, Doc, url, cmd, fnames[1]); break;
 	}
-	DpsUnsetEnv("DPS_URL");
 
 	/* Remove temporary file */
 	if(arg1pos)unlink(fnames[0]);
