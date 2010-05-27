@@ -244,8 +244,9 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 	TRACE_IN(Indexer, "DpsRobotClone");
 
 	DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
-	if (Robots->nrobots == 2 * DPS_SERVERID_CACHE_SIZE) {
+	if (Robots->nrobots == 3 * DPS_SERVERID_CACHE_SIZE) {
 	  robot = NULL;
+	  Robots->serial++;
 	  DpsRobotListFree(Robots);
 	} else {
 	  robot = DpsRobotFind(Robots, DPS_NULL2EMPTY(URL->hostinfo));
@@ -426,7 +427,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	const char *hostname;
 	char		*rurl = l_rurl;
 	size_t        rurlen, j;
-	int have_host = 0;
+	int have_host = 0, u;
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
 #endif
@@ -459,9 +460,13 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 
 	hostname = DPS_NULL2EMPTY(URL->hostinfo);
 
-	if (Indexer->Robots.nrobots == DPS_SERVERID_CACHE_SIZE) {
+	DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
+	u = ((Indexer->Robots.nrobots == DPS_SERVERID_CACHE_SIZE) || (Indexer->Robots.serial != Robots->serial));
+	DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
+	if (u) {
 	  robot = NULL;
 	  DpsRobotListFree(&Indexer->Robots);
+	  Indexer->Robots.serial = Robots->serial;
 	} else {
 	  robot = DpsRobotFind(&Indexer->Robots, hostname);
 	}
@@ -512,6 +517,15 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      time_t now;
 
 	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
+
+	      if (Indexer->Robots.serial != Robots->serial) {
+		DpsRobotListFree(&Indexer->Robots);
+		Indexer->Robots.serial = Robots->serial;
+		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
+		robot = DpsRobotClone(Indexer, Robots, Server, Doc, URL, rurl, rurlen);
+		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+	      }
+
 	      now = time(NULL);
 	      diff = (size_t) (now - *(robot->last_crawled));
 	      while (1000 * diff < robot->crawl_delay) {

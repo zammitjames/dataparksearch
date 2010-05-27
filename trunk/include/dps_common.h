@@ -735,6 +735,7 @@ typedef struct{
 
 typedef struct{
 	size_t		nrobots;
+        size_t          serial;
 	DPS_ROBOT	*Robot;
 } DPS_ROBOTS;
 
