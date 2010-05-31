@@ -5341,6 +5341,7 @@ static char * include_params(const char *src,char *path,char *dst, size_t start,
 	return(dst);
 }
 
+#define MAXHSIZE	8192 /*4096*/	/* TUNE */
 
 int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 	char		*qbuf;
@@ -5490,6 +5491,14 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			DPS_FREE(Href.url);
 		  }
 		  DpsSQLFree(&SQLres);
+		  if(Doc->Hrefs.nhrefs > MAXHSIZE) {
+		    if (DPS_OK == DpsDocStoreHrefs(Indexer, Doc)) {
+		      DpsHrefListFree(&Doc->Hrefs);
+		    }
+		  }
+		  if(Indexer->Hrefs.nhrefs > MAXHSIZE) {
+		    DpsStoreHrefs(Indexer);
+		  }
 		}
 	}
 	end = DPS_STREND(Doc->Buf.buf);
