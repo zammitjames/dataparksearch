@@ -24,6 +24,7 @@
 #include "dps_match.h"
 #include "dps_vars.h"
 #include "dps_mutex.h"
+#include "dps_alias.h"
 
 #include <stdio.h>
 #include <stdlib.h>
