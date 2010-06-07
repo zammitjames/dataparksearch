@@ -2691,18 +2691,18 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	    goto URLDataWrite_exit;
 	  }
 	  max_shows = DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) + 1;
-	  max_shows = DPS_ATOI(DpsSQLValue(&SQLres, 0, 1)) - 1;
+	  rec_id = DPS_ATOI(DpsSQLValue(&SQLres, 0, 1));
 	  DpsSQLFree(&SQLres);
 	}
 
 	while(u) {
 	  if (use_showcnt) {
 	    dps_snprintf(str, sizeof(str), 
- "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight,u.shows FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+ "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight,u.shows FROM url u,server s WHERE u.rec_id>=%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
 			 rec_id, recs);
 	  } else {
 	    dps_snprintf(str, sizeof(str), 
- "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
+ "SELECT u.rec_id,u.site_id,u.pop_rank,u.last_mod_time,u.since,u.status,u.crc32,s.weight FROM url u,server s WHERE u.rec_id>=%d AND s.rec_id=u.site_id ORDER by u.rec_id LIMIT %d",
 			 rec_id, recs);
 	  }
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
@@ -2749,7 +2749,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  /* To see the URL being indexed in "ps" output on xBSD */
 	  dps_setproctitle("[%d] url data: %d records processed", Indexer->handle, offset);
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "%d records of url data written, at %d", offset, rec_id);
-	  rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nitems - 1, 0));
+	  rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nitems - 1, 0)) + 1;
 	  DpsSQLFree(&SQLres);
 	  u = (nitems == (size_t)recs);
 /*	  if (u) DPSSLEEP(0);*/
