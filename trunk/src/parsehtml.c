@@ -945,15 +945,15 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 
 				if (nt == 0) {
 				  if(!strncasecmp(t->b,"script",6)) t->script = 1;
-				  else if(!strncasecmp(t->b,"/script",7)) t->script = 0;
+				  else if(!strncasecmp(t->b,"/script",7)) { t->script = 0; if (t->comment_inside) { t->comment = t->comment_inside = 0; }}
 				  else if(!strncasecmp(t->b, "style", 5)) t->style = 1;
-				  else if(!strncasecmp(t->b, "/style", 6)) t->style = 0;
+				  else if(!strncasecmp(t->b, "/style", 6)) { t->style = 0; if (t->comment_inside) { t->comment = t->comment_inside = 0; }}
 				  else if(!strncasecmp(t->b, "select", 4)) t->select = 1;
 				  else if(!strncasecmp(t->b, "/select", 5)) t->select = 0;
 				  else if(!strncasecmp(t->b, "body", 4)) t->body = 1;
 				  else if(!strncasecmp(t->b, "/body", 5)) t->body = 0;
-				  else if(!strncasecmp(t->b, "noindex", 7)) t->comment = 1;
-				  else if(!strncasecmp(t->b, "/noindex", 8)) t->comment = 0;
+				  else if(!strncasecmp(t->b, "noindex", 7)) t->noindex = 1;
+				  else if(!strncasecmp(t->b, "/noindex", 8)) t->noindex = 0;
 				}
 
 				if(*t->e=='>'){
@@ -1012,35 +1012,40 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 
 		case DPS_HTML_COM: /* comment */
 			
-			if(!strncasecmp(t->s, "<!--DpsComment-->", 17))	t->comment=1;
+			if(!strncasecmp(t->s, "<!--DpsComment-->", 17))	t->noindex = 1;
 			else
-			if(!strncasecmp(t->s, "<!--/DpsComment-->", 18)) t->comment=0;
+			if(!strncasecmp(t->s, "<!--/DpsComment-->", 18)) t->noindex = 0;
 			else
-			if(!strncasecmp(t->s, "<!--UdmComment-->", 17)) t->comment=1;
+			if(!strncasecmp(t->s, "<!--UdmComment-->", 17)) t->noindex = 1;
 			else
-			if(!strncasecmp(t->s, "<!--/UdmComment-->", 18)) t->comment=0;
+			if(!strncasecmp(t->s, "<!--/UdmComment-->", 18)) t->noindex = 0;
 			else
-			if(!strncasecmp(t->s, "<!--noindex-->", 14)) t->comment=1;
+			if(!strncasecmp(t->s, "<!--noindex-->", 14)) t->noindex = 1;
 			else
-			if(!strncasecmp(t->s, "<!--/noindex-->", 15)) t->comment=0;
+			if(!strncasecmp(t->s, "<!--/noindex-->", 15)) t->noindex = 0;
 			else
-			if(!strncasecmp(t->s, "<!--Comment-->", 14)) t->comment=1;
+			if(!strncasecmp(t->s, "<!--Comment-->", 14)) t->noindex = 1;
 			else
-			if(!strncasecmp(t->s, "<!--/Comment-->", 15)) t->comment=0;
+			if(!strncasecmp(t->s, "<!--/Comment-->", 15)) t->noindex = 0;
 			else
-			if(!strncasecmp(t->s, "<!--htdig_noindex-->", 20)) t->comment=1;
+			if(!strncasecmp(t->s, "<!--htdig_noindex-->", 20)) t->noindex = 1;
 			else
-			if(!strncasecmp(t->s, "<!--/htdig_noindex-->", 21)) t->comment=0;
+			if(!strncasecmp(t->s, "<!--/htdig_noindex-->", 21)) t->noindex = 0;
 			else
-			if(!strncasecmp(t->s, "<!-- google_ad_section_start -->", 32)) t->comment = 0;
+			if(!strncasecmp(t->s, "<!-- google_ad_section_start -->", 32)) t->noindex = 0;
 			else
-			if(!strncasecmp(t->s, "<!-- google_ad_section_start(weight=ignore) -->", 47)) t->comment = 1;
+			if(!strncasecmp(t->s, "<!-- google_ad_section_start(weight=ignore) -->", 47)) t->noindex = 1;
 			else
-			if(!strncasecmp(t->s, "<!-- google_ad_section_end -->", 30)) t->comment = !(t->comment);
+			if(!strncasecmp(t->s, "<!-- google_ad_section_end -->", 30)) t->noindex = !(t->noindex);
 
 			for(t->e = t->s; (*t->e) && (strncmp(t->e, "-->", 3)); (*t->next_e)(t));
 			if(!strncmp(t->e, "-->", 3)) *lt = t->e + 3;
-			else	*lt = t->e;
+			else {
+/*				*lt = t->e;*/
+			    *lt = t->e = t->s + 3;
+			    if (t->style || t->script) t->comment_inside = 1;
+			    t->comment = 1;
+			}
 			break;
 
 		case DPS_HTML_TXT: /* text */
@@ -1308,7 +1313,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		dps_strncat(secname + 5 ,metaname, seclen - 5);
 		secname[seclen - 1]='\0';
 		
-		if((!tag->comment) && (Sec=DpsVarListFind(&Doc->Sections,secname)) && Doc->Spider.index && visible) {
+		if((tag->comment + tag->index == 0) && (Sec=DpsVarListFind(&Doc->Sections,secname)) && Doc->Spider.index && visible) {
 /*			DpsSGMLUnescape(metacont);   we do this later */
 		        bzero((void*)&Item, sizeof(Item));
 			Item.str=metacont;
@@ -1436,7 +1441,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	}
 	else	if(!strcmp(name,"script"))	tag->script=opening;
 	else	if(!strcmp(name,"style"))	tag->style=opening;
-	else	if(!strcmp(name,"noindex"))	tag->comment=opening;
+	else	if(!strcmp(name,"noindex"))	tag->noindex = opening;
 	else	
 	if((!strcmp(name,"base"))&&(href)){
 		
@@ -1464,6 +1469,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
 		  Href.url=href;
 		  Href.method=DPS_METHOD_GET;
+		  Href.charset_id = Doc->charset_id;
 		  DpsHrefListAdd(Indexer, &Doc->Hrefs,&Href);
 		  
 		  /* For crosswords */
@@ -1514,7 +1520,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	tag.follow = Doc->Spider.follow;
 	tag.index = Doc->Spider.index;
 	tag.body = 1; /* for the case when the BodyPattern is applied */
-	tag.comment = (strstr(content, "<!-- google_ad_section_start -->") == NULL) ? 0 : 2;
+	tag.noindex = (strstr(content, "<!-- google_ad_section_start -->") == NULL) ? 0 : 2;
 
 	htok=DpsHTMLToken(content, &last, &tag);
 	
@@ -1536,7 +1542,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 				
 	    tmp = DpsStrndup(tmpbeg,(size_t)(tmpend-tmpbeg+1));
 
-	    if (BSec && !tag.comment && !tag.title && tag.body && !tag.script && !tag.style && tag.index && !tag.select 
+	    if (BSec && (tag.comment + tag.noindex == 0) && !tag.title && tag.body && !tag.script && !tag.style && tag.index && !tag.select 
 		&& tag.visible[tag.level]) {
 	      int z;
 	      for(z = tag.level - 1; z >= 0 && tag.section[z] == 0; z--);
@@ -1555,7 +1561,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      DpsTextListAdd(&Doc->TextList,&Item);
 	    }
-	    if (TSec && (tag.comment != 1) && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
+	    if (TSec && (tag.comment != 1) && (tag.noindex != 1) && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
 	      bzero((void*)&Item, sizeof(Item));
 	      Item.href=NULL;
 	      Item.str=tmp;
