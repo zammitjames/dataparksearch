@@ -1231,6 +1231,8 @@ typedef struct {
 	int	follow;
 	int	index;
 	int	comment;
+	int     comment_inside;
+	int	noindex;
         int     select;
 	char	*lasthref;
         void    (*next_b)(void *t);
