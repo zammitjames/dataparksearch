@@ -778,7 +778,7 @@ not converted, it must be in BrowserCharset.</para>
 		<para>Use "<command>Cache</command> yes/no" to enable/disable search results cache.</para>
 
 <indexterm><primary>Command</primary><secondary>DetectClones</secondary></indexterm>
-		<para>Use "<command>DetectClones</command> yes/no" to enable/disable clones detection.</para>
+		<para>Use "<command>DetectClones</command> yes/no" to enable/disable clones detection. This is disable by default for search.</para>
 
 		<para><indexterm><primary>Command</primary><secondary>GroupBySite</secondary></indexterm>
 Use "<command>GroupBySite</command> yes/no" to enable/disable grouping results by url.site_id.</para>

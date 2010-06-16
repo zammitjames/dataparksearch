@@ -187,6 +187,7 @@
 	{"HrefSection",         1,3,    add_hrefsection},
 	{"SectionSQL",		4,8,	add_sectionsql},
 	{"BodyPattern",         2,2,    add_body_pattern},
+	{"BodyBrackets",	2,2,	add_body_brackets},
 	{"ActionSQL",	        3,5,    add_actionsql},
 	{"Affix",		3,3,	add_affix},
 	{"Spell",		3,3,	add_spell},

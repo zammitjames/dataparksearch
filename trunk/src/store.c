@@ -93,8 +93,8 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
           
 	      zstream.next_in = Doc;
               zstream.avail_in = DocSize;
-              zstream.avail_out = 2 * DocSize + sizeof(gz_header);
-              CDoc = zstream.next_out = (Byte *) DpsMalloc(2 * DocSize + sizeof(gz_header) + 1);
+              zstream.avail_out = 2 * DocSize + 128 /*sizeof(gz_header) */;
+              CDoc = zstream.next_out = (Byte *) DpsMalloc(2 * DocSize + 128 /*sizeof(gz_header) + 1*/);
               if (zstream.next_out == NULL) {
                 return DPS_ERROR;
               }

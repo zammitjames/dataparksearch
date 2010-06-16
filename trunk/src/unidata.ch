@@ -31090,6 +31090,7 @@ const int uni_CompositionExclusions[] = {
 
 int dps_isPatternSyntax(dpsunicode_t ch) {
   switch(ch) {
+  case 0x0023:
   case 0x0024:
 /*  case 0x0028:*/
 /*  case 0x0029:*/
@@ -31097,6 +31098,7 @@ int dps_isPatternSyntax(dpsunicode_t ch) {
   case 0x002B:
 /*  case 0x002C:*/
   case 0x002D:
+  case 0x0040:
 /*  case 0x005B:*/
   case 0x005C:
 /*  case 0x005D:*/

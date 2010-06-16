@@ -15,13 +15,16 @@ fail !0 exec mkdir $(DPS_TEST_DIR)/var/url
 fail 20 exec $(INDEXER) -Edrop   $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 fail !0 exec $(INDEXER) -Ecreate $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 fail !0 exec $(INDEXER) -Eindex  -v5 $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
+fail !0 exec $(INDEXER) -Eindex  -v5 $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 #fail !0 exec $(INDEXER) -Eindex  -v5 $(DPS_TEST_DIR)/indexer.conf > $(DPS_TEST_DIR)/indexer.log 2>&1
 fail !0 exec $(INDEXER) -TWv4      $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 fail !0 exec $(INDEXER) -Esqlmon $(DPS_TEST_DIR)/indexer.conf < $(DPS_TEST_DIR)/query.tst > $(DPS_TEST_DIR)/query.rej 2>&1
 fail !0 exec $(SEARCH) body1 > $(DPS_TEST_DIR)/search.rej 2>&1
 fail !0 exec $(SEARCH) Wall > $(DPS_TEST_DIR)/search2.rej 2>&1
 fail !0 exec $(SEARCH) "text+file&sp=1" > $(DPS_TEST_DIR)/search3.rej 2>&1
-#fail !0 exec $(SEARCH) "Wall+%22Street+Journal%22&sp=1&ps=15&m=near" > $(DPS_TEST_DIR)/search3.rej 2>&1
+fail !0 exec $(SEARCH) "ruhrstadtmedia" > $(DPS_TEST_DIR)/search4.rej 2>&1
+fail !0 exec $(SEARCH) "bosch" > $(DPS_TEST_DIR)/search5.rej 2>&1
+#fail !0 exec $(SEARCH) "Wall+%22Street+Journal%22&sp=1&ps=15&m=near" > $(DPS_TEST_DIR)/search5.rej 2>&1
 
 fail !0 mdiff $(DPS_TEST_DIR)/query.rej $(DPS_TEST_DIR)/query.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/query.rej

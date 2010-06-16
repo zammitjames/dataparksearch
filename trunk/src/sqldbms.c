@@ -3007,7 +3007,14 @@ void DpsSQLClose(DPS_DB *db){
 	if (1 /*db->async_in_process*/) {
 	  /* Wait async query in process */
 	  PGresult  *pgsqlres;
-	  while ((pgsqlres = PQgetResult(db->pgsql))) PQclear(pgsqlres);
+	  while ((pgsqlres = PQgetResult(db->pgsql))) {
+	    if (PQstatus(db->pgsql) == CONNECTION_BAD) { 
+	      PQfinish(db->pgsql); /* db error occured, trying reconnect */
+	      db->connected=0;
+	      break;
+	    }
+	    PQclear(pgsqlres);
+	  }
 	  db->async_in_process = 0;
 	}
 #endif

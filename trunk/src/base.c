@@ -449,7 +449,7 @@ __C_LINK int __DPSCALL DpsBaseWrite(DPS_BASE_PARAM *P, void *buffer, size_t len)
        && (deflateInit2(&zstream, P->zlib_level, Z_DEFLATED, P->zlib_windowBits, P->zlib_memLevel, P->zlib_strategy) == Z_OK) ) {
     
     zstream.avail_in = len;
-    zstream.avail_out = sizeof(gz_header) + 4096 + 2 * len;
+    zstream.avail_out = /*sizeof(gz_header) +*/ 4096 + 2 * len;
     CData = zstream.next_out = (Byte *) DpsMalloc(zstream.avail_out);
     if (zstream.next_out == NULL) {
       return DPS_ERROR;

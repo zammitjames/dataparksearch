@@ -1033,6 +1033,8 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
 
 #ifdef HAVE_LIBEXTRACTOR
+
+#if EXTRACTOR_VERSION < 0x00060000
 static const char * DpsLibextractorMsgName(int type) {
   switch(type) {
 /*  case EXTRACTOR_UNKNOWN: return "body";*/
@@ -1173,7 +1175,42 @@ static const char * DpsLibextractorMsgName(int type) {
   }
   return "body";
 }
+#else
+
+typedef struct dps_cls {
+  DPS_AGENT *Indexer;
+  DPS_DOCUMENT *Doc;
+} DPS_CLS;
+
+int Dps_MetaDataProcessor(void *cls, const char *plugin_name, enum EXTRACTOR_MetaType type, enum EXTRACTOR_MetaFormat format, const char *data_mime_type,
+			  const char *data, size_t data_len) {
+  DPS_CLS *C = (DPS_CLS*)cls;
+  DPS_AGENT *Indexer = C->Indexer;
+  DPS_DOC *Doc = C->Doc;
+  DPS_TEXTITEM  Item;
+  const char *secname = EXTRACTOR_metatype_to_string(type);
+  DPS_VAR       *Sec = DpsVarListFind(&Doc->Sections, secname);
+  DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
+
+  bzero((void*)&Item, sizeof(Item));
+  Item.href = NULL;
+
+  DpsLog(Indexer, DPS_LOG_DEBUG, "Libextracted %s: %s", secname, data);
+  if (Sec != NULL || BSec != NULL) {
+    Item.section = (Sec != NULL) ? Sec->section : BSec->section;
+    Item.strict = (Sec != NULL) ? Sec->strict : BSec->strict;
+    Item.str = data;
+    Item.section_name = (Sec) ? Sec->name : BSec->name;
+    Item.len = data_len;
+    DpsTextListAdd(&Doc->ExtractorList, &Item);
+  }
+
+  return DPS_OK;
+}
+
 #endif
+
+#endif /* HAVE_LIBEXTRACTOR */
 
 static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
@@ -1247,6 +1284,8 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
 #ifdef HAVE_LIBEXTRACTOR
 	  if (strncasecmp(ct, "text/", 5) != 0) {
+
+#if EXTRACTOR_VERSION < 0x00060000
 	    DPS_TEXTITEM  Item;
 	    DPS_VAR       *Sec;
 	    DPS_VAR       *BSec = DpsVarListFind(&Doc->Sections, "body");
@@ -1280,6 +1319,14 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	     EXTRACTOR_freeKeywords(md_list);
 	     EXTRACTOR_removeAll(plugins);
 	    DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
+#else /* For versions 0.6.x */
+	    struct EXTRACTOR_PluginList *plugins = EXTRACTOR_plugin_add_defaults(EXTRACTOR_OPTION_DEFAULT_POLICY);
+	    DPS_CLS CLS;
+	    CLS.Indexer = Indexer;
+	    CLS.Doc = Doc;
+	    EXTRACTOR_extract(plugins, NULL, Doc->Buf.buf, Doc->Buf.size, &Dps_MetaDataProcessor, &CLS);
+	    EXTRACTOR_plugin_remove_all(plugins);
+#endif
 	  }
 #endif
 
@@ -1334,18 +1381,34 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 	    for (i = 0; i < Indexer->Conf->BodyPatterns.nmatches; i++) {
 	      Alias = &Indexer->Conf->BodyPatterns.Match[i];
+
+	      if (Alias->match_type == DPS_MATCH_REGEX) {
 	      
-	      DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-	      if (DpsMatchExec(Alias, Doc->Buf.content, Doc->Buf.content, NULL, nparts, Parts)) {
+		DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+		if (DpsMatchExec(Alias, Doc->Buf.content, Doc->Buf.content, NULL, nparts, Parts)) {
+		  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+		  continue;
+		}
+		DpsMatchApply(buf, buf_len - 1, Doc->Buf.content, Alias->arg, Alias, nparts, Parts);
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-		continue;
+		DPS_FREE(Doc->Buf.pattern);
+		Doc->Buf.pattern = DpsRealloc(buf, dps_strlen(buf) + 1);
+		DpsLog(Indexer, DPS_LOG_DEBUG, "%dth, BodyPattern applied", i);
+		break;
+	      } else if (Alias->match_type == DPS_MATCH_SUBSTR) {
+		char *second, *first = strstr(Doc->Buf.content, Alias->pattern);
+		size_t flen;
+		if (first != NULL) {
+		  second = strstr(first, Alias->arg);
+		  if (second != NULL) {
+		    flen = dps_strlen(Alias->pattern);
+		    Doc->Buf.pattern = DpsStrndup(first + flen, (second - first - flen));
+		    DPS_FREE(buf);
+		    DpsLog(Indexer, DPS_LOG_DEBUG, "%dth, BodyBrackets applied", i);
+		    break;
+		  }
+		}
 	      }
-	      DpsMatchApply(buf, buf_len - 1, Doc->Buf.content, Alias->arg, Alias, nparts, Parts);
-	      DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	      DPS_FREE(Doc->Buf.pattern);
-	      Doc->Buf.pattern = DpsRealloc(buf, dps_strlen(buf) + 1);
-	      DpsLog(Indexer, DPS_LOG_DEBUG, "%dth BodyPattern applied.", i);
-	      break;
 	    }
 /*	    dps_memmove(Doc->Buf.content, buf, buf_len = dps_strlen(buf) + 1);
 	    Doc->Buf.size = buf_len + (Doc->Buf.content - Doc->Buf.buf);*/

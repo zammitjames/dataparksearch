@@ -1739,7 +1739,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
       w.order = wword->order;
       w.order_inquery = wword->order_inquery;
       w.count = 0;
-      w.origin = DPS_WORD_ORIGIN_SPELL;
+      w.origin = wword->origin | DPS_WORD_ORIGIN_SPELL;
       if (sp) { DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE); }
 
       if (sy) syn = DpsSynonymListFind(&(Indexer->Conf->Synonyms), &w);
@@ -1752,7 +1752,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	  sw.order = wword->order;
 	  sw.order_inquery = wword->order_inquery;
 	  sw.count = 0;
-	  sw.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
+	  sw.origin = wword->origin | DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
 	  DpsWideWordListAdd(result, &sw, DPS_WWL_LOOSE);
 	}
       }
@@ -1777,7 +1777,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    DpsUniStrRCpy(w.uword, aw); 
 	    DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(w.uword[0]) * (w.len + 1));
 	    w.crcword = DpsStrHash32(w.word);
-	    w.origin = DPS_WORD_ORIGIN_ACCENT;
+	    w.origin = wword->origin | DPS_WORD_ORIGIN_ACCENT;
 	    w.order = wword->order;
 	    w.order_inquery = wword->order_inquery;
 	    DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE);
@@ -1809,7 +1809,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
       w.order = wword->order;
       w.order_inquery = wword->order_inquery;
       w.count = 0;
-      w.origin = DPS_WORD_ORIGIN_SPELL;
+      w.origin = wword->origin | DPS_WORD_ORIGIN_SPELL;
       if (sp) { 
 	DpsWideWordListAdd(result, &w, DPS_WWL_LOOSE); 
       }
@@ -1824,7 +1824,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	  sw.order = wword->order;
 	  sw.order_inquery = wword->order_inquery;
 	  sw.count = 0;
-	  sw.origin = DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
+	  sw.origin = wword->origin | DPS_WORD_ORIGIN_SYNONYM | DPS_WORD_ORIGIN_SPELL;
 	  DpsWideWordListAdd(result, &sw, DPS_WWL_LOOSE);
 	}
       }
@@ -1849,7 +1849,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	    DpsUniStrRCpy(w.uword, aw); 
 	    DpsConv(&fromuni, w.word, 14 * w.len + 1, (char*)w.uword, sizeof(w.uword[0]) * (w.len + 1));
 	    w.crcword = DpsStrHash32(w.word);
-	    w.origin = DPS_WORD_ORIGIN_ACCENT; 
+	    w.origin = wword->origin | DPS_WORD_ORIGIN_ACCENT; 
 	    w.order = wword->order;
 	    w.order_inquery = wword->order_inquery;
 	    w.count = 0;
@@ -1879,7 +1879,7 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
 	sw.order = wword->order;
 	sw.order_inquery = wword->order_inquery;
 	sw.count = 0;
-	sw.origin = DPS_WORD_ORIGIN_SYNONYM;
+	sw.origin = wword->origin | DPS_WORD_ORIGIN_SYNONYM;
 	DpsWideWordListAdd(result, &sw, DPS_WWL_LOOSE);
       }
     

@@ -982,16 +982,18 @@ time_t Dps_dp2time_t(const char * time_str){
 	char *s;
 	const char *ts;
 
-	/* flag telling us that time_str is exactly <num> without any char
-	 * so we think it's seconds
-	 * flag==0 means not defined yet
-	 * flag==1 means ordinary format (XXXmYYYs)
-	 * flag==2 means seconds only
-	 */
-	int flag=0;
+	if (time_str != NULL && *time_str != '\0') {
+
+	  /* flag telling us that time_str is exactly <num> without any char
+	   * so we think it's seconds
+	   * flag==0 means not defined yet
+	   * flag==1 means ordinary format (XXXmYYYs)
+	   * flag==2 means seconds only
+	   */
+	  int flag=0;
 	
-	ts = time_str;
-	do{
+	  ts = time_str;
+	  do {
 		i=strtol(ts, &s, 10);
 		if (s==ts){ /* falied to find a number */
 			/* FIXME: report error */
@@ -1030,8 +1032,9 @@ time_t Dps_dp2time_t(const char * time_str){
 		}
 		/* go to next char */
 		ts=++s;
-	/* is it end? */
-	} while (*s);
+	  /* is it end? */
+	  } while (*s);
+	}
 	
 	return t;
 }

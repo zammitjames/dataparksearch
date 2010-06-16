@@ -16,6 +16,7 @@
 	{"AuthBasic",		1,1,	srv_rpl_auth},
 	{"BaseFiles",		1,1,	env_rpl_var},
 	{"Bind",                1,1,    env_rpl_var},
+	{"BodyBrackets",	2,2,	add_body_brackets},
 	{"BodyPattern",         2,2,    add_body_pattern},
 	{"BrowserCharset",	1,1,	env_rpl_charset},
 	{"Cache",		1,1,	env_rpl_var},
