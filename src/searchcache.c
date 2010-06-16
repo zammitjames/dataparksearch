@@ -134,7 +134,9 @@ int DpsSearchCacheClean(DPS_AGENT *query) {
 	dir = opendir(param);
 	if (!dir) return DPS_ERROR;
 	while((item = readdir(dir))){
+#if defined(_DIRENT_HAVE_D_TYPE)
 	  if (item->d_type != DT_REG) continue;
+#endif
 	  if (strncasecmp(item->d_name, filen, prefix_len) != 0) continue;
 	  dps_snprintf(filen, sizeof(filen), "%s%s", param, item->d_name);
 	  unlink(filen);
