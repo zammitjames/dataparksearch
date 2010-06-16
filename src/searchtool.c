@@ -1776,7 +1776,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						) {
   register double y = 0.0;
 
-  if (D[DPS_N_PHRASE] > 0) xy += (x - xy + D[DPS_N_PHRASE]) / 2.0;
+/*  if (D[DPS_N_PHRASE] > 0) xy += (x - xy + D[DPS_N_PHRASE]) / 2.0;*/
+  if (D[DPS_N_PHRASE] == 0) y += x;
   if (D[DPS_N_EXACT] == 0) y += x;
   y += x * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
 
@@ -1997,10 +1998,10 @@ static int DpsOriginIndex(int origin) {
 static int DpsOriginWeightFull(int origin) {  /* Weight for origin can be from 1 to 15 */
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x01;
   if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x02;
-  if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x14;
-  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x0A;
-  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x21;
-  if (origin & DPS_WORD_ORIGIN_QUERY)   return 0x24;
+  if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x04; /*0x14;*/
+  if (origin & DPS_WORD_ORIGIN_SPELL)   return 0x08; /*0x0A;*/
+  if (origin & DPS_WORD_ORIGIN_ACCENT)  return 0x10; /*0x21;*/
+  if (origin & DPS_WORD_ORIGIN_QUERY)   return 0x30; /*0x24;*/
   if (origin & DPS_WORD_ORIGIN_COMMON)  return 0x3F;
   return 0;
 }

@@ -707,7 +707,7 @@ Locale            ru_Ru.KOI8-R
 
 		<para>
 <indexterm><primary>Команда</primary><secondary>DetectClones</secondary></indexterm>
-Используйте "<command>DetectClones</command> yes/no" для включения/выключения определения клонов.</para>
+Используйте "<command>DetectClones</command> yes/no" для включения/выключения определения клонов. Выключено по умолчанию при поиске.</para>
 
 		<para><indexterm><primary>Команда</primary><secondary>GroupBySite</secondary></indexterm>
 Используйте "<command>GroupBySite</command> yes/no" для включения/выключения группировки результатов по url.site_id.</para>

@@ -21488,7 +21488,7 @@ case "$host" in
             LDFLAGS="$LDFLAGS -lbsd"
             ;;
 	*-*-freebsd*)
-	    LIBS="$LIBS -L/usr/local/lib"
+	    LIBS="$LIBS -L/usr/local/lib -lc"
 	    CFLAGS="$CFLAGS -I/usr/local/include"
 	    INCLUDES="$INCLUDES -I/usr/local/include"
 	    ;;
@@ -21496,7 +21496,7 @@ case "$host" in
             LDFLAGS="$LDFLAGS -lsocket -lresolv -lnsl"
             ;;
         *-*-linux*)
-	    LIBS="$LIBS -L/usr/local/lib -lrt"
+	    LIBS="$LIBS -L/usr/local/lib -lrt -lc"
             ;;
 esac
 case "$host" in

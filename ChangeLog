@@ -3,6 +3,9 @@ History
 -------
 
 Latest snapshot:
+	* -G switch for indexer takes now an integral value for all threads.
+	* Clones detection in search is now disabled by default.
+	* StopwordsLoose command has been added.
 	* hash32 function has been fixed for 64-bit systems. Total reindexing is required if affected.
 	* XML Entity Definitions for Characters have been updated to the W3C Recommendation 01 April 2010.
 	* Options "add", "update" or "delete" has been added the the ActionSQL command.

@@ -834,6 +834,25 @@ static int add_body_pattern(void *Cfg, size_t ac, char **av) {
 	return DPS_OK;
 }
 
+static int add_body_brackets(void *Cfg, size_t ac, char **av) {
+	DPS_CFG	*C=(DPS_CFG*)Cfg;
+	DPS_ENV	*Conf=C->Indexer->Conf;
+	DPS_MATCH M;
+	char err[128] = "";
+
+	DpsMatchInit(&M);
+	M.match_type = DPS_MATCH_SUBSTR;
+	M.case_sense = 1;
+	M.section = "body";
+	M.pattern = av[1];
+	M.arg = av[2];
+	if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->BodyPatterns, &M, err, sizeof(err), ++C->ordre)) {
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "%s", err);
+	  return DPS_ERROR;
+	}
+	return DPS_OK;
+}
+
 
 
 static int add_hrefsection(void *Cfg, size_t ac,char **av){
