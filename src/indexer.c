@@ -1186,7 +1186,7 @@ int Dps_MetaDataProcessor(void *cls, const char *plugin_name, enum EXTRACTOR_Met
 			  const char *data, size_t data_len) {
   DPS_CLS *C = (DPS_CLS*)cls;
   DPS_AGENT *Indexer = C->Indexer;
-  DPS_DOC *Doc = C->Doc;
+  DPS_DOCUMENT  *Doc = C->Doc;
   DPS_TEXTITEM  Item;
   const char *secname = EXTRACTOR_metatype_to_string(type);
   DPS_VAR       *Sec = DpsVarListFind(&Doc->Sections, secname);
