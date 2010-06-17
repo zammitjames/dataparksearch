@@ -85,6 +85,7 @@
 	{"LogsOnly",		1,1,	env_rpl_bool_var},
 	{"LongestTextItems",    1,1,    env_rpl_num_var},
 	{"MakePrefixes",	1,1,	env_rpl_bool_var},
+	{"MakeSuffixes",	1,1,	env_rpl_bool_var},
 	{"MarkForIndex",        1,1,	env_rpl_bool_var},
 	{"MaxClients",          1,1,    env_rpl_var},
 	{"MaxCrawlDelay",	1,1,	env_rpl_num_var},

@@ -106,6 +106,7 @@
 	{"CollectLinks",	1,1,	env_rpl_bool_var},
 	{"ProvideReferer",	1,1,	env_rpl_bool_var},
 	{"MakePrefixes",	1,1,	env_rpl_bool_var},
+	{"MakeSuffixes",	1,1,	env_rpl_bool_var},
 	{"URLInfoSQL",	        1,1,	env_rpl_bool_var},
 	{"CheckInsertSQL",      1,1,	env_rpl_bool_var},
 	{"MarkForIndex",        1,1,	env_rpl_bool_var},
