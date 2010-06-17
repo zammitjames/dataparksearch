@@ -77,7 +77,7 @@ static void DpsUniDesegment(dpsunicode_t *s) {
 
 
 static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, size_t min_word_len, int crossec, int have_bukva_forte, 
-			      dpsunicode_t *uword, int make_prefixes, int strict
+			      dpsunicode_t *uword, int make_prefixes, int make_suffixes, int strict
 #ifdef HAVE_ASPELL
 		   , int have_speller, AspellSpeller *speller
 #endif
@@ -234,7 +234,8 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 	    DpsCrossListAddFantom(Doc, &cw);
 	  }
 
-	  DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, dw_have_bukva_forte, nword, (n) ? Indexer->Flags.make_prefixes : 0, !strict
+	  DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, dw_have_bukva_forte, nword, (n) ? Indexer->Flags.make_prefixes : 0, 
+			    (n) ? Indexer->Flags.make_suffixes : 0, !strict
 #ifdef HAVE_ASPELL
 			    , have_speller, speller
 #endif
@@ -244,15 +245,27 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
     }
     DPS_FREE(dword); DPS_FREE(nword);
   }
+  
+  if (make_prefixes || make_suffixes) {
+    size_t ul = DpsUniLen(uword), ml;
 
-  if (make_prefixes) {
-    size_t ml;
-    Word.uword = uword;
-    for (ml = DpsUniLen(uword) - 1; ml >= min_word_len; ml--) {
-      Word.uword[ml] = 0;
-      Word.ulen = ml;
-      res = DpsWordListAddFantom(Doc, &Word, Item->section);
-      if (res != DPS_OK) break;
+    if (make_suffixes && ul > min_word_len) {
+      for (ml = ul - ((min_word_len) ? min_word_len : 1); ml > 0; ml--) {
+	Word.uword = uword + ml;
+	Word.ulen = ul - ml;
+	res = DpsWordListAddFantom(Doc, &Word, Item->section);
+	if (res != DPS_OK) break;
+      }
+    }
+
+    if (make_prefixes) {
+      Word.uword = uword;
+      for (ml = ul - 1; ml >= min_word_len; ml--) {
+	Word.uword[ml] = 0;
+	Word.ulen = ml;
+	res = DpsWordListAddFantom(Doc, &Word, Item->section);
+	if (res != DPS_OK) break;
+      }
     }
   }
   TRACE_OUT(Indexer);
@@ -341,7 +354,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	  DpsCrossListAdd(Doc, &cw);
 	}
 
-	DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, have_bukva_forte, uword, Indexer->Flags.make_prefixes, Item->strict
+	DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, have_bukva_forte, uword, Indexer->Flags.make_prefixes, Indexer->Flags.make_suffixes, Item->strict
 #ifdef HAVE_ASPELL
 			  , have_speller, speller
 #endif
