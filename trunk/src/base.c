@@ -138,14 +138,14 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
     }
   }
   if (!P->A->Flags.cold_var) {
+#if 1
+    DPS_GETLOCK(P->A, DPS_LOCK_BASE_N(P->FileNo));
+#endif
     switch (mode) {
     case DPS_READ_LOCK:
       DpsReadLock(P->Ifd);
       break;
     case DPS_WRITE_LOCK:
-#if 1
-      DPS_GETLOCK(P->A, DPS_LOCK_BASE_N(P->FileNo));
-#endif
       DpsWriteLock(P->Ifd);
       break;
     }
