@@ -145,7 +145,7 @@ void DpsStopListFree(DPS_STOPLIST *List){
 
 __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
         struct stat     sb;
-	char *str, *cur_n = NULL, *data = NULL;
+	char *str, *cur_n = NULL, *data = NULL, *sharp;
 	char * lasttok;
 	FILE * stopfile;
 	DPS_STOPWORD stopword;
@@ -195,6 +195,8 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 	while(str != NULL) {
 		if(!str[0]) goto loop_continue;
 		if(str[0]=='#') goto loop_continue;
+		sharp = strchr(str, (int)'#');
+		if (sharp != NULL) *sharp = '\0';
 		
 		if(!strncmp(str,"Charset:",8)){
 			DPS_FREE(charset);
