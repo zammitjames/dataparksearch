@@ -27,6 +27,7 @@
 #include "dps_chinese.h"
 #include "dps_acronym.h"
 #include "dps_charsetutils.h"
+#include "dps_store.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -110,7 +111,9 @@ enum {
   DPS_VAR_ALIGN_RIGHT = 1,
   DPS_VAR_IDN_NONE = 2,
   DPS_VAR_IDN_DECODE = 3,
-  DPS_VAR_IDN_ENCODE = 4
+  DPS_VAR_IDN_ENCODE = 4,
+  DPS_VAR_CITE_NONE = 5,
+  DPS_VAR_CITE_DO = 6
 };
 
 size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * stream, char * dst, size_t dst_len, 
@@ -119,13 +122,14 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 	DPS_CONV bc_bc, bc_bc_txt, bc_vc, *cnv = &bc_bc;
 	DPS_CHARSET *vcs = NULL;
 	const char * s;
-	char *newvalue = NULL;
+	char *newvalue = NULL, *cite_value = NULL;
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	char *idn_value = NULL;
 #endif
 	size_t dlen=0;
 	int align = DPS_VAR_ALIGN_LEFT;
 	int idn = DPS_VAR_IDN_NONE;
+	int cite = DPS_VAR_CITE_NONE;
 
 	DpsConvInit(&bc_bc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&bc_bc_txt, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_TEXT);
@@ -179,6 +183,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					      else if (!strcasecmp(sem3 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
 					      else if (!strcasecmp(sem3 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					      else if (!strcasecmp(sem3 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
+					      else if (!strcasecmp(sem3 + 1, "cite")) cite = DPS_VAR_CITE_DO;
 					    } else {
 					      maxlen = DPS_ATOI(sem2 + 1);
 					    }
@@ -191,6 +196,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					    else if (!strcasecmp(sem2 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
 					    else if (!strcasecmp(sem2 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					    else if (!strcasecmp(sem2 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
+					    else if (!strcasecmp(sem2 + 1, "cite")) cite = DPS_VAR_CITE_DO;
 					  } else {
 					    maxlen = DPS_ATOI(sem2 + 1);
 					  }
@@ -282,6 +288,10 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 			}
 		}
 		if(!value)value=empty;
+		if (cite && maxlen > 0 && A->Res != NULL) {
+		  cite_value = DpsExcerptString(A, A->Res, value, maxlen, A->WordParam.max_word_len);
+		  if (cite_value != NULL) value = cite_value;
+		}
 
 		curlen = DpsUniConvLength(cnv, value); charlen = dps_strlen(value);
 		
@@ -357,6 +367,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 		}
 	}
 	DPS_FREE(newvalue);
+	DPS_FREE(cite_value);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	DPS_FREE(idn_value);
 #endif

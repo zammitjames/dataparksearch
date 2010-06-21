@@ -91,7 +91,8 @@ extern __C_LINK int __DPSCALL DpsStoreDeleteDoc(DPS_AGENT *A, DPS_DOCUMENT *Doc)
 extern __C_LINK int __DPSCALL DpsStoreCheckUp(DPS_AGENT *Agent, int level);
 
 
-extern __C_LINK char * __DPSCALL DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res,DPS_DOCUMENT *Doc, size_t size, size_t padding);
+extern char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding);
+extern char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, size_t size, size_t padding);
 extern int DpsStoreSave(DPS_AGENT *Agent, int ns, char *Client);
 extern int DpsStoreGet(DPS_AGENT *Agent, int ns, int sd, char *Client);
 extern int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, char *Client);
