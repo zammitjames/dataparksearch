@@ -1482,6 +1482,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	/* Allocate result */
 	Res=DpsResultInit(NULL);
 	if (Res == NULL) {
+	  A->Res = NULL;
 	  TRACE_OUT(A);
 	  return NULL;
 	}
@@ -1515,6 +1516,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	if (Res->num_rows > 0) {
 	  Res->Doc = (DPS_DOCUMENT*)DpsMalloc(sizeof(DPS_DOCUMENT) * (Res->num_rows));
 	  if (Res->Doc == NULL) {
+	    A->Res = NULL;
 	    TRACE_OUT(A);
 	    return NULL;
 	  }
@@ -1588,6 +1590,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 			if(Cl){
 				Res->Doc=(DPS_DOCUMENT*)DpsRealloc(Res->Doc,sizeof(DPS_DOCUMENT)*(Res->num_rows+Cl->num_rows+1));
 				if (Res->Doc == NULL) {
+				  A->Res = NULL;
 				  TRACE_OUT(A);
 				  return NULL;
 				}
@@ -1709,6 +1712,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 		DpsResultFree(Res);
 		Res=NULL;
 	}
+	A->Res = Res;
 	TRACE_OUT(A);
 	return Res;
 }

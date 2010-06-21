@@ -185,7 +185,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					      else if (!strcasecmp(sem3 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					      else if (!strcasecmp(sem3 + 1, "cite")) cite = DPS_VAR_CITE_DO;
 					    } else {
-					      maxlen = DPS_ATOI(sem2 + 1);
+					      maxlen = DPS_ATOI(sem3 + 1);
 					    }
 					  }
 					  
@@ -207,6 +207,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					  else if (!strcasecmp(sem + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
 					  else if (!strcasecmp(sem + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					  else if (!strcasecmp(sem + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
+					  else if (!strcasecmp(sem + 1, "cite")) cite = DPS_VAR_CITE_DO;
 					} else {
 					  maxlen = DPS_ATOI(sem + 1);
 					}
@@ -288,7 +289,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 			}
 		}
 		if(!value)value=empty;
-		if (cite && maxlen > 0 && A->Res != NULL) {
+		if ((cite == DPS_VAR_CITE_DO) && (maxlen > 0) && (A->Res != NULL)) {
 		  cite_value = DpsExcerptString(A, A->Res, value, maxlen, A->WordParam.max_word_len);
 		  if (cite_value != NULL) value = cite_value;
 		}
