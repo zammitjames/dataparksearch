@@ -224,6 +224,7 @@ stopwords/ca.sl \
 stopwords/ca2.sl \
 stopwords/cz.sl \
 stopwords/da.sl \
+stopwords/da2.sl \
 stopwords/de.sl \
 stopwords/de.top100.sl \
 stopwords/de.top1000.sl \
@@ -231,9 +232,11 @@ stopwords/en.big.sl \
 stopwords/en.huge.sl \
 stopwords/en.medline.sl \
 stopwords/en.sl \
+stopwords/en2.sl \
 stopwords/en.top100.sl \
 stopwords/en.top1000.sl \
 stopwords/es.sl \
+stopwords/fi.sl \
 stopwords/fr.sl \
 stopwords/fr.top100.sl \
 stopwords/fr.top1000.sl \
@@ -242,10 +245,12 @@ stopwords/hu.sl \
 stopwords/hu2.sl \
 stopwords/is.sl \
 stopwords/it.sl \
+stopwords/it2.sl \
 stopwords/ja.sl \
 stopwords/lt.sl \
 stopwords/lv.sl \
 stopwords/nl.sl \
+stopwords/nl2.sl \
 stopwords/nl.top100.sl \
 stopwords/nl.top1000.sl \
 stopwords/no.sl \
@@ -253,6 +258,7 @@ stopwords/pl.sl \
 stopwords/pt.sl \
 stopwords/ro.sl \
 stopwords/ru.sl \
+stopwords/ru2.sl \
 stopwords/sk.sl \
 stopwords/th.sl \
 stopwords/tr.sl \
