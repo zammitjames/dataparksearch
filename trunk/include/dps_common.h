@@ -1102,6 +1102,7 @@ typedef struct dps_indexer_struct{
 	int		doccount;	/**< for DpsGetDocCount()         */
 	DPS_ENV		*Conf;		/**< Configuration                */
 	DPS_LANGMAP	*LangMap;	/**< LangMap for current document */
+        DPS_RESULT      *Res;           /**< Search result pointer      */
 	DPS_RESULT	Indexed;	/**< Indexed cache              */
 	DPS_HREFLIST	Hrefs;		/**< Links cache                */
   DPS_DEMONCONNLIST     Demons;         /**< Daemons connections        */
