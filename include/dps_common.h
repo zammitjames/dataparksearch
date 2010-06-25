@@ -956,6 +956,7 @@ typedef struct {
         int             provide_referer;
         int             make_prefixes;    /**< Make word prefixes for cache mode */
         int             make_suffixes;    /**< Make word suffixes for cache mode */
+        int             fill_dictionary;  /**< Fill "dict" table in dbmode cache */
         int             OptimizeAtUpdate;
         int             PreloadURLData;
         int             cold_var;         /**< Do not use file locking for read-only operations */

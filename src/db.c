@@ -884,7 +884,7 @@ __C_LINK int __DPSCALL DpsURLAction(DPS_AGENT *A, DPS_DOCUMENT *D, int cmd) {
 #endif
 		  res = DpsURLActionCache(A, D, cmd, db);
 /*		  if (res != DPS_OK) break;*/
-		  if (cmd == DPS_URL_ACTION_INSWORDS) break;
+		  if (cmd == DPS_URL_ACTION_INSWORDS && !A->Flags.fill_dictionary) break;
 		}
 		if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
 		  
