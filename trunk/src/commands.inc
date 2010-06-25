@@ -49,6 +49,7 @@
 	{"EtcDir",		1,1,	env_rpl_var},
 	{"ExpireAt",            0,5,    srv_rpl_var},
 	{"FastHrefCheck",	1,1,	env_rpl_bool_var},
+	{"FillDictionary",      1,1,    env_rpl_bool_var},
 	{"FlushServerTable",	0,0,	flush_srv_table},
 	{"ForceIISCharset1251",	1,1,	env_rpl_var},
 	{"GroupBySite",		1,1,	env_rpl_var},

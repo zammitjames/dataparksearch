@@ -1770,7 +1770,7 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 			DpsConv(&Indexer->uni_lc, lcsword, lcslen, 
 				(char*)Doc->Words.Word[i].uword, sizeof(dpsunicode_t) * (Doc->Words.Word[i].ulen + 1));
 
-			if(db->DBMode==DPS_DBMODE_SINGLE){
+			if(db->DBMode == DPS_DBMODE_SINGLE || db->DBMode == DPS_DBMODE_CACHE) {
 			  DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
 			  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO dict (url_id,word,intag)VALUES(%s%i%s,'%s',%d)", qu, url_id, qu, 
 				  word_escaped, Doc->Words.Word[i].coord);
@@ -1830,7 +1830,8 @@ static int DpsStoreWords(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 	
 	switch(db->DBMode){
 		case DPS_DBMODE_CACHE:
-			res=DpsStoreWordsCache(Indexer,Doc,db);
+			res=StoreWordsSingle(Indexer,Doc,db); /* For FillDictionary option enabled */
+/*			res=DpsStoreWordsCache(Indexer,Doc,db);*/
 			break;
 		case DPS_DBMODE_MULTI:
 		case DPS_DBMODE_MULTI_CRC:
