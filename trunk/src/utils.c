@@ -504,7 +504,8 @@ char * DpsEscapeURI(char *d,const char *s){
 	if((d==NULL)||(s==NULL))return(0);
 	dd=d;
 	while(*ss){
-		if(strchr(" ", *ss)) {
+/*		if(strchr(" ", *ss)) {*/
+	        if((*ss & 0x80) || (*ss == 0x7f) || (*ss < 0x20)) {
 /*			sprintf(d,"%%%X",(int)*s);*/
 	                register int dig = (int)(((*ss) & 0xF0) >> 4);
 			*d = '%';
