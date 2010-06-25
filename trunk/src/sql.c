@@ -1459,8 +1459,8 @@ static int DpsDeleteWordFromURL(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db)
 		break;
 	case DPS_DBMODE_CACHE:
 		/* Let's lock it */
-		i = DpsDeleteURLFromCache(Indexer, url_id, db);
-		return i;
+/*		i = DpsDeleteURLFromCache(Indexer, url_id, db);
+		return i;*/
 /*	  return DPS_OK;  It's already removed early ? */
 	default:  /* DPS_DBMODE_SINGLE */
 		dps_snprintf(qbuf, sizeof(qbuf)-1, "DELETE FROM dict WHERE url_id=%s%d%s", qu, url_id, qu);
