@@ -1307,23 +1307,8 @@ else
 fi
 
 dnl aspell related stuff
-aspell=no
-  LIBS_save="$LIBS"
-  case "$host" in
-	*-*-freebsd*)
-		LIBS="$LIBS -laspell -lstdc++ -lintl"
-		;;
-	*)
-		LIBS="$LIBS -laspell -lstdc++"
-		;;
-  esac
-  AC_CHECK_LIB(aspell, new_aspell_config, aspell=yes,
-      	LIBS="$LIBS -L/usr/local/lib"
-      	AC_CHECK_LIB(aspell,new_aspell_config,aspell=yes LIBS="$LIBS -laspell" INCLUDES="$INCLUDES -I/usr/local/include",
-		LIBS="$LIBS_save"
-		aspell=no
-		)
-	)
+aspell=yes
+LIBS_save="$LIBS"
 
 AC_MSG_CHECKING(for aspell)
 AC_ARG_WITH(aspell,
@@ -1337,13 +1322,44 @@ if test "$aspell" = "no" ; then
   dnl to avoid bash error
   x=$x
 elif test "$aspell" = "yes" ; then
-  AC_CHECK_LIB(aspell, new_aspell_config, AC_DEFINE(HAVE_ASPELL),
-      	LIBS="$LIBS -L/usr/local/lib"
-      	AC_CHECK_LIB(aspell,new_aspell_config,AC_DEFINE(HAVE_ASPELL) LIBS="$LIBS -laspell" INCLUDES="$INCLUDES -I/usr/local/include",
-		LIBS="$LIBS_save"
+
+    aspell=no
+    MY_DIRS="/usr/local/include /usr/include /opt/local/include /opt/include"
+    for DIR in $MY_DIRS; do
+       	if test -f $DIR/aspell.h; then
+		INCLUDES="$INCLUDES -I$DIR"
+		aspell=yes
+		break;
+	fi
+    done
+
+    if test "$aspell" = "yes" ; then
+
+	aspell=no
+	MY_DIRS="/usr/local/lib /usr/lib /opt/local/lib /opt/lib"
+    	for DIR in $MY_DIRS; do
+		LIBS="$LIBS -L$DIR"
+		case "$host" in
+			*-*-freebsd*)
+				LIBS="$LIBS -laspell -lstdc++ -lintl"
+			;;
+		*)
+			LIBS="$LIBS -laspell -lstdc++"
+			;;
+		esac
+		AC_CHECK_LIB(aspell, new_aspell_config, AC_DEFINE(HAVE_ASPELL) aspell=yes break;, LIBS="$LIBS_save")
+    	done
+
+	if test "$aspell" != "yes" ; then
 		AC_MSG_ERROR([Unable to find working aspell library or stdc++ library])
-		)
-	)
+	fi
+	AC_MSG_RESULT([$aspell])
+
+    else
+	AC_MSG_RESULT([No aspell.h has been found.])
+    fi
+
+
 else
   CFLAGS="$CFLAGS -I$aspell/include"
   case "$host" in
