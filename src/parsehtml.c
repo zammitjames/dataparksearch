@@ -1326,7 +1326,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		dps_strncat(secname + 5 ,metaname, seclen - 5);
 		secname[seclen - 1]='\0';
 		
-		if((tag->comment + tag->index == 0) && (Sec=DpsVarListFind(&Doc->Sections,secname)) && Doc->Spider.index && visible) {
+		if((tag->comment + tag->noindex == 0) && (Sec=DpsVarListFind(&Doc->Sections,secname)) && Doc->Spider.index && visible) {
 /*			DpsSGMLUnescape(metacont);   we do this later */
 		        bzero((void*)&Item, sizeof(Item));
 			Item.str=metacont;
