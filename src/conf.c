@@ -182,31 +182,23 @@ dps_uint4 DpsHrefFrom(const char *str) {
 
 int DpsWeightFactorsInit(const char *wf, int *res){
 	size_t len;
-	register size_t sn;
 	int flag = 0, last;
 	
 	len = dps_strlen(wf);
 
 	if (len == 0) {
+	  register size_t sn;
 	  for(sn = 0; sn < 256; sn++) {
-/*#ifdef FULL_RELEVANCE
-		res[sn] = 0x10;
-#else*/
 		res[sn] = 1;
-/*#endif*/
 	  }
 	} else {
 	  if (len > 255) len = 255;
-	  for (sn = 1; sn < len; sn++) {
-/*#ifdef FULL_RELEVANCE
-          if ((res[(len - sn)%256] = (DpsHex2Int(wf[sn]) << 4)) == 0) flag = 1;
-#else*/
-	    if ((res[(len - sn)%256] = DpsHex2Int(wf[sn])) == 0) flag = 1;
-/*#endif*/
-	  }
-	  last = DpsHex2Int(wf[0]);
-	  for ( ; sn < 256; sn++) {
-	    res[sn] = last;
+	  register size_t sn;
+	  register const char *p = wf + len - 1;
+
+	  for (sn = 0; sn < 256; sn++) {
+	    if ((res[sn] = DpsHex2Int((int)*p)) == 0) flag = 1;
+	    if (p > wf) p--;
 	  }
 	}
 	return flag;
