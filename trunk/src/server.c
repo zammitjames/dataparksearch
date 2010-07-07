@@ -321,7 +321,7 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
   if (/*!(Agent->flags & DPS_FLAG_ADD_SERVURL) &&*/ (server_id != 0)) {
     DPS_SERVER key, *pkey = &key, **res;
     key.site_id = server_id;
-    res = bsearch(&pkey, Agent->Conf->SrvPnt, Agent->Conf->total_srv_cnt, sizeof(DPS_SERVER*), cmpsrvpnt); 
+    res = dps_bsearch(&pkey, Agent->Conf->SrvPnt, Agent->Conf->total_srv_cnt, sizeof(DPS_SERVER*), cmpsrvpnt); 
     if (res != NULL) {
       Res = *res;
       {

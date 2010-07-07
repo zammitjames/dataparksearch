@@ -58,7 +58,7 @@ DPS_ROBOT* DpsRobotFind(DPS_ROBOTS *Robots,const char *hostinfo){
 	if (Robots->nrobots == 1) return (strcasecmp(Robots->Robot->hostinfo, hostinfo) == 0) ? Robots->Robot : NULL;
 	bzero(&key, sizeof(DPS_ROBOT));
 	key.hostinfo = hostinfo;
-	r = bsearch(&key, Robots->Robot, Robots->nrobots, sizeof(DPS_ROBOT), (qsort_cmp)DpsRobotCmp);
+	r = dps_bsearch(&key, Robots->Robot, Robots->nrobots, sizeof(DPS_ROBOT), (qsort_cmp)DpsRobotCmp);
 
 	return r;
 }

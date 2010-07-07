@@ -252,7 +252,7 @@ DPS_ACRONYM *DpsAcronymListFind(const DPS_ACRONYMLIST * List, DPS_WIDEWORD * wwo
 
      acr.a.uword = wword->uword;
 
-     res = bsearch(&acr, List->Acronym, List->nacronyms, sizeof(DPS_ACRONYM), &cmpacr);
+     res = dps_bsearch(&acr, List->Acronym, List->nacronyms, sizeof(DPS_ACRONYM), &cmpacr);
 
      if (res == NULL) return NULL;
 

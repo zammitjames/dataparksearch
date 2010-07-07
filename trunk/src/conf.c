@@ -1839,7 +1839,7 @@ __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C,char *str){
 	}
 
 	key.name = DPS_NULL2EMPTY(av[0]);
-	Cmd = bsearch(&key, commands, sizeof(commands) / sizeof(commands[0]), sizeof(commands[0]), (qsort_cmp)dps_commands_cmp);
+	Cmd = dps_bsearch(&key, commands, sizeof(commands) / sizeof(commands[0]), sizeof(commands[0]), (qsort_cmp)dps_commands_cmp);
 	if (Cmd != NULL) {
 	  argc = ac;
 			argc--;
