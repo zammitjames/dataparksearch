@@ -1241,14 +1241,14 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
 
      Stat->hits = Stat->miss = 0;
      for (i = 0; i < DPS_LM_TOPCNT; i++) {
-       if ( (HIT = bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+       if ( (HIT = dps_bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        } else {
 	 register int p = (HIT - map0->memb3);
 	 Stat->diff += (i >= p) ? (i - p) : (p - i);
 	 Stat->hits++;
        }
-       if ( (HIT = bsearch(&map1->memb6[i], map0->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+       if ( (HIT = dps_bsearch(&map1->memb6[i], map0->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        } else {
 	 register int p = (HIT - map0->memb6);
@@ -1256,10 +1256,10 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
 /*	 Stat->hits += 1;*/
        }
 #if 1
-       if ( (HIT = bsearch(&map0->memb3[i], map1->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+       if ( (HIT = dps_bsearch(&map0->memb3[i], map1->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        }
-       if ( (HIT = bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+       if ( (HIT = dps_bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += 1;
        }
 #endif
@@ -1274,13 +1274,13 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
 
      Stat->hits = Stat->miss = 0;
      for (i = 0; i < DPS_LM_TOPCNT; i++) {
-/*       if ( (HIT = bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+/*       if ( (HIT = dps_bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss++;
        } else {
 	 register int p = (HIT - map0->memb3);
 	 Stat->hits += (i >= p) ? (i - p) : (p - i);
        }*/
-       if ( (HIT = bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
+       if ( (HIT = dps_bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss++;
        } else {
 	 register int p = (HIT - map1->memb6);

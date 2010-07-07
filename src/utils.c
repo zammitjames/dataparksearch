@@ -208,7 +208,7 @@ char * dps_rfc1522_decode(char * dst, const char *src){
 					while(data<e){
 						char c;
 						if(*data=='='){
-							c=(char)(DpsHex2Int(data[1])*16+DpsHex2Int(data[2]));
+						  c=(char)(DpsHex2Int((int)data[1])*16+DpsHex2Int((int)data[2]));
 							data+=3;
 						}else{
 							c=data[0];
@@ -2350,6 +2350,57 @@ int dps_demonize(void) {
 
   return rc;
 }
+
+
+/*
+ * Perform a binary search.
+ *
+*/
+void * dps_bsearch(const void *key, const void *base0, size_t nmemb, size_t size, int (*compar)(const void *, const void *)) {
+	const char *base = base0;
+	size_t lim;
+	int cmp;
+	const void *p;
+
+	if ((*compar)(key, base0) < 0) return NULL;
+	p = base + (nmemb - 1) * size;
+	if ((*compar)(key, p) > 0) return NULL;
+
+	for (lim = nmemb; lim != 0; lim >>= 1) {
+		p = base + (lim >> 1) * size;
+		cmp = (*compar)(key, p);
+		if (cmp == 0)
+			return ((void *)p);
+		if (cmp > 0) {	/* key > p: move right */
+			base = (char *)p + size;
+			lim--;
+		}		/* else move left */
+	}
+	return (NULL);
+}
+
+/*
+ * Perform an interpolation search.
+ *
+*/
+void * dps_isearch(const void *key, const void *base0, size_t nmemb0, size_t size, int (*compar)(const void *, const void *)) {
+	const char *base = base0;
+	size_t nmemb = nmemb0 - 1;
+	int cmp;
+	const void *p;
+
+	if ((*compar)(key, base0) < 0) return NULL;
+	p = base + (nmemb - 1) * size;
+	if ((*compar)(key, p) > 0) return NULL;
+	while(1) {
+	  if (nmemb == 0) {
+	    p = base;
+	  } else {
+	  }
+	}
+}
+
+
 
 
 

@@ -191,6 +191,8 @@ extern __C_LINK void __DPSCALL DpsUnLockFILE(FILE *f);
 
 extern FILE * dps_fopen(const char *path, const char *mode);
 extern int dps_demonize(void);
+extern void * dps_bsearch(const void *key, const void *base0, size_t nmemb0, size_t size, int (*compar)(const void *, const void *));
+extern void * dps_isearch(const void *key, const void *base0, size_t nmemb0, size_t size, int (*compar)(const void *, const void *));
 
 
 /* NULL safe atoi*/

@@ -100,9 +100,9 @@
 #define DPS_BINARY 0
 #endif
 
-/*
+
 #define DEBUG_SEARCH 1
-*/
+
 
 /* uncomment this to enable MODE_ALL realisation via search limits */
 /*#define MODE_ALL_VIA_LIMITS*/
@@ -914,14 +914,14 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
     return DPS_OK;
   }
 
-    P->rec_id = (log_num << DPS_BASE_BITS);
-    if (DpsBaseSeek(P, DPS_WRITE_LOCK) != DPS_OK) {
+  P->rec_id = (log_num << DPS_BASE_BITS);
+  if (DpsBaseSeek(P, DPS_WRITE_LOCK) != DPS_OK) {
       DpsLog(Indexer, DPS_LOG_ERROR, "Can't open base %s/%s {%s:%d}", P->subdir, P->basename, __FILE__, __LINE__);
       DpsBaseClose(P);
       DPS_FREE(todel);
       TRACE_OUT(Indexer);
       return DPS_ERROR;
-    }
+  }
 
     if (lseek(P->Ifd, (off_t)0, SEEK_SET) == (off_t)-1) {
       DpsLog(Indexer, DPS_LOG_ERROR, "Can't seeek for file %s at %s[%d]", P->Ifilename, __FILE__, __LINE__);
@@ -951,12 +951,11 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
     if (ndel > 1) DpsSort(todel, ndel, sizeof(*todel), (qsort_cmp)cmp_todel);
 
 
-
     for (i = 0; i < n; i += n_add) {
       for(n_add = 1; (i + n_add < n) && (log_buf[i].wrd_id == log_buf[i + n_add].wrd_id); n_add++);
 /**************/
       key.rec_id = P->rec_id = log_buf[i].wrd_id;
-      found = bsearch(&key, todel, ndel, sizeof(*found), (qsort_cmp)cmp_todel);
+      found = dps_bsearch(&key, todel, ndel, sizeof(*found), (qsort_cmp)cmp_todel);
       if (found != NULL) found->flag = 1;
       if ((data = (DPS_URL_CRD*)DpsBaseARead(P, &len)) == NULL) {
 	len = 0;
@@ -1004,29 +1003,6 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 	data[p--].coord = log_buf[i + z - 1].coord; z--;
       }
 
-/*
-      dps_memmove(data + n_add, data, sizeof(DPS_URL_CRD) * n_old);
-      for (j = n_add, z = 0, p = 0; (j < n_add + n_old) && (z < n_add); ) {
-	if ( ((data[j].url_id < log_buf[z].url_id) ||
-	      ((data[j].url_id == log_buf[z].url_id) && (data[j].coord <= log_buf[z].coord))) ) {
-	  data[p++] = data[j++];
-	} else {
-	  data[p].url_id = log_buf[z].url_id;
-	  data[p++].coord = log_buf[z++].coord;
-	}
-      }
-      while(z < n_add) {
-	data[p].url_id = log_buf[z].url_id;
-	data[p++].coord = log_buf[z++].coord;
-      }
-*/
-/*
-      for (j = 0; j < n_add; j++) {
-	data[n_old + j].url_id = log_buf[i + j].url_id;
-	data[n_old + j].coord = log_buf[i + j].coord;
-      }
-      DpsSortSearchWordsByURL(data, n_add + n_old);
-*/
 #if 0
       fprintf(stderr, "==== MERGED ====\n");
 
@@ -1322,7 +1298,7 @@ urlid_t* LoadLinearLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uin
 
 	num=sb.st_size/sizeof(DPS_UINT4_POS_LEN);
 	key.val=val;
-	if(!(found=bsearch(&key,ind,num,sizeof(DPS_UINT4_POS_LEN),(qsort_cmp)cmp_hex4_ind))){
+	if(!(found = dps_bsearch(&key, ind, num, sizeof(DPS_UINT4_POS_LEN), (qsort_cmp)cmp_hex4_ind))) {
 	  data = (urlid_t*)DpsMalloc(sizeof(*data) + 1);
 	  if (data == NULL) {
 	    DpsLog(Agent, DPS_LOG_ERROR, "Can't alloc %d bytes at %s:%d", sizeof(*data), __FILE__, __LINE__);
@@ -1603,7 +1579,7 @@ int DpsURLDataLoadCache(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db) {
 	    }
 	    K.url_id = Crd[i].url_id;
 	    if ((nrec > 0) 
-		&& (F = (DPS_URLDATA*)bsearch(&K, &D[first], nrec - first, sizeof(DPS_URLDATA),(qsort_cmp) DpsCmpURLData)) != NULL) {
+		&& (F = (DPS_URLDATA*)dps_bsearch(&K, &D[first], nrec - first, sizeof(DPS_URLDATA),(qsort_cmp) DpsCmpURLData)) != NULL) {
 	      Dat[j] = *F;
 	      first = (F - D);
 	      if (i != j) {
@@ -1648,7 +1624,7 @@ int DpsURLDataLoadCache(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db) {
 	    K.url_id = Crd[i].url_id;
 /*	  fprintf(stderr, "K.url_id: %d  filenum: %d  first: %d\n", Crd[i].url_id, filenum, first);*/
 	    if ((nrec > 0) 
-		&& (F = (DPS_URLDATA*)bsearch(&K, &D[first], nrec - first, sizeof(DPS_URLDATA),(qsort_cmp) DpsCmpURLData)) != NULL) {
+		&& (F = (DPS_URLDATA*)dps_bsearch(&K, &D[first], nrec - first, sizeof(DPS_URLDATA),(qsort_cmp) DpsCmpURLData)) != NULL) {
 	      Dat[j] = *F;
 	      first = (F - D);
 	      if (i != j) {

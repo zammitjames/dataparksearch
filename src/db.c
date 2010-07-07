@@ -2549,7 +2549,7 @@ int DpsURLDataLoad(DPS_AGENT *Indexer, DPS_RESULT *R, DPS_DB *db) {
       }
       K.url_id = Crd[i].url_id;
       if ((nrec > 0) 
-	  && (F = (DPS_URLDATA*)bsearch(&K, &D[first], nrec - first, sizeof(DPS_URLDATA),(qsort_cmp) DpsCmpURLData)) != NULL) {
+	  && (F = (DPS_URLDATA*)dps_bsearch(&K, &D[first], nrec - first, sizeof(DPS_URLDATA),(qsort_cmp) DpsCmpURLData)) != NULL) {
 	Dat[j] = *F;
 	first = (F - D);
 	if (i != j) Crd[j] = Crd[i];

@@ -247,7 +247,7 @@ DPS_WIDEWORDLIST * DpsSynonymListFind(const DPS_SYNONYMLIST * List,DPS_WIDEWORD 
 
      syn.p.uword = wword->uword;
 
-     res = bsearch(&syn, List->Synonym, List->nsynonyms, sizeof(DPS_SYNONYM), &cmpsyn);
+     res = dps_bsearch(&syn, List->Synonym, List->nsynonyms, sizeof(DPS_SYNONYM), &cmpsyn);
 
      if(res){
 
@@ -278,7 +278,7 @@ DPS_WIDEWORDLIST * DpsSynonymListFind(const DPS_SYNONYMLIST * List,DPS_WIDEWORD 
 
      syn.s.uword = wword->uword;
      psyn = &syn;
-     pres = bsearch(&psyn, List->Back, List->nsynonyms, sizeof(DPS_SYNONYM*), &cmpsynback);
+     pres = dps_bsearch(&psyn, List->Back, List->nsynonyms, sizeof(DPS_SYNONYM*), &cmpsynback);
 
      if(pres) {
 
@@ -317,7 +317,7 @@ DPS_WIDEWORDLIST * DpsSynonymListFind(const DPS_SYNONYMLIST * List,DPS_WIDEWORD 
 
 	    syn.p.uword = Res->Word[i].uword;
 
-	    res = bsearch(&syn, List->Synonym, List->nsynonyms, sizeof(DPS_SYNONYM), &cmpsyn);
+	    res = dps_bsearch(&syn, List->Synonym, List->nsynonyms, sizeof(DPS_SYNONYM), &cmpsyn);
 
 	    if(res){
 
@@ -345,7 +345,7 @@ DPS_WIDEWORDLIST * DpsSynonymListFind(const DPS_SYNONYMLIST * List,DPS_WIDEWORD 
 	    }
 
 	    syn.s.uword = Res->Word[i].uword;
-	    pres = bsearch(&psyn, List->Back, List->nsynonyms, sizeof(DPS_SYNONYM*), &cmpsynback);
+	    pres = dps_bsearch(&psyn, List->Back, List->nsynonyms, sizeof(DPS_SYNONYM*), &cmpsynback);
                
 	    if(pres) {
                     /* Find first and last synonym */

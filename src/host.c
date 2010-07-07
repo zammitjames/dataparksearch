@@ -133,7 +133,7 @@ static DPS_HOST_ADDR *host_addr_find(DPS_HOSTLIST *List, const char *hostname) {
 
 	if (List->nhost_addr == 0 || hostname == NULL) return NULL;
 	key.hostname = hostname;
-	return bsearch(&key, List->host_addr, List->nhost_addr, sizeof(DPS_HOST_ADDR), (qsort_cmp)cmphost);
+	return dps_bsearch(&key, List->host_addr, List->nhost_addr, sizeof(DPS_HOST_ADDR), (qsort_cmp)cmphost);
 
 /*	
 
