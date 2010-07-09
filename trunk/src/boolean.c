@@ -538,17 +538,18 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  DpsLog(query, DPS_LOG_EXTRA, "\t\t\t\tx1origin.%x x2origin.%x", x1origin, x2origin);
 #endif
 
-
+/*
 			  if ((x1origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_QUERY)) == (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY)) {
 			    res.origin = x1origin;
 			  } else
 			  if ((x2origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_QUERY)) == (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY)) {
 			    res.origin = x2origin;
-			  } else
+			  } else*/
 			  if (((x1origin & DPS_WORD_ORIGIN_STOP) && (x2origin & DPS_WORD_ORIGIN_STOP)) ||
 			      ( (res.count == 0) && 
 				((x1origin & DPS_WORD_ORIGIN_STOP) || (x2origin & DPS_WORD_ORIGIN_STOP))))
 			    res.origin = DPS_WORD_ORIGIN_STOP;
+
 			  if ((x1origin & DPS_WORD_ORIGIN_ACRONYM) && (x1origin & DPS_WORD_ORIGIN_ACRONYM)) 
 			    res.origin |= DPS_WORD_ORIGIN_ACRONYM;
 			}
@@ -603,16 +604,15 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 				} else { found = ((pos1 + 16) >= pos2);
 				}
 				x1->pchecked = x1->pcur; x2->pchecked = x2->pcur;
-				while ((!found) && (x1->pchecked < x1->plast) && (x2->pchecked < x2->plast) 
-				       /*&& (x1->pchecked->url_id == x2->pchecked->url_id)*/ ) {
+				while ((!found) /* && (x1->pchecked < x1->plast) && (x2->pchecked < x2->plast) && (x1->pchecked->url_id == x2->pchecked->url_id)*/ ) {
 				  if (x1->pchecked->coord <= x2->pchecked->coord) {
 				    x1->pchecked++;
 				    pos1 = DPS_WRDPOS(x1->pchecked->coord);
-				    if (x1->pchecked->url_id != curlid) break;
+				    if (x1->pchecked >= x1->plast || x1->pchecked->url_id != curlid) break;
 				  } else {
 				    x2->pchecked++;
 				    pos2 = DPS_WRDPOS(x2->pchecked->coord);
-				    if (x2->pchecked->url_id != curlid) break;
+				    if (x2->pchecked >= x2->plast || x2->pchecked->url_id != curlid) break;
 				  }
 				  if (pos1 > pos2) { found = ((pos2 + 16) >= pos1);
 				  } else { found = ((pos1 + 16) >= pos2);
@@ -621,13 +621,15 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 				if (x2->cmd & DPS_STACK_WORD_NOT || x1->cmd & DPS_STACK_WORD_NOT) found = !found;
 				if (found) {
 
-				  while ((x1->pcur < x1->plast) && (x2->pcur < x2->plast) /*&& (x1->pcur->url_id == x2->pcur->url_id)*/) {
+				  while (1 /* (x1->pcur < x1->plast) && (x2->pcur < x2->plast) && (x1->pcur->url_id == x2->pcur->url_id)*/) {
 				    if (x1->pcur->coord <= x2->pcur->coord) {
 				      *res.pcur = *x1->pcur;
-				      res.pcur++; x1->pcur++; if (x1->pcur->url_id != curlid) break;
+				      res.pcur++; x1->pcur++; 
+				      if (x1->pcur >= x1->plast || x1->pcur->url_id != curlid) break;
 				    } else {
 				      *res.pcur = *x2->pcur;
-				      res.pcur++; x2->pcur++; if (x2->pcur->url_id != curlid) break;
+				      res.pcur++; x2->pcur++; 
+				      if (x2->pcur >= x2->plast || x2->pcur->url_id != curlid) break;
 				    }
 				  }
 				  while ((x1->pcur < x1->plast) && (x1->pcur->url_id == curlid)) {
@@ -695,26 +697,29 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 				register urlid_t curlid = x1->pcur->url_id;
 				found = ((flag1) ? ((pos1 + 2) == pos2) : ((pos2 + 2) == pos1));
 				x1->pchecked = x1->pcur; x2->pchecked = x2->pcur;
-				while ((!found) && (x1->pchecked < x1->plast) && (x2->pchecked < x2->plast) 
-				       && (x1->pchecked->url_id == x2->pchecked->url_id)) {
+				while ((!found) /*&& (x1->pchecked < x1->plast) && (x2->pchecked < x2->plast)*/ ) {
 				  if (x1->pchecked->coord <= x2->pchecked->coord) {
 				    x1->pchecked++;
+				    if (x1->pchecked >= x1->plast || x1->pchecked->url_id != curlid) break;
 				    pos1 = (dps_int4)DPS_WRDPOS(x1->pchecked->coord);
 				  } else {
 				    x2->pchecked++;
+				    if (x2->pchecked >= x2->plast || x2->pchecked->url_id != curlid) break;
 				    pos2 = (dps_int4)DPS_WRDPOS(x1->pchecked->coord);
 				  }
 				  found = ((flag1) ? ((pos1 + 2) == pos2) : ((pos2 + 2) == pos1));
 				}
 				if (x2->cmd & DPS_STACK_WORD_NOT || x1->cmd & DPS_STACK_WORD_NOT) found = !found;
 				if (found) {
-				  while ((x1->pcur < x1->plast) && (x2->pcur < x2->plast) && (x1->pcur->url_id == x2->pcur->url_id)) {
+				  while (1 /* (x1->pcur < x1->plast) && (x2->pcur < x2->plast) && (x1->pcur->url_id == x2->pcur->url_id) && (x1->pcur->url_id == curlid) */) {
 				    if (x1->pcur->coord <= x2->pcur->coord) {
 				      *res.pcur = *x1->pcur;
 				      res.pcur++; x1->pcur++;
+				      if (x1->pcur >= x1->plast || x1->pcur->url_id != curlid) break;
 				    } else {
 				      *res.pcur = *x2->pcur;
 				      res.pcur++; x2->pcur++;
+				      if (x2->pcur >= x2->plast || x2->pcur->url_id != curlid) break;
 				    }
 				  }
 				  while ((x1->pcur < x1->plast) && (x1->pcur->url_id == curlid)) {
