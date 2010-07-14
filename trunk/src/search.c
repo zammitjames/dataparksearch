@@ -245,7 +245,8 @@ int main(int argc, char **argv, char **envp) {
 		/* or under server which does not */
 		/* pass an empty QUERY_STRING var */
 		if(argv[1]) {
-		  query_string = (char*)DpsRealloc(query_string, dps_strlen(argv[1]) + 10);
+		  size_t qslen;
+		  query_string = (char*)DpsRealloc(query_string, (qslen = dps_strlen(argv[1]) + 10));
 		  if (query_string == NULL) {
 		    if(httpd){
 		      printf("Content-Type: text/plain\r\n\r\n");
@@ -253,7 +254,7 @@ int main(int argc, char **argv, char **envp) {
 		    printf("Can't realloc query_string\n");
 		    exit(0);
 		  }
-		  sprintf(query_string, "q=%s", argv[1]);
+		  dps_snprintf(query_string, qslen, "q=%s", argv[1]);
 		} else {
 		  query_string = (char*)DpsRealloc(query_string, 1024);
 		  if (query_string == NULL) {
@@ -327,6 +328,8 @@ int main(int argc, char **argv, char **envp) {
 
 	/* set locale if specified */
 	if ((url = DpsVarListFindStr(&Env->Vars, "Locale", NULL)) != NULL) {
+	  setlocale(LC_COLLATE, url);
+	  setlocale(LC_CTYPE, url);
 	  setlocale(LC_ALL, url);
 /*#ifdef HAVE_ASPELL*/
 	  { char *p;
