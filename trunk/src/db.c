@@ -1369,7 +1369,7 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 	size_t	corder = (size_t)-1, ccount = 0;
 	
 	for(len = i = 0; i < Res->WWList.nwords; i++) 
-		len += Res->WWList.Word[i].len + 32;
+		len += Res->WWList.Word[i].len + 48;
 	
 	wsize=(1+len*15)*sizeof(char);
 	wordinfo = (char*) DpsMalloc(wsize);
@@ -1386,7 +1386,7 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 
 	*wordinfo = '\0';
 	for(i = 0; i < Res->WWList.nwords; i++){
-		if ((Res->WWList.Word[i].count > 0) || Res->WWList.Word[i].origin == DPS_WORD_ORIGIN_QUERY) {
+	  if ((Res->WWList.Word[i].count > 0) || (Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_QUERY)) {
 			if(wordinfo[0]) dps_strcat(wordinfo,", ");
 			sprintf(DPS_STREND(wordinfo)," %s: %d", Res->WWList.Word[i].word, Res->WWList.Word[i].count);
 		} else if ((Res->WWList.Word[i].origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_QUERY)) == 
@@ -1401,6 +1401,9 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 
 	*wordinfo = '\0';
 	for(i = 0; i < Res->WWList.nwords; i++) {
+
+	  if ((Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_QUERY) == 0) continue;
+
 	  corder = Res->WWList.Word[i].order;
 	  ccount = 0;
 	  for(j = 0; j < Res->WWList.nwords; j++) {
@@ -1408,11 +1411,10 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 			ccount += Res->WWList.Word[j].count;
 		}
 	  }
-	  if (Res->WWList.Word[i].origin == (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_QUERY)) {
-	          sprintf(DPS_STREND(wordinfo),"%s%s: stopword", (*wordinfo) ? ", " : "",  Res->WWList.Word[i].word);
-	  } else if (Res->WWList.Word[i].origin == DPS_WORD_ORIGIN_QUERY) {
-		  sprintf(DPS_STREND(wordinfo),"%s%s: %d / %d", 
-			  (*wordinfo) ? ", " : "", Res->WWList.Word[i].word, Res->WWList.Word[i].count, ccount );
+	  if (Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_STOP == DPS_WORD_ORIGIN_STOP) {
+	    sprintf(DPS_STREND(wordinfo),"%s%s: stopword", (*wordinfo) ? ", " : "",  Res->WWList.Word[i].word);
+	  } else {
+	    sprintf(DPS_STREND(wordinfo),"%s%s: %d / %d",  (*wordinfo) ? ", " : "", Res->WWList.Word[i].word, Res->WWList.Word[i].count, ccount );
 	  }
 	}
 	
@@ -1421,6 +1423,9 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 
 	*wordinfo = '\0';
 	for(i = 0; i < Res->WWList.nwords; i++) {
+
+	  if ((Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_QUERY) == 0) continue;
+
 	  corder = Res->WWList.Word[i].order;
 	  ccount = 0;
 	  for(j = 0; j < Res->WWList.nwords; j++) {
@@ -1428,9 +1433,9 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 			ccount += Res->WWList.Word[j].count;
 		}
 	  }
-	  if (Res->WWList.Word[i].origin  == (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_QUERY)) {
+	  if (Res->WWList.Word[i].origin  & DPS_WORD_ORIGIN_STOP) {
 		  sprintf(DPS_STREND(wordinfo),"%s%s: stopword", (*wordinfo) ? ", " : "",  Res->WWList.Word[i].word);
-	  } else if (Res->WWList.Word[i].origin == DPS_WORD_ORIGIN_QUERY) {
+	  } else {
 		  sprintf(DPS_STREND(wordinfo),"%s%s: %d", 
 			  (*wordinfo) ? ", " : "", Res->WWList.Word[i].word, ccount );
 	  }
