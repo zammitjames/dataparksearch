@@ -600,7 +600,7 @@ static int DpsExpandWord(DPS_AGENT *query, DPS_RESULT *Res, DPS_WIDEWORD *OWord,
       local.cmd = DPS_STACK_WORD;
       local.add_cmd = DPS_STACK_OR;
       local.order = ORDER_ADD;
-      local.origin = (Origin & ~1) | forms->Word[frm].origin;
+      local.origin = ((Origin | forms->Word[frm].origin) & ~1);
       if (DpsAddStackItem(query, Res, &local, OWord->word, forms->Word[frm].uword) != DPS_OK) {
 	return DPS_ERROR;
       }
@@ -742,7 +742,7 @@ static int DpsExpandWord(DPS_AGENT *query, DPS_RESULT *Res, DPS_WIDEWORD *OWord,
 	  local.cmd = DPS_STACK_WORD;
 	  local.add_cmd = DPS_STACK_OR;
 	  local.order = state->order;
-	  local.origin = (Origin & ~1) | DPS_WORD_ORIGIN_ACCENT | forms->Word[frm].origin;
+	  local.origin = ((Origin | DPS_WORD_ORIGIN_ACCENT | forms->Word[frm].origin) & ~1);
 	  if (DpsAddStackItem(query, Res, &local, OWord->word, forms->Word[frm].uword) != DPS_OK) {
 	    return DPS_ERROR;
 	  }
@@ -786,7 +786,7 @@ static int DpsExpandWord(DPS_AGENT *query, DPS_RESULT *Res, DPS_WIDEWORD *OWord,
 	  local.cmd = DPS_STACK_WORD;
 	  local.add_cmd = DPS_STACK_OR;
 	  local.order = state->order;
-	  local.origin = (Origin & ~1) | DPS_WORD_ORIGIN_ACCENT | forms->Word[frm].origin;
+	  local.origin = ((Origin | DPS_WORD_ORIGIN_ACCENT | forms->Word[frm].origin) & ~1);
 	  if (DpsAddStackItem(query, Res, &local, OWord->word, forms->Word[frm].uword) != DPS_OK) {
 	    return DPS_ERROR;
 	  }
