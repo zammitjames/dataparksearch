@@ -411,7 +411,7 @@ char * DpsURLNormalizePath(char * str){
  void RelLink(DPS_AGENT *Indexer, DPS_URL *curURL, DPS_URL *newURL, char **str, int ReverseAliasFlag) {
 	const char	*schema = newURL->schema ? newURL->schema : curURL->schema;
 	const char	*hostname = newURL->hostname ? newURL->hostname : curURL->hostname;
-	const char	*auth = newURL->auth ? newURL->auth : curURL->auth;
+	const char	*auth = NULL;
 	const char	*path = (newURL->path && newURL->path[0]) ? newURL->path : curURL->path;
 	const char	*fname = ((newURL->filename && newURL->filename[0]) || (newURL->path && newURL->path[0])) ? 
 	  newURL->filename : curURL->filename;
@@ -424,9 +424,14 @@ char * DpsURLNormalizePath(char * str){
 	size_t		aliassize, nparts = 10;
 	DPS_MATCH_PART	Parts[10];
 
-	if (newURL->hostinfo == NULL) newURL->charset_id = curURL->charset_id;
-	
 	if (pathfile == NULL) return;
+
+	if (newURL->hostinfo == NULL) newURL->charset_id = curURL->charset_id;
+
+	if (newURL->hostname == NULL) {
+	  auth = newURL->auth ? newURL->auth : curURL->auth;
+	} else auth = newURL->auth;
+	
 /*	sprintf(pathfile, "/%s%s%s",  DPS_NULL2EMPTY(path), DPS_NULL2EMPTY(fname), DPS_NULL2EMPTY(query_string));*/
 	pathfile[0] = '/'; 
 	dps_strcpy(pathfile + 1, DPS_NULL2EMPTY(path)); dps_strcat(pathfile, DPS_NULL2EMPTY(fname)); dps_strcat(pathfile, DPS_NULL2EMPTY(query_string));
