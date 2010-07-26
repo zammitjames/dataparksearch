@@ -185,7 +185,7 @@ static int DpsStoreFilterFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc
 	return res;
 }
 
-static int DpsSubSectionMatchFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc, char *reason, char **subsection) {
+static int DpsSubSectionMatchFind(DPS_AGENT *Indexer, int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc, char *reason, char **subsection) {
 	DPS_MATCH_PART	P[NS];
 	DPS_MATCH	*M;
 	int		res = DPS_METHOD_UNKNOWN;
@@ -195,12 +195,25 @@ static int DpsSubSectionMatchFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT 
 #endif
 
 	if((M = DpsSectionMatchListFind(L, Doc, NS, P))) {
+
 	  if (DpsNeedLog(log_level))
 	    dps_snprintf(reason, PATH_MAX, "%s %s %s '%s'", M->arg, DpsMatchTypeStr(M->match_type), 
 			 M->case_sense ? "Sensitive" : "InSensitive", M->pattern);
 	  res = DpsMethod(M->arg);
-	  *subsection = M->subsection;
-	  DpsVarListReplaceInt(&Doc->Sections, "Server_id", M->server_id);
+	  if (strchr(M->subsection, (int)'$') != NULL) {
+	    char qbuf[16384];
+	    DPS_TEMPLATE t;
+
+	    bzero(&t, sizeof(t));
+	    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
+	    t.Env_Vars = &Doc->Sections;
+	    DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, M->subsection);
+	    *subsection = DpsStrdup(qbuf);
+	    DpsTemplateFree(&t);
+	  } else {
+	    *subsection = DpsStrdup(M->subsection);
+	  }
+/*	  DpsVarListReplaceInt(&Doc->Sections, "Server_id", M->server_id);*/
 	}else{
 	  if (DpsNeedLog(log_level))
 	    sprintf(reason, "No conditional subsection detected");
@@ -1895,7 +1908,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	  DpsDocAddDocExtraHeaders(Indexer, Doc);
 	  if(!strncmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "http", 4)) {
 	    if(!Doc->Spider.use_robots){
-	      DpsLog(Indexer,DPS_LOG_WARN, "robots.txt support is disallowed for '%s'", DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
+	      DpsLog(Indexer,DPS_LOG_DEBUG, "robots.txt support is disallowed for '%s'", DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
 	      DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 	      result = DpsRobotParse(Indexer, NULL, NULL, DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
 	      DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
@@ -2100,18 +2113,19 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			  m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason);
 			  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 			  if (m != DPS_METHOD_NOINDEX) {
-			    char *subsection;
+			    char *subsection = NULL;
 			    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
 			    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
 
 			    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-			    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
+			    switch(DpsSubSectionMatchFind(Indexer, DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
 			    case DPS_METHOD_TAG:
 			      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
 			    case DPS_METHOD_CATEGORY:
 			      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
 			    }
 			    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+			    DPS_FREE(subsection);
 
 			    if (Doc->method != DPS_METHOD_HREFONLY) { DpsPrepareWords(Indexer, Doc); }
 			  } else Doc->method = m;
@@ -2401,7 +2415,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	  DpsDocAddDocExtraHeaders(Indexer, Doc);
 	  if(!strncmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "http", 4)) {
 	    if(!Doc->Spider.use_robots){
-	      DpsLog(Indexer,DPS_LOG_WARN, "robots.txt support is disallowed for '%s'", DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
+	      DpsLog(Indexer,DPS_LOG_DEBUG, "robots.txt support is disallowed for '%s'", DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
 	      DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 	      result = DpsRobotParse(Indexer, NULL, NULL, DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
 	      DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
@@ -2596,18 +2610,19 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		  m = DpsSectionFilterFind(DPS_LOG_DEBUG,&Indexer->Conf->SectionFilters,Doc,reason);
 		  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 		  if (m != DPS_METHOD_NOINDEX) {
-		    char *subsection;
+		    char *subsection = NULL;
 		    DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
 		    if (m == DPS_METHOD_INDEX) Doc->method = DPS_METHOD_GET;
 
 		    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-		    switch(DpsSubSectionMatchFind(DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
+		    switch(DpsSubSectionMatchFind(Indexer, DPS_LOG_DEBUG, &Indexer->Conf->SubSectionMatch, Doc, reason, &subsection)) {
 		    case DPS_METHOD_TAG:
 		      DpsVarListReplaceStr(&Doc->Sections, "Tag", subsection); break;
 		    case DPS_METHOD_CATEGORY:
 		      DpsVarListReplaceStr(&Doc->Sections, "Category", subsection); break;
 		    }
 		    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+		    DPS_FREE(subsection);
 
 		    if (Doc->method != DPS_METHOD_HREFONLY) DpsPrepareWords(Indexer, Doc);
 		  } else Doc->method = m;
