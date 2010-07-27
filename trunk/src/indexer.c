@@ -207,6 +207,7 @@ static int DpsSubSectionMatchFind(DPS_AGENT *Indexer, int log_level, DPS_MATCHLI
 	    bzero(&t, sizeof(t));
 	    t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
 	    t.Env_Vars = &Doc->Sections;
+	    qbuf[0] = '\0';
 	    DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, M->subsection);
 	    *subsection = DpsStrdup(qbuf);
 	    DpsTemplateFree(&t);
@@ -1014,6 +1015,7 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
       Sec = DpsVarListFind(&Indexer->Conf->Sections, Alias->section);
       if (! Sec) continue;
+      buf[0] = '\0';
       DpsPrintTextTemplate(Indexer, NULL, NULL, buf, buf_len, &t, Alias->arg);
       if (Alias->dbaddr != NULL) {
 	DpsDBListInit(&dbl);

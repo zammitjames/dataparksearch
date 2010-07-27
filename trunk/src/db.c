@@ -337,6 +337,7 @@ int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
 	  DpsMatchApply(buf, buf_len - 1, Item->str, Alias->arg, Alias, nparts, Parts);
 
 	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	  qbuf[0] = '\0';
 	  DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	  if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
@@ -352,6 +353,7 @@ int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
 	DpsMatchApply(buf, buf_len - 1, dSec->val, Alias->arg, Alias, nparts, Parts);
 
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+	qbuf[0] = '\0';
 	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
 	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
