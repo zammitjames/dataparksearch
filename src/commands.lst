@@ -212,5 +212,11 @@
 	{"RealmDB",             1,100,  add_srv_db},
 	{"SubnetDB",            1,100,  add_srv_db},
 	{"URLDB",               1,1,    add_srv_db},
+
+	{"ServerFile",            1,100,  add_srv_file},
+	{"RealmFile",             1,100,  add_srv_file},
+	{"SubnetFile",            1,100,  add_srv_file},
+	{"URLFile",               1,1,    add_srv_file},
+
 	{"ReplaceVar",          2,2,    env_rpl_named_var},
 	{"ReplaceVarLcs",       2,2,    env_rpl_named_var_lcs},

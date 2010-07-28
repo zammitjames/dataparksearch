@@ -1,4 +1,6 @@
 
+
+
 	
 	
 	
@@ -141,6 +143,7 @@
 	{"ReadTimeOut",		1,1,	srv_rpl_time_var},
 	{"Realm",		1,100,	add_srv},
 	{"RealmDB",             1,100,  add_srv_db},
+	{"RealmFile",             1,100,  add_srv_file},
 	{"RemoteCharset",	0,1,	srv_rpl_charset},
 	{"ReplaceVar",          2,2,    env_rpl_named_var},
 	{"ReplaceVarLcs",       2,2,    env_rpl_named_var_lcs},
@@ -160,6 +163,7 @@
 	{"SectionSQL",		4,8,	add_sectionsql},
 	{"Server",		1,100,	add_srv},
 	{"ServerDB",            1,100,  add_srv_db},
+	{"ServerFile",            1,100,  add_srv_file},
 	{"ServerTable",		1,1,	add_srv_table},
 	{"ServerWeight",	1,1,	srv_rpl_num_var},
 	{"SkipHrefIn",          1,1,    env_rpl_var},
@@ -174,6 +178,7 @@
 	{"SubDocLevel",		1,1,	env_rpl_num_var},
 	{"Subnet",		1,100,	add_srv},
 	{"SubnetDB",            1,100,  add_srv_db},
+	{"SubnetFile",            1,100,  add_srv_file},
 	{"Synonym",		1,1,	add_synonym},
 	{"SyslogFacility",	1,1,	env_rpl_var},
 	{"Tag",			1,1,	srv_rpl_var},
@@ -186,6 +191,7 @@
 	{"URLDataFiles",	1,1,	env_rpl_var},
 	{"URLDB",               1,1,    add_srv_db},
 	{"URLDumpCacheSize",	1,1,	env_rpl_var},
+	{"URLFile",               1,1,    add_srv_file},
 	{"URLInfoSQL",	        1,1,	env_rpl_bool_var},
 	{"URLSelectCacheSize",	1,1,	env_rpl_var},
 	{"UseCRC32URLId",	1,1,	env_rpl_bool_var},

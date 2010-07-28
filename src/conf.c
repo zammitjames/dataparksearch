@@ -1189,6 +1189,87 @@ static int add_srv_db(void *Cfg, size_t ac, char **av) {
 }
 		
 
+static int add_srv_file(void *Cfg, size_t ac, char **av) {
+        char fstr[16384];
+        char	fname[PATH_MAX];
+        struct stat     sb;
+	DPS_CFG	*C = (DPS_CFG*)Cfg;
+	DPS_ENV	*Conf = C->Indexer->Conf;
+	char **newav;
+	size_t i, p, newac;
+	int url = 0;
+	FILE *f;
+	char *curch;
+
+	if(!(C->flags & DPS_FLAG_ADD_SERV)) {
+	  return DPS_OK;
+	}
+
+	newav = (char**)DpsMalloc(ac * sizeof(char*));
+	if (newav == NULL) {
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Can't alloc %d bytes of memory", ac * sizeof(char*));
+	  return DPS_ERROR;
+	}
+
+	if (!strcasecmp(av[0], "ServerFile")) {
+	  newav[0] = "Server";
+	} else if (!strcasecmp(av[0], "RealmFile")) {
+	  newav[0] = "Realm";
+	} else if (!strcasecmp(av[0], "SubnetFile")) {
+	  newav[0] = "Subnet";
+	} else if (!strcasecmp(av[0], "URLFile")) {
+	  newav[0] = "URL";
+	  url = 1;
+	} else {
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Unknown command %s", av[0]);
+	  DPS_FREE(newav);
+	  return DPS_ERROR;
+	}
+
+
+	for(i = p = 1; i < ac; i++) {
+	  if (DPS_FOLLOW_UNKNOWN != DpsFollowType(av[i])) newav[p++] = av[i];
+	  else if (DPS_METHOD_UNKNOWN != DpsMethod(av[i])) newav[p++] = av[i];
+	  else if (!strcasecmp(av[i], "nocase") || !strcasecmp(av[i], "case") || !strcasecmp(av[i], "match") || !strcasecmp(av[i], "nomatch")
+		   || !strcasecmp(av[i], "string") || !strcasecmp(av[i], "regex") || !strcasecmp(av[i], "page")) {
+	    newav[p++] = av[i];
+	  } else {
+
+	    DpsRelEtcName(Conf, fname, sizeof(fname)-1, av[i]);
+	    if (stat(fname, &sb)) {
+	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Unable to stat file '%s': %s", fname, strerror(errno));
+	      DPS_FREE(newav);
+	      return DPS_ERROR;
+	    }
+	    if ((f = fopen(fname, "r")) == NULL) {
+	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Unable to open file '%s': %s", fname, strerror(errno));
+	      DPS_FREE(newav);
+	      return DPS_ERROR;
+	    }
+	    while((fgets(fstr, sizeof(fstr), f)) != NULL) {
+	      curch = strchr(fstr, NL_INT);
+	      if (curch != NULL) *curch = '\0';
+	      newav[p] = fstr;
+	      if (url) {
+		if (DPS_OK != add_url(Cfg, p + 1, newav)) {
+		  DPS_FREE(newav);
+		  return DPS_ERROR;
+		}
+	      } else {
+		if (DPS_OK != add_srv(Cfg, p + 1, newav)) {
+		  DPS_FREE(newav);
+		  return DPS_ERROR;
+		}
+	      }
+	    }
+	    fclose(f);
+	  }
+	}
+	DPS_FREE(newav);
+	return DPS_OK;
+}
+		
+
 static int add_srv_table(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
