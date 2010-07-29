@@ -613,6 +613,8 @@ static int add_subsection_match(void *Cfg, size_t ac,char **av) {
     else
     if(!strcasecmp(av[i],"match"))M.nomatch=0;
     else
+    if(!strcasecmp(av[i],"loose"))M.loose=1;
+    else
     if (section_flag == 1) {
       section_flag = 0;
       M.section = av[i];

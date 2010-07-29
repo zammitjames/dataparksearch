@@ -333,6 +333,7 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	N->subsection = M->subsection ? (char *)DpsStrdup(M->subsection) : NULL;
 	N->dbaddr = M->dbaddr ? (char *)DpsStrdup(M->dbaddr) : NULL;
 	N->last = M->last;
+	N->loose = M->loose;
 
 	if (A != NULL) {
 
@@ -345,6 +346,8 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	  n.Match.arg = N->arg;
 	  n.Match.section = N->section;
 	  n.Match.subsection = N->subsection;
+	  n.Match.last = N->last;
+	  n.Match.loose = N->loose;
 	  n.ordre = ordre;
 
 	  if(A->flags & DPS_FLAG_ADD_SERVURL) {
