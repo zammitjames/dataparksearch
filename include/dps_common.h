@@ -219,6 +219,7 @@ typedef struct {
 	urlid_t         server_id;        /**< server.rec_id            */
 	dps_uint2	case_sense;
         dps_uint2       last;
+        dps_uint2       loose;
 } DPS_MATCH;
 
 typedef struct {

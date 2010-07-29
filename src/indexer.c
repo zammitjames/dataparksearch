@@ -197,9 +197,23 @@ static int DpsSubSectionMatchFind(DPS_AGENT *Indexer, int log_level, DPS_MATCHLI
 	if((M = DpsSectionMatchListFind(L, Doc, NS, P))) {
 
 	  if (DpsNeedLog(log_level))
-	    dps_snprintf(reason, PATH_MAX, "%s %s %s '%s'", M->arg, DpsMatchTypeStr(M->match_type), 
-			 M->case_sense ? "Sensitive" : "InSensitive", M->pattern);
+	    dps_snprintf(reason, PATH_MAX, "%s %s %s '%s' %s", M->arg, DpsMatchTypeStr(M->match_type), 
+			 M->case_sense ? "Sensitive" : "InSensitive", M->pattern, M->loose ? "loose" : "");
 	  res = DpsMethod(M->arg);
+	  if (M->loose) {
+	    DPS_VAR *V = NULL;
+	    switch(res) {
+	    case DPS_METHOD_TAG:
+	      V = DpsVarListFind(&Doc->Sections, "Tag");
+	      if (V == NULL && Doc->Server != NULL) V = DpsVarListFind(&Doc->Server->Vars, "Tag");
+	      break;
+	    case DPS_METHOD_CATEGORY:
+	      V = DpsVarListFind(&Doc->Sections, "Category");
+	      if (V == NULL && Doc->Server != NULL) V = DpsVarListFind(&Doc->Server->Vars, "Category");
+	      break;
+	    }
+	    if (V != NULL) return DPS_METHOD_UNKNOWN;
+	  }
 	  if (strchr(M->subsection, (int)'$') != NULL) {
 	    char qbuf[16384];
 	    DPS_TEMPLATE t;
@@ -1698,6 +1712,9 @@ int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server) {
 
 	value = DpsVarListFindStr(V, "Category", NULL);
 	if (value != NULL) DpsVarListReplaceStr(&Doc->Sections, "Category", value);
+
+	value = DpsVarListFindStr(V, "Tag", NULL);
+	if (value != NULL) DpsVarListReplaceStr(&Doc->Sections, "Tag", value);
 
 /*
 	for (i = 0; i < DPS_DEFAULT_MAX_HOPS; i++) {
