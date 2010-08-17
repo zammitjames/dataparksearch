@@ -967,6 +967,8 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 				  else if(!strncasecmp(t->b, "/body", 5)) t->body = 0;
 				  else if(!strncasecmp(t->b, "noindex", 7)) t->noindex = 1;
 				  else if(!strncasecmp(t->b, "/noindex", 8)) t->noindex = 0;
+				  else if(!strncasecmp(t->b, "frameset", 8)) t->frameset++;
+				  else if(!strncasecmp(t->b, "/frameset", 9)) if (t->frameset) t->frameset--;
 				}
 
 				if(*t->e=='>'){
@@ -1455,6 +1457,10 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	else	if(!strcmp(name,"script"))	tag->script=opening;
 	else	if(!strcmp(name,"style"))	tag->style=opening;
 	else	if(!strcmp(name,"noindex"))	tag->noindex = opening;
+	else	if(!strcmp(name,"frameset"))	{
+	  if (opening) tag->frameset++;
+	  else if (tag->frameset) tag->frameset--;
+	}
 	else	
 	if((!strcmp(name,"base"))&&(href)){
 		
@@ -1555,7 +1561,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 				
 	    tmp = DpsStrndup(tmpbeg,(size_t)(tmpend-tmpbeg+1));
 
-	    if (BSec && (tag.comment + tag.noindex == 0) && !tag.title && tag.body && !tag.script && !tag.style && tag.index && !tag.select 
+	    if (BSec && (tag.comment + tag.noindex == 0) && !tag.title && (tag.body || tag.frameset) && !tag.script && !tag.style && tag.index && !tag.select 
 		&& tag.visible[tag.level]) {
 	      int z;
 	      for(z = tag.level - 1; z >= 0 && tag.section[z] == 0; z--);
