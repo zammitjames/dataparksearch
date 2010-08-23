@@ -93,7 +93,7 @@ CLASS="TOC"
 HREF="dpsearch-subsections.ru.html#TAGS"
 >Тэги
 <A
-NAME="AEN4053"
+NAME="AEN4039"
 ></A
 ></A
 ></DT
@@ -102,7 +102,7 @@ NAME="AEN4053"
 HREF="dpsearch-categories.ru.html"
 >Категории
 <A
-NAME="AEN4081"
+NAME="AEN4095"
 ></A
 ></A
 ></DT
@@ -116,7 +116,7 @@ CLASS="SECT1"
 NAME="TAGS"
 >6.1. Тэги
 <A
-NAME="AEN4053"
+NAME="AEN4039"
 ></A
 ></A
 ></H1
@@ -127,7 +127,7 @@ NAME="AEN4053"
  </P
 ><P
 ><A
-NAME="AEN4057"
+NAME="AEN4043"
 ></A
 >
 Вы можете использовать команду <KBD
@@ -155,8 +155,94 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
+NAME="TAG_CMD"
+>6.1.1. Команда <B
+CLASS="COMMAND"
+>Tag</B
+></A
+></H2
+><A
+NAME="AEN4054"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>Tag &lt;string&gt;</PRE
+><P
+>Используйте эту команду по своему усмотрению чтобы сгруппировать несколько сайтов,
+помечая их указаным тэгом. При индексировании или поиске, вы можете ограничиваться сайтами только указаного тэга.
+Можно указывать несколько команд <B
+CLASS="COMMAND"
+>Tag</B
+>. Команда <B
+CLASS="COMMAND"
+>Tag</B
+> имеет значение до следующей
+команды <B
+CLASS="COMMAND"
+>Tag</B
+> или до конца файла конфигурации. 
+Значение по умолчанию: пустая строка.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TAGIF_CMD"
+>6.1.2. Команда <B
+CLASS="COMMAND"
+>TagIf</B
+></A
+></H2
+><A
+NAME="AEN4065"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>TagIf &lt;tag&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] [loose] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Присвоить документу тэг &lt;tag&gt;, если значении секции <CODE
+CLASS="OPTION"
+>section</CODE
+> подпадает под указаный
+шаблон <CODE
+CLASS="OPTION"
+>arg</CODE
+>.
+Значение первых трёх необязательных параметров такое же как для команды 
+<B
+CLASS="COMMAND"
+>Allow</B
+> (см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;). Необязательный параметр <CODE
+CLASS="OPTION"
+>loose</CODE
+> используется для задания
+более низкого приоритета такому присвоению тэга, т.е. если тэг уже был присвоен на основании параметров сервера, новое значение тэгу
+присвоено не будет.</P
+><P
+>Пример
+<PRE
+CLASS="PROGRAMLISTING"
+>TagIf Docs regex Title Manual</PRE
+></P
+><P
+>В тэге &lt;tag&gt; можно использовать мета-переменные шаблона страницы выдачи (например, $(title), $(Last-Modified)). В примере
+ниже для каждого документа в качестве тэга выставляется доменное имя из его URL:
+<PRE
+CLASS="PROGRAMLISTING"
+>TagIf $(url.host) match url.host *</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
 NAME="TAGS-SQL"
->6.1.1. Тэги в SQL версии</A
+>6.1.3. Тэги в SQL версии</A
 ></H2
 ><P
 >Начиная с версии 3.1.x. тип тэгов изменён с INT на CHAR.
@@ -262,7 +348,7 @@ ALIGN="left"
 VALIGN="top"
 >Oracle notes
 <A
-NAME="AEN3973"
+NAME="AEN3959"
 ></A
 ></TD
 ><TD
@@ -276,7 +362,7 @@ ALIGN="right"
 VALIGN="top"
 >Категории
 <A
-NAME="AEN4081"
+NAME="AEN4095"
 ></A
 ></TD
 ></TR

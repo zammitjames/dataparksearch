@@ -171,7 +171,7 @@ CLASS="COMMAND"
 >Allow</B
 >
 <A
-NAME="AEN868"
+NAME="AEN878"
 ></A
 >
 				</P
@@ -193,7 +193,7 @@ CLASS="COMMAND"
 >Disallow</B
 >
 <A
-NAME="AEN878"
+NAME="AEN888"
 ></A
 >
 				</P
@@ -212,7 +212,7 @@ CLASS="COMMAND"
 >HrefOnly</B
 >
 <A
-NAME="AEN887"
+NAME="AEN897"
 ></A
 >
 				</P
@@ -237,7 +237,7 @@ CLASS="COMMAND"
 >CheckOnly</B
 >
 <A
-NAME="AEN897"
+NAME="AEN907"
 ></A
 >
 				</P
@@ -275,7 +275,7 @@ CLASS="COMMAND"
 >Skip</B
 >
 <A
-NAME="AEN911"
+NAME="AEN921"
 ></A
 >
 				</P
@@ -295,7 +295,7 @@ CLASS="COMMAND"
 >CheckMP3</B
 >
 <A
-NAME="AEN920"
+NAME="AEN930"
 ></A
 >
 				</P
@@ -332,7 +332,7 @@ CLASS="COMMAND"
 >CheckMP3Only</B
 >
 <A
-NAME="AEN934"
+NAME="AEN944"
 ></A
 >
 				</P
@@ -596,7 +596,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1014"
+NAME="AEN1024"
 ></A
 ><P
 >This is the main command of the
@@ -650,7 +650,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1028"
+NAME="AEN1038"
 ></A
 ><P
 >Realm command is a more powerful means of describing web area to be indexed.
@@ -677,7 +677,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1037"
+NAME="AEN1047"
 ></A
 ><P
 >Subnet command is another way to describe web area to be indexed.
@@ -835,23 +835,48 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="DB_CMD"
+NAME="URL_CMD"
 >3.6.7. <B
+CLASS="COMMAND"
+>URL</B
+> command</A
+></H2
+><A
+NAME="AEN1088"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>URL http://localhost/path/to/page.html</PRE
+><P
+>This command inserts given <CODE
+CLASS="OPTION"
+>URL</CODE
+> into database. This is usefull to add
+several entry points to one server. Has no effect if an URL is already
+in the database. </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="DB_CMD"
+>3.6.8. <B
 CLASS="COMMAND"
 >ServerDB, RealmDB, SubnetDB and URLDB</B
 > commands</A
 ></H2
 ><A
-NAME="AEN1078"
+NAME="AEN1097"
 ></A
 ><A
-NAME="AEN1081"
+NAME="AEN1100"
 ></A
 ><A
-NAME="AEN1084"
+NAME="AEN1103"
 ></A
 ><A
-NAME="AEN1087"
+NAME="AEN1106"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -888,25 +913,50 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="URL_CMD"
->3.6.8. <B
+NAME="FILE_CMD"
+>3.6.9. <B
 CLASS="COMMAND"
->URL</B
-> command</A
+>ServerFile, RealmFile, SubnetFile and URLFile</B
+> commands</A
 ></H2
 ><A
-NAME="AEN1102"
+NAME="AEN1121"
+></A
+><A
+NAME="AEN1124"
+></A
+><A
+NAME="AEN1127"
+></A
+><A
+NAME="AEN1130"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->URL http://localhost/path/to/page.html</PRE
+>URLFile url.lst</PRE
 ><P
->This command inserts given <CODE
+>These commands are equal to <B
+CLASS="COMMAND"
+>Server</B
+>, <B
+CLASS="COMMAND"
+>Realm</B
+>, <B
+CLASS="COMMAND"
+>Subnet</B
+> and 
+<B
+CLASS="COMMAND"
+>URL</B
+> commands respectively, but takes arguments from a text file specified. 
+In example above, URLs are takes from the text file <CODE
 CLASS="OPTION"
->URL</CODE
-> into database. This is usefull to add
-several entry points to one server. Has no effect if an URL is already
-in the database. </P
+>url.lst</CODE
+> located in 
+<TT
+CLASS="FILENAME"
+>/usr/local/dpsearch/etc</TT
+> directory, but the full path to a file can be specified as well.</P
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -914,13 +964,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="ROBOTS_TXT"
->3.6.9. Robots exclusion standard</A
+>3.6.10. Robots exclusion standard</A
 ></H2
 ><A
-NAME="AEN1110"
+NAME="AEN1143"
 ></A
 ><A
-NAME="AEN1112"
+NAME="AEN1145"
 ></A
 ><P
 ><SPAN
@@ -941,7 +991,7 @@ CLASS="FILENAME"
 > is a file that you place in your web server's root directory that tells search engines what pages you do not want to be indexed.</P
 ><P
 ><A
-NAME="AEN1120"
+NAME="AEN1153"
 ></A
 >
 <SPAN
@@ -963,11 +1013,11 @@ TARGET="_top"
 >.</P
 ><P
 ><A
-NAME="AEN1129"
+NAME="AEN1162"
 ></A
 >
 <A
-NAME="AEN1132"
+NAME="AEN1165"
 ></A
 >
 <SPAN
@@ -1002,13 +1052,13 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="ROBOTS_CMD"
->3.6.9.1. <B
+>3.6.10.1. <B
 CLASS="COMMAND"
 >Robots</B
 > command</A
 ></H3
 ><A
-NAME="AEN1146"
+NAME="AEN1179"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1042,14 +1092,14 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="ROBOTSPERIOD_CMD"
->3.6.9.2. <B
+>3.6.10.2. <B
 CLASS="COMMAND"
 >RobotsPeriod</B
 > command</A
 ></H3
 ><P
 ><A
-NAME="AEN1160"
+NAME="AEN1193"
 ></A
 >
 By defaults, robots.txt data holds in SQL-database for one week. You may change this period using
@@ -1078,14 +1128,14 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="CRAWLDELAY_CMD"
->3.6.9.3. <B
+>3.6.10.3. <B
 CLASS="COMMAND"
 >CrawlDelay</B
 > command</A
 ></H3
 ><P
 ><A
-NAME="AEN1173"
+NAME="AEN1206"
 ></A
 >
 Use this command to specify default pause in seconds between consecutive fetches from same server. 
@@ -1116,14 +1166,14 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="MAXCRAWLDELAY_CMD"
->3.6.9.4. <B
+>3.6.10.4. <B
 CLASS="COMMAND"
 >MaxCrawlDelay</B
 > command</A
 ></H3
 ><P
 ><A
-NAME="AEN1185"
+NAME="AEN1218"
 ></A
 >
 When <SPAN

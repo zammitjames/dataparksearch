@@ -1,6 +1,8 @@
 
 
 
+
+
 	
 	
 	
@@ -26,6 +28,7 @@
 	{"CacheLogWords",       1,1,    env_rpl_var},
 	{"Category",		0,1,	srv_rpl_category},
 	{"CategoryIf",          3,100,  add_subsection_match},
+	{"CategoryTable",	1,1,	add_cat_table},
 	{"CharsToEscape",       1,1,    env_rpl_var},
 	{"CheckInsertSQL",      1,1,	env_rpl_bool_var},
 	{"CheckMP3",		1,100,	add_filter},
@@ -52,6 +55,7 @@
 	{"ExpireAt",            0,5,    srv_rpl_var},
 	{"FastHrefCheck",	1,1,	env_rpl_bool_var},
 	{"FillDictionary",      1,1,    env_rpl_bool_var},
+	{"FlushCategoryTable",	0,0,	flush_cat_table},
 	{"FlushServerTable",	0,0,	flush_srv_table},
 	{"ForceIISCharset1251",	1,1,	env_rpl_var},
 	{"GroupBySite",		1,1,	env_rpl_var},

@@ -228,6 +228,7 @@ stopwords/da2.sl \
 stopwords/de.sl \
 stopwords/de.top100.sl \
 stopwords/de.top1000.sl \
+stopwords/de2.sl \
 stopwords/en.big.sl \
 stopwords/en.huge.sl \
 stopwords/en.medline.sl \
@@ -238,6 +239,7 @@ stopwords/en.top1000.sl \
 stopwords/es.sl \
 stopwords/fi.sl \
 stopwords/fr.sl \
+stopwords/fr2.sl \
 stopwords/fr.top100.sl \
 stopwords/fr.top1000.sl \
 stopwords/he.sl \

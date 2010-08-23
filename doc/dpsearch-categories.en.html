@@ -84,7 +84,7 @@ NAME="CATEGORIES"
 >6.2. Categories</A
 ></H1
 ><A
-NAME="AEN3842"
+NAME="AEN3880"
 ></A
 ><P
 >There is a categories editor written in  Perl. You can
@@ -204,7 +204,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN3873"
+NAME="AEN3911"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -237,11 +237,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN3883"
+NAME="AEN3921"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CategoryIf &lt;category&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+>CategoryIf &lt;category&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] [loose] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Mark document by &lt;category&gt; category, if the value of <CODE
 CLASS="OPTION"
@@ -257,13 +257,85 @@ CLASS="COMMAND"
 > command (see <A
 HREF="dpsearch-indexcmd.en.html#ALLOW_CMD"
 >Section 3.10.14</A
->&#62;).</P
+>&#62;). Optional parameter <CODE
+CLASS="OPTION"
+>loose</CODE
+> specify
+to do not override the category value if it has been already set from server parameters.</P
 ><P
 >Example
 <PRE
 CLASS="PROGRAMLISTING"
 >CategoryIf 010F regex Title "JOB ID"</PRE
 ></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CATTABLE"
+>6.2.3. Loading categories table</A
+></H2
+><A
+NAME="AEN3935"
+></A
+><P
+>When the command 
+<PRE
+CLASS="PROGRAMLISTING"
+>CategoryTable mysql://user:pass@host/dbname/tablename[?charset=CHARSET]</PRE
+>
+is specified, <SPAN
+CLASS="APPLICATION"
+>indexer</SPAN
+> loads categories information from given <TT
+CLASS="LITERAL"
+>tablename</TT
+> SQL-table. 
+Check the structure of <CODE
+CLASS="OPTION"
+>categories</CODE
+> table in <TT
+CLASS="FILENAME"
+>create/mysql/create.txt</TT
+> file. 
+If there is no structure example for your database, take it as an example.</P
+><P
+>You may use several <B
+CLASS="COMMAND"
+>CategoryTable</B
+> commands to load categories information from different tables.
+In such case, the values of <CODE
+CLASS="OPTION"
+>rec_id</CODE
+> field must be unique for all these tables.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="FLUSHCATTABLE"
+>6.2.4. FlushCategoryTable command
+<A
+NAME="AEN3949"
+></A
+></A
+></H2
+><P
+>This command deletes all records from <CODE
+CLASS="OPTION"
+>categories</CODE
+> table.
+Use this command to delete outdated data before loading new data into <CODE
+CLASS="OPTION"
+>categories</CODE
+> table 
+with <B
+CLASS="COMMAND"
+>CategoryTable</B
+> commands.</P
 ></DIV
 ></DIV
 ><DIV

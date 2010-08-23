@@ -381,15 +381,40 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 
 static int PresentInDelLog(DPS_LOGDEL *buf, size_t buf_count, size_t *start, const urlid_t url_id) {
 	register size_t m, l, r;
+	urlid_t umin, umax;
 	
 	if (buf == NULL || buf_count == 0) return 0;
 	if (start) l = *start;
 	else l = 0;
-	r = buf_count;
+	r = buf_count - 1;
 
-	if (url_id < buf[l].url_id) return 0;
-	if (url_id > buf[r - 1].url_id) return 0;
+	umin = buf[l].url_id;
+	umax = buf[r].url_id;
 
+	while(1) {
+	  if (l > r || url_id > umax) {
+	    if(start) *start = r;
+	    return 0;
+	  }
+	  if (url_id < umin) {
+	    return 0;
+	  }
+	  if (l == r) m = r;
+	  else m = l + (urlid_t)((r - l - 1) * ((dps_uint8)(url_id - umin)) / (umax -  umin));
+	  if (buf[m].url_id > url_id) {
+	    r = m - 1;
+	    umax = buf[r].url_id;
+	  } else if (buf[m].url_id < url_id) {
+	    l = m + 1;
+	    umin = buf[l].url_id;
+	  } else {
+	    if(start) *start = m;
+	    return buf[m].stamp;
+	  }
+	  
+	}
+
+/*
 	while(l < r) {
 		m = (l + r) / 2;
 		if(buf[m].url_id < url_id) { l = m + 1; continue; }
@@ -403,6 +428,7 @@ static int PresentInDelLog(DPS_LOGDEL *buf, size_t buf_count, size_t *start, con
 	if(buf[r].url_id==url_id) {
 	  return buf[r].stamp;
 	}
+*/
 	return 0;
 }
 
@@ -720,7 +746,9 @@ static size_t RemoveOldCrds(DPS_URL_CRD *words, size_t n, DPS_LOGDEL *del, size_
     u = (PresentInDelLog(del, del_count, /*NULL*/ &start, words[i].url_id) == 0);
     curl = words[i].url_id;
     for ( ; (i < n) && (words[i].url_id == curl); i++) {
-      if (u) words[j++] = words[i];
+      if (u) {
+	if (j < i) { words[j++] = words[i];} else { j++; }
+      }
     }
 
   }
@@ -1028,7 +1056,7 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
     }
 /*************/
 
-    DpsBaseClose(P);
+/*    DpsBaseClose(P);*/
 
 
     for (i = 0; i < ndel; i++) {
@@ -1056,10 +1084,10 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 
 #ifdef DEBUG_SEARCH
     total_ticks = DpsStartTimer() - total_ticks;
-    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated in %.2f sec., ndel:%d, nwrd:%d", log_num, (float)total_ticks / 1000, del_count, n);
-    dps_setproctitle("Log %03X updated in %.2f sec.", log_num, (float)total_ticks / 1000);
+    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated in %.2f sec., docs:%d, nwrd:%d, ndel:%d", log_num, (float)total_ticks / 1000, del_count, n, ndel);
+    dps_setproctitle("Log %03X updated in %.2f sec., ndel:%d", log_num, (float)total_ticks / 1000, ndel);
 #else
-    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated, ndel:%d, nwrd:%d", log_num, del_count, n);
+    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated, docs:%d, nwrd:%d, ndel:%d", log_num, del_count, n, ndel);
     dps_setproctitle("Log %03X updated", log_num);
 #endif
 

@@ -86,10 +86,6 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CTLIB_INCLUDE = @CTLIB_INCLUDE@
 CTLIB_LFLAGS = @CTLIB_LFLAGS@
-CXX = @CXX@
-CXXCPP = @CXXCPP@
-CXXDEPMODE = @CXXDEPMODE@
-CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DB2_INCLUDE = @DB2_INCLUDE@
 DB2_LFLAGS = @DB2_LFLAGS@
@@ -103,16 +99,15 @@ DPS_BASE_VERSION = @DPS_BASE_VERSION@
 DPS_TAIL_VERSION = @DPS_TAIL_VERSION@
 DPS_VERSION_ID = @DPS_VERSION_ID@
 DSYMUTIL = @DSYMUTIL@
+DUMPBIN = @DUMPBIN@
 EASYSOFT_INCLUDE = @EASYSOFT_INCLUDE@
 EASYSOFT_LFLAGS = @EASYSOFT_LFLAGS@
-ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-F77 = @F77@
-FFLAGS = @FFLAGS@
+FGREP = @FGREP@
 GREP = @GREP@
 IBASE_INCLUDE = @IBASE_INCLUDE@
 IBASE_LFLAGS = @IBASE_LFLAGS@
@@ -125,6 +120,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 IODBC_INCLUDE = @IODBC_INCLUDE@
 IODBC_LFLAGS = @IODBC_LFLAGS@
 JADE = @JADE@
+LD = @LD@
 LDFLAGS = @LDFLAGS@
 LFLAGS = @LFLAGS@
 LIBLIB = @LIBLIB@
@@ -133,6 +129,7 @@ LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LINKING = @LINKING@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
@@ -145,13 +142,17 @@ MSQL_INCLUDE = @MSQL_INCLUDE@
 MSQL_LFLAGS = @MSQL_LFLAGS@
 MYSQL_INCLUDE = @MYSQL_INCLUDE@
 MYSQL_LFLAGS = @MYSQL_LFLAGS@
+NM = @NM@
 NMEDIT = @NMEDIT@
 NSGMLS = @NSGMLS@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 ORACLE7_INCLUDE = @ORACLE7_INCLUDE@
 ORACLE7_LFLAGS = @ORACLE7_LFLAGS@
 ORACLE8_INCLUDE = @ORACLE8_INCLUDE@
 ORACLE8_LFLAGS = @ORACLE8_LFLAGS@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -195,8 +196,7 @@ abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_CC = @ac_ct_CC@
-ac_ct_CXX = @ac_ct_CXX@
-ac_ct_F77 = @ac_ct_F77@
+ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -231,6 +231,7 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
+lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -476,17 +477,22 @@ stopwords/ca.sl \
 stopwords/ca2.sl \
 stopwords/cz.sl \
 stopwords/da.sl \
+stopwords/da2.sl \
 stopwords/de.sl \
 stopwords/de.top100.sl \
 stopwords/de.top1000.sl \
+stopwords/de2.sl \
 stopwords/en.big.sl \
 stopwords/en.huge.sl \
 stopwords/en.medline.sl \
 stopwords/en.sl \
+stopwords/en2.sl \
 stopwords/en.top100.sl \
 stopwords/en.top1000.sl \
 stopwords/es.sl \
+stopwords/fi.sl \
 stopwords/fr.sl \
+stopwords/fr2.sl \
 stopwords/fr.top100.sl \
 stopwords/fr.top1000.sl \
 stopwords/he.sl \
@@ -494,10 +500,12 @@ stopwords/hu.sl \
 stopwords/hu2.sl \
 stopwords/is.sl \
 stopwords/it.sl \
+stopwords/it2.sl \
 stopwords/ja.sl \
 stopwords/lt.sl \
 stopwords/lv.sl \
 stopwords/nl.sl \
+stopwords/nl2.sl \
 stopwords/nl.top100.sl \
 stopwords/nl.top1000.sl \
 stopwords/no.sl \
@@ -505,6 +513,7 @@ stopwords/pl.sl \
 stopwords/pt.sl \
 stopwords/ro.sl \
 stopwords/ru.sl \
+stopwords/ru2.sl \
 stopwords/sk.sl \
 stopwords/th.sl \
 stopwords/tr.sl \

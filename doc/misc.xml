@@ -65,6 +65,18 @@ Options of <command>Match:</command> command are the same as for <command>Allow<
 
 </sect2>
 
+<sect2 id="filldict">
+<title><command>FillDictionary</command> command.</title>
+<indexterm><primary>Command</primary><secondary>FillDictionary</secondary></indexterm>
+
+<para>With the command <userinput>"FillDictionary yes"</userinput> in <filename>indexer.conf</filename> 
+you can enable storage of all indexed words into <filename>"dict"</filename> table for dbmode cache. 
+This is usefull to track down which words are stopwords for your installation.
+</para>
+
+</sect2>
+
+
 </sect1>
 
 

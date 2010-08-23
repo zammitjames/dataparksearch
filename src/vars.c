@@ -211,7 +211,7 @@ DPS_VAR * DpsVarListFind(DPS_VARLIST * vars, const char * name) {
 	if (!vars->Root[r].nvars) return NULL;
 	bzero(&key, sizeof(key));
 	key.name = (char *)name;
-	return (DPS_VAR*) bsearch(&key, vars->Root[r].Var, vars->Root[r].nvars, sizeof(DPS_VAR), (qsort_cmp)varcmp);
+	return (DPS_VAR*) dps_bsearch(&key, vars->Root[r].Var, vars->Root[r].nvars, sizeof(DPS_VAR), (qsort_cmp)varcmp);
 }
 
 int DpsVarListDel(DPS_VARLIST *vars, const char *name) {

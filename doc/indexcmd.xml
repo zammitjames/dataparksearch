@@ -202,7 +202,7 @@ MinDocSize 1024
 <title><command>IndexDocSizeLimit</command> command</title>
 <indexterm><primary>Command</primary><secondary>IndexDocSizeLimit</secondary></indexterm>
 <para>Use this command to specify the maximal amount of data stored in index per document.
-Default value 0. This mean no limit. Takes effect till next <command>IndexDocSizeLimit</command> command.
+Default value 0. This means no limit. Takes effect till next <command>IndexDocSizeLimit</command> command.
 <programlisting>
 IndexDocSizeLimit 65536
 </programlisting>
