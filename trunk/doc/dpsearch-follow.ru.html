@@ -499,7 +499,7 @@ CLASS="COMMAND"
 >Allow</B
 >
 <A
-NAME="AEN1001"
+NAME="AEN1011"
 ></A
 >
 				</P
@@ -524,7 +524,7 @@ CLASS="COMMAND"
 >Disallow</B
 >
 <A
-NAME="AEN1011"
+NAME="AEN1021"
 ></A
 >
 				</P
@@ -545,7 +545,7 @@ CLASS="COMMAND"
 >HrefOnly</B
 >
 <A
-NAME="AEN1020"
+NAME="AEN1030"
 ></A
 >
 				</P
@@ -575,7 +575,7 @@ CLASS="COMMAND"
 >CheckOnly</B
 >
 <A
-NAME="AEN1030"
+NAME="AEN1040"
 ></A
 >
 				</P
@@ -623,7 +623,7 @@ CLASS="COMMAND"
 >Skip</B
 >
 <A
-NAME="AEN1046"
+NAME="AEN1056"
 ></A
 >
 				</P
@@ -650,7 +650,7 @@ CLASS="COMMAND"
 >CheckMP3</B
 >
 <A
-NAME="AEN1056"
+NAME="AEN1066"
 ></A
 >
 				</P
@@ -692,7 +692,7 @@ CLASS="COMMAND"
 >CheckMP3Only</B
 >
 <A
-NAME="AEN1071"
+NAME="AEN1081"
 ></A
 >
 				</P
@@ -725,7 +725,7 @@ CLASS="COMMAND"
 >Server</B
 >
 			<A
-NAME="AEN1082"
+NAME="AEN1092"
 ></A
 ></A
 ></H2
@@ -813,7 +813,7 @@ CLASS="COMMAND"
 >Realm</B
 >
 			<A
-NAME="AEN1106"
+NAME="AEN1116"
 ></A
 ></A
 ></H2
@@ -856,7 +856,7 @@ CLASS="COMMAND"
 >Subnet</B
 >
 			<A
-NAME="AEN1120"
+NAME="AEN1130"
 ></A
 ></A
 ></H2
@@ -994,23 +994,44 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
+NAME="URL_CMD"
+>3.6.6. Команда <B
+CLASS="COMMAND"
+>URL</B
+></A
+></H2
+><A
+NAME="AEN1167"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>URL http://localhost/path/to/page.html</PRE
+><P
+>Эта команда добавляет указаный URL в базу. Это полезно когда нужно добавить несколько
+стартовых точек для одного сервера. Не имеет эффекта, если указываемый URL уже находится в базе.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
 NAME="DB_CMD"
->3.6.6. Команды <B
+>3.6.7. Команды <B
 CLASS="COMMAND"
 >ServerDB, RealmDB, SubnetDB и URLDB</B
 ></A
 ></H2
 ><A
-NAME="AEN1157"
+NAME="AEN1175"
 ></A
 ><A
-NAME="AEN1160"
+NAME="AEN1178"
 ></A
 ><A
-NAME="AEN1163"
+NAME="AEN1181"
 ></A
 ><A
-NAME="AEN1166"
+NAME="AEN1184"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1047,21 +1068,51 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="URL_CMD"
->3.6.7. Команда <B
+NAME="FILE_CMD"
+>3.6.8. Команды <B
 CLASS="COMMAND"
->URL</B
+>ServerFile, RealmFile, SubnetFile и URLFile</B
 ></A
 ></H2
 ><A
-NAME="AEN1181"
+NAME="AEN1199"
+></A
+><A
+NAME="AEN1202"
+></A
+><A
+NAME="AEN1205"
+></A
+><A
+NAME="AEN1208"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->URL http://localhost/path/to/page.html</PRE
+>URLFile url.lst</PRE
 ><P
->Эта команда добавляет указаный URL в базу. Это полезно когда нужно добавить несколько
-стартовых точек для одного сервера. Не имеет эффекта, если указываемый URL уже находится в базе.</P
+>Эти команды аналогичны командам <B
+CLASS="COMMAND"
+>Server</B
+>, <B
+CLASS="COMMAND"
+>Realm</B
+>, <B
+CLASS="COMMAND"
+>Subnet</B
+> 
+и <B
+CLASS="COMMAND"
+>URL</B
+>соответственно, но аргументы для вставки в базу выбираются из указанного текстового файла, в котором
+каждый аргумент указывается на отдельной строке. 
+В примере выше ссылки выбираются из текстового файла <CODE
+CLASS="OPTION"
+>url.lst</CODE
+>, расположенного в директории
+<TT
+CLASS="FILENAME"
+>/usr/local/dpsearch/etc</TT
+>. Однако можно указывать и полный путь до файла с аргументами.</P
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -1069,13 +1120,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="ROBOTS_TXT"
->3.6.8. Стандарт исключений для роботов</A
+>3.6.9. Стандарт исключений для роботов</A
 ></H2
 ><A
-NAME="AEN1188"
+NAME="AEN1221"
 ></A
 ><A
-NAME="AEN1190"
+NAME="AEN1223"
 ></A
 ><P
 ><SPAN
@@ -1097,7 +1148,7 @@ CLASS="FILENAME"
 вы не хотите индексировать.</P
 ><P
 ><A
-NAME="AEN1198"
+NAME="AEN1231"
 ></A
 >
 <SPAN
@@ -1119,11 +1170,11 @@ CLASS="OPTION"
 >.</P
 ><P
 ><A
-NAME="AEN1207"
+NAME="AEN1240"
 ></A
 >
 <A
-NAME="AEN1210"
+NAME="AEN1243"
 ></A
 >
 <SPAN
@@ -1158,13 +1209,13 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="ROBOTS_CMD"
->3.6.8.1. Команда <B
+>3.6.9.1. Команда <B
 CLASS="COMMAND"
 >Robots</B
 ></A
 ></H3
 ><A
-NAME="AEN1224"
+NAME="AEN1257"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1198,14 +1249,14 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="ROBOTSPERIOD_CMD"
->3.6.8.2. Команда <B
+>3.6.9.2. Команда <B
 CLASS="COMMAND"
 >RobotsPeriod</B
 ></A
 ></H3
 ><P
 ><A
-NAME="AEN1238"
+NAME="AEN1271"
 ></A
 >
 По умолчанию, данные из robots.txt хранятся в SQL-базе одну неделю. Вы можете изменить этот период используя команду
@@ -1235,14 +1286,14 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="CRAWLDELAY_CMD"
->3.6.8.3. Команда <B
+>3.6.9.3. Команда <B
 CLASS="COMMAND"
 >CrawlDelay</B
 ></A
 ></H3
 ><P
 ><A
-NAME="AEN1250"
+NAME="AEN1283"
 ></A
 >
 Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу. 
@@ -1276,14 +1327,14 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="MAXCRAWLDELAY_CMD"
->3.6.8.4. Команда <B
+>3.6.9.4. Команда <B
 CLASS="COMMAND"
 >MaxCrawlDelay</B
 ></A
 ></H3
 ><P
 ><A
-NAME="AEN1263"
+NAME="AEN1296"
 ></A
 >
 Когда <SPAN

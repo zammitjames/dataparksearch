@@ -892,7 +892,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
   char *IP, *qwords, *qtime, *total_found, *wtime, *var, *val;
   size_t i, dbfrom = 0, dbto;
   const char      *TrackDBAddr = DpsVarListFindStr(&Agent->Vars, "TrackDBAddr", NULL);
-  size_t to_sleep, to_delete;
+  size_t to_sleep = 0, to_delete, done;
 
   init_TrackSignals();
 
@@ -941,20 +941,20 @@ static void SearchdTrack(DPS_AGENT *Agent) {
       have_sigusr2 = 0;
     }
     DpsLog(Agent, DPS_LOG_DEBUG, "Query Track: starting directory reading");
-
+    done = 0;
 
     for (i = dbfrom; (i < dbto); i++) {
       db = &DBL->db[i];
       tr_db = (TrackDBAddr!=NULL) ? &TrL->db[0] : db;
       
-      fprintf(stderr, " -- %d TrackDBAddr:%s  TrackQuery:%d\n", i, DPS_NULL2EMPTY(TrackDBAddr), db->TrackQuery);
+/*      fprintf(stderr, " -- %d TrackDBAddr:%s  TrackQuery:%d\n", i, DPS_NULL2EMPTY(TrackDBAddr), db->TrackQuery);*/
 
       if(TrackDBAddr || db->TrackQuery) {
 	const char      *qu = (tr_db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	const char      *vardir = (db->vardir != NULL) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
 
 	dir = opendir(vardir);
-	fprintf(stderr, " -- opendir: %s\n", dir);
+/*	fprintf(stderr, " -- opendir: %s\n", dir);*/
 	if (dir) {
 	  while((item = readdir(dir))) {
 	    if (strncmp(item->d_name, "track.", 6) && strncmp(item->d_name, "query.", 6)) continue;
@@ -974,7 +974,9 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		if (strncmp(item->d_name, "track.", 6)) {
 		  res = DpsSQLAsyncQuery(tr_db, NULL, query);
 		  if (res != DPS_OK) {to_delete = 0; continue; }
+		  done = 1;
 		} else {
+		  done = 1;
 		  IP = dps_strtok_r(query + sizeof(long), "\2", &lt, NULL);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: IP: %s", IP);*/
 		  qwords = dps_strtok_r(NULL, "\2", &lt, NULL);
@@ -1014,27 +1016,26 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 	      }
 
 	      if (to_delete) unlink(fullname);
+
 	    }
 	  }
 	  closedir(dir);
 
-	  if (to_delete) {
-	    to_sleep = 10;
-	  } else if (to_sleep < 3600) {
-	    to_sleep += 10;
+	  if (done) {
+	    to_sleep = 0;
 	  }
 	} else {
 	  DpsLog(Agent, DPS_LOG_ERROR, "Can't open directory: %s, [%d:%s]", vardir, errno, strerror(errno));
-	  if (to_sleep < 3600) {
-	    to_sleep += 10;
-	  }
 	}
 
 
       }
     }
 
-
+    if (to_sleep < 3600) {
+      to_sleep += 10;
+    }
+    DpsLog(Agent, DPS_LOG_DEBUG, "Query Track: sleeping %d", to_sleep);
     DPSSLEEP(to_sleep);
 
   }

@@ -1307,6 +1307,41 @@ static int add_srv_table(void *Cfg, size_t ac,char **av){
 	return res;
 }
 
+static int add_cat_table(void *Cfg, size_t ac, char **av) {
+	DPS_CFG	*C = (DPS_CFG*)Cfg;
+	DPS_ENV	*Conf = C->Indexer->Conf;
+	int		res = DPS_OK;
+	DPS_DBLIST      dbl;
+	DPS_DB		*db;
+#ifdef WITH_PARANOIA
+	void * paran = DpsViolationEnter(paran);
+#endif
+	
+	if(!(C->flags & DPS_FLAG_ADD_SERV)) {
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
+	  return DPS_OK;
+	}
+	
+	DpsDBListInit(&dbl);
+	DpsDBListAdd(&dbl, av[1], DPS_OPEN_MODE_READ);
+	db = &dbl.db[0];
+
+#ifdef HAVE_SQL
+	res = DpsSrvActionSQL(C->Indexer, NULL, DPS_SRV_ACTION_CATTABLE, db);
+#endif
+	if(res != DPS_OK){
+	  dps_strncpy(Conf->errstr, db->errstr, sizeof(Conf->errstr));
+	}
+
+	DpsDBListFree(&dbl);
+#ifdef WITH_PARANOIA
+	DpsViolationExit(-1, paran);
+#endif
+	return res;
+}
+
 
 static int add_limit(void *Cfg, size_t ac, char **av) {
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
@@ -1436,6 +1471,16 @@ static int flush_srv_table(void *Cfg, size_t ac,char **av){
 	if(C->flags & DPS_FLAG_ADD_SERVURL) {
 		res = DpsSrvAction(C->Indexer, NULL, DPS_SRV_ACTION_FLUSH);
 		C->flush_server = 1;
+	}
+	return res;
+}
+
+
+static int flush_cat_table(void *Cfg, size_t ac,char **av) {
+	DPS_CFG	*C = (DPS_CFG*)Cfg;
+	int	res = DPS_OK;
+	if(C->flags & DPS_FLAG_ADD_SERVURL) {
+		res = DpsSrvAction(C->Indexer, NULL, DPS_SRV_ACTION_CATFLUSH);
 	}
 	return res;
 }

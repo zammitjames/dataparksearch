@@ -83,7 +83,7 @@ CLASS="SECT1"
 NAME="CATEGORIES"
 >6.2. Категории
 <A
-NAME="AEN4081"
+NAME="AEN4095"
 ></A
 ></A
 ></H1
@@ -168,6 +168,145 @@ CLASS="PROGRAMLISTING"
 >Section category 0 32 single</PRE
 ></P
 ></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CATEGORY_CMD"
+>6.2.1. Команда <B
+CLASS="COMMAND"
+>Category</B
+></A
+></H2
+><A
+NAME="AEN4124"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>Category &lt;string&gt;</PRE
+><P
+>Вы можете помечать документы при помощи вложеный категорий. Категория - строка шестнадцатиричных цмфр.
+Вы можете иметь до 6 уровней вложенности по 256 элементов на каждом уровне. Пустая категоря означает корень
+дерева категорий. См. <A
+HREF="dpsearch-categories.ru.html"
+>&#1056;&#1072;&#1079;&#1076;. 6.2</A
+>&#62; для дальнейшего описания.
+<PRE
+CLASS="PROGRAMLISTING"
+># This command means a category on first level:
+Category AA
+# This command meand a category on 5th level:
+Category FFAABBCCDD</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CATEGORYIF_CMD"
+>6.2.2. Команда <B
+CLASS="COMMAND"
+>CategoryIf</B
+></A
+></H2
+><A
+NAME="AEN4134"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>CategoryIf &lt;category&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] [loose] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+><P
+>Присвоить документу категорию &lt;category&gt;, если значение секции <CODE
+CLASS="OPTION"
+>section</CODE
+> подпадает под указаный 
+шаблон <CODE
+CLASS="OPTION"
+>arg</CODE
+>.
+Значение первых трёх необязательных параметров такое же как для команды 
+<B
+CLASS="COMMAND"
+>Allow</B
+> (см. <A
+HREF="dpsearch-indexcmd.ru.html#ALLOW_CMD"
+>&#1056;&#1072;&#1079;&#1076;. 3.10.14</A
+>&#62;). Необязательный параметр <CODE
+CLASS="OPTION"
+>loose</CODE
+> используется для задания
+более низкого приоритета такому присвоению категории, т.е. если категория уже была присвоена на основании параметров сервера, новое значение категории присвоено не будет.</P
+><P
+>Пример
+<PRE
+CLASS="PROGRAMLISTING"
+>CategoryIf 010F regex Title "JOB ID"</PRE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CATTABLE"
+>6.2.3. Загрузка таблицы категорий</A
+></H2
+><A
+NAME="AEN4148"
+></A
+><P
+>Когда задана команда 
+<PRE
+CLASS="PROGRAMLISTING"
+>CategoryTable mysql://user:pass@host/dbname/tablename[?charset=CHARSET]</PRE
+>
+<SPAN
+CLASS="APPLICATION"
+>indexer</SPAN
+> будет загружать информацию о категориях из указаной SQL-таблицы <TT
+CLASS="LITERAL"
+>tablename</TT
+>. 
+См. структуру этой таблицы в файле <TT
+CLASS="FILENAME"
+>create/mysql/create.txt</TT
+>. 
+Если для вашей базы данных нет соответсвующего скрипта со структурой
+этой таблицы, возьмите этот файл в качестве образца.</P
+><P
+>Вы можете использовать несколько команд <B
+CLASS="COMMAND"
+>CategoryTable</B
+> для загрузки информации о категориях из 
+различных таблиц. В этом случае значения полей <CODE
+CLASS="OPTION"
+>rec_id</CODE
+> должны быть уникальными в пределах всех таких таблиц.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="FLUSHCATTABLE"
+>6.2.4. Команда FlushCategoryTable
+<A
+NAME="AEN4161"
+></A
+></A
+></H2
+><P
+>Эта команда очищает содержимое таблицы <CODE
+CLASS="OPTION"
+>categories</CODE
+>.
+Используйте эту команду для удалений устаревших данных перед загрузкой новых при помощи команды <B
+CLASS="COMMAND"
+>CategoryTable</B
+>.</P
 ></DIV
 ></DIV
 ><DIV

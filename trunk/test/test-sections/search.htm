@@ -267,7 +267,7 @@ Section meta.source 16 0
 <!ELSE>
   <DT>$(Order).<!-- DP_ID: $(DP_ID)-->
   <a href="$(URL)" TARGET="_blank">
-    <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title)<!ENDIF>
+    <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title:cite:32)<!ENDIF>
   </a>
   <small>[<b>$(Score)</b> Popularity: <b>$(Pop_Rank)</b>]</small>
   <DD>

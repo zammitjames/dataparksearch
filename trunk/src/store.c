@@ -495,7 +495,8 @@ static void DpsNextCharB_stored(void *d) {
 
 static void DpsNextCharE_stored(void *d) {
   DPS_HTMLTOK *t = (DPS_HTMLTOK *)d;
-  if (!t->finished && ((t->e - t->Content) > t->chunks * DPS_DOCHUNKSIZE - 32)) {
+  if (!t->finished && ((t->e -
+ t->Content) > t->chunks * DPS_DOCHUNKSIZE - 32)) {
     char *OldContent = t->Content;
     size_t ChunkSize, i;
     t->Content = (char*)DpsRealloc(t->Content, (size_t)(t->chunks + 1) * DPS_DOCHUNKSIZE + 1);
@@ -705,7 +706,8 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     return NULL;
   }
 
-  DpsHTMLTOKInit(&tag); 
+  DpsHTMLTOKInit(&tag);
+  tag.body = 1;  /* for the case when the BodyPattern is applied */
 
   index_limit = (size_t)DpsVarListFindInt(&query->Vars, "IndexDocSizeLimit", 0);
   rec_id = DpsURL_ID(Doc, NULL);
@@ -816,7 +818,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   for (len = 0; (len < (size_t)(8 * maxwlen + 16 * padding + 1)) && htok; ) {
     switch(tag.type) {
     case DPS_HTML_TXT:
-      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && tag.body == 1) {
+      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
 	dps_memmove(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
@@ -861,7 +863,330 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
       while(htok && ((len - prevlen) < (size_t)(8 * maxwlen + 16 * padding + 1)) ) {
 	switch(tag.type) {
 	case DPS_HTML_TXT:
-	  if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && tag.body == 1) {
+	  if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+	    dps_memmove(HEnd, htok, (size_t)(last-htok));
+	    HEnd += (size_t)(last - htok);
+	    HEnd[0] = ' ';
+	    HEnd++;
+	    HEnd[0] = '\0';
+	    len = HEnd - HDoc;
+	  }
+	  break;
+	case DPS_HTML_COM:
+	case DPS_HTML_TAG:
+	default:
+	  break;
+	}
+	htok = DpsHTMLToken(NULL, &last, &tag);
+      }
+
+      add = DpsConv(&dc_uni, (char*)(uni + ulen), sizeof(*uni)*(DocSize + 10 - ulen), HDoc + prevlen, len - prevlen + 2) / sizeof(*uni);
+      prevlen = len;
+      ulen += DpsUniLen(uni+ulen);
+    }
+    if (np == NULL) break;
+
+    p = np;
+    start = dps_max(dps_max(p - padding, uni), prevend);
+    end = dps_min(p + maxwlen + 1 + padding, uni + ulen);
+    for (i = 0; (i < 2 * query->WordParam.max_word_len) && (start > uni) && DpsUniNSpace(*start); i++) start--;
+    for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < uni + ulen) && DpsUniNSpace(*end); i++) end++;
+    while ((start < end) && !DpsUniNSpace(*start)) start++;
+    if (start < end) {
+      if (oi[0]) DpsUniStrCat(oi, mark);
+      if ((start != uni) && (start != prevend)) DpsUniStrCat(oi, prefix_dot);
+      ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
+      if ((end != uni + ulen) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
+    }
+    p = prevend = end;
+    prevlen = len;
+    if (end == np) p++;
+  }
+
+  {
+    register dpsunicode_t *cc;
+    for(cc = oi; *cc; cc++) {
+      switch(*cc) {
+      case 9:
+      case 10:
+      case 13:
+      case 160:
+	*cc = 32;
+      default:
+	break;
+      }
+    }
+  }
+
+  osl = (DpsUniLen(oi) + 1) * sizeof(char);
+  if ((os = (char *)DpsMalloc(osl * 16)) == NULL) {
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+    DPS_FREE(SourceToFree);
+    return NULL;
+  }
+
+  
+  DpsConv(&uni_bc, os, osl * 16, (char*)oi, sizeof(*oi) * osl);
+  
+  if (!tag.finished) {
+    tag.chunks = 0;
+    if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
+  }
+  DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(oi); DPS_FREE(HDoc); DPS_FREE(uni);
+  if (needFreeSource) { DPS_FREE(SourceToFree); } else { DPS_FREE(tag.Content); }
+  return os;
+}
+
+
+
+struct ex_point {
+  int h;
+  int l;
+  int c;
+  int d;
+  int k;
+  float weight;
+  dpsunicode_t *oi;
+};
+
+
+
+char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding) {
+  static const dpsunicode_t prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
+  char *HDoc,*HEnd;
+  const char *htok, *last = NULL;
+  const char *lcharset;
+  const char *doclang;
+  DPS_CHARSET *bcs = NULL, *dcs = NULL, *sys_int;
+  DPS_HTMLTOK tag;
+  DPS_VAR ST;
+  dpsunicode_t *start, *end, *prevend, *uni, ures, *p, *oi, *np, add;
+  dpsunicode_t *c;
+  char *os;
+  int s = -1, r = -1;
+  size_t *wlen, i, len, maxwlen = 0, minwlen = query->WordParam.max_word_len, ulen, prevlen, osl, index_limit;
+  DPS_CONV dc_uni, uni_bc;
+  const char *hello = "E\0";
+  dpshash32_t rec_id;
+  size_t ChunkSize, DocSize, dbnum = Doc->dbnum;
+  char *Source = NULL, *SourceToFree = NULL;
+  int needFreeSource = 1;
+  int NOprefixHL = 0;
+#ifdef WITH_OLDHASH
+  int first = 1;
+#endif
+
+  if (Res->WWList.nwords == 0) return NULL;
+  bzero(&ST, sizeof(ST));
+  ST.section = 255;
+  ST.name = "ST";
+  ST.val = "1";
+
+  lcharset = DpsVarListFindStr(&query->Vars, "LocalCharset", "iso-8859-1");
+  doclang = DpsVarListFindStr(&Doc->Sections, "Content-Language", "en");
+  if ((!query->Flags.make_prefixes) && strncasecmp(doclang, "zh", 2) && strncasecmp(doclang, "th", 2) 
+	   && strncasecmp(doclang, "ja", 2) && strncasecmp(doclang, "ko", 2) ) NOprefixHL = 1;
+
+  bcs = DpsGetCharSet(lcharset);
+  dcs = DpsGetCharSet(DpsVarListFindStr(&Doc->Sections,"Charset","iso-8859-1"));
+  
+  if (!bcs || !dcs) return NULL;
+  if (!(sys_int=DpsGetCharSet("sys-int")))
+    return NULL;
+  
+  DpsConvInit(&uni_bc, sys_int, bcs, query->Conf->CharsToEscape, DPS_RECODE_HTML);
+
+  c = (dpsunicode_t *) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t) + 1);
+  if (c == NULL) {  return NULL; }
+  wlen = (size_t *) DpsMalloc(Res->WWList.nwords * sizeof(size_t) + 1);
+  if (wlen == NULL) {
+    DPS_FREE(c);
+    return NULL;
+  }
+  for (i = 0; i < Res->WWList.nwords; i++) {
+    wlen[i] = Res->WWList.Word[i].ulen - 1;
+    c[i] = DpsUniToLower(Res->WWList.Word[i].uword[0]);
+    if (wlen[i] > maxwlen) maxwlen = wlen[i];
+    if (wlen[i] < minwlen) minwlen = wlen[i];
+  }
+
+  if ((oi = (dpsunicode_t *)DpsMalloc(2 * (dps_max(size + 2 * query->WordParam.max_word_len, Res->WWList.maxulen + 4 * (query->WordParam.max_word_len + padding) + 8) + 1) * sizeof(dpsunicode_t))) == NULL) {
+    DPS_FREE(c); DPS_FREE(wlen);
+    return NULL;
+  }
+  oi[0]=0;
+
+  DocSize = DpsVarListFindInt(&Doc->Sections, "Content-Length", DPS_MAXDOCSIZE) + 2 * DPS_DOCHUNKSIZE;
+
+  if ((DocSize == 0) ||  ((HEnd = HDoc = (char *)DpsMalloc(2 * DocSize + 4)) == NULL) ) {
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen);
+    return NULL;
+  }
+  HDoc[0]='\0';
+
+  if ( (uni = (dpsunicode_t *)DpsMalloc((DocSize + 10) * sizeof(dpsunicode_t)) ) == NULL) {
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc);
+    return NULL;
+  }
+
+  DpsHTMLTOKInit(&tag); 
+  tag.body = 1; /* for the case when the BodyPattern is applied */
+
+  index_limit = (size_t)DpsVarListFindInt(&query->Vars, "IndexDocSizeLimit", 0);
+  rec_id = DpsURL_ID(Doc, NULL);
+ oncemore:
+/*  dbnum = ((size_t)rec_id) % ((query->flags & DPS_FLAG_UNOCON) ? query->Conf->dbl.nitems : query->dbl.nitems);*/
+/*  if (query->flags & DPS_FLAG_UNOCON) {
+    if (query->Conf->dbl.cnt_db) {
+      dbnum = query->Conf->dbl.dbfrom + ((size_t)rec_id) % query->Conf->dbl.cnt_db;
+    } else {
+      dbnum = ((size_t)rec_id) % query->Conf->dbl.nitems;
+    }
+  } else {
+    if (query->dbl.cnt_db) {
+      dbnum = query->dbl.dbfrom + ((size_t)rec_id) % query->dbl.cnt_db;
+    } else {
+      dbnum = ((size_t)rec_id) % query->dbl.nitems;
+    }
+  }
+*/
+  if ((tag.socket_sd = s = query->Demons.Demon[dbnum].stored_sd) <= 0)  {
+#ifdef HAVE_ZLIB
+    if ((query->Flags.do_store == 0) || (GetStore(query, Doc, rec_id, dbnum, "") != DPS_OK) || Doc->Buf.buf == NULL)
+#endif
+      {
+#ifdef WITH_OLDHASH
+	if (first) {
+	  first = 0;
+	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
+	  goto oncemore;
+	}
+#endif
+/*    register int not_have_doc = (query->Flags.do_store == 0);
+    if (not_have_doc) not_have_doc = (GetStore(query, Doc, rec_id, "") != DPS_OK);
+    if (!not_have_doc) if (Doc->Buf.size == 0) not_have_doc = 1;
+    if (not_have_doc) {*/
+	DpsConvInit(&dc_uni, bcs, sys_int, query->Conf->CharsToEscape, DPS_RECODE_HTML);
+	Source = SourceToFree = (char*)DpsStrdup(DpsVarListFindStr(&Doc->Sections, "body", ""));
+	DpsVarListReplaceStr(&Doc->Sections, "Z", "Z");
+      } 
+#ifdef HAVE_ZLIB
+    else {
+      DpsConvInit(&dc_uni, dcs, sys_int, query->Conf->CharsToEscape, DPS_RECODE_HTML);
+/*      DpsVarListReplaceStr(&Doc->Sections, "ST", "1");*/
+      DpsVarListReplace(&Doc->Sections, &ST);
+      if (strncmp(DPS_NULL2EMPTY(Doc->Buf.buf), "HTTP/", 5)) {
+/*	Doc->Buf.content = Doc->Buf.buf;*/ /* for compatibility with data of old version */
+	Source = Doc->Buf.buf;
+      } else {
+	DpsParseHTTPResponse(query, Doc);
+	Source = Doc->Buf.content;
+      }
+      SourceToFree = Doc->Buf.buf;
+      Doc->Buf.buf = Doc->Buf.content = NULL;
+    }
+#endif
+  } else {
+    DpsConvInit(&dc_uni, dcs, sys_int, query->Conf->CharsToEscape, DPS_RECODE_HTML);
+    tag.next_b = &DpsNextCharB_stored;
+    tag.next_e = &DpsNextCharE_stored;
+    tag.chunks = 1;
+    tag.socket_rv = r = query->Demons.Demon[dbnum].stored_rv;
+
+    DpsSend(s, hello, 1, 0);
+    DpsSend(s, &rec_id, sizeof(rec_id), 0);
+    DpsRecvall(r, &ChunkSize, sizeof(ChunkSize), 360);
+
+    if (ChunkSize == 0) {
+#ifdef WITH_OLDHASH
+	if (first) {
+	  first = 0;
+	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
+	  goto oncemore;
+	}
+#endif
+      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+      return NULL;
+    }
+    DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
+    DpsRecvall(r, &ChunkSize, sizeof(ChunkSize), 360);
+    if (ChunkSize == 0) {
+      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+      return NULL;
+    }
+
+    if ((tag.Content = (char*)DpsMalloc(ChunkSize+10)) == NULL) {
+      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+      return NULL;
+    }
+    DpsRecvall(r, tag.Content, ChunkSize, 360);
+    tag.Content[ChunkSize] = '\0';
+    if (strncmp(DPS_NULL2EMPTY(tag.Content), "HTTP/", 5)) {
+      Source = SourceToFree = tag.Content;
+    } else {
+      Doc->Buf.buf = SourceToFree = tag.Content;
+      Doc->Buf.size = ChunkSize;
+      DpsParseHTTPResponse(query, Doc);
+      Source = Doc->Buf.content;
+    }
+    Doc->Buf.buf = Doc->Buf.content = NULL;
+
+/*    DpsVarListReplaceStr(&Doc->Sections, "ST", "1");*/
+    DpsVarListReplace(&Doc->Sections, &ST);
+    needFreeSource = 0;
+  }
+
+
+  htok = DpsHTMLToken(Source, &last, &tag);
+  for (len = 0; (len < (size_t)(8 * maxwlen + 16 * padding + 1)) && htok; ) {
+    switch(tag.type) {
+    case DPS_HTML_TXT:
+      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+	dps_memmove(HEnd, htok, (size_t)(last - htok));
+	HEnd += (size_t)(last - htok);
+	HEnd[0] = ' ';
+	HEnd++;
+	HEnd[0] = '\0';
+	len = HEnd - HDoc;
+      }
+      break;
+    case DPS_HTML_COM:
+    case DPS_HTML_TAG:
+    default:
+      break;
+    }
+    htok = DpsHTMLToken(NULL, &last, &tag);
+  }
+
+  if (HEnd == HDoc) {
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+    if (!tag.finished) {
+      tag.chunks = 0;
+      if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
+    }
+    DPS_FREE(SourceToFree);
+    return NULL;
+  }
+
+  add = DpsConv(&dc_uni, (char*)uni, sizeof(*uni)*(DocSize+10), HDoc, len + 1) / sizeof(*uni);
+  prevlen = len;
+  ulen = DpsUniLen(uni);
+  if ((index_limit != 0) && (ulen > index_limit)) {
+    ulen = index_limit;
+    uni[ulen] = 0;
+  }
+
+
+  for (p = prevend = uni; DpsUniLen(oi) < size; ) {
+
+
+    while(((np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, minwlen, NOprefixHL)) == NULL) 
+	  && (htok != NULL) && ((index_limit == 0) || (ulen < index_limit) )) {
+
+      while(htok && ((len - prevlen) < (size_t)(8 * maxwlen + 16 * padding + 1)) ) {
+	switch(tag.type) {
+	case DPS_HTML_TXT:
+	  if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
 	    dps_memmove(HEnd, htok, (size_t)(last-htok));
 	    HEnd += (size_t)(last - htok);
 	    HEnd[0] = ' ';

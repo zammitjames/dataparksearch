@@ -37,6 +37,7 @@ $^(x) - search words highlighted.
 $(x:128) - value truncated to the first 128 bytes, if longer.
 $(x:UTF-8) - value written in UTF-8 charset. You may specify any charset supported.
 $(x:128:right) - value truncated to the last 128 bytes, if longer.
+$(x:cite:160) - make value citation on search keywords, no longer than 160 characters (approx.).
 </programlisting>
 </para>
 	<sect2 id="templates-sect">

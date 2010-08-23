@@ -31,6 +31,12 @@ fail !0 mdiff $(DPS_TEST_DIR)/search3.rej $(DPS_TEST_DIR)/search3.res
 fail !0 exec $(SEARCH) "body19+NEAR+NOT+body20&m=bool"> $(DPS_TEST_DIR)/search4.rej 2>&1
 fail !0 mdiff $(DPS_TEST_DIR)/search4.rej $(DPS_TEST_DIR)/search4.res
 
+fail !0 exec $(SEARCH) "yak anyword body&m=bool"> $(DPS_TEST_DIR)/search5.rej 2>&1
+fail !0 mdiff $(DPS_TEST_DIR)/search5.rej $(DPS_TEST_DIR)/search5.res
+
+fail !0 exec $(SEARCH) "master anyword body&m=bool"> $(DPS_TEST_DIR)/search6.rej 2>&1
+fail !0 mdiff $(DPS_TEST_DIR)/search6.rej $(DPS_TEST_DIR)/search6.res
+
 
 #fail !0 exec $(SEARCH) "(body1+NEAR+body18)+OR+(body1+NEAR+body15)&m=bool&LogLevel=5" > $(DPS_TEST_DIR)/search.rej 2>&1
 #fail !0 exec $(SEARCH) "body1+NEAR+(body18+OR+body15)&m=bool&LogLevel=5" > $(DPS_TEST_DIR)/search2.rej 2>&1

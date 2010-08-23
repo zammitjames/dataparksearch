@@ -917,6 +917,61 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 	return(DPS_OK);
 }
 
+
+static int DpsLoadCategoryTable(DPS_AGENT *Indexer, DPS_DB *catdb) {
+	char		qbuf[1024];
+	DPS_SQLRES	SQLRes, SRes;
+	size_t		rows, i, d, dbfrom = 0, dbto;
+	const char	*name = ((catdb->addrURL.filename != NULL) && (catdb->addrURL.filename[0] != '\0')) ? catdb->addrURL.filename : "categories";
+	int             res;
+	DPS_DB		*db;
+
+	DpsSQLResInit(&SQLRes);
+	DpsSQLResInit(&SRes);
+
+	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
+	dbto =  (Indexer->flags & DPS_FLAG_UNOCON) ? Indexer->Conf->dbl.nitems : Indexer->dbl.nitems;
+	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+
+	for (d = dbfrom; d < dbto; d++) {
+	    db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[d] : &Indexer->dbl.db[d];
+	    if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB); 
+
+
+	    dps_snprintf(qbuf, sizeof(qbuf), "SELECT rec_id, path, link, name FROM %s", name);
+	    if(DPS_OK != (res = DpsSQLQuery(catdb, &SQLRes, qbuf))) {
+	      if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+	      return res;
+	    }
+	    rows = DpsSQLNumRows(&SQLRes);
+	    for(i = 0; i < rows; i++) {
+	      dps_snprintf(qbuf, sizeof(qbuf), "SELECT COUNT(*) FROM categories WHERE rec_id=%s", DpsSQLValue(&SQLRes, i, 0));
+	      if(DPS_OK != (res = DpsSQLQuery(catdb, &SRes, qbuf))) {
+		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+		DpsSQLFree(&SQLRes);
+		return res;
+	      }
+	      switch(DPS_ATOI(DpsSQLValue(&SRes, 0, 0))) {
+	      case 0: dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO categories(rec_id,path,link,name)VALUES(%s,'%s','%s','%s')",
+				  DpsSQLValue(&SQLRes, i, 0), DpsSQLValue(&SQLRes, i, 1),  DpsSQLValue(&SQLRes, i, 2), DpsSQLValue(&SQLRes, i, 3));
+	      break;
+	      default: dps_snprintf(qbuf, sizeof(qbuf), "UPDATE categories SET path='%s',link='%s',name='%s' WHERE rec_id=%s",
+				  DpsSQLValue(&SQLRes, i, 1), DpsSQLValue(&SQLRes, i, 2),  DpsSQLValue(&SQLRes, i, 3), DpsSQLValue(&SQLRes, i, 0));
+	      }
+	      if(DPS_OK != (res = DpsSQLAsyncQuery(catdb, NULL, qbuf))) {
+		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+		DpsSQLFree(&SQLRes);
+		return res;
+	      }
+	    }
+	    if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
+	}
+	DpsSQLFree(&SRes);
+	DpsSQLFree(&SQLRes);
+	return DPS_OK;
+}
+
+
 static int DpsServerTableClean(DPS_DB *db){
 	char str[128];
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
@@ -956,6 +1011,16 @@ static int DpsServerTableFlush(DPS_DB *db){
 
 	return rc;
 }
+
+
+static int DpsCatTableFlush(DPS_DB *db) {
+	int rc;
+	
+	rc = DpsSQLAsyncQuery(db, NULL, "DELETE FROM categories");
+
+	return rc;
+}
+
 
 static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	DPS_SQLRES	SQLRes;
@@ -7027,6 +7092,9 @@ int DpsSrvActionSQL(DPS_AGENT *A, DPS_SERVER *S, int cmd, DPS_DB *db) {
 	case DPS_SRV_ACTION_TABLE:
 	  return DpsLoadServerTable(A, db);
 
+	case DPS_SRV_ACTION_CATTABLE:
+	  return DpsLoadCategoryTable(A, db);
+
 	case DPS_SRV_ACTION_URLDB:
 	  return DpsURLDB(A, S, db);
 
@@ -7037,6 +7105,9 @@ int DpsSrvActionSQL(DPS_AGENT *A, DPS_SERVER *S, int cmd, DPS_DB *db) {
 
 	case DPS_SRV_ACTION_FLUSH:
 	  return DpsServerTableFlush(db);
+
+	case DPS_SRV_ACTION_CATFLUSH:
+	  return DpsCatTableFlush(db);
 
 	case DPS_SRV_ACTION_CLEAN:
 	  return DpsServerTableClean(db);

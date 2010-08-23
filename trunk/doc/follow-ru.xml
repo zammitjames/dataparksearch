@@ -426,6 +426,19 @@ of this URL during next startup. </para>
 	</sect2>
 
 
+<sect2 id="URL_cmd">
+<title>Команда <command>URL</command></title>
+<indexterm><primary>Команда</primary><secondary>URL</secondary></indexterm>
+<programlisting>
+URL http://localhost/path/to/page.html
+</programlisting>
+<para>
+Эта команда добавляет указаный URL в базу. Это полезно когда нужно добавить несколько
+стартовых точек для одного сервера. Не имеет эффекта, если указываемый URL уже находится в базе.
+</para>
+</sect2>
+
+
 <sect2 id="DB_cmd">
 <title>Команды <command>ServerDB, RealmDB, SubnetDB и URLDB</command></title>
 <indexterm><primary>Команда</primary><secondary>URLDB</secondary></indexterm>
@@ -444,17 +457,24 @@ URLDB pgsql://foo:bar@localhost/portal/links?field=url
 </sect2>
 
 
-<sect2 id="URL_cmd">
-<title>Команда <command>URL</command></title>
-<indexterm><primary>Команда</primary><secondary>URL</secondary></indexterm>
+<sect2 id="FILE_cmd">
+<title>Команды <command>ServerFile, RealmFile, SubnetFile и URLFile</command></title>
+<indexterm><primary>Команда</primary><secondary>URLFile</secondary></indexterm>
+<indexterm><primary>Команда</primary><secondary>ServerFile</secondary></indexterm>
+<indexterm><primary>Команда</primary><secondary>RealmFile</secondary></indexterm>
+<indexterm><primary>Команда</primary><secondary>SubnetFile</secondary></indexterm>
 <programlisting>
-URL http://localhost/path/to/page.html
+URLFile url.lst
 </programlisting>
 <para>
-Эта команда добавляет указаный URL в базу. Это полезно когда нужно добавить несколько
-стартовых точек для одного сервера. Не имеет эффекта, если указываемый URL уже находится в базе.
+Эти команды аналогичны командам <command>Server</command>, <command>Realm</command>, <command>Subnet</command> 
+и <command>URL</command>соответственно, но аргументы для вставки в базу выбираются из указанного текстового файла, в котором
+каждый аргумент указывается на отдельной строке. 
+В примере выше ссылки выбираются из текстового файла <option>url.lst</option>, расположенного в директории
+<filename>/usr/local/dpsearch/etc</filename>. Однако можно указывать и полный путь до файла с аргументами.
 </para>
 </sect2>
+
 
 <sect2 id="robots_txt">
 <title>Стандарт исключений для роботов</title>

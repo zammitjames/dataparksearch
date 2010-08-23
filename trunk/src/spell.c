@@ -543,7 +543,7 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
       r = SpellList->SpellTree[li].Right[i];
       if (l == -1) continue;
       while(l<=r){
-	c = (l + r) >> 1;
+	c = l + ((r - l) >> 1);
 	resc = cmpspellword(SpellList->Spell[c].word, word);
 	if( (resc == 0) && 
 	    ((affixflag == NULL) || (strstr(SpellList->Spell[c].flag, affixflag) != NULL)) ) {
@@ -579,13 +579,8 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
 */
 	if(resc < 0){
 	  l = c + 1;
-/*	  r--;*/
-	} else /*if(resc > 0)*/ {
+	} else {
 	  r = c - 1;
-/*	  l++;*/
-/*	} else {
-	  l++;
-	  r--;*/
 	}
       }
 
@@ -1400,7 +1395,12 @@ static int CheckPrefix(const dpsunicode_t *word, DPS_AFFIX *Affix, DPS_AGENT *In
     } 
     newlen = DpsUniLen(newword);
     ls = Indexer->Conf->Affixes.SuffixTree[li].Left[pi];
-    rs = Indexer->Conf->Affixes.SuffixTree[li].Right[pi];
+    if (ls >= 0) {
+      for (rs = Indexer->Conf->Affixes.SuffixTree[li].Right[pi]; ls <= rs; ls++) {
+	CheckSuffix(newword, newlen, &CAffix[ls], &lres, Indexer, PS, FZ);
+      }
+    }
+/*
     while (ls >= 0 && ls <= rs) {
       CheckSuffix(newword, newlen, &CAffix[ls], &lres, Indexer, PS, FZ);
       if (rs > ls) {
@@ -1409,6 +1409,7 @@ static int CheckPrefix(const dpsunicode_t *word, DPS_AFFIX *Affix, DPS_AGENT *In
       ls++;
       rs--;
     }
+*/
   }
 #ifdef WITH_PARANOIA
   DpsViolationExit(-1, paran);

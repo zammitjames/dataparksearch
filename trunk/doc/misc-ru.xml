@@ -61,6 +61,16 @@ Match: regex ^\$##
 
 </sect2>
 
+<sect2 id="filldict">
+<title>Команда <command>FillDictionary</command>.</title>
+<indexterm><primary>Команда</primary><secondary>FillDictionary</secondary></indexterm>
+
+<para>При помощи команды <userinput>"FillDictionary yes"</userinput> в <filename>indexer.conf</filename> 
+вы можете включить сохранение всех индексируемых слов в таблице <filename>"dict"</filename> для способа хранения cache. 
+Это может пригодиться для отслеживания, какие слова могут быть стопсловами для вашей инсталляции.
+</para>
+</sect2>
+
 </sect1>
 
 

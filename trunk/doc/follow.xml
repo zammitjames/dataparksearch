@@ -529,6 +529,21 @@ thread pages though still scan them for URLs.</para>
 	</sect2>
 -->
 
+
+<sect2 id="URL_cmd">
+<title><command>URL</command> command</title>
+<indexterm><primary>Command</primary><secondary>URL</secondary></indexterm>
+<programlisting>
+URL http://localhost/path/to/page.html
+</programlisting>
+<para>
+This command inserts given <option>URL</option> into database. This is usefull to add
+several entry points to one server. Has no effect if an URL is already
+in the database. 
+</para>
+</sect2>
+
+
 <sect2 id="DB_cmd">
 <title><command>ServerDB, RealmDB, SubnetDB and URLDB</command> commands</title>
 <indexterm><primary>Command</primary><secondary>URLDB</secondary></indexterm>
@@ -546,18 +561,24 @@ and filed <option>url</option>.
 </para>
 </sect2>
 
-<sect2 id="URL_cmd">
-<title><command>URL</command> command</title>
-<indexterm><primary>Command</primary><secondary>URL</secondary></indexterm>
+
+<sect2 id="File_cmd">
+<title><command>ServerFile, RealmFile, SubnetFile and URLFile</command> commands</title>
+<indexterm><primary>Command</primary><secondary>URLFile</secondary></indexterm>
+<indexterm><primary>Command</primary><secondary>ServerFile</secondary></indexterm>
+<indexterm><primary>Command</primary><secondary>RealmFile</secondary></indexterm>
+<indexterm><primary>Command</primary><secondary>SubnetFile</secondary></indexterm>
 <programlisting>
-URL http://localhost/path/to/page.html
+URLFile url.lst
 </programlisting>
 <para>
-This command inserts given <option>URL</option> into database. This is usefull to add
-several entry points to one server. Has no effect if an URL is already
-in the database. 
+These commands are equal to <command>Server</command>, <command>Realm</command>, <command>Subnet</command> and 
+<command>URL</command> commands respectively, but takes arguments from a text file specified. 
+In example above, URLs are takes from the text file <option>url.lst</option> located in 
+<filename>/usr/local/dpsearch/etc</filename> directory, but the full path to a file can be specified as well.
 </para>
 </sect2>
+
 
 <sect2 id="robots_txt">
 <title>Robots exclusion standard</title>

@@ -311,7 +311,7 @@ Mime  image/vnd.djvu  text/plain  "/usr/local/bin/djvutxt $1 $2"
 <para>Чтобы собрать <application>DataparkSearch</application> с библиотекой <application>libextractor</application>, установите библиотеку, а затем сконфигурируйте и соберите <application>DataparkSearch</application>.
 </para>
 
-<para>Ниже приводится соответствие между типами keyword в <application>libextractor</application> и именами секций <application>DataparkSearch</application>:</para>
+<para>Ниже приводится соответствие между типами keyword в <application>libextractor</application> версии до 0.6 и именами секций <application>DataparkSearch</application>:</para>
 	<table>
 		<title>Соответствие между типами keyword библиотеки libextractor и именами секций DataparkSearch</title>
 		<tgroup cols="2">
@@ -460,6 +460,10 @@ Mime  image/vnd.djvu  text/plain  "/usr/local/bin/djvutxt $1 $2"
 <para>Если секция из списка выше не указана в файле <filename>sections.conf</filename>, значение ключевого слова соответствующего типа будет записано как секция <varname>body</varname>.
 Тоже самое относится к ключевым словам неизвестно типа.
 </para>
+
+<para>Для <application>libextractor 0.6.x</application> в качестве имен секций используются значения, возвращаемые функцией EXTRACTOR_metatype_to_string.
+</para>
+
 </sect2>
 
 </sect1>

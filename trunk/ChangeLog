@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* Support for libextractor 0.6.x has been added.
 	* -G switch for indexer takes now an integral value for all threads.
 	* Clones detection in search is now disabled by default.
 	* StopwordsLoose command has been added.

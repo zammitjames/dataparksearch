@@ -314,7 +314,7 @@ Using this library, <application>DataparkSearch</application> can index keywords
 <para>To build <application>DataparkSearch</application> with <application>libextractor library</application>, install the library, and then configure and compile <application>DataparkSearch</application>.
 </para>
 
-<para>Bellow the relationship between keyword types of <application>libextractor</application> and <application>DataparkSearch</application>'s section names is given:</para>
+<para>Bellow the relationship between keyword types of <application>libextractor</application> version prior to 0.6 and <application>DataparkSearch</application>'s section names is given:</para>
 	<table>
 		<title>Relationship between libextractor's keyword types and DataparkSearch section names</title>
 		<tgroup cols="2">
@@ -463,6 +463,10 @@ Using this library, <application>DataparkSearch</application> can index keywords
 <para>If a section name from the list above doesn't specified in sections.conf, the value of corresponding keyword is written as <varname>body</varname> section. 
 Keywords of unknown type are written as <varname>body</varname> section as well.
 </para>
+
+<para>For <application>libextractor 0.6.x</application>, the values returned by EXTRACTOR_metatype_to_string function are used as section names.
+</para>
+
 </sect2>
 
 
