@@ -2313,6 +2313,7 @@ int DpsTrackSearchd(DPS_AGENT * query, DPS_RESULT *Res) {
 
 DPS_RESULT * DpsCloneList(DPS_AGENT * Indexer, DPS_VARLIST *Env_Vars, DPS_DOCUMENT *Doc) {
 	size_t i, dbfrom = 0, dbto =  (Indexer->flags & DPS_FLAG_UNOCON) ? Indexer->Conf->dbl.nitems : Indexer->dbl.nitems;
+	const char      *label = DpsVarListFindStr(&Indexer->Vars, "label", NULL);
 	DPS_DB		*db;
 	DPS_RESULT	*Res;
 	int		rc = DPS_OK;
@@ -2327,6 +2328,9 @@ DPS_RESULT * DpsCloneList(DPS_AGENT * Indexer, DPS_VARLIST *Env_Vars, DPS_DOCUME
 
 	for (i = dbfrom; i < dbto; i++) {
 	    db = (Indexer->flags & DPS_FLAG_UNOCON) ? &Indexer->Conf->dbl.db[i] : &Indexer->dbl.db[i];
+	    if (label != NULL && db->label == NULL) continue;
+	    if (label == NULL && db->label != NULL) continue;
+	    if (label != NULL && db->label != NULL && strcasecmp(db->label, label)) continue;
 	    switch(db->DBDriver) {
 	    case DPS_DB_SEARCHD:
 		  rc = DpsCloneListSearchd(Indexer, Doc, Res, db);
