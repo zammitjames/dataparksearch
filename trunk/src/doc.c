@@ -462,7 +462,6 @@ int DpsDocAddServExtraHeaders(DPS_SERVER *Server,DPS_DOCUMENT *Doc) {
 
 int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* This function must have exclusive acces to Conf */
 	DPS_VAR		*var;
-	DPS_MATCH_PART	P[10];
 	const char      *content_type = DpsVarListFindStr(&Doc->Sections, "Content-Type", NULL);
 	const int       content_length = DpsVarListFindInt(&Doc->Sections, "Content-Length", 0);
 	const int       status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
@@ -516,8 +515,14 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	   	const char	*fn = (Doc->CurURL.filename && Doc->CurURL.filename[0]) ? Doc->CurURL.filename : "index.html";
 		
 		DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-		if((M=DpsMatchListFind(&Indexer->Conf->MimeTypes,fn,10,P)))
+		if((M = DpsMatchListFind(&Indexer->Conf->MimeTypes, fn, 0, NULL))) {
 			DpsVarListReplaceStr(&Doc->Sections,"Content-Type",M->arg);
+		} else {
+		  if (fn = DpsVarListFindStr(&Doc->Sections, "URL", NULL)) {
+		    if((M = DpsMatchListFind(&Indexer->Conf->MimeTypes, fn, 0, NULL)))
+		        DpsVarListReplaceStr(&Doc->Sections, "Content-Type", M->arg);
+		  }
+		}
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	}
 	if(!DpsVarListFind(&Doc->Sections,"Content-Type")) {
