@@ -493,7 +493,7 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 	  } else {
 	    pdb = db;
 	  }
-	  if (!strcasecmp(ind, "nex8str")) {
+	  if (!strcasecmp(ind, "hex8str")) {
 	    if (DPS_OK == DpsSQLLimit8(Indexer, &L8, req, DPS_IFIELD_TYPE_HEX8STR, pdb)) {
 	      MakeNestedIndex(Indexer, &L8, lfname, pdb);
 	    }
