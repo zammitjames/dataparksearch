@@ -538,7 +538,7 @@ static int DpsExpandWord(DPS_AGENT *query, DPS_RESULT *Res, DPS_WIDEWORD *OWord,
   size_t ORDER_ADD = state->order;
 #if 0 && defined HAVE_ASPELL
   AspellCanHaveError *ret;
-  AspellSpeller *speller;
+  AspellSpeller *speller = NULL;
   AspellWordList *suggestions;
   AspellStringEnumeration *elements;
   char *lcsword;
@@ -556,7 +556,10 @@ static int DpsExpandWord(DPS_AGENT *query, DPS_RESULT *Res, DPS_WIDEWORD *OWord,
       speller = to_aspell_speller(ret);
       if (aspell_speller_check(speller, (const char *)OWord->uword, -1) == 0) {
 	lcsword = (char*)DpsMalloc(12*query->WordParam.max_word_len);
-	if (lcsword == NULL) return DPS_ERROR;
+	if (lcsword == NULL) {
+	  delete_aspell_speller(speller);
+	  return DPS_ERROR;
+	}
 	suggestions = aspell_speller_suggest(speller, (const char *)OWord->uword, -1);
 	elements = aspell_word_list_elements(suggestions);
 	for (i = 0; (i < 2) && ((af_uwrd = (dpsunicode_t*)aspell_string_enumeration_next(elements)) != NULL); ) { 
@@ -574,6 +577,8 @@ static int DpsExpandWord(DPS_AGENT *query, DPS_RESULT *Res, DPS_WIDEWORD *OWord,
 	  local.origin = (Origin & ~1) | DPS_WORD_ORIGIN_ASPELL;
 	  if (DpsAddStackItem(query, Res, &local, lcsword, af_uwrd) != DPS_OK) {
 	    DPS_FREE(lcsword);
+	    delete_aspell_string_enumeration(elements);
+	    delete_aspell_speller(speller);
 	    return DPS_ERROR;
 	  }
 	  af_uwrd = NULL;
@@ -950,7 +955,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	int toadd = 0;
 #if defined HAVE_ASPELL
 	AspellCanHaveError *ret;
-	AspellSpeller *speller;
+	AspellSpeller *speller = NULL;
 	const AspellWordList *suggestions;
 	AspellStringEnumeration *elements;
 	char *asug = NULL;
