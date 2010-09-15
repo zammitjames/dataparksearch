@@ -1393,9 +1393,11 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  DpsVarListAddStr(&Doc->Sections,"Parser-Content-Type",real_content_type);
 
 	  /* CRC32 without headers */
-	  {
+	  if (Doc->Buf.content != NULL) {
 	    size_t crclen=Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf);
 	    DpsVarListReplaceInt(&Doc->Sections, "crc32", (int)DpsHash32(Doc->Buf.content, crclen));
+	  } else {
+	    DpsVarListDel(&Doc->Sections, "crc32");
 	  }
 
 	  if (Indexer->Conf->BodyPatterns.nmatches != 0) {
@@ -2094,7 +2096,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		   && !(status == DPS_HTTP_STATUS_MOVED_PARMANENTLY && Doc->subdoc > 1) ) {
 		  Doc->method = DPS_METHOD_HREFONLY;
 		}
-		{
+		if (Doc->Buf.content != NULL ) {
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
@@ -2596,7 +2598,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		if(status != DPS_HTTP_STATUS_OK && status != DPS_HTTP_STATUS_PARTIAL_OK && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
 		  Doc->method = DPS_METHOD_HREFONLY;
 		}
-		{
+		if (Doc->Buf.content != NULL ) {
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
