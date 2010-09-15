@@ -2089,10 +2089,12 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			DpsVarListReplaceInt(&Doc->Sections, "Status", status);
 		}
 		
-		if(status == DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK 
-		   || status == DPS_HTTP_STATUS_MOVED_TEMPORARILY
-		   || (status == DPS_HTTP_STATUS_MOVED_PARMANENTLY && Doc->subdoc > 1)
-		   ) {
+		/* Collect only hrefs from erroneous documents */
+		if(status != DPS_HTTP_STATUS_OK && status != DPS_HTTP_STATUS_PARTIAL_OK && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY
+		   && !(status == DPS_HTTP_STATUS_MOVED_PARMANENTLY && Doc->subdoc > 1) ) {
+		  Doc->method = DPS_METHOD_HREFONLY;
+		}
+		{
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
@@ -2590,7 +2592,11 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			DpsVarListReplaceInt(&Doc->Sections, "Status", status);
 		}
 		
-		if(status == DPS_HTTP_STATUS_OK || status==DPS_HTTP_STATUS_PARTIAL_OK || status == DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
+		/* Collect only hrefs from erroneous documents */
+		if(status != DPS_HTTP_STATUS_OK && status != DPS_HTTP_STATUS_PARTIAL_OK && status != DPS_HTTP_STATUS_MOVED_TEMPORARILY) {
+		  Doc->method = DPS_METHOD_HREFONLY;
+		}
+		{
 		   	size_t		wordnum, min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
