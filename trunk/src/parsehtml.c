@@ -1099,6 +1099,29 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 }
 
 
+
+static int DpsHasEndTag(const char *name) {
+  if (!strcasecmp(name, "img")) return 0;
+  if (!strcasecmp(name, "br")) return 0;
+  if (!strcasecmp(name, "hr")) return 0;
+  if (!strcasecmp(name, "link")) return 0;
+  if (!strcasecmp(name, "meta")) return 0;
+
+  if (!strcasecmp(name, "area")) return 0;
+  if (!strcasecmp(name, "base")) return 0;
+  if (!strcasecmp(name, "basefont")) return 0;
+  if (!strcasecmp(name, "col")) return 0;
+  if (!strcasecmp(name, "frame")) return 0;
+  if (!strcasecmp(name, "input")) return 0;
+  if (!strcasecmp(name, "isindex")) return 0;
+  if (!strcasecmp(name, "param")) return 0;
+
+  return 1;
+}
+
+
+
+
 int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	DPS_TEXTITEM Item;
 	DPS_VAR	*Sec;
@@ -1230,7 +1253,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  }
 		  DPS_FREE(y);
 		}else
-		if(ISTAG(i, "style")) {
+		  if(ISTAG(i, "style") && DpsHasEndTag(name)) {
 		  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
 		  char *z = strcasestr(y, "visibility:");
 		  if (z != NULL) {
@@ -1547,6 +1570,9 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	  char       *tmp=NULL;
 	  const char *tmpbeg;
 	  const char *tmpend;
+
+/*	  fprintf(stderr, " -- tag.scr:%d .com:%d .noi:%d .tit:%d .bod:%d sty:%d fra:%d ind:%d sel:%d vis:%d -- htok: %s\n", 
+		  tag.script, tag.comment, tag.noindex, tag.title, tag.body, tag.style, tag.frameset, tag.index, tag.select, tag.visible[tag.level], htok);*/
 
 	  switch(tag.type){
 			
