@@ -1,7 +1,6 @@
 <chapter id="intro">
-	<title>Введение
+	<title>Введение</title>
         <indexterm><primary>Введение</primary></indexterm>
-        </title>
 	<para>
 		<application>DataparkSearch</application> является поисковым движком, использующим SQL, и предназначенным для
 организации поиска на одном или многих веб-серверах.

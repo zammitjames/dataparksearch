@@ -229,9 +229,16 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			break;
 
 		case DPS_MATCH_SUBSTR:
+			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
+			if(Match->case_sense){
+			  res = (strcasestr(string, Match->pattern) == NULL);
+			}else{
+			  res = (strstr(string, Match->pattern) == NULL);
+			}
+			break;
 		default:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
-			res=0;
+			res = 0;
 	}
 	if (Match->nomatch) res = !res;
 #ifdef WITH_PARANOIA
@@ -285,6 +292,9 @@ int DpsMatchApply(char *res, size_t size, const char *string, const char *rpl,
 			
 		case DPS_MATCH_BEGIN:
 			len = dps_snprintf(res, size - 1, "%s%s", rpl, string + dps_strlen(Match->pattern));
+			break;
+		case DPS_MATCH_SUBSTR:
+			len = dps_snprintf(res, size - 1, "%s", rpl);
 			break;
 		default:
 			*res='\0';

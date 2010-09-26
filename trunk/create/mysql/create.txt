@@ -65,6 +65,7 @@ CREATE TABLE categories (
 );
 CREATE INDEX cat_path ON categories (path);
 CREATE INDEX cat_link ON categories (link);
+INSERT INTO categories (path,link,name) VALUES ('', '', 'Root');
 
 
 CREATE TABLE qtrack (

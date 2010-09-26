@@ -309,6 +309,7 @@ static int proceedOR(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x1, 
     *res->pcur = *x2->pcur;
     res->pcur++; x2->pcur++;
   }
+  res->count = res->pcur - res->pbegin;
   return DPS_OK;
 }
 
@@ -341,7 +342,7 @@ static int proceedSTOP(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x,
     *res->pcur = *x->pcur;
     res->pcur++; x->pcur++;
   }
-
+  res->count = res->pcur - res->pbegin;
   return DPS_OK;
 }
 
@@ -489,7 +490,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 		      DPS_FREE(pos_real);
 		    }
 		  }
-#ifdef DEBUG_BOOL
+#if defined(DEBUG_BOOL)
 		  DpsLog(query, DPS_LOG_EXTRA,
 			 "Perform <{%d}:%d:%d> ->{%d}", x1 ? x1->count : 0, x1 ? x1->order_from : 0, x1 ? x1->order_to : 0, res.count);
 #endif
@@ -538,13 +539,13 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  DpsLog(query, DPS_LOG_EXTRA, "\t\t\t\tx1origin.%x x2origin.%x", x1origin, x2origin);
 #endif
 
-/*
-			  if ((x1origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_QUERY)) == (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY)) {
+
+			  if ((x1->order_inquery==x2->order_inquery)&&((x1origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))==(DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))) {
 			    res.origin = x1origin;
 			  } else
-			  if ((x2origin & (DPS_WORD_ORIGIN_STOP | DPS_WORD_ORIGIN_QUERY)) == (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY)) {
+			  if ((x1->order_inquery==x2->order_inquery)&&((x2origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))==(DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))) {
 			    res.origin = x2origin;
-			  } else*/
+			  } else
 			  if (((x1origin & DPS_WORD_ORIGIN_STOP) && (x2origin & DPS_WORD_ORIGIN_STOP)) ||
 			      ( (res.count == 0) && 
 				((x1origin & DPS_WORD_ORIGIN_STOP) || (x2origin & DPS_WORD_ORIGIN_STOP))))
@@ -554,7 +555,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			    res.origin |= DPS_WORD_ORIGIN_ACRONYM;
 			}
 			}
-#ifdef DEBUG_BOOL
+#if defined(DEBUG_BOOL)
 			DpsLog(query, DPS_LOG_EXTRA, "Perform {%d}.%x | {%d}.%x -> {%d}.%x",
 			       (x1) ? x1->count:-1, (x1)?x1->origin:-1, (x2)?x2->count : -1, (x2) ? x2->origin : -1, res.count, res.origin);
 /*			printBoolRes(query, &res);*/
@@ -655,7 +656,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			}
 			DpsStackItemFree(x1); DpsStackItemFree(x2);
 			res.count = res.pcur - res.pbegin;
-#ifdef DEBUG_BOOL
+#if defined(DEBUG_BOOL)
 			DpsLog(query, DPS_LOG_EXTRA,"Perform {%d}.%x NEAR {%d}.%x - > %d.%d", 
 			       (x1)?x1->count:-1, (x1)?x1->origin:-1, (x2) ? x2->count : -1, (x2) ? x2->origin: - 1, res.count, res.origin);
 /*			printBoolRes(query, &res);*/
@@ -744,7 +745,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			}
 			DpsStackItemFree(x1); DpsStackItemFree(x2);
 			res.count = res.pcur - res.pbegin;
-#ifdef DEBUG_BOOL
+#if defined(DEBUG_BOOL)
 			DpsLog(query, DPS_LOG_EXTRA, "Perform {%d} ANYWORD {%d} - > %d", 
 			       (x1) ? x1->count : -1, (x2) ? x2->count : -1, res.count);
 #endif
@@ -843,7 +844,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			}
 			DpsStackItemFree(x1); DpsStackItemFree(x2);
 			res.count = res.pcur - res.pbegin;
-#ifdef DEBUG_BOOL
+#if defined(DEBUG_BOOL)
 #if 0
 			{
 			  DPS_URL_CRD_DB *w = res.pbegin;
@@ -871,7 +872,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  x1->cmd ^= DPS_STACK_WORD_NOT;
 			  rc = PUSHARG(s, x1);
 			}
-#ifdef DEBUG_BOOL
+#if defined(DEBUG_BOOL)
 			DpsLog(query, DPS_LOG_EXTRA, "Perform ~ {%d}", (x1) ? x1->count : -1);
 /*			printBoolRes(query, &x1);*/
 			DpsLog(query, DPS_LOG_EXTRA, "===");
@@ -886,6 +887,7 @@ void DpsWWLBoolItems(DPS_RESULT *Res) {
   DPS_STACK_ITEM *items = Res->items;
   size_t i;
   if (Res->WWList.nwords == 0) {
+    bzero(&Word, sizeof(Word));
     for (i = 0; i < Res->nitems; i++) {
       if (items[i].cmd != DPS_STACK_WORD) continue;
       Word.order = items[i].order;
@@ -911,7 +913,7 @@ void DpsWWLBoolItems(DPS_RESULT *Res) {
 /* Main function to calculate items sequence */
 int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
   DPS_BOOLSTACK *s = DpsBoolStackInit(NULL);
-  DPS_STACK_ITEM *items = Res->items, *res;
+  DPS_STACK_ITEM *items = Res->items, *res = NULL;
   DPS_WIDEWORD Word;
   size_t nitems = Res->nitems;
   size_t i, j;
@@ -926,6 +928,8 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
     DpsBoolStackFree(s);
     return DPS_OK;
   }
+
+  bzero(&Word, sizeof(Word));
 
   for (i = 0; i < nitems; i++) {
     if (items[i].cmd != DPS_STACK_WORD) continue;
@@ -981,13 +985,16 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
   }
   DpsLog(query, DPS_LOG_EXTRA, "--------");
 #endif
-  for(i=0;i<nitems;i++){
+
+  for(i = 0; i < nitems; i++) {
     int c;
+
 #ifdef DEBUG_BOOL
     DpsLog(query, DPS_LOG_EXTRA,
 	   ".[%d].%d %c : %d -- %s, (order_origin:%d)", i, items[i].wordnum, item_type(items[i].cmd), items[i].count, (items[i].word == NULL) ? "<NULL>" : items[i].word, items[i].order_origin);
 #endif
-    switch(c=items[i].cmd){
+
+    switch(c = items[i].cmd) {
     case DPS_STACK_RIGHT:
       /* Perform till LEFT bracket */
       while((TOPCMD(s) != DPS_STACK_LEFT) && (TOPCMD(s) != DPS_STACK_BOT))
@@ -1039,7 +1046,7 @@ int DpsCalcBoolItems(DPS_AGENT *query, DPS_RESULT *Res) {
 	DpsBoolStackFree(s);
 	return DPS_STACK_ERR;
       }
-      items[i].pbegin = items[i].plast = NULL; /*items[i].word = NULL; items[i].uword = NULL;*/
+      items[i].pbegin = items[i].plast = NULL;
       items[i].db_pbegin = items[i].db_plast = NULL;
 /*      items[i].count = 0;*/
 

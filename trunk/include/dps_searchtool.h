@@ -45,7 +45,7 @@ extern dpsunicode_t   *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *s, const 
 extern char * DpsBuildPageURL(DPS_VARLIST * vars, char **dst);
 extern void DpsParseQStringUnescaped(DPS_VARLIST *vars, const char *qstring);
 
-extern int DpsCmpUrlid(DPS_URL_CRD_DB *s1, DPS_URL_CRD_DB *s2);
+extern int DpsCmpUrlid(const void *v1, const void *v2);
 extern size_t DpsRemoveNullSections(DPS_URL_CRD *words, size_t n, int *wf);
 extern size_t DpsRemoveNullSectionsDB(DPS_URL_CRD_DB *words, size_t n, int *wf);
 

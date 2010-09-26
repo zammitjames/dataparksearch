@@ -2191,8 +2191,11 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	ticks=DpsStartTimer();
 #endif
 /********/
+#if 0
 	DpsSortSearchWordsByURL(Res->CoordList.Coords, Res->CoordList.ncoords);
+#endif
 	DpsGroupByURL(Indexer, Res);
+	
 	
 #ifdef DEBUG_SEARCH
 	ticks=DpsStartTimer() - ticks;

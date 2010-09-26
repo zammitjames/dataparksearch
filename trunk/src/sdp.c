@@ -61,13 +61,13 @@
 #endif
 #include <errno.h>
 
-/*
-#define DEBUG_SDP
-*/
 
-/*
+#define DEBUG_SDP
+
+
+
 #define DEBUG_SEARCH
-*/
+
 
 ssize_t DpsSearchdSendPacket(int fd,const DPS_SEARCHD_PACKET_HEADER *hdr,const void *data){
 	ssize_t nsent = 0;
