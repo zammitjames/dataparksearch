@@ -89,7 +89,7 @@ static void init_signals(void){
 static void sighandler(int sign){
 	switch(sign){
 	        case SIGALRM:
-		        _Exit(0);
+		        _exit(0);
 			break;
 		default:
 			break;
@@ -173,7 +173,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 			write(wr[1], Doc->Buf.content, Doc->Buf.size - gap);
 			close(wr[1]);
 
-			_Exit(0);
+			_exit(0);
 		}else{
 			/* Child process */
 			/* Close other pipe ends */
@@ -192,7 +192,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 
 			system(cmd);
 			DpsUnsetEnv("DPS_URL");
-			_Exit(0);
+			_exit(0);
 		}
 	}
 	Doc->Buf.content = Doc->Buf.buf + gap;
@@ -271,7 +271,7 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		system(cmd);
 		DpsUnsetEnv("DPS_URL");
 		close (rd[1]);
-		_Exit(rc);
+		_exit(rc);
 	}
 
 	Doc->Buf.buf[Doc->Buf.size] = '\0';
@@ -304,7 +304,7 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	  init_signals();
 	  system(cmd);
 	  DpsUnsetEnv("DPS_URL");
-	  _Exit(0);
+	  _exit(0);
 	}
 	
 	if((fd = DpsOpen2(to_file, O_RDONLY | DPS_BINARY))) {
@@ -378,7 +378,7 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 
 	  system(cmd);
 	  DpsUnsetEnv("DPS_URL");
-	  _Exit(0);
+	  _exit(0);
 	}
 
 	if((fd = DpsOpen2(to_file, O_RDONLY | DPS_BINARY))) {

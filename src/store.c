@@ -940,11 +940,12 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 
 
 struct ex_point {
-  int h;
-  int l;
-  int c;
-  int d;
-  int k;
+  dps_uint2 h; /* =1, if heading */ 
+  dps_uint2 l; /* =2, for first excerpt, =1 for second, =0, otherwise */
+  dps_uint2 c; /* number of query words, repeats include */
+  dps_uint2 d; /* number of exact query words, repeats include */
+  dps_uint2 k; /* maximal length of substring of a query, in words */
+  dps_uint2 m; /* integral distance between words */
   float weight;
   dpsunicode_t *oi;
 };
@@ -1135,6 +1136,40 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     DpsVarListReplace(&Doc->Sections, &ST);
     needFreeSource = 0;
   }
+
+
+
+  for(htok = DpsHTMLToken(Source, &last, &tag); htok; htok = DpsHTMLToken(NULL, &last, &tag)) {
+    switch(tag.type) {
+    case DPS_HTML_TXT:
+      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+	dps_memmove(HEnd, htok, (size_t)(last - htok));
+	HEnd += (size_t)(last - htok);
+	HEnd[0] = ' ';
+	HEnd++;
+	HEnd[0] = '\0';
+	len = HEnd - HDoc;
+      }
+      break;
+    case DPS_HTML_COM:
+    case DPS_HTML_TAG:
+    default:
+      break;
+    }
+  }
+  HEnd[0] = '\0';
+  len = HEnd - HDoc;
+  add = DpsConv(&dc_uni, (char*)uni, sizeof(*uni)*(DocSize+10), HDoc, len + 1) / sizeof(*uni);
+  prevlen = len;
+  ulen = DpsUniLen(uni);
+  if ((index_limit != 0) && (ulen > index_limit)) {
+    ulen = index_limit;
+    uni[ulen] = 0;
+  }
+  p = prevend = uni;
+
+
+  /******************************************************************/
 
 
   htok = DpsHTMLToken(Source, &last, &tag);

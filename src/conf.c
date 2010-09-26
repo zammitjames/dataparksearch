@@ -708,10 +708,19 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	S.section = atoi(av[2]);
 	S.maxlen = ((ac > 2) && av[3]) ? atoi(av[3]) : 0;
 
+	DpsMatchInit(&M);
+	M.match_type = DPS_MATCH_REGEX;
+	M.case_sense = 0;
+
 	if (ac >= 4) {
 	  while(shift + 4 < ac) {
 	    if (!strcasecmp(av[4 + shift], "strict")) S.strict = 1;
 	    else if (!strcasecmp(av[4 + shift], "single")) S.single = 1;
+	    else if (!strcasecmp(av[4 + shift], "regex")) M.match_type = DPS_MATCH_REGEX;
+	    else if (!strcasecmp(av[4 + shift], "string")) M.match_type = DPS_MATCH_WILD;
+	    else if (!strcasecmp(av[4 + shift], "substr")) M.match_type = DPS_MATCH_SUBSTR;
+	    else if (!strcasecmp(av[4 + shift], "case")) M.case_sense = 1;
+	    else if (!strcasecmp(av[4 + shift], "nocase")) M.case_sense = 0;
 	    else if (shift + 4 < ac - 2) {
 	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "unknown option %s in arguments of for Section command", av[shift + 4]);
 	      return DPS_ERROR;
@@ -722,12 +731,9 @@ static int add_section(void *Cfg, size_t ac,char **av){
 
 	if (ac - shift == 6) {
 
-	  if(!(C->flags & DPS_FLAG_ADD_SERV))
-	    return DPS_OK;
+/*	  if(!(C->flags & DPS_FLAG_ADD_SERV))
+	    return DPS_OK;*/
 
-	  DpsMatchInit(&M);
-	  M.match_type = DPS_MATCH_REGEX;
-	  M.case_sense = 1;
 	  M.section = av[1];
 	  M.pattern = av[shift + 4];
 	  M.arg = av[shift + 5];
@@ -893,7 +899,7 @@ static int add_actionsql(void *Cfg, size_t ac,char **av) {
 	int shift = 0;
 	char err[128] = "";
 
-	if (ac < 4 || ac > 5) {
+	if (ac < 4 || ac > 6) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "wrong number of arguments for ActionSQL command");
 	  return DPS_ERROR;
 	}

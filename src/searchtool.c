@@ -92,7 +92,9 @@ static int cmpword(DPS_URL_CRD *s1,DPS_URL_CRD *s2){
 	return 0;
 }
 */
-int DpsCmpUrlid(DPS_URL_CRD_DB *s1, DPS_URL_CRD_DB *s2) {
+int DpsCmpUrlid(const void *v1, const void *v2) {
+  const DPS_URL_CRD_DB *s1 = v1;
+  const DPS_URL_CRD_DB *s2 = v2;
 	if (s1->url_id < s2->url_id) return -1;
 	if (s1->url_id > s2->url_id) return 1;
 	if (s1->coord < s2->coord) return -1;
@@ -100,7 +102,9 @@ int DpsCmpUrlid(DPS_URL_CRD_DB *s1, DPS_URL_CRD_DB *s2) {
 	return 0;
 }
 
-static int DpsCmpUrlid0(DPS_URL_CRD *s1, DPS_URL_CRD *s2) {
+static int DpsCmpUrlid0(const void *v1, const void *v2) {
+  const DPS_URL_CRD *s1 = v1;
+  const DPS_URL_CRD *s2 = v2;
 	if (s1->url_id < s2->url_id) return -1;
 	if (s1->url_id > s2->url_id) return 1;
 	if (s1->coord < s2->coord) return -1;
@@ -2069,6 +2073,9 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   if (DPS_OK != DpsCalcBoolItems(query, Res)) {TRACE_OUT(query); return; }
   if(!Res->CoordList.ncoords || Res->nitems == 0) {TRACE_OUT(query); return; }
 
+  DpsLog(query, DPS_LOG_EXTRA, "\tBoolean.nrecords:%d", Res->CoordList.ncoords);
+/*  DpsSortSearchWordsByURL(Res->CoordList.Coords, Res->CoordList.ncoords);*/
+
 
   Crd = Res->CoordList.Coords;
 #ifdef DEBUG_MEM
@@ -2375,6 +2382,7 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
 
   if (DPS_OK != DpsCalcBoolItems(query, Res)) {TRACE_OUT(query); return; }
   if(!Res->CoordList.ncoords || Res->nitems == 0) {TRACE_OUT(query); return; }
+/*  DpsSortSearchWordsByURL(Res->CoordList.Coords, Res->CoordList.ncoords);*/
 
   Crd = Res->CoordList.Coords;
   count_size = (Res->max_order_inquery + 1) * sizeof(size_t);
@@ -2609,6 +2617,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
 
   if (DPS_OK != DpsCalcBoolItems(query, Res)) {TRACE_OUT(query); return; }
   if(!Res->CoordList.ncoords || Res->nitems == 0) {TRACE_OUT(query); return; }
+/*  DpsSortSearchWordsByURL(Res->CoordList.Coords, Res->CoordList.ncoords);*/
 
   Crd = Res->CoordList.Coords;
   count_size = (Res->max_order_inquery + 1) * sizeof(size_t);

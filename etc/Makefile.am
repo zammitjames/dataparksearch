@@ -237,6 +237,7 @@ stopwords/en2.sl \
 stopwords/en.top100.sl \
 stopwords/en.top1000.sl \
 stopwords/es.sl \
+stopwords/es2.sl \
 stopwords/fi.sl \
 stopwords/fr.sl \
 stopwords/fr2.sl \

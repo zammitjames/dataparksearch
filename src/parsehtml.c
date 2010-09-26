@@ -367,7 +367,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 
     if((Sec) && (strncasecmp(Item->section_name, "url.", 4) != 0) && (strcasecmp(Item->section_name, "url") != 0) ) {
       int cnvres;
-			
+
       /* +4 to avoid attempts to fill the only one  */
       /* last byte with multibyte sequence          */
       /* as well as to add a space between portions */
@@ -377,7 +377,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	src = (char*)UStr;
 	srclen = DpsUniLen(UStr) * sizeof(dpsunicode_t);
 	if(Sec->val == NULL) {
-	  dstlen = dps_min(Sec->maxlen, 24 * srclen);
+	  dstlen = (Sec->maxlen) ? dps_min(Sec->maxlen, 24 * srclen) : 24 * srclen;
 	  Sec->val = (char*)DpsMalloc( dstlen + 32 );
 	  if (Sec->val == NULL) {
 	    Sec->curlen = 0;

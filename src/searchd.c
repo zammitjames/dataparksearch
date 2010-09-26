@@ -98,9 +98,9 @@
 #define DPS_BINARY 0
 #endif
 
-/*
+
 #define DEBUG_SEARCH 1
-*/
+
 
 static	fd_set mask;
 static DPS_CHILD Children[DPS_CHILDREN_LIMIT];
@@ -320,7 +320,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 				if(DPS_OK != DpsResAction(Agent, Res, DPS_RES_ACTION_DOCINFO)){
 /*					DpsResultFree(Res);  must not be here */
 					dps_snprintf(buf,sizeof(buf)-1,"%s",DpsEnvErrMsg(Agent->Conf));
-					DpsLog(Agent,verb,"%s",DpsEnvErrMsg(Agent->Conf));
+					DpsLog(Agent, DPS_LOG_ERROR, "ResAction Error: %s", DpsEnvErrMsg(Agent->Conf));
 					hdr.cmd=DPS_SEARCHD_CMD_ERROR;
 					hdr.len=dps_strlen(buf);
 					nsent = DpsSearchdSendPacket(server, &hdr, buf);
@@ -892,7 +892,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
   char *IP, *qwords, *qtime, *total_found, *wtime, *var, *val;
   size_t i, dbfrom = 0, dbto;
   const char      *TrackDBAddr = DpsVarListFindStr(&Agent->Vars, "TrackDBAddr", NULL);
-  size_t to_sleep = 0, to_delete, done;
+  size_t to_sleep = 0, to_delete, trdone;
 
   init_TrackSignals();
 
@@ -941,7 +941,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
       have_sigusr2 = 0;
     }
     DpsLog(Agent, DPS_LOG_DEBUG, "Query Track: starting directory reading");
-    done = 0;
+    trdone = 0;
 
     for (i = dbfrom; (i < dbto); i++) {
       db = &DBL->db[i];
@@ -974,9 +974,9 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		if (strncmp(item->d_name, "track.", 6)) {
 		  res = DpsSQLAsyncQuery(tr_db, NULL, query);
 		  if (res != DPS_OK) {to_delete = 0; continue; }
-		  done = 1;
+		  trdone = 1;
 		} else {
-		  done = 1;
+		  trdone = 1;
 		  IP = dps_strtok_r(query + sizeof(long), "\2", &lt, NULL);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: IP: %s", IP);*/
 		  qwords = dps_strtok_r(NULL, "\2", &lt, NULL);
@@ -1021,7 +1021,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 	  }
 	  closedir(dir);
 
-	  if (done) {
+	  if (trdone) {
 	    to_sleep = 0;
 	  }
 	} else {
