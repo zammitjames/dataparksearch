@@ -36,6 +36,9 @@
 #include "dps_conf.h"
 #include "dps_charsetutils.h"
 #include "dps_db.h"
+#include "dps_parsexml.h"
+#include "dps_doc.h"
+#include "dps_hrefs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -637,6 +640,105 @@ void DpsRobotClean(DPS_AGENT *A) {
 	}
 }
 
+
+static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
+  XML_PARSER_DATA *D = parser->user_data;
+  DPS_AGENT *Indexer = D->Indexer;
+  DPS_DOCUMENT *Doc = D->Doc;
+  char *value = DpsStrndup(s, len);
+
+  if (D->sec != NULL) {
+    if (!strcasecmp(D->sec, "loc")) {
+      DpsVarListReplaceStr(&Doc->Sections, "URL", value);
+    } else if (!strcasecmp(D->sec, "lastmod")) {
+      /* FIXME: implemet the check if the URL has been changed */
+    } else if (!strcasecmp(D->sec, "changefreq")) {
+      /* FIXME: implement the adjusting of next_index_time according this value */
+    } else if (!strcasecmp(D->sec, "priority")) {
+      DpsVarListReplaceStr(&Doc->Sections, "Pop_Rank", value);
+    }
+  }
+
+  DPS_FREE(value);
+  return DPS_XML_OK;
+}
+
+
+static int DpsSitemapEndElement(DPS_XML_PARSER *parser, const char *name, size_t l) {
+  XML_PARSER_DATA *D = parser->user_data;
+  size_t i = l;
+  char *p;
+
+  if (!strcasecmp(D->sec, "loc")) {
+    DPS_AGENT *Indexer = D->Indexer;
+    DPS_DOCUMENT *Doc = D->Doc;
+    DPS_HREF Href;
+
+    DpsHrefInit(&Href);
+    Href.url = DpsVarListFindStr(&Doc->Sections, "URL", NULL);
+    if (Href.url) {
+      Href.method = DPS_METHOD_GET;
+      Href.checked = 1;
+      Href.weight = DPS_ATOF(DpsVarListFindStr(&Doc->Sections, "Pop_Rank", "0.5"));
+      DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
+      if(Indexer->Hrefs.nhrefs > 1024) DpsStoreHrefs(Indexer);
+    }
+    DpsVarListFree(&Doc->Sections);
+  }
+
+  while (i && name[i] != '.') i--;
+
+  DPS_FREE(D->secpath);
+  D->secpath = DpsStrndup(name, i);
+  DPS_FREE(D->sec);
+  p = strrchr(D->secpath, '.');
+  D->sec = p ? DpsStrdup(p + 1) : DpsStrndup(name, i);
+  return(DPS_XML_OK);
+}
+
+
+
+static int DpsSitemapParse(DPS_AGENT *Indexer, const char *content) {
+  XML_PARSER_DATA Data;
+  DPS_XML_PARSER parser;
+  DPS_DOCUMENT Doc;
+  int res = DPS_OK;
+
+  DpsLog(Indexer, DPS_LOG_INFO, "Executing Sitemap parser");
+
+  DpsDocInit(&Doc);
+
+  DpsXMLParserCreate(&parser);
+  bzero(&Data, sizeof(Data));
+  Data.Indexer = Indexer;
+  Data.Doc = &Doc;
+
+  DpsXMLSetUserData(&parser, &Data);
+  DpsXMLSetEnterHandler(&parser, DpsXMLstartElement);
+  DpsXMLSetLeaveHandler(&parser, DpsSitemapEndElement);
+  DpsXMLSetValueHandler(&parser, Text);
+
+  if (DpsXMLParser(&parser, 0, content, (int)dps_strlen(content)) == DPS_XML_ERROR) {
+    char err[256];    
+    dps_snprintf(err, sizeof(err), 
+                 "Sitemap parsing error: %s at line %d pos %d\n",
+                  DpsXMLErrorString(&parser),
+                  DpsXMLErrorLineno(&parser),
+                  DpsXMLErrorPos(&parser));
+    DpsLog(Indexer, DPS_LOG_ERROR, err);
+    res = DPS_ERROR;
+  }
+
+  DpsXMLParserFree(&parser);
+  DPS_FREE(Data.sec);
+  DPS_FREE(Data.secpath);
+  DpsDocFree(&Doc);
+  DpsStoreHrefs(Indexer);
+
+  return res;
+}
+
+
 int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, const char *hostinfo) {
         DPS_ENV *Conf = Indexer->Conf;
         DPS_ROBOTS *Robots = &Conf->Robots;
@@ -739,6 +841,84 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			  if(AddRobotRule(Indexer, robot, DPS_METHOD_HOST, s, 1)) {
 				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
 					return(DPS_ERROR);
+			  }
+			}
+		  }else
+		  if((!(strncasecmp(s, "Sitemap", 7))) && (rule)) {
+			if((e=strchr(s+8,'#')))*e=0;
+			e=s+8;DPS_SKIP(e," \t");s=e;
+			DPS_SKIPN(e," \t");*e=0;
+			if(s && *s) {
+			  DPS_SERVER	*mServer;
+			  DPS_DOCUMENT	*mDoc;
+			  int status, result;
+
+			  mDoc = DpsDocInit(NULL);
+			  DpsSpiderParamInit(&mDoc->Spider);
+			  mDoc->Buf.max_size = (size_t)DpsVarListFindInt(&Indexer->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
+			  mDoc->Buf.allocated_size = DPS_NET_BUF_SIZE;
+			  if ((mDoc->Buf.buf = (char*)DpsMalloc(mDoc->Buf.allocated_size + 1)) == NULL) {
+			    DpsDocFree(mDoc);
+			    return DPS_ERROR;
+			  }
+			  mDoc->Buf.buf[0]='\0';
+			  mDoc->subdoc = Indexer->Flags.SubDocLevel + 1;
+
+			  DpsVarListAddStr(&mDoc->Sections, "URL", s);
+			  DpsURLParse(&mDoc->CurURL, s);
+			  DpsLog(Indexer, DPS_LOG_INFO, "Sitemap: %s", s);
+
+			  if (Srv != NULL) mServer = Srv;
+			  else mServer = DpsServerFind(Indexer, 0, s, mDoc->CurURL.charset_id, NULL);
+
+			  DpsDocAddDocExtraHeaders(Indexer, mDoc);
+			  DpsDocAddConfExtraHeaders(Indexer->Conf, mDoc);
+
+			  if (mServer != NULL) {
+			    DpsVarListReplaceLst(&mDoc->Sections, &mServer->Vars, NULL, "*");
+			    DpsDocAddServExtraHeaders(mServer, mDoc);
+			    DpsVarList2Doc(mDoc, mServer);
+			  } else {
+			    DpsSpiderParamInit(&mDoc->Spider);
+			  }
+			  DpsVarListLog(Indexer, &mDoc->RequestHeaders, DPS_LOG_DEBUG, "Sitemap.Request");
+
+			  DpsDocLookupConn(Indexer, mDoc);
+
+			  result = DpsGetURL(Indexer, mDoc, NULL);
+			  /*	  DpsParseHTTPResponse(Indexer, mDoc);*/
+			  DpsDocProcessResponseHeaders(Indexer, mDoc);
+			  DpsVarListLog(Indexer, &mDoc->Sections, DPS_LOG_DEBUG, "Sitemap.Response");
+
+			  if ((status = DpsVarListFindInt(&mDoc->Sections, "Status", 0)) == DPS_HTTP_STATUS_OK) {
+			    const char	*ce = DpsVarListFindStr(&mDoc->Sections, "Content-Encoding", "");
+			    const char	*ct = DpsStrdup(DpsVarListFindStr(&mDoc->Sections, "Content-Type", ""));
+			    char *p = strchr(ct, (int)';');
+
+			    if (p != NULL) *p = '\0';
+#ifdef HAVE_ZLIB
+			    if(!strcasecmp(ce, "gzip") || !strcasecmp(ce, "x-gzip") || !strcasecmp(ct, "application/x-gzip")) {
+			      DPS_THREADINFO(Indexer, "UnGzip", s);
+			      DpsUnGzip(Indexer, mDoc);
+			      DpsVarListReplaceInt(&mDoc->Sections, "Content-Length", mDoc->Buf.buf - mDoc->Buf.content + (int)mDoc->Buf.size);
+			    } else if(!strcasecmp(ce, "deflate") || !strcasecmp(ct, "application/deflate")) {
+			      DPS_THREADINFO(Indexer, "Inflate", s);
+			      DpsInflate(Indexer, mDoc);
+			      DpsVarListReplaceInt(&mDoc->Sections, "Content-Length", mDoc->Buf.buf - mDoc->Buf.content + (int)mDoc->Buf.size);
+			    }else if(!strcasecmp(ce, "compress") || !strcasecmp(ce, "x-compress") || !strcasecmp(ct, "application/x-compress")) {
+			      DPS_THREADINFO(Indexer, "Uncompress", s);
+			      DpsUncompress(Indexer, mDoc);
+			      DpsVarListReplaceInt(&mDoc->Sections, "Content-Length", mDoc->Buf.buf - mDoc->Buf.content + (int)mDoc->Buf.size);
+			    }else
+#endif
+			    if(!strcasecmp(ce, "identity") || !strcasecmp(ce, "")) {
+				/* Nothing to do*/
+			    }else{
+			      DpsLog(Indexer,DPS_LOG_ERROR,"Unsupported Content-Encoding");
+/*	          DpsVarListReplaceInt(&mDoc->Sections, "Status", status = DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);*/
+			    }
+			    result = DpsSitemapParse(Indexer, mDoc->Buf.content);
+			    DPS_FREE(ct);
 			  }
 			}
 		  }else

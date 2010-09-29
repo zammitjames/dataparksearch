@@ -39,54 +39,6 @@
 #define DEBUG_XML 1
 */
 
-typedef struct {
-  DPS_AGENT *Indexer;
-  DPS_DOCUMENT *Doc;
-  int body_sec;
-  int body_strict;
-  char *sec;
-  char *secpath;
-  size_t pathlen, curlen;
-} XML_PARSER_DATA;
-
-
-/************ MY_XML **************/
-#define DPS_XML_EOF		'E'
-#define DPS_XML_STRING		'S'
-#define DPS_XML_IDENT		'I'
-#define DPS_XML_EQ		'='
-#define DPS_XML_LT		'<'
-#define DPS_XML_GT		'>'
-#define DPS_XML_SLASH		'/'
-#define DPS_XML_COMMENT		'C'
-#define DPS_XML_TEXT		'T'
-#define DPS_XML_QUESTION	'?'
-#define DPS_XML_EXCLAM		'!'
-#define DPS_XML_LSB             '['
-#define DPS_XML_RSB             ']'
-
-#define DPS_XML_OK	0
-#define DPS_XML_ERROR	1
-
-
-typedef struct xml_attr_st {
-  const char *beg;
-  const char *end;
-} DPS_XML_ATTR;
-
-typedef struct xml_stack_st {
-  char errstr[512];
-  char attr[4096];
-  char *attrend;
-  const char *beg;
-  const char *cur;
-  const char *end;
-  void *user_data;
-  int (*enter)(struct xml_stack_st *st, const char *val, size_t len);
-  int (*value)(struct xml_stack_st *st, const char *val, size_t len);
-  int (*leave_xml)(struct xml_stack_st *st, const char *val, size_t len);
-} DPS_XML_PARSER;
-
 static const char *DpsLex2str (int lex) {
   switch (lex) {
   case DPS_XML_EOF:      return "EOF";
@@ -108,7 +60,7 @@ static const char *DpsLex2str (int lex) {
 
 /************ /MY_XML **************/
 
-static int startElement(DPS_XML_PARSER *parser, const char *name, size_t l) {
+int DpsXMLstartElement(DPS_XML_PARSER *parser, const char *name, size_t l) {
   XML_PARSER_DATA *D = parser->user_data;
   char *p;
   
@@ -120,7 +72,7 @@ static int startElement(DPS_XML_PARSER *parser, const char *name, size_t l) {
   return DPS_XML_OK;
 }
 
-static int endElement(DPS_XML_PARSER *parser, const char *name, size_t l) {
+int DpsXMLendElement(DPS_XML_PARSER *parser, const char *name, size_t l) {
   XML_PARSER_DATA *D = parser->user_data;
   size_t i = l;
   char *p;
@@ -239,34 +191,34 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
 
 /************ MY_XML **************/
 
-static void DpsXMLParserCreate (DPS_XML_PARSER *p) {
+void DpsXMLParserCreate (DPS_XML_PARSER *p) {
   bzero((void*)p, sizeof(p[0]));
 }
 
-static void DpsXMLParserFree (DPS_XML_PARSER *p) {
+void DpsXMLParserFree (DPS_XML_PARSER *p) {
 }
 
-static void DpsXMLSetValueHandler (DPS_XML_PARSER *p, int (*action)(DPS_XML_PARSER *p, const char *s, size_t l)) {
+void DpsXMLSetValueHandler (DPS_XML_PARSER *p, int (*action)(DPS_XML_PARSER *p, const char *s, size_t l)) {
   p->value = action;
 }
 
-static void DpsXMLSetEnterHandler (DPS_XML_PARSER *p, int (*action)(DPS_XML_PARSER *p, const char *s, size_t l)) {
+void DpsXMLSetEnterHandler (DPS_XML_PARSER *p, int (*action)(DPS_XML_PARSER *p, const char *s, size_t l)) {
   p->enter = action;
 }
 
-static void DpsXMLSetLeaveHandler (DPS_XML_PARSER *p, int (*action)(DPS_XML_PARSER *p, const char *s, size_t l)) {
+void DpsXMLSetLeaveHandler (DPS_XML_PARSER *p, int (*action)(DPS_XML_PARSER *p, const char *s, size_t l)) {
   p->leave_xml = action;
 }
 
-static void DpsXMLSetUserData (DPS_XML_PARSER *p, void *user_data) {
+void DpsXMLSetUserData (DPS_XML_PARSER *p, void *user_data) {
   p->user_data = user_data;
 }
 
-static const char *DpsXMLErrorString (DPS_XML_PARSER *p) {
+const char *DpsXMLErrorString (DPS_XML_PARSER *p) {
   return(p->errstr);
 }
 
-static size_t DpsXMLErrorPos (DPS_XML_PARSER *p) {
+size_t DpsXMLErrorPos (DPS_XML_PARSER *p) {
   const char *beg = p->beg;
   const char *s;
   for (s = p->beg; s < p->cur; s++) {
@@ -276,7 +228,7 @@ static size_t DpsXMLErrorPos (DPS_XML_PARSER *p) {
   return(p->cur-beg);
 }
 
-static size_t DpsXMLErrorLineno (DPS_XML_PARSER *p) {
+size_t DpsXMLErrorLineno (DPS_XML_PARSER *p) {
   size_t res = 0;
   const char *s;
   for (s=p->beg; s<p->cur; s++) {
@@ -394,7 +346,7 @@ static int DpsXMLLeave(DPS_XML_PARSER *p, const char *str, size_t slen) {
 }
 
 
-static int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
+int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
   p->attrend = p->attr;
   p->beg = str;
   p->cur = str;
@@ -473,8 +425,8 @@ static int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t l
 	Data.secpath = DpsStrdup(ud->secpath);
 
 	DpsXMLSetUserData(&parser, &Data);
-	DpsXMLSetEnterHandler(&parser, startElement);
-	DpsXMLSetLeaveHandler(&parser, endElement);
+	DpsXMLSetEnterHandler(&parser, DpsXMLstartElement);
+	DpsXMLSetLeaveHandler(&parser, DpsXMLendElement);
 	DpsXMLSetValueHandler(&parser, Text);
 	rc = DpsXMLParser(&parser, level + 1, p->cur, (p->end - p->cur));
 	p->cur = parser.cur;
@@ -545,8 +497,8 @@ static int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t l
 	  Data.secpath = DpsStrdup(ud->secpath);
 
 	  DpsXMLSetUserData(&parser, &Data);
-	  DpsXMLSetEnterHandler(&parser, startElement);
-	  DpsXMLSetLeaveHandler(&parser, endElement);
+	  DpsXMLSetEnterHandler(&parser, DpsXMLstartElement);
+	  DpsXMLSetLeaveHandler(&parser, DpsXMLendElement);
 	  DpsXMLSetValueHandler(&parser, Text);
 	  rc = DpsXMLParser(&parser, level + 1, p->cur, (p->end - p->cur));
 	  p->cur = parser.cur;
@@ -757,8 +709,8 @@ int DpsXMLParse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   Data.body_strict = body_strict;
 
   DpsXMLSetUserData(&parser, &Data);
-  DpsXMLSetEnterHandler(&parser, startElement);
-  DpsXMLSetLeaveHandler(&parser, endElement);
+  DpsXMLSetEnterHandler(&parser, DpsXMLstartElement);
+  DpsXMLSetLeaveHandler(&parser, DpsXMLendElement);
   DpsXMLSetValueHandler(&parser, Text);
 
   if (DpsXMLParser(&parser, 0, buf_content, (int)dps_strlen(buf_content)) == DPS_XML_ERROR) {
