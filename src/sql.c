@@ -2204,7 +2204,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	    /* using CRC32 algorithm     */
 	    rec_id = crc32_rec_id;
 		
-	    dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (rec_id,url,referrer,hops,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES (%s%i%s,'%s',%s%i%s,%d,0,%d,0,%d,%d,%s%i%s,%s%i%s,%s%i%s,%li,0,0.25,%d,%d)",
+	    dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (rec_id,url,referrer,hops,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES (%s%i%s,'%s',%s%i%s,%d,0,%d,0,%d,%d,%s%i%s,%s%i%s,%s%i%s,%li,0,%s,%d,%d)",
 			 qu, rec_id, qu,
 			 e_url,
 			 qu, DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0), qu,
@@ -2216,6 +2216,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			 qu, DpsVarListFindInt(&Doc->Sections, "Content-Length", 0), qu,
 			 DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
 					      (Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
+			 DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			 (int)Indexer->now, Doc->charset_id
 			 );
 	    /* Exec INSERT now */
@@ -2234,7 +2235,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		return rc;
 	      next_url_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes,0,0));
 	      DpsSQLFree(&SQLRes);
-	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,%i,0,%d,0,%d,%d,%i,%i,%i,%li,0,0.25,%d,%d)",
+	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,%i,0,%d,0,%d,%d,%i,%i,%i,%li,0,%s,%d,%d)",
 			   e_url,
 			   DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
@@ -2246,6 +2247,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
+			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;
@@ -2258,7 +2260,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		 Change this for config parameter checking */
 /*			if (dps_strlen(e_url)>DPS_URLSIZE)e_url[DPS_URLSIZE]=0;*/
 	      /* Use sequence next_url_id.nextval */
-	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,next_url_id.nextval,0,%d,0,%d,%d,%i,%i,%i,%li,0,0.25,%d,%d)",
+	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,next_url_id.nextval,0,%d,0,%d,%d,%i,%i,%i,%li,0,%s,%d,%d)",
 			   e_url,
 			   DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
@@ -2269,11 +2271,12 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
+			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;
 	    case DPS_DB_MIMER:
-	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,NEXT_VALUE OF rec_id_GEN,0,%d,0,%d,%d,%i,%i,%i,%li,0,0.25,%d,%d)",
+	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,NEXT_VALUE OF rec_id_GEN,0,%d,0,%d,%d,%i,%i,%i,%li,0,%s,%d,%d)",
 			   e_url,
 			   DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
@@ -2284,11 +2287,12 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
+			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;		
 	    case DPS_DB_IBASE:
-	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,GEN_ID(rec_id_GEN,1),0,%d,0,%d,%d,%i,%i,%i,%li,0,0.25,%d,%d)",
+	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,rec_id,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%i,%d,GEN_ID(rec_id_GEN,1),0,%d,0,%d,%d,%i,%i,%i,%li,0,%s,%d,%d)",
 			   e_url,
 			   DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0),
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
@@ -2299,13 +2303,14 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
+			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;
 	    case DPS_DB_MYSQL:
 	      /* MySQL generates itself */
 	    default:	
-	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%s%i%s,%d,0,%d,0,%d,%d,%s%i%s,%s%i%s,%s%i%s,%li,0,0.25,%d,%d)",
+	      dps_snprintf(qbuf, 4 * len + 512, "INSERT INTO url (url,referrer,hops,crc32,next_index_time,status,seed,bad_since_time,site_id,server_id,docsize,last_mod_time,shows,pop_rank,since,charset_id) VALUES ('%s',%s%i%s,%d,0,%d,0,%d,%d,%s%i%s,%s%i%s,%s%i%s,%li,0,%s,%d,%d)",
 			   e_url,
 			   qu, DpsVarListFindInt(&Doc->Sections,"Referrer-ID",0), qu,
 			   DpsVarListFindInt(&Doc->Sections,"Hops",0),
@@ -2316,6 +2321,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   qu, DpsVarListFindInt(&Doc->Sections, "Content-Length", 0), qu,
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
+			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	    }
