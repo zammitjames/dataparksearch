@@ -109,6 +109,7 @@
 	{"MakeSuffixes",	1,1,	env_rpl_bool_var},
 	{"FillDictionary",      1,1,    env_rpl_bool_var},
 	{"URLInfoSQL",	        1,1,	env_rpl_bool_var},
+	{"SRVInfoSQL",		1,1,	env_rpl_bool_var},
 	{"CheckInsertSQL",      1,1,	env_rpl_bool_var},
 	{"MarkForIndex",        1,1,	env_rpl_bool_var},
 	{"UseDateHeader",       1,1,	env_rpl_bool_var},

@@ -970,6 +970,7 @@ typedef struct {
         int             limits;           /**< mask of defined cache mode limits */
         int             nmaps;
         int             URLInfoSQL;       /**< Store URLInfo into SQL-base for cache mode */
+        int             SRVInfoSQL;       /**< Store SRVInfo into SQL-base */
         int             CheckInsertSQL;   /**< Check before INSERT new record */
         int             mark_for_index;
         int             use_date_header;  /**< Use Date: HTTP header if Last-Modified: is not specified */

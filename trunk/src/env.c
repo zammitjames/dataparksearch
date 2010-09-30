@@ -66,6 +66,7 @@ DPS_ENV *DpsEnvInit(DPS_ENV *Conf){
 	Conf->Flags.GuesserBytes = 8192;
 	Conf->Flags.robots_period = 604800;   /* one week */
 	Conf->Flags.URLInfoSQL = 1;
+	Conf->Flags.SRVInfoSQL = 1;
 	Conf->Flags.CheckInsertSQL = 1;
 	Conf->Flags.mark_for_index = 1;
 	Conf->Flags.MaxSiteLevel = 2;

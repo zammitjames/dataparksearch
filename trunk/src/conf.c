@@ -1765,6 +1765,7 @@ static int env_rpl_bool_var(void *Cfg, size_t ac,char **av){
 	else if(!strcasecmp(av[0], "TrackHops")) Conf->Flags.track_hops = res;
 	else if(!strcasecmp(av[0], "PopRankPostpone")) Conf->Flags.poprank_postpone = res;
 	else if(!strcasecmp(av[0], "URLInfoSQL")) Conf->Flags.URLInfoSQL = res;
+	else if(!strcasecmp(av[0], "SRVInfoSQL")) Conf->Flags.SRVInfoSQL = res;
 	else if(!strcasecmp(av[0], "CheckInsertSQL")) Conf->Flags.CheckInsertSQL = res;
 	else if(!strcasecmp(av[0], "MarkForIndex")) Conf->Flags.mark_for_index = res;
 	else if(!strcasecmp(av[0], "UseDateHeader")) Conf->Flags.use_date_header = res;
