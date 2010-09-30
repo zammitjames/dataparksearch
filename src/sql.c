@@ -996,13 +996,25 @@ static int DpsServerTableFlush(DPS_DB *db){
 	dps_snprintf(str, sizeof(str), "SELECT rec_id FROM server WHERE parent!=%s0%s", qu, qu);
 	if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, str))) goto flush_exit;
 	rows = DpsSQLNumRows(&SQLRes);
-	for(i = 0; i < rows; i++) {
-	  dps_snprintf(str, sizeof(str), "SELECT COUNT(*) FROM url WHERE site_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
-	  if(DPS_OK != (rc = DpsSQLQuery(db, &SRes, str))) goto flush_exit;
-	  if (DPS_ATOI(DpsSQLValue(&SRes, 0, 0)) > 0) {
-	    dps_snprintf(str, sizeof(str),  "UPDATE server SET enabled=1 WHERE rec_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
-	    rc = DpsSQLAsyncQuery(db, NULL, str);
-	    if (rc != DPS_OK) goto flush_exit;
+	if (db->DBSQL_LIMIT) {
+	  for(i = 0; i < rows; i++) {
+	    dps_snprintf(str, sizeof(str), "SELECT 1 FROM url WHERE site_id=%s%s%s LIMIT 1", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	    if(DPS_OK != (rc = DpsSQLQuery(db, &SRes, str))) goto flush_exit;
+	    if (DpsSQLNumRows(&SRes) > 0) {
+	      dps_snprintf(str, sizeof(str),  "UPDATE server SET enabled=1 WHERE rec_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	      rc = DpsSQLAsyncQuery(db, NULL, str);
+	      if (rc != DPS_OK) goto flush_exit;
+	    }
+	  }
+	} else {
+	  for(i = 0; i < rows; i++) {
+	    dps_snprintf(str, sizeof(str), "SELECT COUNT(*) FROM url WHERE site_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	    if(DPS_OK != (rc = DpsSQLQuery(db, &SRes, str))) goto flush_exit;
+	    if (DPS_ATOI(DpsSQLValue(&SRes, 0, 0)) > 0) {
+	      dps_snprintf(str, sizeof(str),  "UPDATE server SET enabled=1 WHERE rec_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	      rc = DpsSQLAsyncQuery(db, NULL, str);
+	      if (rc != DPS_OK) goto flush_exit;
+	    }
 	  }
 	}
  flush_exit:
@@ -1174,7 +1186,7 @@ command, parent, ordre, weight, url, pop_weight \
 	  sprintf(buf, "DELETE FROM srvinfo WHERE srv_id=%s%i%s", qu, Server->site_id, qu);
 	  if(DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, buf))) goto ex;
 	  
-	  if (Server->parent == 0) {
+	  if ((Server->parent == 0) && A->Conf->Flags.SRVInfoSQL) {
 	    for (r = 0; r < 256; r++) {
 	      for(i = 0; i < Server->Vars.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Server->Vars.Root[r].Var[i];

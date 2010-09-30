@@ -174,6 +174,7 @@
 	{"SkipUnreferred",      1,1,    env_rpl_var},
 	{"Socket",		1,1,	env_rpl_var},
 	{"Spell",		3,3,	add_spell},
+	{"SRVInfoSQL",		1,1,	env_rpl_bool_var},
 	{"StopwordFile",	1,1,	add_stoplist},
 	{"StopwordsLoose",      1,1,    env_rpl_bool_var},
 	{"Store",               1,100,  add_store_filter},
