@@ -678,7 +678,7 @@ static int DpsSitemapEndElement(DPS_XML_PARSER *parser, const char *name, size_t
     Href.url = DpsVarListFindStr(&Doc->Sections, "URL", NULL);
     if (Href.url) {
       Href.method = DPS_METHOD_GET;
-      Href.checked = 1;
+      Href.checked = 0;
       Href.weight = DPS_ATOF(DpsVarListFindStr(&Doc->Sections, "Pop_Rank", "0.5"));
       DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
       if(Indexer->Hrefs.nhrefs > 1024) DpsStoreHrefs(Indexer);
