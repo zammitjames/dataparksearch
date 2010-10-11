@@ -2952,7 +2952,7 @@ void __DPSCALL DpsSQLFree(DPS_SQLRES * res){
 #if HAVE_DP_PGSQL
 	if(res->DBDriver==DPS_DB_PGSQL){
 	  if (res->pgsqlres) PQclear(res->pgsqlres);
-	  res->pgsqlres = NULL;
+	  bzero((void*)res, sizeof(*res));
 	  return;
 	}
 #endif
@@ -2960,7 +2960,7 @@ void __DPSCALL DpsSQLFree(DPS_SQLRES * res){
 #if HAVE_DP_MSQL
 	if(res->DBDriver==DPS_DB_MSQL){
 	  if (res->msqlres) msqlFreeResult(res->msqlres);
-	  res->msqlres = NULL;
+	  bzero((void*)res, sizeof(*res));
 	  return;
 	}
 #endif
@@ -2968,6 +2968,7 @@ void __DPSCALL DpsSQLFree(DPS_SQLRES * res){
 #if HAVE_ORACLE7
 	if(res->DBDriver==DPS_DB_ORACLE7){
 		oci_free_result(res)
+		bzero((void*)res, sizeof(*res));
 		return;
 	}
 #endif
@@ -2975,10 +2976,12 @@ void __DPSCALL DpsSQLFree(DPS_SQLRES * res){
 #if HAVE_ORACLE8
 	if(res->DBDriver==DPS_DB_ORACLE8){
 		oci_free_result(res);
+		bzero((void*)res, sizeof(*res));
 		return;
 	}
 #endif
 	udb_free_result(res);
+	bzero((void*)res, sizeof(*res));
 }
 
 
