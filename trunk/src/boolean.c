@@ -343,6 +343,8 @@ static int proceedSTOP(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x,
     res->pcur++; x->pcur++;
   }
   res->count = res->pcur - res->pbegin;
+  if (x->origin & DPS_WORD_ORIGIN_QUERY == 0)
+    if (stop->origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY) == (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY)) res->origin = DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY;
   return DPS_OK;
 }
 
@@ -491,8 +493,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 		    }
 		  }
 #if defined(DEBUG_BOOL)
-		  DpsLog(query, DPS_LOG_EXTRA,
-			 "Perform <{%d}:%d:%d> ->{%d}", x1 ? x1->count : 0, x1 ? x1->order_from : 0, x1 ? x1->order_to : 0, res.count);
+		  DpsLog(query, DPS_LOG_INFO, "Perform <{%d}:%d:%d> ->{%d}", x1 ? x1->count : 0, x1 ? x1->order_from : 0, x1 ? x1->order_to : 0, res.count);
 #endif
 		  rc = PUSHARG(s, &res);
 		  break;
@@ -540,10 +541,10 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 #endif
 
 
-			  if ((x1->order_inquery==x2->order_inquery)&&((x1origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))==(DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))) {
+			  if (((x1origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))==(DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))) {
 			    res.origin = x1origin;
 			  } else
-			  if ((x1->order_inquery==x2->order_inquery)&&((x2origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))==(DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))) {
+			  if (((x2origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))==(DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY))) {
 			    res.origin = x2origin;
 			  } else
 			  if (((x1origin & DPS_WORD_ORIGIN_STOP) && (x2origin & DPS_WORD_ORIGIN_STOP)) ||
@@ -556,7 +557,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			}
 			}
 #if defined(DEBUG_BOOL)
-			DpsLog(query, DPS_LOG_EXTRA, "Perform {%d}.%x | {%d}.%x -> {%d}.%x",
+			DpsLog(query, DPS_LOG_INFO, "Perform {%d}.%x | {%d}.%x -> {%d}.%x",
 			       (x1) ? x1->count:-1, (x1)?x1->origin:-1, (x2)?x2->count : -1, (x2) ? x2->origin : -1, res.count, res.origin);
 /*			printBoolRes(query, &res);*/
 			DpsLog(query, DPS_LOG_EXTRA, "===");
@@ -657,7 +658,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			DpsStackItemFree(x1); DpsStackItemFree(x2);
 			res.count = res.pcur - res.pbegin;
 #if defined(DEBUG_BOOL)
-			DpsLog(query, DPS_LOG_EXTRA,"Perform {%d}.%x NEAR {%d}.%x - > %d.%d", 
+			DpsLog(query, DPS_LOG_INFO, "Perform {%d}.%x NEAR {%d}.%x - > %d.%d", 
 			       (x1)?x1->count:-1, (x1)?x1->origin:-1, (x2) ? x2->count : -1, (x2) ? x2->origin: - 1, res.count, res.origin);
 /*			printBoolRes(query, &res);*/
 			DpsLog(query, DPS_LOG_EXTRA, "===");
@@ -746,8 +747,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			DpsStackItemFree(x1); DpsStackItemFree(x2);
 			res.count = res.pcur - res.pbegin;
 #if defined(DEBUG_BOOL)
-			DpsLog(query, DPS_LOG_EXTRA, "Perform {%d} ANYWORD {%d} - > %d", 
-			       (x1) ? x1->count : -1, (x2) ? x2->count : -1, res.count);
+			DpsLog(query, DPS_LOG_INFO, "Perform {%d} ANYWORD {%d} - > %d", (x1) ? x1->count : -1, (x2) ? x2->count : -1, res.count);
 #endif
 			rc = PUSHARG(s, &res);
 			break;
@@ -854,7 +854,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  }
 			}
 #endif
-			DpsLog(query, DPS_LOG_EXTRA, "Perform {%d}.%x & {%d}.%x - > {%d}.%x", 
+			DpsLog(query, DPS_LOG_INFO, "Perform {%d}.%x & {%d}.%x - > {%d}.%x", 
 	       (x1) ? x1->count : -1, (x1) ? x1->origin : -1, (x2) ? x2->count : -1 , (x2) ? x2->origin : -1, res.count, res.origin);
 /*			printBoolRes(query, &res);*/
 			DpsLog(query, DPS_LOG_EXTRA, "===");
@@ -873,7 +873,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 			  rc = PUSHARG(s, x1);
 			}
 #if defined(DEBUG_BOOL)
-			DpsLog(query, DPS_LOG_EXTRA, "Perform ~ {%d}", (x1) ? x1->count : -1);
+			DpsLog(query, DPS_LOG_INFO, "Perform ~ {%d}", (x1) ? x1->count : -1);
 /*			printBoolRes(query, &x1);*/
 			DpsLog(query, DPS_LOG_EXTRA, "===");
 #endif
