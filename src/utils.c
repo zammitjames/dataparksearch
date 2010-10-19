@@ -573,6 +573,11 @@ static time_t dps_tz_adjust(time_t timevalue, const char *tz_name) {
   time_t add = 0;
 
   if (tz_name == NULL) return timevalue;
+  if (*tz_name == '+' || *tz_name == '-') {
+    add = (tz_name[1] - '0') * 36000 + (tz_name[2] - '0') * 3600 + (tz_name[4] - '0') * 600 + (tz_name[5] - '0') * 60;
+    if (*tz_name == '+') return timevalue - add;
+    return timevalue + add;
+  }else
   if (strncasecmp(tz_name, "PM ", 3) == 0) {
     add = 12 * 3600;
     key.name = tz_name + 3;
@@ -732,6 +737,9 @@ static int ap_checkmask(const char *data, const char *mask) {
 	    if ((d != ' ') && !ap_isdigit(d))
 		return 0;
 	    break;
+        case '+':
+	  if ((d != '+') && (d != '-'))
+	        return 0;
 	default:
 	    if (mask[i] != d)
 		return 0;
@@ -834,7 +842,7 @@ static time_t ap_tm2sec(const struct tm * t)
 time_t DpsHttpDate2Time_t(const char *date){
     struct tm ds;
     int mint, mon;
-    const char *monstr, *timstr, *tz_str = NULL;
+    const char *monstr = NULL, *timstr, *tz_str = NULL;
     static const int months[12] =
     {
 	('J' << 16) | ('a' << 8) | 'n', ('F' << 16) | ('e' << 8) | 'b',
@@ -910,6 +918,27 @@ time_t DpsHttpDate2Time_t(const char *date){
 	monstr = date;
 	timstr = date + 7;
     }
+    else if (ap_checkmask(date, "####-##-##T##:##:##Z*")) {	/* ISO 8601 format, UTC  */
+      ds.tm_year = ((date[0] - '0') * 10 + (date[1] - '0') - 19) * 100;
+      if (ds.tm_year < 0)
+	return BAD_DATE;
+      ds.tm_year += ((date[2] - '0') * 10) + (date[3] - '0');
+
+      ds.tm_mon = mon = (date[5] - '0') * 10 + (date[6] - '0');
+      ds.tm_mday = (date[8] - '0') * 10 + (date[9] - '0');
+      timstr = date + 11;
+    }
+    else if (ap_checkmask(date, "####-##-##T##:##:##+##:##*")) {	/* ISO 8601 format */
+      ds.tm_year = ((date[0] - '0') * 10 + (date[1] - '0') - 19) * 100;
+      if (ds.tm_year < 0)
+	return BAD_DATE;
+      ds.tm_year += ((date[2] - '0') * 10) + (date[3] - '0');
+
+      ds.tm_mon = mon = (date[5] - '0') * 10 + (date[6] - '0');
+      ds.tm_mday = (date[8] - '0') * 10 + (date[9] - '0');
+      timstr = date + 11;
+      tz_str = date + 19;
+    }
     else
 	return BAD_DATE;
 
@@ -923,15 +952,19 @@ time_t DpsHttpDate2Time_t(const char *date){
     if ((ds.tm_hour > 23) || (ds.tm_min > 59) || (ds.tm_sec > 61))
 	return BAD_DATE;
 
-    mint = (monstr[0] << 16) | (monstr[1] << 8) | monstr[2];
-    for (mon = 0; mon < 12; mon++)
+    if (monstr != NULL) {
+      mint = (monstr[0] << 16) | (monstr[1] << 8) | monstr[2];
+      for (mon = 0; mon < 12; mon++)
 	if (mint == months[mon])
-	    break;
-    if (mon == 12)
+	  break;
+      if (mon == 12)
 	return BAD_DATE;
 
+      ds.tm_mon = mon;
+    }
+
     if ((ds.tm_mday == 31) && (mon == 3 || mon == 5 || mon == 8 || mon == 10))
-	return BAD_DATE;
+      return BAD_DATE;
 
     /* February gets special check for leapyear */
 
@@ -941,9 +974,7 @@ time_t DpsHttpDate2Time_t(const char *date){
 	     && ((ds.tm_year & 3)
 		 || (((ds.tm_year % 100) == 0)
 		     && (((ds.tm_year % 400) != 100)))))))
-	return BAD_DATE;
-
-    ds.tm_mon = mon;
+      return BAD_DATE;
 
 /*    fprintf(stderr, " -- parseHTTPdate: %s is %lu adjusted to %lu\n", date, ap_tm2sec(&ds), dps_tz_adjust(ap_tm2sec(&ds), tz_str));*/
 
