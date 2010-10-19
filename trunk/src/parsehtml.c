@@ -1451,6 +1451,9 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		if(!strcasecmp(metaname, "Last-Modified")) {
 		  DpsVarListReplaceStr(&Doc->Sections, metaname, metacont);
 		}else
+		if(!strcasecmp(metaname, "Date")) {
+		  DpsVarListReplaceStr(&Doc->Sections, metaname, metacont);
+		}else
 		if(!strcasecmp(metaname, "geo.position")) {
 		  double lat, lon;
 		  char *l = strchr(metacont, (int)';');
