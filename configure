@@ -22017,8 +22017,24 @@ $as_echo_n "checking for MySQL support... " >&6; }
 if test "${with_mysql+set}" = set; then
   withval=$with_mysql;
   if test "$withval" != "no"; then
+    MYSQL_INCLUDE=""
+    MYSQL_LFLAGS=""
   	if test "$withval" = "yes"; then
-		if test -f /usr/local/mysql/include/mysql/mysql.h; then
+
+		PATH_DIRS=`echo $PATH | tr : \ `
+	    	MY_DIRS="/usr/bin /usr/local/bin"
+	    	MYSQL_CONFIG=""
+	    	for DIR in $PATH_DIRS $MY_DIRS; do
+        		if test -f $DIR/mysql_config; then
+            			MYSQL_CONFIG=$DIR/mysql_config
+				break;
+			fi
+	    	done
+
+		if test "$MYSQL_CONFIG" != ""; then
+			MYSQL_INCLUDE=`$MYSQL_CONFIG --include`
+			MYSQL_LFLAGS=`$MYSQL_CONFIG --libs`
+		elif test -f /usr/local/mysql/include/mysql/mysql.h; then
 			MYSQL_INCDIR=/usr/local/mysql/include/mysql
 			MYSQL_LIBDIR=/usr/local/mysql/lib/mysql
 			withval="/usr/local/mysql"
@@ -22064,8 +22080,12 @@ $as_echo "$as_me: error: Invalid MySQL directory - unable to find mysql.h under 
    { (exit 1); exit 1; }; }
 		fi
    	fi
-    MYSQL_INCLUDE="-I$MYSQL_INCDIR"
-    MYSQL_LFLAGS="-L$MYSQL_LIBDIR -lmysqlclient"
+    if test "$MYSQL_INCLUDE" == ""; then
+    	MYSQL_INCLUDE="-I$MYSQL_INCDIR"
+    fi
+    if test "$MYSQL_LFLAGS" == ""; then
+    	MYSQL_LFLAGS="-L$MYSQL_LIBDIR -lmysqlclient"
+    fi
 
     cat >>confdefs.h <<\_ACEOF
 #define HAVE_DP_MYSQL 1
