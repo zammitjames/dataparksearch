@@ -2410,27 +2410,55 @@ void * dps_bsearch(const void *key, const void *base0, size_t nmemb, size_t size
 	return (NULL);
 }
 
+
+
+
 /*
- * Perform an interpolation search.
+ * Heapsort.
  *
 */
-void * dps_isearch(const void *key, const void *base0, size_t nmemb0, size_t size, int (*compar)(const void *, const void *)) {
-	const char *base = base0;
-	size_t nmemb = nmemb0 - 1;
-	int cmp;
-	const void *p;
 
-	if ((*compar)(key, base0) < 0) return NULL;
-	p = base + (nmemb - 1) * size;
-	if ((*compar)(key, p) > 0) return NULL;
-	while(1) {
-	  if (nmemb == 0) {
-	    p = base;
-	  } else {
-	  }
-	}
+int dps_heapsort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *)) {
+  size_t n = nmemb, i = (n / 2), parent, child;
+  char *t;
+  unsigned char *cbase = (unsigned char*)base;
+
+  if (nmemb < 1 || size < 1) return -1;
+  t = DpsMalloc(size + 1);
+  if (t == NULL) return -1;
+
+  while(1) {
+    if (i > 0) {
+      i--;
+      dps_memcpy(t, cbase + i * size, size);
+    } else {
+      n--;
+      if (n == 0) {
+	DPS_FREE(t);
+	return 0;
+      }
+      dps_memcpy(t, cbase + n * size, size);
+      dps_memcpy(cbase + n * size, cbase, size);
+    }
+
+    parent = i;
+    child = (i * 2) + 1;
+
+    while(child < n) {
+      if (child + 1 < n && compar(cbase + (child + 1) * size, cbase + child * size) > 0) {
+	child ++;
+      }
+      if (compar(cbase + (child * size), t) > 0) {
+	dps_memcpy(cbase + parent * size, cbase + child * size, size);
+	parent = child;
+	child = parent * 2 + 1;
+      } else {
+	break;
+      }
+    }
+    dps_memcpy(cbase + parent * size, t, size);
+  }
 }
-
 
 
 

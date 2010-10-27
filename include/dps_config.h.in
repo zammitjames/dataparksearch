@@ -700,14 +700,7 @@ extern void *DpsRealloc(void *p, size_t size);
 
 
 #define DpsSort qsort
-
-#ifdef HAVE_MERGESORT
-#define DpsPreSort mergesort
-#elif defined(HAVE_HEAPSORT)
-#define DpsPreSort heapsort
-#else
-#define DpsPreSort qsort
-#endif
+#define DpsPreSort dps_heapsort
 
 
 #ifdef WITH_PARANOIA
