@@ -139,6 +139,7 @@ int DpsMethod(const char *s){
 	else if(!strcasecmp(s,"CheckMP3Only"))	return DPS_METHOD_CHECKMP3ONLY;
 	else if(!strcasecmp(s,"CheckMP3"))	return DPS_METHOD_CHECKMP3;
 	else if(!strcasecmp(s,"CheckOnly"))	return DPS_METHOD_HEAD;
+	else if(!strcasecmp(s,"CheckOnlyIf"))	return DPS_METHOD_HEAD;
 	else if(!strcasecmp(s,"HrefOnly"))	return DPS_METHOD_HREFONLY;
 	else if(!strcasecmp(s,"Skip"))		return DPS_METHOD_VISITLATER;
 	else if(!strcasecmp(s,"IndexIf"))       return DPS_METHOD_INDEX;
@@ -1747,6 +1748,7 @@ static int env_rpl_bool_var(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	int res = !strcasecmp(av[1], "yes");
+	int force = !strcasecmp(av[1], "force");
 	if(!strcasecmp(av[0], "LogsOnly")) Conf->logs_only = res;
 	else if(!strcasecmp(av[0], "DoStore")) Conf->Flags.do_store = res;
 	else if(!strcasecmp(av[0], "DoExcerpt")) Conf->Flags.do_excerpt = res;
@@ -1768,7 +1770,7 @@ static int env_rpl_bool_var(void *Cfg, size_t ac,char **av){
 	else if(!strcasecmp(av[0], "SRVInfoSQL")) Conf->Flags.SRVInfoSQL = res;
 	else if(!strcasecmp(av[0], "CheckInsertSQL")) Conf->Flags.CheckInsertSQL = res;
 	else if(!strcasecmp(av[0], "MarkForIndex")) Conf->Flags.mark_for_index = res;
-	else if(!strcasecmp(av[0], "UseDateHeader")) Conf->Flags.use_date_header = res;
+	else if(!strcasecmp(av[0], "UseDateHeader")) Conf->Flags.use_date_header = (force) ? 2 : ((res) ? 1 : 0);
 	else if(!strcasecmp(av[0], "ProvideReferer")) Conf->Flags.provide_referer = res;
 	else if(!strcasecmp(av[0], "MakePrefixes")) Conf->Flags.make_prefixes = res;
 	else if(!strcasecmp(av[0], "MakeSuffixes")) Conf->Flags.make_suffixes = res;
