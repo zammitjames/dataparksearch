@@ -615,6 +615,7 @@ static char * strdupnull(const char * src){
 }
 
 
+
 static int DpsURLDB(DPS_AGENT *Indexer, DPS_SERVER *S, DPS_DB *db) {
   size_t	rows, i;
   DPS_SQLRES	SQLRes;
@@ -2226,7 +2227,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			 qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			 qu, DpsVarListFindInt(&Doc->Sections, "Server_id", 0), qu,
 			 qu, DpsVarListFindInt(&Doc->Sections, "Content-Length", 0), qu,
-			 DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
+			 DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 					      (Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 			 DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			 (int)Indexer->now, Doc->charset_id
@@ -2257,7 +2258,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
-			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
+			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
@@ -2281,7 +2282,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
-			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
+			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
@@ -2297,7 +2298,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
-			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
+			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
@@ -2313,7 +2314,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Server_id", 0),
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
-			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
+			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
@@ -2331,7 +2332,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			   qu, DpsVarListFindInt(&Doc->Sections, "Server_id", 0), qu,
 			   qu, DpsVarListFindInt(&Doc->Sections, "Content-Length", 0), qu,
-			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
+			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			   (int)Indexer->now, Doc->charset_id
@@ -2972,7 +2973,7 @@ docsize=%d,pop_rank=%s%s%s,\
 crc32=%d%s, site_id=%s%i%s, server_id=%s%i%s \
 WHERE rec_id=%s%s%s",
 	status,
-	DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", 
+	DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 					     (Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 	DpsVarListFindStr(&Doc->Sections, "Next-Index-Time","0"),
 	DpsVarListFindInt(&Doc->Sections,"Content-Length",0),
@@ -6626,7 +6627,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   if ((pdiv = fabs(PopRank - Oi)) > EPS) to_update++;
   u_it = ( (cur_div > EPS || pdiv > EPS) && n_Oi > 0);
 
-  DpsLog(A, DPS_LOG_DEBUG, " -- di:%f  Oi:%f  cur_div:%f  pdiv:%f  nOi:%d", di, Oi, cur_div, pdiv, n_Oi);
+/*  DpsLog(A, DPS_LOG_DEBUG, " -- di:%f  Oi:%f  cur_div:%f  pdiv:%f  nOi:%d", di, Oi, cur_div, pdiv, n_Oi);*/
 
   for (it = 0; u_it && (it < A->Flags.PopRankNeoIterations); it++) {
 
