@@ -6158,7 +6158,7 @@ __C_LINK int __DPSCALL DpsSQLLimit8(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const c
 	u = 1;
 	offset = (dps_uint8)0;
 	while (u) {
-	  dps_snprintf(qbuf, qbuflen, "%s OFFSET %ld LIMIT %d", req, (long)offset, url_num);
+	  dps_snprintf(qbuf, qbuflen, "%s LIMIT %d OFFSET %ld", req, url_num, (long)offset);
 	  for (i = 0; i < 3; i++) {
 	    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
 	    rc = DpsSQLQuery(db, &SQLres, qbuf);
@@ -6221,7 +6221,7 @@ __C_LINK int __DPSCALL DpsSQLLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const c
 	u = 1;
 	offset = (dps_uint8)0;
 	while (u) {
-	  dps_snprintf(qbuf, qbuflen, "%s OFFSET %ld LIMIT %d", req, (long)offset, url_num);
+	  dps_snprintf(qbuf, qbuflen, "%s LIMIT %d OFFSET %ld", req, url_num, (long)offset);
 	  for (i = 0; i < 3; i++) {
 	    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
 	    rc = DpsSQLQuery(db, &SQLres, qbuf);
