@@ -539,7 +539,7 @@ static int DpsDocConvertHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 		Href->charset_id = Doc->charset_id;
 		DpsConvertHref(Indexer,&Doc->CurURL,Href);
 		Href->referrer=url_id;
-		if ((server_id != Href->server_id) || (maxhops > Href->hops)) {
+		if ((server_id != Href->server_id) || (maxhops >= Href->hops)) {
 		  Href->stored = 0;
 		} else {
 		  if (Href->method != DPS_METHOD_DISALLOW) 
