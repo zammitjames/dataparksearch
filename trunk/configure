@@ -21300,7 +21300,7 @@ if test $ac_cv_lib_aspell_new_aspell_config = yes; then
 _ACEOF
  aspell=yes break;
 else
-  LIBS="$LIBS_save"
+  LIBS="$LIBS_save" $as_unset ac_cv_lib_aspell_new_aspell_config || test "${ac_cv_lib_aspell_new_aspell_config+set}" != set || { ac_cv_lib_aspell_new_aspell_config=; export ac_cv_lib_aspell_new_aspell_config; }
 fi
 
     	done
