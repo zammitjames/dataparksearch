@@ -20844,6 +20844,9 @@ _ACEOF
 _ACEOF
 
 	ADDCHARSETS="japanese"
+	MECAB_LFLAGS="-L/usr/local/lib -lmecab -lstdc++"
+	MECAB_INCLUDE="-I/usr/local/include"
+	INCLUDES="$INCLUDES -I/usr/local/include"
 	{ $as_echo "$as_me:$LINENO: result: yes" >&5
 $as_echo "yes" >&6; }
 else
@@ -20857,10 +20860,6 @@ fi
 rm -rf conftest.dSYM
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
-
-	MECAB_LFLAGS="-L/usr/local/lib -lmecab -lstdc++"
-	MECAB_INCLUDE="-I/usr/local/include"
-	INCLUDES="$INCLUDES -I/usr/local/include"
 
 	LIBS="$LIBS_SAVE"
 	CFLAGS="$CFLAGS_SAVE"

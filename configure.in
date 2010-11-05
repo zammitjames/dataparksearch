@@ -1214,12 +1214,11 @@ AC_TRY_LINK([#include <stdio.h>
 	AC_DEFINE(MECAB)
 	AC_DEFINE(HAVE_CHARSET_japanese)
 	ADDCHARSETS="japanese"
-	AC_MSG_RESULT(yes),
-	AC_MSG_RESULT(no))
-
 	MECAB_LFLAGS="-L/usr/local/lib -lmecab -lstdc++"
 	MECAB_INCLUDE="-I/usr/local/include"
 	INCLUDES="$INCLUDES -I/usr/local/include"
+	AC_MSG_RESULT(yes),
+	AC_MSG_RESULT(no))
 
 	LIBS="$LIBS_SAVE"
 	CFLAGS="$CFLAGS_SAVE"
