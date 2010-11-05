@@ -1347,7 +1347,7 @@ elif test "$aspell" = "yes" ; then
 			LIBS="$LIBS -laspell -lstdc++"
 			;;
 		esac
-		AC_CHECK_LIB(aspell, new_aspell_config, AC_DEFINE(HAVE_ASPELL) aspell=yes break;, LIBS="$LIBS_save")
+		AC_CHECK_LIB(aspell, new_aspell_config, AC_DEFINE(HAVE_ASPELL) aspell=yes break;, LIBS="$LIBS_save" AS_UNSET(ac_cv_lib_aspell_new_aspell_config))
     	done
 
 	if test "$aspell" != "yes" ; then
