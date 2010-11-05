@@ -21218,7 +21218,7 @@ elif test "$aspell" = "yes" ; then
     if test "$aspell" = "yes" ; then
 
 	aspell=no
-	MY_DIRS="/usr/local/lib /usr/lib /opt/local/lib /opt/lib"
+	MY_DIRS="/usr/lib /usr/local/lib /opt/local/lib /opt/lib"
     	for DIR in $MY_DIRS; do
 		LIBS="$LIBS -L$DIR"
 		case "$host" in
@@ -21300,9 +21300,10 @@ if test $ac_cv_lib_aspell_new_aspell_config = yes; then
 _ACEOF
  aspell=yes break;
 else
-  LIBS="$LIBS_save" $as_unset ac_cv_lib_aspell_new_aspell_config || test "${ac_cv_lib_aspell_new_aspell_config+set}" != set || { ac_cv_lib_aspell_new_aspell_config=; export ac_cv_lib_aspell_new_aspell_config; }
+  LIBS="$LIBS_save"
 fi
 
+		$as_unset ac_cv_lib_aspell_new_aspell_config || test "${ac_cv_lib_aspell_new_aspell_config+set}" != set || { ac_cv_lib_aspell_new_aspell_config=; export ac_cv_lib_aspell_new_aspell_config; }
     	done
 
 	if test "$aspell" != "yes" ; then
@@ -22031,32 +22032,32 @@ if test "${with_mysql+set}" = set; then
 			fi
 	    	done
 
-		if test "$MYSQL_CONFIG" != ""; then
+		if test $MYSQL_CONFIG != ""; then
 			MYSQL_INCLUDE=`$MYSQL_CONFIG --include`
 			MYSQL_LFLAGS=`$MYSQL_CONFIG --libs`
 		elif test -f /usr/local/mysql/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/usr/local/mysql/include/mysql
-			MYSQL_LIBDIR=/usr/local/mysql/lib/mysql
+			MYSQL_INCLUDE="-I/usr/local/mysql/include/mysql"
+			MYSQL_LFLAGS="-L/usr/local/mysql/lib/mysql -lmysqlclient"
 			withval="/usr/local/mysql"
 		elif test -f /usr/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/usr/include/mysql
-			MYSQL_LIBDIR=/usr/lib/mysql
+			MYSQL_INCLUDE="-I/usr/include/mysql"
+			MYSQL_LFLAGS="-L/usr/lib/mysql -lmysqlclient"
 			withval="/usr"
 		elif test -f /usr/include/mysql.h; then
-			MYSQL_INCDIR=/usr/include
-			MYSQL_LIBDIR=/usr/lib
+			MYSQL_INCLUDE="-I/usr/include"
+			MYSQL_LFLAGS="-L/usr/lib -lmysqlclient"
 			withval="/usr"
 		elif test -f /usr/local/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/usr/local/include/mysql
-			MYSQL_LIBDIR=/usr/local/lib/mysql
+			MYSQL_INCLUDE="-I/usr/local/include/mysql"
+			MYSQL_LFLAGS="-L/usr/local/lib/mysql -lmysqlclient"
 			withval="/usr/local"
 		elif test -f /usr/local/include/mysql.h; then
-			MYSQL_INCDIR=/usr/local/include
-			MYSQL_LIBDIR=/usr/local/lib
+			MYSQL_INCLUDE="-I/usr/local/include"
+			MYSQL_LFLAGS="-L/usr/local/lib -lmysqlclient"
 			withval="/usr/local"
 		elif test -f /Library/MySQL/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/Library/MySQL/include/mysql
-			MYSQL_LIBDIR=/Library/MySQL/lib/mysql
+			MYSQL_INCLUDE="-I/Library/MySQL/include/mysql"
+			MYSQL_LFLAGS=="-L/Library/MySQL/lib/mysql -lmysqlclient"
 			withval="/Library/MySQL"
 		else
 			{ $as_echo "$as_me:$LINENO: result: no" >&5
@@ -22079,13 +22080,9 @@ $as_echo "no" >&6; }
 $as_echo "$as_me: error: Invalid MySQL directory - unable to find mysql.h under $withval" >&2;}
    { (exit 1); exit 1; }; }
 		fi
+	    	MYSQL_INCLUDE="-I$MYSQL_INCDIR"
+    		MYSQL_LFLAGS="-L$MYSQL_LIBDIR -lmysqlclient"
    	fi
-    if test "$MYSQL_INCLUDE" == ""; then
-    	MYSQL_INCLUDE="-I$MYSQL_INCDIR"
-    fi
-    if test "$MYSQL_LFLAGS" == ""; then
-    	MYSQL_LFLAGS="-L$MYSQL_LIBDIR -lmysqlclient"
-    fi
 
     cat >>confdefs.h <<\_ACEOF
 #define HAVE_DP_MYSQL 1

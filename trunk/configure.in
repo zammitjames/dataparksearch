@@ -1336,7 +1336,7 @@ elif test "$aspell" = "yes" ; then
     if test "$aspell" = "yes" ; then
 
 	aspell=no
-	MY_DIRS="/usr/local/lib /usr/lib /opt/local/lib /opt/lib"
+	MY_DIRS="/usr/lib /usr/local/lib /opt/local/lib /opt/lib"
     	for DIR in $MY_DIRS; do
 		LIBS="$LIBS -L$DIR"
 		case "$host" in
@@ -1347,7 +1347,8 @@ elif test "$aspell" = "yes" ; then
 			LIBS="$LIBS -laspell -lstdc++"
 			;;
 		esac
-		AC_CHECK_LIB(aspell, new_aspell_config, AC_DEFINE(HAVE_ASPELL) aspell=yes break;, LIBS="$LIBS_save" AS_UNSET(ac_cv_lib_aspell_new_aspell_config))
+		AC_CHECK_LIB(aspell, new_aspell_config, AC_DEFINE(HAVE_ASPELL) aspell=yes break;, LIBS="$LIBS_save")
+		AS_UNSET([ac_cv_lib_aspell_new_aspell_config])
     	done
 
 	if test "$aspell" != "yes" ; then
@@ -1791,32 +1792,32 @@ What DBMS support do you want (you may select several):
 			fi
 	    	done
 
-		if test "$MYSQL_CONFIG" != ""; then
+		if test $MYSQL_CONFIG != ""; then
 			MYSQL_INCLUDE=`$MYSQL_CONFIG --include`
 			MYSQL_LFLAGS=`$MYSQL_CONFIG --libs`
 		elif test -f /usr/local/mysql/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/usr/local/mysql/include/mysql
-			MYSQL_LIBDIR=/usr/local/mysql/lib/mysql
+			MYSQL_INCLUDE="-I/usr/local/mysql/include/mysql"
+			MYSQL_LFLAGS="-L/usr/local/mysql/lib/mysql -lmysqlclient"
 			withval="/usr/local/mysql"
 		elif test -f /usr/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/usr/include/mysql
-			MYSQL_LIBDIR=/usr/lib/mysql
+			MYSQL_INCLUDE="-I/usr/include/mysql"
+			MYSQL_LFLAGS="-L/usr/lib/mysql -lmysqlclient"
 			withval="/usr"
 		elif test -f /usr/include/mysql.h; then
-			MYSQL_INCDIR=/usr/include
-			MYSQL_LIBDIR=/usr/lib
+			MYSQL_INCLUDE="-I/usr/include"
+			MYSQL_LFLAGS="-L/usr/lib -lmysqlclient"
 			withval="/usr"
 		elif test -f /usr/local/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/usr/local/include/mysql
-			MYSQL_LIBDIR=/usr/local/lib/mysql
+			MYSQL_INCLUDE="-I/usr/local/include/mysql"
+			MYSQL_LFLAGS="-L/usr/local/lib/mysql -lmysqlclient"
 			withval="/usr/local"
 		elif test -f /usr/local/include/mysql.h; then
-			MYSQL_INCDIR=/usr/local/include
-			MYSQL_LIBDIR=/usr/local/lib
+			MYSQL_INCLUDE="-I/usr/local/include"
+			MYSQL_LFLAGS="-L/usr/local/lib -lmysqlclient"
 			withval="/usr/local"
 		elif test -f /Library/MySQL/include/mysql/mysql.h; then
-			MYSQL_INCDIR=/Library/MySQL/include/mysql
-			MYSQL_LIBDIR=/Library/MySQL/lib/mysql
+			MYSQL_INCLUDE="-I/Library/MySQL/include/mysql"
+			MYSQL_LFLAGS=="-L/Library/MySQL/lib/mysql -lmysqlclient"
 			withval="/Library/MySQL"
 		else
 			AC_MSG_RESULT(no)
@@ -1833,13 +1834,9 @@ What DBMS support do you want (you may select several):
 			AC_MSG_RESULT(no)
 			AC_MSG_ERROR(Invalid MySQL directory - unable to find mysql.h under $withval)
 		fi
+	    	MYSQL_INCLUDE="-I$MYSQL_INCDIR"
+    		MYSQL_LFLAGS="-L$MYSQL_LIBDIR -lmysqlclient"
    	fi
-    if test "$MYSQL_INCLUDE" == ""; then
-    	MYSQL_INCLUDE="-I$MYSQL_INCDIR"
-    fi
-    if test "$MYSQL_LFLAGS" == ""; then
-    	MYSQL_LFLAGS="-L$MYSQL_LIBDIR -lmysqlclient"
-    fi
 
     AC_DEFINE(HAVE_DP_MYSQL)
     AC_MSG_RESULT($withval)
