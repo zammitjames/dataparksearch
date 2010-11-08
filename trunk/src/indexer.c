@@ -404,9 +404,8 @@ __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT * Indexer) {
 	    DpsVarListDel(&Doc.Sections, "URL_ID");
 	    Doc.charset_id = H->charset_id;
 	    if (H->delay) {
-	      dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
+	      dps_snprintf(dbuf, sizeof(dbuf), "%lu", next_index_time + H->delay);
 	      DpsVarListReplaceStr(&Doc.Sections, "Next-Index-Time", dbuf);
-	      next_index_time += (time_t)H->delay;
 	    }
 	    if( H->method != DPS_METHOD_DISALLOW && H->method != DPS_METHOD_VISITLATER
 		/*dps_strlen(H->url) <= DPS_URLSIZE*/) { /* FIXME: replace this by config parameter chacking */
