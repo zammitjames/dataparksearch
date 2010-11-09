@@ -702,6 +702,7 @@ extern "C" {
  *   # - digit
  *   ~ - digit or space
  *   * - swallow remaining characters 
+ *   + - plus or minus sign
  *  <x> - exact match for any other character
  */
 static int ap_checkmask(const char *data, const char *mask) {
@@ -740,6 +741,7 @@ static int ap_checkmask(const char *data, const char *mask) {
         case '+':
 	  if ((d != '+') && (d != '-'))
 	        return 0;
+	    break;
 	default:
 	    if (mask[i] != d)
 		return 0;
@@ -861,13 +863,37 @@ time_t DpsHttpDate2Time_t(const char *date){
     if (*date == '\0')
 	return BAD_DATE;
 
-    if ((date = strchr(date, ' ')) == NULL)	/* Find space after weekday */
+
+    if (ap_checkmask(date, "####-##-##T##:##:##Z*")) {	/* ISO 8601 format, UTC  */
+      ds.tm_year = ((date[0] - '0') * 10 + (date[1] - '0') - 19) * 100;
+      if (ds.tm_year < 0)
+	return BAD_DATE;
+      ds.tm_year += ((date[2] - '0') * 10) + (date[3] - '0');
+
+      ds.tm_mon = mon = (date[5] - '0') * 10 + (date[6] - '0') - 1;
+      ds.tm_mday = (date[8] - '0') * 10 + (date[9] - '0');
+      timstr = date + 11;
+    }
+    else if (ap_checkmask(date, "####-##-##T##:##:##+##:##*")) {	/* ISO 8601 format */
+      ds.tm_year = ((date[0] - '0') * 10 + (date[1] - '0') - 19) * 100;
+      if (ds.tm_year < 0)
+	return BAD_DATE;
+      ds.tm_year += ((date[2] - '0') * 10) + (date[3] - '0');
+
+      ds.tm_mon = mon = (date[5] - '0') * 10 + (date[6] - '0') - 1;
+      ds.tm_mday = (date[8] - '0') * 10 + (date[9] - '0');
+      timstr = date + 11;
+      tz_str = date + 19;
+    } else {
+
+
+      if ((date = strchr(date, ' ')) == NULL)	/* Find space after weekday */
 	return BAD_DATE;
 
-    ++date;			/* Now pointing to first char after space, which should be */
+      ++date;			/* Now pointing to first char after space, which should be */
     /* start of the actual date information for all 3 formats. */
 
-    if (ap_checkmask(date, "## @$$ #### ##:##:## *")) {	/* RFC 1123 format */
+      if (ap_checkmask(date, "## @$$ #### ##:##:## *")) {	/* RFC 1123 format */
 	ds.tm_year = ((date[7] - '0') * 10 + (date[8] - '0') - 19) * 100;
 	if (ds.tm_year < 0)
 	    return BAD_DATE;
@@ -879,8 +905,8 @@ time_t DpsHttpDate2Time_t(const char *date){
 	monstr = date + 3;
 	timstr = date + 12;
 	tz_str = date + 21;
-    }
-    else if (ap_checkmask(date, "##-@$$-## ##:##:## *")) {		/* RFC 850 format  */
+      }
+      else if (ap_checkmask(date, "##-@$$-## ##:##:## *")) {		/* RFC 850 format  */
 	ds.tm_year = ((date[7] - '0') * 10) + (date[8] - '0');
 	if (ds.tm_year < 70)
 	    ds.tm_year += 100;
@@ -890,8 +916,8 @@ time_t DpsHttpDate2Time_t(const char *date){
 	monstr = date + 3;
 	timstr = date + 10;
 	tz_str = date + 19;
-    }
-    else if (ap_checkmask(date, "##-@$$-#### ##:##:## *")) {		/* RFC 850 "fixed" format (HTTP Cookie format ?)  */
+      }
+      else if (ap_checkmask(date, "##-@$$-#### ##:##:## *")) {		/* RFC 850 "fixed" format (HTTP Cookie format ?)  */
         ds.tm_year = (date[7] - '0') * 1000 + (date[8] - '0') * 100 + (date[9] - '0') * 10 + (date[10] - '0');
 	ds.tm_year -= 1900;
 
@@ -900,8 +926,8 @@ time_t DpsHttpDate2Time_t(const char *date){
 	monstr = date + 3;
 	timstr = date + 12;
 	tz_str = date + 21;
-    }
-    else if (ap_checkmask(date, "@$$ ~# ##:##:## ####*")) {	/* asctime format  */
+      }
+      else if (ap_checkmask(date, "@$$ ~# ##:##:## ####*")) {	/* asctime format  */
 	ds.tm_year = ((date[16] - '0') * 10 + (date[17] - '0') - 19) * 100;
 	if (ds.tm_year < 0)
 	    return BAD_DATE;
@@ -917,30 +943,10 @@ time_t DpsHttpDate2Time_t(const char *date){
 
 	monstr = date;
 	timstr = date + 7;
-    }
-    else if (ap_checkmask(date, "####-##-##T##:##:##Z*")) {	/* ISO 8601 format, UTC  */
-      ds.tm_year = ((date[0] - '0') * 10 + (date[1] - '0') - 19) * 100;
-      if (ds.tm_year < 0)
+      }
+      else
 	return BAD_DATE;
-      ds.tm_year += ((date[2] - '0') * 10) + (date[3] - '0');
-
-      ds.tm_mon = mon = (date[5] - '0') * 10 + (date[6] - '0');
-      ds.tm_mday = (date[8] - '0') * 10 + (date[9] - '0');
-      timstr = date + 11;
     }
-    else if (ap_checkmask(date, "####-##-##T##:##:##+##:##*")) {	/* ISO 8601 format */
-      ds.tm_year = ((date[0] - '0') * 10 + (date[1] - '0') - 19) * 100;
-      if (ds.tm_year < 0)
-	return BAD_DATE;
-      ds.tm_year += ((date[2] - '0') * 10) + (date[3] - '0');
-
-      ds.tm_mon = mon = (date[5] - '0') * 10 + (date[6] - '0');
-      ds.tm_mday = (date[8] - '0') * 10 + (date[9] - '0');
-      timstr = date + 11;
-      tz_str = date + 19;
-    }
-    else
-	return BAD_DATE;
 
     if (ds.tm_mday <= 0 || ds.tm_mday > 31)
 	return BAD_DATE;
