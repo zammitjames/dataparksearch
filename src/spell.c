@@ -56,6 +56,7 @@
 #include <netdb.h>
 #endif
 
+#include <sys/mman.h>
 
 #define MAXNORMLEN 256
 #define MAX_NORM 512
@@ -631,7 +632,7 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
 	    for (y = 0; word[y] && SpellList->Spell[q].word[y] == word[y]; y++);
 	    if (y < 3) break;
 	    if (y < z) continue;
-	    if (strlen(FZ->cur[0]->flag) < strlen(SpellList->Spell[q].flag)) {
+	    if (dps_strlen(FZ->cur[0]->flag) < dps_strlen(SpellList->Spell[q].flag)) {
 	      DPS_FREE(FZ->cur[0]->word);
 	      dps_memmove(FZ->cur[0]->flag, SpellList->Spell[q].flag, sizeof(FZ->cur[0]->flag));
 	      dps_memmove(FZ->cur[0]->lang, SpellList->Spell[q].lang, sizeof(FZ->cur[0]->lang));
@@ -644,7 +645,7 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
 	    for (y = 0; word[y] && SpellList->Spell[q].word[y] == word[y]; y++);
 	    if (y < 3) break;
 	    if (y < z) continue;
-	    if (strlen(FZ->cur[0]->flag) <= strlen(SpellList->Spell[q].flag)) {
+	    if (dps_strlen(FZ->cur[0]->flag) <= dps_strlen(SpellList->Spell[q].flag)) {
 	      DPS_FREE(FZ->cur[0]->word);
 	      dps_memmove(FZ->cur[0]->flag, SpellList->Spell[q].flag, sizeof(FZ->cur[0]->flag));
 	      dps_memmove(FZ->cur[0]->lang, SpellList->Spell[q].lang, sizeof(FZ->cur[0]->lang));
@@ -1723,6 +1724,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
   if ((PS.cur = (DPS_SPELL **) DpsXmalloc(MAX_NORM*sizeof(DPS_SPELL *))) == NULL) return NULL;
   PS.nspell = 0;
   DpsWideWordListInit(result);
+
+/*  mprotect(&(FZ.cur), 4096, PROT_READ);*/
+
   cur = norm = DpsNormalizeWord(Indexer, wword, &FZ);
 
   if (cur != NULL) {
@@ -1731,6 +1735,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
       w.len = DpsUniLen((*cur)->word);
       if ( ( (w.word = DpsRealloc(w.word, 14 * w.len + 1)) == NULL) ||
 	   ( (w.uword = DpsRealloc(w.uword, (3 * w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
+	
+/*	mprotect(&FZ.cur, 4096, PROT_READ | PROT_WRITE);*/
+
 	DPS_FREE(w.word); DPS_FREE(w.uword); DPS_FREE(s_p.word);
 	return NULL;
       }
@@ -1801,6 +1808,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
       w.len = DpsUniLen(s_p.word);
       if ( ( (w.word = DpsRealloc(w.word, 14 * w.len + 1)) == NULL) ||
 	   ( (w.uword = DpsRealloc(w.uword, (3 * w.len + 1) * sizeof(dpsunicode_t))) == NULL)) {
+	
+/*	mprotect(&FZ.cur, 4096, PROT_READ | PROT_WRITE);*/
+
 	DPS_FREE(w.word); DPS_FREE(w.uword); DPS_FREE(s_p.word);
 	return NULL;
       }
@@ -1892,6 +1902,9 @@ __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms (DPS_AGENT *Indexer, DPS_WIDEW
       }
     }
   }
+	
+/*  mprotect(&FZ.cur, 4096, PROT_READ | PROT_WRITE);*/
+
   DPS_FREE(w.word); DPS_FREE(w.uword);
   DPS_FREE(norm);
   DPS_FREE(PS.cur);
