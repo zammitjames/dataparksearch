@@ -44,6 +44,7 @@
 #include "dps_charsetutils.h"
 #include "dps_guesser.h"
 #include "dps_match.h"
+#include "dps_signals.h"
 
 #include <stdlib.h>
 #include <fcntl.h>
@@ -81,6 +82,60 @@
 /*
 #define DEBUG_PHRASES
 */
+
+/********************* SIG Handlers ****************/
+static void SpellSighandler(int sign);
+
+static void init_signals(void){
+	/* Set up signals handler*/
+	DpsSignal(SIGPIPE, SpellSighandler);
+	DpsSignal(SIGCHLD, SpellSighandler);
+	DpsSignal(SIGALRM, SpellSighandler);
+	DpsSignal(SIGUSR1, SpellSighandler);
+	DpsSignal(SIGUSR2, SpellSighandler);
+	DpsSignal(SIGHUP, SpellSighandler);
+	DpsSignal(SIGINT, SpellSighandler);
+	DpsSignal(SIGTERM, SpellSighandler);
+}
+
+static void SpellSighandler(int sign) {
+        pid_t chpid;
+#ifdef UNIONWAIT
+	union wait status;
+#else
+	int status;
+#endif
+	switch(sign){
+		case SIGPIPE:
+			have_sigpipe = 1;
+			break;
+		case SIGCHLD:
+		  while ((chpid = waitpid(-1, &status, WNOHANG)) > 0);
+			break;
+		case SIGHUP:
+			have_sighup=1;
+			break;
+		case SIGINT:
+			have_sigint=1;
+			break;
+		case SIGTERM:
+			have_sigterm=1;
+			break;
+	        case SIGALRM:
+		        _exit(0);
+			break;
+		case SIGUSR1:
+		  have_sigusr1 = 1;
+		  break;
+		case SIGUSR2:
+		  have_sigusr2 = 1;
+		  break;
+		default:
+			break;
+	}
+	init_signals();
+}
+
 
 /********** QSORT functions *******************************/
 /*
@@ -1361,6 +1416,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		    
 		    } else {
 		    /* Child process */
+		      init_signals();
 		      close(rd[0]);
 
 		      suggestions = aspell_speller_suggest(speller, (const char *)wrd, (int)tlen);
@@ -2155,11 +2211,11 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     { register size_t nwordpos = DPS_WRDPOS(Crd[i].coord);
       if (wordpos != nwordpos) {
 	prev_wordpos = wordpos;
+	prev_wordnum = wordnum;
+	prev_wordorder = wordorder;
+	wordpos = nwordpos;
       }
-      wordpos = nwordpos;
     }
-    prev_wordnum = wordnum;
-    prev_wordorder = wordorder;
     wordnum = DPS_WRDNUM(Crd[i].coord);
     wordsec = DPS_WRDSEC_N(Crd[i].coord, nsections);
     wordorder = Res->WWList.Word[wordnum].order_inquery;

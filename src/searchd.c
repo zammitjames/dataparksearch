@@ -213,7 +213,7 @@ static void TrackSighandler(int sign){
 		default:
 			break;
 	}
-	init_signals();
+	init_TrackSignals();
 }
 
 /*************************************************************/
