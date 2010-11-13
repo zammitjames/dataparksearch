@@ -23,6 +23,7 @@
 
 typedef struct {
   DPS_SPELL **cur;
+/*  char buff[4096 - sizeof(DPS_SPELL**)];*/
   size_t nspell;
 } DPS_PSPELL;
 
