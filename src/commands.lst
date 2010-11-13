@@ -44,6 +44,9 @@
 	{"GroupBySite",		1,1,	env_rpl_var},
 	{"Cache",		1,1,	env_rpl_var},
 	{"wf",   		1,1,	env_rpl_var},
+	{"sp",   		1,1,	env_rpl_var},
+	{"sy",   		1,1,	env_rpl_var},
+	{"s",   		1,1,	env_rpl_var},
 	{"PopRankMethod",	1,1,	env_rpl_var},
 	{"PopRankSkipSameSite",	1,1,	env_rpl_var},
 	{"PopRankFeedBack",	1,1,	env_rpl_var},
@@ -173,6 +176,7 @@
 
 	{"IndexIf",             1,100,  add_section_filter},
 	{"NoIndexIf",           1,100,  add_section_filter},
+	{"CheckOnlyIf",		1,100,	add_section_filter},
 	{"TagIf",               3,100,  add_subsection_match},
 	{"CategoryIf",          3,100,  add_subsection_match},
   
