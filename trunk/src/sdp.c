@@ -547,7 +547,7 @@ int __DPSCALL DpsFindWordsSearchd(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *sea
 		return DPS_ERROR;
 	}
 	
-     dps_snprintf(request, maxlen, "%s&BrowserCharset=%s&IP=%s&g-lc=%s&ExcerptSize=%s&ExcerptPadding=%s&DoExcerpt=%s&tmplt=%s%s%s%s%s%s%s&sp=%s&sy=%s",
+     dps_snprintf(request, maxlen, "%s&BrowserCharset=%s&IP=%s&g-lc=%s&ExcerptSize=%s&ExcerptPadding=%s&DoExcerpt=%s&tmplt=%s%s%s%s%s%s%s&sp=%s&sy=%s&s=%s",
 		  qs,
 		  DpsVarListFindStr(&query->Vars, "BrowserCharset", "iso-8859-1"),
 		  DpsVarListFindStr(&query->Vars, "IP", "localhost"),
@@ -560,7 +560,8 @@ int __DPSCALL DpsFindWordsSearchd(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *sea
 		  (e_empty) ? "&empty=" : "", (e_empty) ? e_empty : "",
 		  (searchd->label) ? "&label=" : "", (searchd->label) ? searchd->label : "",
 		  DpsVarListFindStr(&query->Vars, "sp", "1"),
-		  DpsVarListFindStr(&query->Vars, "sy", "1") 
+		  DpsVarListFindStr(&query->Vars, "sy", "1"),
+		  DpsVarListFindStr(&query->Vars, "s", "RP")
 		  );
 	DPS_FREE(edf);
 	DPS_FREE(e_empty);
