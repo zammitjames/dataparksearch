@@ -516,15 +516,10 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
 	  if (rc != DPS_OK) {
 	    DpsSQLFree(&SQLres);
-	    goto SWC_exit;
+	    TRACE_OUT(Indexer);
+	    return (DPS_OK);
 	  }
 	  cmd.nwords += DpsSQLNumRows(&SQLres);
-	}
-	
- SWC_exit:
-	if ( cmd.nwords == 0 ) {
-	  TRACE_OUT(Indexer);
-	  return (DPS_OK);
 	}
 
 	cmd.stamp = Indexer->now;
@@ -3961,6 +3956,9 @@ int __DPSCALL DpsURLActionCache(DPS_AGENT *A, DPS_DOCUMENT *D, int cmd, DPS_DB *
 		case DPS_URL_ACTION_DELETE:
 			res = DpsDeleteURLCache(A, D, db);
 			break;
+	        case DPS_URL_ACTION_DELWORDS:
+		        DpsWordListFree(&D->Words);
+			DpsCrossListFree(&D->CrossWords);
 	        case DPS_URL_ACTION_INSWORDS:
 			res = DpsStoreWordsCache(A, D, db);
 			break;
