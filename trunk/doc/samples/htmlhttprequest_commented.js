@@ -1,7 +1,7 @@
 /*
 
-HTMLHttpRequest v1.0 beta2
-(c) 2001-2005 Angus Turnbull, TwinHelix Designs http://www.twinhelix.com
+HTMLHttpRequest v1.0 beta3
+(c) 2001-2006 Angus Turnbull, TwinHelix Designs http://www.twinhelix.com
 
 Licensed under the CC-GNU LGPL, version 2.1 or later:
 http://creativecommons.org/licenses/LGPL/2.1/
@@ -18,36 +18,35 @@ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // 'legacy' disables addEventListener if true.
 // You can add multiple events to one object, and in MSIE all are removed onunload.
 
-var aeOL = [];
-function addEvent(o, n, f, l)
+if (typeof addEvent != 'function')
 {
- var a = 'addEventListener', h = 'on'+n, b = '', s = '';
- if (o[a] && !l) return o[a](n, f, false);
- o._c |= 0;
- if (o[h])
+ var addEvent = function(o, t, f, l)
  {
-  b = '_f' + o._c++;
-  o[b] = o[h];
- }
- s = '_f' + o._c++;
- o[s] = f;
- o[h] = function(e)
- {
-  e = e || window.event;
-  var r = true;
-  if (b) r = o[b](e) != false && r;
-  r = o[s](e) != false && r;
-  return r;
+  var d = 'addEventListener', n = 'on' + t, rO = o, rT = t, rF = f, rL = l;
+  if (o[d] && !l) return o[d](t, f, false);
+  if (!o._evts) o._evts = {};
+  if (!o._evts[t])
+  {
+   o._evts[t] = o[n] ? { b: o[n] } : {};
+   o[n] = new Function('e',
+    'var r = true, o = this, a = o._evts["' + t + '"], i; for (i in a) {' +
+     'o._f = a[i]; r = o._f(e||window.event) != false && r; o._f = null;' +
+     '} return r');
+   if (t != 'unload') addEvent(window, 'unload', function() {
+    removeEvent(rO, rT, rF, rL);
+   });
+  }
+  if (!f._i) f._i = addEvent._i++;
+  o._evts[t][f._i] = f;
  };
- aeOL[aeOL.length] = { o: o, h: h };
-};
-addEvent(window, 'unload', function() {
- for (var i = 0; i < aeOL.length; i++) with (aeOL[i])
+ addEvent._i = 1;
+ var removeEvent = function(o, t, f, l)
  {
-  o[h] = null;
-  for (var c = 0; o['_f' + c]; c++) o['_f' + c] = null;
- }
-});
+  var d = 'removeEventListener';
+  if (o[d] && !l) return o[d](t, f, false);
+  if (o._evts && o._evts[t] && f._i) delete o._evts[t][f._i];
+ };
+}
 
 function cancelEvent(e, c)
 {
@@ -72,6 +71,7 @@ function cancelEvent(e, c)
 // a reference to a callback function, and a pathname to a blank HTML document.
 // The callback function will be called on load/submit completion with parameters:
 //  1) A reference to the loaded DOM document (which you may then parse).
+//  2) The text content of the loaded document.
 //  2) The requested URI.
 // NOTE: All requested documents must reside on the same domain as this document!
 //
@@ -104,21 +104,8 @@ function HTMLHttpRequest(myName, callback) { with (this)
  this.loadingURI = '';
 
  // Attempt to init an XMLHttpRequest object where supported.
- if (window.XMLHttpRequest)
- {
-  xmlhttp = new XMLHttpRequest();
-  // Force it to attempt to parse all documents as XML.
-  if (xmlhttp.overrideMimeType) xmlhttp.overrideMimeType('text/xml');
- }
-
- if(window.ActiveXObject) {
-  if (!xmlhttp) {
-  	xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-  }
-  if (!xmlhttp) {
-	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
- }
+ // Note: MSIE7 is best with the IFRAME method, so exclude IE here.
+ if (window.XMLHttpRequest && !window.ActiveXObject) xmlhttp = new XMLHttpRequest();
 
  if (!xmlhttp)
  {
@@ -191,17 +178,17 @@ HTMLHttpRequest.prototype.xmlhttpSend = function(uri, formStr) { with (this)
  xmlhttp.onreadystatechange = function() {
   if (xmlhttp.readyState == 4)
   {
-//   var doc = xmlhttp.responseXML;
-//   alert(xmlhttp.responseText);
-   // If you are getting an error where 'doc' is null in your own code, try changing
+   // If you are getting an error where either of these value are null, try changing
    // the MIME type returned by the server: setting it to text/xml usually works well!
-//   if (callback) callback(doc, loadingURI);
-   if (callback && (xmlhttp.status == 200)) callback(xmlhttp.responseText, loadingURI);
+   if (callback) callback(xmlhttp.responseXML, xmlhttp.responseText, loadingURI);
    loadingURI = '';
   }
  };
  if (formStr && xmlhttp.setRequestHeader)
   xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+ // You might need to customise this.
+ if (xmlhttp.overrideMimeType)
+  xmlhttp.overrideMimeType((/\.txt/i).test(uri) ? 'text/plain' : 'text/xml');
  xmlhttp.send(formStr);
  loadingURI = uri;
  return true;
@@ -250,10 +237,12 @@ HTMLHttpRequest.prototype.iframeCheck = function() { with (this)
  // Check the IFRAME's .readyState property and callback() if load complete.
  // IE4 only seems to advance to 'interactive' so let it proceed from there.
  var il = iframe.location, dr = doc.readyState;
- if ((il && il.href ? il.href.match(loadingURI) : 1) &&
+ if ((il && il.href ? il.href.match(loadingURI.replace("\?", "\\?")) : 1) &&
      (dr == 'complete' || (!document.getElementById && dr == 'interactive')))
  {
-  if (callback) callback((doc.documentElement || doc), loadingURI);
+  var cbDoc = doc.documentElement || doc;
+  if (callback) callback(cbDoc,
+   (cbDoc.innerHTML || (cbDoc.body ? cbDoc.body.innerHTML : '')), loadingURI);
   loadingURI = '';
  }
  else setTimeout(myName + '.iframeCheck()', 50);
@@ -296,8 +285,8 @@ HTMLHttpRequest.prototype.submit = function(formRef, evt) { with (this)
  {
   // For GET requests, append ?querystring or &querystring to the GET uri and
   // forward it to the load() function. Always cancel form submit().
-  return load(uri + (uri.indexOf('?') == -1 ? '?' : '&') + parseForm(formRef));
   cancelEvent(evt);
+  return load(uri + (uri.indexOf('?') == -1 ? '?' : '&') + parseForm(formRef));
  }
 }};
 
@@ -388,8 +377,8 @@ RemoteFileLoader.prototype.getThread = function(destId) { with (this)
  }
 
  // Assign our callback function; it passed the destination to copyContent.
- threads[thr].callback = new Function('doc', 'uri', 'with (' + myName + ') { ' +
-  'copyContent(doc, "' + destId + '"); if (onload) onload(doc, uri, "' + destId + '") }');
+ threads[thr].callback = new Function('doc', 'text', 'uri', 'with (' + myName + ') { ' +
+  'copyContent(doc, text, "' + destId + '"); if (onload) onload(doc, uri, "' + destId + '") }');
 
  return threads[thr];
 }};
@@ -409,31 +398,35 @@ RemoteFileLoader.prototype.submitInto = function(formRef, destId, event)
 };
 
 
-RemoteFileLoader.prototype.copyContent = function(domDoc, destId)
+RemoteFileLoader.prototype.copyContent = function(docDOM, docText, destId)
 {
  // This copies the <body> content of the loaded DOM document into an element in the
  // current page with a specified ID.
 
  // Retrieve references to the loaded BODY. You might want to modify this so that you
  // load content from <div id="content"> within the loaded document perhaps?
- var src = domDoc.getElementsByTagName ? domDoc.getElementsByTagName('body')[0] :
-  (domDoc.body ? domDoc.body : null);
+ var src = docDOM ?
+  (docDOM.getElementsByTagName ?
+   docDOM.getElementsByTagName('body')[0] :
+    (docDOM.body ? docDOM.body : null) ) :
+     null;
  var dest = document.getElementById ? document.getElementById(destId) :
   (document.all ? document.all[destId] : null);
-// alert('copyContent');
- if (!src) {
- 	src = domDoc.getElementById ? domDoc.getElementById('Content') :
-  		(domDoc.all ? domDoc.all['Content'] : null);
- }
-// if (!src) alert('src is NULL');
-// if (!dest) alert('dest is NULL');
- if (!src || !dest) return;
+ if (!dest || (!src && !docText)) return;
  // innerHTML is still a little more reliable than importNode across browsers.
- if (src.innerHTML) dest.innerHTML = src.innerHTML;
- else if (document.importNode)
+ if (src && src.innerHTML) dest.innerHTML = src.innerHTML;
+ else if (src && document.importNode)
  {
   while (dest.firstChild) dest.removeChild(dest.firstChild);
   for (var i = 0; i < src.childNodes.length; i++)
    dest.appendChild(document.importNode(src.childNodes.item(i), true));
  }
+	else if (docText)
+	{
+	 if (docText.match(/(<body>)(.*)(<\/body>)/i)) docText = RegExp.$2;
+		// You might want to do some post-processing here if you are rendering
+		// plain text in an XHTML document, for instance to keep line breaks:
+		//docText = '<pre>' + docText + '</pre>';
+		dest.innerHTML = docText;
+	}
 };

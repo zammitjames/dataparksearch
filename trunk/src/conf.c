@@ -1214,9 +1214,9 @@ static int add_srv_file(void *Cfg, size_t ac, char **av) {
 	  return DPS_OK;
 	}
 
-	newav = (char**)DpsMalloc(ac * sizeof(char*));
+	newav = (char**)DpsMalloc((ac + 1) * sizeof(char*));
 	if (newav == NULL) {
-	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Can't alloc %d bytes of memory", ac * sizeof(char*));
+	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Can't alloc %d bytes of memory", (ac + 1) * sizeof(char*));
 	  return DPS_ERROR;
 	}
 

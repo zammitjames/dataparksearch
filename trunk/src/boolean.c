@@ -328,8 +328,10 @@ static int proceedSTOP(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x,
     while (x->pcur < x->plast) {
       while (stop->pcur < stop->plast && stop->pcur->url_id < x->pcur->url_id) stop->pcur++;
       while (stop->pcur < stop->plast && DpsCmpUrlid(stop->pcur, x->pcur) <= 0) { 
-	*res->pcur = *stop->pcur;
-	res->pcur++; stop->pcur++;
+	if (stop->pcur->url_id == x->pcur->url_id) {
+	  *res->pcur = *stop->pcur; res->pcur++; 
+	}
+	stop->pcur++;
       }
       if (stop->pcur >= stop->plast) break;
       while (x->pcur < x->plast && DpsCmpUrlid(x->pcur, stop->pcur) <= 0) {
@@ -343,8 +345,10 @@ static int proceedSTOP(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x,
     res->pcur++; x->pcur++;
   }
   res->count = res->pcur - res->pbegin;
+/*
   if (x->origin & DPS_WORD_ORIGIN_QUERY == 0)
     if (stop->origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY) == (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY)) res->origin = DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY;
+*/
   return DPS_OK;
 }
 

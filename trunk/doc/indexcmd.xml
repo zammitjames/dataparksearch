@@ -621,9 +621,10 @@ D - stand for month, may be * or 1-12; E - stand for day of week, may be * or 0-
 <title><command>UseDateHeader</command> command</title>
 <indexterm><primary>Command</primary><secondary>UseDateHeader</secondary></indexterm>
 <programlisting>
-UseDateHeader yes|no
+UseDateHeader yes|no|force
 </programlisting>
-<para>Use Date header if no Last-Modified header is sent by remote web-server. Default value: no.
+<para>Use Date header if no Last-Modified header is sent by remote web-server. The value "force" instructs to use Date header even if Last-Modified header has been sent by remote server.
+Default value: no.
 </para>
 </sect2>
 
