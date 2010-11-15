@@ -372,14 +372,14 @@ A.sem, A.sem:visited {
 	font-size: smaller;
 }
 .menu, .menu A, .menu A:visited {
-	color: #369; /*#808080;*/ font-weight: bold; text-align: center;
+	color: #311; /*#369;*/ /*#808080;*/ font-weight: bold; text-align: center;
 	background-color: #f4f4f4; white-space: nowrap;
 }
 form {
 	margin: 0; padding: 0;
 }
 #form, .form {
-	background-color: white; color: #69c; text-align: center;
+	background-color: white; color: #311; /*#69c;*/ text-align: center;
 }
 #form h1, .form h1 {
 	color: #390; font-size: 165%; margin: .1em; padding: .25em .25em .5em .25em; border-bottom: dashed 1px #8ca3c3;
@@ -402,7 +402,7 @@ form {
 .inputsearch {
 	font-size: x-large; border: 1px dotted #666;
 }
-.inputrev, .inputrev A, .inputrev A:visited, #form A, #form A:visited {
+.inputrev, .inputrev A, .inputrev A:visited, .form a, .form a:visited {
   color: #311;
 }
 #form table, #form form, .form table, .form form {
@@ -442,7 +442,7 @@ form {
   color: #063; font-weight: bold;
 }
 #dir .result, .result {
-  color: #1f8101; /*#080;*/ /*#0a5;*/ 
+  color: #1e8100; /*#1f8101;*/ /*#080;*/ /*#0a5;*/ 
 }
 #dir A.siteinfo, #dir A.siteinfo:visited {
   color: #999;
@@ -454,7 +454,7 @@ form {
   color: #257;
 }*/
 #dir .restop, #dir .restop A, .restop, A.restop {
-	color: #05a; 
+	color: #05a; font-weight: 400; 
 }
 #dir A.restop:visited, A.restop:visited, A.serp1:visited, A.serp1.restop:visited {
         color: #25a;
@@ -523,7 +523,7 @@ i.serp1 {
 	top:auto; position:absolute; display:block; width:16px; height:16px;
 }
 DIV.serp2 {
-        color: #111;
+        color: #111; line-height: 1.1em;
 }
 DIV.serp3 {
         margin-left: 1em; margin-right: -1em; color: #333;
@@ -539,7 +539,7 @@ DIV.qsimilar {
 	display: block; margin-bottom: 0.3em;
 }
 .firstpage p {
-	margin-top: 0; margin-bottom: 0.3em; padding: 0; border: 0; color: #505050;
+	margin-top: 0; margin-bottom: 0.5em; padding: 0; border: 0; color: #505050;
 }
 .hl {
 	color: black; background-color: #ECECEC;
@@ -576,6 +576,7 @@ DIV.sea {
 /* cloud  */
 #cloud { border: 1px #ccc solid; background-color: #f4f4f4; padding: 5px; }
 .cloud { padding: 3px; text-decoration: none; }
+span.cloud:first-letter { font-weight: bold; font-size: 112%; }
 /*.cloud:link  { color: #063; }
 .cloud:visited { color: #363; }*/
 /*.cloud:hover { color: #ffffff; background: #69da03; }
@@ -593,7 +594,7 @@ DIV.sea {
 }
 #search_suggest {
 	position: absolute;
-	background-color: #FFFFFF; 
+	background-color: #FFFFFF;  color: #69C;
 	text-align: left; 
 	border: 1px solid #000000;
 	z-index: 255;		

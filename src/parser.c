@@ -187,8 +187,8 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 			dup2(wr[0], STDIN_FILENO);
 
 			DpsSetEnv("DPS_URL",url);
-			alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 			init_signals();
+			alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 
 			system(cmd);
 			DpsUnsetEnv("DPS_URL");
@@ -265,8 +265,8 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		if (close(fd) == -1)    rc |= 64;
 		
 		DpsSetEnv("DPS_URL",url);
-		alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 		init_signals();
+		alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 
 		system(cmd);
 		DpsUnsetEnv("DPS_URL");
@@ -300,8 +300,8 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	  waitpid(pid, &status, 0);
 	} else {
 	  DpsSetEnv("DPS_URL",url);
-	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 	  init_signals();
+	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 	  system(cmd);
 	  DpsUnsetEnv("DPS_URL");
 	  _exit(0);
@@ -373,8 +373,8 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	  dup2(wr[0], STDIN_FILENO);
 	  
 	  DpsSetEnv("DPS_URL",url);
-	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 	  init_signals();
+	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 
 	  system(cmd);
 	  DpsUnsetEnv("DPS_URL");

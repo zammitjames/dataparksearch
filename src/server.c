@@ -339,7 +339,7 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
 	}
       }
       TRACE_OUT(Agent);
-      return *res;
+      return Res;
     }
   }
 	

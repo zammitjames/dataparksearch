@@ -14,7 +14,7 @@ StopwordFile stopwords/fr.sl
 #StopwordFile stopwords/fr.top1000.sl
 StopwordFile stopwords/it.sl
 # Uncomment this if you have japanese charsets enabled
-StopwordFile stopwords/ja.sl
+#StopwordFile stopwords/ja.sl
 StopwordFile stopwords/lt.sl
 StopwordFile stopwords/nl.sl
 #StopwordFile stopwords/nl.top100.sl

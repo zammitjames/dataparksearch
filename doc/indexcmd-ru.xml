@@ -608,9 +608,10 @@ D - обозначает месяц, может быть * или 1-12; E - обозначает день недели, может б
 <title>Команда <command>UseDateHeader</command></title>
 <indexterm><primary>Команда</primary><secondary>UseDateHeader</secondary></indexterm>
 <programlisting>
-UseDateHeader yes|no
+UseDateHeader yes|no|force
 </programlisting>
 <para>Использовать ли заголовок ответа сервера Date если в ответе сервера не содержится заголовок Last-Modified. 
+Если указано значение force, то заголовок Date используется даже если сервер отправляет заголовок Last-Modified.
 Значение по-умолчанию: no.
 </para>
 </sect2>

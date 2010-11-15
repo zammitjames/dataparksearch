@@ -1300,12 +1300,12 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
  */
 
 char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, size_t size, size_t padding) {
-  static const char prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
+  static const unsigned char prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
   int NOprefixHL = 0;
   size_t *wlen, i, maxwlen = 0, minwlen = query->WordParam.max_word_len;
-  char *start, *end, *prevend, ures, *p, *oi, *np;
-  char *c;
-  char *Source = NULL, *SourceToFree = NULL;
+  unsigned char *start, *end, *prevend, ures, *p, *oi, *np;
+  unsigned char *c;
+  unsigned char *Source = NULL, *SourceToFree = NULL;
   size_t DocSize = dps_strlen(value);
  
   if (DocSize == 0) return NULL;
@@ -1329,7 +1329,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, si
     if (wlen[i] < minwlen) minwlen = wlen[i];
   }
 
-  if ((oi = (char *)DpsMalloc(2 * (dps_max(size + 2 * query->WordParam.max_word_len, Res->WWList.maxulen + 4 * (query->WordParam.max_word_len + padding) + 8) + 1) * sizeof(char))) == NULL) {
+  if ((oi = (char *)DpsMalloc(128 + 2 * (size + 4 * query->WordParam.max_word_len + 2 * padding + maxwlen) * sizeof(char))) == NULL) {
     DPS_FREE(c); DPS_FREE(wlen);
     return NULL;
   }

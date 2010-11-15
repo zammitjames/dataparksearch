@@ -6,6 +6,7 @@ var g_slabel = '';
 var g_str = '';
 Suggests = new Array();
 var old_str = '';
+var old_slabel = 'qsimilar';
 var SuggestLoader = new HTMLHttpRequest('SuggestLoader', SuggestCopyContent);
 //////////////////////////////////////////
 function utf8_encode ( string ) {
@@ -43,7 +44,7 @@ function utf8_encode ( string ) {
 }
 
 
-function SuggestCopyContent(domDoc, uri) {
+function SuggestCopyContent(domXML, domDoc, uri) {
   var destId = 'search_suggest';
   var dest = document.getElementById ? document.getElementById(destId) : (document.all ? document.all[destId] : null);
   var clie = document.getElementById ? document.getElementById('q') : (document.all ? document.all['q'] : null);
@@ -79,8 +80,9 @@ function SuggestCopyContent(domDoc, uri) {
       			}
 		}
 	}
-    	if (nsugg == 0) { 
+    	if (nsugg == 0 && g_slabel != old_slabel) { 
   		SuggestLoader.load('/cgi-bin/search.cgi?q=' + g_str + '&m=any&sp=1&sy=0&GroupBySite=yes&s=IRPD&&ps=10&tmplt=suggest.htm&label='+g_slabel);
+		old_slabel = g_slabel;
     	}
   } else {
     dest.style.display = 'none';
@@ -106,6 +108,7 @@ function searchSuggest(slabel) {
 		} else {
 			g_slabel = slabel;
 		}
+		old_slabel = 'qsimilar';
 	  SuggestLoader.load('/cgi-bin/search.cgi?q=' + str + '&m=all&sp=1&sy=1&GroupBySite=no&s=IRPD&&ps=10&tmplt=suggest.htm&label=qsimilar');
 	}
       }

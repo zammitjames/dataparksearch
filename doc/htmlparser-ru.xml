@@ -178,6 +178,17 @@ BodyPattern "&lt;!--content--&gt;(.*)&lt;!--/content--&gt;" "$1"
 Эти команды пытаются примениться к каждой индексируемой странице. 
 Осторожно, большое число таких команд может замедлить скорость индексирования.
 </para>
+
+<para>
+<indexterm><primary>Команда</primary><secondary>BodyBrackets</secondary></indexterm>
+Команда <command>BodyBrackets</command> аналогична команде <command>BodyPattern</command>, но задает два маркера:
+начала контента и конца контента, например:
+<programlisting>
+BodyBrackets "&lt;!--B--&gt;" "&lt;!--E--&gt;"
+</programlisting>
+При этом фрагмент документа заключенный между &lt;!--B--&gt; и &lt;!--E--&gt; будет считаться телом документа.
+</para>
+
 </sect1>
 
 <sect1 id="subdocs">

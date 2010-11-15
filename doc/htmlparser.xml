@@ -159,6 +159,17 @@ this pattern will extract content between special comments and only that content
 <para>You may specify several <command>BodyPattern</command> commands, but only the first match will be applied to a page.
 These patterns are trying to apply to all pages indexed. Beware, huge number of such body patterns may hurt indexing speed.
 </para>
+
+<para>
+<indexterm><primary>Command</primary><secondary>BodyBrackets</secondary></indexterm>
+The <command>BodyBrackets</command> command is similar to <command>BodyPattern</command> command, but it defines two markers: beginning
+of the body and ending of the body, e.g.
+<programlisting>
+BodyBrackets "&lt;!--B--&gt;" "&lt;!--E--&gt;"
+</programlisting>
+Then fragment of the document enclosed between &lt;!--B--&gt; and &lt;!--E--&gt; is treated as document body.
+</para>
+
 </sect1>
 
 <sect1 id="subdocs">
