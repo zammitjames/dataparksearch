@@ -818,7 +818,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   for (len = 0; (len < (size_t)(8 * maxwlen + 16 * padding + 1)) && htok; ) {
     switch(tag.type) {
     case DPS_HTML_TXT:
-      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+      if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
 	dps_memmove(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
@@ -863,7 +863,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
       while(htok && ((len - prevlen) < (size_t)(8 * maxwlen + 16 * padding + 1)) ) {
 	switch(tag.type) {
 	case DPS_HTML_TXT:
-	  if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
 	    dps_memmove(HEnd, htok, (size_t)(last-htok));
 	    HEnd += (size_t)(last - htok);
 	    HEnd[0] = ' ';
@@ -1142,7 +1142,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
   for(htok = DpsHTMLToken(Source, &last, &tag); htok; htok = DpsHTMLToken(NULL, &last, &tag)) {
     switch(tag.type) {
     case DPS_HTML_TXT:
-      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+      if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
 	dps_memmove(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
@@ -1176,7 +1176,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
   for (len = 0; (len < (size_t)(8 * maxwlen + 16 * padding + 1)) && htok; ) {
     switch(tag.type) {
     case DPS_HTML_TXT:
-      if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+      if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
 	dps_memmove(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
@@ -1221,7 +1221,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
       while(htok && ((len - prevlen) < (size_t)(8 * maxwlen + 16 * padding + 1)) ) {
 	switch(tag.type) {
 	case DPS_HTML_TXT:
-	  if (tag.script == 0 && tag.comment == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
 	    dps_memmove(HEnd, htok, (size_t)(last-htok));
 	    HEnd += (size_t)(last - htok);
 	    HEnd[0] = ' ';
