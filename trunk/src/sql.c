@@ -1604,7 +1604,7 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 		if(db->DBType==DPS_DB_MYSQL){
 			int have_words=0;
 			char * qb,*qe;
-			size_t step=1024,mlen=1024,len,i;
+			size_t step=4096,mlen=4096,len,i;
 
 			qb=(char*)DpsMalloc(mlen);
 			if (qb == NULL) goto unlock_StoreWordsMulti;
@@ -1624,7 +1624,7 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 				if (DICTNUM(dps_strlen(lcsword)) == dictlen[n]) {
 					len = qe - qb;
 					/* DPS_MAXWORDSIZE+100 should be enough */
-					if((len + Indexer->WordParam.max_word_len + 100) >= mlen){
+					if((len + 18 * Indexer->WordParam.max_word_len + 100) >= mlen){
 						mlen+=step;
 						qb=(char*)DpsRealloc(qb,mlen);
 						if (qb == NULL) goto unlock_StoreWordsMulti;
