@@ -965,6 +965,8 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 				  else if(!strncasecmp(t->b, "/select", 5)) t->select = 0;
 				  else if(!strncasecmp(t->b, "body", 4)) t->body = 1;
 				  else if(!strncasecmp(t->b, "/body", 5)) t->body = 0;
+				  else if(!strncasecmp(t->b, "title", 5)) t->title = 1;
+				  else if(!strncasecmp(t->b, "/title", 6)) t->title = 0;
 				  else if(!strncasecmp(t->b, "noindex", 7)) t->noindex = 1;
 				  else if(!strncasecmp(t->b, "/noindex", 8)) t->noindex = 0;
 				  else if(!strncasecmp(t->b, "frameset", 8)) t->frameset++;
