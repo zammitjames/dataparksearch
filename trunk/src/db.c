@@ -40,6 +40,7 @@
 #include "dps_store.h"
 #include "dps_agent.h"
 #include "dps_match.h"
+#include "dps_template.h"
 
 #include <stdio.h>
 #include <stdlib.h>
