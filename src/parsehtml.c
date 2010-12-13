@@ -436,7 +436,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   DPS_VAR	*Sec;
   int		res = DPS_OK;
   dpshash32_t	crc32 = 0;
-  int		crossec, seasec;
+  int		crossec, seasec, makesea;
   dpsunicode_t    *uword = NULL;    /* Word in UNICODE      */
   char            *lcsword = NULL;  /* Word in LocalCharset */
   size_t          max_word_len, min_word_len, uwordlen = DPS_MAXWORDSIZE;
@@ -485,6 +485,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   crossec = Sec ? Sec->section : 0;
   Sec = DpsVarListFind(&Doc->Sections, "sea");
   seasec = Sec ? Sec->section : 0;
+  makesea = Sec ? 1 : 0;
 	
   doccset=DpsVarListFindStr(&Doc->Sections,"Charset",NULL);
   if(!doccset||!*doccset)doccset=DpsVarListFindStr(&Doc->Sections,"RemoteCharset","iso-8859-1");
@@ -589,7 +590,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
     }
 
 
-    if (seasec && strstr(SEASections, Item->section_name)) {
+    if (makesea && strstr(SEASections, Item->section_name)) {
       DpsDSTRAppendUniWithSpace(&exrpt, UStr);
     }
 
@@ -675,7 +676,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DpsHrefListAdd(Indexer, &Doc->Hrefs, &Href);
     }
 
-    if (seasec && strstr(SEASections, Item->section_name)) {
+    if (makesea && strstr(SEASections, Item->section_name)) {
       DpsDSTRAppendUniWithSpace(&exrpt, UStr);
     }
 
@@ -704,7 +705,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
   DpsVarListReplaceInt(&Doc->Sections,"crc32", (int)crc32);
 
-  if (seasec) {
+  if (makesea) {
     DpsSEAMake(Indexer, Doc, &exrpt, content_lang, &indexed_size, &indexed_limit, max_word_len, min_word_len, crossec, seasec
 #ifdef HAVE_ASPELL
 	       , have_speller, speller
