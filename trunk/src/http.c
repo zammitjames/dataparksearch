@@ -30,6 +30,8 @@
 #include "dps_textlist.h"
 #include "dps_cookies.h"
 #include "dps_charsetutils.h"
+#include "dps_log.h"
+#include "dps_server.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,6 +56,41 @@ static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *
       char *v;
       for(v=val ; *v ; v++) 
 	*v = dps_tolower(*v);
+    } else if (Doc->Spider.use_robots && !strcasecmp(header_name, "X-Robots-Tag")) {
+        char * lt;
+	char * rtok;
+	char savec;
+					
+	rtok = dps_strtok_r(val, " ,\r\n\t", &lt, &savec);
+	while(rtok){
+	  if(!strcasecmp(rtok, "ALL")){
+	    /* Left Server parameters unchanged */
+	  }else if(!strcasecmp(rtok, "NONE")){
+	    Doc->Spider.follow = DPS_FOLLOW_NO;
+	    Doc->Spider.index = 0;
+	    if (DpsNeedLog(DPS_LOG_DEBUG)) {
+	      DpsVarListReplaceInt(&Doc->Sections, "Index", 0);
+	      DpsVarListReplaceInt(&Doc->Sections, "Follow", DPS_FOLLOW_NO);
+	    }
+	  }else if(!strcasecmp(rtok, "NOINDEX")) {
+	    Doc->Spider.index = 0;
+/*          Doc->method = DPS_METHOD_DISALLOW;*/
+	    if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Index", 0);
+	  }else if(!strcasecmp(rtok, "NOFOLLOW")) {
+	    Doc->Spider.follow = DPS_FOLLOW_NO;
+	    if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Follow", DPS_FOLLOW_NO);
+	  }else if(!strcasecmp(rtok, "NOARCHIVE")) {
+	    DpsVarListReplaceStr(&Doc->Sections, "Z", "");
+	  }else if(!strcasecmp(rtok, "INDEX")) {
+            /* left server value unchanged */ 
+	    if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Index", Doc->Spider.index);
+	  }else if(!strcasecmp(rtok, "FOLLOW")) {
+            /* left server value unchanged */ 
+	    if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Follow", Doc->Spider.follow);
+	  }
+	  rtok = dps_strtok_r(NULL, " \r\n\t", &lt, &savec);
+	}
+      
     } else if (Doc->Spider.use_cookies && !strcasecmp(header_name, "Set-Cookie")) {
       char *part, *lpart;
       char *name = NULL;
