@@ -42,7 +42,8 @@
 #include "dps_socket.h"
 #include "dps_url.h"
 #include "dps_charsetutils.h"
-
+#include "dps_word.h"
+#include "dps_crossword.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
