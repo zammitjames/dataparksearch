@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -343,15 +343,15 @@ ssize_t DpsRecvall(int s, void *buf, size_t len, size_t time_to_wait) {
 	if (len == 0) return received;
 	while ((size_t)received < len) {
 
-	  if ((r = read(s, b + received, dps_min(len - received, DPS_BLKLEN))) >= 0) {
+	  if ((r = read(s, b + received, dps_min(len - received, DPS_BLKLEN))) > 0) {
 		received += r;
 	  }
 	  if ( ((r < 0) && (errno != EINTR))  /* || have_sigint || have_sigterm */
 	       || have_sigpipe
 	       ) break;
 	  if (r == 0) {
+	    if (time_to_wait > 0 && (time(NULL) - start > time_to_wait)) break;
 	    DPS_MSLEEP(1);
-	    if (time(NULL) - start > time_to_wait) break;
 	  }
 	}
 	return (r < 0) ? r : received;
