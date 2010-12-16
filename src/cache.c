@@ -104,6 +104,7 @@
 
 #define DEBUG_SEARCH 1
 
+#define WAIT_TIME 36000 /* 10 hours */
 
 /* uncomment this to enable MODE_ALL realisation via search limits */
 /*#define MODE_ALL_VIA_LIMITS*/
@@ -458,7 +459,7 @@ int DpsDeleteURLFromCache(DPS_AGENT * Indexer, urlid_t url_id, DPS_DB *db){
 			TRACE_OUT(Indexer);
 			return DPS_ERROR;
 		}
-		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), 3600)) != 1) {
+		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
 			DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%d] %d, %s", __LINE__, recvt, strerror(errno));
 			TRACE_OUT(Indexer);
@@ -595,7 +596,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  fprintf(Indexer->TR, "[%d] DpsStoreWordsCache: receiving reply for cmd\n", Indexer->handle);
 	  fflush(Indexer->TR);
 #endif
-	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, 3600)) != 1) {
+	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, WAIT_TIME)) != 1) {
 	    if (recvt <= 0) {
 	      DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%d] %d, %s", __LINE__, recvt, strerror(errno));
 	      DPS_FREE(wrd); DPS_FREE(lcsword);
@@ -627,7 +628,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  fprintf(Indexer->TR, "[%d] DpsStoreWordsCache: receiving reply for wrd\n", Indexer->handle);
 	  fflush(Indexer->TR);
 #endif
-	  while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), 3600)) != 1) {
+	  while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 	    if (recvt <= 0) {
 	      DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached %s:%d", __FILE__, __LINE__);
 	      DPS_FREE(wrd); DPS_FREE(lcsword);
@@ -2806,7 +2807,7 @@ int DpsURLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 			TRACE_OUT(Indexer);
 			return DPS_ERROR;
 		}
-		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), 3600)) != 1) {
+		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
 			DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%s:%d], %d, %s", 
 			       __FILE__, __LINE__, recvt, strerror(errno));
@@ -2920,7 +2921,7 @@ int DpsCachedFlush(DPS_AGENT *Indexer, DPS_DB *db) {
 			TRACE_OUT(Indexer);
 			return DPS_ERROR;
 		}
-		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), 3600)) != 1) {
+		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
 			DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%s:%d], %d, %s", 
 			       __FILE__, __LINE__, recvt, strerror(errno));
@@ -3485,7 +3486,7 @@ int DpsCachedCheck(DPS_AGENT *A, int level) {
 			TRACE_OUT(A);
 			return(DPS_ERROR);
 		}
-		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), 3600)) != 1) {
+		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
 			DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d]: %d %s",__FILE__,__LINE__,recvt, strerror(errno));
 			TRACE_OUT(A);
@@ -3670,7 +3671,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  fprintf(A->TR, "[%d] DpsAddURLCache: receiving reply for cmd\n", A->handle);
 	  fflush(A->TR);
 #endif
-	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, 3600)) != 1) {
+	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
 			DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d, %s",__FILE__,__LINE__,recvt, strerror(errno));
 			DpsFree(textbuf);
@@ -3704,7 +3705,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  fprintf(A->TR, "[%d] DpsAddURLCache: receiving reply for tlen\n", A->handle);
 	  fflush(A->TR);
 #endif
-	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, 3600)) != 1) {
+	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
 			DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d, %s",__FILE__,__LINE__,recvt, strerror(errno));
 			DpsFree(textbuf);
@@ -3736,7 +3737,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  fflush(A->TR);
 #endif
 
-	  while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), 3600)) != 1) {
+	  while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 	    if (recvt <= 0) {
 	      DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d, %s",__FILE__,__LINE__,recvt, strerror(errno));
 	      DpsFree(textbuf);
