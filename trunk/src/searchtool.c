@@ -1417,6 +1417,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		    } else {
 		    /* Child process */
 		      init_signals();
+		      close(0); close(1); /* close STDIN and STDOUT */
 		      close(rd[0]);
 
 		      suggestions = aspell_speller_suggest(speller, (const char *)wrd, (int)tlen);
@@ -1427,9 +1428,10 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 			write(rd[1], asug, tlen);
 		      }
 		      delete_aspell_string_enumeration(elements);
+		      close(2); /* close STDERR */
 		      close(rd[1]);
 		      /* wait till killing by parent */
-		      while(1) DPSSLEEP(300); /* exit(0); */
+		      /*while(1) DPSSLEEP(300);*/ exit(0);
 		    }
 		  }
 		}
