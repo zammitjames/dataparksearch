@@ -1844,8 +1844,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
   register double y = 0.0;
 
 /*  if (D[DPS_N_PHRASE] > 0) xy += (x - xy + D[DPS_N_PHRASE]) / 2.0;*/
-  if (D[DPS_N_PHRASE] == 0) y += x;
-  if (D[DPS_N_EXACT] == 0) y += x;
+  if (D[DPS_N_PHRASE] == 0) y += x; else y += x / D[DPS_N_PHRASE];
+  if (D[DPS_N_EXACT] == 0) y += x; else y += x / D[DPS_N_EXACT];
   y += x * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
 
 
@@ -2251,8 +2251,8 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	if (cur_order == 0) { cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY); }
 	else cur_exact *= (w_origin == DPS_WORD_ORIGIN_QUERY);
       	if (cur_order == Res->max_order_inquery) {
-		D[DPS_N_PHRASE] |= a; cur_order = (wordorder == 0) ? 0 : -1;
-		if (cur_exact) D[DPS_N_EXACT] |= a;
+		D[DPS_N_PHRASE] += 2; cur_order = (wordorder == 0) ? 0 : -1;
+		if (cur_exact) D[DPS_N_EXACT] += 2;
 		cur_exact = (wordorder == 0) ? (w_origin == DPS_WORD_ORIGIN_QUERY) : 0;
 	}
       } else if ((cur_order != wordorder) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) {
