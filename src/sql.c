@@ -498,7 +498,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 	default:
 	  break;
 	}
-#if 0
+#if 1
 	if (fromserver  && (/* (Agent->Flags.cmd == DPS_IND_POPRANK) || */ (Agent->flags & DPS_FLAG_SORT_POPRANK)) ) {
 	  fromserver = 0;
 	  fromstr = (char*)DpsRealloc(fromstr, dps_strlen(fromstr) + 12);
@@ -516,7 +516,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 		db->from = (char*)DpsStrdup("");
 		goto ret;
 	  }
-	  sprintf(DPS_STREND(serverstr), "%ss.rec_id=url.site_id", (serverstr[0]) ? " AND " : "");
+	  sprintf(DPS_STREND(serverstr), "%ss.rec_id=url.server_id", (serverstr[0]) ? " AND " : "");
 	}
 #endif
 
@@ -983,20 +983,22 @@ static int DpsServerTableClean(DPS_DB *db){
 }
 
 static int DpsServerTableFlush(DPS_DB *db){
-	DPS_SQLRES	SQLRes, SRes;
+  DPS_SQLRES	SQLRes, SRes;
 	size_t		i, rows;
 	int rc;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	char str[128];
+	int per_site, per_server;
 	
 	rc = DpsSQLAsyncQuery(db, NULL, "UPDATE server SET enabled=0");
 	if (rc != DPS_OK) return rc;
 
 	DpsSQLResInit(&SQLRes);
 	DpsSQLResInit(&SRes);
-	dps_snprintf(str, sizeof(str), "SELECT rec_id FROM server WHERE parent!=%s0%s", qu, qu);
+	dps_snprintf(str, sizeof(str), "SELECT rec_id FROM server WHERE command='S'");
 	if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, str))) goto flush_exit;
 	rows = DpsSQLNumRows(&SQLRes);
+/*
 	if (db->DBSQL_LIMIT) {
 	  for(i = 0; i < rows; i++) {
 	    dps_snprintf(str, sizeof(str), "SELECT 1 FROM url WHERE site_id=%s%s%s LIMIT 1", qu, DpsSQLValue(&SQLRes, i, 0), qu);
@@ -1008,16 +1010,25 @@ static int DpsServerTableFlush(DPS_DB *db){
 	    }
 	  }
 	} else {
+*/
 	  for(i = 0; i < rows; i++) {
 	    dps_snprintf(str, sizeof(str), "SELECT COUNT(*) FROM url WHERE site_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
 	    if(DPS_OK != (rc = DpsSQLQuery(db, &SRes, str))) goto flush_exit;
-	    if (DPS_ATOI(DpsSQLValue(&SRes, 0, 0)) > 0) {
-	      dps_snprintf(str, sizeof(str),  "UPDATE server SET enabled=1 WHERE rec_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	    per_site = DPS_ATOI(DpsSQLValue(&SRes, 0, 0));
+
+	    dps_snprintf(str, sizeof(str), "SELECT COUNT(*) FROM url WHERE server_id=%s%s%s", qu, DpsSQLValue(&SQLRes, i, 0), qu);
+	    if(DPS_OK != (rc = DpsSQLQuery(db, &SRes, str))) goto flush_exit;
+	    per_server = DPS_ATOI(DpsSQLValue(&SRes, 0, 0));
+
+	    if (per_site > 0 || per_server > 0) {
+	      dps_snprintf(str, sizeof(str),  "UPDATE server SET enabled=1,pop_weight=%s%d%s WHERE rec_id=%s%s%s", 
+			   qu, dps_max(per_site,per_server), qu,
+			   qu, DpsSQLValue(&SQLRes, i, 0), qu);
 	      rc = DpsSQLAsyncQuery(db, NULL, str);
 	      if (rc != DPS_OK) goto flush_exit;
 	    }
 	  }
-	}
+/*	}*/
  flush_exit:
 	DpsSQLFree(&SRes);
 	DpsSQLFree(&SQLRes);
@@ -3294,7 +3305,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	     || (Indexer->flags & DPS_FLAG_SORT_SEED)  ) {
 	  int notfirst = 0;
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
-	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",s.pop_weight,pop_rank DESC" : "ORDER BY s.pop_weight,pop_rank DESC");
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_HOPS) {
