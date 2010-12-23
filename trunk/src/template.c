@@ -492,10 +492,13 @@ static size_t TemplateTag(DPS_AGENT *Agent, DPS_OUTPUTFUNCTION dps_out, void *st
 
 	for (i = 0; i < ltag.ntoks; i++) {
 		if (ISTAG(i, "selected")) {
+		        DPS_FREE(vname);
 			vname = DpsStrndup(ltag.toks[i].val, ltag.toks[i].vlen);
 		} else if (ISTAG(i, "checked")) {
+		        DPS_FREE(vname);
 		        vname = DpsStrndup(ltag.toks[i].val, ltag.toks[i].vlen);
 		} else if (ISTAG(i, "value")) {
+		        DPS_FREE(value);
 			value = DpsStrndup(ltag.toks[i].val, ltag.toks[i].vlen);
 			sprintf(DPS_STREND(opt), "value=\"%s\" ", value);
 		} else if (ISTAG(i, "/")) { /* the closing slash is necessary for some xhtml tags */
@@ -514,7 +517,7 @@ static size_t TemplateTag(DPS_AGENT *Agent, DPS_OUTPUTFUNCTION dps_out, void *st
 	}
 
 	if(vname) {
-		var = DpsVarListFindWithValue(vars, DpsTrim(vname, "$&%^()"), value ? value:"");
+		var = DpsVarListFindWithValue(vars, DpsTrim(vname, "$*&%^()"), value ? value:"");
 	}
 
 	sprintf(DPS_STREND(opt), "%s%s%s>", var ? (checked ? "checked" : "selected") : "",
