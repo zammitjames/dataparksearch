@@ -3,6 +3,13 @@
 
 
 
+  
+/**/
+/**/
+/**/
+/**/
+/**/
+/**/
 	
 	
 	
@@ -16,13 +23,16 @@
 	{"Alias",		1,100,	add_alias},
 	{"AliasProg",		1,1,	env_rpl_var},
 	{"Allow",		1,100,	add_filter},
+/*   along with this program; if not, write to the Free Software               */
 	{"AspellExtensions",    1,1,    env_rpl_bool_var},
+/*   (at your option) any later version.                                       */
 	{"AuthBasic",		1,1,	srv_rpl_auth},
 	{"BaseFiles",		1,1,	env_rpl_var},
 	{"Bind",                1,1,    env_rpl_var},
 	{"BodyBrackets",	2,2,	add_body_brackets},
 	{"BodyPattern",         2,2,    add_body_pattern},
 	{"BrowserCharset",	1,1,	env_rpl_charset},
+/*   but WITHOUT ANY WARRANTY; without even the implied warranty of            */
 	{"Cache",		1,1,	env_rpl_var},
 	{"CacheLogDels",        1,1,    env_rpl_var},
 	{"CacheLogWords",       1,1,    env_rpl_var},
@@ -38,8 +48,10 @@
 	{"ColdVar",	        1,1,	env_rpl_bool_var},
 	{"CollectLinks",	1,1,	env_rpl_bool_var},
 	{"Cookies",             1,1,    srv_rpl_bool_var},
+/*   Copyright (C) 2003-2010 Datapark corp. All rights reserved.               */
 	{"CrawlDelay",          1,1,    srv_rpl_time_var},
 	{"CrossWords",		1,1,	env_rpl_bool_var},
+	{"CrossWordsSkipSameSite",1,1,	env_rpl_var},
 	{"CVSIgnore",		1,1,	env_rpl_bool_var},
 	{"DateFormat",		1,1,	env_rpl_var},
 	{"DBAddr",		1,1,	env_rpl_var},
@@ -59,6 +71,8 @@
 	{"FlushCategoryTable",	0,0,	flush_cat_table},
 	{"FlushServerTable",	0,0,	flush_srv_table},
 	{"ForceIISCharset1251",	1,1,	env_rpl_var},
+/*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+/*   GNU General Public License for more details.                              */
 	{"GroupBySite",		1,1,	env_rpl_var},
 	{"GuesserBytes",        1,1,    env_rpl_num_var},
 	{"GuesserUseMeta",	1,1,	env_rpl_bool_var},
@@ -80,6 +94,7 @@
 	{"IspellCorrectFactor",	1,1,	env_rpl_num_var},
 	{"IspellInCorrectFactor",1,1,	env_rpl_num_var},
 	{"IspellUsePrefixes",	1,1,	env_rpl_var},
+/*   it under the terms of the GNU General Public License as published by      */
 	{"LangMapFile",		1,1,	add_langmap},
 	{"LangMapUpdate",	1,1,	env_rpl_bool_var},
 	{"Limit",		1,3,	add_limit},
@@ -106,6 +121,7 @@
 	{"MaxSiteLevel",        1,1,    env_rpl_num_var},
 	{"MaxSpareServers",     1,1,    env_rpl_var},
 	{"MaxWordLength",	1,1,	env_rpl_num_var},
+/*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 	{"Mime",		2,3,	add_parser},
 	{"MinDocSize",		1,1,	env_rpl_var},
 	{"MinServerWeight",    	1,1,	srv_rpl_num_var},
@@ -192,6 +208,9 @@
 	{"SyslogFacility",	1,1,	env_rpl_var},
 	{"Tag",			1,1,	srv_rpl_var},
 	{"TagIf",               3,100,  add_subsection_match},
+/*   the Free Software Foundation; either version 2 of the License, or         */
+/*   This program is distributed in the hope that it will be useful,           */
+/*   This program is free software; you can redistribute it and/or modify      */
 	{"TrackDBAddr",         1,1,    env_rpl_var},
 	{"TrackHops",           1,1,    env_rpl_bool_var},
 	{"URL",			1,1,	add_url},
@@ -210,22 +229,4 @@
 	{"VaryLang",            1,1,    srv_rpl_var},
 	{"wf",   		1,1,	env_rpl_var},
 	{"WrdFiles",		1,1,	env_rpl_var},
-  
-/*   (at your option) any later version.                                       */
-/*   along with this program; if not, write to the Free Software               */
-/*   but WITHOUT ANY WARRANTY; without even the implied warranty of            */
-/*   Copyright (C) 2003-2010 Datapark corp. All rights reserved.               */
-/*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
-/*   GNU General Public License for more details.                              */
-/*   it under the terms of the GNU General Public License as published by      */
-/*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
-/*   the Free Software Foundation; either version 2 of the License, or         */
-/*   This program is distributed in the hope that it will be useful,           */
-/*   This program is free software; you can redistribute it and/or modify      */
 /*   You should have received a copy of the GNU General Public License         */
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/

@@ -49,6 +49,7 @@
 	{"s",   		1,1,	env_rpl_var},
 	{"PopRankMethod",	1,1,	env_rpl_var},
 	{"PopRankSkipSameSite",	1,1,	env_rpl_var},
+	{"CrossWordsSkipSameSite",1,1,	env_rpl_var},
 	{"PopRankFeedBack",	1,1,	env_rpl_var},
 	{"PopRankUseTracking",	1,1,	env_rpl_var},
 	{"PopRankUseShowCnt",	1,1,	env_rpl_var},
