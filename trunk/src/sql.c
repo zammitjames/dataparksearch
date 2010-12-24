@@ -1340,7 +1340,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	DPS_SQLRES	SQLRes;
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
-	dpshash32_t	id = 0;
+	dpshash32_t	id = 0, site_id = 0;
 	int             hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 	int		rc = DPS_OK;
 	
@@ -1401,11 +1401,14 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		      char *tp = Indexer->DpsFindURLCache[i];
 		      hops = Indexer->DpsFindURLCacheHops[i];
 		      id = Indexer->DpsFindURLCacheId[i];
+		      site_id = Indexer->DpsFindURLCacheSiteId[i];
 		      Indexer->DpsFindURLCache[i] = Indexer->DpsFindURLCache[Indexer->pURLCache]; 
 		      Indexer->DpsFindURLCacheId[i] = Indexer->DpsFindURLCacheId[Indexer->pURLCache];
+		      Indexer->DpsFindURLCacheSiteId[i] = Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache];
 		      Indexer->DpsFindURLCacheHops[i] = Indexer->DpsFindURLCacheHops[Indexer->pURLCache];
 		      Indexer->DpsFindURLCache[Indexer->pURLCache] = tp;
 		      Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
+		      Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache] = site_id;
 		      Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
 		      Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 		      break;
@@ -1413,7 +1416,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		}
 
 		if (i == DPS_FINDURL_CACHE_SIZE) {
-		  dps_snprintf(qbuf, l + 100, "SELECT rec_id,hops FROM url WHERE url='%s'",e_url);
+		  dps_snprintf(qbuf, l + 100, "SELECT rec_id,hops,site_id FROM url WHERE url='%s'",e_url);
 		  if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes,qbuf))){
 		    if (need_free_e_url) { 
 		      DPS_FREE(e_url);
@@ -1423,12 +1426,14 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		    return rc;
 		  }
 		  for(i=0;i<DpsSQLNumRows(&SQLRes);i++){
-			if((o=DpsSQLValue(&SQLRes,i,0))){
-				id=atoi(o);
-				break;
+			if((o = DpsSQLValue(&SQLRes, i, 0))) {
+				id = DPS_ATOI(o);
 			}
 			if((o = DpsSQLValue(&SQLRes, i, 1))) {
-				hops = atoi(o);
+				hops = DPS_ATOI(o);
+			}
+			if((o = DpsSQLValue(&SQLRes, i, 2))) {
+				site_id = DPS_ATOI(o);
 				break;
 			}
 		  }
@@ -1436,6 +1441,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		  DPS_FREE(Indexer->DpsFindURLCache[Indexer->pURLCache]);
 		  Indexer->DpsFindURLCache[Indexer->pURLCache] = (char*)DpsStrdup(e_url);
 		  Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
+		  Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache] = site_id;
 		  Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
 		  Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 		}
@@ -1446,6 +1452,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		DPS_FREE(qbuf);
 	}
 	DpsVarListReplaceInt(&Doc->Sections, "DP_ID", id);
+	DpsVarListReplaceInt(&Doc->Sections, "Site_id", site_id);
 	DpsVarListReplaceInt(&Doc->Sections, "hops", hops);
 	return	rc;
 }
@@ -2033,18 +2040,20 @@ static int DpsDeleteCrossWordFromURL(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_D
 }
 
 
-static int DpsStoreCrossWords(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
+static int DpsStoreCrossWords(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	DPS_DOCUMENT	U;
 	size_t		i, lcslen;
 	char		qbuf[1024];
 	char		table[64]="ncrossdict";
 	char            *word_escaped, *lcsword;
 	int		crcmode=1;
+	int skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "CrossWordsSkipSameSite", DPS_CROSSWORDSSKIPSAMESITE), "yes");
 	const char	*lasturl="scrap";
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	urlid_t		referrer = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
+	const char      *site_id = DpsVarListFindStr(&Doc->Sections, "Site_id", "0");
 	urlid_t		childid = 0;
-	int		rc=DPS_OK;
+	int		rc=DPS_OK, disallow = 0;
 	DPS_HREF        Href;
 	DPS_URL         docURL;
 
@@ -2094,9 +2103,11 @@ static int DpsStoreCrossWords(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 			}
 			childid = DpsVarListFindInt(&U.Sections,"DP_ID",0);
 			lasturl = Doc->CrossWords.CrossWord[i].url;
+			disallow = !strcasecmp(site_id, DpsVarListFindStr(&U.Sections, "Site_id", "0"));
 			DPS_FREE(Href.url);
 		}
 		Doc->CrossWords.CrossWord[i].referree_id = childid;
+		if (disallow) Doc->CrossWords.CrossWord[i].weight = 0;
 	}
 	
 	/* Begin transacttion/lock */

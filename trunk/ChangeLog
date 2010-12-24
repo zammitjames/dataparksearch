@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* "CrossWordsSkipSameSite yes/no" command has been added.
 	* Added support for ISO 8601 date and time format.
 	* Added support for Sitemap: command in robots.txt file.
 	* Support for libextractor 0.6.x has been added.
