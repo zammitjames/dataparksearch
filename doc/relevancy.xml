@@ -259,7 +259,17 @@ See also <xref linkend="search-bool"/>.
 to. <!--It works in SQL database mode and is not supported in cache mode.--> To enable Crosswords, please use
 <command>CrossWords yes</command> command in
 <filename>indexer.conf</filename> and
-<filename>search.htm</filename>, and define <userinput>crosswords</userinput> section in <filename>sections.conf</filename> file.</para>
+<filename>search.htm</filename>, and define <userinput>crosswords</userinput> section in <filename>sections.conf</filename> file.
+</para>
+
+<para><indexterm><primary>Command</primary><secondary>CrossWordsSkipSameSite</secondary></indexterm>
+With the <command>CrossWordsSkipSameSite</command> command you can manage the collection of crosswords from the same site.
+If the option <userinput>yes</userinput> is set (by default), the crosswords from the same site doen't collected. 
+If you wish to collect such crosswords, you need to set <userinput>no</userinput> option explicitly:
+<programlisting>
+CrossWordsSkipSameSite no
+</programlisting>
+</para>
 
 	</sect2>
 

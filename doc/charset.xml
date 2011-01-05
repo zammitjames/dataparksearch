@@ -260,7 +260,7 @@ URLCharset KOI8-R
 <programlisting>
 CharsToEscape &quot;\&quot;&amp;&lt;&gt;![]&quot;
 </programlisting>
-<para>Use this command in your search template to specify the list of characters to escape for $&(x) search template meta-variables.
+<para>Use this command in your search template to specify the list of characters to escape for $&amp;(x) search template meta-variables.
 </para>
 </sect2>
 

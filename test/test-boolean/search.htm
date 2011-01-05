@@ -19,8 +19,8 @@ LocalCharset   utf-8
 BrowserCharset utf-8
 
 Acronym /home/maxime/make/DataparkSearch/test/test-boolean/acr.conf
-Affix en latin1 /usr/local/dpsearch/etc/en/english.aff
-Spell en latin1 /usr/local/dpsearch/etc/en/british.xlg
+#Affix en latin1 /usr/local/dpsearch/etc/en/english.aff
+#Spell en latin1 /usr/local/dpsearch/etc/en/british.xlg
 
 # Load stopwords file.  File name is either absolute
 # or relative to /etc directory of mnoGoSearch installation.
@@ -67,6 +67,7 @@ HlEnd	</b>
 # Uncomment this line to change Last-Modified format output
 # Use strftime function meta variables
 #DateFormat %d %b %Y %X %Z
+DateFormat %s
 
 DetectClones yes
 Locale en_US.ISO8859-1

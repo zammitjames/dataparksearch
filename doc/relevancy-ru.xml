@@ -200,14 +200,23 @@ PopRankPostpone yes
 <indexterm><primary>Crosswords</primary></indexterm>
 </title>
 		<para>Эта возможность позволяет связать слова между
-&lt;a href="xxx"&gt; и &lt;/a&gt; с документов, на который указывает данная ссылка.
-<!--Эта возможность не поддерживается для встроенной (built-in) базы данных.-->
+&lt;a href="xxx"&gt; и &lt;/a&gt; с документом, на который указывает данная ссылка.
 Для включения этой возможности, используйте команду
 <command>CrossWords yes
 <indexterm><primary>Команда</primary><secondary>CrossWords</secondary></indexterm>
 </command> в <filename>indexer.conf</filename> и <filename>search.htm</filename>, а также определите секцию
 <userinput>crosswords</userinput> в файле <filename>sections.conf</filename>.
 </para>
+
+<para><indexterm><primary>Команда</primary><secondary>CrossWordsSkipSameSite</secondary></indexterm>
+При помощи команды <command>CrossWordsSkipSameSite</command> можно управлять сбором кросс-слов со страниц того же сайта.
+Если указана опция <userinput>yes</userinput> (по умолчанию), то сбор кросс-слов со страниц того же сайта не происходит. 
+Для включения учета таких слов необходимо явно задать опцию <userinput>no</userinput>:
+<programlisting>
+CrossWordsSkipSameSite no
+</programlisting>
+</para>
+
 	</sect2>
 
 <sect2 id="sea">

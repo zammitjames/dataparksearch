@@ -134,11 +134,13 @@
 
 </sect1>
 	</chapter>
+
 	<chapter id="misc">
 		<title>Miscellaneous</title>
 &bugs;
 &lib;
 &dbschema;
+</chapter>
 
 <appendix id="donations">
 <title>Donations</title>
@@ -161,7 +163,6 @@ feel free to make a <ulink url="http://order.kagi.com/?6CYPQ">donation
 
 </appendix>
 
-</chapter>
 
 &index;
 
