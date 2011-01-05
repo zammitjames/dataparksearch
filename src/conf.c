@@ -197,7 +197,7 @@ int DpsWeightFactorsInit(const char *wf, int *res){
 	  register size_t sn;
 	  register const char *p = wf + len - 1;
 
-	  for (sn = 0; sn < 256; sn++) {
+	  for (sn = 1; sn < 256; sn++) {
 	    if ((res[sn] = DpsHex2Int((int)*p)) == 0) flag = 1;
 	    if (p > wf) p--;
 	  }
