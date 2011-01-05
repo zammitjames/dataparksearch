@@ -138,8 +138,6 @@ http	1313028	-36944204	http://site/body19.txt
 site	1378308	-36944204	http://site/body19.txt
 body19	1443334	-36944204	http://site/body19.txt
 txt	1508867	-36944204	http://site/body19.txt
-http	67844	0	http://site/
-site	133124	0	http://site/
 body1	65797	107219943	http://site/body3.txt
 body2	131333	107219943	http://site/body3.txt
 body3	196869	107219943	http://site/body3.txt
@@ -181,8 +179,8 @@ abasements	1376522	173274629	http://site/body-not-near.txt
 http	1444100	173274629	http://site/body-not-near.txt
 site	1509380	173274629	http://site/body-not-near.txt
 not	1574403	173274629	http://site/body-not-near.txt
-near	1574404	173274629	http://site/body-not-near.txt
 body	1574404	173274629	http://site/body-not-near.txt
+near	1574404	173274629	http://site/body-not-near.txt
 body-not-near	1574413	173274629	http://site/body-not-near.txt
 txt	1639939	173274629	http://site/body-not-near.txt
 body1	65797	636090241	http://site/body8.txt
@@ -334,29 +332,29 @@ site	1116164	2066814873	http://site/body15.txt
 body15	1181190	2066814873	http://site/body15.txt
 txt	1246723	2066814873	http://site/body15.txt
 SQL>'SELECT status, docsize, hops, crc32, pop_rank, url FROM url ORDER BY status, crc32'
-200	72	1	-1673460639	0.25	http://site/body10.txt
-200	132	1	-1299279076	0.25	http://site/body20.txt
-200	55	1	-1237685749	0.25	http://site/body9.txt
-200	72	1	-768614668	0.25	http://site/body11.txt
-200	111	1	-418485286	0.25	http://site/body17.txt
-200	104	1	-317936283	0.25	http://site/body16.txt
-200	16	1	-126934289	0.25	http://site/body1.txt
-200	125	1	-36944204	0.25	http://site/body19.txt
-200	635	0	0	0.25	http://site/
-200	19	1	107219943	0.25	http://site/body3.txt
-200	38	1	125878963	0.25	http://site/anyword.txt
-200	143	1	173274629	0.25	http://site/body-not-near.txt
-200	49	1	636090241	0.25	http://site/body8.txt
-200	13	1	734643115	0.25	http://site/body2.txt
-200	90	1	810758181	0.25	http://site/body14.txt
-200	25	1	1003638722	0.25	http://site/body4.txt
-200	83	1	1056882743	0.25	http://site/body13.txt
-200	37	1	1325631088	0.25	http://site/body6.txt
-200	118	1	1513978753	0.25	http://site/body18.txt
-200	43	1	1567986838	0.25	http://site/body7.txt
-200	31	1	1793755820	0.25	http://site/body5.txt
-200	76	1	1842841898	0.25	http://site/body12.txt
-200	97	1	2066814873	0.25	http://site/body15.txt
+200	72	1	-1673460639	0.020833	http://site/body10.txt
+200	132	1	-1299279076	0.020833	http://site/body20.txt
+200	55	1	-1237685749	0.020833	http://site/body9.txt
+200	72	1	-768614668	0.020833	http://site/body11.txt
+200	884	0	-692672599	0.0	http://site/
+200	111	1	-418485286	0.020833	http://site/body17.txt
+200	104	1	-317936283	0.020833	http://site/body16.txt
+200	16	1	-126934289	0.020833	http://site/body1.txt
+200	125	1	-36944204	0.020833	http://site/body19.txt
+200	19	1	107219943	0.020833	http://site/body3.txt
+200	38	1	125878963	0.020833	http://site/anyword.txt
+200	143	1	173274629	0.020833	http://site/body-not-near.txt
+200	49	1	636090241	0.020833	http://site/body8.txt
+200	13	1	734643115	0.020833	http://site/body2.txt
+200	90	1	810758181	0.020833	http://site/body14.txt
+200	25	1	1003638722	0.020833	http://site/body4.txt
+200	83	1	1056882743	0.020833	http://site/body13.txt
+200	37	1	1325631088	0.020833	http://site/body6.txt
+200	118	1	1513978753	0.020833	http://site/body18.txt
+200	43	1	1567986838	0.020833	http://site/body7.txt
+200	31	1	1793755820	0.020833	http://site/body5.txt
+200	76	1	1842841898	0.020833	http://site/body12.txt
+200	97	1	2066814873	0.020833	http://site/body15.txt
 SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,urlinfo WHERE url.rec_id=urlinfo.url_id ORDER BY url.status,url.crc32,lower(urlinfo.sname)'
 200	-1673460639	http://site/body10.txt	body	body1 body2 body3 body4 body5 body6 body7 body8 body9 body10 abasements
 200	-1673460639	http://site/body10.txt	Charset	ISO-8859-1
@@ -374,6 +372,9 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	-768614668	http://site/body11.txt	Charset	ISO-8859-1
 200	-768614668	http://site/body11.txt	Content-Language	en
 200	-768614668	http://site/body11.txt	Content-Type	text/plain
+200	-692672599	http://site/	Charset	ISO-8859-1
+200	-692672599	http://site/	Content-Language	en
+200	-692672599	http://site/	Content-type	text/html
 200	-418485286	http://site/body17.txt	body	body1 body2 body3 body4 body5 body6 body7 body8 body9 body10 body11 body12 body13 body14 body15 body16 body17
 200	-418485286	http://site/body17.txt	Charset	ISO-8859-1
 200	-418485286	http://site/body17.txt	Content-Language	en
@@ -390,9 +391,6 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	-36944204	http://site/body19.txt	Charset	ISO-8859-1
 200	-36944204	http://site/body19.txt	Content-Language	en
 200	-36944204	http://site/body19.txt	Content-Type	text/plain
-200	0	http://site/	Charset	ISO-8859-1
-200	0	http://site/	Content-Language	en
-200	0	http://site/	Content-type	text/html
 200	107219943	http://site/body3.txt	body	body1 body2 body3
 200	107219943	http://site/body3.txt	Charset	ISO-8859-1
 200	107219943	http://site/body3.txt	Content-Language	en
@@ -472,29 +470,29 @@ SQL>'SELECT u1.docsize,u2.docsize,u1.url,u2.url FROM url u1,url u2, links l WHER
 125	125	http://site/body19.txt	http://site/body19.txt
 132	132	http://site/body20.txt	http://site/body20.txt
 143	143	http://site/body-not-near.txt	http://site/body-not-near.txt
-635	13	http://site/	http://site/body2.txt
-635	16	http://site/	http://site/body1.txt
-635	19	http://site/	http://site/body3.txt
-635	25	http://site/	http://site/body4.txt
-635	31	http://site/	http://site/body5.txt
-635	37	http://site/	http://site/body6.txt
-635	38	http://site/	http://site/anyword.txt
-635	43	http://site/	http://site/body7.txt
-635	49	http://site/	http://site/body8.txt
-635	55	http://site/	http://site/body9.txt
-635	72	http://site/	http://site/body11.txt
-635	72	http://site/	http://site/body10.txt
-635	76	http://site/	http://site/body12.txt
-635	83	http://site/	http://site/body13.txt
-635	90	http://site/	http://site/body14.txt
-635	97	http://site/	http://site/body15.txt
-635	104	http://site/	http://site/body16.txt
-635	111	http://site/	http://site/body17.txt
-635	118	http://site/	http://site/body18.txt
-635	125	http://site/	http://site/body19.txt
-635	132	http://site/	http://site/body20.txt
-635	143	http://site/	http://site/body-not-near.txt
-635	635	http://site/	http://site/
+884	13	http://site/	http://site/body2.txt
+884	16	http://site/	http://site/body1.txt
+884	19	http://site/	http://site/body3.txt
+884	25	http://site/	http://site/body4.txt
+884	31	http://site/	http://site/body5.txt
+884	37	http://site/	http://site/body6.txt
+884	38	http://site/	http://site/anyword.txt
+884	43	http://site/	http://site/body7.txt
+884	49	http://site/	http://site/body8.txt
+884	55	http://site/	http://site/body9.txt
+884	72	http://site/	http://site/body10.txt
+884	72	http://site/	http://site/body11.txt
+884	76	http://site/	http://site/body12.txt
+884	83	http://site/	http://site/body13.txt
+884	90	http://site/	http://site/body14.txt
+884	97	http://site/	http://site/body15.txt
+884	104	http://site/	http://site/body16.txt
+884	111	http://site/	http://site/body17.txt
+884	118	http://site/	http://site/body18.txt
+884	125	http://site/	http://site/body19.txt
+884	132	http://site/	http://site/body20.txt
+884	143	http://site/	http://site/body-not-near.txt
+884	884	http://site/	http://site/
 SQL>'SELECT url FROM url WHERE url='http://site/''
 http://site/
 SQL>

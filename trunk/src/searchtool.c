@@ -2251,9 +2251,9 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	if (cur_order == 0) { cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY); }
 	else cur_exact *= (w_origin == DPS_WORD_ORIGIN_QUERY);
       	if (cur_order == Res->max_order_inquery) {
-		D[DPS_N_PHRASE] += 2; cur_order = (wordorder == 0) ? 0 : -1;
+		D[DPS_N_PHRASE] += 2; cur_order = -1;
 		if (cur_exact) D[DPS_N_EXACT] += 2;
-		cur_exact = (wordorder == 0) ? (w_origin == DPS_WORD_ORIGIN_QUERY) : 0;
+		/*		cur_exact = (wordorder == 0) ? (w_origin == DPS_WORD_ORIGIN_QUERY) : 0;*/
 	}
       } else if ((cur_order != wordorder) && ((wordorder != prev_wordorder) || (wordpos != prev_wordpos))) {
 	    if (wordorder == 0) {

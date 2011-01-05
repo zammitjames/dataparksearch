@@ -3,8 +3,8 @@
 <indexterm><primary>Oracle</primary><secondary>notes</secondary></indexterm>
 
 	<sect2 id="oracle-intro">
-		<!--title>Introduction</title>
-		<para>By Anton Zemlyanov <email>az@hotmail.ru</email>
+		<title>Introduction</title>
+		<!--para>By Anton Zemlyanov <email>az@hotmail.ru</email>
 		</para-->
 		<sect3 id="oracle-why">
 			<title>Why Oracle?</title>

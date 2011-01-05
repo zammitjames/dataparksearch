@@ -41,11 +41,15 @@ bin-dist:
 
 EXTRA_DIST = net.m4 threads.m4 install.pl bootstrap acinclude.m4 docbook.m4 README.XML BUGS \
 	perl/Makefile.PL.in perl/BUGS perl/README perl/INSTALL perl/test.pl perl/Dataparksearch.pm perl/Dataparksearch.xs \
-	perl/cat_ed/*.pl perl/cat_ed/*.gif perl/examples/*
+	perl/cat_ed/*.pl perl/cat_ed/*.gif perl/examples/* charset-Makefile.am charset-configure.in \
+	dp-Makefile.am dp-configure.in
 
 
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
+
+dist-hook:
+	cp -rf $(srcdir)/debian $(distdir)
 
 ## libdpcharset distribution
 
@@ -94,6 +98,44 @@ charset-dist: charsetdistdir
 	-chmod -R a+w $(charsetdistdir) >/dev/null 2>&1; rm -rf $(charsetdistdir)
 
 
-dist-hook:
-	cp -rf $(srcdir)/debian $(distdir)
+## libdp distribution
+
+DPDISTFILES =  src/dp.c include/dps_config.h.in COPYING
+
+dpdistdir = libdp-$(VERSION)
+
+dpdistdir: $(DPDISTFILES)
+	-chmod -R a+w $(dpdistdir) >/dev/null 2>&1; rm -rf $(dpdistdir)
+	mkdir $(dpdistdir)
+	$(mkinstalldirs) $(dpdistdir)/. $(dpdistdir)/././include $(dpdistdir)/./include $(dpdistdir)/src
+	@for file in $(DPDISTFILES); do \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(dpdistdir)/$$dir"; \
+	  fi; \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(dpdistdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(dpdistdir)/$$file \
+	    || cp -p $$d/$$file $(dpdistdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+	cp bootstrap $(dpdistdir)
+	cp dp-configure.in $(dpdistdir)/configure.in
+	cp dp-Makefile.am $(dpdistdir)/Makefile.am
+	cp src/dp-Makefile.am $(dpdistdir)/src/Makefile.am
+	-find $(dpdistdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r $(dpdistdir)
+
+
+dp-dist: dpdistdir
+	$(AMTAR) chof - $(dpdistdir) | GZIP=$(GZIP_ENV) gzip -c >$(dpdistdir).tar.gz
+	-chmod -R a+w $(dpdistdir) >/dev/null 2>&1; rm -rf $(dpdistdir)
+
 

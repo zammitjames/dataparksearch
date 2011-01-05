@@ -20,6 +20,7 @@ htdb.xml \
 html-design.xml \
 htmlparser.xml \
 httpcodes.xml \
+index.xml \
 install.xml \
 intro.xml \
 ispell.xml \
@@ -70,6 +71,7 @@ htdb-ru.xml \
 html-design-ru.xml \
 htmlparser-ru.xml \
 httpcodes-ru.xml \
+index-ru.xml \
 install-ru.xml \
 intro-ru.xml \
 ispell-ru.xml \
@@ -182,30 +184,24 @@ uninstall-local:
 
 index.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
 	$(JADE) -t sgml -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
 	$(JADE) -t sgml -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 
 index.ru.html: $(@doc_FILES_RU@)
 	$(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
 	perl $(COLLATEINDEX) -x -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
 
 book.tex: $(@doc_FILES_EN@)
 	LANG=C LC_ALL=C $(JADE) -V html-index -v -wno-valid -c ./catalog -d ./datapark.dsl -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 	rm index.en.html
 	LANG=C LC_ALL=C perl $(COLLATEINDEX) -i index -o index.xml HTML.index
 	LANG=C LC_ALL=C $(JADE) -v -wno-valid -c ./catalog -d ./datapark-pdf.dsl -t tex \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 
 book.pdf: book.tex
@@ -215,18 +211,15 @@ book.pdf: book.tex
 
 single.en.html: $(@doc_FILES_EN@) $(PDF_FILES)
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 	perl $(COLLATEINDEX) -i index -o index.xml HTML.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book.xml
 
 single.ru.html: $(@doc_FILES_RU@)
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
 	perl $(COLLATEINDEX) -i index-ru -o index-ru.xml HTML-ru.index
 	$(JADE) -V html-index -V nochunks -v -wno-valid -c ./catalog -d ./datapark-ru.dsl -V %root-filename%=single -t sgml \
-		 @DOCBOOKSTYLE@/dtds/decls/docbook.dcl \
 		 book-ru.xml
+

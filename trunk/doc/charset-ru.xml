@@ -327,7 +327,7 @@ URLCharset KOI8-R
 CharsToEscape &quot;\&quot;&amp;&lt;&gt;![]&quot;
 </programlisting>
 <para>Используйте эту команду в вашем поисковом шаблоне для указания списка эскейп-символов для мета-переменных поискового шаблона 
-типа $&(x).
+типа $&amp;(x).
 </para>
 </sect2>
 

@@ -1385,9 +1385,10 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 
 		if((dir=opendir(openname))){
 		        DPS_HREF Href;
-			char *stre;
+			char *stre, *lname = DpsVarListFindStr(&Doc->Sections, "ORIG_URL", NULL);
 			int hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
-			dps_strcpy(Doc->Buf.buf,"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n<HTML><BODY>\n");
+			sprintf(Doc->Buf.buf,"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n<HTML><TITLE>%s</TITLE><BODY>\n",
+				(lname != NULL) ? lname : DpsVarListFindStr(&Doc->Sections, "URL", openname));
 			
 			stre=DPS_STREND(Doc->Buf.buf);
 			while((rec = readdir (dir))){
@@ -1398,7 +1399,7 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 				This does not work on Solaris
 				is_dir=(rec->d_type==DT_DIR);
 				*/
-				if (cvs_ignore && !strcmp(rec->d_name,"CVS"))
+				if (cvs_ignore && (!strcmp(rec->d_name, "CVS") || !strcmp(rec->d_name, ".svn")))
 					continue;
 
 				sprintf(newfilename, "%s%s", openname, rec->d_name);
@@ -1428,7 +1429,7 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 				if (Doc->Buf.allocated_size > Doc->Buf.max_size) continue;
 
 				gap = stre - Doc->Buf.buf + 1;
-				if (gap >= Doc->Buf.allocated_size - 2048) {
+				if (gap >= Doc->Buf.allocated_size - 2*PATH_MAX + 32) {
 				  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 				  if ((e = (char*)DpsRealloc(Doc->Buf.buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
 				    break;
@@ -1437,7 +1438,7 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 				  stre = e + gap;
 				}
 				
-				sprintf(stre, "<A HREF=\"%s%s\"></A>\n", escaped_name, is_dir ? "/" : "");
+				dps_snprintf(stre,2*PATH_MAX+32,"<A HREF=\"%s%s\">%s</A>\n",escaped_name, is_dir ? "/" : "", rec->d_name);
 				stre=DPS_STREND(stre);
 			}
 			closedir(dir);

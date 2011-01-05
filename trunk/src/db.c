@@ -1752,9 +1752,9 @@ __C_LINK const char* __DPSCALL DpsDBTypeToStr(int dbtype)
     case DPS_DB_MSSQL:   return "mssql";
     case DPS_DB_ORACLE8: return "oracle";
     case DPS_DB_SQLITE:  return "sqlite";
-    case DPS_DB_SQLITE3: return "sqlite3";
+    case DPS_DB_SQLITE3: return "sqlite";
     case DPS_DB_MIMER:   return "mimer";
-	case DPS_DB_ACCESS:  return "access";
+    case DPS_DB_ACCESS:  return "access";
   }
   return "unknown_dbtype";
 }
@@ -1953,6 +1953,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #if (HAVE_SQLITE)
 	else if (!strcasecmp(db->addrURL.schema,"sqlite")){
 		db->DBType=DPS_DB_SQLITE;
+		db->DBDriver = DPS_DB_SQLITE;
 		db->DBSQL_IN=1;
 		db->DBSQL_LIMIT=1;
 		db->DBSQL_GROUP=1;
@@ -1960,7 +1961,8 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #endif
 #if (HAVE_SQLITE3)
 	else if (!strcasecmp(db->addrURL.schema, "sqlite3")){
-		db->DBType = DPS_DB_SQLITE3;
+		db->DBType = DPS_DB_SQLITE;
+		db->DBDriver = DPS_DB_SQLITE3;
 		db->DBSQL_IN = 1;
 		db->DBSQL_LIMIT = 1;
 		db->DBSQL_GROUP = 1;

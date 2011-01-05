@@ -2103,7 +2103,7 @@ static int DpsStoreCrossWords(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db)
 			}
 			childid = DpsVarListFindInt(&U.Sections,"DP_ID",0);
 			lasturl = Doc->CrossWords.CrossWord[i].url;
-			disallow = !strcasecmp(site_id, DpsVarListFindStr(&U.Sections, "Site_id", "0"));
+			if (skip_same_site) disallow = !strcasecmp(site_id, DpsVarListFindStr(&U.Sections, "Site_id", "0"));
 			DPS_FREE(Href.url);
 		}
 		Doc->CrossWords.CrossWord[i].referree_id = childid;

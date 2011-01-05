@@ -2442,7 +2442,7 @@ static int DpsSQLite3InitDB(DPS_DB *db) {
   
   if ( SQLITE_OK != sqlite3_open(dbname, &db->sqlt3)) {
     const char *errmsg = sqlite3_errmsg(db->sqlt3);
-    dps_snprintf(db->errstr, sizeof(db->errstr), "sqlite3 driver: %s", errmsg ? errmsg : "<NOERROR>");
+    dps_snprintf(db->errstr, sizeof(db->errstr), "sqlite3 driver (dbname:%s): %s", dbname, errmsg ? errmsg : "<NOERROR>");
     sqlite3_close(db->sqlt3);
     db->errcode = 1;
     return DPS_ERROR;
@@ -2784,7 +2784,7 @@ int __DPSCALL _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * query, c
 	}
 #endif
 	db->errcode=1;
-	dps_snprintf(db->errstr,sizeof(db->errstr)-1,"Unsupported SQL database type @ %s:%d", file, line);
+	dps_snprintf(db->errstr,sizeof(db->errstr)-1,"Unsupported SQL database type %d @ %s:%d", db->DBDriver, file, line);
 ret:
 #ifdef DEBUG_SQL
 	ticks=DpsStartTimer()-ticks;
@@ -2815,7 +2815,7 @@ ret:
 
 int __DPSCALL _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * query, const char *file, const int line) {
   DPS_SQLRES *res = (SQLRes == NULL) ? &db->Res : SQLRes;
-  int rc;
+  int rc, done = 0;
 	
 #ifdef DEBUG_SQL
 	unsigned long ticks;
@@ -2837,6 +2837,7 @@ int __DPSCALL _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * que
 /*			DPS_FREE(res);*/
 			res = NULL;
 		}
+		done = 1;
 		goto asyncret;
 	}
 #endif
@@ -2846,6 +2847,7 @@ int __DPSCALL _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *SQLRes, const char * que
 		bzero((void*)res, sizeof(*res));*/
 		DpsMySQLAsyncQuery(db, res, query);
 		res->DBDriver = db->DBDriver;
+		done = 1;
 		goto asyncret;
 	}
 #endif
@@ -2856,7 +2858,7 @@ asyncret:
 #ifdef DEBUG_SQL
 	ticks=DpsStartTimer()-ticks;
 /*	fprintf(stderr,"[%d,%x] %.2fs SQL {%s:%d}: %s\n", getpid(), db, (float)ticks/1000, file, line, query);*/
-	fprintf(stderr,"%.2fs SQL {%s:%d}: %s\n", (float)ticks/1000, file, line, query);
+	if (done) fprintf(stderr,"%.2fs AsSQL {%s:%d}: %s\n", (float)ticks/1000, file, line, query);
 #endif
 	
 #ifdef DEBUG_ERR_QUERY

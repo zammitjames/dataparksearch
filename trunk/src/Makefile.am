@@ -15,64 +15,68 @@ extra = libdpsearch_mod.la
 endif
 
 
-lib_LTLIBRARIES = libdpsearch.la libdpcharset.la $(extra)
+lib_LTLIBRARIES = libdp.la libdpsearch.la libdpcharset.la $(extra)
 
 noinst_HEADERS = uconv-8bit.h
 bin_PROGRAMS = search.cgi storedoc.cgi filler.cgi
 sbin_PROGRAMS = @db_PROGS@
 noinst_PROGRAMS = @APACHE_MODULE@ @PHP_MODULE@
 EXTRA_PROGRAMS= indexer searchd splitter stored dpguesser cached dpconv mod_dpsearch.so dpsearch.so
-EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php.c commands.lst commands.inc timezones.lst timezones.inc
+EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php.c commands.lst commands.inc \
+	timezones.lst timezones.inc charset-Makefile.am dp-Makefile.am dp.c
 
 splitter_SOURCES = splitter.c
-splitter_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+splitter_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 splitter_LDFLAGS = @PTHREAD_LFLAGS@
 splitter_CFLAGS = @PTHREAD_CFLAGS@
 
 searchd_SOURCES = searchd.c
-searchd_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+searchd_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 searchd_LDFLAGS = @PTHREAD_LFLAGS@
 searchd_CFLAGS = @PTHREAD_CFLAGS@
 
 stored_SOURCES = stored.c
-stored_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+stored_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 stored_LDFLAGS = @PTHREAD_LFLAGS@
 stored_CFLAGS = @PTHREAD_CFLAGS@
 
 indexer_SOURCES = main.c
-indexer_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+indexer_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 indexer_LDFLAGS = @PTHREAD_LFLAGS@
 indexer_CFLAGS = @PTHREAD_CFLAGS@
 
 search_cgi_SOURCES = search.c
-search_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+search_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 search_cgi_LDFLAGS = @PTHREAD_LFLAGS@
 search_cgi_CFLAGS = @PTHREAD_CFLAGS@
 
 storedoc_cgi_SOURCES = storedoc.c
-storedoc_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+storedoc_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 storedoc_cgi_LDFLAGS = @PTHREAD_LFLAGS@
 storedoc_cgi_CFLAGS = @PTHREAD_CFLAGS@
 
 filler_cgi_SOURCES = filler.c
-filler_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+filler_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 filler_cgi_LDFLAGS = @PTHREAD_LFLAGS@
 filler_cgi_CFLAGS = @PTHREAD_CFLAGS@
 
 dpguesser_SOURCES = dpguesser.c
-dpguesser_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+dpguesser_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 dpguesser_LDFLAGS = @PTHREAD_LFLAGS@  
 dpguesser_CFLAGS = @PTHREAD_CFLAGS@
 
 dpconv_SOURCES = dpconv.c
-dpconv_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+dpconv_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 dpconv_LDFLAGS = @PTHREAD_LFLAGS@  
 dpconv_CFLAGS = @PTHREAD_CFLAGS@
 
 cached_SOURCES = cached.c
-cached_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@
+cached_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
 cached_LDFLAGS = @PTHREAD_LFLAGS@  
 cached_CFLAGS = @PTHREAD_CFLAGS@
+
+libdp_la_SOURCES = dp.c
+libdp_la_LDFLAGS = -release @DPS_BASE_VERSION@
 
 libdpsearch_la_SOURCES = indexer.c url.c parser.c sql.c spell.c \
 log.c proto.c robots.c hrefs.c mutex.c conf.c utils.c cookies.c \
@@ -84,15 +88,16 @@ result.c synonym.c match.c store.c template.c guesser.c base.c carry.c \
 mirror.c sqldbms.c mkind.c chinese.c parsexml.c wild.c hash.c indexertool.c acronym.c sea.c \
 efence.c ef_page.c ef_print.c filence.c
 #EXTRA_libdpsearch_la_SOURCES = efence.c ef_page.c ef_print.c
-libdpsearch_la_LIBADD = @LIBLIB@ @PTHREAD_LDADD@ 
+libdpsearch_la_LIBADD = libdp.la @LIBLIB@ @PTHREAD_LDADD@ 
 libdpsearch_la_LDFLAGS = -release @DPS_BASE_VERSION@
-libdpsearch_la_DEPENDENCIES = libdpcharset.la 
+libdpsearch_la_DEPENDENCIES = libdpcharset.la libdp.la
 
 libdpcharset_la_SOURCES = uconv.c unidata.c sgml.c unicode.c xmalloc.c \
 uconv-8bit.c uconv-alias.c uconv-big5.c uconv-big5hkscs.c uconv-eucjp.c uconv-euckr.c \
 uconv-gb2312.c uconv-gbk.c uconv-sjis.c uconv-sys.c uconv-utf8.c uconv-gujarati.c \
 uconv-tscii.c charset-utils.c
 libdpcharset_la_LDFLAGS = -release @DPS_BASE_VERSION@ 
+libdpcharset_la_DEPENDENCIES = libdp.la
 
 
 sgml.c: sgml.inc
@@ -121,14 +126,14 @@ doc.c contentencoding.c vars.c db.c sdp.c textlist.c dps_image.c \
 result.c synonym.c match.c store.c template.c guesser.c base.c \
 mirror.c sqldbms.c mkind.c chinese.c parsexml.c wild.c hash.c indexertool.c acronym.c sea.c \
 efence.c ef_page.c ef_print.c filence.c
-libdpsearch_mod_la_LIBADD = @MODLIB@
+libdpsearch_mod_la_LIBADD = libdp.la @MODLIB@
 
 if APACHEMODULE
 libdpsearch_mod_la_CFLAGS = -DAPACHE@APACHE_VER@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS) $(APACHE_NOTEST_CPPFLAGS) $(APACHE_EXTRA_CPPFLAGS) $(APACHE_EXTRA_CFLAGS)
 endif
 
 libdpsearch_mod_la_LDFLAGS = -release @DPS_BASE_VERSION@
-libdpsearch_mod_la_DEPENDENCIES = libdpcharset.la
+libdpsearch_mod_la_DEPENDENCIES = libdpcharset.la libdp.la
 
 endif
 
@@ -144,12 +149,12 @@ endif
 
 if THREADSLESS
 
-mod_dpsearch_so_LDADD = libdpsearch_mod.la libdpcharset.la @APACHE_LIBS_SHLIB@
+mod_dpsearch_so_LDADD = libdpsearch_mod.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la
 libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@
 
 else
 
-mod_dpsearch_so_LDADD = libdpsearch.la libdpcharset.la @APACHE_LIBS_SHLIB@
+mod_dpsearch_so_LDADD = libdpsearch.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la
 libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS)
 
 endif
@@ -224,7 +229,7 @@ if PHPMODULE
 dpsearch_so_SOURCES=php.c
 dpsearch_so_CFLAGS=-fpic -DCOMPILE_DL=1 @PHP_INCLUDES@
 dpsearch_so_LDFLAGS=-shared -L/usr/local/lib -rdynamic
-dpsearch_so_LDADD=libdpsearch.la libdpcharset.la
+dpsearch_so_LDADD=libdpsearch.la libdpcharset.la libdp.la
 
 endif
 
@@ -298,6 +303,8 @@ LIBS = @LIBS@ @STATIC_LFLAGS@ \
 @DMALLOC_LFLAGS@ \
 @BOEHMGC_LFLAGS@ \
 @MECAB_LFLAGS@ 
+
+LDADD = @LDADD@ libdp.la
 
 
 lint_FILES = ${libdpsearch_la_SOURCES} ${indexer_SOURCES}

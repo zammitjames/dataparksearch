@@ -107,11 +107,17 @@ test-charset/htdocs/ZH.html
 
 test_sections_FILES = \
 test-sections/indexer.conf \
+test-sections/match.sl \
+test-sections/cz.sl \
 test-sections/query.res \
 test-sections/query.tst \
 test-sections/test.cmd \
 test-sections/search.htm \
 test-sections/search.res \
+test-sections/search2.res \
+test-sections/search3.res \
+test-sections/search4.res \
+test-sections/search5.res \
 test-sections/htdocs/test1.html \
 test-sections/htdocs/test2.html \
 test-sections/htdocs/test.xml \
@@ -146,6 +152,12 @@ test-boolean/test.cmd \
 test-boolean/search.htm \
 test-boolean/search.res \
 test-boolean/search2.res \
+test-boolean/search3.res \
+test-boolean/search4.res \
+test-boolean/search5.res \
+test-boolean/search6.res \
+test-boolean/acr.conf \
+test-boolean/htdocs/anyword.txt \
 test-boolean/htdocs/body1.txt \
 test-boolean/htdocs/body2.txt \
 test-boolean/htdocs/body3.txt \

@@ -27,16 +27,20 @@ CREATE INDEX key_url_referrer        ON url (referrer);
 CREATE INDEX key_url_bad_since_time  ON url (bad_since_time);
 CREATE INDEX key_url_next_index_time ON url (next_index_time);
 CREATE INDEX key_url_site_id         ON url (site_id);
+CREATE INDEX key_url_server_id       ON url (server_id);
 CREATE INDEX key_url_hops            ON url (hops);
 CREATE INDEX key_url_status          ON url (status);
 CREATE INDEX key_url_poprank         ON url (pop_rank);
 
+
 CREATE TABLE urlinfo (
-  url_id INT NOT NULL,
-  sname  VARCHAR(32)  NOT NULL,
-  sval   TEXT         NOT NULL
+  url_id INT   NOT NULL,
+  sname  TEXT  NOT NULL,
+  sval   TEXT  NOT NULL
 );
-CREATE INDEX key_urlinfo_url_id ON urlinfo (url_id);
+CREATE INDEX key_uinfo_url_id ON urlinfo (url_id);
+CREATE INDEX key_uinfo_sname ON urlinfo (sname);
+CREATE INDEX key_uinfo_sval ON urlinfo (sval);
 
 
 CREATE TABLE dict (
@@ -122,10 +126,12 @@ create table server (
 	weight		float		not null	default 1,
 	pop_weight	float		not null	default 0
 );
-CREATE INDEX key_server_ordre      ON server (ordre);
-CREATE INDEX key_server_parent     ON server (parent);
-CREATE INDEX key_server_command    ON server (command);
-CREATE UNIQUE INDEX key_server_url ON server (url);
+CREATE INDEX key_srv_ordre      ON server (ordre);
+CREATE INDEX key_srv_parent     ON server (parent);
+CREATE INDEX key_srv_command    ON server (command);
+CREATE UNIQUE INDEX key_srv_url ON server (url);
+CREATE INDEX key_srv_tag        ON server (tag);
+CREATE INDEX key_srv_category   ON server (category);
 
 
 CREATE TABLE srvinfo (

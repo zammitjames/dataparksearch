@@ -18,14 +18,25 @@
 #ifndef _DPS_CHARSETUTILS_H
 #define _DPS_CHARSETUTILS_H
 
+#define dps_memmove memmove
+#define dps_memcpy  memcpy
+#define dps_strcpy  strcpy
+#define dps_strncpy strncpy
+#define dps_strcat  strcat
+#define dps_strncat strncat
+#define dps_strlen  strlen
+
 /*extern __C_LINK void* dps_memmove(void *dst0, const void *src0, size_t length);*/
+/*
 #define dps_memmove dps_memcpy
 extern __C_LINK void* dps_memcpy(void *dst0, const void *src0, size_t length);
-extern __C_LINK void* dps_strncpy(void *dst0, const void *src0, size_t length);
 extern __C_LINK void* dps_strcpy(void *dst0, const void *src0);
+extern __C_LINK void* dps_strncpy(void *dst0, const void *src0, size_t length);
 extern __C_LINK void* dps_strcat(void *dst0, const void *src0);
 extern __C_LINK void* dps_strncat(void *dst0, const void *src0, size_t length);
 extern __C_LINK size_t dps_strlen(const char *src);
+*/
+
 extern __C_LINK int dps_tolower(int c);
 extern __C_LINK void dps_mstr(char *s, const char *src, size_t l1, size_t l2);
 
