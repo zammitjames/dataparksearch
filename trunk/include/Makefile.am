@@ -21,7 +21,6 @@ dps_host.h \
 dps_xmalloc.h \
 dps_id3.h \
 dps_http.h \
-dps_http.h \
 dps_cache.h \
 dps_boolean.h \
 dps_server.h \
