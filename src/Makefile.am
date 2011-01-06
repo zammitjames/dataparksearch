@@ -23,7 +23,7 @@ sbin_PROGRAMS = @db_PROGS@
 noinst_PROGRAMS = @APACHE_MODULE@ @PHP_MODULE@
 EXTRA_PROGRAMS= indexer searchd splitter stored dpguesser cached dpconv mod_dpsearch.so dpsearch.so
 EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php.c commands.lst commands.inc \
-	timezones.lst timezones.inc charset-Makefile.am dp-Makefile.am dp.c
+	timezones.lst timezones.inc charset-Makefile.am dp-Makefile.am dp.c dps_memcpy.inc
 
 splitter_SOURCES = splitter.c
 splitter_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la

@@ -88,6 +88,7 @@ test-multi/search.htm \
 test-multi/htdocs/test1.html \
 test-multi/htdocs/test2.html \
 test-multi/htdocs/test3.html \
+test-multi/htdocs/test4.html \
 test-multi/htdocs/test1.txt
 
 test_complexbody_FILES = \
@@ -103,6 +104,11 @@ test-charset/indexer.conf \
 test-charset/query.res \
 test-charset/query.tst \
 test-charset/test.cmd \
+test-charset/htdocs/segmented.gb2312.txt \
+test-charset/htdocs/segmented.utf-8.txt \
+test-charset/htdocs/unsegmented.gb2312.txt \
+test-charset/htdocs/unsegmented.utf-8.txt \
+test-charset/htdocs/JP.html \
 test-charset/htdocs/ZH.html
 
 test_sections_FILES = \
@@ -182,6 +188,7 @@ test-boolean/htdocs/body-not-near.txt
 
 
 test_cache_FILES =\
+test-cache/htdocs/test.html \
 test-cache/htdocs/testpage1.html \
 test-cache/htdocs/testpage2.html \
 test-cache/htdocs/testpage3.html \
