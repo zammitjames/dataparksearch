@@ -71,6 +71,7 @@ langmap/el.cp1253.lm \
 langmap/el.greek.lm \
 langmap/el.utf-8.lm \
 langmap/en.ascii.lm \
+langmap/en.utf-8.lm \
 langmap/en.utf-16be.lm \
 langmap/en.utf-16le.lm \
 langmap/eo.latin3.lm \

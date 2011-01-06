@@ -1,20 +1,22 @@
 SQL>'FIELDS=OFF'
 SQL>'SELECT dict.word,dict.intag,url.crc32,url.url FROM dict, url WHERE url.rec_id=dict.url_id ORDER BY url.crc32,dict.intag'
-SQL>'SELECT status, docsize, hops, crc32, pop_rank, url FROM url ORDER BY status, crc32'
-200	986	1	-1374685134	0.25	http://site/testpage1.html
-200	807	1	-881841819	0.25	http://site/testpage12.html
-200	828	1	-708625298	0.25	http://site/testpage5.html
-200	987	1	-344645535	0.25	http://site/testpage3.html
-200	458	0	0	0.25	http://site/
-200	1729	1	45424519	0.25	http://site/testpage9.html
-200	813	1	56418718	0.25	http://site/testpage7.html
-200	924	1	142526279	0.25	http://site/testpage4.html
-200	1041	1	410205822	0.25	http://site/testpage11.html
-200	894	1	724662721	0.25	http://site/testpage13.html
-200	1023	1	1076547708	0.25	http://site/testpage10.html
-200	941	1	1415382465	0.25	http://site/testpage6.html
-200	2989	1	1636581900	0.25	http://site/testpage8.html
-200	992	1	1772538893	0.25	http://site/testpage2.html
+SQL>'SELECT status, docsize, hops, crc32, pop_rank, charset_id, url FROM url ORDER BY status, crc32'
+200	986	1	-1374685134	0.03125	54	http://site/testpage1.html
+200	331	0	-1070890398	0.0	0	http://site/test.html
+200	807	1	-881841819	0.03125	54	http://site/testpage12.html
+200	708	0	-748993644	0.0	0	http://site/
+200	828	1	-708625298	0.03125	54	http://site/testpage5.html
+200	987	1	-344645535	0.03125	54	http://site/testpage3.html
+200	1729	1	45424519	0.03125	54	http://site/testpage9.html
+200	813	1	56418718	0.03125	54	http://site/testpage7.html
+200	924	1	142526279	0.03125	54	http://site/testpage4.html
+200	1041	1	410205822	0.03125	54	http://site/testpage11.html
+200	894	1	724662721	0.03125	54	http://site/testpage13.html
+200	1023	1	1076547708	0.03125	54	http://site/testpage10.html
+200	941	1	1415382465	0.03125	54	http://site/testpage6.html
+200	2989	1	1636581900	0.03125	54	http://site/testpage8.html
+200	992	1	1772538893	0.03125	54	http://site/testpage2.html
+404	0	1	0	0.5	0	http://site/müller_mäher_groß_und_grösser.html
 SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,urlinfo WHERE url.rec_id=urlinfo.url_id ORDER BY url.status,url.crc32,lower(urlinfo.sname)'
 200	-1374685134	http://site/testpage1.html	adate	Thu, 25 May 2006 23:06:00 EDT
 200	-1374685134	http://site/testpage1.html	body	The Wall Street Journal Thu, 25 May 2006 23:06:00 EDT BODY1 BODY2 BODY3 BODY4 BODY5 BODY6 BODY7 BODY8 BODY9 BODY10 BODY11 BODY12 BODY13 BODY14 BODY15 BODY16 BODY17 BODY18 BODY19 BODY20 BODY21 BODY22 BODY23 BODY24 BODY25 BODY26 BODY27 BODY28 BODY29 BODY30
@@ -22,12 +24,22 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	-1374685134	http://site/testpage1.html	Content-Language	en
 200	-1374685134	http://site/testpage1.html	Content-Type	text/html
 200	-1374685134	http://site/testpage1.html	title	TestPage1
+200	-1070890398	http://site/test.html	body	Müller Mäher groß und grösser Bosch 2320 G Sichelmäher-Rotak
+200	-1070890398	http://site/test.html	Charset	ISO-8859-1
+200	-1070890398	http://site/test.html	Content-Language	en
+200	-1070890398	http://site/test.html	Content-Type	text/html
+200	-1070890398	http://site/test.html	title	TEST
 200	-881841819	http://site/testpage12.html	adate	Sun, 30 Apr 2006 23:06:00 EDT
 200	-881841819	http://site/testpage12.html	body	The Wall Street Journal Sun, 30 Apr 2006 23:06:00 EDT rewrite
 200	-881841819	http://site/testpage12.html	Charset	ISO-8859-1
 200	-881841819	http://site/testpage12.html	Content-Language	en
 200	-881841819	http://site/testpage12.html	Content-Type	text/html
 200	-881841819	http://site/testpage12.html	title	TestPage12 Within Three Months
+200	-748993644	http://site/	body	.. testpage10.html testpage1.html testpage11.html testpage2.html testpage3.html testpage12.html testpage4.html testpage13.html testpage5.html testpage6.html testpage7.html testpage8.html testpage9.html test.html
+200	-748993644	http://site/	Charset	UTF-8
+200	-748993644	http://site/	Content-Language	ru
+200	-748993644	http://site/	Content-type	text/html
+200	-748993644	http://site/	title	http://site/
 200	-708625298	http://site/testpage5.html	adate	Mon, 24 May 2006 23:06:00 EDT
 200	-708625298	http://site/testpage5.html	body	The Wall Street Journal Mon, 24 May 2006 23:06:00 EDT American typo Insurance Group
 200	-708625298	http://site/testpage5.html	Charset	ISO-8859-1
@@ -40,9 +52,6 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	-344645535	http://site/testpage3.html	Content-Language	en
 200	-344645535	http://site/testpage3.html	Content-Type	text/html
 200	-344645535	http://site/testpage3.html	title	TestPage3 Even Number of BODY's until 30
-200	0	http://site/	Charset	ISO-8859-1
-200	0	http://site/	Content-Language	en
-200	0	http://site/	Content-type	text/html
 200	45424519	http://site/testpage9.html	adate	Mon, 24 May 2005 23:06:00 EDT
 200	45424519	http://site/testpage9.html	body	The Wall Street Journal The Wall Street Journal The Wall Street Journal Mon, 24 May 2005 23:06:00 EDT On the walls of the city. Shadowed streets. Unknown journals. rewrite
 200	45424519	http://site/testpage9.html	Charset	ISO-8859-1
@@ -98,20 +107,24 @@ SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,url
 200	1772538893	http://site/testpage2.html	Content-Type	text/html
 200	1772538893	http://site/testpage2.html	title	TestPage2 Odd Number of BODY's until 30
 SQL>'SELECT u1.docsize,u2.docsize,u1.url,u2.url FROM url u1,url u2, links l WHERE u1.rec_id=l.ot AND u2.rec_id=l.k ORDER BY u1.docsize,u2.docsize'
-458	458	http://site/	http://site/
-458	807	http://site/	http://site/testpage12.html
-458	813	http://site/	http://site/testpage7.html
-458	828	http://site/	http://site/testpage5.html
-458	894	http://site/	http://site/testpage13.html
-458	924	http://site/	http://site/testpage4.html
-458	941	http://site/	http://site/testpage6.html
-458	986	http://site/	http://site/testpage1.html
-458	987	http://site/	http://site/testpage3.html
-458	992	http://site/	http://site/testpage2.html
-458	1023	http://site/	http://site/testpage10.html
-458	1041	http://site/	http://site/testpage11.html
-458	1729	http://site/	http://site/testpage9.html
-458	2989	http://site/	http://site/testpage8.html
+0	0	http://site/müller_mäher_groß_und_grösser.html	http://site/müller_mäher_groß_und_grösser.html
+331	0	http://site/test.html	http://site/müller_mäher_groß_und_grösser.html
+331	331	http://site/test.html	http://site/test.html
+708	331	http://site/	http://site/test.html
+708	708	http://site/	http://site/
+708	807	http://site/	http://site/testpage12.html
+708	813	http://site/	http://site/testpage7.html
+708	828	http://site/	http://site/testpage5.html
+708	894	http://site/	http://site/testpage13.html
+708	924	http://site/	http://site/testpage4.html
+708	941	http://site/	http://site/testpage6.html
+708	986	http://site/	http://site/testpage1.html
+708	987	http://site/	http://site/testpage3.html
+708	992	http://site/	http://site/testpage2.html
+708	1023	http://site/	http://site/testpage10.html
+708	1041	http://site/	http://site/testpage11.html
+708	1729	http://site/	http://site/testpage9.html
+708	2989	http://site/	http://site/testpage8.html
 807	807	http://site/testpage12.html	http://site/testpage12.html
 813	813	http://site/testpage7.html	http://site/testpage7.html
 828	828	http://site/testpage5.html	http://site/testpage5.html

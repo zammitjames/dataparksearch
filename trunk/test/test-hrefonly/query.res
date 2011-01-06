@@ -12,6 +12,16 @@ http	592132	-1302496456	http://site/test1.txt
 site	657412	-1302496456	http://site/test1.txt
 test1	722437	-1302496456	http://site/test1.txt
 txt	787971	-1302496456	http://site/test1.txt
-http	67844	0	http://site/
-site	133124	0	http://site/
+http	66052	1516055255	http://site/
+site	131588	1516055255	http://site/
+test1	196869	1516055255	http://site/
+html	262404	1516055255	http://site/
+test2	327941	1516055255	http://site/
+html	393476	1516055255	http://site/
+test3	459013	1516055255	http://site/
+html	524548	1516055255	http://site/
+test1	590085	1516055255	http://site/
+txt	655619	1516055255	http://site/
+http	723204	1516055255	http://site/
+site	788484	1516055255	http://site/
 SQL>

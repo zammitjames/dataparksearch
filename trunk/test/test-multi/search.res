@@ -42,7 +42,7 @@
   <DT>1.
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt  </a>
-  <small>[<b>34,466%</b> Popularity: <b>0,25000</b>]</small>
+  <small>[<b>0.112%</b> Popularity: <b>0.07143</b>]</small>
   <DD>
   <table width=60%>
     <tr>
