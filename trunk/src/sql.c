@@ -2881,25 +2881,27 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 		sprintf(qbuf,"UPDATE url SET status=:1,next_index_time=:2,bad_since_time=:4, site_id=%i, server_id=%i WHERE rec_id=:3",
 			DpsVarListFindInt(&Doc->Sections, "Site_id",0), DpsVarListFindInt(&Doc->Sections, "Server_id",0));
 		param_init(db, 1, 2, 3, 4);
-		param_add(db, status, next_index_time, url_id, Indexer->now);
+		param_add(db, status ? status : prevStatus, next_index_time, url_id, Indexer->now);
 	  } else {
 		sprintf(qbuf,"UPDATE url SET status=:1,next_index_time=:2, site_id=%i, server_id=%i WHERE rec_id=:3",
 			DpsVarListFindInt(&Doc->Sections, "Site_id",0), DpsVarListFindInt(&Doc->Sections, "Server_id",0));
 		param_init(db, 1, 2, 3, 0);
-		param_add(db, status, next_index_time, url_id, 0);
+		param_add(db, status ? status : prevStatus, next_index_time, url_id, 0);
 	  }
 	}
 #endif
 	if(!qbuf[0]) {
 	  if ( (prevStatus != status) && (status > 300) && (status != 304) && (status < 2000) )
 		sprintf(qbuf, "UPDATE url SET status=%d,next_index_time=%u,bad_since_time=%d,site_id=%s%i%s,server_id=%s%i%s,pop_rank=%s%s%s WHERE rec_id=%s%i%s",
-			status, (unsigned int)next_index_time, (int)Indexer->now, qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
+			status ? status : prevStatus, (unsigned int)next_index_time, (int)Indexer->now, 
+			qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, 
 			qu, DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25")), qu, 
 			qu, url_id, qu);
 	  else
-		sprintf(qbuf,"UPDATE url SET status=%d,next_index_time=%u, site_id=%s%i%s,server_id=%s%i%s,pop_rank=%s%s%s WHERE rec_id=%s%i%s",
-			status, (unsigned int)next_index_time, qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
+		sprintf(qbuf,"UPDATE url SET status=%d,next_index_time=%u,site_id=%s%i%s,server_id=%s%i%s,pop_rank=%s%s%s WHERE rec_id=%s%i%s",
+			status ? status: prevStatus, (unsigned int)next_index_time, 
+			qu, DpsVarListFindInt(&Doc->Sections, "Site_id", 0), qu,
 			qu, DpsVarListFindInt(&Doc->Sections, "Server_id",0), qu, 
 			qu, DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "Pop_Rank","0.25")), qu, 
 			qu, url_id, qu);
@@ -2927,6 +2929,7 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 	/* remove all old broken hrefs from this document to avoid broken link collecting */
 	return DpsDeleteBadHrefs(Indexer,Doc,db);
 }
+
 
 static int DpsRegisterChild(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db) {
 	char	qbuf[1024];
@@ -2994,7 +2997,7 @@ next_index_time=%s,\
 docsize=%d,pop_rank=%s%s%s,\
 crc32=%d%s, site_id=%s%i%s, server_id=%s%i%s \
 WHERE rec_id=%s%s%s",
-	status,
+        status ? status : prevStatus,
 	DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 					     (Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
 	DpsVarListFindStr(&Doc->Sections, "Next-Index-Time","0"),
