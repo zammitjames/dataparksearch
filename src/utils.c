@@ -2399,6 +2399,7 @@ void * dps_bsearch(const void *key, const void *base0, size_t nmemb, size_t size
 	int cmp;
 	const void *p;
 
+	if (nmemb == 0) return NULL;
 	if ((*compar)(key, base0) < 0) return NULL;
 	p = base + (nmemb - 1) * size;
 	if ((*compar)(key, p) > 0) return NULL;

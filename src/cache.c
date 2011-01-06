@@ -980,7 +980,7 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
       for(n_add = 1; (i + n_add < n) && (log_buf[i].wrd_id == log_buf[i + n_add].wrd_id); n_add++);
 /**************/
       key.rec_id = P->rec_id = log_buf[i].wrd_id;
-      found = dps_bsearch(&key, todel, ndel, sizeof(*found), (qsort_cmp)cmp_todel);
+      found = (ndel == 0) ? NULL : dps_bsearch(&key, todel, ndel, sizeof(*found), (qsort_cmp)cmp_todel);
       if (found != NULL) found->flag = 1;
       if ((data = (DPS_URL_CRD*)DpsBaseARead(P, &len)) == NULL) {
 	len = 0;

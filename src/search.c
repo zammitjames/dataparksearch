@@ -614,7 +614,7 @@ int main(int argc, char **argv, char **envp) {
 		DpsBuildPageURL(&query_vars, &url);
 		DpsVarListReplaceStr(&Agent->Vars, "NH", url);
 		DpsVarListReplaceInt(&Agent->Vars, "NP", (int)(i+1));
-		DpsTemplatePrint(Agent,(DPS_OUTPUTFUNCTION)&fprintf,  NULL, DPS_STREND(nav), nav_len - (nav - DPS_STREND(nav)), 
+		DpsTemplatePrint(Agent,(DPS_OUTPUTFUNCTION)&fprintf,  NULL, DPS_STREND(nav), nav_len - strlen(nav), 
 				 &Agent->tmpl, (i == (size_t)page_number)?"navbar0":"navbar1");
 	}
 	DpsVarListAddStr(&Agent->Vars, "NB", nav);
