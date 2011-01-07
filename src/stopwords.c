@@ -196,7 +196,13 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 		if(!str[0]) goto loop_continue;
 		if(str[0]=='#') goto loop_continue;
 		sharp = strchr(str, (int)'#');
-		if (sharp != NULL) *sharp = '\0';
+		while (sharp != NULL) 
+		  if (*(sharp - 1) != '\\') {
+		    *sharp = '\0';
+		    break;
+		  } else {
+		    sharp = strchr(sharp + 1, (int)'#');
+		  }
 		
 		if(!strncmp(str,"Charset:",8)){
 			DPS_FREE(charset);
