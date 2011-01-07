@@ -7211,26 +7211,44 @@ int DpsCheckUrlidSQL(DPS_AGENT *Agent, DPS_DB *db, urlid_t id) {
   return rc;
 }
 
+
 int DpsCheckReferrerSQL(DPS_AGENT *Agent, DPS_DB *db, urlid_t id) {
   DPS_SQLRES SQLRes;
   char qbuf[128];
   unsigned int rc = DPS_ERROR;
 
   DpsSQLResInit(&SQLRes);
-  if (db->DBSQL_LIMIT) {
-    dps_snprintf(qbuf, sizeof(qbuf), "SELECT ot FROM links WHERE k=%d AND ot!=k LIMIT 1", id);
-    rc = DpsSQLQuery(db, &SQLRes, qbuf);
-    if(DPS_OK == rc) {
-      if (DpsSQLNumRows(&SQLRes) != 0) rc = DPS_OK;
-      else rc = DPS_ERROR;
+
+  if (Agent->Flags.collect_links) {
+
+    if (db->DBSQL_LIMIT) {
+      dps_snprintf(qbuf, sizeof(qbuf), "SELECT ot FROM links WHERE k=%d AND ot!=k LIMIT 1", id);
+      rc = DpsSQLQuery(db, &SQLRes, qbuf);
+      if(DPS_OK == rc) {
+	if (DpsSQLNumRows(&SQLRes) != 0) rc = DPS_OK;
+	else rc = DPS_ERROR;
+      }
+    } else {
+      dps_snprintf(qbuf, sizeof(qbuf), "SELECT count(*) FROM links WHERE k=%d AND ot!=k", id);
+      rc = DpsSQLQuery(db, &SQLRes, qbuf);
+      if(DPS_OK == rc) {
+	if (DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0)) != 0) rc = DPS_OK;
+	else rc = DPS_ERROR;
+      }
     }
   } else {
-    dps_snprintf(qbuf, sizeof(qbuf), "SELECT count(*) FROM links WHERE k=%d AND ot!=k", id);
-    rc = DpsSQLQuery(db, &SQLRes, qbuf);
-    if(DPS_OK == rc) {
-      if (DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0)) != 0) rc = DPS_OK;
-      else rc = DPS_ERROR;
-    }
+      dps_snprintf(qbuf, sizeof(qbuf), "SELECT referrer,status FROM url WHERE rec_id=%d", id);
+      rc = DpsSQLQuery(db, &SQLRes, qbuf);
+      if(DPS_OK == rc) {
+	if (DpsSQLNumRows(&SQLRes) > 0) {
+	  int referrer = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
+	  if (referrer == -1) rc = DPS_ERROR;
+	  else if (referrer == 0) {
+	    int status = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 1));
+	    if (status != 0) rc = DPS_ERROR; 
+	  }
+	} else rc = DPS_ERROR;
+      }
   }
   DpsSQLFree(&SQLRes);
   return rc;
