@@ -3319,7 +3319,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	     || (Indexer->flags & DPS_FLAG_SORT_SEED)  ) {
 	  int notfirst = 0;
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
-	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",s.pop_weight,pop_rank DESC" : "ORDER BY s.pop_weight,pop_rank DESC");
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_HOPS) {
@@ -3355,6 +3355,10 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	      }
 	    }
 	    DpsSQLFree(&SQLRes);
+	  }
+	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",s.pop_weight" : "ORDER BY s.pop_weight");
+	    notfirst = 1;
 	  }
 	}
 		
