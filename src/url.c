@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -266,9 +266,11 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	/* truncate path to query_string */
 	/* and store query_string        */
 
-	if((query=strrchr(url->path,'?'))){
+	if((query = strrchr(url->path, '?'))){
 		url->query_string = (char*)DpsStrdup(query);
 		*(query) = 0;
+	} else if((query = strrchr(DPS_NULL2EMPTY(url->specific), '?'))) {
+		url->query_string = (char*)DpsStrdup(query);
 	}
 	
 	DpsURLNormalizePath(url->path);
@@ -431,7 +433,7 @@ char * DpsURLNormalizePath(char * str){
 	if (newURL->hostname == NULL) {
 	  auth = newURL->auth ? newURL->auth : curURL->auth;
 	} else auth = newURL->auth;
-	
+
 /*	sprintf(pathfile, "/%s%s%s",  DPS_NULL2EMPTY(path), DPS_NULL2EMPTY(fname), DPS_NULL2EMPTY(query_string));*/
 	pathfile[0] = '/'; 
 	dps_strcpy(pathfile + 1, DPS_NULL2EMPTY(path)); dps_strcat(pathfile, DPS_NULL2EMPTY(fname)); dps_strcat(pathfile, DPS_NULL2EMPTY(query_string));
