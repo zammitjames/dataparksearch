@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -3666,10 +3666,18 @@ size_t DpsRemoveNullSections(DPS_URL_CRD *words, size_t n, int *wf) {
   return j;
 }
 
-size_t DpsRemoveNullSectionsDB(DPS_URL_CRD_DB *words, size_t n, int *wf) {
+size_t DpsRemoveNullSectionsDB(DPS_URL_CRD_DB *words, size_t n, int *wf, int secno) {
   register size_t i, j = 0;
-  for (i = 0; i < n; i++) {
-    if (wf[DPS_WRDSEC(words[i].coord)] > 0) words[j++] = words[i];
+  if (secno == 0) {
+    for (i = 0; i < n; i++) {
+      if (wf[DPS_WRDSEC(words[i].coord)] > 0) words[j++] = words[i];
+    }
+  } else {
+    register int s; 
+    for (i = 0; i < n; i++) {
+      s = DPS_WRDSEC(words[i].coord);
+      if ((s == secno) && (wf[s] > 0)) words[j++] = words[i];
+    }
   }
   return j;
 }
