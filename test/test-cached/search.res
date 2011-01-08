@@ -42,7 +42,7 @@
   <DT>1.
   <a href="http://site/testpage1.html" TARGET="_blank">
     TestPage1  </a>
-  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
+  <small>[<b>0.789%</b> Popularity: <b>0.05083</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -76,7 +76,7 @@
   <DT>2.
   <a href="http://site/testpage2.html" TARGET="_blank">
     TestPage2 Odd Number of BODY's until 30  </a>
-  <small>[<b>0,019%</b> Popularity: <b>0,00000</b>]</small>
+  <small>[<b>0.783%</b> Popularity: <b>0.05083</b>]</small>
   <DD>
   <table width=60%>
     <tr>

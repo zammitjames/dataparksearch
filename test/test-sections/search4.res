@@ -27,7 +27,7 @@
   <tr>
     <td>
       <small>Search for <b>insurance AND (allinmeta.source: &#34;associated press&#34;)</b>.</small>
-      <small>Search results: <b>insurance: 2 / 2, associated: 1 / 1, press: 4 / 4</b>.</small>
+      <small>Search results: <b>insurance: 2 / 2, associated: 1 / 1, press: 1 / 1</b>.</small>
     </td>
     <td>
       <small>Results <b>1-1</b> of <B>1</B>.</small>
@@ -39,15 +39,15 @@
             <b>relevancy</b>&nbsp;|&nbsp;<a href="?m=bool&amp;np=0&amp;q=insurance+AND+%28allinmeta.source%3A+%22associated+press%22%29&s=DRP">last modified date</a>
         </td></tr>
 </table><DL>
-  <DT>1.<!-- DP_ID: 9-->
+  <DT>1.<!-- DP_ID: 596362935-->
   <a href="http://site/directory/test-tz.html" TARGET="_blank">
     Test Timezone  </a>
-  <small>[<b>0,165%</b> Popularity: <b>0,25000</b>]</small>
+  <small>[<b>0.152%</b> Popularity: <b>0.12500</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>TZ <b>insurance</b> ...</small>
+        <small>... TZ   <b>insurance</b>  ...</small>
       </td>
     </tr>
     <tr>
@@ -59,6 +59,7 @@
              <font color="#008800">
               - 214 bytes [text/html]
               - 
+	      	      <DD><small>[<a href="/cgi-bin/storedoc.cgi?rec_id=-562063921&amp;label=&amp;DM=Tue%2C+08+Sep+1970%2C+13%3A29%3A24+EST&amp;DS=214&amp;L=en&amp;CS=ISO-8859-1&amp;DU=http%3A%2F%2Fsite%2Fdirectory%2Ftest-tz.html&amp;CT=text%2Fhtml&amp;q=insurance+associated+press">Cached copy</a>]</small></DD>
 	      	      	      <DD><small>[<a href="?m=bool&amp;np=0&amp;q=insurance+AND+%28allinmeta.source%3A+%22associated+press%22%29&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
@@ -82,15 +83,6 @@
   </tr>
 </table><table bgcolor=#EEEEEE width=100%>
   <tr><td>&nbsp;</td></tr>
-</table>
-
-<table width=100% bgcolor=#FFFFFF>
-<tr>
-  <td align=left>
-    <a href="http://www.mnogosearch.org/"><IMG BORDER=0 SRC="http://www.mnogosearch.org/img/udm.gif"></A>
-    <FONT SIZE=1><A HREF="http://www.mnogosearch.org/">Powered by mnoGoSearch - free web search engine software</A></FONT><BR>
-  </td>
-</tr>
 </table>
 <P>
 </BODY>

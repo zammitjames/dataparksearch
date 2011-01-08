@@ -1,14 +1,6 @@
 <!--variables
 ImportEnv DPS_TEST_DBADDR0
-ImportEnv DPS_TEST_DIR
-DBAddr $(DPS_TEST_DBADDR0)?dbmode=cache
-VarDir $(DPS_TEST_DIR)/var
-
-WrdFiles 1
-URLDataFiles 1
-NumSections 9
-
-#LogLevel 5
+DBAddr $(DPS_TEST_DBADDR0)?dbmode=single
 
 # Uncomment this line to enable search result cache
 #Cache yes
@@ -20,8 +12,8 @@ NumSections 9
 # Default charset is iso-8859-1 (latin1)
 # which is suitable for the most Western European languages
 
-LocalCharset   iso-8859-1
-BrowserCharset iso-8859-1
+LocalCharset   utf-8
+BrowserCharset utf-8
 
 # Load stopwords file.  File name is either absolute
 # or relative to /etc directory of mnoGoSearch installation.
@@ -71,6 +63,8 @@ HlEnd	</b>
 DateFormat %s
 
 DetectClones yes
+
+AccentExtensions yes
 
 -->
 
@@ -265,7 +259,7 @@ DetectClones yes
 <!ELSE>
   <DT>$(Order).
   <a href="$(URL)" TARGET="_blank">
-    <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title)<!ENDIF>
+    <!IF NAME="Title" CONTENT="[no title]">$(URL:40)<!ELSE>$&(Title:72)<!ENDIF>
   </a>
   <small>[<b>$(Score)</b> Popularity: <b>$(Pop_Rank)</b>]</small>
   <DD>
@@ -408,15 +402,6 @@ You haven't typed any word(s) to search for.
   <tr><td>&nbsp;</td></tr>
 </table>
 
-<table width=100% bgcolor=#FFFFFF>
-<tr>
-  <td align=left>
-    <a href="http://www.mnogosearch.org/"><IMG BORDER=0 SRC="http://www.mnogosearch.org/img/udm.gif"></A>
-    <FONT SIZE=1><A HREF="http://www.mnogosearch.org/">Powered by mnoGoSearch - free web search engine software</A></FONT><BR>
-  </td>
-</tr>
-</table>
-<P>
 </BODY>
 </HTML>
 <!--/bottom-->

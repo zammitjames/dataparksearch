@@ -39,15 +39,15 @@
             <b>relevancy</b>&nbsp;|&nbsp;<a href="?m=bool&amp;np=0&amp;q=press+AND+NOT+%28allinmeta.source%3A+press%29&s=DRP">last modified date</a>
         </td></tr>
 </table><DL>
-  <DT>1.<!-- DP_ID: 5-->
+  <DT>1.<!-- DP_ID: 1972109194-->
   <a href="http://site/test.xml" TARGET="_blank">
     http://site/test.xml  </a>
-  <small>[<b>0,021%</b> Popularity: <b>0,25000</b>]</small>
+  <small>[<b>0.036%</b> Popularity: <b>0.07143</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>... RAW_CONTENT watermark 20040101000791 DJ CHINA <b>PRESS</b>: Netcom Wants IPO Shr Price Set Around Jan ...<br>... footnote 25638033 RAW_CONTENT DJ CHINA <b>PRESS</b>: Netcom Wants IPO Shr Price Set Around Jan ......</small>
+        <small>... DJ CHINA <b>PRESS</b>: Netcom Wants IPO Shr Price Set Around Jan ......</small>
       </td>
     </tr>
     <tr>
@@ -59,6 +59,7 @@
              <font color="#008800">
               - 2893 bytes [text/xml]
               - 
+	      	      <DD><small>[<a href="/cgi-bin/storedoc.cgi?rec_id=1346304065&amp;label=&amp;DM=Sat%2C+08+Jan+2011%2C+00%3A07%3A09+EST&amp;DS=2893&amp;L=en&amp;CS=ISO-8859-1&amp;DU=http%3A%2F%2Fsite%2Ftest.xml&amp;CT=text%2Fxml&amp;q=press+press">Cached copy</a>]</small></DD>
 	      	      	      <DD><small>[<a href="?m=bool&amp;np=0&amp;q=press+AND+NOT+%28allinmeta.source%3A+press%29&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
@@ -72,16 +73,18 @@
     </tr>
   </table>
 
-</DL><DL>
-  <DT>2.<!-- DP_ID: 8-->
+</DL>
+  <!-- TR -->
+<DL>
+  <DT>2.<!-- DP_ID: -1457856117-->
   <a href="http://site/directory/test.html" TARGET="_blank">
     Test Subdirectory  </a>
-  <small>[<b>0,019%</b> Popularity: <b>0,25000</b>]</small>
+  <small>[<b>0.032%</b> Popularity: <b>0.12500</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>Subdir insurance <b>press</b> ...</small>
+        <small>... Subdir   insurance <b>press</b>  ...</small>
       </td>
     </tr>
     <tr>
@@ -93,6 +96,7 @@
              <font color="#008800">
               - 216 bytes [text/html]
               - 
+	      	      <DD><small>[<a href="/cgi-bin/storedoc.cgi?rec_id=-1413435903&amp;label=&amp;DM=Tue%2C+08+Sep+1970%2C+16%3A29%3A24+EST&amp;DS=216&amp;L=en&amp;CS=ISO-8859-1&amp;DU=http%3A%2F%2Fsite%2Fdirectory%2Ftest.html&amp;CT=text%2Fhtml&amp;q=press+press">Cached copy</a>]</small></DD>
 	      	      	      <DD><small>[<a href="?m=bool&amp;np=0&amp;q=press+AND+NOT+%28allinmeta.source%3A+press%29&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
@@ -106,7 +110,9 @@
     </tr>
   </table>
 
-</DL><table width=100% bgcolor=#FFFFFF>
+</DL>
+  <!-- /TR -->
+<table width=100% bgcolor=#FFFFFF>
   <tr>
     <td align=center>
       <TABLE BORDER=0>
@@ -116,15 +122,6 @@
   </tr>
 </table><table bgcolor=#EEEEEE width=100%>
   <tr><td>&nbsp;</td></tr>
-</table>
-
-<table width=100% bgcolor=#FFFFFF>
-<tr>
-  <td align=left>
-    <a href="http://www.mnogosearch.org/"><IMG BORDER=0 SRC="http://www.mnogosearch.org/img/udm.gif"></A>
-    <FONT SIZE=1><A HREF="http://www.mnogosearch.org/">Powered by mnoGoSearch - free web search engine software</A></FONT><BR>
-  </td>
-</tr>
 </table>
 <P>
 </BODY>

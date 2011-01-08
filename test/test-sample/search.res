@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
+<META NAME="Content-Type" Content="text/html; charset=utf-8">
 <TITLE>mnoGoSearch: this</TITLE>
 </HEAD>
 
@@ -42,7 +42,10 @@
   <DT>1.
   <a href="http://site/test1.html" TARGET="_blank">
     Test 1 title  </a>
-  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
+  [site]
+  [site]
+  [http://site/test1.html]
+  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -74,43 +77,12 @@
 
 </DL><DL>
   <DT>2.
-  <a href="http://site/test1.txt" TARGET="_blank">
-    http://site/test1.txt  </a>
-  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
-  <DD>
-  <table width=60%>
-    <tr>
-      <td>
-        <small><b>This</b> is a text file. No title available. </small>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <UL>
-         <li>
-           <small>
-             <A HREF="http://site/test1.txt" TARGET="_blank">http://site/test1.txt</A>
-             <font color="#008800">
-              - 41 bytes [text/plain]
-              - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
-		    	        </a>]</small></DD>
-	                   </font>
-           </small>
-           <BR>
-           
-        </UL>
-        
-
-      </td>
-    </tr>
-  </table>
-
-</DL><DL>
-  <DT>3.
   <a href="http://site/test2.html" TARGET="_blank">
     Test 2 title  </a>
-  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
+  [site]
+  [site]
+  [http://site/test2.html]
+  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -141,10 +113,13 @@
   </table>
 
 </DL><DL>
-  <DT>4.
+  <DT>3.
   <a href="http://site/test3.html" TARGET="_blank">
     Test 3 title  </a>
-  <small>[<b>0,016%</b> Popularity: <b>0,25000</b>]</small>
+  [site]
+  [site]
+  [http://site/test3.html]
+  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -175,10 +150,50 @@
   </table>
 
 </DL><DL>
+  <DT>4.
+  <a href="http://site/test1.txt" TARGET="_blank">
+    http://site/test1.txt  </a>
+  [site]
+  [site]
+  [http://site/test1.txt]
+  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
+  <DD>
+  <table width=60%>
+    <tr>
+      <td>
+        <small><b>This</b> is a text file. No title available. </small>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <UL>
+         <li>
+           <small>
+             <A HREF="http://site/test1.txt" TARGET="_blank">http://site/test1.txt</A>
+             <font color="#008800">
+              - 41 bytes [text/plain]
+              - 
+	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
+		    	        </a>]</small></DD>
+	                   </font>
+           </small>
+           <BR>
+           
+        </UL>
+        
+
+      </td>
+    </tr>
+  </table>
+
+</DL><DL>
   <DT>5.
   <a href="http://site/test4.html" TARGET="_blank">
     Test 4 title  </a>
-  <small>[<b>0,016%</b> Popularity: <b>0,17000</b>]</small>
+  [site]
+  [site]
+  [http://site/test4.html]
+  <small>[<b>0.063%</b> Popularity: <b>0.17000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
