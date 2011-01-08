@@ -126,6 +126,7 @@ test-sections/search4.res \
 test-sections/search5.res \
 test-sections/htdocs/test1.html \
 test-sections/htdocs/test2.html \
+test-sections/htdocs/test.pdf \
 test-sections/htdocs/test.xml \
 test-sections/htdocs/directory/test.html \
 test-sections/htdocs/directory/test-tz.html
@@ -141,13 +142,34 @@ test-sample/search.res \
 test-sample/htdocs/test1.html \
 test-sample/htdocs/test2.html \
 test-sample/htdocs/test3.html \
-test-sample/htdocs/test1.txt
+test-sample/htdocs/test4.html \
+test-sample/htdocs/test5.html \
+test-sample/htdocs/test1.txt \
+test-sample/htdocs/z-clone1.txt \
+test-sample/htdocs/z-clone2.html
 
 test_parsehtml_FILES = \
 test-parsehtml/indexer.conf \
 test-parsehtml/query.res \
+test-parsehtml/search.htm \
+test-parsehtml/search.res \
+test-parsehtml/search2.res \
 test-parsehtml/query.tst \
 test-parsehtml/test.cmd \
+test-parsehtml/htdocs/accept.html \
+test-parsehtml/htdocs/bogus-fpi.html \
+test-parsehtml/htdocs/display.html \
+test-parsehtml/htdocs/html40-frameset.html \
+test-parsehtml/htdocs/html40-strict.html \
+test-parsehtml/htdocs/html40-transitional.html \
+test-parsehtml/htdocs/meta-ua.html \
+test-parsehtml/htdocs/no-newlines.html \
+test-parsehtml/htdocs/refresh.html \
+test-parsehtml/htdocs/xhtml1-blank-1st-line.xhtml \
+test-parsehtml/htdocs/xhtml1-missing-doctype-and-xmlns.xhtml \
+test-parsehtml/htdocs/xhtml1-strict-minimal.xhtml \
+test-parsehtml/htdocs/xhtml1-strict-missing-xmlns.xhtml \
+test-parsehtml/htdocs/xhtml1-strict.xhtml \
 test-parsehtml/htdocs/index.html
 
 test_boolean_FILES = \

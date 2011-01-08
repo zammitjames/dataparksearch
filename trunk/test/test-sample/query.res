@@ -1,5 +1,29 @@
 SQL>'FIELDS=OFF'
 SQL>'SELECT dict.word,dict.intag,url.crc32,url.url FROM dict, url WHERE url.rec_id=dict.url_id ORDER BY url.crc32,dict.intag'
+http	66052	-1573968177	http://site/
+site	131588	-1573968177	http://site/
+test1	196869	-1573968177	http://site/
+html	262404	-1573968177	http://site/
+test2	327941	-1573968177	http://site/
+html	393476	-1573968177	http://site/
+test3	459013	-1573968177	http://site/
+html	524548	-1573968177	http://site/
+test1	590085	-1573968177	http://site/
+txt	655619	-1573968177	http://site/
+test4	721157	-1573968177	http://site/
+html	786692	-1573968177	http://site/
+test5	852229	-1573968177	http://site/
+html	917764	-1573968177	http://site/
+z	983297	-1573968177	http://site/
+clone1	983302	-1573968177	http://site/
+z-clone1	983304	-1573968177	http://site/
+txt	1048835	-1573968177	http://site/
+z	1114369	-1573968177	http://site/
+clone2	1114374	-1573968177	http://site/
+z-clone2	1114376	-1573968177	http://site/
+html	1179908	-1573968177	http://site/
+http	1247492	-1573968177	http://site/
+site	1312772	-1573968177	http://site/
 this	65796	-1302496456	http://site/test1.txt
 is	131330	-1302496456	http://site/test1.txt
 a	196865	-1302496456	http://site/test1.txt
@@ -12,6 +36,14 @@ http	592132	-1302496456	http://site/test1.txt
 site	657412	-1302496456	http://site/test1.txt
 test1	722437	-1302496456	http://site/test1.txt
 txt	787971	-1302496456	http://site/test1.txt
+that	65796	-588703039	http://site/test5.html
+is	131330	-588703039	http://site/test5.html
+inside	196870	-588703039	http://site/test5.html
+bodybrackets	262412	-588703039	http://site/test5.html
+http	329988	-588703039	http://site/test5.html
+site	395268	-588703039	http://site/test5.html
+test5	460293	-588703039	http://site/test5.html
+html	525828	-588703039	http://site/test5.html
 test	66052	-271113602	http://site/test3.html
 3	131585	-271113602	http://site/test3.html
 title	197125	-271113602	http://site/test3.html
@@ -28,8 +60,6 @@ http	854276	-271113602	http://site/test3.html
 site	919556	-271113602	http://site/test3.html
 test3	984581	-271113602	http://site/test3.html
 html	1050116	-271113602	http://site/test3.html
-http	67844	0	http://site/
-site	133124	0	http://site/
 test	66052	1607690376	http://site/test1.html
 1	131585	1607690376	http://site/test1.html
 title	197125	1607690376	http://site/test1.html
@@ -98,27 +128,34 @@ site	1902596	2096750386	http://site/test4.html
 test4	1967621	2096750386	http://site/test4.html
 html	2033156	2096750386	http://site/test4.html
 SQL>'SELECT status, docsize, hops, crc32, pop_rank, url FROM url ORDER BY status, crc32'
-200	41	1	-1302496456	0.25	http://site/test1.txt
-200	122	1	-271113602	0.25	http://site/test3.html
-200	250	0	0	0.25	http://site/
-200	168	1	1607690376	0.25	http://site/test1.html
-200	158	1	1826495965	0.25	http://site/test2.html
+200	390	0	-1573968177	0.0	http://site/
+200	41	1	-1302496456	0.05	http://site/test1.txt
+200	171	1	-588703039	0.05	http://site/test5.html
+200	122	1	-271113602	0.05	http://site/test3.html
+200	168	1	1607690376	0.05	http://site/test1.html
+200	158	1	1826495965	0.05	http://site/test2.html
 200	225	1	2096750386	0.17	http://site/test4.html
-2200	41	1	-1302496456	0.25	http://site/z-clone1.txt
-2200	158	1	1826495965	0.25	http://site/z-clone2.html
+2200	41	1	-1302496456	0.05	http://site/z-clone1.txt
+2200	158	1	1826495965	0.05	http://site/z-clone2.html
 SQL>'SELECT url.status,url.crc32,url.url,urlinfo.sname,urlinfo.sval FROM url,urlinfo WHERE url.rec_id=urlinfo.url_id ORDER BY url.status,url.crc32,lower(urlinfo.sname)'
+200	-1573968177	http://site/	body	.. test1.html test2.html test3.html test1.txt test4.html test5.html z-clone1.txt z-clone2.html
+200	-1573968177	http://site/	Charset	ISO-8859-1
+200	-1573968177	http://site/	Content-Language	en
+200	-1573968177	http://site/	Content-type	text/html
+200	-1573968177	http://site/	title	http://site/
 200	-1302496456	http://site/test1.txt	body	This is a text file. No title available.
 200	-1302496456	http://site/test1.txt	Charset	ISO-8859-1
 200	-1302496456	http://site/test1.txt	Content-Language	en
 200	-1302496456	http://site/test1.txt	Content-Type	text/plain
+200	-588703039	http://site/test5.html	body	THAT is inside BodyBrackets.
+200	-588703039	http://site/test5.html	Charset	ISO-8859-1
+200	-588703039	http://site/test5.html	Content-Language	en
+200	-588703039	http://site/test5.html	Content-Type	text/html
 200	-271113602	http://site/test3.html	body	This is the third test. No more tests available.
 200	-271113602	http://site/test3.html	Charset	ISO-8859-1
 200	-271113602	http://site/test3.html	Content-Language	en
 200	-271113602	http://site/test3.html	Content-Type	text/html
 200	-271113602	http://site/test3.html	title	Test 3 title
-200	0	http://site/	Charset	ISO-8859-1
-200	0	http://site/	Content-Language	en
-200	0	http://site/	Content-type	text/html
 200	1607690376	http://site/test1.html	body	This is the first test page. &#38; Here is the second one.
 200	1607690376	http://site/test1.html	Charset	ISO-8859-1
 200	1607690376	http://site/test1.html	Content-Language	en
@@ -144,15 +181,17 @@ SQL>'SELECT u1.docsize,u2.docsize,u1.url,u2.url FROM url u1,url u2, links l WHER
 158	158	http://site/z-clone2.html	http://site/z-clone2.html
 168	158	http://site/test1.html	http://site/test2.html
 168	168	http://site/test1.html	http://site/test1.html
+171	171	http://site/test5.html	http://site/test5.html
 225	225	http://site/test4.html	http://site/test4.html
-250	41	http://site/	http://site/test1.txt
-250	41	http://site/	http://site/z-clone1.txt
-250	122	http://site/	http://site/test3.html
-250	158	http://site/	http://site/test2.html
-250	158	http://site/	http://site/z-clone2.html
-250	168	http://site/	http://site/test1.html
-250	225	http://site/	http://site/test4.html
-250	250	http://site/	http://site/
+390	41	http://site/	http://site/test1.txt
+390	41	http://site/	http://site/z-clone1.txt
+390	122	http://site/	http://site/test3.html
+390	158	http://site/	http://site/test2.html
+390	158	http://site/	http://site/z-clone2.html
+390	168	http://site/	http://site/test1.html
+390	171	http://site/	http://site/test5.html
+390	225	http://site/	http://site/test4.html
+390	390	http://site/	http://site/
 SQL>'SELECT url FROM url WHERE url='http://site/''
 http://site/
 SQL>SQL>
