@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,7 @@ extern void DpsParseQStringUnescaped(DPS_VARLIST *vars, const char *qstring);
 
 extern int DpsCmpUrlid(const void *v1, const void *v2);
 extern size_t DpsRemoveNullSections(DPS_URL_CRD *words, size_t n, int *wf);
-extern size_t DpsRemoveNullSectionsDB(DPS_URL_CRD_DB *words, size_t n, int *wf);
+extern size_t DpsRemoveNullSectionsDB(DPS_URL_CRD_DB *words, size_t n, int *wf, int secno);
 
 
 #endif

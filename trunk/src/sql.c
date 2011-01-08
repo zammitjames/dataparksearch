@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1343,58 +1343,60 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	dpshash32_t	id = 0, site_id = 0;
 	int             hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 	int		rc = DPS_OK;
+	char            *e_url = DpsVarListFindStr(&Doc->Sections, "E_URL", NULL), *lc_url = NULL;
+	DPS_CHARSET	*doccs;
+	DPS_CHARSET	*loccs;
+	DPS_CONV        dc_lc;
+	int             need_free_e_url = 0;
+	size_t          i, l, len;
 	
+	l = (len = (e_url == NULL) ? (24 * dps_strlen(url)) : dps_strlen(e_url)) + 1;
+	if (e_url == NULL) {
+		
+	  doccs = DpsGetCharSetByID(Doc->charset_id);
+	  if(!doccs) doccs = DpsGetCharSet("iso-8859-1");
+	  loccs = Indexer->Conf->lcs;
+	  if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
+	  DpsConvInit(&dc_lc, doccs, loccs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
+
+	  /* Escape URL string */
+	  if ((e_url = (char*)DpsMalloc( l )) == NULL) {
+	    DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory");
+	    return DPS_ERROR;
+	  }
+	  need_free_e_url = 1;
+	  if ((lc_url = (char*)DpsMalloc( l )) == NULL) {
+	    DPS_FREE(e_url);
+	    DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory");
+	    return DPS_ERROR;
+	  }
+
+	  /* Convert URL to LocalCharset */
+	  DpsConv(&dc_lc, lc_url, l, url, len + 1);
+	  /* Escape URL string */
+	  DpsDBEscStr(db->DBType, e_url, lc_url, dps_strlen(lc_url));
+	  DpsVarListAddStr(&Doc->Sections, "E_URL", e_url);
+	}
+
 	DpsSQLResInit(&SQLRes);
 
 	if (Indexer->Flags.use_crc32_url_id) {
 		/* Auto generation of rec_id */
 		/* using CRC32 algorythm     */
-		id = DpsStrHash32(url);
+		id = DpsStrHash32(e_url);
 	}else{
-	  size_t i, l, len;
 		const char *o;
 		char *qbuf = NULL;
-		char *e_url = DpsVarListFindStr(&Doc->Sections, "E_URL", NULL), *lc_url = NULL;
-		DPS_CHARSET	*doccs;
-		DPS_CHARSET	*loccs;
-		DPS_CONV        dc_lc;
-		int need_free_e_url = 0;
 		
-		l = (len = (e_url == NULL) ? (24 * dps_strlen(url)) : dps_strlen(e_url)) + 1;
 		if ((qbuf = (char*)DpsMalloc( l + 100 )) == NULL){
 		  DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory");
+		  if(need_free_e_url) {
+		    DPS_FREE(lc_url);
+		    DPS_FREE(e_url);
+		  }
 		  return DPS_ERROR;
 		}
 		
-		if (e_url == NULL) {
-		
-		  doccs = DpsGetCharSetByID(Doc->charset_id);
-		  if(!doccs) doccs = DpsGetCharSet("iso-8859-1");
-		  loccs = Indexer->Conf->lcs;
-		  if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
-		  DpsConvInit(&dc_lc, doccs, loccs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
-
-		  /* Escape URL string */
-		  if ((e_url = (char*)DpsMalloc( l )) == NULL) {
-		    DPS_FREE(qbuf);
-		    DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory");
-		    return DPS_ERROR;
-		  }
-		  need_free_e_url = 1;
-		  if ((lc_url = (char*)DpsMalloc( l )) == NULL) {
-		    DPS_FREE(qbuf);
-		    DPS_FREE(e_url);
-		    DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory");
-		    return DPS_ERROR;
-		  }
-
-		  /* Convert URL to LocalCharset */
-		  DpsConv(&dc_lc, lc_url, l, url, len + 1);
-		  /* Escape URL string */
-		  DpsDBEscStr(db->DBType, e_url, lc_url, dps_strlen(lc_url));
-		  DpsVarListAddStr(&Doc->Sections, "E_URL", e_url);
-		}
-
 		for(i = 0; i < DPS_FINDURL_CACHE_SIZE; i++) {
 		  if (Indexer->DpsFindURLCache[i])
 		    if (!strcmp(e_url, Indexer->DpsFindURLCache[i])) {
@@ -1445,11 +1447,11 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 		  Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
 		  Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 		}
-		if(need_free_e_url) {
-		  DPS_FREE(lc_url);
-		  DPS_FREE(e_url);
-		}
 		DPS_FREE(qbuf);
+	}
+	if(need_free_e_url) {
+	  DPS_FREE(lc_url);
+	  DPS_FREE(e_url);
 	}
 	DpsVarListReplaceInt(&Doc->Sections, "DP_ID", id);
 	DpsVarListReplaceInt(&Doc->Sections, "Site_id", site_id);
@@ -2231,8 +2233,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	old_hops = (urlid_t)DpsVarListFindInt(&Doc->Sections, "hops", 0);
 	url_seed = (crc32_rec_id = (urlid_t)DpsStrHash32(e_url)) & 0xFFF /*& 0xFF*/;
 
-	if (rec_id == 0) {
-	  updated = 0;
+	if (rec_id == 0 || Indexer->Flags.use_crc32_url_id) {
 
 	  if(Indexer->Flags.use_crc32_url_id) {
 	    /* Auto generation of rec_id */
@@ -2254,6 +2255,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			 DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
 			 (int)Indexer->now, Doc->charset_id
 			 );
+
 	    /* Exec INSERT now */
 	    if(DPS_OK!=(rc=DpsSQLAsyncQuery(db, NULL, qbuf))) {
 	      DPS_FREE(qbuf); return rc;
@@ -2261,7 +2263,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	  } else {
 	    /* Use dabatase generated rec_id */
 	    /* It depends on used DBType     */
-
+	    updated = 0;
 
 	    switch(db->DBType){
 	    case DPS_DB_MSQL:
@@ -4398,7 +4400,7 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 		    tlst = DICTNUM(tnum);
 
 		    ticks=DpsStartTimer();
-		    DpsLog(query,DPS_LOG_DEBUG,"Start search for '%s'", Res->items[wordnum].word);
+		    DpsLog(query,DPS_LOG_DEBUG,"Start search for '%s'(%d)", Res->items[wordnum].word, Res->items[wordnum].secno);
 				
 		    switch(db->DBMode){
 		    case DPS_DBMODE_MULTI:
@@ -4504,8 +4506,8 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		      pmerg[tlst].pcur[i].coord = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
 		    }
 		    pmerg[tlst].count = numrows;
-		    if (flag_null_wf) {
-		      pmerg[tlst].count = DpsRemoveNullSectionsDB(pmerg[tlst].pcur, numrows, wf);
+		    if (flag_null_wf || Res->items[wordnum].secno) {
+		      pmerg[tlst].count = DpsRemoveNullSectionsDB(pmerg[tlst].pcur, numrows, wf, Res->items[wordnum].secno);
 		    }
 		    pmerg[tlst].plast = &pmerg[tlst].pcur[pmerg[tlst].count];
 		    Res->CoordList.ncoords += pmerg[tlst].count;
@@ -4518,7 +4520,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		/* Now find each word in crosstable */
 		if (use_crosswords) {
 		  ticks = DpsStartTimer();
-		  DpsLog(query,DPS_LOG_DEBUG,"Start search crosswords for '%s'", Res->items[wordnum].word);
+		  DpsLog(query,DPS_LOG_DEBUG,"Start search crosswords for '%s'(%d)", Res->items[wordnum].word, Res->items[wordnum].secno);
 		
 		  switch(db->DBMode) {
 		  case DPS_DBMODE_SINGLE_CRC:
@@ -4608,8 +4610,8 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		    pmerg[idx].pcur[i].coord = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
 		  }
 		  pmerg[idx].count = numrows;
-		  if (flag_null_wf) {
-		    pmerg[idx].count = DpsRemoveNullSectionsDB(pmerg[idx].pcur, numrows, wf);
+		  if (flag_null_wf || Res->items[wordnum].secno) {
+		    pmerg[idx].count = DpsRemoveNullSectionsDB(pmerg[idx].pcur, numrows, wf, Res->items[wordnum].secno);
 		  }
 		  pmerg[idx].plast = &pmerg[idx].pcur[pmerg[idx].count];
 		  Res->CoordList.ncoords += pmerg[idx].count;
