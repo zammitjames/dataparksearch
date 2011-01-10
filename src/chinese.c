@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -79,13 +79,16 @@ This is C version of a LDC Chinese segmentor
 #include <sys/stat.h>
 #include <math.h>
 
+
 static int cmpchinese(const void *s1,const void *s2){
      return(DpsUniStrCmp(((const DPS_CHINAWORD*)s1)->word, ((const DPS_CHINAWORD*)s2)->word));
 }
 
+
 static void DpsChineseListSort(DPS_CHINALIST *List){
      if (List->nwords > 1) DpsSort(List->ChiWord, List->nwords, sizeof(DPS_CHINAWORD), cmpchinese);
 }
+
 
 static void DpsChineseSortForLast(DPS_CHINAWORD *List, size_t n) {
   register size_t l = 0, c, r;
@@ -113,6 +116,7 @@ __C_LINK void __DPSCALL DpsChineseListFree(DPS_CHINALIST *List){
      List->mwords = 0;
 }
 
+
 static DPS_CHINAWORD * DpsChineseListFind(DPS_CHINALIST *List, const dpsunicode_t *word) {
      int low  = 0;
      int high = List->nwords - 1;
@@ -127,6 +131,7 @@ static DPS_CHINAWORD * DpsChineseListFind(DPS_CHINALIST *List, const dpsunicode_
      }
      return(NULL);
 }
+
 
 static void DpsChineseListAddBundle(DPS_CHINALIST *List, DPS_CHINAWORD * chinaword){
      unsigned int h;
@@ -157,23 +162,14 @@ static void DpsChineseListAddBundle(DPS_CHINALIST *List, DPS_CHINAWORD * chinawo
      List->nwords++;
 }
 
-static void DpsChineseListAdd(DPS_CHINALIST *List, DPS_CHINAWORD * chinaword){
-  dpsunicode_t *nfc = DpsUniNormalizeNFC(NULL, chinaword->word);
-  DPS_CHINAWORD *F = DpsChineseListFind(List, nfc);
 
-  if (F != NULL) {
-    F->freq += chinaword->freq;
-    List->total += chinaword->freq;
-    DPS_FREE(nfc);
-    return;
-  }
-  {
-    DPS_CHINAWORD cw = *chinaword;
-    cw.word = nfc;
-    DpsChineseListAddBundle(List, &cw);
-  }
-  if (List->nwords > 1) DpsChineseSortForLast(List->ChiWord, List->nwords);
+static void DpsChineseListAdd(DPS_CHINALIST *List, DPS_CHINAWORD * chinaword){
+  dpsunicode_t *nfc = DpsUniNormalizeNFC(NULL, DpsUniDup(chinaword->word));
+  DPS_CHINAWORD cw = *chinaword;
+  cw.word = nfc;
+  DpsChineseListAddBundle(List, &cw);
 }
+
 
 int DpsChineseListLoad(DPS_AGENT *Agent, DPS_CHINALIST *List, const char *charset, const char *fname) {
      struct stat     sb;
@@ -241,7 +237,7 @@ int DpsChineseListLoad(DPS_AGENT *Agent, DPS_CHINALIST *List, const char *charse
      while(str != NULL) {
           if(!str[0]) goto loop_continue;
           if(str[0]=='#') goto loop_continue;
-          sscanf(str, "%d %63s ", &chinaword.freq, word );
+          if (2 != sscanf(str, "%d %63s ", &chinaword.freq, word )) goto loop_continue;
 	  DpsConv(&to_uni, (char*)uword, sizeof(uword), word, sizeof(word));
           DpsChineseListAdd(List, &chinaword);
      loop_continue:
