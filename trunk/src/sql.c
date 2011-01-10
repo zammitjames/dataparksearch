@@ -1095,7 +1095,7 @@ static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	DpsDBEscDoubleStr(server_weight);
 
 	while(done) {
-	  dps_snprintf(buf, len, "SELECT rec_id, url, tag, category, command, parent, ordre, weight, enabled FROM server WHERE rec_id=%s%d%s", 
+	  dps_snprintf(buf, len, "SELECT rec_id, url, tag, category, command, parent, ordre, weight, enabled,pop_weight FROM server WHERE rec_id=%s%d%s", 
 		       qu, rec_id, qu);
 	  if (DPS_OK != (res = DpsSQLQuery(db, &SQLRes, buf)))
 	    goto ex;
@@ -1150,6 +1150,11 @@ command, parent, ordre, weight, url, pop_weight \
 	  if (DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, buf))) goto ex;
 	} else {
 	
+	  /* Update Server.ndocs according to pop_weight value */
+	  if(A->Conf->flags & DPS_FLAG_ADD_SERVURL) {
+	    Server->ndocs = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 9));
+	  }
+
 	  if ((Server->command != *DpsSQLValue(&SQLRes, 0, 4)) ||
 	      (Server->parent != DPS_ATOI(DpsSQLValue(&SQLRes, 0, 5))) ||
 	      (Server->ordre != (size_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 6))) ||
