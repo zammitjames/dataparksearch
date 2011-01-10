@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* Added performance assessment for some libc functions at configuration.
 	* "CrossWordsSkipSameSite yes/no" command has been added.
 	* Added support for ISO 8601 date and time format.
 	* Added support for Sitemap: command in robots.txt file.

@@ -12263,6 +12263,7 @@ fi
 fi
 
 
+
 tre=yes
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libtre" >&5
 $as_echo_n "checking for libtre... " >&6; }
@@ -12875,6 +12876,35 @@ cat >>confdefs.h <<_ACEOF
 #define SIZEOF_VOIDP $ac_cv_sizeof_voidp
 _ACEOF
 
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libc functions performance" >&5
+$as_echo_n "checking for libc functions performance... " >&6; }
+if test "$cross_compiling" = yes; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: cross-compiling?" >&5
+$as_echo "cross-compiling?" >&6; }
+
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include "confdefs.h"
+#define DPS_CONFIGURE
+#include "src/dp.c"
+
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: done" >&5
+$as_echo "done" >&6; }
+else
+  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error "unable to complete tests
+See \`config.log' for more details." "$LINENO" 5; }
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
 
 
 
