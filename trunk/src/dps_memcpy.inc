@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2010-2011 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
   memmove
   memcpy
  */
-
-#if 1
 
 #ifndef DPS_MEMMOVE_ADD
 
@@ -106,10 +104,12 @@ typedef long long dps_mword;  /* up to 32 bytes long */
 #endif
 
 
+#if (defined DPS_MEMMOVE && (defined DPS_USE_MEMMOVE_UNALIGNED || defined DPS_CONFIGURE)) || (!defined DPS_MEMMOVE && (defined DPS_USE_MEMCPY_UNALIGNED || defined DPS_CONFIGURE))
+
 #ifdef DPS_MEMMOVE
-void *memmove(void *dst0, const void *src0, size_t length) {
+void *dps_memmove(void *dst0, const void *src0, size_t length) {
 #else
-void *memcpy(void *dst0, const void *src0, size_t length) {
+void *dps_memcpy(void *dst0, const void *src0, size_t length) {
 #endif
 	size_t t;
 
@@ -209,50 +209,6 @@ void *memcpy(void *dst0, const void *src0, size_t length) {
     src -= t;
     dps_minimove_backward(dst, src, t);
  }
-  return dst0;
-}
-
-
-
-#else
-
-#ifdef DPS_MEMMOVE
-void *memmove(void *dst0, const void *src0, size_t length) {
-#else
-void *memcpy(void *dst0, const void *src0, size_t length) {
-#endif
-
-  if (length == 0 || dst0 == src0)		/* nothing to do */
-    return dst0;
-  if ((unsigned long)dst0 < (unsigned long)src0) { /* copy forward */
-    register size_t n = (length + 7) / 8;
-    register char *dst = dst0, *src = src0;
-    switch(length % 8) {
-    case 0:	do {	*dst++ = *src++;
-    case 7:		*dst++ = *src++;
-    case 6:		*dst++ = *src++;
-    case 5:		*dst++ = *src++;
-    case 4:		*dst++ = *src++;
-    case 3:		*dst++ = *src++;
-    case 2:		*dst++ = *src++;
-    case 1:		*dst++ = *src++;
-                    } while(--n > 0);
-    }
-  } else { /* copy backward */
-    register size_t n = (length + 7) / 8;
-    register char *dst = dst0 + length, *src = src0 + length;
-    switch(length % 8) {
-    case 0:	do {	*--dst = *--src;
-    case 7:		*--dst = *--src;
-    case 6:		*--dst = *--src;
-    case 5:		*--dst = *--src;
-    case 4:		*--dst = *--src;
-    case 3:		*--dst = *--src;
-    case 2:		*--dst = *--src;
-    case 1:		*--dst = *--src;
-                    } while(--n > 0);
-    }
-  }
   return dst0;
 }
 

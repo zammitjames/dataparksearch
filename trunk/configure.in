@@ -137,6 +137,7 @@ AC_CHECK_FUNC(inet_addr, , AC_CHECK_LIB(xnet, inet_addr, LIBS="$LIBS -lxnet"))
 dnl AC_CHECK_FUNC(setproctitle, , AC_CHECK_LIB(util, setproctitle, LIBS="$LIBS -lutil"))
 AC_CHECK_FUNC(sqrt, , AC_CHECK_LIB(m, sqrt, LIBS="$LIBS -lm"))
 
+
 dnl Check for libtre
 tre=yes
 AC_MSG_CHECKING(for libtre)
@@ -199,6 +200,15 @@ AC_CHECK_SIZEOF(long long)
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(void*)
 dnl AC_CHECK_SIZEOF(off_t)
+
+dnl Check for libc performance
+AC_MSG_CHECKING(for libc functions performance, please be patient)
+AC_RUN_IFELSE([
+#include "confdefs.h"
+#define DPS_CONFIGURE
+#include "src/dp.c"
+], AC_MSG_RESULT(done), AC_MSG_FAILURE(unable to complete tests), AC_MSG_RESULT(cross-compiling?)
+)
 
 dnl Check for libraries
 dnl Next line was commented out by Kir 
