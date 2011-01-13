@@ -528,8 +528,8 @@ int __DPSCALL DpsFindWordsSearchd(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *sea
 	  maxlen += dps_strlen(edf);
 	}
 	if (empty) {
-	  edf = (char*)DpsMalloc(dps_strlen(empty) * 10 + 1);
-	  if (edf == NULL) {
+	  e_empty = (char*)DpsMalloc(dps_strlen(empty) * 10 + 1);
+	  if (e_empty == NULL) {
 		sprintf(query->Conf->errstr, "Can't allocate memory");
 		TRACE_OUT(query);
 		return DPS_ERROR;
