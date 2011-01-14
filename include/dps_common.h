@@ -98,6 +98,7 @@
 #include <assert.h>
 #endif
 
+#include "dps_filence.h"
 #include "dps_unicode.h"
 #include "dps_uniconv.h"
 
