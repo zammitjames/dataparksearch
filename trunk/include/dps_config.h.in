@@ -658,8 +658,6 @@ typedef unsigned int dps_uintptr_t;
 #define dps_min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
-#include "dps_filence.h"
-
 
 #ifdef EFENCE
 
