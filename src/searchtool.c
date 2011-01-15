@@ -3661,7 +3661,8 @@ void DpsParseQStringUnescaped(DPS_VARLIST *vars, const char *qstring){
 size_t DpsRemoveNullSections(DPS_URL_CRD *words, size_t n, int *wf) {
   register size_t i, j = 0;
   for (i = 0; i < n; i++) {
-    if (wf[DPS_WRDSEC(words[i].coord)] > 0) words[j++] = words[i];
+    register int s = DPS_WRDSEC(words[i].coord);
+    if (s == 0 || wf[s] > 0) words[j++] = words[i]; /* zero section number means it's came from a limit */
   }
   return j;
 }
