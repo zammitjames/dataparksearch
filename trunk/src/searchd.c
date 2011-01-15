@@ -551,24 +551,6 @@ static int do_client(DPS_AGENT *Agent, int client){
 					DpsVarListFindStr(&Agent->Vars, "q", ""), bcharset);
 				
 				DpsPrepare(Agent, Res);		/* Prepare search query */
-#ifdef HAVE_ASPELL
-				if (Agent->Flags.use_aspellext && Agent->naspell > 0) {
-				  register size_t z;
-/*#ifdef UNIONWAIT
-				  union wait status;
-#else
-				  int status;
-#endif*/
-				  for (z = 0; z < Agent->naspell; z++) {
-				    if (Agent->aspell_pid[z]) {
-				      kill(Agent->aspell_pid[z], SIGALRM);
-				      Agent->aspell_pid[z] = 0;
-				    }
-				  }
-/*				  while(waitpid(Agent->aspell_pid, &status, WNOHANG) > 0); we catch it by signal */
-				  Agent->naspell = 0;
-				}
-#endif /* HAVE_ASPELL */
 				if(DPS_OK != DpsFindWords(Agent, Res)) {
 					dps_snprintf(buf,sizeof(buf)-1,"%s",DpsEnvErrMsg(Agent->Conf));
 					DpsLog(Agent,verb,"%s",DpsEnvErrMsg(Agent->Conf));
@@ -685,6 +667,24 @@ static int do_client(DPS_AGENT *Agent, int client){
 				nsent=DpsSearchdSendPacket(server, &hdr, &Res->CoordList.Coords[Res->first]);
 				DpsLog(Agent,verb,"Sent words packet %d bytes cmd=%d len=%d nwords=%d",(int)nsent,hdr.cmd,hdr.len,Res->CoordList.Coords);
 
+#ifdef HAVE_ASPELL
+				if (Agent->Flags.use_aspellext && Agent->naspell > 0) {
+				  register size_t z;
+/*#ifdef UNIONWAIT
+				  union wait status;
+#else
+				  int status;
+#endif*/
+				  for (z = 0; z < Agent->naspell; z++) {
+				    if (Agent->aspell_pid[z]) {
+				      kill(Agent->aspell_pid[z], SIGALRM);
+				      Agent->aspell_pid[z] = 0;
+				    }
+				  }
+/*				  while(waitpid(Agent->aspell_pid, &status, WNOHANG) > 0); we catch it by signal */
+				  Agent->naspell = 0;
+				}
+#endif /* HAVE_ASPELL */
 				/*
 				for(i=0;i<Agent->total_found;i++){
 					dps_snprintf(buf,sizeof(buf)-1,"u=%08X c=%08X",wrd[i].url_id,wrd[i].coord);
