@@ -317,7 +317,7 @@ include/dps_unidata.h src/uconv-8bit.h include/dps_charsetutils.h include/dps_fi
 COPYING
 
 charsetdistdir = libdpcharset-$(VERSION)
-DPDISTFILES = src/dp.c include/dps_config.h.in COPYING
+DPDISTFILES = src/dp.c src/dps_memcpy.inc include/dps_config.h.in COPYING
 dpdistdir = libdp-$(VERSION)
 all: all-recursive
 

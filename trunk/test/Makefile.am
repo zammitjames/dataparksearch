@@ -154,6 +154,7 @@ test-parsehtml/query.res \
 test-parsehtml/search.htm \
 test-parsehtml/search.res \
 test-parsehtml/search2.res \
+test-parsehtml/search3.res \
 test-parsehtml/query.tst \
 test-parsehtml/test.cmd \
 test-parsehtml/htdocs/accept.html \

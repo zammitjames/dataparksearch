@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -224,6 +224,7 @@ typedef struct {
         dps_uint2       loose;
 } DPS_MATCH;
 
+
 typedef struct {
 	int		match_type;
 	int		nomatch;
@@ -242,15 +243,18 @@ typedef struct {
         dps_uint2       last;
 } DPS_UNIMATCH;
 
+
 typedef struct {
 	size_t		nmatches;
 	DPS_MATCH	*Match;
 } DPS_MATCHLIST;
 
+
 typedef struct {
 	size_t		nmatches;
 	DPS_UNIMATCH	*Match;
 } DPS_UNIMATCHLIST;
+
 
 typedef struct {
 	int beg;
@@ -456,6 +460,7 @@ typedef union {
 typedef struct {
 	time_t	        period[DPS_DEFAULT_MAX_HOPS];		/**< Reindex period by hops          */
 	DPS_MATCH	Match;
+        DPS_MATCHLIST   HTDBsec;
 	urlid_t         site_id;        /**< server.rec_id            */
 	size_t          ordre;          /**< order in list to find    */
 	urlid_t         parent;         /**< parent rec_id for grouping by site */

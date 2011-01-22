@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,9 @@
 #include <strings.h>
 #include <sys/types.h>
 #include <ctype.h>
+#ifdef HAVE_INET_NET_PTON_PROTO
+#include <arpa/inet.h>
+#endif
 
 #define ERRSTRSIZ 1024
 /*
@@ -58,7 +61,7 @@ int DpsMatchComp(DPS_MATCH *Match,char *errstr,size_t errstrsize){
 				flag|=REG_ICASE;
 			if((err=regcomp(Match->reg, Match->pattern, flag))){
 				regerror(err, Match->reg, errstr, errstrsize);
-				fprintf(stderr, "DpsMatchComp of %s !!! - regcomp[%d]: %s\n", Match->pattern, err, errstr);
+				fprintf(stderr, "DpsMatchComp of %s !!! - regcomp[%d]: %s\n", DPS_NULL2EMPTY(Match->pattern), err, errstr);
 				DPS_FREE(Match->reg);
 				return DPS_ERROR;
 			}
@@ -114,7 +117,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 	void *paran = DpsViolationEnter(paran);
 #endif
 /*	
-	fprintf(stderr, "DpsMatchExec: '%s' -> '%s'['%s'] '%s'\n",string, Match->pattern, DPS_NULL2EMPTY(Match->idn_pattern), DpsMatchTypeStr(Match->match_type));
+	fprintf(stderr, "DpsMatchExec: '%s' -> '%s'['%s'] '%s'\n",string, DPS_NULL2EMPTY(Match->pattern), DPS_NULL2EMPTY(Match->idn_pattern), DpsMatchTypeStr(Match->match_type));
 */
 	
 	switch(Match->match_type){
@@ -157,13 +160,13 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			  struct sockaddr_in iNET;
 			  int bits;
 			  if ((sin != NULL) 
-			      && ((bits = inet_net_pton(AF_INET, Match->pattern, &iNET.sin_addr.s_addr,sizeof(iNET.sin_addr.s_addr)))!= -1)) {
+			      && ((bits = inet_net_pton(AF_INET, DPS_NULL2EMPTY(Match->pattern), &iNET.sin_addr.s_addr,sizeof(iNET.sin_addr.s_addr)))!= -1)) {
 			    net = (dps_uint4)ntohl(iNET.sin_addr.s_addr);
 			    mask = (dps_uint4)(0xffffffffU << (32 - bits));
 			    addr = (dps_uint4)ntohl(sin->sin_addr.s_addr);
 			    res = !((addr & mask) == net);
 #ifdef DEBUG_MATCH
-			    fprintf(stderr, "Subnet.pton: addr:%x @ net/mask:%x/%x [%s] => %d\n", addr, net, mask, Match->pattern, res);
+			    fprintf(stderr, "Subnet.pton: addr:%x @ net/mask:%x/%x [%s] => %d\n", addr, net, mask, DPS_NULL2EMPTY(Match->pattern), res);
 #endif
 			  } else {
 /*			if(Match->case_sense){
@@ -172,7 +175,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 				res = DpsWildCmp(net_string, Match->pattern);
 /*			}*/
 #ifdef DEBUG_MATCH
-				fprintf(stderr, "Subnet.WildCmp: %s @ %s => %d\n", net_string, Match->pattern, res);
+				fprintf(stderr, "Subnet.WildCmp: %s @ %s => %d\n", net_string, DPS_NULL2EMPTY(Match->pattern), res);
 #endif
 			  }
 			}
@@ -181,7 +184,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			slen = dps_strlen(DPS_NULL2EMPTY(Match->pattern));
 			if(Match->case_sense){
-				res=strncasecmp(Match->pattern,string,slen);
+			  res=strncasecmp(DPS_NULL2EMPTY(Match->pattern),string,slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
 				  slen = dps_strlen(DPS_NULL2EMPTY(Match->idn_pattern));
@@ -189,7 +192,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 				}
 #endif
 			}else{
-				res=strncmp(Match->pattern,string,slen);
+			  res=strncmp(DPS_NULL2EMPTY(Match->pattern),string,slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
 				  slen = dps_strlen(DPS_NULL2EMPTY(Match->idn_pattern));
@@ -201,12 +204,12 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 		case DPS_MATCH_FULL:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			if(Match->case_sense){
-				res=strcasecmp(Match->pattern,string);
+			  res = strcasecmp(DPS_NULL2EMPTY(Match->pattern), string);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = strcasecmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
 #endif
 			}else{
-				res=strcmp(Match->pattern,string);
+			  res = strcmp(DPS_NULL2EMPTY(Match->pattern), string);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = strcmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
 #endif
@@ -214,26 +217,26 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			break;
 		case DPS_MATCH_END:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
-			plen=dps_strlen(Match->pattern);
-			slen=dps_strlen(string);
+			plen = dps_strlen(DPS_NULL2EMPTY(Match->pattern));
+			slen = dps_strlen(string);
 			if(slen<plen){
 				res=1;
 				break;
 			}
 			se=string+slen-plen;
 			if(Match->case_sense){
-				res=strcasecmp(Match->pattern,se);
+			  res = strcasecmp(DPS_NULL2EMPTY(Match->pattern), se);
 			}else{
-				res=strcmp(Match->pattern,se);
+			  res = strcmp(DPS_NULL2EMPTY(Match->pattern), se);
 			}
 			break;
 
 		case DPS_MATCH_SUBSTR:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			if(Match->case_sense){
-			  res = (strcasestr(string, Match->pattern) == NULL);
+			  res = (strcasestr(string, DPS_NULL2EMPTY(Match->pattern)) == NULL);
 			}else{
-			  res = (strstr(string, Match->pattern) == NULL);
+			  res = (strstr(string, DPS_NULL2EMPTY(Match->pattern)) == NULL);
 			}
 			break;
 		default:
@@ -291,7 +294,7 @@ int DpsMatchApply(char *res, size_t size, const char *string, const char *rpl,
 			break;
 			
 		case DPS_MATCH_BEGIN:
-			len = dps_snprintf(res, size - 1, "%s%s", rpl, string + dps_strlen(Match->pattern));
+		  len = dps_snprintf(res, size - 1, "%s%s", rpl, string + dps_strlen(DPS_NULL2EMPTY(Match->pattern)));
 			break;
 		case DPS_MATCH_SUBSTR:
 			len = dps_snprintf(res, size - 1, "%s", rpl);
@@ -313,7 +316,7 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	size_t i;
 
 	for (i = 0; i < L->nmatches; i++) {
-	  if ((strcmp(L->Match[i].pattern, M->pattern) == 0) && 
+	  if ((strcmp(L->Match[i].pattern, DPS_NULL2EMPTY(M->pattern)) == 0) && 
 	      (strcmp(DPS_NULL2EMPTY(L->Match[i].subsection), DPS_NULL2EMPTY(M->subsection)) == 0) && 
 	      (strcmp(DPS_NULL2EMPTY(L->Match[i].arg), DPS_NULL2EMPTY(M->arg)) == 0) &&
 	      (L->Match[i].match_type == M->match_type) &&
@@ -454,7 +457,7 @@ int DpsUniMatchListAdd(DPS_AGENT *A, DPS_UNIMATCHLIST *L, DPS_UNIMATCH *M, char 
 	size_t i;
 
 	for (i = 0; i < L->nmatches; i++) {
-	  if ((DpsUniStrCmp(L->Match[i].pattern, M->pattern) == 0) &&
+	  if ((DpsUniStrCmp(L->Match[i].pattern, DPS_NULL2EMPTY(M->pattern)) == 0) &&
 	      (L->Match[i].match_type == M->match_type) &&
 	      (L->Match[i].case_sense == M->case_sense) &&
 	      (L->Match[i].nomatch == M->nomatch)) {
@@ -606,9 +609,9 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 		case DPS_MATCH_WILD:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			if(Match->case_sense) {
-				res = DpsUniWildCaseCmp(string, Match->pattern);
+			  res = DpsUniWildCaseCmp(string, DPS_NULL2EMPTY(Match->pattern));
 			}else{
-				res = DpsUniWildCmp(string, Match->pattern);
+			  res = DpsUniWildCmp(string, DPS_NULL2EMPTY(Match->pattern));
 			}
 			break;
 		case DPS_MATCH_SUBNET:
@@ -619,22 +622,22 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 			  struct sockaddr_in iNET;
 			  int bits;
 			  if ((sin != NULL) 
-			      && ((bits = inet_net_pton(AF_INET, Match->pattern, &iNET.sin_addr.s_addr,sizeof(iNET.sin_addr.s_addr)))!= -1)) {
+			      && ((bits = inet_net_pton(AF_INET, DPS_NULL2EMPTY(Match->pattern), &iNET.sin_addr.s_addr,sizeof(iNET.sin_addr.s_addr)))!= -1)) {
 			    net = (dps_uint4)ntohl(iNET.sin_addr.s_addr);
 			    mask = (dps_uint4)(0xffffffffU << (32 - bits));
 			    addr = (dps_uint4)ntohl(sin->sin_addr.s_addr);
 			    res = !((addr & mask) == net);
 #ifdef DEBUG_MATCH
-			    fprintf(stderr, "Subnet.pton: addr:%x @ net/mask:%x/%x [%s] => %d\n", addr, net, mask, Match->pattern, res);
+			    fprintf(stderr, "Subnet.pton: addr:%x @ net/mask:%x/%x [%s] => %d\n", addr, net, mask, DPS_NULL2EMPTY(Match->pattern), res);
 #endif
 			  } else {
 /*			if(Match->case_sense){
 				res = DpsWildCaseCmp(net_string, Match->pattern);
 			}else{*/
-				res = DpsUniWildCmp(net_string, Match->pattern);
+			    res = DpsUniWildCmp(net_string, DPS_NULL2EMPTY(Match->pattern));
 /*			}*/
 #ifdef DEBUG_MATCH
-				fprintf(stderr, "Subnet.WildCmp: %s @ %s => %d\n", net_string, Match->pattern, res);
+			    fprintf(stderr, "Subnet.WildCmp: %s @ %s => %d\n", net_string, DPS_NULL2EMPTY(Match->pattern), res);
 #endif
 			  }
 			}
@@ -644,7 +647,7 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			slen = DpsUniLen(DPS_UNINULL2EMPTY(Match->pattern));
 			if(Match->case_sense){
-			  res = DpsUniStrNCaseCmp(Match->pattern, string, slen);
+			  res = DpsUniStrNCaseCmp(DPS_NULL2EMPTY(Match->pattern), string, slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
 				  slen = DpsUniLen(DPS_NULL2EMPTY(Match->idn_pattern));
@@ -652,7 +655,7 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 				}
 #endif
 			}else{
-			  res = DpsUniStrNCmp(Match->pattern, string, slen);
+			  res = DpsUniStrNCmp(DPS_NULL2EMPTY(Match->pattern), string, slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
 				  slen = DpsUniLen(DPS_NULL2EMPTY(Match->idn_pattern));

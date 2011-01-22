@@ -12,11 +12,14 @@ fail !0 exec $(INDEXER) -Esqlmon $(DPS_TEST_DIR)/indexer.conf < $(DPS_TEST_DIR)/
 
 fail !0 exec $(SEARCH) пятерка > $(DPS_TEST_DIR)/search.rej 2>&1
 fail !0 exec $(SEARCH) body > $(DPS_TEST_DIR)/search2.rej 2>&1
+fail !0 exec $(SEARCH) "allinurl.host:live.uz&m=bool" > $(DPS_TEST_DIR)/search3.rej 2>&1
 
 fail !0 mdiff $(DPS_TEST_DIR)/search.rej $(DPS_TEST_DIR)/search.res
 fail !0 mdiff $(DPS_TEST_DIR)/search2.rej $(DPS_TEST_DIR)/search2.res
+fail !0 mdiff $(DPS_TEST_DIR)/search3.rej $(DPS_TEST_DIR)/search3.res
 fail !0 mdiff $(DPS_TEST_DIR)/query.rej $(DPS_TEST_DIR)/query.res
 
+fail !0 exec rm -f $(DPS_TEST_DIR)/search3.rej
 fail !0 exec rm -f $(DPS_TEST_DIR)/search2.rej
 fail !0 exec rm -f $(DPS_TEST_DIR)/search.rej
 fail !0 exec rm -f $(DPS_TEST_DIR)/query.rej

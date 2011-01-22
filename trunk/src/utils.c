@@ -31,7 +31,7 @@
 #include <signal.h>
 #include <math.h>
 #include <float.h>
-#ifndef HAVE_INET_NET_PTON
+#ifndef HAVE_INET_NET_PTON_PROTO
 #include <assert.h>
 #endif
 #ifdef HAVE_SYS_TIME_H
@@ -2141,7 +2141,7 @@ void dps_setproctitle( const char *fmt, ... ) {
 
 /* BEGIN OF inet_net_pton implementation */
 
-#ifndef HAVE_INET_NET_PTON
+#ifndef HAVE_INET_NET_PTON_PROTO
 
 /*
  * Copyright (c) 1996 by Internet Software Consortium.

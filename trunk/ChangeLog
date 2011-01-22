@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* It can now specify regex pattern for HTDBDoc and HTDBText commands to parse URL into htdb:/ paramters.
 	* Added performance assessment for some libc functions at configuration.
 	* "CrossWordsSkipSameSite yes/no" command has been added.
 	* Added support for ISO 8601 date and time format.
