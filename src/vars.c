@@ -614,7 +614,7 @@ int DpsVarListLog(DPS_AGENT *A, DPS_VARLIST *V, int l, const char *pre) {
 	  for (r = 0; r < 256; r++)
 	    for(h=0; h < V->Root[r].nvars; h++) {
 		DPS_VAR *v = &V->Root[r].Var[h];
-		if (v->section != 0 || v->maxlen != 0) DpsLog(A, l, "%s.%s [%d,%d:%d]: %s", pre, v->name, v->section, v->maxlen, v->single, DPS_NULL2STR(v->val));
+		if (v->section != 0 || v->maxlen != 0) DpsLog(A, l, "%s.%s [%d,%d:%d%d]: %s", pre, v->name, v->section, v->maxlen, v->single, v->strict, DPS_NULL2STR(v->val));
 		else DpsLog(A, l, "%s.%s: %s", pre, v->name, DPS_NULL2STR(v->val));
 	    }
 	}

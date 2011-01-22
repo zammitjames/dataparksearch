@@ -100,7 +100,7 @@ charset-dist: charsetdistdir
 
 ## libdp distribution
 
-DPDISTFILES =  src/dp.c include/dps_config.h.in COPYING
+DPDISTFILES =  src/dp.c src/dps_memcpy.inc include/dps_config.h.in COPYING
 
 dpdistdir = libdp-$(VERSION)
 

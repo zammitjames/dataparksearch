@@ -49,7 +49,9 @@
 extern int ARGC;
 extern char **ARGV;
 extern char **ENVP;
+#ifndef environ
 extern char **environ;
+#endif
 #ifdef HAVE_SETPROCTITLE
 #define dps_setproctitle setproctitle
 #else
@@ -159,7 +161,7 @@ extern const char *h_errlist[];
 # define hstrerror(err)  ((err) <= 4 ? h_errlist[(err)] : "unknown error")
 #endif
 
-#ifndef HAVE_INET_NET_PTON
+#ifndef HAVE_INET_NET_PTON_PROTO
 int inet_net_pton(int af, const char *src, void *dst, size_t size);
 #endif
 

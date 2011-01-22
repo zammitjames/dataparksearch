@@ -520,20 +520,20 @@ int main() {
     /* ###################################### */
 
     TimerStart();
-    for (i = N; i > STARTLEN; i--) {
+    for (i = N-1; i > STARTLEN; i--) {
       d[0] = '\0';
-      dps_strcat(d, a);
+      dps_strcat(d, a+i);
       a[0] = '\0';
-      dps_strcat(a, d);
+      dps_strcat(a, d + i);
     }
     t_dps = TimerEnd();
 
     TimerStart();
-    for (i = N; i > STARTLEN; i--) {
+    for (i = N-1; i > STARTLEN; i--) {
       d[0] = '\0';
-      strcat(d, a);
+      strcat(d, a+i);
       a[0] = '\0';
-      strcat(a, d);
+      strcat(a, d + i);
     }
     t_lib = TimerEnd();
 
@@ -546,21 +546,21 @@ int main() {
 
     TimerStart();
     for (z =0; z < 8; z++)
-      for (i = N - z; i > STARTLEN; i--) {
+      for (i = N - z - 1; i > STARTLEN; i--) {
 	d[0] = '\0';
-	dps_strcat(d, a + z);
+	dps_strcat(d, a + z + i);
 	a[0] = '\0';
-	dps_strcat(a, d+z);
+	dps_strcat(a, d + z + i);
       }
     t_dps = TimerEnd();
 
     TimerStart();
     for (z =0; z < 8; z++)
-      for (i = N - z; i > STARTLEN; i--) {
+      for (i = N - z - 1; i > STARTLEN; i--) {
 	d[0] = '\0';
-	strcat(d, a + z);
+	strcat(d, a + z + i);
 	a[0] = '\0';
-	strcat(a, d+z);
+	strcat(a, d + z + i);
       }
     t_lib = TimerEnd();
 

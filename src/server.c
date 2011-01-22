@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -251,6 +251,12 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	    new->need_free = 0;
 	  }
 
+	  { char err[512];
+	    for (i = 0; i < srv->HTDBsec.nmatches; i++) {
+	      DpsMatchListAdd(A, &new->HTDBsec, &srv->HTDBsec.Match[i], err, sizeof(err), 0);
+	    }
+	  }
+
 #ifdef TRACE_SRVS
 	  fprintf(stderr, " command:%c  match_type:%d  pattern: %s\n", srv->command, srv->Match.match_type, urlstr);
 #endif
@@ -277,6 +283,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 
 void DpsServerFree(DPS_SERVER *Server){
 	DpsMatchFree(&Server->Match);
+	DpsMatchListFree(&Server->HTDBsec);
 	DpsVarListFree(&Server->Vars);
 	if (Server->need_free) {
 	  DPS_FREE(Server->last_crawled);

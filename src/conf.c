@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1710,6 +1710,64 @@ static int srv_rpl_var(void *Cfg, size_t ac,char **av){
 	}
 	return DPS_OK;
 }
+
+
+static int srv_htdb(void *Cfg, size_t ac,char **av){
+	DPS_CFG	*C=(DPS_CFG*)Cfg;
+	char err[512];
+	size_t i, j;
+	if (ac == 1) {
+	  for (i = j = 0; i < C->Srv->HTDBsec.nmatches; i++) {
+	    if (strcasecmp(av[0], C->Srv->Match.arg)) {
+	      if (i != j) {
+		DpsMatchFree(&C->Srv->HTDBsec.Match[j]);
+		C->Srv->HTDBsec.Match[j] = C->Srv->HTDBsec.Match[i];
+	      }
+	      j++;
+	    }
+	    if (j != C->Srv->HTDBsec.nmatches) {
+	      C->Srv->HTDBsec.nmatches = j;
+	    }
+	  }
+	} else if (ac == 2 && !strcasecmp(av[0], "HTDBText")) {
+	  for (i = j = 0; i < C->Srv->HTDBsec.nmatches; i++) {
+	    if (strcasecmp(av[0], C->Srv->Match.arg) || strcasecmp(av[1], C->Srv->Match.section)) {
+	      if (i != j) {
+		DpsMatchFree(&C->Srv->HTDBsec.Match[j]);
+		C->Srv->HTDBsec.Match[j] = C->Srv->HTDBsec.Match[i];
+	      }
+	      j++;
+	    }
+	    if (j != C->Srv->HTDBsec.nmatches) {
+	      C->Srv->HTDBsec.nmatches = j;
+	    }
+	  }
+	} else {
+	  DPS_MATCH M;
+	  bzero(&M, sizeof(M));
+	  M.nomatch = 0;
+	  M.case_sense = 1;
+	  M.match_type = DPS_MATCH_BEGIN;
+	  M.arg = av[0];
+	  if (!strcasecmp(av[0], "HTDBDoc")) {
+	    M.subsection = av[1];
+	    if (ac == 3) {
+	      M.match_type = DPS_MATCH_REGEX;
+	      M.pattern = av[2];
+	    } else if (ac > 3) return DPS_ERROR;
+	  } else if (!strcasecmp(av[0], "HTDBText")) {
+	    M.section = av[1];
+	    M.subsection = av[2];
+	    if (ac == 4) {
+	      M.match_type = DPS_MATCH_REGEX;
+	      M.pattern = av[3];
+	    } else if (ac > 4) return DPS_ERROR;
+	  } else return DPS_ERROR; /* this should never happen */
+	  DpsMatchListAdd(C->Indexer, &C->Srv->HTDBsec, &M, err, sizeof(err), 0);
+	}
+	return DPS_OK;
+}
+
 
 static int srv_rpl_hdr(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;

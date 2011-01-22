@@ -12573,16 +12573,34 @@ _ACEOF
 fi
 done
 
-for ac_func in inet_net_pton
-do :
-  ac_fn_c_check_func "$LINENO" "inet_net_pton" "ac_cv_func_inet_net_pton"
-if test "x$ac_cv_func_inet_net_pton" = x""yes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_INET_NET_PTON 1
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for inet_net_pton function prototype in arpa/inet.h" >&5
+$as_echo_n "checking for inet_net_pton function prototype in arpa/inet.h... " >&6; }
+if test "${ac_cv_have_inet_net_pton_proto+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <arpa/inet.h>
+
 _ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "inet_net_pton" >/dev/null 2>&1; then :
+  ac_cv_have_inet_net_pton_proto=yes
+else
+  ac_cv_have_inet_net_pton_proto=no
+fi
+rm -f conftest*
 
 fi
-done
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_have_inet_net_pton_proto" >&5
+$as_echo "$ac_cv_have_inet_net_pton_proto" >&6; }
+        if test $ac_cv_have_inet_net_pton_proto = yes ; then
+                ac_tr_func=HAVE_`echo inet_net_pton | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`_PROTO
+                cat >>confdefs.h <<_ACEOF
+#define $ac_tr_func 1
+_ACEOF
+
+        fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_setconcurrency function prototype in pthread.h" >&5
 $as_echo_n "checking for pthread_setconcurrency function prototype in pthread.h... " >&6; }

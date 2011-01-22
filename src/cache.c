@@ -1061,16 +1061,18 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
       if (todel[i].flag > 0) continue;
       P->rec_id = todel[i].rec_id;
       if ((data = (DPS_URL_CRD*)DpsBaseARead(P, &len)) == NULL) {
+	P->rec_id = todel[i].rec_id;
+	DpsBaseDelete(P);
 	continue;
       } else {
 	n_old = len / sizeof(DPS_URL_CRD);
 /*	DpsSortSearchWordsByURL(data, n_old);*/
 	n_old_new = RemoveOldCrds(data, n_old, del_buf, del_count);
-      }
-      if (n_old_new != n_old) {
-	P->rec_id = todel[i].rec_id;
-	if (n_old_new) DpsBaseWrite(P, data, n_old_new * sizeof(DPS_URL_CRD));
-	else DpsBaseDelete(P);
+	if (n_old_new != n_old) {
+	  P->rec_id = todel[i].rec_id;
+	  if (n_old_new) DpsBaseWrite(P, data, n_old_new * sizeof(DPS_URL_CRD));
+	  else DpsBaseDelete(P);
+	}
       }
       DPS_FREE(data);
 /*************/

@@ -344,7 +344,7 @@
 #undef HAVE_GETADDRINFO
 
 /* Define if you have the inet_net_pton function. */
-#undef HAVE_INET_NET_PTON
+#undef HAVE_INET_NET_PTON_PROTO
 
 /* Define if you have strerror_r function. */
 #undef HAVE_STRERROR_R
