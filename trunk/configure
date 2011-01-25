@@ -11753,7 +11753,7 @@ case "$host" in
             LDFLAGS="$LDFLAGS -lsocket -lresolv -lnsl"
             ;;
         *-*-linux*)
-	    LIBS="$LIBS -L/usr/local/lib -lrt -lc"
+	    LIBS="$LIBS -L/usr/local/lib -lrt -lc -lresolv"
             ;;
 esac
 case "$host" in

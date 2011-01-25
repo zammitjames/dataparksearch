@@ -65,7 +65,7 @@ dnl            LDADD="$LDADD -lbsd"
             ;;
         *-*-linux*)
 dnl            CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
-	    LIBS="$LIBS -L/usr/local/lib -lrt -lc"
+	    LIBS="$LIBS -L/usr/local/lib -lrt -lc -lresolv"
             ;;
 esac
 dnl platform specific flags and options

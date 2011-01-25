@@ -32,7 +32,15 @@
 #include <sys/types.h>
 #include <ctype.h>
 #ifdef HAVE_INET_NET_PTON_PROTO
+# if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+# endif
+# if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+# endif
+# if HAVE_ARPA_INET_H
 #include <arpa/inet.h>
+# endif
 #endif
 
 #define ERRSTRSIZ 1024
