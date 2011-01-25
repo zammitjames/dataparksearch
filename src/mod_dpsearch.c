@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2011 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -395,10 +395,15 @@ static int dpstoredoc_handler(request_rec *r) {
 		switch(tag.type) {
 		case DPS_HTML_COM:
 		case DPS_HTML_TAG:
-			dps_memmove(HEnd, htok, (size_t)(last - htok));
+		  /*			dps_memmove(HEnd, htok, (size_t)(last - htok));
 			HEnd+=last-htok;
 			HEnd[0]='\0';
-			DpsHTMLParseTag(Agent, &tag, Doc);
+			DpsHTMLParseTag(Agent, &tag, Doc);*/
+			ch = *last; *last = '\0';
+			sprintf(HEnd, "%s", tp = DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text, 0)); /* FIXME: add check for Content-Language */
+			DPS_FREE(tp);
+			HEnd=DPS_STREND(HEnd);
+			*last = ch;
 			break;
 		case DPS_HTML_TXT:
 		        ch = *last; *last = '\0';
