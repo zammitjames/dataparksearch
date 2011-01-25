@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -444,6 +444,8 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 	DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
 	
+        DpsLog(Indexer, DPS_LOG_DEBUG, "Next-Index-Time: %s", dbuf);
+
 	switch(status){
 	
 	case 0: /* No HTTP code */
@@ -455,6 +457,7 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 	  if (Doc->method != DPS_METHOD_CRAWLDELAY) {
 		dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 		DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+		DpsLog(Indexer, DPS_LOG_DEBUG, "Next-Index-Time: %s", dbuf);
 	  }
 		result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_SUPDATE);
 		TRACE_OUT(Indexer);
@@ -475,6 +478,7 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 			  next_index_time = Indexer->now + Doc->Spider.net_error_delay_time;
 			  dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 			  DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+			  DpsLog(Indexer, DPS_LOG_DEBUG, "Next-Index-Time: %s", dbuf);
 			}
 			result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_SUPDATE);
 			TRACE_OUT(Indexer);
@@ -537,6 +541,7 @@ static int DocUpdate(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc) {
 		next_index_time = Indexer->now + Doc->Spider.net_error_delay_time;
 		dps_snprintf(dbuf, sizeof(dbuf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
 		DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",dbuf);
+		DpsLog(Indexer, DPS_LOG_DEBUG, "Next-Index-Time: %s", dbuf);
 		result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_SUPDATE);
 		TRACE_OUT(Indexer);
 		return result;
