@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -408,11 +408,15 @@ int main(int argc, char **argv, char **envp) {
 		switch(tag.type) {
 		case DPS_HTML_COM:
 		case DPS_HTML_TAG:
-			dps_memmove(HEnd, htok, (size_t)(last - htok));
+		  /*			dps_memmove(HEnd, htok, (size_t)(last - htok));
 			HEnd+=last-htok;
-			HEnd[0]='\0';
-
-			DpsHTMLParseTag(Agent, &tag, Doc);
+			HEnd[0]='\0';*/
+			ch = *last; *last = '\0';
+			sprintf(HEnd, "%s", tp = DpsHlConvert(NULL, htok, &lc_uni_text, &uni_bc_text, 0)); /* FIXME: add check for Content-Language */
+			DPS_FREE(tp);
+			HEnd=DPS_STREND(HEnd);
+			*last = ch;
+			/*DpsHTMLParseTag(Agent, &tag, Doc);*/ /* Either we need it here ?*/
 			break;
 		case DPS_HTML_TXT:
 		        ch = *last; *last = '\0';
