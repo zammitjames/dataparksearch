@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -199,7 +199,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 
     tok = DpsUniGetToken(dword, &lt, &dw_have_bukva_forte, !strict); 
     if (tok) {
-      tlen = lt - tok;
+      tlen = (size_t)(lt - tok);
       if (tlen + 1 > nlen) {
 	nword = (dpsunicode_t*)DpsRealloc(nword, (tlen + 1) * sizeof(dpsunicode_t));
 	nlen = tlen;
@@ -211,7 +211,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 	    tok ; 
 	    tok = DpsUniGetToken(NULL, &lt, &dw_have_bukva_forte, !strict), n++ ) {
 
-	  tlen = lt - tok;
+	  tlen = (size_t)(lt - tok);
 	  if (tlen + 1 > nlen) {
 	    nword = (dpsunicode_t*)DpsRealloc(nword, (tlen + 1) * sizeof(dpsunicode_t));
 	    nlen = tlen;
@@ -227,7 +227,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 	  if(Item->href && crossec){
 	    DPS_CROSSWORD cw;
 	    cw.url = Item->href;
-	    cw.weight = crossec;
+	    cw.weight = (short)crossec;
 	    cw.pos = Doc->CrossWords.wordpos;
 	    cw.uword = nword;
 	    cw.ulen = Word.ulen;
@@ -320,7 +320,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
       size_t	tlen;				/* Word length          */ 
       DPS_WORD Word;
 				
-      tlen=lt-tok;
+      tlen = (size_t)(lt-tok);
 				
       if (tlen <= max_word_len && tlen >= min_word_len && (*indexed_limit == 0 || *indexed_size < *indexed_limit )) {
 
@@ -347,7 +347,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 	if(Item->href && crossec){
 	  DPS_CROSSWORD cw;
 	  cw.url=Item->href;
-	  cw.weight = crossec;
+	  cw.weight = (short)crossec;
 	  cw.pos=Doc->CrossWords.wordpos;
 	  cw.uword = uword;
 	  cw.ulen = tlen;
@@ -582,7 +582,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_HREF	Href;
       DpsHrefInit(&Href);
       Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-      Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
+      Href.hops = 1 + (dps_uint4)DpsVarListFindInt(&Doc->Sections, "Hops", 0);
       Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
       Href.url = Item->str;
       Href.method = DPS_METHOD_GET;
@@ -669,7 +669,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_HREF	Href;
       DpsHrefInit(&Href);
       Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-      Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
+      Href.hops = 1 + (dps_uint4)DpsVarListFindInt(&Doc->Sections, "Hops", 0);
       Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
       Href.url = Item->str;
       Href.method = DPS_METHOD_GET;
@@ -814,15 +814,15 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.file"))) {
 	        char *str, sc[]="url.file\0";
-		size_t len;
-		str = (char*)DpsMalloc((len = dps_strlen(DPS_NULL2EMPTY(dcURL.filename))) + 1);
+		size_t flen;
+		str = (char*)DpsMalloc((flen = dps_strlen(DPS_NULL2EMPTY(dcURL.filename))) + 1);
 		if (str != NULL) {
 		  DpsUnescapeCGIQuery(str, DPS_NULL2EMPTY(dcURL.filename));
 		  Item.str = str;
 		  Item.section = Sec->section;
 		  Item.strict = Sec->strict;
 		  Item.section_name = sc;
-		  Item.len = len;
+		  Item.len = flen;
 		  DpsTextListAdd(&Doc->TextList, &Item);
 		  DpsVarListReplaceStr(&Doc->Sections, "url.file", Item.str);
 		  DPS_FREE(str);
@@ -874,7 +874,7 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 		Item.str = dps_strtok_r(buf_content, "\r\n", &lt, &savec);
 		Item.section_name = BSec->name; /*"body";*/
 		while(Item.str){
-		        Item.len = (lt != NULL) ? (lt - Item.str) : dps_strlen(Item.str);
+		  Item.len = (lt!=NULL) ? (size_t)(lt-Item.str) : dps_strlen(Item.str);
 			DpsTextListAdd(&Doc->TextList, &Item);
 			Item.str = dps_strtok_r(NULL, "\r\n", &lt, &savec);
 		}
@@ -955,7 +955,7 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 				t->toks[nt].val=0;
 				t->toks[nt].vlen=0;
 				t->toks[nt].name = t->b;
-				t->toks[nt].nlen = t->e - t->b;
+				t->toks[nt].nlen = (size_t)(t->e - t->b);
 
 				if (nt == 0) {
 				  if(!strncasecmp(t->b,"script",6)) t->script = 1;
@@ -1023,8 +1023,8 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 					t->b = t->e;
 				}
 				*lt = t->b;
-				t->toks[nt].val=valbeg;
-				t->toks[nt].vlen=valend-valbeg;
+				t->toks[nt].val = valbeg;
+				t->toks[nt].vlen = (size_t)(valend - valbeg);
 			}
 			break;
 
@@ -1173,7 +1173,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	dps_strncpy(name, tag->toks[0].name, (i = dps_min(sizeof(name) - 1, tag->toks[0].nlen)) );
 	name[i]='\0';
 	
-	for(n=name; *n; *n = dps_tolower(*n), n++);
+	for(n=name; *n; *n = (char)dps_tolower((int)*n), n++);
 	
 	if(name[0]=='/'){
 	        char *e;
@@ -1184,7 +1184,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  do {
 		    /* Find previous '.' or beginning */
 		    for(e = tag->trailend; (e > tag->trail) && (e[0] != '.'); e--);
-		    glen = (e[0] == '.') ? (tag->trailend - e - 1) : tag->trailend - e;
+		    glen = (size_t)((e[0] == '.') ? (tag->trailend - e-1) : (tag->trailend - e));
 		    *e = '\0';
 		    tag->trailend = e;
 		    if (tag->level) { tag->level--; tag->section[tag->level] = 0; }
@@ -1587,8 +1587,8 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 
 	  case DPS_HTML_TXT:
 
-	    for( tmpbeg=htok;   tmpbeg<last && strchr(" \r\n\t",tmpbeg[0]) ; tmpbeg++);
-	    for( tmpend=last-1; htok<tmpend && strchr(" \r\n\t",tmpend[0]) ; tmpend--);
+	    for( tmpbeg=htok;   tmpbeg<last && strchr(" \r\n\t", tmpbeg[0]); tmpbeg++);
+	    for( tmpend=last-1; htok<tmpend && strchr(" \r\n\t", tmpend[0]); tmpend--);
 	    if(tmpbeg>=tmpend)break;
 				
 	    tmp = DpsStrndup(tmpbeg,(size_t)(tmpend-tmpbeg+1));

@@ -1259,7 +1259,7 @@ typedef struct {
         int chunks;
         char *Content;
         int finished;
-        int level;
+        size_t  level;
 	size_t	ntoks;
 	struct {
 		const char *name;
