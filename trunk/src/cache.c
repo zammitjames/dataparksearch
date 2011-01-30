@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -483,6 +483,7 @@ int DpsDeleteURLFromCache(DPS_AGENT * Indexer, urlid_t url_id, DPS_DB *db){
 }
 
 int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
+#ifdef HAVE_SQL
 	DPS_LOGD_CMD	cmd;
 	DPS_LOGD_WRD	*wrd;
 	DPS_SQLRES	SQLres;
@@ -653,6 +654,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	}
 	DPS_FREE(wrd); DPS_FREE(lcsword);
 	TRACE_OUT(Indexer);
+#endif
 	return(DPS_OK);
 }
 

@@ -996,6 +996,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
 
 static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
+#ifdef HAVE_SQL
   DPS_MATCH       *Alias;
   DPS_MATCH_PART  Parts[10];
   DPS_SQLRES	SQLres;
@@ -1055,6 +1056,7 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
   DpsSQLFree(&SQLres);
   DPS_FREE(buf);
+#endif
   return DPS_OK;
 }
 

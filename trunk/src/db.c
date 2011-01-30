@@ -135,7 +135,9 @@ void *DpsDBInit(void *vdb){
 void DpsDBFree(void *vdb){
 	DPS_DB	*db=vdb;
 
+#ifdef HAVE_SQL
 	DpsSQLFree(&db->Res);
+#endif
 	
 	DpsURLFree(&db->addrURL);
 	DPS_FREE(db->DBADDR);
