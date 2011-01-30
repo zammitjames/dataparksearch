@@ -1385,16 +1385,20 @@ else
 fi
 
 
+readline=no
 AC_MSG_CHECKING(for readline support)
 AC_ARG_WITH(readline,
 [  --with-readline       enable readline support for SQL monitor],
-[
-  AC_DEFINE(HAVE_READLINE)
-  LIBS="$LIBS -lreadline -ltermcap"
-  AC_MSG_RESULT(yes)
-],
-[AC_MSG_RESULT([no])]
+[readline=$withval],
+[readline=no]
 )
+  if test "$readline" != "no" ; then
+    AC_DEFINE(HAVE_READLINE)
+    LIBS="$LIBS -lreadline -ltermcap"
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+  fi
 
 AC_DIVERT_PUSH(0)
 define(DCHARSETS_AVAILABLE,chinese japanese euc-kr gujarati tscii)
