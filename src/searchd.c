@@ -949,6 +949,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
       
 /*      fprintf(stderr, " -- %d TrackDBAddr:%s  TrackQuery:%d\n", i, DPS_NULL2EMPTY(TrackDBAddr), db->TrackQuery);*/
 
+#ifdef HAVE_SQL
       if(TrackDBAddr || db->TrackQuery) {
 	const char      *qu = (tr_db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	const char      *vardir = (db->vardir != NULL) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
@@ -1030,6 +1031,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 
 
       }
+#endif
     }
 
     if (to_sleep < 3600) {

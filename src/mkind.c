@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -385,6 +385,7 @@ err_IndexLinks:
 
 
 __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
+#ifdef HAVE_SQL
   DPS_UINT8URLIDLIST  L8;
   DPS_UINT4URLIDLIST  L4;
   DPS_VARLIST *v = &Indexer->Conf->Vars;
@@ -516,6 +517,7 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
       DpsLog(Indexer, DPS_LOG_EXTRA, "Done");
     }
   }
+#endif
   return DPS_OK;
 }
 
