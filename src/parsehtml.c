@@ -780,8 +780,8 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
-		DpsVarListReplaceStr(&Doc->Sections, "url.proto", Item.str);
 	}
+	DpsVarListReplaceStr(&Doc->Sections, "url.proto", DPS_NULL2EMPTY(dcURL.schema));
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.host"))) {
 		char sc[] = "url.host\0";
 		Item.str = DPS_NULL2EMPTY(dcURL.hostname);
@@ -790,8 +790,8 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
-		DpsVarListReplaceStr(&Doc->Sections, "url.host", Item.str);
 	}
+	DpsVarListReplaceStr(&Doc->Sections, "url.host", DPS_NULL2EMPTY(dcURL.hostname));
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.path"))) {
 		char sc[] = "url.path\0";
 		Item.str = DPS_NULL2EMPTY(dcURL.path);
@@ -800,8 +800,8 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
-		DpsVarListReplaceStr(&Doc->Sections, "url.path", Item.str);
 	}
+	DpsVarListReplaceStr(&Doc->Sections, "url.path", DPS_NULL2EMPTY(dcURL.path));
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.directory"))) {
 		char sc[]="url.directory\0";
 		Item.str = DPS_NULL2EMPTY(dcURL.directory);
@@ -810,23 +810,26 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.section_name = sc;
 		Item.len = 0;
 		DpsTextListAdd(&Doc->TextList, &Item);
-		DpsVarListReplaceStr(&Doc->Sections, "url.directory", Item.str);
 	}
-	if((Sec=DpsVarListFind(&Doc->Sections,"url.file"))) {
-	        char *str, sc[]="url.file\0";
-		size_t flen;
-		str = (char*)DpsMalloc((flen = dps_strlen(DPS_NULL2EMPTY(dcURL.filename))) + 1);
-		if (str != NULL) {
-		  DpsUnescapeCGIQuery(str, DPS_NULL2EMPTY(dcURL.filename));
-		  Item.str = str;
-		  Item.section = Sec->section;
-		  Item.strict = Sec->strict;
-		  Item.section_name = sc;
-		  Item.len = flen;
-		  DpsTextListAdd(&Doc->TextList, &Item);
-		  DpsVarListReplaceStr(&Doc->Sections, "url.file", Item.str);
-		  DPS_FREE(str);
-		}
+	DpsVarListReplaceStr(&Doc->Sections, "url.directory", DPS_NULL2EMPTY(dcURL.directory));
+	{
+	  char * str;
+	  size_t flen;
+	  str = (char*)DpsMalloc((flen = dps_strlen(DPS_NULL2EMPTY(dcURL.filename))) + 1);
+	  if (str != NULL) {
+	    DpsUnescapeCGIQuery(str, DPS_NULL2EMPTY(dcURL.filename));
+	    if((Sec = DpsVarListFind(&Doc->Sections, "url.file"))) {
+	        char sc[] = "url.file\0";
+		Item.str = str;
+		Item.section = Sec->section;
+		Item.strict = Sec->strict;
+		Item.section_name = sc;
+		Item.len = flen;
+		DpsTextListAdd(&Doc->TextList, &Item);
+	    }
+	    DpsVarListReplaceStr(&Doc->Sections, "url.file", str);
+	    DPS_FREE(str);
+	  }
 	}
 	DpsURLFree(&dcURL);
 	DPS_FREE(dc_url);
