@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -915,7 +915,7 @@ static void * thread_main(void *arg){
 #endif
 	    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 	    Indexer->Flags = Indexer->Conf->Flags;
-	    Indexer->flags &= (~DPS_FLAG_ADD_SERVURL);
+	    Indexer->flags &= ~((dps_uint8)DPS_FLAG_ADD_SERVURL);
 	    Indexer->WordParam = Indexer->Conf->WordParam;
 	    Indexer->Conf->url_number = cfg_url_number;
 	    Indexer->Conf->url_size = max_index_size * 1048576;
