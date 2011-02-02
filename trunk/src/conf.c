@@ -1834,10 +1834,10 @@ static int env_rpl_bool_var(void *Cfg, size_t ac,char **av){
 	else if(!strcasecmp(av[0], "MakeSuffixes")) Conf->Flags.make_suffixes = res;
 	else if(!strcasecmp(av[0], "FillDictionary")) Conf->Flags.fill_dictionary = res;
 	else if(!strcasecmp(av[0], "FastHrefCheck")) { if (res) Conf->flags |= DPS_FLAG_FAST_HREF_CHECK;
-	                                               else Conf->flags &= ~(DPS_FLAG_FAST_HREF_CHECK);
+	                                               else Conf->flags &= ~((dps_uint8)DPS_FLAG_FAST_HREF_CHECK);
 	                                             }
 	else if(!strcasecmp(av[0], "StopWordsLoose")) { if (res) Conf->flags |= DPS_FLAG_STOPWORDS_LOOSE;
-	                                                else Conf->flags &= ~(DPS_FLAG_STOPWORDS_LOOSE);
+	                                                else Conf->flags &= ~((dps_uint8)DPS_FLAG_STOPWORDS_LOOSE);
 						      }
 	else if(!strcasecmp(av[0], "DisableRelNoFollow")) Conf->Flags.rel_nofollow = !res;
 	else if(!strcasecmp(av[0], "ResegmentChinese"))  if (res) { Conf->Flags.Resegment |= DPS_RESEGMENT_CHINESE;

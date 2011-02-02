@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1782,7 +1782,7 @@ int DpsBuild(char *path, int omode) {
 			 * instead of doing chmod's.
 			 */
 			oumask = umask(0);
-			numask = oumask & ~(S_IWUSR | S_IXUSR);
+			numask = oumask & ~((mode_t)(S_IWUSR | S_IXUSR));
 			(void)umask(numask);
 			first = 0;
 		}
