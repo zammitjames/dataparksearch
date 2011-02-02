@@ -15517,34 +15517,51 @@ fi
 	    PATH_DIRS=`echo $PATH | tr : \ `
 	    MY_DIRS="/usr/sbin /usr/local/sbin /usr/local/apache/bin /home/httpd/bin /httpd/bin /usr/bin"
 	    for DIR in $PATH_DIRS $MY_DIRS; do
-        	if test -f $DIR/apxs; then
-            		APXS=$DIR/apxs
+        	if test -f $DIR/apxs2; then
+            		APXS=$DIR/apxs2
+			APACHE_VER=2
 			break;
 		fi
 	    done
-	    for DIR in $PATH_DIRS $MY_DIRS; do
-        	if test -f $DIR/apr-1-config; then
-			APRCONFIG=$DIR/apr-1-config
-			break;
-		fi
-	    done
+	    if test -z "$APXS"; then
+	    	for DIR in $PATH_DIRS $MY_DIRS; do
+        		if test -f $DIR/apxs; then
+            			APXS=$DIR/apxs
+				break;
+			fi
+	    	done
+	    	for DIR in $PATH_DIRS $MY_DIRS; do
+        		if test -f $DIR/apr-1-config; then
+				APRCONFIG=$DIR/apr-1-config
+				break;
+			fi
+	    	done
+	    fi
 	    if test -z "$APXS"; then
 		as_fn_error "apxs not found in $PATH_DIRS $MY_DIRS" "$LINENO" 5
 	    fi
         elif test "$apache" != ""; then
 	    MY_DIRS="$apache/bin $apache/sbin $apache"
 	    for DIR in $MY_DIRS; do
-		if test -f $DIR/apxs; then
-		    APXS=$DIR/apxs
+		if test -f $DIR/apxs2; then
+		    APXS=$DIR/apxs2
 		    break;
 		fi
 	    done
-	    for DIR in $MY_DIRS; do
-		if test -f $DIR/apr-1-config; then
-		    APRCONFIG=$DIR/apr-1-config
-		    break;
-		fi
-	    done
+	    if test -z "$APXS"; then
+	    	for DIR in $MY_DIRS; do
+			if test -f $DIR/apxs; then
+		    		APXS=$DIR/apxs
+		    		break;
+			fi
+	    	done
+	    	for DIR in $MY_DIRS; do
+			if test -f $DIR/apr-1-config; then
+		    		APRCONFIG=$DIR/apr-1-config
+		    		break;
+			fi
+	    	done
+	    fi
 	    if test -z "$APXS"; then
 		as_fn_error "apxs not found in $MY_DIRS" "$LINENO" 5
 	    fi
@@ -15569,6 +15586,7 @@ $as_echo "yes, apxs is $APXS, apr-config is $APRCONFIG, includes at $APACHE_INCD
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Apache version" >&5
 $as_echo_n "checking for Apache version... " >&6; }
+	if test -z "$APACHE_VER"; then
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <httpd.h>
@@ -15594,6 +15612,7 @@ else
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+	fi
 
 	if test "$APACHE_VER" = "1" -a -x "$APRCONFIG"; then
         	CFLAGS="$CFLAGS `$APRCONFIG --includes`"
