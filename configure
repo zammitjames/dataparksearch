@@ -15530,13 +15530,13 @@ fi
 				break;
 			fi
 	    	done
-	    	for DIR in $PATH_DIRS $MY_DIRS; do
-        		if test -f $DIR/apr-1-config; then
-				APRCONFIG=$DIR/apr-1-config
-				break;
-			fi
-	    	done
 	    fi
+	    for DIR in $PATH_DIRS $MY_DIRS; do
+        	if test -f $DIR/apr-1-config; then
+			APRCONFIG=$DIR/apr-1-config
+			break;
+		fi
+	    done
 	    if test -z "$APXS"; then
 		as_fn_error "apxs not found in $PATH_DIRS $MY_DIRS" "$LINENO" 5
 	    fi
@@ -15555,13 +15555,13 @@ fi
 		    		break;
 			fi
 	    	done
-	    	for DIR in $MY_DIRS; do
-			if test -f $DIR/apr-1-config; then
-		    		APRCONFIG=$DIR/apr-1-config
-		    		break;
-			fi
-	    	done
 	    fi
+	    for DIR in $MY_DIRS; do
+		if test -f $DIR/apr-1-config; then
+			APRCONFIG=$DIR/apr-1-config
+			break;
+		fi
+	    done
 	    if test -z "$APXS"; then
 		as_fn_error "apxs not found in $MY_DIRS" "$LINENO" 5
 	    fi
