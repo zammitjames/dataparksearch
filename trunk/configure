@@ -15583,6 +15583,9 @@ $as_echo "yes, apxs is $APXS, apr-config is $APRCONFIG, includes at $APACHE_INCD
 
 	ac_save_cflags="$CFLAGS"
 	CFLAGS="$CFLAGS -I$APACHE_INCDIR"
+	if test "$APACHE_VER" = "2" -a -x "$APRCONFIG"; then
+		APACHE_CFLAGS="$APACHE_CFLAGS `$APRCONFIG --includes`"
+	fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Apache version" >&5
 $as_echo_n "checking for Apache version... " >&6; }
