@@ -798,7 +798,7 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 		Server->Match.pattern	= strdupnull(DpsSQLValue(&SQLRes,i,1));
 		Server->ordre		= DPS_ATOI(DpsSQLValue(&SQLRes, i, 6));
 		Server->command		= *DpsSQLValue(&SQLRes, i, 4);
-		Server->weight		= DPS_ATOF(DpsSQLValue(&SQLRes, i, 5));
+		Server->weight		= (float)DPS_ATOF(DpsSQLValue(&SQLRes, i, 5));
 		
 		if((val=DpsSQLValue(&SQLRes,i,2)) && val[0])
 			DpsVarListReplaceStr(&Server->Vars, "Tag", val);
@@ -818,7 +818,7 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 		}
 
 		Server->Match.match_type	= DpsVarListFindInt(&Server->Vars, "match_type", DPS_MATCH_BEGIN);
-		Server->Match.case_sense	= DpsVarListFindInt(&Server->Vars, "case_sense", 1);
+		Server->Match.case_sense	= (dps_uint2)DpsVarListFindInt(&Server->Vars, "case_sense", 1);
 		Server->Match.nomatch	= DpsVarListFindInt(&Server->Vars, "nomatch", 0);
 		Server->MaxHops = DpsVarListFindInt(&Server->Vars, "MaxHops", DPS_DEFAULT_MAX_HOPS);
 		Server->MaxDepth = DpsVarListFindInt(&Server->Vars, "MaxDepth", DPS_DEFAULT_MAX_DEPTH);
@@ -1054,7 +1054,7 @@ static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	size_t		i, r, len;
 	char		*buf, *arg, *arg_insert;
-	dpshash32_t     rec_id = DpsStrHash32(Server->Match.pattern);
+	dpshash32_t     rec_id = DpsStrHash32(DPS_NULL2EMPTY(Server->Match.pattern));
 	DPS_CHARSET     *doccs = DpsGetCharSet(DpsVarListFindStr(&Server->Vars, "RemoteCharset", 
 								 DpsVarListFindStr(&Server->Vars, "URLCharset", "iso-8859-1")));
 	DPS_CHARSET	*loccs = A->Conf->lcs;
@@ -1253,7 +1253,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 
 	for (i = 0; i < DPS_SERVERID_CACHE_SIZE; i++) {
 	  if (Indexer->ServerIdCache[i].Command == Server->command)
-	    if (!strcmp(DPS_NULL2EMPTY(Indexer->ServerIdCache[i].Match_Pattern), Server->Match.pattern)) {
+	    if (!strcmp(DPS_NULL2EMPTY(Indexer->ServerIdCache[i].Match_Pattern), DPS_NULL2EMPTY(Server->Match.pattern))) {
 	      DPS_SERVERCACHE tp = Indexer->ServerIdCache[i];
 	      Server->site_id = id = Indexer->ServerIdCache[i].Id;
 	      Server->weight = Indexer->ServerIdCache[i].Weight;
@@ -1277,9 +1277,9 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	  res = DpsSQLQuery(db, &SQLRes, buf);
 	  if ((res == DPS_OK) && DpsSQLNumRows(&SQLRes)) {
 	    id = Server->site_id = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
-	    Server->weight = DPS_ATOF(DpsSQLValue(&SQLRes, 0, 1));
+	    Server->weight = (float)DPS_ATOF(DpsSQLValue(&SQLRes, 0, 1));
 	    DPS_FREE(Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern);
-	    Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(Server->Match.pattern);
+	    Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(Server->Match.pattern));
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].Command = Server->command;
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].Id = id;
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].Weight = Server->weight;
@@ -1290,13 +1290,13 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	    return DPS_OK;
 	  }
 	  DpsSQLFree(&SQLRes);
-	  rec_id = DpsStrHash32(Server->Match.pattern);
+	  rec_id = DpsStrHash32(DPS_NULL2EMPTY(Server->Match.pattern));
 	  while(done) {
 	    dps_snprintf(buf, len, "SELECT rec_id, url FROM server WHERE rec_id=%s%i%s", qu, rec_id, qu);
 	    if (DPS_OK != (res = DpsSQLQuery(db, &SQLRes, buf)))
 	      return res;
 	    
-	    if (DpsSQLNumRows(&SQLRes) && (strcmp(Server->Match.pattern,DpsSQLValue(&SQLRes, 0, 1)) != 0)) {
+	    if (DpsSQLNumRows(&SQLRes) && (strcmp(DPS_NULL2EMPTY(Server->Match.pattern),DpsSQLValue(&SQLRes, 0, 1)) != 0)) {
 	      rec_id++;
 	    } else done = 0;
 	    DpsSQLFree(&SQLRes);
@@ -1329,7 +1329,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 
 	  Server->site_id = id = rec_id;
 	  DPS_FREE(Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern);
-	  Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(Server->Match.pattern);
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(Server->Match.pattern));
 	  Indexer->ServerIdCache[Indexer->pServerIdCache].Command = Server->command;
 	  Indexer->ServerIdCache[Indexer->pServerIdCache].Id = id;
 	  Indexer->ServerIdCache[Indexer->pServerIdCache].Weight = weight;
@@ -2217,9 +2217,6 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	int		rc = DPS_OK;
 	size_t          len;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
-	DPS_CHARSET	*doccs;
-	DPS_CHARSET	*loccs;
-	DPS_CONV        dc_lc;
 
 	DpsSQLResInit(&SQLRes);
 	url = DpsVarListFindStr(&Doc->Sections,"URL","");
@@ -2980,7 +2977,7 @@ static int  DpsUpdateClone(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		}
 		len = dps_strlen(var->val);
 		for(i = 0; i < len; i++) {
-			var->val[i] = dps_tolower(var->val[i]);
+		  var->val[i] = (char)dps_tolower((int)var->val[i]);
 		}
 	}
 	
@@ -3340,14 +3337,14 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	  if (Indexer->flags & DPS_FLAG_SORT_SEED) {
 	    int dir = rand()%2;
 	    if(db->DBSQL_LIMIT){
-	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%u %s %s %s LIMIT 10", db->from, 
+	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s %s LIMIT 10", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
-		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
+			   (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
 		       where[0] ? "AND" : "", where, sortstr);
 	    } else {
-	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%u %s %s %s", db->from, 
+	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s %s", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
-		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
+			   (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
 		       where[0] ? "AND" : "", where, sortstr);
 	    }
 
@@ -3371,18 +3368,18 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		
 			
 	if(db->DBSQL_LIMIT){
-	  dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%u %s %s %s %s LIMIT %d%s",
+	  dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%lu %s %s %s %s LIMIT %d%s",
 		       select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
-		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
+		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
 		       where[0] ? "AND" : "", where, smallbuf, sortstr, url_num, updstr);
 	}else{
 	  db->res_limit=url_num;
 	  if(!qbuf[0])
-	    dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%u %s %s %s %s %s %s",
+	    dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%lu %s %s %s %s %s %s",
 			 select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from, 
 			 (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
-			 (Indexer->Flags.cmd == DPS_IND_POPRANK) ? nit : Indexer->now, 
+			 (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
 			 where[0] ? "AND" : "", where, smallbuf, lmtstr, sortstr, updstr);
 	}
 	if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
@@ -4215,7 +4212,7 @@ int DpsURLDataPreloadSQL(DPS_AGENT *Agent, DPS_DB *db) {
   DPS_URLDATA *D;
   DPS_SQLRES	SQLres;
   size_t url_num = (size_t)DpsVarListFindUnsigned(&Agent->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
-  int NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&Agent->Conf->Vars, "URLDataFiles", 0x300);
+  size_t NFiles = (db->URLDataFiles) ? db->URLDataFiles : (size_t)DpsVarListFindUnsigned(&Agent->Conf->Vars, "URLDataFiles", 0x300);
   int filenum;
   size_t i, nrec = 0, mem_used = 0;
   unsigned long offset;
@@ -6010,7 +6007,9 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 
 int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int type, DPS_DB *db) {
 	char		*qbuf;
+#if 0
 	char            *var_dir = (db->vardir) ? db->vardir : DpsVarListFindStr(&A->Vars, "VarDir", DPS_VAR_DIR);
+#endif
 	size_t		i, nrows, qbuflen, ncats;
 	DPS_SQLRES	SQLres;
 	int		rc = DPS_OK, fd;
