@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -241,8 +241,9 @@ static void DpsCAS_lock(DPS_AGENT *A, dps_mutex_t *mut) {
   while(!CAS(mut, A, NULL)) {
 #if defined(HAVE_PTHREAD) && defined(HAVE_PTHREAD_YIELD_PROTO)
     pthread_yield();
+#else
+    DPS_MSLEEP(0);
 #endif
-    DPS_MSLEEP(20);
   }
 }
 
