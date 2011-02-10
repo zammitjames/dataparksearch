@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -67,6 +67,13 @@ int dps_mb_wc_utf8 (DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const un
 	}
       }
     }
+    if ( *s == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
+      n = DpsJSONToUni(s + 1, pwc, &conv->icodes);
+      if (n) {
+	conv->ocodes = n;
+	return ++conv->icodes;
+      }
+    }
     *pwc = c;
     return 1;
   } else if (c < 0xc2) {
@@ -125,7 +132,10 @@ int dps_wc_mb_utf8(DPS_CONV *conv, DPS_CHARSET *cs, const dpsunicode_t *pwc, uns
   conv->icodes = conv->ocodes = 1;
 
   if (wc < 0x80) {
-    r[0] = wc;
+    if ((conv->flags & DPS_RECODE_JSON_TO) && ( (wc > 0 && wc < 0x20) || wc == 0x22 || wc == 0x5C )) {
+      return DPS_CHARSET_ILUNI;
+    }
+    r[0] = (unsigned char)wc;
     if ((conv->flags & DPS_RECODE_HTML_TO) && (strchr(DPS_NULL2EMPTY(conv->CharsToEscape), (int)r[0]) != NULL))
       return DPS_CHARSET_ILUNI;
     if ((conv->flags & DPS_RECODE_URL_TO) && (r[0] == '!')) 
@@ -149,15 +159,16 @@ int dps_wc_mb_utf8(DPS_CONV *conv, DPS_CHARSET *cs, const dpsunicode_t *pwc, uns
     return DPS_CHARSET_TOOSMALL;
   
   switch (count) { /* Fall through all cases. */
-    case 6: r[5] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x4000000;
-    case 5: r[4] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x200000;
-    case 4: r[3] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x10000;
-    case 3: r[2] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x800;
-    case 2: r[1] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0xC0;
-    case 1: r[0] = wc;
+  case 6: r[5] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x4000000;
+  case 5: r[4] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x200000;
+  case 4: r[3] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x10000;
+  case 3: r[2] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0x800;
+  case 2: r[1] = 0x80 | (wc & 0x3f); wc = wc >> 6; wc |= 0xC0;
+  case 1: r[0] = (unsigned char)wc;
   }
   return conv->ocodes = count;
 }
+
 
 /* UTF-16LE RFC2781 */
 

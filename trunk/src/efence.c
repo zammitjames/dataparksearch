@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Based on Electric Fence 2.2 by Bruce Perens
 
    This program is free software; you can redistribute it and/or modify
@@ -504,7 +504,7 @@ allocateMoreSlots(void)
  * so that it won't waste even more. It's slow, but thrashing because your
  * working set is too big for a system's RAM is even slower. 
  */
-static void * _DpsMemalign(size_t alignment, size_t userSize, char *filename, size_t fileline) {
+static void * _DpsMemalign(size_t alignment, size_t userSize, const char *filename, size_t fileline) {
         register Slot   *slot, *slot2;
 	register size_t	count;
 	Slot *		fullSlot = 0;
@@ -866,7 +866,7 @@ slotForInternalAddressPreviousTo(void * address) {
 	return 0;
 }
 
-extern C_LINKAGE void _DpsFree(void * address, char *filename, size_t fileline) {
+extern C_LINKAGE void _DpsFree(void * address, const char *filename, size_t fileline) {
 	Slot *	slot;
 	Slot *	previousSlot = 0;
 	Slot *	nextSlot = 0;
@@ -957,7 +957,7 @@ extern C_LINKAGE void _DpsFree(void * address, char *filename, size_t fileline) 
 /*	fprintf(stderr, "DpsFree Done\n");*/
 }
 
-extern C_LINKAGE void * _DpsRealloc(void * oldBuffer, size_t newSize, char *filename, size_t fileline) {
+extern C_LINKAGE void * _DpsRealloc(void * oldBuffer, size_t newSize, const char *filename, size_t fileline) {
 	void *	newBuffer = 0;
 
 	if ( allocationList == 0 )
@@ -1003,14 +1003,14 @@ extern C_LINKAGE void * _DpsRealloc(void * oldBuffer, size_t newSize, char *file
 	return newBuffer;
 }
 
-extern C_LINKAGE void *_DpsMalloc(size_t size, char *filename, size_t fileline) {
+extern C_LINKAGE void *_DpsMalloc(size_t size, const char *filename, size_t fileline) {
 	if ( allocationList == 0 )
 		initialize();	/* This sets EF_ALIGNMENT */
 
 	return _DpsMemalign(EF_ALIGNMENT, size, filename, fileline);
 }
 
-extern C_LINKAGE void *_DpsCalloc(size_t nelem, size_t elsize, char *filename, size_t fileline) {
+extern C_LINKAGE void *_DpsCalloc(size_t nelem, size_t elsize, const char *filename, size_t fileline) {
 	size_t	size = nelem * elsize;
 	void *	allocation = _DpsMalloc(size, filename, fileline);
 
@@ -1022,13 +1022,13 @@ extern C_LINKAGE void *_DpsCalloc(size_t nelem, size_t elsize, char *filename, s
  * This will catch more bugs if you remove the page alignment, but it
  * will break some software.
  */
-extern C_LINKAGE void *_DpsValloc (size_t size, char *filename, size_t fileline) {
+extern C_LINKAGE void *_DpsValloc (size_t size, const char *filename, size_t fileline) {
 	return _DpsMemalign(bytesPerPage, size, filename, fileline);
 }
 
 /*
 */
-extern C_LINKAGE char * _DpsStrdup(const char *str, char *filename, size_t fileline) {
+extern C_LINKAGE char * _DpsStrdup(const char *str, const char *filename, size_t fileline) {
         size_t len;
         char *copy;
 

@@ -32,19 +32,20 @@
 #define DPS_PNTYPE unsigned long long
 #endif
 
-double ticks;
-inline double getTime(void);
-inline double getTime() {
+static double ticks;
+static double getTime(void);
+
+static double getTime(void) {
   struct timeval tv; 
   gettimeofday(&tv, 0); 
   return tv.tv_sec + tv.tv_usec * 1e-6;
 }
-void TimerStart(void);
-void TimerStart() {
+static void TimerStart(void);
+static void TimerStart(void) {
   ticks = getTime();
 }
-double TimerEnd(void);
-double TimerEnd() {
+static double TimerEnd(void);
+static double TimerEnd(void) {
   return getTime() - ticks;
 }
 char* copyarr(char*, int);
@@ -183,7 +184,7 @@ char * dps_strncpy(char *dst0, const char *src0, size_t length) {
     }
 dps_strncpy_second_pas:
     if (dst < dst0 + length) {
-      size_t t, restlen = length - (dst - dst0);
+      size_t t, restlen = length - (size_t)(dst - dst0);
       t = (unsigned int)dst & strncpy_wmask;
       if (t) {
     	if (restlen < strncpy_wsize) {

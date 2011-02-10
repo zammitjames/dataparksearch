@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,9 @@
 #define DPS_RECODE_URL_FROM             16
 #define DPS_RECODE_URL_TO               32
 #define DPS_RECODE_URL                  48 /* DPS_RECODE_URL_FROM | DPS_RECODE_URL_TO */
+#define DPS_RECODE_JSON_FROM            64
+#define DPS_RECODE_JSON_TO              128
+#define DPS_RECODE_JSON                 192 /* DPS_RECODE_JSON_FROM | DPS_RECODE_JSON_TO */
 
 
 #define DPS_CHARSET_UNKNOWN             0

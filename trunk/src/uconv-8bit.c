@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -41,8 +41,8 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
     /*if (p != NULL)*/ {
       if (str[1] == '#') {
 	p = str + 2;
-	if (str[2] == 'x' || str[2] == 'X') sscanf(str + 3, "%x", &sw);
-	else sscanf(str + 2, "%d", &sw);
+	if (str[2] == 'x' || str[2] == 'X') sscanf((const char*)(str + 3), "%x", &sw);
+	else sscanf((const char*)(str + 2), "%d", &sw);
 	*wc = (dpsunicode_t)sw;
 	if (sw < 256 && sw > 0x20 && DpsUniCType(*wc) >= DPS_UNI_OTHER_C) { // try to resolve bogus ENTITY escaping
 	  dpsunicode_t sv = cs->tab_to_uni[sw];
@@ -57,7 +57,7 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
 	    *e = '\0';
 	    n = DpsSgmlToUni(str + 1, wc);
 	    if (n == 0) *wc = 0;
-	    else conv->ocodes = n;
+	    else conv->ocodes = (size_t)n;
 	    *e = z;
 	  } else *wc = 0;
 	} else *wc = 0;
@@ -65,8 +65,15 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
       if (*wc) {
 	for (; isalpha(*p) || isdigit(*p); p++);
 	if (*p == ';') p++;
-	return conv->icodes = (p - str /*+ 1*/);
+	return conv->icodes = (size_t)(p - str /*+ 1*/);
       }
+    }
+  }
+  if ( *str == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
+    n = DpsJSONToUni(str + 1, wc, &conv->icodes);
+    if (n) {
+      conv->ocodes = n;
+      return ++conv->icodes;
     }
   }
 
@@ -75,20 +82,26 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
   return (!wc[0] && str[0]) ? DPS_CHARSET_ILSEQ : 1;
 }
 
+
 __C_LINK int __DPSCALL dps_wc_mb_8bit(DPS_CONV *conv, DPS_CHARSET *cs, const dpsunicode_t *wc, unsigned char *s, unsigned char *e) {
      DPS_UNI_IDX *idx;
      
-  conv->icodes = conv->ocodes = 1;
+     conv->icodes = conv->ocodes = 1;
+     if ((conv->flags & DPS_RECODE_JSON_TO) && ((*wc > 0 && *wc < 0x20) || *wc == 0x22 || *wc == 0x5C)) {
+       return DPS_CHARSET_ILUNI;
+     }
 
      for(idx=cs->tab_from_uni; idx->tab ; idx++){
-          if(idx->from <= *wc && idx->to >= *wc){
-               s[0]=idx->tab[*wc - idx->from];
-               if ((conv->flags & DPS_RECODE_HTML_TO) && (strchr(DPS_NULL2EMPTY(conv->CharsToEscape), (int)s[0]) != NULL))
-                 return DPS_CHARSET_ILUNI;
-               if ((conv->flags & DPS_RECODE_URL_TO) && (s[0] == '!')) 
-                 return DPS_CHARSET_ILUNI;
-               return (!s[0] && *wc) ? DPS_CHARSET_ILUNI : 1;
-          }
+       if(idx->from <= *wc && idx->to >= *wc){
+	 s[0]=idx->tab[*wc - idx->from];
+	 if ((conv->flags & DPS_RECODE_HTML_TO) && (strchr(DPS_NULL2EMPTY(conv->CharsToEscape), (int)s[0]) != NULL))
+	   return DPS_CHARSET_ILUNI;
+	 if ((conv->flags & DPS_RECODE_URL_TO) && (s[0] == '!')) 
+	   return DPS_CHARSET_ILUNI;
+	 if ((conv->flags & DPS_RECODE_JSON_TO) && (s[0] == '\\')) 
+	   return DPS_CHARSET_ILUNI;
+	 return (!s[0] && *wc) ? DPS_CHARSET_ILUNI : 1;
+       }
      }
      return DPS_CHARSET_ILUNI;
 }

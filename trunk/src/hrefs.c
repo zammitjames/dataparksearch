@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -73,7 +73,7 @@ __C_LINK int __DPSCALL DpsHrefListAdd(DPS_AGENT *A, DPS_HREFLIST * HrefList,DPS_
 	if ((s = strstr(ehref, "://")) != NULL) {
 	  if ((e = strchr(s + 3, '/')) != NULL) {
 	    if ((ss = strchr(s + 3, '@')) == NULL) ss = s + 3;
-	    for(;ss < e; ss++) if (*ss >= 'A' && *ss <= 'Z') *ss = dps_tolower(*ss);
+	    for(;ss < e; ss++) if (*ss >= 'A' && *ss <= 'Z') *ss = (char)dps_tolower((int)*ss);
 	  }
 	}
 

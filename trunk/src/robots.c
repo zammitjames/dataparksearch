@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -160,7 +160,7 @@ static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int
 #endif
 
 	if (cmd == DPS_METHOD_CRAWLDELAY) {
-	  robot->crawl_delay = 1000 * DPS_ATOF(path);
+	  robot->crawl_delay = (size_t)(1000 * DPS_ATOF(path));
 	} 
 	{
 
@@ -489,7 +489,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      now = time(NULL);
 	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 	      diff = (size_t) (now - *(Server->last_crawled));
-	      while (1000 * diff < Server->crawl_delay) {
+	      while ((time_t)(1000 * diff) < Server->crawl_delay) {
 		to_sleep = Server->crawl_delay - diff * 1000;
 		if ( (to_sleep > Indexer->Flags.MaxCrawlDelay * 1000) || (Indexer->action == DPS_TERMINATED) ) {
 		  time_t		next_index_time;
@@ -531,7 +531,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 
 	      now = time(NULL);
 	      diff = (size_t) (now - *(robot->last_crawled));
-	      while (1000 * diff < robot->crawl_delay) {
+	      while ((time_t)(1000 * diff) < robot->crawl_delay) {
 		to_sleep = robot->crawl_delay - 1000 * diff;
 		if ( (to_sleep > Indexer->Flags.MaxCrawlDelay * 1000) || (Indexer->action == DPS_TERMINATED) ) {
 		  time_t		next_index_time;
@@ -643,7 +643,7 @@ void DpsRobotClean(DPS_AGENT *A) {
 
 static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
   XML_PARSER_DATA *D = parser->user_data;
-  DPS_AGENT *Indexer = D->Indexer;
+  /*  DPS_AGENT *Indexer = D->Indexer;*/
   DPS_DOCUMENT *Doc = D->Doc;
   char *value = DpsStrndup(s, len);
 
@@ -679,7 +679,7 @@ static int DpsSitemapEndElement(DPS_XML_PARSER *parser, const char *name, size_t
     if (Href.url) {
       Href.method = DPS_METHOD_GET;
       Href.checked = 0;
-      Href.weight = DPS_ATOF(DpsVarListFindStr(&Doc->Sections, "Pop_Rank", "0.5"));
+      Href.weight = (float)DPS_ATOF(DpsVarListFindStr(&Doc->Sections, "Pop_Rank", "0.5"));
       DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
       if(Indexer->Hrefs.nhrefs > 1024) DpsStoreHrefs(Indexer);
     }
@@ -758,7 +758,7 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 /*
 	fprintf(stderr, "ROBOTS CONTENT: %s\n", content);
 */
-	s = content;
+	s = (char*)content;
 	while (*s && (*s == NL_CHAR || *s == CR_CHAR)) s++;
 	lt = s;
 	while(*lt && (*lt != NL_CHAR) && (*lt != CR_CHAR)) lt++;

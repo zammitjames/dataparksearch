@@ -163,7 +163,7 @@ dps_uint4 DpsHrefFrom(const char *str) {
   char	*tok;
   dps_uint4 result = 0;
 
-  tok = DpsGetStrToken(str, &lt);
+  tok = DpsGetStrToken((char*)str, &lt);
 	
   while (tok) {
     if (!strncasecmp(tok, "area", 4)) result |= DPS_HREF_FROM_AREA;
@@ -183,7 +183,7 @@ dps_uint4 DpsHrefFrom(const char *str) {
 
 int DpsWeightFactorsInit(const char *wf, int *res){
 	size_t len;
-	int flag = 0, last;
+	int flag = 0;
 	
 	len = dps_strlen(wf);
 
@@ -702,7 +702,7 @@ static int add_section(void *Cfg, size_t ac,char **av){
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	DPS_VAR S;
 	DPS_MATCH M;
-	int shift = 0;
+	size_t shift = 0;
 
 	bzero((void*)&S, sizeof(S));
 	S.name = av[1];
@@ -1916,7 +1916,7 @@ static int env_rpl_named_var_lcs(void *Cfg, size_t ac, char **av) {
 static int srv_rpl_num_var(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	int	res = DPS_ATOI(av[1]);
-	float   val = DPS_ATOF(av[1]);
+	float   val = (float)DPS_ATOF(av[1]);
 	DpsVarListReplaceInt(&C->Srv->Vars,av[0],res);
 	if (strcasecmp(av[0], "MaxHops") == 0) C->Srv->MaxHops = (dps_uint4) res;
 	else if (strcasecmp(av[0], "MaxDocsPerServer") == 0) C->Srv->MaxDocsPerServer = (dps_uint4) res;

@@ -300,7 +300,7 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	  DpsRTrim(url->hostname, ".");
 	  url->domain_level = 1;
 	  for (s = url->hostname; *s; s++) {
-	    *s = dps_tolower(*s);
+	    *s = (char)dps_tolower((int)*s);
 	    if (*s == '.') url->domain_level++;
 	    if (strchr(",'\";", (int)*s)) {
 #ifdef WITH_PARANOIA
@@ -313,9 +313,9 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	if (url->hostinfo != NULL) {
 	  DpsRTrim(url->hostinfo, ".");
 	  s = strchr(url->hostinfo, '@');
-	  for (s = (s == NULL) ? url->hostinfo : s + 1; *s; s++) *s = dps_tolower(*s);
+	  for (s = (s == NULL) ? url->hostinfo : s + 1; *s; s++) *s = (char)dps_tolower((int)*s);
 	}
-	if (url->schema != NULL) for (s = url->schema; *s; s++) *s = dps_tolower(*s);
+	if (url->schema != NULL) for (s = url->schema; *s; s++) *s = (char)dps_tolower((int)*s);
 
 /*	fprintf(stderr, "url: .path: %s port:%d\n", url->path, url->port);*/
 

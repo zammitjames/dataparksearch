@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -74,13 +74,13 @@ static int dps_wc_mb_jisx0201(DPS_CHARSET *cs, const dpsunicode_t wc, unsigned c
 
   if (wc <= 0x7D)
   {
-    *s = wc;
+    *s = (unsigned char)wc;
     return (wc == 0x5C) ? DPS_CHARSET_ILUNI : 1;
   }
   
   if (wc >= 0xFF61 && wc <= 0xFF9F)
   {
-    *s = (wc - 0xFEC0);
+    *s = (unsigned char)(wc - 0xFEC0);
     return 1;
   }
   
@@ -8118,6 +8118,13 @@ dps_mb_wc_euc_jp(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsig
 	    }
 	  }
 	}
+    if ( *s == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
+      n = DpsJSONToUni(s + 1, pwc, &conv->icodes);
+      if (n) {
+	conv->ocodes = n;
+	return ++conv->icodes;
+      }
+    }
     *pwc=c1;
     return 1;
   }
@@ -8204,10 +8211,12 @@ dps_wc_mb_euc_jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, unsigne
     if (s>e)
       return DPS_CHARSET_TOOSMALL;
       
-    *s = *wc;
+    *s = (unsigned char)*wc;
     if ((conv->flags & DPS_RECODE_HTML_TO) && (strchr(DPS_NULL2EMPTY(conv->CharsToEscape), (int)s[0]) != NULL))
       return DPS_CHARSET_ILUNI;
     if ((conv->flags & DPS_RECODE_URL_TO) && (s[0] == '!')) 
+      return DPS_CHARSET_ILUNI;
+    if ((conv->flags & DPS_RECODE_JSON_TO) && (s[0] == '\\')) 
       return DPS_CHARSET_ILUNI;
     return conv->ocodes = 1;
   }
@@ -8218,8 +8227,8 @@ dps_wc_mb_euc_jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, unsigne
       return DPS_CHARSET_TOOSMALL;
       
     jp+=0x8080;
-    s[0]=jp>>8;
-    s[1]=jp&0xFF;
+    s[0] = (unsigned char)(jp >> 8);
+    s[1] = (unsigned char)(jp & 0xFF);
     return conv->ocodes = 2;
   }
 
@@ -8248,8 +8257,8 @@ dps_wc_mb_euc_jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, unsigne
       
     jp+=0x8080;
     s[0]=0x8F;
-    s[1]=jp>>8;
-    s[2]=jp&0xFF;
+    s[1] = (unsigned char)(jp >> 8);
+    s[2] = (unsigned char)(jp & 0xFF);
     return conv->ocodes = 3;
   }
   
@@ -8260,9 +8269,9 @@ dps_wc_mb_euc_jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, unsigne
     if (s+2>e)
       return DPS_CHARSET_TOOSMALL;
       
-    c1 = ((unsigned)(*wc - 0xE000) / 94) + 0xF5;
+    c1 = (unsigned char)((unsigned)(*wc - 0xE000) / 94) + 0xF5;
     s[0]=c1;
-    c1 = ((unsigned)(*wc  -0xE000) % 94) + 0xa1;
+    c1 = (unsigned char)((unsigned)(*wc  -0xE000) % 94) + 0xa1;
     s[1]=c1;
     return conv->ocodes = 2;
   }
@@ -8275,9 +8284,9 @@ dps_wc_mb_euc_jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, unsigne
       return DPS_CHARSET_TOOSMALL;
       
     s[0]=0x8F;
-    c1 = ((unsigned)(*wc - 0xE3AC) / 94) + 0xF5;
+    c1 = (unsigned char)((unsigned)(*wc - 0xE3AC) / 94) + 0xF5;
     s[1]=c1;
-    c1 = ((unsigned)(*wc - 0xE3AC) % 94) + 0xa1;
+    c1 = (unsigned char)((unsigned)(*wc - 0xE3AC) % 94) + 0xa1;
     s[2]=c1;
     return conv->ocodes = 3;
   }
@@ -8361,6 +8370,13 @@ int dps_mb_wc_iso2022jp(DPS_CONV *conv, DPS_CHARSET *c, dpsunicode_t *pwc, const
 	    }
 	  }
 	}
+    if ( *p == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
+      n = DpsJSONToUni(p + 1, pwc, &conv->icodes);
+      if (n) {
+	conv->ocodes = n;
+	return ++conv->icodes;
+      }
+    }
 
     *pwc = *p;
     return conv->icodes = (p - s) + 1;
@@ -8393,10 +8409,12 @@ int dps_wc_mb_iso2022jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, 
       conv->ocodes += 3;
       conv->ostate = DPS_STATE_ASCII;
     }
-    s[conv->ocodes - 1] = *wc;
+    s[conv->ocodes - 1] = (unsigned char)*wc;
     if ((conv->flags & DPS_RECODE_HTML_TO) && (strchr(DPS_NULL2EMPTY(conv->CharsToEscape), (int)*wc) != NULL))
       return DPS_CHARSET_ILUNI;
     if ((conv->flags & DPS_RECODE_URL_TO) && (s[0] == '!')) 
+      return DPS_CHARSET_ILUNI;
+    if ((conv->flags & DPS_RECODE_JSON_TO) && (s[0] == '\\')) 
       return DPS_CHARSET_ILUNI;
     return conv->ocodes;
   }
@@ -8413,8 +8431,8 @@ int dps_wc_mb_iso2022jp(DPS_CONV *conv, DPS_CHARSET *c, const dpsunicode_t *wc, 
     if (s+2>e)
       return DPS_CHARSET_TOOSMALL;
       
-    s[conv->ocodes - 1] = jp >> 8;
-    s[conv->ocodes] = jp & 0xFF;
+    s[conv->ocodes - 1] = (unsigned char)(jp >> 8);
+    s[conv->ocodes] = (unsigned char)(jp & 0xFF);
     conv->ocodes++;
     return conv->ocodes;
   }

@@ -37,7 +37,7 @@ void __DPSCALL DpsConvInit(DPS_CONV *cnv, DPS_CHARSET *from, DPS_CHARSET *to, ch
 
 static int dps_ENTITYprint(char *dest, char sym, dpsunicode_t n) {
   dpsunicode_t mask = 10000000;
-  register dpsunicode_t num = n, dig;
+  register dpsunicode_t dig;
   int was_lead = 0;
   char *d = dest;
   *d = sym; d++;
@@ -52,6 +52,32 @@ static int dps_ENTITYprint(char *dest, char sym, dpsunicode_t n) {
     mask /= 10;
   }
   *d = ';'; d++;
+  return (int)(d - dest);
+}
+
+static int dps_JSONprint(char *dest, dpsunicode_t n) {
+  dpsunicode_t mask = 0x1000;
+  register dpsunicode_t dig;
+  char *d = dest;
+  *d = '\\'; d++;
+  switch(n) {
+  case 0x08: *d++ = 'b'; break;
+  case 0x09: *d++ = 't'; break;
+  case 0x0A: *d++ = 'n'; break;
+  case 0x0C: *d++ = 'f'; break;
+  case 0x0D: *d++ = 'r'; break;
+  case 0x22: *d++ = '"'; break;
+  case 0x2F: *d++ = '/'; break;
+  case 0x5C: *d++ = '\\'; break;
+  default:
+    *d++ = 'u';
+    while(mask > 0) {
+      dig = n / mask;
+      *d = (char)(dig + ((dig < 10) ? 0x30 : 0x36)); d++;
+      n -= dig * mask;
+      mask /= 16;
+    }
+  }
   return (int)(d - dest);
 }
 
@@ -117,6 +143,13 @@ outp:
 	  if (d_e-d > 11) {
 /*	    res = sprintf(d, "!#%d;", (wc[i] & 0xFFFFFF));*/
 	    res = dps_ENTITYprint(d, '!', (wc[i] & 0xFFFFFF));
+	    d += res;
+	  }
+	  else
+	    break;
+	} else if (c->flags & DPS_RECODE_JSON_TO) {
+	  if (d_e-d > 6) {
+	    res = dps_JSONprint(d, (wc[i] & 0xFFFF));
 	    d += res;
 	  }
 	  else
@@ -195,6 +228,13 @@ outp:
 	} else if (c->flags & DPS_RECODE_URL_TO) {
 	  if (d_e-d > 11) {
 	    res = dps_ENTITYprint(d, '!', (wc[i] & 0xFFFFFF));
+	    d += res;
+	  }
+	  else
+	    break;
+	} else if (c->flags & DPS_RECODE_JSON_TO) {
+	  if (d_e-d > 6) {
+	    res = dps_JSONprint(d, (wc[i] & 0xFFFF));
 	    d += res;
 	  }
 	  else
