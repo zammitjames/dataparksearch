@@ -597,17 +597,17 @@ dist-hook:
 	cp -rf $(srcdir)/samples $(distdir)
 
 install-data-local: $(PDF_FILES) $(HTML_FILES)
-	$(mkinstalldirs) $(DESTDIR)$(datadir)/doc/dataparksearch
-	echo ${INSTALL_DATA} docs $(DESTDIR)$(datadir)/doc/dataparksearch/
+	$(mkinstalldirs) $(DESTDIR)$(docdir)
+	echo ${INSTALL_DATA} docs $(DESTDIR)$(docdir)
 	list='${HTML_FILES} ${PDF_FILES}'; \
 	for p in $$list; do \
-		${INSTALL_DATA} $(srcdir)/$$p $(DESTDIR)$(datadir)/doc/dataparksearch/ ; \
+		${INSTALL_DATA} $(srcdir)/$$p $(DESTDIR)$(docdir)/ ; \
 	done
 
 uninstall-local:
 	list='${PDF_FILES} ${HTML_FILES}'; \
 	for p in $$list; do \
-		rm -f $(DESTDIR)$(datadir)/doc/dataparksearch/$$p ; \
+		rm -f $(DESTDIR)$(docdir)/$$p ; \
 	done
 
 index.en.html: $(@doc_FILES_EN@) $(PDF_FILES)

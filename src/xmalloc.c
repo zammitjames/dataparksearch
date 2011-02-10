@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@
 
 #ifdef EFENCE
 
-void *_DpsXmalloc(size_t size, char *filename, size_t fileline) {
+void *_DpsXmalloc(size_t size, const char *filename, size_t fileline) {
 	void *value;
 
 	value = _DpsMalloc (size, filename, fileline);
@@ -38,7 +38,7 @@ void *_DpsXmalloc(size_t size, char *filename, size_t fileline) {
 	return value;
 }
 
-void *_DpsXrealloc(void *ptr, size_t newsize, char *filename, size_t fileline) {
+void *_DpsXrealloc(void *ptr, size_t newsize, const char *filename, size_t fileline) {
 	void *value;
 	
 	if(!ptr)

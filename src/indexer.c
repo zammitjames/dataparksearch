@@ -244,7 +244,6 @@ static int DpsSubSectionMatchFind(DPS_AGENT *Indexer, int log_level, DPS_MATCHLI
 int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	char		reason[PATH_MAX+1]="";
 	DPS_URL		*newURL;
-	DPS_ROBOT_RULE	*rule;
 	DPS_SERVER	*Srv;
 	size_t          depth;
 	const char      *method, *s;
@@ -339,6 +338,7 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	  Href->delay = Srv->crawl_delay / 1000;
 #if 0
 	  if (Srv->use_robots) {
+	    DPS_ROBOT_RULE	*rule;
 	    rule = DpsRobotRuleFind(Indexer, Srv, NULL, newURL, 0, 0);
 	    if (rule) {
 	      DpsLog(Indexer, DPS_LOG_DEBUG, "Href.robots.txt: '%s %s'", (rule->cmd==DPS_METHOD_DISALLOW)?"Disallow":"Allow", rule->path);
@@ -357,7 +357,8 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 
 __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT * Indexer) {
         char            dbuf[64];
-	size_t		i, res;
+	size_t		i;
+	int             res;
 	DPS_HREF        *H;
 	DPS_DOCUMENT	Doc;
 	time_t next_index_time = Indexer->now;
@@ -527,14 +528,14 @@ int DpsConvertHref(DPS_AGENT *Indexer, DPS_URL *CurURL, DPS_HREF *Href){
 
 static int DpsDocConvertHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 	size_t		i;
-	int		hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
+	size_t		hops = (size_t)DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 	urlid_t		url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	dps_uint4           maxhops = DpsVarListFindUnsigned(&Doc->Sections, "MaxHops", 255);
 	urlid_t         server_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0);
 
 	for(i=0;i<Doc->Hrefs.nhrefs;i++){
 		DPS_HREF	*Href=&Doc->Hrefs.Href[i];
-		Href->hops=hops+1;
+		Href->hops = hops + 1;
 		Href->charset_id = Doc->charset_id;
 		DpsConvertHref(Indexer,&Doc->CurURL,Href);
 		Href->referrer=url_id;
@@ -559,7 +560,7 @@ int DpsDocStoreHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 	
 	DpsDocBaseHref(Indexer,Doc);
 	DpsDocConvertHrefs(Indexer,Doc);
-	weight = (Doc->Hrefs.nhrefs) ?  (1.0 / Doc->Hrefs.nhrefs) : 0.1;
+	weight = (float)((Doc->Hrefs.nhrefs) ?  (1.0 / Doc->Hrefs.nhrefs) : 0.1);
 	for(i=0;i<Doc->Hrefs.nhrefs;i++){
 		DPS_HREF	*Href=&Doc->Hrefs.Href[i];
 		if((Href->method != DPS_METHOD_DISALLOW) && (Href->method != DPS_METHOD_VISITLATER)) {
@@ -859,7 +860,7 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 		
 		DpsLog(Indexer,DPS_LOG_WARN,"Too many network errors (%d) for this server",nerrors);
 		DpsVarListReplaceInt(&Doc->Sections,"Status",DPS_HTTP_STATUS_SERVICE_UNAVAILABLE);
-		dps_snprintf(buf, sizeof(buf), "%lu", (next_index_time & 0x80000000) ? 0x7fffffff : next_index_time);
+		dps_snprintf(buf, sizeof(buf), "%lu", (unsigned long int)((next_index_time & 0x80000000) ? 0x7fffffff : next_index_time));
 		DpsVarListReplaceStr(&Doc->Sections,"Next-Index-Time",buf);
 		Doc->method = DPS_METHOD_VISITLATER;
 		if (nerrors == Doc->Spider.max_net_errors) {
@@ -919,7 +920,6 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   DPS_MATCH_PART  Parts[10];
   size_t nparts = 10;
   DPS_VAR *Sec;
-  DPS_VAR S;
   char *lt, *buf;
   const char *buf_content = (Doc->Buf.pattern == NULL) ? Doc->Buf.content : Doc->Buf.pattern;
   char savec;
@@ -959,7 +959,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     Item.section_name = Sec->name;
     Item.str = dps_strtok_r(buf, "\r\n", &lt, &savec);
     while(Item.str) {
-      Item.len = (lt != NULL) ? (lt - Item.str) : 0 /*dps_strlen(Item.str)*/;
+      Item.len = (size_t)((lt != NULL) ? (lt - Item.str) : 0 /*dps_strlen(Item.str)*/);
 /*      fprintf(stderr, " -- Alias:%s/%s, [%d] %s\n", Sec->name, Alias->section, Item.len, Item.str);*/
       DpsTextListAdd(&Doc->TextList, &Item);
       Item.str = dps_strtok_r(NULL, "\r\n", &lt, &savec);
@@ -983,7 +983,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
     DpsHrefInit(&Href);
     Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
-    Href.hops = 1 + DpsVarListFindInt(&Doc->Sections,"Hops", 0);
+    Href.hops = 1 + (dps_uint4)DpsVarListFindInt(&Doc->Sections,"Hops", 0);
     Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
     Href.url = buf;
     Href.method = DPS_METHOD_GET;
@@ -998,9 +998,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 #ifdef HAVE_SQL
   DPS_MATCH       *Alias;
-  DPS_MATCH_PART  Parts[10];
   DPS_SQLRES	SQLres;
-  size_t nparts = 10;
   DPS_VAR *Sec;
   char *buf;
   DPS_TEXTITEM Item;
@@ -1024,7 +1022,6 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     Item.href = NULL;
 
     for (z = 0; z < Indexer->Conf->SectionSQLMatch.nmatches; z++) {
-      DPS_TEXTLIST	*tlist = &Doc->TextList;
       Alias = &Indexer->Conf->SectionSQLMatch.Match[z];
 
       Sec = DpsVarListFind(&Indexer->Conf->Sections, Alias->section);
@@ -1395,7 +1392,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 	  /* CRC32 without headers */
 	  if (Doc->Buf.content != NULL) {
-	    size_t crclen=Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf);
+	    size_t crclen = (size_t)(Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf));
 	    DpsVarListReplaceInt(&Doc->Sections, "crc32", (int)DpsHash32(Doc->Buf.content, crclen));
 	  } else {
 	    DpsVarListDel(&Doc->Sections, "crc32");
@@ -1434,7 +1431,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		  second = strstr(first, Alias->arg);
 		  if (second != NULL) {
 		    flen = dps_strlen(Alias->pattern);
-		    Doc->Buf.pattern = DpsStrndup(first + flen, (second - first - flen));
+		    Doc->Buf.pattern = DpsStrndup(first + flen, (size_t)(second - first - flen));
 		    DPS_FREE(buf);
 		    DpsLog(Indexer, DPS_LOG_DEBUG, "%dth, BodyBrackets applied", i);
 		    break;
@@ -1558,10 +1555,10 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  if (strcasestr(vary, "accept-language") != NULL) {
 	    DPS_HREF Href;
 	    DPS_URL *newURL = DpsURLInit(NULL);
-	    char *url; const char *ourl;
+	    char *curl; const char *ourl;
 	    const char *VaryLang = DpsVarListFindStr(&Doc->Sections, "VaryLang", "en"), *CL;
 	    const char *ContentLanguage = DpsVarListFindStr(&Doc->Sections, "Content-Language", "en");
-	    const int       hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
+	    const size_t hops = (size_t)DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 	    char *tok, *lt;
 	    size_t urlen;
 	    size_t cl_len = dps_strlen(ContentLanguage);
@@ -1578,21 +1575,21 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    if ((status < 400) && (strcmp(DPS_NULL2EMPTY(newURL->filename), "robots.txt") != 0)) {
 	      CL = DpsVarListFindStr(&Doc->Sections, "Content-Location", DPS_NULL2EMPTY(newURL->filename));
 	      urlen = 128 + dps_strlen(DPS_NULL2EMPTY(newURL->hostinfo)) + dps_strlen(DPS_NULL2EMPTY(newURL->path)) + dps_strlen(CL);
-	      if ((url = (char*)DpsMalloc(urlen)) != NULL) {
-		dps_snprintf(url, urlen, "%s://%s%s%s", DPS_NULL2EMPTY(newURL->schema), DPS_NULL2EMPTY(newURL->hostinfo), 
+	      if ((curl = (char*)DpsMalloc(urlen)) != NULL) {
+		dps_snprintf(curl, urlen, "%s://%s%s%s", DPS_NULL2EMPTY(newURL->schema), DPS_NULL2EMPTY(newURL->hostinfo), 
 			     DPS_NULL2EMPTY(newURL->path), CL );
-		Href.url = url;
+		Href.url = curl;
 		DpsHrefListAdd(Indexer, &Indexer->Hrefs, &Href);
 		if (Doc->subdoc < Indexer->Flags.SubDocLevel) {
 		  tok = dps_strtok_r((char*)VaryLang, " ,\t", &lt, &savec);
 		  while (tok != NULL) {
 		    size_t min_len = dps_min(cl_len, dps_strlen(tok));
-		    if (strncasecmp(ContentLanguage, tok, min_len) != NULL)
+		    if (0 != strncasecmp(ContentLanguage, tok, min_len))
 		      DpsIndexSubDoc(Indexer, Doc, NULL, tok, ourl);
 		    tok = dps_strtok_r(NULL, " ,\t", &lt, &savec);
 		  }
 		}
-		DPS_FREE(url);
+		DPS_FREE(curl);
 	      }
 	    }
 	    DpsURLFree(newURL);
@@ -1699,8 +1696,8 @@ int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server) {
 	S->follow		= DpsVarListFindInt(V, "Follow",		DPS_FOLLOW_PATH);
 	S->max_net_errors	= DpsVarListFindInt(V, "MaxNetErrors",	DPS_MAXNETERRORS);
 	S->net_error_delay_time	= DpsVarListFindInt(V, "NetErrorDelayTime",DPS_DEFAULT_NET_ERROR_DELAY_TIME);
-	Doc->connp.timeout = S->read_timeout = DpsVarListFindInt(V, "ReadTimeOut",	DPS_READ_TIMEOUT);
-	S->doc_timeout		= DpsVarListFindInt(V, "DocTimeOut",	DPS_DOC_TIMEOUT);
+	Doc->connp.timeout = S->read_timeout = DpsVarListFindUnsigned(V, "ReadTimeOut",	DPS_READ_TIMEOUT);
+	S->doc_timeout		= DpsVarListFindUnsigned(V, "DocTimeOut",	DPS_DOC_TIMEOUT);
 	S->index		= DpsVarListFindInt(V, "Index",		1);
 	S->use_robots		= Server->use_robots;
 	S->use_clones		= DpsVarListFindInt(V, "DetectClones",	1);
@@ -2600,7 +2597,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		  Doc->method = DPS_METHOD_HREFONLY;
 		}
 		if (Doc->Buf.content != NULL ) {
-		   	size_t		wordnum, min_size;
+		   	size_t		min_size;
 			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
 			size_t	cont_len = Doc->Buf.size - hdr_len;
 			int skip_too_small;

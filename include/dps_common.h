@@ -496,8 +496,8 @@ typedef struct {
   DPS_EXPIRE    ExpireAt;
 	int	max_net_errors;
 	int	net_error_delay_time;
-	int	read_timeout;
-	int	doc_timeout;
+	size_t	read_timeout;
+	size_t	doc_timeout;
 	int	maxhops;	/**< Max way in mouse clicks  */
 	int	index;		/**< Whether to index words   */
 	int	follow;		/**< Whether to follow links  */
@@ -735,7 +735,7 @@ typedef struct{
 typedef struct{
 	const char	*hostinfo;
 	size_t		nrules;
-        size_t          crawl_delay;
+        time_t          crawl_delay;
         time_t          *last_crawled;
         int             need_free;
 	DPS_ROBOT_RULE	*Rule;
@@ -989,7 +989,7 @@ typedef struct {
         int             LongestTextItems; /**< Number of longest text items to index */
         int             SubDocLevel;      /**< Maximum nested level for sub-documents */
         int             SubDocCnt;        /**< Maximum number of subdocuments to be indexed */
-        int             MaxCrawlDelay;    /**< Maximum Crawl-delay seconds to wait */
+        size_t          MaxCrawlDelay;    /**< Maximum Crawl-delay seconds to wait */
         dps_uint4       SkipHrefIn;       /**< Flag to skip some HTML tags from new href lookup */
    enum dps_prmethod    poprank_method;
    enum dps_indcmd      cmd;

@@ -53,13 +53,12 @@ static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *
     val = DpsTrim(val," \t:");
 			
     if (!strcasecmp(header_name, "Content-Type") || !strcasecmp(header_name, "Content-Encoding")) {
-      char *v;
+      register char *v;
       for(v=val ; *v ; v++) 
-	*v = dps_tolower(*v);
+	*v = (char)dps_tolower((int)*v);
     } else if (Doc->Spider.use_robots && !strcasecmp(header_name, "X-Robots-Tag")) {
         char * lt;
 	char * rtok;
-	char savec;
 					
 	rtok = dps_strtok_r(val, " ,\r\n\t", &lt, &savec);
 	while(rtok){

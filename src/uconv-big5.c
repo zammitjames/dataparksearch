@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -5803,10 +5803,12 @@ int dps_wc_mb_big5(DPS_CONV *conv, DPS_CHARSET *cs, const dpsunicode_t *wc, unsi
   conv->icodes = conv->ocodes = 1;
 
   if(*wc < 0x80) {
-    s[0] = *wc;
+    s[0] = (unsigned char)*wc;
     if ((conv->flags & DPS_RECODE_HTML_TO) && (strchr(DPS_NULL2EMPTY(conv->CharsToEscape), (int)s[0]) != NULL))
       return DPS_CHARSET_ILUNI;
     if ((conv->flags & DPS_RECODE_URL_TO) && (s[0] == '!')) 
+      return DPS_CHARSET_ILUNI;
+    if ((conv->flags & DPS_RECODE_JSON_TO) && (s[0] == '\\')) 
       return DPS_CHARSET_ILUNI;
     return 1;
   }
@@ -5817,15 +5819,16 @@ int dps_wc_mb_big5(DPS_CONV *conv, DPS_CHARSET *cs, const dpsunicode_t *wc, unsi
   if(s+2>e)
     return DPS_CHARSET_TOOSMALL;
   
-  s[0]=code>>8;
-  s[1]=code&0xFF;
+  s[0]=(unsigned char)(code >> 8);
+  s[1]=(unsigned char)(code & 0xFF);
   
   return conv->ocodes = 2;
 }
 
+
 int dps_mb_wc_big5(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsigned char *s, const unsigned char *end) {
 
-  int hi=s[0];
+  int hi = (int)s[0];
   const unsigned char *p;
   unsigned char *e, z;
   int n;
@@ -5861,6 +5864,13 @@ int dps_mb_wc_big5(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const uns
 	  if (*p == ';') p++;
 	  return conv->icodes = (p - s /*+ 1*/);
 	}
+      }
+    }
+    if ( *s == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
+      n = DpsJSONToUni(s + 1, pwc, &conv->icodes);
+      if (n) {
+	conv->ocodes = n;
+	return ++conv->icodes;
       }
     }
     pwc[0]=hi;

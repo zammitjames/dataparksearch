@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -106,6 +106,7 @@ static char * HiLightDup(const char *src, const char *beg, const char *end, cons
 	return(res);
 }
 
+
 enum {
   DPS_VAR_ALIGN_LEFT  = 0,
   DPS_VAR_ALIGN_RIGHT = 1,
@@ -113,8 +114,10 @@ enum {
   DPS_VAR_IDN_DECODE = 3,
   DPS_VAR_IDN_ENCODE = 4,
   DPS_VAR_CITE_NONE = 5,
-  DPS_VAR_CITE_DO = 6
+  DPS_VAR_CITE_DO = 6,
+  DPS_VAR_JSON = 7
 };
+
 
 size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * stream, char * dst, size_t dst_len, 
 				DPS_TEMPLATE *tmplt, const char * templ) {
@@ -122,7 +125,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 	DPS_CONV bc_bc, bc_bc_txt, bc_vc, *cnv = &bc_bc;
 	DPS_CHARSET *vcs = NULL;
 	const char * s;
-	char *newvalue = NULL, *cite_value = NULL;
+	char *newvalue = NULL, *cite_value = NULL, *json_value = NULL;
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	char *idn_value = NULL;
 #endif
@@ -130,6 +133,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 	int align = DPS_VAR_ALIGN_LEFT;
 	int idn = DPS_VAR_IDN_NONE;
 	int cite = DPS_VAR_CITE_NONE;
+	int json = 0;
 
 	DpsConvInit(&bc_bc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&bc_bc_txt, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_TEXT);
@@ -184,6 +188,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					      else if (!strcasecmp(sem3 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					      else if (!strcasecmp(sem3 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					      else if (!strcasecmp(sem3 + 1, "cite")) cite = DPS_VAR_CITE_DO;
+					      else if (!strcasecmp(sem3 + 1, "json")) json = DPS_VAR_JSON;
 					    } else {
 					      maxlen = DPS_ATOI(sem3 + 1);
 					    }
@@ -197,6 +202,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					    else if (!strcasecmp(sem2 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					    else if (!strcasecmp(sem2 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					    else if (!strcasecmp(sem2 + 1, "cite")) cite = DPS_VAR_CITE_DO;
+					    else if (!strcasecmp(sem2 + 1, "json")) json = DPS_VAR_JSON;
 					  } else {
 					    maxlen = DPS_ATOI(sem2 + 1);
 					  }
@@ -208,6 +214,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					  else if (!strcasecmp(sem + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					  else if (!strcasecmp(sem + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					  else if (!strcasecmp(sem + 1, "cite")) cite = DPS_VAR_CITE_DO;
+					  else if (!strcasecmp(sem + 1, "json")) json = DPS_VAR_JSON;
 					} else {
 					  maxlen = DPS_ATOI(sem + 1);
 					}
@@ -243,42 +250,53 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					  } else cnv = &bc_bc_txt;
 					}
 					if(!value)value=empty;
-#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
-					else if (idn == DPS_VAR_IDN_DECODE) {
-					  DPS_CHARSET *uni_cs;
-					  DPS_CONV  bc_utf8, utf8_bc;
-					  char    *uni = NULL, *q, *start, *end;
-					  size_t len = 48 * dps_strlen(value);
-					  int rc;
-
-					  uni_cs = DpsGetCharSet("UTF-8");
-					  DpsConvInit(&bc_utf8, A->Conf->bcs, uni_cs, A->Conf->CharsToEscape, DPS_RECODE_URL);
-					  DpsConvInit(&utf8_bc, uni_cs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_URL);
-					  if ((uni = (char*)DpsMalloc(len + 1)) != NULL) {
-					    DpsConv(&bc_utf8, (char*)uni, len, value, len);
-					    start = strstr(uni, "xn--");
-					    if (start) {
-					      end = strchr(start, (int)'/');
-					      if (end) *end = '\0';
-					      if ( (rc = idna_to_unicode_8z8z((const char*)uni + (start - uni), &q, 0)) == IDNA_SUCCESS) {
-						if ((idn_value = (char*)DpsRealloc(idn_value, len + 1)) != NULL) {
-						  if (start != uni) {
-						    dps_memcpy(idn_value, uni, (start - uni) * sizeof(char));
-						  }
-						  DpsConv(&utf8_bc, (char*)idn_value + (start - uni), len, q, len);
-						  if (end) {
-						    idn_value[utf8_bc.obytes] = '/';
-						    dps_strcpy(idn_value + utf8_bc.obytes + 1, end + 1);
-						  }
-						  value = idn_value;
-						}
-						DPS_FREE(q);
-					      }
+					else {
+					  if (DPS_VAR_JSON == json) {
+					    DPS_CONV  mybc;
+					    size_t len = 48 * dps_strlen(value);
+					    DpsConvInit(&mybc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_JSON_TO);
+					    if ((json_value = (char*)DpsRealloc(json_value, len + 1)) != NULL) {
+					      DpsConv(&mybc, json_value, len, value, len);
+					      value = json_value;
 					    }
 					  }
-					  DPS_FREE(uni);
-					}
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+					  if (idn == DPS_VAR_IDN_DECODE) {
+					    DPS_CHARSET *uni_cs;
+					    DPS_CONV  bc_utf8, utf8_bc;
+					    char    *uni = NULL, *q, *start, *end;
+					    size_t len = 48 * dps_strlen(value);
+					    int rc;
+
+					    uni_cs = DpsGetCharSet("UTF-8");
+					    DpsConvInit(&bc_utf8, A->Conf->bcs, uni_cs, A->Conf->CharsToEscape, DPS_RECODE_URL);
+					    DpsConvInit(&utf8_bc, uni_cs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_URL);
+					    if ((uni = (char*)DpsMalloc(len + 1)) != NULL) {
+					      DpsConv(&bc_utf8, (char*)uni, len, value, len);
+					      start = strstr(uni, "xn--");
+					      if (start) {
+						end = strchr(start, (int)'/');
+						if (end) *end = '\0';
+						if ( (rc = idna_to_unicode_8z8z((const char*)uni + (start - uni), &q, 0)) == IDNA_SUCCESS) {
+						  if ((idn_value = (char*)DpsRealloc(idn_value, len + 1)) != NULL) {
+						    if (start != uni) {
+						      dps_memcpy(idn_value, uni, (start - uni) * sizeof(char));
+						    }
+						    DpsConv(&utf8_bc, (char*)idn_value + (start - uni), len, q, len);
+						    if (end) {
+						      idn_value[utf8_bc.obytes] = '/';
+						      dps_strcpy(idn_value + utf8_bc.obytes + 1, end + 1);
+						    }
+						    value = idn_value;
+						  }
+						  DPS_FREE(q);
+						}
+					      }
+					    }
+					    DPS_FREE(uni);
+					  }
 #endif
+					}
 				}else{	
 					value=empty;
 				}
@@ -369,6 +387,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 	}
 	DPS_FREE(newvalue);
 	DPS_FREE(cite_value);
+	DPS_FREE(json_value);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	DPS_FREE(idn_value);
 #endif
@@ -1150,6 +1169,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 			}else
 			if(is.Items[is.pos].condition){
 			  if(DPS_OK != (r = ParseVariable(Agent, Env, vars, s)) && DPS_OK != ( r = DpsEnvAddLine(&Cfg,s))) {
+			    dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Line: %s", s);
 			    DpsServerFree(&Srv);
 			    return r;
 			  }

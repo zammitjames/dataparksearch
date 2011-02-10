@@ -6199,7 +6199,6 @@ __C_LINK int __DPSCALL DpsSQLLimit8(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const c
 	size_t     url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	size_t	   i, p, nrows, qbuflen;
 	int	   rc = DPS_OK, u;
-	urlid_t    rec_id = 0;
 
 	if ((qbuf = (char*)DpsMalloc((qbuflen = 128 + dps_strlen(req)))) == NULL) {
 		return DPS_ERROR;
@@ -6262,7 +6261,6 @@ __C_LINK int __DPSCALL DpsSQLLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const c
 	size_t     url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	size_t	   i, p, nrows, qbuflen;
 	int	   rc = DPS_OK, u;
-	urlid_t    rec_id = 0;
 
 	if ((qbuf = (char*)DpsMalloc((qbuflen = 128 + dps_strlen(req)))) == NULL) {
 		return DPS_ERROR;

@@ -103,8 +103,9 @@ static const dpsunicode_t *DpsUniRegTok(const dpsunicode_t *s, const dpsunicode_
 
 int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern) {
 	const dpsunicode_t *tok, *lt;
-	size_t i, p, len;
+	size_t len;
 #ifdef DEBUG_UNIREG
+	size_t i, p;
 	DPS_CHARSET *k = DpsGetCharSet("koi8-r");
 	DPS_CHARSET *sy = DpsGetCharSet("sys-int");
 	DPS_CONV fromuni;
@@ -415,14 +416,14 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	  fprintf(stderr, "Unable to open synonyms file '%s': %s", filename, strerror(errno));
 	  return DPS_ERROR;
 	}
-	if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+	if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
 	  fprintf(stderr, "Unable to alloc %ld bytes", (long)sb.st_size);
 	  DpsClose(fd);
 	  DPS_FREE(lstr);
 	  DPS_FREE(ustr);
 	  return DPS_ERROR;
 	}
-	if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+	if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
 	  fprintf(stderr, "Unable to read synonym file '%s': %s", filename, strerror(errno));
 	  DPS_FREE(data);
 	  DpsClose(fd);
@@ -529,7 +530,7 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 
 
 static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word, const char *affixflag, DPS_PSPELL *PS, DPS_PSPELL *FZ) {
-  int l,c,r,resc,resl,resr, nlang = /*Indexer->SpellLang*/ -1 /*Indexer->spellang FIXME: if Language limit issued in query */, 
+  int l,c,r,resc,nlang = /*Indexer->SpellLang*/ -1 /*Indexer->spellang FIXME: if Language limit issued in query */, 
     li, li_from, li_to, i, ii;
   DPS_SPELLLIST *SpellList=&Indexer->Conf->Spells;
   dpsunicode_t *word = DpsUniRDup(p_word);
@@ -557,29 +558,6 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
 	  }
 	  break;
 	}
-/*	resl = cmpspellword(SpellList->Spell[l].word, word);
-	if( (resl == 0) && 
-	    ((affixflag == NULL) || (strstr(SpellList->Spell[l].flag, affixflag) != NULL)) ) {
-	  if (PS->nspell < MAX_NORM - 1) {
-	    PS->cur[PS->nspell] = &SpellList->Spell[l];
-	    PS->nspell++;
-	    PS->cur[PS->nspell] = NULL;
-	  }
-	  resc = resl;
-	  break;
-	}
-	resr = cmpspellword(SpellList->Spell[r].word, word);
-	if( (resr == 0) && 
-	    ((affixflag == NULL) || (strstr(SpellList->Spell[r].flag, affixflag) != NULL)) ) {
-	  if (PS->nspell < MAX_NORM - 1) {
-	    PS->cur[PS->nspell] = &SpellList->Spell[r];
-	    PS->nspell++;
-	    PS->cur[PS->nspell] = NULL;
-	  }
-	  resc = resr;
-	  break;
-	}
-*/
 	if(resc < 0){
 	  l = c + 1;
 	} else {
@@ -681,7 +659,7 @@ int DpsAffixAdd(DPS_AFFIXLIST *List, const char *flag, const char * lang, const 
 	List->Affix[List->naffixes].flag[0] = flag[0];
 	List->Affix[List->naffixes].flag[1] = flag[1];
 	List->Affix[List->naffixes].flag[2] = '\0';
-	List->Affix[List->naffixes].type=type;
+	List->Affix[List->naffixes].type = (char)type;
 	dps_strncpy(List->Affix[List->naffixes].lang, lang, 5);
 	List->Affix[List->naffixes].lang[5] = 0;
 	
@@ -752,7 +730,6 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
   int suffixes=0;
   int prefixes=0;
   int IspellUsePrefixes;
-  FILE *affix;
   DPS_CHARSET *affix_charset = NULL;
   dpsunicode_t unimask[BUFSIZ];
   dpsunicode_t ufind[BUFSIZ];
@@ -783,7 +760,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
 #endif
     return 1;
   }
-  if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+  if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
     dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to alloc %d bytes", sb.st_size);
     DpsClose(fd);
 #ifdef WITH_PARANOIA
@@ -791,7 +768,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
 #endif
     return 1;
   }
-  if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+  if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
     dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to read affixes file '%s': %s", filename, strerror(errno));
     DPS_FREE(data);
     DpsClose(fd);
@@ -975,7 +952,6 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
   char repl[14*BUFSIZ]="";
   char *s;
   int i;
-  FILE *qregex;
   DPS_CHARSET *qreg_charset = NULL;
   dpsunicode_t unimask[BUFSIZ];
   dpsunicode_t ufind[BUFSIZ];
@@ -1006,7 +982,7 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
 #endif
     return 1;
   }
-  if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+  if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
     dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to alloc %d bytes", sb.st_size);
     DpsClose(fd);
 #ifdef WITH_PARANOIA
@@ -1014,7 +990,7 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
 #endif
     return 1;
   }
-  if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+  if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
     dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to read query regs file '%s': %s", filename, strerror(errno));
     DPS_FREE(data);
     DpsClose(fd);
@@ -1261,8 +1237,8 @@ __C_LINK void __DPSCALL DpsSortAffixes(DPS_AFFIXLIST *List, DPS_SPELLLIST *SL) {
 
 
 void DpsSortQuffixes(DPS_QUFFIXLIST *List, DPS_SPELLLIST *SL) {
-  int  CurLetP = -1, CurLetS = -1, Let, cl = -1;
-  char *CurLangP = NULL, *CurLangS = NULL;
+  int  CurLetP = -1, Let, cl = -1;
+  char *CurLangP = NULL;
   DPS_QUFFIX *Qreg; size_t i, j;
 
   if (List->nrecs > 1)
@@ -1363,7 +1339,8 @@ static void CheckSuffix(const dpsunicode_t *word, size_t len, DPS_AFFIX *Affix, 
 
 static int CheckPrefix(const dpsunicode_t *word, DPS_AFFIX *Affix, DPS_AGENT *Indexer, int li, int pi, DPS_PSPELL *PS, DPS_PSPELL *FZ) {
   dpsunicode_t newword[2*MAXNORMLEN] = {0};
-  int err, ls, rs, lres,rres, res;
+  int err, ls, rs, res;
+  /*  int lres,rres;*/
   size_t newlen;
   DPS_AFFIX *CAffix = Indexer->Conf->Affixes.Affix;
 #ifdef WITH_PARANOIA
@@ -1400,7 +1377,7 @@ static int CheckPrefix(const dpsunicode_t *word, DPS_AFFIX *Affix, DPS_AGENT *In
     ls = Indexer->Conf->Affixes.SuffixTree[li].Left[pi];
     if (ls >= 0) {
       for (rs = Indexer->Conf->Affixes.SuffixTree[li].Right[pi]; ls <= rs; ls++) {
-	CheckSuffix(newword, newlen, &CAffix[ls], &lres, Indexer, PS, FZ);
+	CheckSuffix(newword, newlen, &CAffix[ls], &res, Indexer, PS, FZ);
       }
     }
 /*

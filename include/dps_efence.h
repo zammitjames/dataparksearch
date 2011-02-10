@@ -64,15 +64,15 @@ void			EF_Print(const char * message, ...);
 void			EF_Printv(const char * message, va_list args);
 void			EF_InternalError(const char * message, ...);
 
-extern C_LINKAGE void _DpsFree(void * address, char *filename, size_t fileline);
-extern C_LINKAGE void *_DpsRealloc(void * oldBuffer, size_t newSize, char *filename, size_t fileline);
-extern C_LINKAGE void *_DpsMalloc(size_t size, char *filename, size_t fileline);
-extern C_LINKAGE void *_DpsCalloc(size_t nelem, size_t elsize, char *filename, size_t fileline);
-extern C_LINKAGE void *_DpsValloc (size_t size, char *filename, size_t fileline);
-extern C_LINKAGE char *_DpsStrdup(const char * str, char *filename, size_t fileline);
+extern C_LINKAGE void _DpsFree(void * address, const char *filename, size_t fileline);
+extern C_LINKAGE void *_DpsRealloc(void * oldBuffer, size_t newSize, const char *filename, size_t fileline);
+extern C_LINKAGE void *_DpsMalloc(size_t size, const char *filename, size_t fileline);
+extern C_LINKAGE void *_DpsCalloc(size_t nelem, size_t elsize, const char *filename, size_t fileline);
+extern C_LINKAGE void *_DpsValloc (size_t size, const char *filename, size_t fileline);
+extern C_LINKAGE char *_DpsStrdup(const char * str, const char *filename, size_t fileline);
 extern C_LINKAGE void DpsEfenceCheckLeaks(void);
-extern C_LINKAGE void *_DpsXmalloc(size_t size, char *filename, size_t fileline);
-extern C_LINKAGE void *_DpsXrealloc(void *ptr, size_t newsize, char *filename, size_t fileline);
+extern C_LINKAGE void *_DpsXmalloc(size_t size, const char *filename, size_t fileline);
+extern C_LINKAGE void *_DpsXrealloc(void *ptr, size_t newsize, const char *filename, size_t fileline);
 
 #define DpsFree(x)       _DpsFree(x, __FILE__, __LINE__)
 #define DpsRealloc(x, y) _DpsRealloc(x, y, __FILE__, __LINE__)

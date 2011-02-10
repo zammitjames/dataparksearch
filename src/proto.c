@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -301,7 +301,7 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
     time_t start_time, now_time, prev_time;
     int status;
     ssize_t recv_size;
-    size_t buf_size = DPS_NET_BUF_SIZE, zero_cnt;
+    size_t buf_size = DPS_NET_BUF_SIZE;
     struct timeval tv;
 
     /* Connect to HTTP or PROXY server */
@@ -354,10 +354,10 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	     res = DPS_NET_ERROR; /* recv_size;*/
 	     break;
 	   } else if( recv_size == 0 ){
-	     if(Doc->Spider.doc_timeout < (now_time - start_time)){
+	     if(Doc->Spider.doc_timeout < (size_t)(now_time - start_time)) {
 	       res = DPS_NET_TIMEOUT;
 	     }
-	     if(Doc->Spider.read_timeout < (now_time - prev_time)){
+	     if(Doc->Spider.read_timeout < (size_t)(now_time - prev_time)) {
 	       res = DPS_NET_TIMEOUT;
 	     }
 	     break;
@@ -367,7 +367,7 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	       res = DPS_NET_FILE_TL;
 	       break;
 	     }
-	     if(Doc->Spider.doc_timeout < (now_time - start_time)) {
+	     if(Doc->Spider.doc_timeout < (size_t)(now_time - start_time)) {
 	       res = DPS_NET_TIMEOUT;
 	       break;
 	     }
@@ -477,7 +477,7 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
                    break;
                }else{
                    Doc->Buf.size += status;
-                   if(Doc->Spider.doc_timeout < (time(NULL) - start_time)) {
+                   if(Doc->Spider.doc_timeout < (size_t)(time(NULL) - start_time)) {
                    	res=DPS_NET_TIMEOUT;
                    	break;
                    }
@@ -1483,19 +1483,19 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 
 		sprintf(DPS_STREND(Doc->Buf.buf),"\r\n");
 		l = dps_strlen(Doc->Buf.buf);
-		if (sb.st_size + l >= Doc->Buf.allocated_size) {
-		  if (sb.st_size >= Doc->Buf.max_size) {
+		if ((size_t)sb.st_size + l >= Doc->Buf.allocated_size) {
+		  if ((size_t)sb.st_size >= Doc->Buf.max_size) {
 		    Doc->Buf.allocated_size = Doc->Buf.max_size + l;
-		    size_to_read = Doc->Buf.max_size;
+		    size_to_read = (size_t)Doc->Buf.max_size;
 		  } else {
-		    Doc->Buf.allocated_size = size_to_read = sb.st_size + l;
+		    Doc->Buf.allocated_size = size_to_read = (size_t)(sb.st_size + l);
 		  }
 		  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
 		    DpsClose(fd);
 		    return -1;
 		  }
 		} else {
-		  size_to_read = sb.st_size;
+		  size_to_read = (size_t)sb.st_size;
 		}
 		size = read(fd, Doc->Buf.buf + l, size_to_read);
 		DpsClose(fd);
