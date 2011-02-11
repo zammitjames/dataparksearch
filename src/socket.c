@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -90,7 +90,7 @@ int socket_connect( DPS_CONN *connp){
 
 	for (i = 0; i < connp->n_sinaddr; i++) {
 	  dps_memmove(&connp->sin.sin_addr, &connp->sinaddr[i].sin_addr, sizeof(connp->sin.sin_addr));
-	  connp->sin.sin_port = htons(connp->port);
+	  connp->sin.sin_port = htons((uint16_t)connp->port);
 	  connp->sin.sin_family = AF_INET;
 /*	  connp->sin.sin_len = sizeof(struct sockaddr_in);*/
 	  if (connect(connp->conn_fd, (struct sockaddr *)&connp->sin, sizeof(connp->sin)) == 0) {
@@ -350,7 +350,7 @@ ssize_t DpsRecvall(int s, void *buf, size_t len, size_t time_to_wait) {
 	       || have_sigpipe
 	       ) break;
 	  if (r == 0) {
-	    if (time_to_wait > 0 && (time(NULL) - start > time_to_wait)) break;
+	    if (time_to_wait > 0 && ((size_t)(time(NULL) - start) > time_to_wait)) break;
 	    DPS_MSLEEP(1);
 	  }
 	}

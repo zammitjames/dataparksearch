@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -163,7 +163,7 @@ static void dps_callback(void *arg, int status, struct hostent *he) {
     for (i = 0; he->h_addr_list[i] != NULL && i < DPS_MAX_HOST_ADDR; i++) {
       if (he->h_addrtype != AF_INET) continue;
       dps_memmove((char *)&(connp->sinaddr[i].sin_addr), he->h_addr_list[i], (size_t)he->h_length);
-      connp->sinaddr[i].sin_port = htons(connp->port); /*	Set port	*/
+      connp->sinaddr[i].sin_port = htons((uint16_t)connp->port); /*	Set port	*/
 /*      if (DpsCheckAddr(&(connp->sin), connp->timeout) == DPS_OK) break;*/
     }
   connp->n_sinaddr = i;
@@ -587,7 +587,7 @@ int DpsHostLookup(DPS_AGENT *Indexer, DPS_CONN *connp) {
 	}
 	connp->Host = host_addr_find(List, connp->hostname);
 	/*	Set port	*/
-	connp->sin.sin_port = htons(connp->port);
+	connp->sin.sin_port = htons((uint16_t)connp->port);
 
 /*	fprintf(stderr, "Resolver: %s - > %s [Host.addr: %s]\n", connp->hostname, inet_ntoa(connp->sin.sin_addr),
 		inet_ntoa(connp->Host->addr));*/

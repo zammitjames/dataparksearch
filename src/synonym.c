@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All right reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All right reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -61,12 +61,12 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
        dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to open synonyms file '%s': %s", filename, strerror(errno));
        return DPS_ERROR;
      }
-     if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+     if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
        dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to alloc %d bytes", sb.st_size);
        DpsClose(fd);
        return DPS_ERROR;
      }
-     if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+     if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
        dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to read synonym file '%s': %s", filename, strerror(errno));
        DPS_FREE(data);
        DpsClose(fd);

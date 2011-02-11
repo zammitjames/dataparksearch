@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -485,7 +485,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	      *p = '\0';
 	      DpsRTrim((char*)cs, ";\"");
 	    }
-	    p = DpsCharsetCanonicalName(cs);
+	    p = (char*)DpsCharsetCanonicalName(cs);
 	    DpsVarListReplaceStr(&Doc->Sections, "Server-Charset", p ? p : cs);
 	  }
 	  if ((p = strchr(content_type, ' '))) {
@@ -518,7 +518,7 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 		if((M = DpsMatchListFind(&Indexer->Conf->MimeTypes, fn, 0, NULL))) {
 			DpsVarListReplaceStr(&Doc->Sections,"Content-Type",M->arg);
 		} else {
-		  if (fn = DpsVarListFindStr(&Doc->Sections, "URL", NULL)) {
+		  if (NULL != (fn = DpsVarListFindStr(&Doc->Sections, "URL", NULL))) {
 		    if((M = DpsMatchListFind(&Indexer->Conf->MimeTypes, fn, 0, NULL)))
 		        DpsVarListReplaceStr(&Doc->Sections, "Content-Type", M->arg);
 		  }

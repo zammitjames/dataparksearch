@@ -112,7 +112,7 @@ static int open_host(char *hostname,int port, int timeout)
 	}else{
 		host=gethostbyname(hostname);
 		if (host){
-			sa_in.sin_family=host->h_addrtype;
+		  sa_in.sin_family = (sa_family_t)host->h_addrtype;
 			dps_memmove(&sa_in.sin_addr, host->h_addr, (size_t)host->h_length);
 		}else{
 			return(DPS_NET_CANT_RESOLVE);
@@ -128,17 +128,9 @@ static int open_host(char *hostname,int port, int timeout)
 	return(net);
 }
 
+
 int DpsSearchdConnect(DPS_DB *cl) {
-  char port_str[16];
-  struct sockaddr_in dps_addr;
-  unsigned char *p = (unsigned char*)&dps_addr.sin_port;
-  unsigned int ip[2];
   int res = DPS_OK;
-#ifdef __irix__
-  int addrlen;
-#else
-  socklen_t addrlen;
-#endif
 	
   cl->searchd = open_host(cl->addrURL.hostname, cl->addrURL.port ? cl->addrURL.port : DPS_SEARCHD_PORT, 0);
   if(cl->searchd <= 0) {
@@ -148,6 +140,7 @@ int DpsSearchdConnect(DPS_DB *cl) {
   }
   return res;
 }
+
 
 void DpsSearchdClose(DPS_DB *cl) {
 	DPS_SEARCHD_PACKET_HEADER hdr;

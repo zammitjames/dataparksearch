@@ -111,7 +111,7 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
               P.indname = "doc";
               P.rec_id = rec_id;
 	      P.mode = DPS_WRITE_LOCK;
-	      P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+	      P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindUnsigned(&Agent->Vars, "StoredFiles", 0x100);
 	      P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
 	      P.A = Agent;
 	      if (DpsBaseWrite(&P, CDoc, zstream.total_out) != DPS_OK) {
@@ -147,7 +147,7 @@ static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t 
             P.basename = "doc";
             P.indname = "doc";
             P.rec_id = rec_id;
-	    P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+	    P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindUnsigned(&Agent->Vars, "StoredFiles", 0x100);
 	    P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
 	    P.A = Agent;
             if (DpsBaseOpen(&P, DPS_READ_LOCK) != DPS_OK) {
@@ -216,7 +216,7 @@ static int DpsStoreDeleteRec(DPS_AGENT *Agent, int sd, urlid_t rec_id, char *Cli
   P.basename = "doc";
   P.indname = "doc";
   P.rec_id = rec_id;
-  P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+  P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindUnsigned(&Agent->Vars, "StoredFiles", 0x100);
   P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
   P.A = Agent;
   if (DpsBaseDelete(&P) != DPS_OK) {
@@ -239,7 +239,7 @@ __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const ch
 
 #ifdef HAVE_ZLIB
   const char *hello = "S\0";
-  char result[8];
+  /*  char result[8];*/
   int s, r;
 /*  size_t content_size = Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf);*/
   size_t content_size = Doc->Buf.size;
@@ -248,7 +248,7 @@ __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const ch
 
   if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
 /*    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, Doc->Buf.content, content_size, "") : DPS_OK;*/
-    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, Doc->Buf.buf, content_size, "") : DPS_OK;
+    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, (Byte*)Doc->Buf.buf, content_size, "") : DPS_OK;
   }
 
   r = Agent->Demons.Demon[dbnum].stored_rv;
@@ -439,7 +439,7 @@ __C_LINK int __DPSCALL DpsStoreCheckUp(DPS_AGENT *Agent, int level) {
 	P.basename = "doc";
 	P.indname = "doc";
 	P.mode = DPS_WRITE_LOCK;
-	P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+	P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindUnsigned(&Agent->Vars, "StoredFiles", 0x100);
 	P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
 	P.A = Agent;
 	DpsBaseOptimize(&P, -1);
@@ -591,7 +591,7 @@ static char * DpsStrWWL(char **p, DPS_WIDEWORDLIST *wwl, char *c, size_t *len, s
 
   if (NOprefixHL) {
   
-    while ((sc = tolower(*s)) != 0) {
+    while ((sc = (char)tolower((int)*s)) != 0) {
       s++;
       for(i = 0; i < wwl->nwords; i++) {
 	if (sc != c[i]) continue;
@@ -608,7 +608,7 @@ static char * DpsStrWWL(char **p, DPS_WIDEWORDLIST *wwl, char *c, size_t *len, s
 
   } else {
 
-    while ((sc = tolower(*s)) != 0) {
+    while ((sc = (char)tolower((int)*s)) != 0) {
       s++;
       for(i = 0; i < wwl->nwords; i++) {
 	if (sc != c[i]) continue;
@@ -1315,7 +1315,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, si
     if ( strncasecmp(doclang, "zh", 2) && strncasecmp(doclang, "th", 2) && strncasecmp(doclang, "ja", 2) && strncasecmp(doclang, "ko", 2) ) NOprefixHL = 1;
   }
 
-  c = (char *) DpsMalloc(Res->WWList.nwords * sizeof(char) + 1);
+  c = (unsigned char *) DpsMalloc(Res->WWList.nwords * sizeof(char) + 1);
   if (c == NULL) {  return NULL; }
   wlen = (size_t *) DpsMalloc(Res->WWList.nwords * sizeof(size_t) + 1);
   if (wlen == NULL) {
@@ -1324,22 +1324,22 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, si
   }
   for (i = 0; i < Res->WWList.nwords; i++) {
     wlen[i] = Res->WWList.Word[i].len - 1;
-    c[i] = tolower(Res->WWList.Word[i].word[0]);
+    c[i] = (unsigned char)dps_tolower((int)Res->WWList.Word[i].word[0]);
     if (wlen[i] > maxwlen) maxwlen = wlen[i];
     if (wlen[i] < minwlen) minwlen = wlen[i];
   }
 
-  if ((oi = (char *)DpsMalloc(128 + 2 * (size + 4 * query->WordParam.max_word_len + 2 * padding + maxwlen) * sizeof(char))) == NULL) {
+  if ((oi = (unsigned char *)DpsMalloc(128 + 2 * (size + 4 * query->WordParam.max_word_len + 2 * padding + maxwlen) * sizeof(unsigned char))) == NULL) {
     DPS_FREE(c); DPS_FREE(wlen);
     return NULL;
   }
   oi[0]=0;
 
-  Source = SourceToFree = (char*)DpsStrdup(value);
+  Source = SourceToFree = (unsigned char*)DpsStrdup(value);
 
-  for (p = prevend = Source; dps_strlen(oi) < size; ) {
+  for (p = prevend = Source; dps_strlen((const char*)oi) < size; ) {
 
-    np  = DpsStrWWL(&p, &(Res->WWList), c, wlen, minwlen, NOprefixHL);
+    np  = (unsigned char*)DpsStrWWL((char**)&p, &(Res->WWList), (char*)c, wlen, minwlen, NOprefixHL);
 
     if (np == NULL) break;
 
@@ -1350,10 +1350,10 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, si
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < Source + DocSize) && !isspace(*end); i++) end++;
     while ((start < end) && isspace(*start)) start++;
     if (start < end) {
-      if (oi[0]) dps_strcat(oi, mark);
-      if ((start != Source) && (start != prevend)) dps_strcat(oi, prefix_dot);
-      ures = *end; *end = 0; strcat(oi, start); *end = ures;
-      if ((end != Source + DocSize) && (*(end-1) != 0x2e) ) dps_strcat(oi, suffix_dot);
+      if (oi[0]) dps_strcat((char*)oi, (const char*)mark);
+      if ((start != Source) && (start != prevend)) dps_strcat((char*)oi, (const char*)prefix_dot);
+      ures = *end; *end = 0; dps_strcat((char*)oi, (const char*)start); *end = ures;
+      if ((end != Source + DocSize) && (*(end-1) != 0x2e) ) dps_strcat((char*)oi, (const char*)suffix_dot);
     }
     p = prevend = end;
     if (end == np) p++;
@@ -1376,10 +1376,10 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, si
 
   DPS_FREE(c); DPS_FREE(wlen);
   if (*oi == '\0') {
-    DPS_FREE(oi); return Source;
+    DPS_FREE(oi); return (char *)Source;
   }
   DPS_FREE(Source);
-  return oi;
+  return (char*)oi;
 
 }
 
@@ -1402,8 +1402,8 @@ int DpsStoreDelete(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 #endif
 }
 
+
 int DpsStoredOptimize(DPS_AGENT *Agent, int ns, char *Client) {
-  DPS_ENV *Conf = Agent->Conf;
   unsigned int NFiles = DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
   DPS_BASE_PARAM P;
   size_t i, dbfrom = 0, dbto =  (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
@@ -1426,13 +1426,13 @@ int DpsStoredOptimize(DPS_AGENT *Agent, int ns, char *Client) {
   return DPS_OK;
 }
 
+
 int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 
 #if defined HAVE_SQL && defined HAVE_ZLIB
   DPS_BASE_PARAM P;
   DPS_DOCUMENT *Doc;
   DPS_RESULT  *Res;
-  DPS_ENV *Conf = Agent->Conf;
   size_t DocSize = 0;
   unsigned int i, NFiles = DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
   urlid_t *todel = (int*)DpsMalloc(128 * sizeof(urlid_t));
@@ -1626,7 +1626,7 @@ int DpsStoreFind(DPS_AGENT *Agent, int ns, int sd, char *Client) {
   P.basename = "doc";
   P.indname = "doc";
   P.mode = DPS_READ_LOCK;
-  P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+  P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindUnsigned(&Agent->Vars, "StoredFiles", 0x100);
   P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
   P.A = Agent;
   while (rec_id != 0) {
@@ -1678,7 +1678,7 @@ int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, char *Client) {
   P.basename = "doc";
   P.indname = "doc";
   P.rec_id = rec_id;
-  P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+  P.NFiles = (db->StoredFiles) ? db->StoredFiles : DpsVarListFindUnsigned(&Agent->Vars, "StoredFiles", 0x100);
   P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
   P.A = Agent;
   if (DpsBaseOpen(&P, DPS_READ_LOCK) != DPS_OK) {

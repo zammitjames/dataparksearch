@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -465,7 +465,6 @@ static int dps_is_delim(const dpsunicode_t *delim, dpsunicode_t c) {
 
 
 dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsunicode_t **last) {
-    const dpsunicode_t *spanp;
     dpsunicode_t *tok;
 
     if (s == NULL && (s = *last) == NULL) return NULL;

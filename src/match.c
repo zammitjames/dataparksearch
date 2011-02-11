@@ -460,12 +460,10 @@ const char *DpsMatchTypeStr(int m){
 
 int DpsUniMatchListAdd(DPS_AGENT *A, DPS_UNIMATCHLIST *L, DPS_UNIMATCH *M, char *err, size_t errsize, int ordre) {
 	DPS_UNIMATCH	*N;
-	DPS_SERVER n;
-	int rc;
 	size_t i;
 
 	for (i = 0; i < L->nmatches; i++) {
-	  if ((DpsUniStrCmp(L->Match[i].pattern, DPS_NULL2EMPTY(M->pattern)) == 0) &&
+	  if ((DpsUniStrCmp(L->Match[i].pattern, DPS_UNINULL2EMPTY(M->pattern)) == 0) &&
 	      (L->Match[i].match_type == M->match_type) &&
 	      (L->Match[i].case_sense == M->case_sense) &&
 	      (L->Match[i].nomatch == M->nomatch)) {
@@ -490,32 +488,6 @@ int DpsUniMatchListAdd(DPS_AGENT *A, DPS_UNIMATCHLIST *L, DPS_UNIMATCH *M, char 
 	N->subsection = M->subsection ? (char *)DpsStrdup(M->subsection) : NULL;
 	N->dbaddr = M->dbaddr ? (char *)DpsStrdup(M->dbaddr) : NULL;
 	N->last = M->last;
-
-	if (A != NULL) {
-/*
-	  bzero((void*)&n, sizeof(n));
-	  n.command = 'F';
-	  n.Match.pattern = M->pattern;
-	  n.Match.match_type = M->match_type;
-	  n.Match.case_sense = M->case_sense;
-	  n.Match.nomatch = M->nomatch;
-	  n.Match.arg = N->arg;
-	  n.Match.section = N->section;
-	  n.Match.subsection = N->subsection;
-	  n.ordre = ordre;
-
-	  if(A->flags & DPS_FLAG_ADD_SERVURL) {
-	    rc = DpsSrvAction(A, &n, DPS_SRV_ACTION_ADD);
-	    N->server_id = n.site_id;
-	  } else {
-	    rc = DPS_OK;
-	    N->server_id = 0;
-	  }
-	  DpsVarListFree(&n.Vars);
-
-	  if (rc != DPS_OK) return rc;
-*/
-	}
 
 	return DpsUniMatchComp(N, err, errsize);
 }
@@ -581,11 +553,11 @@ int DpsUniMatchComp(DPS_UNIMATCH *Match, char *errstr, size_t errstrsize) {
 	return DPS_OK;
 }
 
+
 int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsunicode_t *net_string, struct sockaddr_in *sin, 
 		 size_t nparts, DPS_MATCH_PART * Parts) {
 	size_t		i;
 	int		res=0;
-	regmatch_t	subs[DPS_NSUBS];
 	char            regerrstr[ERRSTRSIZ]="";
 	const dpsunicode_t *se;
 	size_t		plen,slen;
@@ -617,9 +589,9 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 		case DPS_MATCH_WILD:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			if(Match->case_sense) {
-			  res = DpsUniWildCaseCmp(string, DPS_NULL2EMPTY(Match->pattern));
+			  res = DpsUniWildCaseCmp(string, DPS_UNINULL2EMPTY(Match->pattern));
 			}else{
-			  res = DpsUniWildCmp(string, DPS_NULL2EMPTY(Match->pattern));
+			  res = DpsUniWildCmp(string, DPS_UNINULL2EMPTY(Match->pattern));
 			}
 			break;
 		case DPS_MATCH_SUBNET:
@@ -655,19 +627,19 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
 			slen = DpsUniLen(DPS_UNINULL2EMPTY(Match->pattern));
 			if(Match->case_sense){
-			  res = DpsUniStrNCaseCmp(DPS_NULL2EMPTY(Match->pattern), string, slen);
+			  res = DpsUniStrNCaseCmp(DPS_UNINULL2EMPTY(Match->pattern), string, slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
-				  slen = DpsUniLen(DPS_NULL2EMPTY(Match->idn_pattern));
-				  if (slen) res = DpsUniStrNCaseCmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
+				  slen = DpsUniLen(DPS_UNINULL2EMPTY(Match->idn_pattern));
+				  if (slen) res = DpsUniStrNCaseCmp(DPS_UNINULL2EMPTY(Match->idn_pattern), string, slen);
 				}
 #endif
 			}else{
-			  res = DpsUniStrNCmp(DPS_NULL2EMPTY(Match->pattern), string, slen);
+			  res = DpsUniStrNCmp(DPS_UNINULL2EMPTY(Match->pattern), string, slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
-				  slen = DpsUniLen(DPS_NULL2EMPTY(Match->idn_pattern));
-				  if (slen) res = DpsUniStrNCmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
+				  slen = DpsUniLen(DPS_UNINULL2EMPTY(Match->idn_pattern));
+				  if (slen) res = DpsUniStrNCmp(DPS_UNINULL2EMPTY(Match->idn_pattern), string, slen);
 				}
 #endif
 			}
@@ -677,12 +649,12 @@ int DpsUniMatchExec(DPS_UNIMATCH *Match, const dpsunicode_t *string, const dpsun
 			if(Match->case_sense){
 				res = DpsUniStrCaseCmp(Match->pattern, string);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
-				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = DpsUniStrCaseCmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
+				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = DpsUniStrCaseCmp(DPS_UNINULL2EMPTY(Match->idn_pattern), string);
 #endif
 			}else{
-				res = DpsUniStrCmp(Match->pattern, string);
+			  res = DpsUniStrCmp(DPS_UNINULL2EMPTY(Match->pattern), string);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
-				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = DpsUniStrCmp(DPS_NULL2EMPTY(Match->idn_pattern), string);
+				if (res && Match->idn_pattern && Match->idn_pattern[0]) res = DpsUniStrCmp(DPS_UNINULL2EMPTY(Match->idn_pattern), string);
 #endif
 			}
 			break;

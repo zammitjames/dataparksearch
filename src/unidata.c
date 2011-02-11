@@ -160,7 +160,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 /* Returns all tokens including separators */
 
 dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last, int *ctype0, int *have_bukva_forte, int cmd_mode) {
-  int ctype, plane, ctype_1, plane_1, ctype_forte, ctype_forte_1, isPatternSyntax;
+  int ctype, plane, ctype_1, plane_1, ctype_forte, ctype_forte_1;
   dpsunicode_t *beg;
 
 	if(s == NULL && (s=*last) == NULL)
@@ -355,7 +355,6 @@ int dps_isApostropheBreak(dpsunicode_t c, dpsunicode_t n) {
 }
 
 static void DpsUniDecomposeRecursive(DPS_DSTR *buf, dpsunicode_t c) {
-  int pos = 0;
   dpsunicode_t decomp[3];
 
   if (c >= SBase && c <= HLast) {

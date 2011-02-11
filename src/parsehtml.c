@@ -1199,8 +1199,8 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		if ((strcasecmp(name, "p")) && (strcasecmp(name, "br")) && (strcasecmp(name, "option")) && (strcasecmp(name, "input")) && (strcasecmp(name, "font"))) {
 		  Sec = DpsVarListFind(&Doc->Sections, name);
 		  if (tag->level < sizeof(tag->visible) - 1) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
-		  tag->section[tag->level] = (Sec) ? Sec->section : 0;
-		  tag->strict[tag->level] = (Sec) ? Sec->strict : 0;
+		  tag->section[tag->level] = (Sec) ? (char)Sec->section : 0;
+		  tag->strict[tag->level] = (Sec) ? (char)Sec->strict : 0;
 		  tag->section_name[tag->level] = (Sec) ? Sec->name : NULL;
 		  if ((tag->level + 2 >= sizeof(tag->visible)) || (((tag->trailend - tag->trail) + name_len + 2) > sizeof(tag->trail)) ) {
 		    DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML, level:%d, trailsize:%d", tag->level, (tag->trailend - tag->trail) + name_len);
@@ -1277,7 +1277,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		    if (x && ((p == NULL) || (p > x))) {
 		      visible = 0;
 		    }
-		    tag->visible[tag->level] = visible;
+		    tag->visible[tag->level] = (char)visible;
 		  }
 		  z = strcasestr(y, "display:");
 		  if (z != NULL) {
@@ -1287,7 +1287,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		    if (x && ((p == NULL) || (p > x))) {
 		      visible = 0;
 		    } else visible = 1;
-		    tag->visible[tag->level] = visible;
+		    tag->visible[tag->level] = (char)visible;
 		  }
 		  DPS_FREE(y);
 		}else
@@ -1303,7 +1303,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
 		  DPS_FREE(lang);
 		  lang = (char*)DpsStrdup(DpsTrim(y, " \t\r\n"));
-		  for(n = lang; *n; *n = dps_tolower(*n),n++);
+		  for(n = lang; *n; *n = (char)dps_tolower((int)*n),n++);
 		  DPS_FREE(y);
 		} /*else*/ {
 		        if (tag->toks[i].nlen + 12 > seclen) {
@@ -1379,7 +1379,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		if(!strcasecmp(metaname, "Content-Language") || !strcasecmp(metaname, "DC.Language")) {
 			char *l;
 			l = (char*)DpsStrdup(metacont);
-			for(n = l; *n; *n = dps_tolower(*n), n++);
+			for(n = l; *n; *n = (char)dps_tolower((int)*n), n++);
 /*			if (dps_strlen(l) > 2) {
 			  if (l[2] != '_') {
 			    l[2] = '\0';

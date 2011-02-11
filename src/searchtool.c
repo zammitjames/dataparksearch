@@ -1011,8 +1011,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	size_t i, wlen, llen, seg_wlen;
 	char *wrd, *clex;
 	dpsunicode_t *uwrd;
-	int toadd = 0;
 #if defined HAVE_ASPELL
+	int toadd = 0;
 	AspellCanHaveError *ret;
 	AspellSpeller *speller = NULL;
 	const AspellWordList *suggestions;
@@ -1485,7 +1485,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		  dpsunicode_t *uwrddup = DpsUniDup(uwrd), *l_lt, *l_tok;
 		  int l_forte, loose_split;
 		  l_tok = DpsUniGetToken(uwrddup, &l_lt, &l_forte, 1);
-		  loose_split = (wlen != (l_lt - l_tok));
+		  loose_split = (wlen != (size_t)(l_lt - l_tok));
 
 		  state.cmd = DPS_STACK_WORD;
 		  state.add_cmd = add_cmd;
@@ -2558,7 +2558,7 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
       D[DPS_N_WRDCOUNT] = phr_n;
 
       { register size_t tt, sum = 0;
-	register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1);
+	register size_t median = (size_t)(((double)phr_n) / (Res->max_order_inquery + 1));
 	for (tt = 0; tt <= Res->max_order_inquery; tt++) {
 	  if (count[tt])
 	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
@@ -2619,7 +2619,7 @@ static void DpsGroupByURLFast(DPS_AGENT *query, DPS_RESULT *Res) {
   D[DPS_N_WRDCOUNT] = phr_n;
 
   { register size_t tt, sum = 0;
-    register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1);
+    register size_t median = (size_t)(((double)phr_n) / (Res->max_order_inquery + 1));
     for (tt = 0; tt <= Res->max_order_inquery; tt++) {
       if (count[tt])
 	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
@@ -2800,7 +2800,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
 
       { register size_t tt, cc = 0;
 #ifdef WITH_REL_WRDCOUNT
-	register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1), sum = 0;
+	register size_t median = (size_t)(((double)phr_n) / (Res->max_order_inquery + 1)), sum = 0;
 #endif
 	for (tt = 0; tt <= Res->max_order_inquery; tt++) {
 	  if (count[tt]) cc += D[DPS_N_ADD + nsections + tt] / count[tt];
@@ -2886,7 +2886,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
 
   { register size_t tt, cc = 0;
 #ifdef WITH_REL_WRDCOUNT
-    register size_t median = ((double)phr_n) / (Res->max_order_inquery + 1), sum = 0;
+    register size_t median = (size_t)(((double)phr_n) / (Res->max_order_inquery + 1)), sum = 0;
 #endif
     for (tt = 0; tt <= Res->max_order_inquery; tt++) {
       if (count[tt]) cc += D[DPS_N_ADD + nsections + tt] / count[tt];
@@ -3127,7 +3127,6 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 		  if((lim = DpsVarListFindStr(vars, str, NULL))) {
 			int ltype = 0;
 			const char *fname = NULL;
-			char * llt;
 			
 			if(!strcasecmp(lim, "category")) {
 			  ltype = DPS_LIMTYPE_NESTED; fname = DPS_LIMFNAME_CAT;
@@ -3482,7 +3481,7 @@ dpsunicode_t *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *ustr, const char *
 	DPS_CHARSET	*sys_int;
 	size_t          dstlen = DpsUniLen(ustr);
 	size_t          bestparts = dstlen, curparts;
-	dpsunicode_t    *ja_seg = NULL, *zh_seg = NULL, *ko_seg = NULL, *th_seg = NULL, *best_seg, *toseg;
+	dpsunicode_t    *ja_seg = NULL, *zh_seg = NULL, *ko_seg = NULL, *th_seg = NULL, *toseg;
 	dpsunicode_t    *lt, *tok;
 	int             have_bukva_forte;
 

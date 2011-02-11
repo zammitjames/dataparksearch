@@ -302,7 +302,7 @@ void DpsServerListFree(DPS_SERVERLIST *List){
 }
 
 int cmpsrvpnt(const void *p1,const void *p2) {
-  const DPS_SERVER **s1 = p1, **s2 = p2;
+  const DPS_SERVER **s1 = (const DPS_SERVER**)p1, **s2 = (const DPS_SERVER**)p2;
   if ((*s1)->site_id < (*s2)->site_id) return -1;
   if ((*s1)->site_id > (*s2)->site_id) return 1;
   return 0;
@@ -461,10 +461,7 @@ __C_LINK int __DPSCALL DpsServerInit(DPS_SERVER * srv){
 urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Doc) {
   char *urlstr, *pp = NULL;
   DPS_SERVER S;
-  int rc, i;
-  urlid_t id = 0;
-  float weight = 0.0;
-  int follow = DpsVarListFindInt(&srv->Vars,"Follow",DPS_FOLLOW_PATH);
+  int rc;
   char *url, *psite;
 
   url = DpsVarListFindStr(&Doc->Sections, "ORIG_URL", NULL);
@@ -509,7 +506,7 @@ urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Do
     register char *p;
     if ((p = strstr(urlstr, ":/")) == NULL) {DPS_FREE(urlstr); return 0; }
     if ((pp = strchr(p + 3, '/')) == NULL) {DPS_FREE(urlstr); return 0; }
-    for (p += 3; p < pp; p++) { *p = dps_tolower(*p); }
+    for (p += 3; p < pp; p++) { *p = (char)dps_tolower((int)*p); }
     for ( ; level < 0; level++) {
       if ((p = strchr(pp, '/')) == NULL) break;
       pp = p;
@@ -536,7 +533,7 @@ urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Do
   
     {
       register size_t ii;
-      for (ii = 0; ii < dps_strlen(psite); ii++) psite[ii] = dps_tolower(psite[ii]);
+      for (ii = 0; ii < dps_strlen(psite); ii++) psite[ii] = (char)dps_tolower((int)psite[ii]);
     }
   }
 

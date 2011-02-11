@@ -249,7 +249,6 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 	      struct sockaddr_in dps_addr;
 	      unsigned char *p = (unsigned char*)&dps_addr.sin_port;
 	      unsigned int ip[2];
-	      struct timeval so_tval;
       
 	      if((A->Demons.Demon[i].cached_sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		DpsLog(A, DPS_LOG_ERROR, "CacheD ERR socket_sd: %s", strerror(errno));
@@ -1199,7 +1198,7 @@ urlid_t* LoadNestedLimit(DPS_AGENT *Agent, DPS_DB *db, size_t lnum, size_t *size
 	  }
 	}
 	DpsClose(ind_fd);
-	num = sb.st_size / sizeof(DPS_UINT8_POS_LEN);
+	num = (size_t)(sb.st_size / sizeof(DPS_UINT8_POS_LEN));
 	DpsLog(Agent, DPS_LOG_DEBUG, " num: %d", num);
 
 	{
@@ -1249,7 +1248,7 @@ urlid_t* LoadNestedLimit(DPS_AGENT *Agent, DPS_DB *db, size_t lnum, size_t *size
 		DpsClose(dat_fd);
 		goto err1;
 	  }
-	  len = ind[stop].pos + ind[stop].len - ind[start].pos;
+	  len = (size_t)(ind[stop].pos + ind[stop].len - ind[start].pos);
 	  DpsLog(Agent, DPS_LOG_DEBUG, "len: %d", len);
 	  data = (urlid_t*)DpsMalloc(len + 1);
 	  if (data == NULL) {
@@ -1325,7 +1324,7 @@ urlid_t* LoadLinearLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uin
 	}
 	DpsClose(ind_fd);
 
-	num=sb.st_size/sizeof(DPS_UINT4_POS_LEN);
+	num = (size_t)(sb.st_size/sizeof(DPS_UINT4_POS_LEN));
 	key.val=val;
 	if(!(found = dps_bsearch(&key, ind, num, sizeof(DPS_UINT4_POS_LEN), (qsort_cmp)cmp_hex4_ind))) {
 	  data = (urlid_t*)DpsMalloc(sizeof(*data) + 1);
@@ -1452,7 +1451,7 @@ urlid_t* LoadTimeLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uint4
 	}
 	DpsClose(ind_fd);
 
-	num=sb.st_size/sizeof(DPS_UINT4_POS_LEN);
+	num = (size_t)(sb.st_size/sizeof(DPS_UINT4_POS_LEN));
 
 	if(!from){
 		found1=&ind[0];
@@ -1504,7 +1503,7 @@ urlid_t* LoadTimeLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uint4
 		DpsClose(dat_fd);
 		goto err1;
 	}
-	len = found2->pos + found2->len - found1->pos;
+	len = (size_t)(found2->pos + found2->len - found1->pos);
 	if (len == 0) {
 	  data = (urlid_t*)DpsMalloc(sizeof(*data) + 1);
 	  if (data == NULL) {
@@ -1644,7 +1643,7 @@ int DpsURLDataLoadCache(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db) {
 		  return DPS_ERROR;
 		}
 		read(fd, D, (size_t)sb.st_size);
-		nrec = sb.st_size / sizeof(DPS_URLDATA);
+		nrec = (size_t)(sb.st_size / sizeof(DPS_URLDATA));
 		first = 0;
 		DpsUnLock(fd);
 		DpsLog(A, DPS_LOG_DEBUG, "%d records readed", nrec);
@@ -1712,7 +1711,7 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	    if (fd > 0) {
 	      DpsReadLock(fd); 
 	      fstat(fd, &sb);
-	      if ((nrec = sb.st_size / sizeof(DPS_URLDATA)) > 0) {
+	      if ((nrec = (size_t)(sb.st_size / sizeof(DPS_URLDATA))) > 0) {
 	      
 		DF[filenum].URLData = (DPS_URLDATA*)DpsRealloc(DF[filenum].URLData, (DF[filenum].nrec + nrec) * sizeof(DPS_URLDATA));
 		if (DF[filenum].URLData == NULL) {
@@ -2359,7 +2358,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
       }
       DpsWriteLock(db->del_fd);
       if (logd->wrd_buf[log_num].ndel) 
-	if(logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL) != 
+	if((ssize_t)(logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL)) != 
 	   write(db->del_fd, logd->wrd_buf[log_num].del_buf, logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL))) {
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't write to del.log: %s\n", strerror(errno));
 	  db->errcode = 1;
@@ -2645,7 +2644,6 @@ int DpsLogdClose(DPS_AGENT *Agent, DPS_DB *db, const char *var_dir, size_t i, in
 static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
         DPS_SQLRES     SQLres, Res;
 	DPS_URLDATA    Item;
-	double pr;
         size_t i, offset = 0, nitems;
 	urlid_t rec_id = 0;
 	int filenum, fd = -1, prevfilenum = - 1;
@@ -2667,7 +2665,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	DpsSQLResInit(&Res);
 
 	recs = DpsVarListFindInt(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
-	NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&Indexer->Vars, "URLDataFiles", 0x300);
+	NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindUnsigned(&Indexer->Vars, "URLDataFiles", 0x300);
 	vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Indexer->Vars, "VarDir", DPS_VAR_DIR);
 
 	FF = (int*)DpsXmalloc(NFiles * sizeof(int));
@@ -2968,7 +2966,7 @@ static int DpsDeleteURLinfoCache(DPS_AGENT *A, DPS_DB *db, urlid_t rec_id) {
   P.zlib_memLevel = 9;
   P.zlib_strategy = DPS_BASE_INFO_STRATEGY;
 #endif
-  P.NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&A->Vars, "URLDataFiles", 0x300);
+  P.NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindUnsigned(&A->Vars, "URLDataFiles", 0x300);
   P.mode = DPS_WRITE_LOCK;
   P.rec_id = rec_id;
   DpsBaseDelete(&P);
@@ -3011,7 +3009,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	    DpsWriteLock(db->del_fd);
 	    for (i = 0; i < NWrdFiles; i++) {
 	      if (logd->wrd_buf[i].ndel == 0) continue;
-	      if(logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL) != write(db->del_fd, logd->wrd_buf[i].del_buf, logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL))) {
+	      if((ssize_t)(logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL)) != write(db->del_fd, logd->wrd_buf[i].del_buf, logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL))) {
 		sprintf(db->errstr, "Can't write to del.log: %s\n", strerror(errno));
 		db->errcode = 1;
 		DpsUnLock(db->del_fd);
@@ -3092,7 +3090,7 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
   int dat_fd, res, recs, u = 1;
   DPS_URL_CRD *crd = NULL;
   DPS_SQLRES	SQLRes;
-  size_t ndel = 0, mdel = 2048, WrdFiles, del_count = 0, mdel_count = 2048, exist_count = 0, mexist = 2048, nitems, total_deleted = 0;
+  size_t ndel = 0, mdel = 2048, WrdFiles, nitems, total_deleted = 0;
   unsigned long offset = 0;
   urlid_t *todel, prev_urlid;
   DPS_LOGD_CMD	cmd;
@@ -3103,7 +3101,6 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
 
   DpsSQLResInit(&SQLRes);
 
-  mexist =  mdel_count = DpsVarListFindInt(&A->Vars, "URLSelectCacheSize", DPS_URL_SELECT_CACHE_SIZE);
   todel = (int*)DpsMalloc(mdel * sizeof(urlid_t));
   if (todel == NULL) {TRACE_OUT(A); return DPS_ERROR; }
 
@@ -3891,7 +3888,7 @@ static int DpsCachedResort(DPS_AGENT *A, DPS_DB *db) {
   P.basename = "wrd";
   P.indname = "wrd";
   P.mode = DPS_WRITE_LOCK;
-  P.NFiles = (db->WrdFiles) ? db->WrdFiles : DpsVarListFindInt(&A->Vars, "WrdFiles", 0x300);
+  P.NFiles = (db->WrdFiles) ? db->WrdFiles : DpsVarListFindUnsigned(&A->Vars, "WrdFiles", 0x300);
   P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&A->Vars, "VarDir", DPS_VAR_DIR);
   P.A = A;
 #ifdef HAVE_ZLIB

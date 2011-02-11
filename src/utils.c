@@ -455,10 +455,10 @@ char * DpsUnescapeCGIQuery(char *d, const char *s) {
 	while(*s){
 		if(*s=='%'){
 			if(strchr("0123456789",*(++s))) hi=*s-'0';
-			else hi = dps_tolower(*s) - 'a' + 10;
+			else hi = dps_tolower((int)*s) - 'a' + 10;
 			if(strchr("0123456789",*(++s))) lo=*s-'0';
-			else lo = dps_tolower(*s) -'a' + 10;
-			*d = hi * 16 + lo;
+			else lo = dps_tolower((int)*s) -'a' + 10;
+			*d = (char)(hi * 16 + lo);
 		}else
 		if(*s=='+'){
 			*d=' ';
@@ -482,9 +482,9 @@ char * DpsEscapeURL(char *d, const char *s) {
 /*			sprintf(d,"%%%X",(int)*ss);*/
 	                register int dig = (int)(((*ss) & 0xF0) >> 4);
 			*d = '%';
-			d[1] = (dig < 10) ? '0' + dig : 'A' + (dig - 10);
+			d[1] = (char)((dig < 10) ? '0' + dig : 'A' + (dig - 10));
 			dig = (int)((*ss) & 0xF);
-			d[2] = (dig < 10) ? '0' + dig : 'A' + (dig - 10);
+			d[2] = (char)((dig < 10) ? '0' + dig : 'A' + (dig - 10));
 			d+=2;
 	  } else
 	  if(*ss==' ') {
@@ -509,9 +509,9 @@ char * DpsEscapeURI(char *d,const char *s){
 /*			sprintf(d,"%%%X",(int)*s);*/
 	                register int dig = (int)(((*ss) & 0xF0) >> 4);
 			*d = '%';
-			d[1] = (dig < 10) ? '0' + dig : 'A' + (dig - 10);
+			d[1] = (char)((dig < 10) ? '0' + dig : 'A' + (dig - 10));
 			dig = (int)((*ss) & 0xF);
-			d[2] = (dig < 10) ? '0' + dig : 'A' + (dig - 10);
+			d[2] = (char)((dig < 10) ? '0' + dig : 'A' + (dig - 10));
 			d+=2;
 		}else{
 			*d=*ss;
@@ -1129,10 +1129,11 @@ void DpsTime_t2HttpStr(time_t t, char *str) {
 
   if (tim->tm_mday > 0 && tim->tm_mday < 32) {
     register int dig = tim->tm_mday / 10;
-    *s = 0x30 + dig; s++;
-    dig = tim->tm_mday - (dig * 10);
-    *s = 0x30 + dig; s++;
-    *s = ' '; s++;
+    register int dig2 = tim->tm_mday - (dig * 10);
+    s[0] = (char)(0x30 + dig);
+    s[1] = (char)(0x30 + dig2);
+    s[2] = ' ';
+    s += 3;
   } else {
     dps_strcpy(s, "?? "); s += 3;
   }
@@ -1141,56 +1142,57 @@ void DpsTime_t2HttpStr(time_t t, char *str) {
     dps_strcpy(s, dps_mon[tim->tm_mon]); s += 3;
     *s = ' '; s++;
   } else {
-    dps_strcpy(s, "??? "); s += 3;
+    dps_strcpy(s, "??? "); s += 4;
   }
 
   {
     register int year = 1900 + tim->tm_year;
-    register int dig = year / 1000;
-    *s = 0x30 + dig; s++;
+    register int dig = year / 1000, dig2, dig3;
+    s[0] = (char)(0x30 + dig);
     year -= dig * 1000;
-    dig = year / 100;
-    *s = 0x30 + dig; s++;
-    year -= dig * 100;
-    dig = year / 10;
-    *s = 0x30 + dig; s++;
-    year -= dig * 10;
-    *s = 0x30 + year; s++;
-    *s = ' '; s++;
+    dig2 = year / 100;
+    s[1] = (char)(0x30 + dig2);
+    year -= dig2 * 100;
+    dig3 = year / 10;
+    s[2] = (char)(0x30 + dig3);
+    year -= dig3 * 10;
+    s[3] = (char)(0x30 + year);
+    s[4] = ' '; s += 5;
   }
 
   if (tim->tm_hour >= 0 && tim->tm_hour < 24) {
     register int dig = tim->tm_hour / 10;
-    *s = 0x30 + dig; s++;
-    dig = tim->tm_hour - (dig * 10);
-    *s = 0x30 + dig; s++;
-    *s = ':'; s++;
+    register int dig2 = tim->tm_hour - (dig * 10);
+    s[0] = (char)(0x30 + dig);
+    s[1] = (char)(0x30 + dig2);
+    s[2] = ':'; s += 3;
   } else {
     dps_strcpy(s, "??:"); s += 3;
   }
 
   if (tim->tm_min >= 0 && tim->tm_min < 60) {
     register int dig = tim->tm_min / 10;
-    *s = 0x30 + dig; s++;
-    dig = tim->tm_min - (dig * 10);
-    *s = 0x30 + dig; s++;
-    *s = ':'; s++;
+    register int dig2 = tim->tm_min - (dig * 10);
+    s[0] = (char)(0x30 + dig);
+    s[1] = (char)(0x30 + dig2);
+    s[3] = ':'; s += 3;
   } else {
     dps_strcpy(s, "??:"); s += 3;
   }
 
   if (tim->tm_sec >= 0 && tim->tm_sec < 60) {
     register int dig = tim->tm_sec / 10;
-    *s = 0x30 + dig; s++;
-    dig = tim->tm_sec - (dig * 10);
-    *s = 0x30 + dig; s++;
-    *s = ' '; s++;
+    register int dig2 = tim->tm_sec - (dig * 10);
+    s[0] = (char)(0x30 + dig);
+    s[1] = (char)(0x30 + dig2);
+    s[2] = ' '; s += 3;
   } else {
     dps_strcpy(s, "?? "); s += 3;
   }
 
   dps_strcpy(s, "GMT");
 }
+
 
 /* Find out tz_offset for the functions above
  */
@@ -2011,12 +2013,12 @@ void DpsUniPrint(const char *head, dpsunicode_t *ustr) {
 
 
 static struct flock* file_lock(struct flock *ret, int type, int whence) {
-    ret->l_type = type ;
-    ret->l_start = 0 ;
-    ret->l_whence = whence ;
-    ret->l_len = 0 ;
-    ret->l_pid = getpid() ;
-    return ret ;
+  ret->l_type = (short)type ;
+  ret->l_start = 0 ;
+  ret->l_whence = (short)whence ;
+  ret->l_len = 0 ;
+  ret->l_pid = getpid() ;
+  return ret ;
 }
 
 
@@ -2348,7 +2350,10 @@ int dps_demonize(void) {
   char *ptty1;
   char *ptty2;
   char *dev_null = "/dev/null";
-  int fd, rc = 0;
+  int rc = 0;
+#ifndef HAVE_DAEMON
+  int fd;
+#endif
 
   if ((ptty0 = ttyname(0)) == NULL) ptty0 = dev_null;
   if ((ptty1 = ttyname(1)) == NULL) ptty1 = dev_null;

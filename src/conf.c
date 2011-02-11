@@ -758,7 +758,7 @@ static int add_sectionsql(void *Cfg, size_t ac,char **av){
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	DPS_VAR S;
 	DPS_MATCH M;
-	int shift = 0;
+	size_t shift = 0;
 
 	if (ac < 4 || ac > 8) {
 	  dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "wrong number (%d) of arguments for SectionSQL command", ac);
@@ -893,11 +893,11 @@ static int add_hrefsection(void *Cfg, size_t ac,char **av){
 	return DPS_OK;
 }
 
-static int add_actionsql(void *Cfg, size_t ac,char **av) {
+static int add_actionsql(void *Cfg, size_t ac, char **av) {
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
 	DPS_MATCH M;
-	int shift = 0;
+	size_t shift = 0;
 	char err[128] = "";
 
 	if (ac < 4 || ac > 6) {
@@ -1205,7 +1205,7 @@ static int add_srv_file(void *Cfg, size_t ac, char **av) {
 	DPS_CFG	*C = (DPS_CFG*)Cfg;
 	DPS_ENV	*Conf = C->Indexer->Conf;
 	char **newav;
-	size_t i, p, newac;
+	size_t i, p;
 	int url = 0;
 	FILE *f;
 	char *curch;
@@ -1669,11 +1669,11 @@ static int srv_rpl_var(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	if (strcasecmp(av[0], "ExpireAt") == 0) {
 	  C->Srv->ExpireAt.eight = 0;
-	  if (ac > 1 && *av[1] != '*') C->Srv->ExpireAt.cron.min = 1 + DPS_ATOI(av[1]);
-	  if (ac > 2 && *av[2] != '*') C->Srv->ExpireAt.cron.hour = 1 + DPS_ATOI(av[2]);
-	  if (ac > 3 && *av[3] != '*') C->Srv->ExpireAt.cron.day = 1 + DPS_ATOI(av[3]);
-	  if (ac > 4 && *av[4] != '*') C->Srv->ExpireAt.cron.month = 1 + DPS_ATOI(av[4]);
-	  if (ac > 5 && *av[5] != '*') C->Srv->ExpireAt.cron.wday = 1 + DPS_ATOI(av[5]);
+	  if (ac > 1 && *av[1] != '*') C->Srv->ExpireAt.cron.min = 1 + (char)DPS_ATOI(av[1]);
+	  if (ac > 2 && *av[2] != '*') C->Srv->ExpireAt.cron.hour = 1 + (char)DPS_ATOI(av[2]);
+	  if (ac > 3 && *av[3] != '*') C->Srv->ExpireAt.cron.day = 1 + (char)DPS_ATOI(av[3]);
+	  if (ac > 4 && *av[4] != '*') C->Srv->ExpireAt.cron.month = 1 + (char)DPS_ATOI(av[4]);
+	  if (ac > 5 && *av[5] != '*') C->Srv->ExpireAt.cron.wday = 1 + (char)DPS_ATOI(av[5]);
 	} else if (ac == 1) {
 	  DpsVarListDel(&C->Srv->Vars, av[0]);
 	} else if (ac == 2) {

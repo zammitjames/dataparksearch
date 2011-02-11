@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -150,7 +150,7 @@ int Dps_ftp_open_data_port( DPS_CONN *c, DPS_CONN *d){
 		return -1;
 
 	if (d->port) {
-	  d->sin.sin_port = htons(d->port);
+	  d->sin.sin_port = htons((uint16_t)d->port);
 	}
 
 	if (socket_open(d))

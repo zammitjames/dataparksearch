@@ -207,14 +207,14 @@ int DpsChineseListLoad(DPS_AGENT *Agent, DPS_CHINALIST *List, const char *charse
        else fprintf(stderr, "Unable to open FreqDic file '%s': %s", fname, strerror(errno));
        return DPS_ERROR;
      }
-     if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+     if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
        if (Agent->Conf->is_log_open) 
 	 DpsLog(Agent, DPS_LOG_ERROR, "Unable to alloc %d bytes", sb.st_size);
        else fprintf(stderr, "Unable to alloc %ld bytes", (long)sb.st_size);
        close(fd);
        return DPS_ERROR;
      }
-     if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+     if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
        if (Agent->Conf->is_log_open) 
 	 DpsLog(Agent, DPS_LOG_ERROR, "Unable to read FreqDic file '%s': %s", fname, strerror(errno));
        else fprintf(stderr, "Unable to read FreqDic file '%s': %s", fname, strerror(errno));
