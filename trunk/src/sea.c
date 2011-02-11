@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2011 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,11 +62,11 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
   DPS_TEXTITEM Item;
   DPS_VAR	*Sec;
   dpsunicode_t *sentence, *lt, savec;
-  double *links;
-  double w, delta, pdiv, cur_div, dw;
+  double *links, w;
+  /*  double delta, pdiv, cur_div, dw;*/
   size_t l, sent_len;
   size_t min_len = 10000000, min_pos = 0;
-  int  it, u_it;
+  int  it;
   register size_t i, j;
 #ifdef DEBUG
   char lcstr[4096];
@@ -245,8 +245,6 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 
 	DpsLog(Indexer, DPS_LOG_DEBUG, "%d:%02d|%12.9f->%12.9f|di:%11.9f|Oi:%11.9f|delta:%12.9f|pas:%11.9f", 
 	       l, it, pdiv, cur_div,  List.Sent[l].di, List.Sent[l].Oi, delta, List.Sent[l].pas);
-
-/*	u_it = ( (pdiv = cur_div) > EPS );*/
 
       }
     }

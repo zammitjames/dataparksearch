@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -783,7 +783,8 @@ const char *DpsLanguageCanonicalName(const char *name) {
   }
   return name;
 }
-const char *DpsHaveLanguageCanonicalName(const char *name) {
+
+static const char *DpsHaveLanguageCanonicalName(const char *name) {
   int l,m,r,s;
 
   if (name != NULL) {
@@ -826,7 +827,7 @@ static DPS_LANGMAP *FindLangMap(DPS_LANGMAPLIST *L, const char *lang, const char
   register int c;
   char savec;
   char *lt;
-  const char *language = DpsLanguageCanonicalName(dps_strtok_r(lang, ", ", &lt, &savec));
+  const char *language = DpsLanguageCanonicalName(dps_strtok_r((char*)lang, ", ", &lt, &savec));
 
   if (L->nmaps) {
     while(language) {
@@ -923,12 +924,12 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
        fprintf(stderr, "Unable to open LangMap file '%s': %s", filename, strerror(errno));
        return DPS_ERROR;
      }
-     if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
-       fprintf(stderr, "Unable to alloc %d bytes", sb.st_size);
+     if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
+       fprintf(stderr, "Unable to alloc %d bytes", (size_t)sb.st_size);
        DpsClose(fd);
        return DPS_ERROR;
      }
-     if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+     if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
        fprintf(stderr, "Unable to read LangMap file '%s': %s", filename, strerror(errno));
        DPS_FREE(data);
        DpsClose(fd);

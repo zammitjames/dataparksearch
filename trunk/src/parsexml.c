@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -94,7 +94,6 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
   DPS_DOCUMENT *Doc = D->Doc;
   DPS_TEXTITEM  Item;
   DPS_VAR    *Sec;
-  const char *val;
   size_t slen;
 
 /*  if (D->sec == NULL) return DPS_XML_OK;*/

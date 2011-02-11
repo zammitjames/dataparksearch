@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ static int add_var(DPS_DOCUMENT *Doc, char *name,char *val, size_t len) {
 int DpsGIFParse(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
   size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
   size_t	cont_len = Doc->Buf.size - hdr_len;
-  unsigned char	*buf_in = Doc->Buf.content, *p;
+  const char	*buf_in = (const char*)Doc->Buf.content, *p;
   int global_palette, colors;
   char *str;
 

@@ -51,11 +51,11 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
       } else {
 	p = str + 1;
 	if (!(conv->flags & DPS_RECODE_TEXT_FROM)) {
-	  for(e = str + 1 ; (e - str < DPS_MAX_SGML_LEN) && (((*e<='z')&&(*e>='a'))||((*e<='Z')&&(*e>='A'))); e++);
+	  for(e = (unsigned char*)str + 1 ; (e - str < DPS_MAX_SGML_LEN) && (((*e<='z')&&(*e>='a'))||((*e<='Z')&&(*e>='A'))); e++);
 	  if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*e == ';')) {
 	    z = *e;
 	    *e = '\0';
-	    n = DpsSgmlToUni(str + 1, wc);
+	    n = DpsSgmlToUni((const char*)str + 1, wc);
 	    if (n == 0) *wc = 0;
 	    else conv->ocodes = (size_t)n;
 	    *e = z;
@@ -70,7 +70,7 @@ __C_LINK int __DPSCALL dps_mb_wc_8bit(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicod
     }
   }
   if ( *str == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
-    n = DpsJSONToUni(str + 1, wc, &conv->icodes);
+    n = DpsJSONToUni((const char*)str + 1, wc, &conv->icodes);
     if (n) {
       conv->ocodes = n;
       return ++conv->icodes;

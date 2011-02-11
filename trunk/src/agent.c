@@ -116,7 +116,6 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
 
 __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, int handle){
   size_t i, z;
-  struct timeval tval;
   DPS_DBLIST *DBL;
   char port_str[16];
   struct sockaddr_in dps_addr;

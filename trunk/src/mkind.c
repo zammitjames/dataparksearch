@@ -107,7 +107,6 @@ static int MakeNestedIndex(DPS_AGENT *Indexer, DPS_UINT8URLIDLIST *L, const char
      size_t    mind=1000, nind=0, ndata;
      char fname[PATH_MAX];
      int  dat_fd=0, ind_fd=0;
-     int  rc=DPS_OK;
      const char	*vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Conf->Vars, "VarDir", DPS_VAR_DIR);
      
      if(!L->Item)return(1);
@@ -197,7 +196,7 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
      DPS_UINT4_POS_LEN *ind=NULL;
      size_t    mind=1000,nind=0, ndata;
      char fname[PATH_MAX];
-     int  dat_fd=0, ind_fd=0, rc;
+     int  dat_fd = 0, ind_fd = 0;
      const char	*vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Conf->Vars, "VarDir", DPS_VAR_DIR);
 
      if(!L->Item)return(1);

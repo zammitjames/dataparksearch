@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2010 Datapark corp. All right reserved.
+/* Copyright (C) 2005-2011 DataPark Ltd. All right reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -64,12 +64,12 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
        dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to open acronyms file '%s': %s", filename, strerror(errno));
        return DPS_ERROR;
      }
-     if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+     if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
        dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to alloc %d bytes", sb.st_size);
        DpsClose(fd);
        return DPS_ERROR;
      }
-     if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+     if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
        dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to read acronym file '%s': %s", filename, strerror(errno));
        DPS_FREE(data);
        DpsClose(fd);

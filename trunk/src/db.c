@@ -2138,7 +2138,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	    return DPS_ERROR;
 	  }
 	  dps_memmove(&db->stored_addr.sin_addr, hp->h_addr, (size_t)hp->h_length);
-	  db->stored_addr.sin_family = hp->h_addrtype;
+	  db->stored_addr.sin_family = (sa_family_t)hp->h_addrtype;
 	  db->stored_addr.sin_port = htons((u_short)nport);
 	}
 
@@ -2160,7 +2160,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 	    return DPS_ERROR;
 	  }
 	  dps_memmove(&db->cached_addr.sin_addr, hp->h_addr, (size_t)hp->h_length);
-	  db->cached_addr.sin_family = hp->h_addrtype;
+	  db->cached_addr.sin_family = (sa_family_t)hp->h_addrtype;
 	  db->cached_addr.sin_port = htons((u_short)nport);
 	}
 
@@ -2301,7 +2301,7 @@ int DpsTrackSearchd(DPS_AGENT * query, DPS_RESULT *Res) {
 	}
       }
 
-      if (write(fd, qbuf,  sizeof(long) + dps_strlen(qbuf + sizeof(long))) < sizeof(long) + dps_strlen(qbuf + sizeof(long))) {
+      if (write(fd, qbuf,  sizeof(long) + dps_strlen(qbuf + sizeof(long))) < (ssize_t)(sizeof(long) + dps_strlen(qbuf + sizeof(long)))) {
 	rc = DPS_ERROR;
 	DpsLog(query, DPS_LOG_ERROR, "DpsTrackSearchd: couldn't write to file %s [%s:%d]", fullname, __FILE__, __LINE__ );
       } else rc = DPS_OK;
@@ -2434,11 +2434,12 @@ DPS_DBLIST * DpsDBListInit(DPS_DBLIST * List){
 size_t DpsDBListAdd(DPS_DBLIST *List, const char * addr, int mode) {
 	DPS_DB	*db;
 	int res;
+	size_t i;
 #ifdef WITH_PARANOIA
 	void * paran = DpsViolationEnter(paran);
 #endif
-	for (res = 0; res < List->nitems; res++) {
-	  if (strcasecmp(List->db[res].DBADDR, addr) == 0) {
+	for (i = 0; i < List->nitems; i++) {
+	  if (strcasecmp(List->db[i].DBADDR, addr) == 0) {
 #ifdef WITH_PARANOIA
 	    DpsViolationExit(-1, paran);
 #endif
@@ -2527,7 +2528,7 @@ int DpsURLDataDePreload(DPS_AGENT *Agent) {
 	  for (i = dbfrom; i < dbto; i++) {
 
 	    db = (Agent->Conf->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[i] : &Agent->dbl.db[i];
-	    NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&Agent->Conf->Vars, "URLDataFiles", 0x300);
+	    NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindUnsigned(&Agent->Conf->Vars, "URLDataFiles", 0x300);
 	    DF = Agent->Conf->URLDataFile[db->dbnum];
 	    for (filenum = 0 ; filenum < NFiles; filenum++) DPS_FREE(DF[filenum].URLData);
 
@@ -2544,7 +2545,7 @@ int DpsURLDataLoad(DPS_AGENT *Indexer, DPS_RESULT *R, DPS_DB *db) {
   DPS_URLDATA *Dat, *D = NULL, K, *F;
   DPS_URL_CRD_DB *Crd;
   size_t i, j, count, nrec = 0, first = 0;
-  int NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindInt(&Indexer->Conf->Vars, "URLDataFiles", 0x300);
+  int NFiles = (db->URLDataFiles) ? db->URLDataFiles : DpsVarListFindUnsigned(&Indexer->Conf->Vars, "URLDataFiles", 0x300);
   int filenum, prevfilenum = - 1, rc = DPS_OK;
 
   TRACE_IN(Indexer, "DpsURLDataLoad");

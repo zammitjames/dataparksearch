@@ -93,7 +93,6 @@ static void DpsStopListSortForLast(DPS_STOPWORD *List, size_t n) {
 }
 
 int DpsStopListAdd(DPS_STOPLIST *List, DPS_STOPWORD * stopword) {
-	size_t j;
 
 	/* If the word is already in list     */
 	/* We will not add it again           */
@@ -105,15 +104,7 @@ int DpsStopListAdd(DPS_STOPLIST *List, DPS_STOPWORD * stopword) {
 	DPS_STOPWORD *F = DpsStopListFind(List, stopword->uword, stopword->lang);
 
 	if (F != NULL) return 0;
-/*
-	for(j=0;j<List->nstopwords;j++){
-		if(!DpsUniStrCmp(List->StopWord[j].uword, stopword->uword)){
-			DPS_FREE(List->StopWord[j].lang);
-			List->StopWord[j].lang = (char*)DpsStrdup("");
-			return 0;
-		}
-	}
-*/
+
 	List->StopWord=(DPS_STOPWORD *)DpsRealloc(List->StopWord,(List->nstopwords+1)*sizeof(DPS_STOPWORD));
 	if (List->StopWord == NULL) {
 	  List->nstopwords = 0;
@@ -147,7 +138,6 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
         struct stat     sb;
 	char *str, *cur_n = NULL, *data = NULL, *sharp;
 	char * lasttok;
-	FILE * stopfile;
 	DPS_STOPWORD stopword;
 	DPS_CHARSET *cs = NULL, *uni_cs = DpsGetCharSet("sys-int");
 	DPS_CONV cnv;
@@ -167,12 +157,12 @@ __C_LINK int __DPSCALL DpsStopListLoad(DPS_ENV * Conf, const char *filename) {
 	  dps_snprintf(Conf->errstr,sizeof(Conf->errstr)-1, "Unable to open stopword file '%s': %s", filename, strerror(errno));
 	  return DPS_ERROR;
 	}
-	if ((data = (char*)DpsMalloc(sb.st_size + 1)) == NULL) {
+	if ((data = (char*)DpsMalloc((size_t)(sb.st_size + 1))) == NULL) {
 	  dps_snprintf(Conf->errstr,sizeof(Conf->errstr)-1, "Unable to alloc %d bytes", sb.st_size);
 	  DpsClose(fd);
 	  return DPS_ERROR;
 	}
-	if (read(fd, data, sb.st_size) != (ssize_t)sb.st_size) {
+	if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
 	  dps_snprintf(Conf->errstr,sizeof(Conf->errstr)-1, "Unable to read stopword file '%s': %s", filename, strerror(errno));
 	  DPS_FREE(data);
 	  DpsClose(fd);

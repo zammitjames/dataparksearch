@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -2380,16 +2380,13 @@ static int xCallBack(void *pArg, int argc, char **argv, char **name)
 
   if (res->nCols == 0)
   {
-    res->nCols= argc;
-    for (i=0 ; i<argc; i++)
-    {
-      res->Fields=(DPS_SQLFIELD*)DpsMalloc(res->nCols*sizeof(DPS_SQLFIELD) + 1);
-      bzero(res->Fields,res->nCols*sizeof(DPS_SQLFIELD));
-      for (i=0 ; i < res->nCols; i++){
+    res->nCols = argc;
+    res->Fields = (DPS_SQLFIELD*)DpsMalloc(res->nCols * sizeof(DPS_SQLFIELD) + 1);
+    bzero(res->Fields, res->nCols * sizeof(DPS_SQLFIELD));
+    for (i = 0 ; i < argc; i++) {
 	res->Fields[i].sqlname = (char*)DpsStrdup(name[i]);
 	res->Fields[i].sqllen= 0;
 	res->Fields[i].sqltype= 0;
-      }
     }
   }
   res->nRows++;
@@ -2397,7 +2394,7 @@ static int xCallBack(void *pArg, int argc, char **argv, char **name)
   
   for (i = 0; i < argc; i++)
   {
-    sql_val(res,(res->nRows-1),(i)) = (char*)DpsStrdup(argv[i]?argv[i]:"");
+    sql_val(res,(res->nRows-1),(i)) = (char*)DpsStrdup(DPS_NULL2EMPTY(argv[i]));
   } 
   return 0;
 }
@@ -2432,7 +2429,7 @@ static int DpsSQLiteQuery(DPS_DB *db, DPS_SQLRES *res, const char *q) {
 #if (HAVE_SQLITE3)
 
 static int DpsSQLite3InitDB(DPS_DB *db) {
-  char dbname[1024], *e, *errmsg;
+  char dbname[1024], *e;
   dps_strncpy(dbname,db->DBName,sizeof(dbname));
   dbname[sizeof(dbname)-1]='\0';
   /* Remove possible trailing slash */
@@ -2466,15 +2463,12 @@ static int xCallBack3(void *pArg, int argc, char **argv, char **name)
   if (res->nCols == 0)
   {
     res->nCols= argc;
-    for (i=0 ; i<argc; i++)
-    {
-      res->Fields = (DPS_SQLFIELD*)DpsMalloc(res->nCols * sizeof(DPS_SQLFIELD) + 1);
-      bzero(res->Fields,res->nCols*sizeof(DPS_SQLFIELD));
-      for (i=0 ; i < res->nCols; i++){
+    res->Fields = (DPS_SQLFIELD*)DpsMalloc(res->nCols * sizeof(DPS_SQLFIELD) + 1);
+    bzero(res->Fields, res->nCols * sizeof(DPS_SQLFIELD));
+    for (i = 0 ; i < argc; i++) {
 	res->Fields[i].sqlname = (char*)DpsStrdup(name[i]);
 	res->Fields[i].sqllen= 0;
 	res->Fields[i].sqltype= 0;
-      }
     }
   }
   res->nRows++;
@@ -2482,7 +2476,7 @@ static int xCallBack3(void *pArg, int argc, char **argv, char **name)
   
   for (i = 0; i < argc; i++)
   {
-    sql_val(res,(res->nRows-1),(i)) = (char*)DpsStrdup(argv[i]?argv[i]:"");
+    sql_val(res,(res->nRows-1),(i)) = (char*)DpsStrdup(DPS_NULL2EMPTY(argv[i]));
   } 
   return 0;
 }
