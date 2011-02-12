@@ -2237,7 +2237,8 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 
       phr_n++;
 #ifdef WITH_REL_POSITION
-	    D[DPS_N_POSITION] += wordpos;
+      D[DPS_N_POSITION] += wordpos;
+      if (count[wordorder] == 0) D[DPS_N_FIRSTPOS] += wordpos;
 #endif
 #ifdef WITH_REL_DISTANCE
 /*      D[DPS_N_DISTANCE] += (wordnum == prev_wordnum + 1) ? (wordpos - prev_wordpos) : (1000 + wordpos - prev_wordpos);*/
