@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -8419,7 +8419,7 @@ int dps_wc_mb_euc_kr(DPS_CONV *conv, DPS_CHARSET *cs, const dpsunicode_t *wc, un
   conv->icodes = conv->ocodes = 1;
   
   if (*wc < 0x80) {
-    s[0] = *wc;
+    s[0] = (unsigned char)*wc;
     if ((conv->flags & DPS_RECODE_HTML_TO) && (strchr(DPS_NULL2EMPTY(conv->CharsToEscape), (int)s[0]) != NULL))
       return DPS_CHARSET_ILUNI;
     if ((conv->flags & DPS_RECODE_URL_TO) && (s[0] == '!')) 
@@ -8433,8 +8433,8 @@ int dps_wc_mb_euc_kr(DPS_CONV *conv, DPS_CHARSET *cs, const dpsunicode_t *wc, un
   if(s+2>e)
     return DPS_CHARSET_TOOSMALL;
   
-  s[0]=code>>8;
-  s[1]=code&0xFF;
+  s[0] = (unsigned char)(code >> 8);
+  s[1] = (unsigned char)(code & 0xFF);
   
   return conv->ocodes = 2;
 }
@@ -8455,17 +8455,17 @@ int dps_mb_wc_euc_kr(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const u
 	  /*if ((p = strchr(s, ';')) != NULL)*/ {
 	    if (s[1] == '#') {
 	      p = s + 2;
-	      if (s[2] == 'x' || s[2] == 'X') sscanf(s + 3, "%x", &sw);
-	      else sscanf(s + 2, "%d", &sw);
+	      if (s[2] == 'x' || s[2] == 'X') sscanf((const char*)s + 3, "%x", &sw);
+	      else sscanf((const char*)s + 2, "%d", &sw);
 	      *pwc = (dpsunicode_t)sw;
 	    } else {
 	      p = s + 1;
 	      if (!(conv->flags & DPS_RECODE_TEXT_FROM)) {
-		for(e = s + 1 ; (e - s < DPS_MAX_SGML_LEN) && (((*e<='z')&&(*e>='a'))||((*e<='Z')&&(*e>='A'))); e++);
+		for(e = (unsigned char*)s + 1 ; (e - s < DPS_MAX_SGML_LEN) && (((*e<='z')&&(*e>='a'))||((*e<='Z')&&(*e>='A'))); e++);
 		if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*e == ';')) {
 		  z = *e;
 		  *e = '\0';
-		  n = DpsSgmlToUni(s + 1, pwc);
+		  n = DpsSgmlToUni((const char*)s + 1, pwc);
 		  if (n == 0) *pwc = 0;
 		  else conv->ocodes = n;
 		  *e = z;

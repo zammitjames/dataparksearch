@@ -8094,17 +8094,17 @@ dps_mb_wc_euc_jp(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsig
 	  /*if ((p = strchr(s, ';')) != NULL)*/ {
 	    if (s[1] == '#') {
 	      p = s + 2;
-	      if (s[2] == 'x' || s[2] == 'X') sscanf(s + 3, "%x;", &sw);
-	      else sscanf(s + 2, "%d;", &sw);
+	      if (s[2] == 'x' || s[2] == 'X') sscanf((const char*)s + 3, "%x;", &sw);
+	      else sscanf((const char*)s + 2, "%d;", &sw);
 	      *pwc = (dpsunicode_t)sw;
 	    } else {
 	      p = s + 1;
 	      if (!(conv->flags & DPS_RECODE_TEXT_FROM)) {
-		for(e = s + 1 ; (e - s < DPS_MAX_SGML_LEN) && (((*e<='z')&&(*e>='a'))||((*e<='Z')&&(*e>='A'))); e++);
+		for(e = (unsigned char*)s + 1 ; (e - s < DPS_MAX_SGML_LEN) && (((*e<='z')&&(*e>='a'))||((*e<='Z')&&(*e>='A'))); e++);
 		if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*e == ';')) {
 		  z = *e;
 		  *e = '\0';
-		  n = DpsSgmlToUni(s + 1, pwc);
+		  n = DpsSgmlToUni((const char*)s + 1, pwc);
 		  if (n == 0) *pwc = 0;
 		  else conv->ocodes = n;
 		  *e = z;
@@ -8119,7 +8119,7 @@ dps_mb_wc_euc_jp(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const unsig
 	  }
 	}
     if ( *s == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
-      n = DpsJSONToUni(s + 1, pwc, &conv->icodes);
+      n = DpsJSONToUni((const char*)s + 1, pwc, &conv->icodes);
       if (n) {
 	conv->ocodes = n;
 	return ++conv->icodes;
@@ -8346,17 +8346,17 @@ int dps_mb_wc_iso2022jp(DPS_CONV *conv, DPS_CHARSET *c, dpsunicode_t *pwc, const
 	  /*if ((pp = strchr(p, ';')) != NULL)*/ {
 	    if (p[1] == '#') {
 	      pp = p + 2;
-	      if (p[2] == 'x' || p[2] == 'X') sscanf(p + 3, "%x", &sw);
-	      else sscanf(p + 2, "%d", &sw);
+	      if (p[2] == 'x' || p[2] == 'X') sscanf((const char*)p + 3, "%x", &sw);
+	      else sscanf((const char*)p + 2, "%d", &sw);
 	      *pwc = (dpsunicode_t)sw;
 	    } else {
 	      pp = p + 1;
 	      if (!(conv->flags & DPS_RECODE_TEXT_FROM)) {
-		for(ee = p + 1 ; (ee - p < DPS_MAX_SGML_LEN) && (((*ee<='z')&&(*ee>='a'))||((*ee<='Z')&&(*ee>='A'))); ee++);
+		for(ee = (unsigned char*)p + 1 ; (ee - p < DPS_MAX_SGML_LEN) && (((*ee<='z')&&(*ee>='a'))||((*ee<='Z')&&(*ee>='A'))); ee++);
 		if (/*!(conv->flags & DPS_RECODE_URL_FROM) ||*/ (*ee == ';')) {
 		  z = *ee;
 		  *ee = '\0';
-		  n = DpsSgmlToUni(p + 1, pwc);
+		  n = DpsSgmlToUni((const char*)p + 1, pwc);
 		  if (n == 0) *pwc = 0;
 		  else conv->ocodes = n;
 		  *ee = z;
@@ -8371,7 +8371,7 @@ int dps_mb_wc_iso2022jp(DPS_CONV *conv, DPS_CHARSET *c, dpsunicode_t *pwc, const
 	  }
 	}
     if ( *p == '\\' && (conv->flags & DPS_RECODE_JSON_FROM)) {
-      n = DpsJSONToUni(p + 1, pwc, &conv->icodes);
+      n = DpsJSONToUni((const char*)p + 1, pwc, &conv->icodes);
       if (n) {
 	conv->ocodes = n;
 	return ++conv->icodes;
