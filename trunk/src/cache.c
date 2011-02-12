@@ -1771,7 +1771,7 @@ static int cmp_search_limit(const DPS_SEARCH_LIMIT *l1, const DPS_SEARCH_LIMIT *
 
 int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
         size_t i, j;
-	DPS_BASE_PARAM P;
+	DPS_BASE_PARAM BASEP;
 	DPS_STACK_ITEM **pmerg = NULL;
 	int wf[256], present;
 	size_t z, npmerge;
@@ -1862,6 +1862,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	}
 
 	for(i = Indexer->loaded_limits; i < Indexer->nlimits; i++){
+	        int not_loaded = 1;
 
 		lims[nlims].start = 0;
 		lims[nlims].origin = -1;
@@ -1876,11 +1877,11 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 		    lims[nlims] = Indexer->limits[j];
 		    lims[nlims].need_free = 0;
 		    nlims++;
-		    goto dps_skiip_limit_loading;
+		    not_loaded = 0; break;
 		  }
 		}
 
-
+		if (not_loaded)
 		switch(Indexer->limits[i].type){
 			case DPS_LIMTYPE_NESTED:
 			  if((lims[nlims].data = LoadNestedLimit(Indexer, db, i, &lims[nlims].size))) nlims++;
@@ -1898,9 +1899,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 								&lims[nlims].size))) nlims++;
 				break;
 		}
-	dps_skiip_limit_loading:
 		DpsLog(Indexer, DPS_LOG_DEBUG, "\t\tlims.%d.size:%d", nlims - 1, lims[nlims - 1].size);
-		;
 	}
 
 	nwords = Res->nitems - Res->ncmds;
@@ -1971,20 +1970,20 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 #endif /* HAVE_PTHREAD */
 
 
-	bzero(&P, sizeof(P));
-	P.subdir = DPS_TREEDIR;
-	P.basename = "wrd";
-	P.indname = "wrd";
-	P.NFiles = (db->WrdFiles > 0) ? (int)db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
-	P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Indexer->Vars, "VarDir", DPS_VAR_DIR);
-	P.A = Indexer;
-	P.mode = DPS_READ_LOCK;
+	bzero(&BASEP, sizeof(BASEP));
+	BASEP.subdir = DPS_TREEDIR;
+	BASEP.basename = "wrd";
+	BASEP.indname = "wrd";
+	BASEP.NFiles = (db->WrdFiles > 0) ? (int)db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
+	BASEP.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Indexer->Vars, "VarDir", DPS_VAR_DIR);
+	BASEP.A = Indexer;
+	BASEP.mode = DPS_READ_LOCK;
 #ifdef HAVE_ZLIB
-	P.zlib_method = Z_DEFLATED;
-	P.zlib_level = 9;
-	P.zlib_windowBits = DPS_BASE_WRD_WINDOWBITS;
-	P.zlib_memLevel = 9;
-	P.zlib_strategy = DPS_BASE_WRD_STRATEGY;
+	BASEP.zlib_method = Z_DEFLATED;
+	BASEP.zlib_level = 9;
+	BASEP.zlib_windowBits = DPS_BASE_WRD_WINDOWBITS;
+	BASEP.zlib_memLevel = 9;
+	BASEP.zlib_strategy = DPS_BASE_WRD_STRATEGY;
 #endif
 
 	if ((pmerg = (DPS_STACK_ITEM**)DpsXmalloc((
@@ -2011,7 +2010,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    for(a = 0,
 #endif
 	  
-	  P.rec_id = Res->items[i].crcword;
+	  BASEP.rec_id = Res->items[i].crcword;
 
 #ifdef WITH_OLDHASH
 		a < 2; a++, P.rec_id = DpsStrOldHash32(Res->items[i].word)) {
@@ -2020,25 +2019,25 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 
 
 #ifdef DEBUG_SEARCH
-	      DpsLog(Indexer, DPS_LOG_DEBUG, "\t\t\tstack.word[%i]:%s %x", i, Res->items[i].word, P.rec_id);
+	      DpsLog(Indexer, DPS_LOG_DEBUG, "\t\t\tstack.word[%i]:%s %x", i, Res->items[i].word, BASEP.rec_id);
 	  seek_ticks = DpsStartTimer();
 #endif
 
-	  DpsBaseSeek(&P, DPS_READ_LOCK);
+	  DpsBaseSeek(&BASEP, DPS_READ_LOCK);
 
 #ifdef DEBUG_SEARCH
 	  seek_ticks = DpsStartTimer() - seek_ticks;
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "Seek time: %.4f)", (float)seek_ticks / 1000);
 #endif
 
-	  if (P.rec_id == P.Item.rec_id) {
+	  if (BASEP.rec_id == BASEP.Item.rec_id) {
 
 #ifdef DEBUG_SEARCH
 	    seek_ticks = DpsStartTimer();
 #endif
 	    pmerg[npmerge] = &Res->items[i];
 
-	    pmerg[npmerge]->db_pcur = pmerg[npmerge]->db_pbegin = pmerg[npmerge]->db_pchecked = (DPS_URL_CRD*)DpsBaseARead(&P, &orig_size);
+	    pmerg[npmerge]->db_pcur = pmerg[npmerge]->db_pbegin = pmerg[npmerge]->db_pchecked = (DPS_URL_CRD*)DpsBaseARead(&BASEP, &orig_size);
 
 	    if (pmerg[npmerge]->db_pbegin == NULL) {
 
@@ -2057,7 +2056,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 		
 #ifdef DEBUG_SEARCH
 	    seek_ticks = DpsStartTimer() - seek_ticks;
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "Read %d->%d time: %.4f)", P.Item.size, P.Item.orig_size, (float)seek_ticks / 1000);
+	    DpsLog(Indexer, DPS_LOG_EXTRA, "Read %d->%d time: %.4f)", BASEP.Item.size, BASEP.Item.orig_size, (float)seek_ticks / 1000);
 #endif
 
 	    if (flag_null_wf) {
@@ -2083,7 +2082,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 
 #ifdef DEBUG_SEARCH
 	  } else {
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "!= P.rec_id:%x  P.Item.rec_id:%x", P.rec_id, P.Item.rec_id);
+	    DpsLog(Indexer, DPS_LOG_EXTRA, "!= P.rec_id:%x  P.Item.rec_id:%x", BASEP.rec_id, BASEP.Item.rec_id);
 #endif	    
 	  }
 
@@ -2094,7 +2093,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 
 	}
 
-	DpsBaseClose(&P);
+	DpsBaseClose(&BASEP);
 	}
 	
 #ifdef DEBUG_SEARCH
