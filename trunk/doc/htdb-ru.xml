@@ -145,6 +145,14 @@ htdb:/path1/path2/path3/path4/idN
 		<para>для всех значений поля <literal>id</literal> в результате выполенния запроса <literal>HTDBList</literal>.</para>
 	</sect3>
 
+		<para>Для команд <command>HTDBDoc</command> и <command>HTDBtext</command> возможно указать свой regex-шаблон для сопоставления индексируемого URL с переменными HTDB:
+<programlisting>
+HTDBText header "SELECT header FROM news WHERE section=$1 AND article=$2" "^/section/([0-9]+)/art/([0-9]+)\.html"
+</programlisting>
+		</para>
+		<para>
+		в этом случае regex-шаблон сопоставляется с полным путем и именем файла индексируемого URL.
+		</para>
 	<sect3 id="htdb-fulltext">
 		<title>Создание текстового индекса</title>
 		<para>Используя схему <literal>htdb:/</literal> вы можете создать текстовый индекс и использовать его в

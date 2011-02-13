@@ -353,6 +353,23 @@ htdb:/path1/path2/path3/path4/idN</PRE
 ></P
 ><P
 >for all values of the field "id" which are in HTDBList output.</P
+><P
+>It's possible to specify a regex-based pattern to match the URL into HTDB variables for <B
+CLASS="COMMAND"
+>HTDBDoc</B
+> and 
+<B
+CLASS="COMMAND"
+>HTDBtext</B
+> commands:
+<PRE
+CLASS="PROGRAMLISTING"
+>HTDBText header "SELECT header FROM news WHERE section=$1 AND article=$2" "^/section/([0-9]+)/art/([0-9]+)\.html"</PRE
+>
+		</P
+><P
+>		in this case the regex pattern specified is matched against the full path and filename of the URL.
+		</P
 ></DIV
 ><DIV
 CLASS="SECT3"
@@ -549,7 +566,7 @@ NAME="EXEC"
 >3.11.2. Indexing binaries output (exec: and cgi: virtual URL schemes)</A
 ></H2
 ><A
-NAME="AEN2755"
+NAME="AEN2760"
 ></A
 ><P
 ><SPAN
@@ -723,11 +740,11 @@ NAME="MIRROR"
 >3.11.3. Mirroring</A
 ></H2
 ><A
-NAME="AEN2798"
+NAME="AEN2803"
 ></A
 ><P
 ><A
-NAME="AEN2801"
+NAME="AEN2806"
 ></A
 >
 You may specify a path to root dir to enable sites mirroring
@@ -738,7 +755,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2806"
+NAME="AEN2811"
 ></A
 >
 You may specify as well root directory of mirrored document's headers indexer will store HTTP headers to local disk too.
@@ -749,7 +766,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2811"
+NAME="AEN2816"
 ></A
 >
 You may specify period during which earlier mirrored files will be used while indexing instead of real downloading.
@@ -833,10 +850,10 @@ NAME="DATA-ACQ"
 >3.11.4. Data acquisition</A
 ></H2
 ><A
-NAME="AEN2831"
+NAME="AEN2836"
 ></A
 ><A
-NAME="AEN2833"
+NAME="AEN2838"
 ></A
 ><P
 >With <B

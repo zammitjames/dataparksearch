@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* Added support for JSON string encoding for search template meta-variables.
 	* It can now specify regex pattern for HTDBDoc and HTDBText commands to parse URL into htdb:/ parameters.
 	* Added performance assessment for some libc functions at configuration.
 	* "CrossWordsSkipSameSite yes/no" command has been added.

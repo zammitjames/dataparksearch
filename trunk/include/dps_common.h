@@ -982,8 +982,8 @@ typedef struct {
         int             mark_for_index;
         int             use_date_header;  /**< Use Date: HTTP header if Last-Modified: is not specified */
         int             MaxSiteLevel;     /**< Maximum level of hostname for site_id */
-        int             SEASentences;     /**< Maximal number of sentenses using by SEA */
-        int             SEASentenceMinLength; /**< minimal length of the sentence to use in SEA */
+        size_t          SEASentences;     /**< Maximal number of sentenses using by SEA */
+        size_t          SEASentenceMinLength; /**< minimal length of the sentence to use in SEA */
         int             Resegment;        /**< Resegmenting flags for East-Asian languages */
         int             PagesInGroup;     /**< Number of additional pages from same site when google-like groupping is enabled */
         int             LongestTextItems; /**< Number of longest text items to index */

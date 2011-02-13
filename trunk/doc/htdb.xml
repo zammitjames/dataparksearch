@@ -131,6 +131,16 @@ htdb:/path1/path2/path3/path4/idN
 </programlisting>
 </para>
 		<para>for all values of the field "id" which are in HTDBList output.</para>
+		
+		<para>It's possible to specify a regex-based pattern to match the URL into HTDB variables for <command>HTDBDoc</command> and 
+<command>HTDBtext</command> commands:
+<programlisting>
+HTDBText header "SELECT header FROM news WHERE section=$1 AND article=$2" "^/section/([0-9]+)/art/([0-9]+)\.html"
+</programlisting>
+		</para>
+		<para>
+		in this case the regex pattern specified is matched against the full path and filename of the URL.
+		</para>
 	</sect3>
 	<sect3 id="htdb-fulltext">
 		<title>Creating full text index</title>
