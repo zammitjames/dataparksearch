@@ -410,6 +410,22 @@ CLASS="LITERAL"
 >HTDBList</TT
 >.</P
 ></DIV
+><P
+>Для команд <B
+CLASS="COMMAND"
+>HTDBDoc</B
+> и <B
+CLASS="COMMAND"
+>HTDBtext</B
+> возможно указать свой regex-шаблон для сопоставления индексируемого URL с переменными HTDB:
+<PRE
+CLASS="PROGRAMLISTING"
+>HTDBText header "SELECT header FROM news WHERE section=$1 AND article=$2" "^/section/([0-9]+)/art/([0-9]+)\.html"</PRE
+>
+		</P
+><P
+>		в этом случае regex-шаблон сопоставляется с полным путем и именем файла индексируемого URL.
+		</P
 ><DIV
 CLASS="SECT3"
 ><H3
@@ -647,7 +663,7 @@ CLASS="LITERAL"
 >cgi:</TT
 >)
 <A
-NAME="AEN2921"
+NAME="AEN2926"
 ></A
 ></A
 ></H2
@@ -873,13 +889,13 @@ CLASS="SECT2"
 NAME="MIRROR"
 >3.11.3. Зеркалирование
 <A
-NAME="AEN2983"
+NAME="AEN2988"
 ></A
 ></A
 ></H2
 ><P
 ><A
-NAME="AEN2986"
+NAME="AEN2991"
 ></A
 >
 Вы должны указать путь к корневой директории для активации зеркалирования сайтов
@@ -890,7 +906,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2991"
+NAME="AEN2996"
 ></A
 >
 Вы также можете указать корневую директорию для хранения заголовков зеркалируемых документов, в этом случае
@@ -905,7 +921,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2997"
+NAME="AEN3002"
 ></A
 >
 Вы можете также указать период, в течении которого будут использоваться файлы из зеркала, вместо выкачивания оригинальных документов.
@@ -1013,10 +1029,10 @@ NAME="DATA-ACQ"
 >3.11.4. Сбор данных</A
 ></H2
 ><A
-NAME="AEN3027"
+NAME="AEN3032"
 ></A
 ><A
-NAME="AEN3029"
+NAME="AEN3034"
 ></A
 ><P
 >Используя команду <B

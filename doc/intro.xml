@@ -102,8 +102,8 @@ same database. Multi-threaded indexing support.</para>
 				<para>Boolean query language support.</para>
 			</listitem>
 			<listitem>
-				<para>Results sorting by relevancy, popularity rank, last modified date and by importance 
-(a multiplication of relevancy and popularity rank).</para>
+				<para>Results sorting by relevance, popularity rank, last modified date and by importance 
+(a multiplication of relevance and popularity rank).</para>
 			</listitem>
 			<listitem>
 				<para>Fuzzy search: different word forms, spelling corrections, 
