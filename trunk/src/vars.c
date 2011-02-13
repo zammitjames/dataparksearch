@@ -474,7 +474,7 @@ int DpsVarListFindInt(DPS_VARLIST * vars, const char * name, int defval) {
 unsigned DpsVarListFindUnsigned(DPS_VARLIST * vars, const char * name, unsigned defval){
 	DPS_VAR * var;
 	if((var=DpsVarListFind(vars,name)) != NULL)
-		return((var->val != NULL) ? (unsigned)strtoull(var->val, (char**)NULL, 10) : defval);
+		return((var->val != NULL) ? (unsigned)strtoull(var->val, (char**)NULL, 0) : defval);
 	else
 		return(defval);
 }
