@@ -71,6 +71,14 @@ Match: regex ^\$##
 </para>
 </sect2>
 
+<sect2 id="stopwordsloose">
+<title>Команда <command>StopwordsLoose</command>.</title>
+<indexterm><primary>Команда</primary><secondary>StopwordsLoose</secondary></indexterm>
+
+<para>Если в <filename>indexer.conf</filename> и в <filename>search.htm</filename> указана команада <userinput>"StopwordsLoose yes"</userinput>,
+только стопслова того же языка, что и индексируемый документ или языка поискового запроса считаются таковыми, т.е. стопслова для других языков обрабатываются как обычные слова для текущего индексируемого документа или исполняемого поискового запроса.
+</para>
+
 </sect1>
 
 
