@@ -77,6 +77,18 @@ This is usefull to track down which words are stopwords for your installation.
 </sect2>
 
 
+<sect2 id="stopwordsloose">
+<title><command>StopwordsLoose</command> command.</title>
+<indexterm><primary>Command</primary><secondary>StopwordsLoose</secondary></indexterm>
+
+<para>With the command <userinput>"StopwordsLoose yes"</userinput> in <filename>indexer.conf</filename> and <filename>search.htm</filename> 
+only the stopwords of the same language as the language of a document indexing or the language of a search request are taken into accont as stopwords, i.e. the stopwords of different language are processed as regular words for this document indexing or search request executed.
+</para>
+
+</sect2>
+
+
+
 </sect1>
 
 
