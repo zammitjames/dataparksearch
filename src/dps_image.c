@@ -45,7 +45,7 @@ static int add_var(DPS_DOCUMENT *Doc, char *name,char *val, size_t len) {
 int DpsGIFParse(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
   size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
   size_t	cont_len = Doc->Buf.size - hdr_len;
-  const char	*buf_in = (const char*)Doc->Buf.content, *p;
+  const unsigned char	*buf_in = (const unsigned char*)Doc->Buf.content, *p;
   int global_palette, colors;
   char *str;
 
@@ -104,7 +104,7 @@ int DpsGIFParse(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
       p += 10;
       if (local_palette) p += 3 * colors;
       p++;
-      while (*p != 0) {
+      while (*p != '\0') {
 	p += *p;
 	p++;
       }
