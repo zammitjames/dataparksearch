@@ -2598,7 +2598,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		}
 		if (Doc->Buf.content != NULL ) {
 		   	size_t		min_size;
-			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
+			size_t	hdr_len = (size_t)(Doc->Buf.content - Doc->Buf.buf);
 			size_t	cont_len = Doc->Buf.size - hdr_len;
 			int skip_too_small;
 		   	
