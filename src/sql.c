@@ -5550,6 +5550,7 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			  Item.len = dps_strlen(Item.str);
 			  Indexer->nbytes += Item.len;
 			  DpsTextListAdd(&Doc->TextList, &Item);
+			  have_words = 1;
 			}
 		      }
 		    }

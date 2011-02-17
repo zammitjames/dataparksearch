@@ -10,10 +10,10 @@ Latest snapshot:
 	* Added support for ISO 8601 date and time format.
 	* Added support for Sitemap: command in robots.txt file.
 	* Support for libextractor 0.6.x has been added.
-	* -G switch for indexer takes now an integral value for all threads.
+	* -G switch for indexer takes now an integral value for all indexing threads.
 	* Clones detection in search is now disabled by default.
 	* StopwordsLoose command has been added.
-	* hash32 function has been fixed for 64-bit systems. Total reindexing is required if affected.
+	* hash32() function has been fixed for 64-bit systems. Total reindexing is required if affected.
 	* XML Entity Definitions for Characters have been updated to the W3C Recommendation 01 April 2010.
 	* Options "add", "update" or "delete" has been added the the ActionSQL command.
 	* Initialization of wf has been changed so the weight for highest section number specified is propagated for the rest sections.

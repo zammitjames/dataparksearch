@@ -128,7 +128,8 @@ dpsearch-rel.ru.html dpsearch-register.ru.html dpsearch-mod_dpsearch.ru.html \
 dpsearch-searchd.ru.html dpsearch-srcache.ru.html dpsearch-pars.ru.html dpsearch-indexcmd.ru.html \
 dpsearch-stored.ru.html dpsearch-subsections.ru.html dpsearch-stopwords.ru.html \
 dpsearch-syslog.ru.html dpsearch-categories.ru.html dpsearch-templates.ru.html \
-dpsearch-toolsreq.ru.html dpsearch-track.ru.html dpsearch-vary.ru.html dpsearch-htmlparser-bodypatterns.ru.html
+dpsearch-toolsreq.ru.html dpsearch-track.ru.html dpsearch-vary.ru.html dpsearch-htmlparser-bodypatterns.ru.html \
+dpsearch-donations.ru.html
 
 HTML_OUT_EN = index.en.html dpsearch-authors.en.html dpsearch-quick-usage.en.html \
 dpsearch-cachemode.en.html dpsearch-cjk.en.html dpsearch-content-enc.en.html \
