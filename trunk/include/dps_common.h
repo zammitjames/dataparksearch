@@ -168,14 +168,14 @@ typedef struct {
 /************************ VARLISTs ************************/
 
 typedef struct dps_var_st {
-	int			section;	/**< Number 0..255   */
+	char			*val;		/**< Field Value     */
+        char                    *txt_val;       /**< Field Value in plain text */
+	char			*name;		/**< Field Name      */
         int                     strict;         /**< strict word splitting */
         int                     single;         /**< single valued section, we will drop any second occurence to be processed.*/
 	size_t			maxlen;		/**< Max length      */
 	size_t			curlen;		/**< Cur length      */
-	char			*val;		/**< Field Value     */
-        char                    *txt_val;       /**< Field Value in plain text */
-	char			*name;		/**< Field Name      */
+	unsigned char		section;	/**< Number 0..255   */
 } DPS_VAR;
 
 typedef struct dps_varlist_st {
@@ -1267,10 +1267,10 @@ typedef struct {
 		size_t     nlen;
 		size_t     vlen;
 	} toks[DPS_MAXTAGVAL+1];
-        char visible[1024];
+        unsigned char visible[1024];
         char trail[4096];
         char *trailend;
-        char section[1024], strict[1024];
+        unsigned char section[1024], strict[1024];
         char *section_name[1024];
 } DPS_HTMLTOK;
 

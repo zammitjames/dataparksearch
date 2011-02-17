@@ -825,7 +825,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
       s=str+5;
       while(strchr("* ",*s))s++;
       flag[0] = s[0];
-      flag[1] = (s[1] >= 'A') ? s[1] : '\0';
+      flag[1] = (s[1] >= 'A') ? s[1] : (char)'\0';
       goto loop2_continue;
     }
     if((!suffixes)&&(!prefixes)) goto loop2_continue;

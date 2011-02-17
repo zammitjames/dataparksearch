@@ -2096,7 +2096,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		}
 		if (Doc->Buf.content != NULL ) {
 		   	size_t		wordnum, min_size;
-			size_t	hdr_len = Doc->Buf.content - Doc->Buf.buf;
+			size_t	hdr_len = (size_t)(Doc->Buf.content - Doc->Buf.buf);
 			size_t	cont_len = Doc->Buf.size - hdr_len;
 			const char *cont_lang = NULL;
 			int skip_too_small;

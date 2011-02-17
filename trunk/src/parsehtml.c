@@ -1199,8 +1199,8 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		if ((strcasecmp(name, "p")) && (strcasecmp(name, "br")) && (strcasecmp(name, "option")) && (strcasecmp(name, "input")) && (strcasecmp(name, "font"))) {
 		  Sec = DpsVarListFind(&Doc->Sections, name);
 		  if (tag->level < sizeof(tag->visible) - 1) visible = tag->visible[tag->level + 1] = tag->visible[tag->level];
-		  tag->section[tag->level] = (Sec) ? (char)Sec->section : 0;
-		  tag->strict[tag->level] = (Sec) ? (char)Sec->strict : 0;
+		  tag->section[tag->level] = (Sec) ? (unsigned char)Sec->section : 0;
+		  tag->strict[tag->level] = (Sec) ? (unsigned char)Sec->strict : 0;
 		  tag->section_name[tag->level] = (Sec) ? Sec->name : NULL;
 		  if ((tag->level + 2 >= sizeof(tag->visible)) || (((tag->trailend - tag->trail) + name_len + 2) > sizeof(tag->trail)) ) {
 		    DpsLog(Indexer, DPS_LOG_WARN, "Too deep or incorrect HTML, level:%d, trailsize:%d", tag->level, (tag->trailend - tag->trail) + name_len);
