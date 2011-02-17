@@ -73,13 +73,13 @@ int DpsAddStackItem(DPS_AGENT *query, DPS_RESULT *Res, DPS_PREPARE_STATE *state,
   } else {
     origin = state->origin;
   }
-
+  /* FIX ME: it's better remove such words in another way, mey by DPS_WORDS_ORIGIN_HARDSTOP ?
   if (state->cmd == DPS_STACK_WORD && !(origin & DPS_WORD_ORIGIN_QUERY)) {
     for (i = 0; i < Res->nitems; i++) {
       if ((Res->items[i].order == state->order) && (Res->items[i].crcword == crcword)) return DPS_OK;
     }
   }
-
+  */
   if (Res->nitems >= Res->mitems - 2) {
     Res->mitems += DPS_MAXSTACK;
     Res->items = (DPS_STACK_ITEM*)DpsRealloc(Res->items, Res->mitems * sizeof(DPS_STACK_ITEM));
@@ -346,7 +346,7 @@ static int proceedSTOP(DPS_AGENT *query, DPS_STACK_ITEM *res, DPS_STACK_ITEM *x,
   }
   res->count = res->pcur - res->pbegin;
 /*
-  if (x->origin & DPS_WORD_ORIGIN_QUERY == 0)
+  if ((x->origin & DPS_WORD_ORIGIN_QUERY) == 0)
     if (stop->origin & (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY) == (DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY)) res->origin = DPS_WORD_ORIGIN_STOP|DPS_WORD_ORIGIN_QUERY;
 */
   return DPS_OK;
