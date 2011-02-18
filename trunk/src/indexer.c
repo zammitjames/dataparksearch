@@ -1673,6 +1673,7 @@ static int DpsNextTarget(DPS_AGENT * Indexer, DPS_DOCUMENT *Result) {
 		  
 		  Indexer->Conf->Targets.cur_row++;
 		  Indexer->Conf->url_number--;
+		  DpsDocFree(Doc);
 		  DPS_RELEASELOCK(Indexer, DPS_LOCK_THREAD);
 /*		  DpsVarListLog(Indexer, &Result->Sections, DPS_LOG_DEBUG, "Target");*/
 		  return DPS_OK;
