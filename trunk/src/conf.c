@@ -1573,7 +1573,7 @@ static char *str_store (char *dest, char *src) {
 	size_t s_size = dps_strlen(src) + 1;
 	char *d = DpsRealloc(dest, d_size + s_size);
 
-	if (d) dps_memmove(d + d_size, src, s_size);
+	if (d) dps_memcpy(d + d_size, src, s_size); /* was: dps_memmove */
 	else DPS_FREE(dest);
 	return(d);
 }

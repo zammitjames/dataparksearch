@@ -1182,7 +1182,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	        char *e;
 		size_t glen, slen;
 		opening = 0;
-		dps_memcpy(name, name + 1, (slen = dps_strlen(name+1)) + 1); /* was: dps_memmove */
+		dps_memmove(name, name + 1, (slen = dps_strlen(name+1)) + 1);
 		if ((strcasecmp(name, "p")) && (strcasecmp(name, "br")) && (strcasecmp(name, "option")) && (strcasecmp(name, "input")) && (strcasecmp(name, "font"))) {
 		  do {
 		    /* Find previous '.' or beginning */
@@ -1215,7 +1215,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		    tag->trailend[0] = '.';
 		    tag->trailend++;
 		  }
-		  dps_memmove(tag->trailend, name, name_len);
+		  dps_memcpy(tag->trailend, name, name_len); /* was: dps_memmove */
 		  tag->trailend += name_len;
 		  tag->trailend[0] = '\0';
 		}

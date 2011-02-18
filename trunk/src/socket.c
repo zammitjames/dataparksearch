@@ -89,7 +89,7 @@ int socket_connect( DPS_CONN *connp){
 	size_t i;
 
 	for (i = 0; i < connp->n_sinaddr; i++) {
-	  dps_memmove(&connp->sin.sin_addr, &connp->sinaddr[i].sin_addr, sizeof(connp->sin.sin_addr));
+	  dps_memcpy(&connp->sin.sin_addr, &connp->sinaddr[i].sin_addr, sizeof(connp->sin.sin_addr));
 	  connp->sin.sin_port = htons((uint16_t)connp->port);
 	  connp->sin.sin_family = AF_INET;
 /*	  connp->sin.sin_len = sizeof(struct sockaddr_in);*/
@@ -254,7 +254,7 @@ int socket_accept(DPS_CONN *connp){
 	}
 	connp->conn_fd = sfd;
 	
-	dps_memmove(&connp->sin, &sa, sizeof(connp->sin));
+	dps_memcpy(&connp->sin, &sa, sizeof(connp->sin));
 	return 0;
 }
 

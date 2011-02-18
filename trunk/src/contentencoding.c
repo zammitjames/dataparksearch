@@ -62,7 +62,7 @@ __C_LINK int __DPSCALL DpsInflate(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
     zstream.avail_in = csize;
   }
 
-  dps_memmove(zstream.next_out, Doc->Buf.buf, gap);
+  dps_memcpy(zstream.next_out, Doc->Buf.buf, gap); /* was: dps_memmove */
 
   zstream.next_out += gap;
 
@@ -170,7 +170,7 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
 
 /*  memcpy(zstream.next_in, cpData, csize);
   zstream.next_out = (Byte*)Doc->Buf.content;*/
-  dps_memmove(zstream.next_out, Doc->Buf.buf, gap);
+  dps_memcpy(zstream.next_out, Doc->Buf.buf, gap); /* was: dps_memmove */
   zstream.next_out += gap;
 
   zstream.next_in = cpData;
@@ -234,7 +234,7 @@ __C_LINK int __DPSCALL DpsUncompress(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   buf = (Byte*)DpsMalloc(allocated_size + 1);
   if (buf == NULL) return -1;
 /*  memcpy(buf, Doc->Buf.content, csize);*/
-  dps_memmove(buf, Doc->Buf.buf, gap);
+  dps_memcpy(buf, Doc->Buf.buf, gap); /* was: dps_memmove */
   
   while(1) {
     Len = (uLong)(allocated_size - gap);
@@ -284,7 +284,7 @@ int DpsUnchunk(DPS_AGENT *query, DPS_DOCUMENT *Doc, const char *ce) {
   allocated_size = (size_t)Doc->Buf.allocated_size;
   buf = (char*)DpsMalloc(allocated_size + 1);
   if (buf == NULL) return DPS_ERROR;
-  dps_memmove(buf, Doc->Buf.buf, gap);
+  dps_memcpy(buf, Doc->Buf.buf, gap); /* was: dps_memmove */
   
   to_buf = buf + gap;
   from_content = Doc->Buf.content;
@@ -299,7 +299,7 @@ int DpsUnchunk(DPS_AGENT *query, DPS_DOCUMENT *Doc, const char *ce) {
     from_content++;
 
     if (from_content + chunk_size >= dead_end) { rc = DPS_ERROR; break; }
-    dps_memmove(to_buf, from_content, chunk_size);
+    dps_memcpy(to_buf, from_content, chunk_size); /* was: dps_memmove */
 
     to_buf += chunk_size;
     from_content += chunk_size;

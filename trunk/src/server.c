@@ -372,7 +372,7 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
       conn.port=80;
       conn.charset_id = charset_id;
       if (DpsHostLookup(Agent, &conn) != -1) {
-	dps_memmove(&conn.sin, &conn.sinaddr[0], sizeof(conn.sin));
+	dps_memcpy(&conn.sin, &conn.sinaddr[0], sizeof(conn.sin));
 	inet_ntop(AF_INET, &conn.sin.sin_addr, net, sizeof(net));
 /*	unsigned char * h;
 	h = (unsigned char*)(&conn.sin.sin_addr);
@@ -524,7 +524,7 @@ urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Do
 	} else level++;
 	pd = e;
 	if (level == Indexer->Flags.MaxSiteLevel) {
-	  dps_memmove(e - 6, "http://", 7);
+	  dps_memcpy(e - 6, "http://", 7);
 	  psite = e - 6;
 	  break;
 	}

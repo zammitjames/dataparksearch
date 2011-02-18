@@ -595,15 +595,15 @@ static int do_client(DPS_AGENT *Agent, int client){
 					done=1;
 					break;
 				  }
-				  dps_memmove(p, &(Res->WWList), sizeof(DPS_WIDEWORDLIST));
+				  dps_memcpy(p, &(Res->WWList), sizeof(DPS_WIDEWORDLIST));
 				  p += sizeof(DPS_WIDEWORDLIST);
 				  for (i = 0; i < Res->WWList.nwords; i++) {
-				    dps_memmove(p, &(Res->WWList.Word[i]), sizeof(DPS_WIDEWORD));
+				    dps_memcpy(p, &(Res->WWList.Word[i]), sizeof(DPS_WIDEWORD));
 				    p += sizeof(DPS_WIDEWORD);
-				    dps_memmove(p, Res->WWList.Word[i].word, Res->WWList.Word[i].len + 1);
+				    dps_memcpy(p, Res->WWList.Word[i].word, Res->WWList.Word[i].len + 1);
 				    p += Res->WWList.Word[i].len + 1;
 				    p += sizeof(dpsunicode_t) - ((SDPALIGN)p % sizeof(dpsunicode_t));
-				    dps_memmove(p, Res->WWList.Word[i].uword, sizeof(dpsunicode_t) * (Res->WWList.Word[i].ulen + 1));
+				    dps_memcpy(p, Res->WWList.Word[i].uword, sizeof(dpsunicode_t) * (Res->WWList.Word[i].ulen + 1));
 				    p += sizeof(dpsunicode_t) * (Res->WWList.Word[i].ulen + 1);
 				  }
 				  nsent = DpsSearchdSendPacket(server, &hdr, wbuf);

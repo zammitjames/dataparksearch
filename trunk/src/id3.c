@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -109,19 +109,19 @@ static int get_tag(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	char    comment[31];
 	char	*tag=Doc->Buf.buf+Doc->Buf.size-128;
 	
-	dps_memmove(songname,tag + 3, 30);
+	dps_memcpy(songname,tag + 3, 30);
 	songname[30]='\0';
 	
-	dps_memmove(artist, tag + 33, 30);
+	dps_memcpy(artist, tag + 33, 30);
 	artist[30]='\0';
 	
-	dps_memmove(album, tag + 63, 30);
+	dps_memcpy(album, tag + 63, 30);
 	album[30]='\0';
 	
-	dps_memmove(year, tag + 93, 5);
+	dps_memcpy(year, tag + 93, 5);
 	year[4]='\0';
 
-	dps_memmove(comment, tag + 98, 30);
+	dps_memcpy(comment, tag + 98, 30);
 	comment[30]='\0';
 	
 	DpsRTrim(songname, " ");
