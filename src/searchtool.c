@@ -1841,72 +1841,81 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
 						, double *D_y
 #endif
 						) {
-  register double y = 0.0;
+  register double y;
+  register double y_phrase, y_exact, y_origin;
+#ifdef WITH_REL_WRDCOUNT
+  register double y_wrdcount, y_count;
+#endif
+#ifdef WITH_REL_POSITION
+  register double y_position, y_firstpos;
+#endif
+#ifdef WITH_REL_DISTANCE
+  register double y_distance;
+#endif
 
-/*  if (D[DPS_N_PHRASE] > 0) xy += (x - xy + D[DPS_N_PHRASE]) / 2.0;*/
-  if (D[DPS_N_PHRASE] == 0) y += x; else y += x / D[DPS_N_PHRASE];
-  if (D[DPS_N_EXACT] == 0) y += x; else y += x / D[DPS_N_EXACT];
-  y += x * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
+  if (D[DPS_N_PHRASE] == 0) y_phrase = x; else y_phrase = x / D[DPS_N_PHRASE];
+  if (D[DPS_N_EXACT] == 0) y_exact = x; else y_exact = x / D[DPS_N_EXACT];
+  y_origin = x * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
 
 
 #ifdef WITH_REL_WRDCOUNT
   if (D[DPS_N_WRDCOUNT] > R[DPS_N_WRDCOUNT]) {
-    y += DPS_WRD_CNT_FACTOR * (D[DPS_N_WRDCOUNT] - R[DPS_N_WRDCOUNT]);
-/*    fprintf(stderr, "WRDCNT:: R: %d  D: %d -- %f\n", R[DPS_N_WRDCOUNT], D[DPS_N_WRDCOUNT],
-	    DPS_WRD_CNT_FACTOR * (double) (D[DPS_N_WRDCOUNT] - R[DPS_N_WRDCOUNT]) );*/
+    y_wrdcount = DPS_WRD_CNT_FACTOR * (double)(D[DPS_N_WRDCOUNT] - R[DPS_N_WRDCOUNT]);
   } else {
-    y += DPS_LESS_WRD_CNT_FACTOR * (R[DPS_N_WRDCOUNT] - D[DPS_N_WRDCOUNT]);
-/*    fprintf(stderr, "WRDCNT:: R: %d  D: %d -- %f\n", R[DPS_N_WRDCOUNT], D[DPS_N_WRDCOUNT], 
-	    DPS_WRD_CNT_FACTOR * (double) (R[DPS_N_WRDCOUNT] - D[DPS_N_WRDCOUNT]));*/
+    y_wrdcount = DPS_LESS_WRD_CNT_FACTOR * (double)(R[DPS_N_WRDCOUNT] - D[DPS_N_WRDCOUNT]);
   }
-  y += ((D[DPS_N_COUNT] > DPS_UNICNT_BORDER) ? DPS_UNICNT_FACTOR : DPS_LESS_UNICNT_FACTOR) * D[DPS_N_COUNT];
-/*  fprintf(stderr, "UNICNT:: R: %d  D: %f -- %f\n", R[DPS_N_COUNT], (double)D[DPS_N_COUNT], 
-	  DPS_UNICNT_FACTOR * ((double) D[DPS_N_COUNT]));*/
+  y_count = ((D[DPS_N_COUNT] > DPS_UNICNT_BORDER) ? DPS_UNICNT_FACTOR : DPS_LESS_UNICNT_FACTOR) * D[DPS_N_COUNT];
+/*  fprintf(stderr, "WRDCNT:: R: %d  D: %d -- %f\n", R[DPS_N_WRDCOUNT], D[DPS_N_WRDCOUNT], y_wrdcount );*/
+/*  fprintf(stderr, "UNICNT:: R: %d  D: %f -- %f\n", R[DPS_N_COUNT], (double)D[DPS_N_COUNT], y_count );*/
 #endif
 
 
 #ifdef WITH_REL_POSITION
   if (D[DPS_N_POSITION] > R[DPS_N_POSITION]) {
-    y += DPS_POSITION_FACTOR * (D[DPS_N_POSITION] - R[DPS_N_POSITION]);
-/*    fprintf(stderr, "POS:: R: %d  D: %d -- %f\n", R[DPS_N_POSITION], D[DPS_N_POSITION], 
-	    DPS_POSITION_FACTOR * (double) ((D[DPS_N_POSITION] - R[DPS_N_POSITION]) ));*/
+    y_position = DPS_POSITION_FACTOR * (double)(D[DPS_N_POSITION] - R[DPS_N_POSITION]);
   } else {
-    y += DPS_LESS_POSITION_FACTOR * (R[DPS_N_POSITION] - D[DPS_N_POSITION]);
-/*    fprintf(stderr, "POS:: R: %d  D: %d -- %f\n", R[DPS_N_POSITION], D[DPS_N_POSITION], 
-	    DPS_POSITION_FACTOR * (double) ((R[DPS_N_POSITION] - D[DPS_N_POSITION]) ));*/
+    y_position = DPS_LESS_POSITION_FACTOR * (double)(R[DPS_N_POSITION] - D[DPS_N_POSITION]);
   }
   if (D[DPS_N_FIRSTPOS] > R[DPS_N_FIRSTPOS]) {
-    y += DPS_POSITION_FACTOR * (D[DPS_N_FIRSTPOS] - R[DPS_N_FIRSTPOS]); 
-/*    fprintf(stderr, "FIRSTPOS:: R: %d  D: %d -- %f\n", R[DPS_N_FIRSTPOS], D[DPS_N_FIRSTPOS], 
-	    DPS_POSITION_FACTOR * (double) (D[DPS_N_FIRSTPOS] - R[DPS_N_FIRSTPOS]) );*/
+    y_firstpos = DPS_POSITION_FACTOR * (double)(D[DPS_N_FIRSTPOS] - R[DPS_N_FIRSTPOS]); 
   } else {
-    y += DPS_LESS_POSITION_FACTOR * (R[DPS_N_FIRSTPOS] - D[DPS_N_FIRSTPOS]);
-/*    fprintf(stderr, "FIRSTPOS:: R: %d  D: %d -- %f\n", R[DPS_N_FIRSTPOS], D[DPS_N_FIRSTPOS], 
-	    DPS_POSITION_FACTOR * (double) (R[DPS_N_FIRSTPOS] - D[DPS_N_FIRSTPOS]) );*/
+    y_firstpos = DPS_LESS_POSITION_FACTOR * (double)(R[DPS_N_FIRSTPOS] - D[DPS_N_FIRSTPOS]);
   }
+/*    fprintf(stderr, "POS:: R: %d  D: %d -- %f\n", R[DPS_N_POSITION], D[DPS_N_POSITION], y_position );*/
+/*    fprintf(stderr, "FIRSTPOS:: R: %d  D: %d -- %f\n", R[DPS_N_FIRSTPOS], D[DPS_N_FIRSTPOS], y_firstpos );*/
 #endif
 
 #ifdef WITH_REL_DISTANCE
   if (D[DPS_N_DISTANCE] > R[DPS_N_DISTANCE]) {
-    y += DPS_DISTANCE_FACTOR * (D[DPS_N_DISTANCE] - R[DPS_N_DISTANCE]);
-/*    fprintf(stderr, "DIST:: R: %d  D: %d -- %f\n", R[DPS_N_DISTANCE], D[DPS_N_DISTANCE], 
-	    DPS_DISTANCE_FACTOR * (double) (D[DPS_N_DISTANCE] - R[DPS_N_DISTANCE]));*/
+    y_distance = DPS_DISTANCE_FACTOR * (double)(D[DPS_N_DISTANCE] - R[DPS_N_DISTANCE]);
   } else {
-    y += DPS_LESS_DISTANCE_FACTOR * (R[DPS_N_DISTANCE] - D[DPS_N_DISTANCE]);
-/*    fprintf(stderr, "DIST:: R: %d  D: %d -- %f\n", R[DPS_N_DISTANCE], D[DPS_N_DISTANCE], 
-	    DPS_DISTANCE_FACTOR * (double) (R[DPS_N_DISTANCE] - D[DPS_N_DISTANCE]));*/
+    y_distance = DPS_LESS_DISTANCE_FACTOR * (double)(R[DPS_N_DISTANCE] - D[DPS_N_DISTANCE]);
   }
+/*    fprintf(stderr, "DIST:: R: %d  D: %d -- %f\n", R[DPS_N_DISTANCE], D[DPS_N_DISTANCE], y_distance );*/
 #endif
 
 /*  fprintf(stderr, "2. x:%lf  xy:%lf  y:%lf {xy /(x + y):%lf}\n\n", 
 	  x, xy, y, xy / (x + y) );*/
   xy *= (phr_n - 1);
-  y -= D[DPS_N_EXACT];
+  /*  y -= D[DPS_N_EXACT]; */
   xy /= phr_n;
+
+  y = y_phrase + y_exact + y_origin
+#ifdef WITH_REL_WRDCOUNT
+    + y_wrdcount + y_count
+#endif
+#ifdef WITH_REL_POSITION
+    + y_position + y_firstpos
+#endif
+#ifdef WITH_REL_DISTANCE
+    + y_distance
+#endif
+    ;
+
 #ifdef WITH_REL_TRACK
   *D_y = y;
 #endif
-  return (dps_uint4)(100000.0 * xy / (x + y) + 1);
+  return (dps_uint4)((double)100000.0 * xy / (x + y) + (double)1.0);
 
 /*  fprintf(stderr, "2. x:%.0lf  xy:%.0lf  y:%lf {0.5*(x + xy) / (x + y):%lf}\n\n", 
 	  x, xy, y, 0.5 * (x + xy) / (x + y) );*/
@@ -2052,6 +2061,7 @@ static inline dps_uint4 DpsCalcCosineWeightUltra(dps_uint4 *R, double x, double 
   
 }
 
+#define DPS_WORD_ORIGIN_MAX 7
 static dps_uint4 DpsOriginIndex(int origin) {
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 6;
   if (origin & DPS_WORD_ORIGIN_ASPELL)  return 5;
@@ -2059,7 +2069,7 @@ static dps_uint4 DpsOriginIndex(int origin) {
   if (origin & DPS_WORD_ORIGIN_SPELL)   return 3;
   if (origin & DPS_WORD_ORIGIN_ACCENT)  return 2;
   if (origin & DPS_WORD_ORIGIN_QUERY)   return 1;
-  return 7;
+  return DPS_WORD_ORIGIN_MAX;
 }
 
 static dps_uint4 DpsOriginWeightFull(int origin) {  /* Weight for origin can be from 1 to 15 */
@@ -2140,10 +2150,10 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   mprotect(Crd, sizeof(*Crd) *  Res->CoordList.ncoords, PROT_READ);
 #endif
 
-  count_size = (2 * Res->max_order_inquery + 10) * sizeof(size_t);
+  count_size = (2 * Res->max_order_inquery + DPS_WORD_ORIGIN_MAX + 10) * sizeof(size_t);
 
   if ((count = (size_t*)DpsXmalloc(2 * count_size + 1)) == NULL) {TRACE_OUT(query); return; }
-  xy_o = count + Res->max_order_inquery + 8;
+  xy_o = count + Res->max_order_inquery + DPS_WORD_ORIGIN_MAX + 1;
 
   DpsWeightFactorsInit(DpsVarListFindStr(&query->Vars, "wf", ""), wf);
 
@@ -2294,7 +2304,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 	}
 	D[DPS_N_ORIGIN] = tt;
-	for (tt++; tt <= Res->max_order_inquery + 7; tt++) {
+	for (tt++; tt < Res->max_order_inquery + DPS_WORD_ORIGIN_MAX; tt++) {
 	  if (count[D[DPS_N_ORIGIN]] < count[tt]) D[DPS_N_ORIGIN] = tt;
 	}
 	D[DPS_N_ORIGIN] -= Res->max_order_inquery;
@@ -2384,7 +2394,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
     }
     D[DPS_N_ORIGIN] = tt;
-    for (tt++; tt <= Res->max_order_inquery + 7; tt++) {
+    for (tt++; tt < Res->max_order_inquery + DPS_WORD_ORIGIN_MAX; tt++) {
       if (count[D[DPS_N_ORIGIN]] < count[tt]) D[DPS_N_ORIGIN] = tt;
     }
     D[DPS_N_ORIGIN] -= Res->max_order_inquery;
