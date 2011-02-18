@@ -168,7 +168,7 @@ static int DpsMySQLQuery(DPS_DB *db,DPS_SQLRES *R,const char *query){
 						len=R->Items[offs].len=lengths[col];
 						R->Items[offs].val=(char*)DpsMalloc(len+1);
 						if (R->Items[offs].val == NULL) return DPS_ERROR;
-						dps_memmove(R->Items[offs].val, mysqlrow[col], len);
+						dps_memcpy(R->Items[offs].val, mysqlrow[col], len); /*was: dps_memmove */
 						R->Items[offs].val[len]='\0';
 					}
 					R->nRows++;

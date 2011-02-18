@@ -173,7 +173,7 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
     char buf[64];
     if (len > 0 && len < sizeof(buf)) {
       const char *csname;
-      dps_memmove(buf, s, len);
+      dps_memcpy(buf, s, len);
       buf[len]= '\0';
       csname= DpsCharsetCanonicalName(buf);
       if (csname)
@@ -310,7 +310,7 @@ static int DpsXMLEnter(DPS_XML_PARSER *st, const char *str, size_t len) {
     st->attrend[0] = '.';
     st->attrend++;
   }
-  dps_memmove(st->attrend, str, len);
+  dps_memcpy(st->attrend, str, len);
   st->attrend += len;
   st->attrend[0] = '\0';
   return(st->enter ? st->enter(st, st->attr, st->attrend - st->attr) : DPS_XML_OK);

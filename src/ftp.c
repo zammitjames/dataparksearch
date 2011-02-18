@@ -420,7 +420,7 @@ static int ftp_parse_list(DPS_CONN *connp, char *path){
 		if (connp->buf == NULL) return -1;
 	}
 	bzero(connp->buf, ((size_t)connp->buf_len_total+1));
-	dps_memmove(connp->buf, buf_out, cur_len);
+	dps_memcpy(connp->buf, buf_out, cur_len); /* was: dps_memmove */
 	DPS_FREE(buf_out);
 	return 0;
 }

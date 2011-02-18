@@ -139,7 +139,7 @@ int DpsUniRegComp(DPS_UNIREG_EXP *reg, const dpsunicode_t *pattern) {
 		}
 		len=lt-tok;
 		reg->Token[reg->ntokens].str = (dpsunicode_t*)DpsMalloc((len+1)*sizeof(dpsunicode_t));
-		dps_memmove(reg->Token[reg->ntokens].str, tok, len * sizeof(dpsunicode_t));
+		dps_memcpy(reg->Token[reg->ntokens].str, tok, len * sizeof(dpsunicode_t));
                 reg->Token[reg->ntokens].str[len]=0;
 
 		reg->ntokens++;
@@ -596,8 +596,8 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
 	if (z > 3) { /* FIXME: min. 4 letters from the end, - add config parameter for that */ 
 	  if (z > FZ->nspell) {
 	    DPS_FREE(FZ->cur[0]->word);
-	    dps_memmove(FZ->cur[0]->flag, SpellList->Spell[c].flag, sizeof(FZ->cur[0]->flag));
-	    dps_memmove(FZ->cur[0]->lang, SpellList->Spell[c].lang, sizeof(FZ->cur[0]->lang));
+	    dps_memcpy(FZ->cur[0]->flag, SpellList->Spell[c].flag, sizeof(FZ->cur[0]->flag));
+	    dps_memcpy(FZ->cur[0]->lang, SpellList->Spell[c].lang, sizeof(FZ->cur[0]->lang));
 	    FZ->cur[0]->word = DpsUniDup(word);
 	    FZ->nspell = z;
 	  } else if (z == FZ->nspell) {
@@ -614,8 +614,8 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
 	    if (y < z) continue;
 	    if (dps_strlen(FZ->cur[0]->flag) < dps_strlen(SpellList->Spell[q].flag)) {
 	      DPS_FREE(FZ->cur[0]->word);
-	      dps_memmove(FZ->cur[0]->flag, SpellList->Spell[q].flag, sizeof(FZ->cur[0]->flag));
-	      dps_memmove(FZ->cur[0]->lang, SpellList->Spell[q].lang, sizeof(FZ->cur[0]->lang));
+	      dps_memcpy(FZ->cur[0]->flag, SpellList->Spell[q].flag, sizeof(FZ->cur[0]->flag));
+	      dps_memcpy(FZ->cur[0]->lang, SpellList->Spell[q].lang, sizeof(FZ->cur[0]->lang));
 	      FZ->cur[0]->word = DpsUniDup(word);
 	      FZ->nspell = z;
 	    }
@@ -627,8 +627,8 @@ static DPS_SPELL ** DpsFindWord(DPS_AGENT * Indexer, const dpsunicode_t *p_word,
 	    if (y < z) continue;
 	    if (dps_strlen(FZ->cur[0]->flag) <= dps_strlen(SpellList->Spell[q].flag)) {
 	      DPS_FREE(FZ->cur[0]->word);
-	      dps_memmove(FZ->cur[0]->flag, SpellList->Spell[q].flag, sizeof(FZ->cur[0]->flag));
-	      dps_memmove(FZ->cur[0]->lang, SpellList->Spell[q].lang, sizeof(FZ->cur[0]->lang));
+	      dps_memcpy(FZ->cur[0]->flag, SpellList->Spell[q].flag, sizeof(FZ->cur[0]->flag));
+	      dps_memcpy(FZ->cur[0]->lang, SpellList->Spell[q].lang, sizeof(FZ->cur[0]->lang));
 	      FZ->cur[0]->word = DpsUniDup(word);
 	      FZ->nspell = z;
 	    }

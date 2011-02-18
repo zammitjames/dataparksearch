@@ -127,7 +127,8 @@ char * _DpsStrdup(const char *str) {
 
         len = dps_strlen(DPS_NULL2EMPTY(str)) + 1;
         if ((copy = DpsMalloc(len)) == NULL) return NULL;
-        dps_memcpy(copy, DPS_NULL2EMPTY(str), len); /* was: dps_memmove */
+        if (len > 1) dps_memcpy(copy, DPS_NULL2EMPTY(str), len); /* was: dps_memmove */
+	copy[len - 1] = '\0';
 /*	fprintf(stderr, " -- dup len:%d copy:%s -- str:%s\n", len, copy, str);*/
         return (copy);
 }

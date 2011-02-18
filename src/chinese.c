@@ -100,7 +100,7 @@ static void DpsChineseSortForLast(DPS_CHINAWORD *List, size_t n) {
   }
   if (r < (n - 1) && cmpchinese(&List[r], &T) < 0) r++;
   if (r == (n - 1)) return;
-  dps_memcpy(&List[r + 1], &List[r], (n - r - 1) * sizeof(DPS_CHINAWORD)); /* was: dps_memmove */
+  dps_memmove(&List[r + 1], &List[r], (n - r - 1) * sizeof(DPS_CHINAWORD));
   List[r] = T;
   return;
 }

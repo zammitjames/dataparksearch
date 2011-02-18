@@ -198,7 +198,7 @@ static int open_host(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	} 
 	Doc->connp.sin.sin_family=AF_INET;
 	for (i = 0; i < Doc->connp.n_sinaddr; i++) {
-	  dps_memmove(&Doc->connp.sin.sin_addr, &Doc->connp.sinaddr[i].sin_addr, sizeof(Doc->connp.sin.sin_addr));
+	  dps_memcpy(&Doc->connp.sin.sin_addr, &Doc->connp.sinaddr[i].sin_addr, sizeof(Doc->connp.sin.sin_addr));
 	  if (DpsNeedLog(DPS_LOG_DEBUG)) {
 	        char abuf[INET_ADDRSTRLEN];
 		if (inet_ntop(AF_INET, &Agent->Flags.bind_addr.sin_addr, abuf, sizeof(abuf)) == NULL) {
@@ -638,7 +638,7 @@ static int DpsFTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc)
 					    else
 					      buf_size = Doc->connp.connp->buf_len;
 					    
-					    dps_memmove(Doc->Buf.buf + Doc->Buf.size, Doc->connp.connp->buf, buf_size);
+					    dps_memcpy(Doc->Buf.buf + Doc->Buf.size, Doc->connp.connp->buf, buf_size);
 					    Doc->Buf.size += buf_size; 
 					  }
 					}else{

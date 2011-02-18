@@ -819,7 +819,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     switch(tag.type) {
     case DPS_HTML_TXT:
       if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	dps_memmove(HEnd, htok, (size_t)(last - htok));
+	dps_memcpy(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
 	HEnd++;
@@ -864,7 +864,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 	switch(tag.type) {
 	case DPS_HTML_TXT:
 	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	    dps_memmove(HEnd, htok, (size_t)(last-htok));
+	    dps_memcpy(HEnd, htok, (size_t)(last-htok));
 	    HEnd += (size_t)(last - htok);
 	    HEnd[0] = ' ';
 	    HEnd++;
@@ -1143,7 +1143,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     switch(tag.type) {
     case DPS_HTML_TXT:
       if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title== 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	dps_memmove(HEnd, htok, (size_t)(last - htok));
+	dps_memcpy(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
 	HEnd++;
@@ -1177,7 +1177,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     switch(tag.type) {
     case DPS_HTML_TXT:
       if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	dps_memmove(HEnd, htok, (size_t)(last - htok));
+	dps_memcpy(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
 	HEnd++;
@@ -1222,7 +1222,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
 	switch(tag.type) {
 	case DPS_HTML_TXT:
 	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title== 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	    dps_memmove(HEnd, htok, (size_t)(last-htok));
+	    dps_memcpy(HEnd, htok, (size_t)(last-htok));
 	    HEnd += (size_t)(last - htok);
 	    HEnd[0] = ' ';
 	    HEnd++;

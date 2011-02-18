@@ -461,7 +461,7 @@ allocateMoreSlots(void)
 	internalUse = 1;
 
 	newAllocation = DpsMalloc(newSize);
-	dps_memmove(newAllocation, allocationList, allocationListSize);
+	dps_memcpy(newAllocation, allocationList, allocationListSize); /* was: dps_memmove */
 	memset(&(((char *)newAllocation)[allocationListSize]), 0, bytesPerPage);
 
 	allocationList = (Slot *)newAllocation;
@@ -986,7 +986,7 @@ extern C_LINKAGE void * _DpsRealloc(void * oldBuffer, size_t newSize, const char
 			size = newSize;
 
 		if ( size > 0 )
-			dps_memmove(newBuffer, oldBuffer, size);
+		  dps_memcpy(newBuffer, oldBuffer, size); /* was: dps_memmove */
 
 		DpsFree(oldBuffer);
 		noAllocationListProtection = 0;
@@ -1035,7 +1035,7 @@ extern C_LINKAGE char * _DpsStrdup(const char *str, const char *filename, size_t
         len = dps_strlen(str) + 1;
         if ((copy = _DpsMalloc(len, filename, fileline)) == NULL)
                 return (NULL);
-        dps_memmove(copy, str, len);
+        dps_memcpy(copy, str, len); /* was: dps_memmove */
         return (copy);
 }
 

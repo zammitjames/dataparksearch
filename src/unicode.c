@@ -58,7 +58,7 @@ dpsunicode_t *DpsUniNDup(const dpsunicode_t *s, size_t len) {
 	size_t size = DpsUniLen(s);
 	if (size > len) size = len;
 	if((res = (dpsunicode_t*)DpsMalloc((size + 1) * sizeof(*s))) == NULL) return(NULL);
-	dps_memmove(res, s, size * sizeof(*s));
+	dps_memcpy(res, s, size * sizeof(*s)); /* was: dps_memmove */
 	res[size] = 0;
 	return res;
 }

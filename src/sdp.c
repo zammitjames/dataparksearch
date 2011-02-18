@@ -77,8 +77,8 @@ ssize_t DpsSearchdSendPacket(int fd,const DPS_SEARCHD_PACKET_HEADER *hdr,const v
 	} else {
 	  char *ldata = (char*)DpsMalloc(sizeof(*hdr) + hdr->len);
 	  if (ldata != NULL) {
-	    dps_memmove(ldata, hdr, sizeof(*hdr));
-	    dps_memmove(ldata + sizeof(*hdr), data, hdr->len);
+	    dps_memcpy(ldata, hdr, sizeof(*hdr));
+	    dps_memcpy(ldata + sizeof(*hdr), data, hdr->len);
 	  
 	    nsent = DpsSend(fd, ldata, sizeof(*hdr) + hdr->len, 0);
 	  }
@@ -113,7 +113,7 @@ static int open_host(char *hostname,int port, int timeout)
 		host=gethostbyname(hostname);
 		if (host){
 		  sa_in.sin_family = (sa_family_t)host->h_addrtype;
-			dps_memmove(&sa_in.sin_addr, host->h_addr, (size_t)host->h_length);
+			dps_memcpy(&sa_in.sin_addr, host->h_addr, (size_t)host->h_length);
 		}else{
 			return(DPS_NET_CANT_RESOLVE);
 		}

@@ -1261,7 +1261,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 				wrdX[i][j].coord = (wrdX[i][j].coord << 8) + (i & 255);
 			}*/
 
-			dps_memmove(curwrd, wrdX[i], sizeof(*curwrd)*nwrdX[i]);
+			dps_memcpy(curwrd, wrdX[i], sizeof(*curwrd)*nwrdX[i]); /* was: dps_memmove */
 #ifdef WITH_MULTIDBADDR
 			if (db->DBDriver == DPS_DB_SEARCHD && nwrdX[i] > 0 ) {
 			  register size_t length = nwrdX[i];
@@ -1282,11 +1282,11 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 			curwrd+=nwrdX[i];
 #endif
 			DPS_FREE(wrdX[i]);
-			dps_memmove(curpersite, PerSite[i], sizeof(size_t) * nwrdX[i]);
+			dps_memcpy(curpersite, PerSite[i], sizeof(size_t) * nwrdX[i]); /* was: dps_memmove */
 			curpersite += nwrdX[i];
 			DPS_FREE(PerSite[i]);
 			if (udtX[i] != NULL) {
-			  dps_memmove(curudt, udtX[i], sizeof(*curudt) * nwrdX[i]);
+			  dps_memcpy(curudt, udtX[i], sizeof(*curudt) * nwrdX[i]); /* was: dps_memmove */
 			} else {
 			  bzero(curudt, sizeof(*curudt) * nwrdX[i]);
 			}
@@ -1294,7 +1294,7 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 			DPS_FREE(udtX[i]);
 #ifdef WITH_REL_TRACK
 			if (trkX[i] != NULL) {
-			  dps_memmove(curtrk, trkX[i], sizeof(*curtrk) * nwrdX[i]);
+			  dps_memcpy(curtrk, trkX[i], sizeof(*curtrk) * nwrdX[i]); /* was: dps_memmove */
 			} else {
 			  bzero(curtrk, sizeof(*curtrk) * nwrdX[i]);
 			}
@@ -1609,7 +1609,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 				  TRACE_OUT(A);
 				  return NULL;
 				}
-				dps_memmove(&Res->Doc[Res->num_rows], Cl->Doc, sizeof(DPS_DOCUMENT)*Cl->num_rows);
+				dps_memcpy(&Res->Doc[Res->num_rows], Cl->Doc, sizeof(DPS_DOCUMENT)*Cl->num_rows); /* was: dps_memmove */
 				Res->num_rows+=Cl->num_rows;
 				DPS_FREE(Cl->Doc);
 				DpsResultFree(Cl);
@@ -2137,7 +2137,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #endif
 	    return DPS_ERROR;
 	  }
-	  dps_memmove(&db->stored_addr.sin_addr, hp->h_addr, (size_t)hp->h_length);
+	  dps_memcpy(&db->stored_addr.sin_addr, hp->h_addr, (size_t)hp->h_length); /* was: dps_memmove */
 	  db->stored_addr.sin_family = (sa_family_t)hp->h_addrtype;
 	  db->stored_addr.sin_port = htons((u_short)nport);
 	}
@@ -2159,7 +2159,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 #endif
 	    return DPS_ERROR;
 	  }
-	  dps_memmove(&db->cached_addr.sin_addr, hp->h_addr, (size_t)hp->h_length);
+	  dps_memcpy(&db->cached_addr.sin_addr, hp->h_addr, (size_t)hp->h_length); /* was: dps_memmove */
 	  db->cached_addr.sin_family = (sa_family_t)hp->h_addrtype;
 	  db->cached_addr.sin_port = htons((u_short)nport);
 	}

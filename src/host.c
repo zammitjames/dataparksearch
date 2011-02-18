@@ -110,10 +110,10 @@ static int host_addr_add(DPS_AGENT *Indexer, DPS_HOSTLIST *List, const char *hos
 	}
 
 	List->host_addr[min_id].last_used = Indexer->now;
-/*	if(addr) dps_memmove(&List->host_addr[min_id].addr, addr, sizeof( struct in_addr));*/
+/*	if(addr) dps_memcpy(&List->host_addr[min_id].addr, addr, sizeof( struct in_addr));*/
 	if (connp) {
 	  for(i = 0; i < connp->n_sinaddr; i++)
-	    dps_memmove(&List->host_addr[min_id].addr[i], &connp->sinaddr[i], sizeof( connp->sinaddr[0]));
+	    dps_memcpy(&List->host_addr[min_id].addr[i], &connp->sinaddr[i], sizeof( connp->sinaddr[0])); /* was: dps_memmove */
 	  List->host_addr[min_id].naddr = connp->n_sinaddr;
 	}
 	
@@ -162,7 +162,7 @@ static void dps_callback(void *arg, int status, struct hostent *he) {
   if (he != NULL)
     for (i = 0; he->h_addr_list[i] != NULL && i < DPS_MAX_HOST_ADDR; i++) {
       if (he->h_addrtype != AF_INET) continue;
-      dps_memmove((char *)&(connp->sinaddr[i].sin_addr), he->h_addr_list[i], (size_t)he->h_length);
+      dps_memcpy((char *)&(connp->sinaddr[i].sin_addr), he->h_addr_list[i], (size_t)he->h_length); /* was: dps_memmove */
       connp->sinaddr[i].sin_port = htons((uint16_t)connp->port); /*	Set port	*/
 /*      if (DpsCheckAddr(&(connp->sin), connp->timeout) == DPS_OK) break;*/
     }
@@ -247,7 +247,7 @@ static int DpsGetHostByName(DPS_AGENT *Indexer, DPS_CONN *connp, const char *hos
 #endif
     for(list = res, i = 0; (list != NULL) && (i < DPS_MAX_HOST_ADDR); list = list->ai_next, i++) {
       if (list->ai_family != AF_INET) continue;
-      dps_memmove((char *)&(connp->sinaddr[i]), list->ai_addr, (size_t)list->ai_addrlen);
+      dps_memcpy((char *)&(connp->sinaddr[i]), list->ai_addr, (size_t)list->ai_addrlen); /*was: dps_memmove */
       connp->sinaddr[i].sin_port = htons(connp->port); /*	Set port	*/
       DpsLog(Indexer, DPS_LOG_DEBUG, "Resolver %dth checking for %s", i, inet_ntoa(connp->sinaddr[i].sin_addr));
 /*      if ((list->ai_next != NULL) && (DpsCheckAddr(&(connp->sin), connp->timeout) == DPS_OK)) break;*/
@@ -285,7 +285,7 @@ static int DpsGetHostByName(DPS_AGENT *Indexer, DPS_CONN *connp, const char *hos
     }
     for (i = 0; he->h_addr_list[i] != NULL && i < DPS_MAX_HOST_ADDR; i++) {
       if (he->h_addrtype != AF_INET) continue;
-      dps_memmove((char *)&(connp->sinaddr[i].sin_addr), he->h_addr_list[i], (size_t)he->h_length);
+      dps_memcpy((char *)&(connp->sinaddr[i].sin_addr), he->h_addr_list[i], (size_t)he->h_length); /* was: dps_memmove */
       connp->sinaddr[i].sin_port = htons(connp->port); /*	Set port	*/
       DpsLog(Indexer, DPS_LOG_DEBUG, "Resolver %dth checking for %s", i, inet_ntoa(connp->sinaddr[i].sin_addr));
 /*      if (DpsCheckAddr(&(connp->sin), connp->timeout) == DPS_OK) break;*/
@@ -313,7 +313,7 @@ static int DpsGetHostByName(DPS_AGENT *Indexer, DPS_CONN *connp, const char *hos
     }
     for (i = 0; he->h_addr_list[i] != NULL && i < DPS_MAX_HOST_ADDR; i++) {
       if (he->h_addrtype != AF_INET) continue;
-      dps_memmove((char *)&(connp->sinaddr[i].sin_addr), he->h_addr_list[i], (size_t)he->h_length);
+      dps_memcpy((char *)&(connp->sinaddr[i].sin_addr), he->h_addr_list[i], (size_t)he->h_length); /*was: dps_memmove */
       connp->sinaddr[i].sin_port = htons(connp->port); /*	Set port	*/
       DpsLog(Indexer, DPS_LOG_DEBUG, "Resolver %dth checking for %s", i, inet_ntoa(connp->sinaddr[i].sin_addr));
 /*      if (DpsCheckAddr(&(connp->sin), connp->timeout) == DPS_OK) break;*/
@@ -491,7 +491,7 @@ int DpsHostLookup(DPS_AGENT *Indexer, DPS_CONN *connp) {
 			connp->Host = Host;
 			if(Host->naddr) {
 			        for (i = 0; i < Host->naddr; i++) {
-				  dps_memmove(&connp->sinaddr[i], &Host->addr[i], sizeof(Host->addr[0]));
+				  dps_memcpy(&connp->sinaddr[i], &Host->addr[i], sizeof(Host->addr[0])); /*was: dps_memmove */
 				}
 				connp->n_sinaddr = Host->naddr;
 			}else{
@@ -580,7 +580,7 @@ int DpsHostLookup(DPS_AGENT *Indexer, DPS_CONN *connp) {
 #endif
 	}else{
 	        connp->n_sinaddr = 1;
-		dps_memmove(&connp->sinaddr[0], &connp->sin, sizeof(connp->sinaddr[0]));
+		dps_memcpy(&connp->sinaddr[0], &connp->sin, sizeof(connp->sinaddr[0])); /* was: dps_memmove */
 		if(!(Host=host_addr_find(List,connp->hostname))){
 		  host_addr_add(Indexer, List,connp->hostname, connp);
 		}
