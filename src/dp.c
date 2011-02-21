@@ -326,7 +326,7 @@ int main() {
 
   {
     char* d = zeroarr(N + 8);
-    char* a = copyarr(a0, N);
+    char* a = copyarr(a0, N + 1);
     a[N] = 0;
 
     TimerStart();
@@ -417,12 +417,17 @@ int main() {
 
 
 
+    free(d);
+    free(a);
+  }
 
+  /* ###################################### */
 
+  {
+    char* d = zeroarr(N + 8);
+    char* a = copyarr(a0, N + 1);
+    a[N] = 0;
 
-
-
-    /* ###################################### */
 
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
@@ -430,6 +435,8 @@ int main() {
       dps_strcpy(a, d);
     }
     t_dps = TimerEnd();
+
+    fprintf(stderr, " -- a[N]:%d d[N]:%d\n", a[N], d[N]);
 
     TimerStart();
     for (i = N; i > STARTLEN; i--) {

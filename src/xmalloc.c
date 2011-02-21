@@ -78,7 +78,7 @@ char * _DpsStrdup(const char *str) {
         len = dps_strlen(str) + 1;
         if ((copy = DpsMalloc(len)) == NULL)
                 return (NULL);
-        dps_memmove(copy, str, len);
+        dps_memcpy(copy, str, len);
         return (copy);
 }
 */

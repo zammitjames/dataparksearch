@@ -1244,7 +1244,7 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
      register int i;
      DPS_LANGITEM *HIT;
 
-     Stat->hits = Stat->miss = 0;
+     Stat->hits = Stat->miss = Stat->diff = 0;
      for (i = 0; i < DPS_LM_TOPCNT; i++) {
        if ( (HIT = dps_bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += (DPS_LM_TOPCNT - i);
@@ -1286,7 +1286,7 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
      register int i;
      DPS_LANGITEM *HIT;
 
-     Stat->hits = Stat->miss = 0;
+     Stat->hits = Stat->miss = Stat->diff = 0;
      for (i = 0; i < DPS_LM_TOPCNT; i++) {
 /*       if ( (HIT = dps_bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss++;

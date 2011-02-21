@@ -40,7 +40,7 @@
 
 /* Some useful MACROs */
 #define DPS_STREND(s)		(s+strlen(s))
-#define DPS_FREE(x)		{if((x)!=NULL){DpsFree((void*)x);x=NULL;}}
+#define DPS_FREE(x)		{if((x)!=NULL){DpsFree((void*)(x));x=NULL;}}
 #define DPS_SKIP(s,set)		while((*s)&&(strchr(set,*s)))s++;
 #define DPS_SKIPN(s,set)	while((*s)&&(!strchr(set,*s)))s++;
 

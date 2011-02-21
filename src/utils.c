@@ -109,7 +109,6 @@ int strncasecmp(const char *s1, const char *s2, size_t n)
 }
 #endif
 
-/*#if !defined(HAVE_STRNDUP) || defined(EFENCE)*/
 char * _DpsStrndup(const char * str, size_t len) {
 	char * res;
 	res=(char*)DpsMalloc(len+1);
@@ -118,7 +117,6 @@ char * _DpsStrndup(const char * str, size_t len) {
 	res[len]='\0';
 	return res;
 }
-/*#endif*/
 
 #ifndef EFENCE
 char * _DpsStrdup(const char *str) {

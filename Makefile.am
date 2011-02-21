@@ -1,4 +1,5 @@
 ## Process this file with automake to produce Makefile.in 
+ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign no-installinfo dist-bzip2 no-dist-gzip
 SUBDIRS = include src doc etc create misc scripts test #php @BINDINGS@
 #DIST_SUBDIRS = php java perl
@@ -50,6 +51,7 @@ libtool: $(LIBTOOL_DEPS)
 
 dist-hook:
 	cp -rf $(srcdir)/debian $(distdir)
+	cp -rf $(srcdir)/m4 $(distdir)
 
 ## libdpcharset distribution
 
