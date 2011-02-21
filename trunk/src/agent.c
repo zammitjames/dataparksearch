@@ -136,6 +136,7 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 	}else{
 		bzero((void*)result, sizeof(*result));
 	}
+
 	if ((result->Locked = (int*)DpsXmalloc(DpsNsems * sizeof(int) + 1)) == NULL) {
 	      DpsAgentFree(result);
 	      return NULL;

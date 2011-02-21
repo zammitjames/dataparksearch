@@ -301,6 +301,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign no-installinfo dist-bzip2 no-dist-gzip
 SUBDIRS = include src doc etc create misc scripts test #php @BINDINGS@
 EXTRA_DIST = net.m4 threads.m4 install.pl bootstrap acinclude.m4 docbook.m4 README.XML BUGS \
@@ -843,6 +844,7 @@ libtool: $(LIBTOOL_DEPS)
 
 dist-hook:
 	cp -rf $(srcdir)/debian $(distdir)
+	cp -rf $(srcdir)/m4 $(distdir)
 
 charsetdistdir: $(CHARSETDISTFILES)
 	-chmod -R a+w $(charsetdistdir) >/dev/null 2>&1; rm -rf $(charsetdistdir)

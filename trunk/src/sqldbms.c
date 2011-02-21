@@ -94,11 +94,11 @@ static int DpsMySQLQuery(DPS_DB *db,DPS_SQLRES *R,const char *query){
 	size_t	i;
 	
 	db->errcode=0;
-/*	if (db->connected && db->async_in_process) {
+	if (db->connected && db->async_in_process) {
 	  mysql_read_query_result(&db->mysql);
 	  db->async_in_process = 0;
 	}
-*/
+
 	
 	for(i = 0; i < 3; i++) {
 	        if(!db->connected) {
@@ -141,7 +141,10 @@ static int DpsMySQLQuery(DPS_DB *db,DPS_SQLRES *R,const char *query){
 				R->nRows=0;
 				R->Items=NULL;
 				R->Fields=(DPS_SQLFIELD*)DpsMalloc(R->nCols*sizeof(DPS_SQLFIELD) + 1);
-				if (R->Fields == NULL) return DPS_ERROR;
+				if (R->Fields == NULL) {
+				  mysql_free_result(mysqlres);
+				  return DPS_ERROR;
+				}
 				bzero(R->Fields,R->nCols*sizeof(DPS_SQLFIELD));
 				
 				for(nfields=0; (field=mysql_fetch_field(mysqlres)); nfields++){
@@ -161,13 +164,17 @@ static int DpsMySQLQuery(DPS_DB *db,DPS_SQLRES *R,const char *query){
 							mitems+=256;
 							R->Items=(DPS_PSTR*)DpsRealloc(R->Items,mitems*sizeof(DPS_PSTR));
 							if (R->Items == NULL) {
+							  mysql_free_result(mysqlres);
 							  return DPS_ERROR;
 							}
 						}
 						
 						len=R->Items[offs].len=lengths[col];
 						R->Items[offs].val=(char*)DpsMalloc(len+1);
-						if (R->Items[offs].val == NULL) return DPS_ERROR;
+						if (R->Items[offs].val == NULL) {
+						  mysql_free_result(mysqlres);
+						  return DPS_ERROR;
+						}
 						dps_memcpy(R->Items[offs].val, mysqlrow[col], len); /*was: dps_memmove */
 						R->Items[offs].val[len]='\0';
 					}
@@ -187,11 +194,11 @@ static int DpsMySQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query) {
 	size_t	i;
 	
 	db->errcode=0;
-/*	if (db->connected && db->async_in_process) {
+	if (db->connected && db->async_in_process) {
 	  mysql_read_query_result(&db->mysql);
 	  db->async_in_process = 0;
 	}
-*/
+
 	
 	for(i = 0; i < 3; i++) {
 	  if(!db->connected) {
@@ -222,8 +229,8 @@ static int DpsMySQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query) {
 				return DPS_OK;
 			}
 	  } else {
-	    mysql_read_query_result(&db->mysql);
-/*	    db->async_in_process = 1;*/
+/*	    mysql_read_query_result(&db->mysql);*/
+	    db->async_in_process = 1;
 	    return DPS_OK;
 	  }
 	}

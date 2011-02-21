@@ -964,6 +964,7 @@ enable_libtool_lock
 enable_largefile
 with_tre
 with_debug
+with_optimise
 enable_paranoia
 enable_syslog
 enable_trace
@@ -1675,7 +1676,7 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --disable-largefile     omit support for large files
   --enable-paranoia       Enable paranoia support. Stack will be checked like with libparanoia
-                          This works only on Intel architecture using gcc. Optimization should be switched off.
+                          This works only on Intel architecture using gcc. Optimisation should be switched off.
   --enable-syslog         Use syslog (default)
   --enable-syslog=LOG_FACILITY
                           Use syslog facility LOG_FACILITY, which should be
@@ -1731,6 +1732,7 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --without-tre           disable support for libtre
   --with-debug            Build with debugging info
+  --with-optimise         Build with compilation optimisation
   --with-pophopsfactor=NUM   Define NUM as factor of hops in the Neo Popularity Rank calculation.
                           Default value is 0.1.
   --with-bestpos=NUM      Define NUM as best first word position for relevance calculation.
@@ -3501,6 +3503,7 @@ else
 $as_echo "no" >&6; }
   SET_MAKE="MAKE=${MAKE-make}"
 fi
+
 
 
 # Set all version vars based on $VERSION. How do we do this more elegant ?
@@ -5300,13 +5303,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:5303: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:5306: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5306: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:5309: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5309: output\"" >&5)
+  (eval echo "\"\$as_me:5312: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6512,7 +6515,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6515 "configure"' > conftest.$ac_ext
+  echo '#line 6518 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8038,11 +8041,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8041: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8044: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8045: \$? = $ac_status" >&5
+   echo "$as_me:8048: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8377,11 +8380,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8380: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8383: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8384: \$? = $ac_status" >&5
+   echo "$as_me:8387: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8482,11 +8485,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8485: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8488: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8489: \$? = $ac_status" >&5
+   echo "$as_me:8492: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8537,11 +8540,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8540: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8543: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8544: \$? = $ac_status" >&5
+   echo "$as_me:8547: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10921,7 +10924,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10924 "configure"
+#line 10927 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11017,7 +11020,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 11020 "configure"
+#line 11023 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12896,6 +12899,57 @@ _ACEOF
 
 
 
+
+
+debug=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for debug info" >&5
+$as_echo_n "checking for debug info... " >&6; }
+
+# Check whether --with-debug was given.
+if test "${with_debug+set}" = set; then :
+  withval=$with_debug; debug=$withval
+else
+  debug=no
+fi
+
+if test "$debug" = "yes"
+then
+  CFLAGS="$CFLAGS -O0 -g"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+optimise=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for compilation optimisation" >&5
+$as_echo_n "checking for compilation optimisation... " >&6; }
+
+# Check whether --with-optimise was given.
+if test "${with_optimise+set}" = set; then :
+  withval=$with_optimise; optimise=$withval
+else
+  optimise=no
+fi
+
+if test "$optimise" = "yes"; then
+  CFLAGS="$CFLAGS -O2"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes, -O2" >&5
+$as_echo "yes, -O2" >&6; }
+elif test "$optimise" != "no"; then
+  CFLAGS="$CFLAGS -O$optimise"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes, -O$optimise" >&5
+$as_echo "yes, -O$optimise" >&6; }
+else
+  # No optimisation
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: default" >&5
+$as_echo "default" >&6; }
+fi
+
+
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libc functions performance" >&5
 $as_echo_n "checking for libc functions performance... " >&6; }
 if test "$cross_compiling" = yes; then :
@@ -13324,30 +13378,6 @@ $as_echo "no" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-
-
-debug=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for debug info" >&5
-$as_echo_n "checking for debug info... " >&6; }
-
-# Check whether --with-debug was given.
-if test "${with_debug+set}" = set; then :
-  withval=$with_debug; debug=$withval
-else
-  debug=no
-fi
-
-if test "$debug" = "yes"
-then
-  CFLAGS="$CFLAGS -O0 -g"
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-else
-  # Optimized version. No debug
-  CFLAGS="-O2 $CFLAGS"
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
 
 
 paranoia=no

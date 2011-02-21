@@ -1316,8 +1316,8 @@ static int DpsIndex(DPS_AGENT *A) {
                DPS_GETLOCK(A,DPS_LOCK_THREAD);
                num=total_threads;
                DPS_RELEASELOCK(A,DPS_LOCK_THREAD);
-               if(!num)break;
                DPSSLEEP(1);
+               if(!num)break;
           }
           DPS_FREE(threads);
      }
