@@ -179,11 +179,11 @@ int dps_mb_wc_utf16le(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const 
   if (r + 2 > end) return DPS_CHARSET_ILUNI;
   
   conv->ocodes = 1;
-  f = (r[1] << 8) + r[0];
+  f = (((dpsunicode_t)r[1]) << 8) + (dpsunicode_t)r[0];
 
   if ((f & 0xFC00) != 0xD800) {
     *pwc = f;
-    return conv->icodes = 1;
+    return conv->icodes = 2;
   }
 
   if (r + 4 > end) return DPS_CHARSET_ILUNI;
@@ -191,7 +191,7 @@ int dps_mb_wc_utf16le(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const 
   *pwc = ((f & 0x03FF) << 10) + 0x010000;
   if ((s & 0xFC00) != 0xDC00) return DPS_CHARSET_ILUNI;
   *pwc += s & 0x03FF;
-  return conv->icodes = 2;
+  return conv->icodes = 4;
 
 }
 
@@ -232,11 +232,11 @@ int dps_mb_wc_utf16be(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const 
   if (r + 2 > end) return DPS_CHARSET_ILUNI;
   
   conv->ocodes = 1;
-  f = (r[0] << 8) + r[1];
+  f = (((dpsunicode_t)r[0]) << 8) + (dpsunicode_t)r[1];
 
   if ((f & 0xFC00) != 0xD800) {
     *pwc = f;
-    return conv->icodes = 1;
+    return conv->icodes = 2;
   }
 
   if (r + 4 > end) return DPS_CHARSET_ILUNI;
@@ -244,7 +244,7 @@ int dps_mb_wc_utf16be(DPS_CONV *conv, DPS_CHARSET *cs, dpsunicode_t *pwc, const 
   *pwc = ((f & 0x03FF) << 10) + 0x010000;
   if ((s & 0xFC00) != 0xDC00) return DPS_CHARSET_ILUNI;
   *pwc += s & 0x03FF;
-  return conv->icodes = 2;
+  return conv->icodes = 4;
 
 }
 
