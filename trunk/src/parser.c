@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -88,11 +88,13 @@ static void init_signals(void){
 
 static void sighandler(int sign){
 	switch(sign){
-	        case SIGALRM:
-		        _exit(0);
-			break;
-		default:
-			break;
+	case SIGTERM:
+	case SIGINT:
+	case SIGALRM:
+	  _exit(0);
+	  break;
+	default:
+	  break;
 	}
 	init_signals();
 }
@@ -480,8 +482,8 @@ __C_LINK DPS_PARSER * __DPSCALL DpsParserFind(DPS_PARSERLIST *List,const char *m
 }
 
 char *DpsParserExec(DPS_AGENT *Agent, DPS_PARSER *P, DPS_DOCUMENT *Doc) {
-  char *result;
-	
+        char *result;
+	if (P->cmd[0] == (char)'\0') return Doc->Buf.content;
 	result = parse_file(Agent, P, Doc, DpsVarListFindStr(&Doc->Sections, "URL", ""));
 	Doc->Buf.size = dps_strlen(Doc->Buf.content) + (Doc->Buf.content - Doc->Buf.buf);
 	return result;
