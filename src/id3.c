@@ -53,21 +53,23 @@ static int add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, char
 
 static int id3_add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, char *val, int charset, size_t len) {
 	DPS_VAR		*Sec;
-/*
+#if 1
 	DPS_CHARSET     *from_cs, *utf8_cs;
 	DPS_CONV        to_utf;
 	char *value;
-*/
+#endif
 
 	if (len == 0) return DPS_OK;
-#if 0	
+#if 1	
 	utf8_cs = from_cs = DpsGetCharSet("utf-8");
 	switch(charset) {
 	case 0: from_cs = DpsGetCharSet("iso-8859-1"); break;
 	case 1: 
-	  if (val[0] == 0xFE && val[1] == 0xFF) from_cs = DpsGetCharSet("utf-16be"); 
-	  else if (val[0] == 0xFF && val[1] == 0xFE) from_cs = DpsGetCharSet("utf-16le"); 
+	  if ((val[0] == (char)0xFE) && (val[1] == (char)0xFF)) from_cs = DpsGetCharSet("utf-16be"); 
+	  else if (val[0] == (char)0xFF && val[1] == (char)0xFE) from_cs = DpsGetCharSet("utf-16le"); 
 	  else return DPS_OK; /* wrong sequence for UTF16 with BOM */
+	  val += 2;
+	  len -= 2;
 	  break;
 	case 2: from_cs = DpsGetCharSet("utf-16be"); break;
 	case 3: /* utf-8 - no recoding required */ break;
@@ -76,23 +78,24 @@ static int id3_add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, 
 	if((Sec=DpsVarListFind(&Doc->Sections,name))){
 		DPS_TEXTITEM	Item;
 		bzero((void*)&Item, sizeof(Item));
-#if 0
+#if 1
 		if (charset != 3) {
 		  DpsConvInit(&to_utf, from_cs, utf8_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_HTML);
 		  value = (char*)DpsMalloc(14 * len + 2);
 		  if ( value == NULL) return DPS_OK;
 		  DpsConv(&to_utf, value, 14 * len, val, len);
+		  value[to_utf.obytes] = value[to_utf.obytes + 1] = 0;
+		  len = to_utf.obytes;
 		} else value = val;
-		value[to_utf.obytes] = value[to_utf.obytes + 1] = 0;
 #endif
 		Item.section = Sec->section;
 		Item.strict = Sec->strict;
-		Item.str = val; /*value;*/
+		Item.str = /*(charset == 3) ? val :*/ value;
 		Item.section_name = name;
-		Item.len = len; /*to_utf.obytes;*/
+		Item.len = len; /*(charset == 3) ? len : to_utf.obytes;*/
 		DpsTextListAdd(&Doc->TextList, &Item);
-		DpsLog(Indexer, DPS_LOG_DEBUG, "Added: %s:%s", name, val /*value*/); 
-		/*if (charset != 3) DPS_FREE(value);*/
+		DpsLog(Indexer, DPS_LOG_DEBUG, "Added: %s:%s", name, value); 
+		if (charset != 3) DPS_FREE(value);
 	} else {
 		DpsLog(Indexer, DPS_LOG_DEBUG, "Skipped: %s:%s", name, val); 
 	}
@@ -284,6 +287,7 @@ static int get_id3v23(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	}else{
 		ch += 10;
 	}
+	DpsVarListReplaceStr(&Doc->Sections, "Server-Charset", "utf-8");
 	
 	while(((size_t)(ch - buf_in) + 10 < tag_size) && ((size_t)(ch - buf_in) + 10 < cont_len)) {
 		
@@ -413,6 +417,8 @@ static int get_id3v24(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 		ch += 10;
 	}
 	
+	DpsVarListReplaceStr(&Doc->Sections, "Server-Charset", "utf-8");
+
 	while(((size_t)(ch - buf_in) + 10 < tag_size) && ((size_t)(ch - buf_in) + 10 < cont_len)) {
 		
 	  frame_size = ((ch[4] & 0x7F) << 21) + ((ch[5] & 0x7F) << 14) + ((ch[6] & 0x7F) << 7) + (ch[7] & 0x7F);
