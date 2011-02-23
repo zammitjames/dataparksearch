@@ -119,7 +119,9 @@ static int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, c
 #endif
 	if( (default_method != DPS_METHOD_DISALLOW) && (M = DpsMatchListFind(L, newhref, NS, P)) != NULL) {
 	  if (DpsNeedLog(log_level))
-	    dps_snprintf(reason, PATH_MAX, "%s %s %s '%s'", DPS_NULL2EMPTY(M->arg), DpsMatchTypeStr(M->match_type),
+	    dps_snprintf(reason, PATH_MAX, "%s %s%s %s '%s'", DPS_NULL2EMPTY(M->arg),
+			 M->nomatch ? "nomatch " : "",
+			 DpsMatchTypeStr(M->match_type),
 			 M->case_sense ? "Sensitive" : "InSensitive", M->pattern);
 	  res = DpsMethod(M->arg);
 	  switch(default_method) {
@@ -270,10 +272,10 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	Href->method = DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, newhref, reason, DPS_METHOD_GET);
 	DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 	if(Href->method == DPS_METHOD_DISALLOW) {
-		DpsLog(Indexer, DPS_LOG_DEBUG, "%s, skip it", reason);
+		DpsLog(Indexer, DPS_LOG_DEBUG, " Filter: %s, skip it", reason);
 		goto check_ret;
 	}else{
-		DpsLog(Indexer, DPS_LOG_DEBUG, "%s", reason);
+		DpsLog(Indexer, DPS_LOG_DEBUG, " Filter: %s", reason);
 	}
 
 	if (!(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
@@ -281,12 +283,12 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	  Srv = DpsServerFind(Indexer, 0, newhref, newURL->charset_id, NULL);
 	  DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 	  if(Srv == NULL) {
-		DpsLog(Indexer, DPS_LOG_DEBUG, "no Server, skip it");
+		DpsLog(Indexer, DPS_LOG_DEBUG, " Server: no, skip it");
 		Href->method = DPS_METHOD_DISALLOW;
 		goto check_ret;
 	  }
 	
-	  DpsLog(Indexer, DPS_LOG_DEBUG, " Server applied: site_id: %d URL: %s", Srv->site_id, Srv->Match.pattern);
+	  DpsLog(Indexer, DPS_LOG_DEBUG, " Server: site_id: %d pattern: %s", Srv->site_id, Srv->Match.pattern);
 	  Href->server_id = Srv->site_id;
 	
 	  method = DpsVarListFindStr(&Srv->Vars, "Method", "Allow");
@@ -1357,37 +1359,42 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  }
 #endif
 
+	  if(!real_content_type) real_content_type = ct;
+
 #ifdef WITH_PARSER
+	  i = 0;
+	  do {
 	  /* Let's try to start external parser for this Content-Type */
 
-	  if((Parser = DpsParserFind(&Indexer->Conf->Parsers, ct))) {
+	    if((Parser = DpsParserFind(&Indexer->Conf->Parsers, ct))) {
 		DpsLog(Indexer,DPS_LOG_DEBUG,"Found external parser '%s' -> '%s'",
 			Parser->from_mime?Parser->from_mime:"NULL",
 			Parser->to_mime?Parser->to_mime:"NULL");
-	  }
-	  if(Parser) {
-	    if (status == DPS_HTTP_STATUS_OK) {
-	      if (DpsParserExec(Indexer, Parser, Doc)) {
-		char *to_charset;
-		real_content_type=Parser->to_mime?Parser->to_mime:"unknown";
-		DpsLog(Indexer,DPS_LOG_DEBUG,"Parser-Content-Type: %s",real_content_type);
-		if((to_charset=strstr(real_content_type,"charset="))){
+	    }
+	    if(Parser) {
+	      if (status == DPS_HTTP_STATUS_OK) {
+		if (DpsParserExec(Indexer, Parser, Doc)) {
+		  char *to_charset;
+		  ct = real_content_type = Parser->to_mime?Parser->to_mime:"unknown";
+		  DpsLog(Indexer,DPS_LOG_DEBUG,"Parser-Content-Type: %s",real_content_type);
+		  if((to_charset=strstr(real_content_type,"charset="))){
 		        const char *cs = DpsCharsetCanonicalName(DpsTrim(to_charset + 8, " \t;\"'"));
 			DpsVarListReplaceStr(&Doc->Sections, "Server-Charset", cs);
 			DpsLog(Indexer,DPS_LOG_DEBUG, "to_charset='%s'", cs);
-		}
+		  }
 #ifdef DEBUG_PARSER
-		fprintf(stderr,"content='%s'\n",Doc->content);
+		  fprintf(stderr,"content='%s'\n",Doc->content);
 #endif
+		}
+	      } else {
+		DpsLog(Indexer, DPS_LOG_WARN, "Parser is not executed, document status: %d", status);
+		break;
+		/*return result;*/
 	      }
-	    } else {
-	      DpsLog(Indexer, DPS_LOG_WARN, "Parser is not executed, document status: %d", status);
-	      return result;
 	    }
-	  }
+	  } while ((Parser != NULL) && (++i < 1000));
 #endif
 	
-	  if(!real_content_type)real_content_type=ct;
 	  DpsVarListAddStr(&Doc->Sections,"Parser-Content-Type",real_content_type);
 
 	  /* CRC32 without headers */
