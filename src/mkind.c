@@ -359,8 +359,8 @@ static int MakeLinearIndexLinks(DPS_AGENT *Indexer, const char *lim_name, DPS_DB
        }
        offset += nitems;
 
-       /* To see the URL being indexed in "ps" output on xBSD */
-       dps_setproctitle("[%d] links data: %d records processed", Indexer->handle, offset);
+       /* To see the URL being indexed in "ps" output */
+       if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] links data: %d records processed", Indexer->handle, offset);
        DpsLog(Indexer, DPS_LOG_EXTRA, "%d records of links were written, at %d", offset, rec_id);
        rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nitems - 1, 0));
        u = (nitems == (size_t)recs);
@@ -402,8 +402,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
       nm = lfname + 6;
       if (!strcasecmp(ind, "category")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Category index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Category index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating category index");
 	if (DPS_OK == DpsLimit8(Indexer, &L8, "Category",  DPS_IFIELD_TYPE_HEX8STR, db)) {
 	  MakeNestedIndex(Indexer, &L8, DPS_LIMFNAME_CAT, db);
@@ -411,8 +411,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 
       } else if (!strcasecmp(ind, "tag")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Tag index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Tag index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating tag index");
 	if (DPS_OK == DpsLimit4(Indexer, &L4, "Tag",  DPS_IFIELD_TYPE_STRCRC32, db)) {
 	  MakeLinearIndex(Indexer, &L4, DPS_LIMFNAME_TAG, db);
@@ -420,8 +420,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 
       } else if (!strcasecmp(ind, "link")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Link index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Link index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating link index");
 	MakeLinearIndexLinks(Indexer, DPS_LIMFNAME_LINK, db);
 /*	if (DPS_OK == DpsLimit4(Indexer, &L4, "link",  DPS_IFIELD_TYPE_INT, db)) {
@@ -430,8 +430,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 
       } else if (!strcasecmp(ind, "time")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Time index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Time index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating time index");
 	if (DPS_OK == DpsLimit4(Indexer, &L4, "last_mod_time",  DPS_IFIELD_TYPE_HOUR, db)) {
 	  MakeLinearIndex(Indexer, &L4, DPS_LIMFNAME_TIME, db);
@@ -439,8 +439,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 
       } else if (!strcasecmp(ind, "hostname")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Hostname index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Hostname index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating hostname index");
 	if (DPS_OK == DpsLimit4(Indexer, &L4, "url",  DPS_IFIELD_TYPE_HOSTNAME, db)) {
 	  MakeLinearIndex(Indexer, &L4, DPS_LIMFNAME_HOST, db);
@@ -448,8 +448,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 
       } else if (!strcasecmp(ind, "language")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Language index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Language index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating language index");
 	if (DPS_OK == DpsLimit4(Indexer, &L4, "Content-Language",  DPS_IFIELD_TYPE_STR2CRC32, db)) {
 	  MakeLinearIndex(Indexer, &L4, DPS_LIMFNAME_LANG, db);
@@ -457,8 +457,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 
       } else if (!strcasecmp(ind, "content")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Content-Type index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Content-Type index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating Content-Type index");
 	if (DPS_OK == DpsLimit4(Indexer, &L4, "Content-Type",  DPS_IFIELD_TYPE_STRCRC32, db)) {
 	  MakeLinearIndex(Indexer, &L4, DPS_LIMFNAME_CTYPE, db);
@@ -466,8 +466,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 
       } else if (!strcasecmp(ind, "siteid")) {
 
-	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Site_id index creation", Indexer->handle);
+	/* To see the URL being indexed in "ps" output */
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Site_id index creation", Indexer->handle);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating Site_id index");
 	if (DPS_OK == DpsLimit4(Indexer, &L4, "site_id",  DPS_IFIELD_TYPE_INT, db)) {
 	  MakeLinearIndex(Indexer, &L4, DPS_LIMFNAME_SITE, db);
@@ -481,7 +481,7 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc %d chars at %s:%d", buf_len, __FILE__, __LINE__);
 	  return DPS_ERROR;
 	}
-	dps_setproctitle("[%d] %s index creation", Indexer->handle, nm);
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] %s index creation", Indexer->handle, nm);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Creating %s index", nm);
 	dps_snprintf(buf, buf_len, "Req-%s", nm);
 	req = DpsVarListFindStr(&Indexer->Conf->Vars, buf, NULL);
@@ -511,8 +511,8 @@ __C_LINK int __DPSCALL DpsCacheMakeIndexes(DPS_AGENT *Indexer, DPS_DB *db) {
 	}
 
       }
-      /* To see the URL being indexed in "ps" output on xBSD */
-      dps_setproctitle("[%d] Indexes done.", Indexer->handle);
+      /* To see the URL being indexed in "ps" output */
+      if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Indexes done.", Indexer->handle);
       DpsLog(Indexer, DPS_LOG_EXTRA, "Done");
     }
   }

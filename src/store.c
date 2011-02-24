@@ -1525,7 +1525,7 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
       DpsSQLFree(&SQLRes);
       offset += nitems;
       u = (nitems == (size_t)recs);
-      dps_setproctitle("[%d] storedchk: %ld records processed", Agent->handle, offset);
+      if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] storedchk: %ld records processed", Agent->handle, offset);
       DpsLog(Agent, DPS_LOG_EXTRA, "%ld records for storedchk were written", offset);
       if (u) DPSSLEEP(0);
     }
@@ -1590,12 +1590,12 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
        return res;
      }
     }
-    dps_setproctitle("Store %03X, %d lost records deleted", i, ndel);
+    if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("Store %03X, %d lost records deleted", i, ndel);
     DpsLog(Agent, DPS_LOG_EXTRA, "Store %03X, %d lost records were deleted", i, ndel);
     totaldel += ndel;
     ndel = 0;
   }
-  dps_setproctitle("Total lost record(s) deleted: %d\n", totaldel);
+  if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("Total lost record(s) deleted: %d\n", totaldel);
   DpsLog(Agent, DPS_LOG_EXTRA, "Total lost record(s) were deleted: %d\n", totaldel);
 /*  for (z = dbfrom; z < dbto; z++) {
     db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[z] : &Agent->dbl.db[z];
