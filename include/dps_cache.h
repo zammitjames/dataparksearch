@@ -25,7 +25,7 @@
 extern int DpsOpenCache(DPS_AGENT *A, int shared, int light);
 extern int DpsCloseCache(DPS_AGENT  *A, int shared, int light);
 extern void DpsRotateDelLog(DPS_AGENT *A);
-extern void DpsFlushAllBufs(DPS_AGENT *Agent);
+extern void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs_flag);
 
 extern __C_LINK int __DPSCALL DpsURLActionCache(DPS_AGENT *A, DPS_DOCUMENT *D, int cmd, DPS_DB *db);
 extern int DpsStatActionCache(DPS_AGENT *A, DPS_STATLIST *S, DPS_DB *db);
