@@ -3465,7 +3465,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 /*	  DpsVarListReplaceUnsigned(&Indexer->Conf->Vars, "PopRank_rec_id", (unsigned)rec_id);*/
 	  DpsVarListReplaceUnsigned(&Indexer->Conf->Vars, "PopRank_nit", (unsigned)nit);
 	  /* To see what rec_id has been indexed in "ps" output on xBSD */
-	  dps_setproctitle("[%d] PopRank rec_id: %u, next_index_time: %u", Indexer->handle, (unsigned)rec_id, (unsigned)nit);
+	  if (DpsNeedLog(DPS_LOG_INFO)) dps_setproctitle("[%d] PopRank rec_id: %u, next_index_time: %u", Indexer->handle, (unsigned)rec_id, (unsigned)nit);
 	  DpsLog(Indexer, DPS_LOG_INFO, "[%d] PopRank rec_id: %u, next_index_time: %u", 
 		 Indexer->handle, (unsigned)rec_id, (unsigned)nit);
 	}else if (Indexer->Flags.mark_for_index) {
@@ -6800,15 +6800,15 @@ static int DpsPopRankCalculateNeo(DPS_AGENT *A, DPS_DB *db) {
 	  u = ((irows == url_num) && (A->Conf->url_number > 0)) ;
 	  offset += (A->Conf->url_number > 0) ? irows : (i + 1);
 	  /* To see the URL being indexed in "ps" output on xBSD */
-	  dps_setproctitle("[%d] Neo:%d URLs done", A->handle, offset);
-	  DpsLog(A, DPS_LOG_EXTRA, "%d URLs processed", offset);
+	  if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Neo:%d URLs done", A->handle, offset);
+	  DpsLog(A, DPS_LOG_EXTRA, "Neo:%d URLs processed", offset);
 	}
 
 	rc = DPS_OK;
 
 Calc_unlockNeo:
 	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Neo done", A->handle);
+	if (DpsNeedLog(DPS_LOG_INFO)) dps_setproctitle("[%d] Neo done", A->handle);
 	DpsLog(A, DPS_LOG_INFO, "Neo PopRank done: %d URLs processed, total pas: %ld", offset, A->poprank_pas);
 	return rc;
 }
@@ -6979,15 +6979,15 @@ static int DpsPopRankCalculateGoo(DPS_AGENT *A, DPS_DB *db) {
 	  u = (nrows == url_num);
 	  offset += nrows;
 	  /* To see the URL being indexed in "ps" output on xBSD */
-	  dps_setproctitle("[%d] Goo:%d URLs done", A->handle, offset);
-	  DpsLog(A, DPS_LOG_EXTRA, "%d URLs processed", offset);
+	  if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] Goo:%d URLs done", A->handle, offset);
+	  DpsLog(A, DPS_LOG_EXTRA, "Goo:%d URLs processed", offset);
 	}
 
 	rc = DPS_OK;
 
 Calc_unlock:
 	/* To see the URL being indexed in "ps" output on xBSD */
-	dps_setproctitle("[%d] Goo done", A->handle);
+	if (DpsNeedLog(DPS_LOG_INFO)) dps_setproctitle("[%d] Goo done", A->handle);
 	DpsLog(A, DPS_LOG_INFO, "Goo PopRank done.");
 	return rc;
 }

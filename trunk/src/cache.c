@@ -1085,10 +1085,10 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 #ifdef DEBUG_SEARCH
     total_ticks = DpsStartTimer() - total_ticks;
     DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated in %.2f sec., docs:%d, nwrd:%d, ndel:%d", log_num, (float)total_ticks / 1000, del_count, n, ndel);
-    dps_setproctitle("Log %03X updated in %.2f sec., ndel:%d", log_num, (float)total_ticks / 1000, ndel);
+    if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("Log %03X updated in %.2f sec., ndel:%d", log_num, (float)total_ticks / 1000, ndel);
 #else
     DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated, docs:%d, nwrd:%d, ndel:%d", log_num, del_count, n, ndel);
-    dps_setproctitle("Log %03X updated", log_num);
+    if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("Log %03X updated", log_num);
 #endif
 
     TRACE_OUT(Indexer);
@@ -2752,7 +2752,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  offset += nitems;
 
 	  /* To see the URL being indexed in "ps" output on xBSD */
-	  dps_setproctitle("[%d] url data: %d records processed", Indexer->handle, offset);
+	  if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] url data: %d records processed", Indexer->handle, offset);
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "%d records of url data written, at %d", offset, rec_id);
 	  rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nitems - 1, 0)) + 1;
 	  DpsSQLFree(&SQLres);
@@ -2771,7 +2771,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	DPS_FREE(FF);
 
 #endif
-	dps_setproctitle("[%d] url data: done", Indexer->handle);
+	if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] url data: done", Indexer->handle);
 
 	TRACE_OUT(Indexer);
 	return rc;
@@ -3190,7 +3190,7 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
     b = (z + bstart) % WrdFiles;
 
     /* To see the URL being indexed in "ps" output on xBSD */
-    dps_setproctitle("[%d] cached checkup %04x, %d of %d", A->handle, b, z + 1, WrdFiles);
+    if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("[%d] cached checkup %04x, %d of %d", A->handle, b, z + 1, WrdFiles);
     DpsLog(A, DPS_LOG_EXTRA, "cached checkup %04x, %d of %d", b, z + 1, WrdFiles);
 
     DpsBaseOptimize(&Q, (int)b);

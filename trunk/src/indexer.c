@@ -1822,8 +1822,8 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	DpsLog(Indexer, (Indexer->Flags.cmd != DPS_IND_POPRANK) ? DPS_LOG_INFO : DPS_LOG_DEBUG, "[%s] Subdoc level:%d, URL: %s", 
 	       DPS_NULL2EMPTY(lang), Doc->subdoc, newhref);
 	
-	/* To see the URL being indexed in "ps" output on xBSD */
-	if (Indexer->Flags.cmd != DPS_IND_POPRANK) dps_setproctitle("[%d] Subdoc:%s", Indexer->handle, newhref);
+	/* To see the URL being indexed in "ps" output on */
+	if (DpsNeedLog(DPS_LOG_EXTRA) && Indexer->Flags.cmd != DPS_IND_POPRANK) dps_setproctitle("[%d] Subdoc:%s", Indexer->handle, newhref);
 	
 	/* Collect information from Conf */
 	
@@ -2334,7 +2334,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	DpsLog(Indexer, (Indexer->Flags.cmd != DPS_IND_POPRANK) ? DPS_LOG_INFO : DPS_LOG_DEBUG, "URL: %s", url);
 	
 	/* To see the URL being indexed in "ps" output on xBSD */
-	if (Indexer->Flags.cmd != DPS_IND_POPRANK) dps_setproctitle("[%d] URL:%s", Indexer->handle, url);
+	if (DpsNeedLog(DPS_LOG_EXTRA) && Indexer->Flags.cmd != DPS_IND_POPRANK) dps_setproctitle("[%d] URL:%s", Indexer->handle, url);
 	
 	/* Collect information from Conf */
 	
