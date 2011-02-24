@@ -174,7 +174,11 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 		}
 	}
 	for (i = 0; i < List->nservers; i++) {
-		if (strcmp(List->Server[i].Match.pattern, urlstr) == 0) {
+		if (strcmp(List->Server[i].Match.pattern, urlstr) == 0
+		    && List->Server[i].Match.nomatch == srv->Match.nomatch
+		    && List->Server[i].Match.match_type == srv->Match.match_type
+		    && List->Server[i].Match.case_sense == srv->Match.case_sense
+		    ) {
 			add = 0;
 			new = &List->Server[i];
 			break;
