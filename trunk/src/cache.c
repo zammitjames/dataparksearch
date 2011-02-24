@@ -2853,7 +2853,7 @@ int DpsURLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 
 
 
-void DpsFlushAllBufs(DPS_AGENT *Agent) {
+void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs) {
   DPS_DB *db;
   size_t i, dbfrom = 0, dbto =  (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
   time_t t = time(NULL);
@@ -2886,7 +2886,7 @@ void DpsFlushAllBufs(DPS_AGENT *Agent) {
     dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
     DpsLog(Agent, DPS_LOG_ERROR, "%s Shutdown", time_pid);
   }
-  if (Agent->Conf->logs_only) DpsRotateDelLog(Agent);
+  if (Agent->Conf->logs_only && rotate_logs) DpsRotateDelLog(Agent);
   DpsLog(Agent, DPS_LOG_INFO, "Done");
 
 }
@@ -2938,7 +2938,7 @@ int DpsCachedFlush(DPS_AGENT *Indexer, DPS_DB *db) {
 		}
 	  }
 	} else {
-	  DpsFlushAllBufs(Indexer);
+	  DpsFlushAllBufs(Indexer, flush_buffers); /* rotate logs if needed */
 	}
 	if (flush_buffers) DpsLog(Indexer, DPS_LOG_INFO, "Cached buffers flush Done");
 	TRACE_OUT(Indexer);

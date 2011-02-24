@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -243,7 +243,7 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 	}
 
 	if (client->cmd.cmd == DPS_LOGD_CMD_CHECK) {
-	  DpsFlushAllBufs(Agent);
+	  DpsFlushAllBufs(Agent, 0); /* Don't rotate del logs */
 	  DpsCachedCheck(Agent, client->cmd.url_id);
 	}
 
@@ -340,7 +340,7 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 	} else if (client->cmd.cmd == DPS_LOGD_CMD_FLUSH) {
 	  while(in_flush) DPSSLEEP(1);
 	  in_flush++;
-	  DpsFlushAllBufs(Agent);
+	  DpsFlushAllBufs(Agent, 1); /* Rotate del logs */
 	  in_flush--;
 	} else if (client->cmd.cmd == DPS_LOGD_CMD_WORD || client->cmd.cmd == DPS_LOGD_CMD_DELETE) {
 	  register size_t dbnum;
@@ -519,7 +519,7 @@ static void * thread_flush_limits(void *arg) {
     db = &Indexer->Conf->dbl.db[i];
     DpsURLDataWrite(Indexer, db);
   }
-  DpsFlushAllBufs(Indexer);
+  DpsFlushAllBufs(Indexer, 1); /* Rotate del logs */
 #ifdef HAVE_PTHREAD
   DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
   total_threads--;
@@ -917,12 +917,12 @@ int main(int argc,char **argv, char **envp) {
 		if (have_sigpipe) {
 		        have_sigpipe = 0;
 			DpsLog(Agent, DPS_LOG_ERROR, "%s SIGPIPE arrived. Broken pipe.", Logd_time_pid_info());
-			DpsFlushAllBufs(Agent);
+			DpsFlushAllBufs(Agent, 0); /* Don't rotate del logs */
 			continue;
 		}
 		if (have_sigint) {
 			DpsLog(Agent, DPS_LOG_INFO, "%s SIGINT arrived. Shutdown.", Logd_time_pid_info());
-			DpsFlushAllBufs(Agent);
+			DpsFlushAllBufs(Agent, 0); /* Don't rotate del logs */
 /*			DpsURLAction(Agent, NULL, DPS_URL_ACTION_WRITEDATA);*/
 			break;
 		}
@@ -936,13 +936,13 @@ int main(int argc,char **argv, char **envp) {
 		}
 		if(have_sigterm){
 			DpsLog(Agent, DPS_LOG_INFO, "SIGTERM arrived. Shutdown.");
-			DpsFlushAllBufs(Agent);
+			DpsFlushAllBufs(Agent, 0); /* Don't rotate del logs */
 /*			DpsURLAction(Agent, NULL, DPS_URL_ACTION_WRITEDATA);*/
 			break;
 		}
 		if(have_sigalrm){
 			DpsLog(Agent, DPS_LOG_INFO, "SIGALRM arrived. Shutdown.");
-			DpsFlushAllBufs(Agent);
+			DpsFlushAllBufs(Agent, 0); /* Don't rotate del logs */
 			break;
 		}
 		
@@ -1124,7 +1124,7 @@ int main(int argc,char **argv, char **envp) {
 	DpsLog(Agent, DPS_LOG_INFO, "Waiting done.");
 #endif
 	if (have_sigpipe || have_sigint || have_sigterm || have_sigalrm) {
-	  DpsFlushAllBufs(Agent);
+	  DpsFlushAllBufs(Agent, 0); /* Don't rotate del logs */
 	}
 /*	if (have_sigint || have_sigterm) {
 	  DpsURLAction(Agent, NULL, DPS_URL_ACTION_WRITEDATA);
