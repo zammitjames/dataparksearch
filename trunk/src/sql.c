@@ -5754,7 +5754,7 @@ int DpsLimit8SQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L,const char *field, int type
 	  }
 	  offset += nrows;
 	  DpsLog(A, DPS_LOG_EXTRA, "%d records processed at %d", offset, rec_id);
-	  rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nrows - 1, 1));
+	  if (nrows > 0) rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nrows - 1, 1));
 	  DpsSQLFree(&SQLres);
 	  L->nitems += p;
 	  u = (nrows == url_num);
@@ -5814,7 +5814,7 @@ int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
     }
     offset += nrows;
     DpsLog(A, DPS_LOG_EXTRA, "%d records processed at %d", offset, rec_id);
-    rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&Res, nrows - 1, 1));
+    if (nrows > 0) rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&Res, nrows - 1, 1));
     DpsSQLFree(&Res);
     u = (nrows == url_num);
     if (u) DPSSLEEP(0);
@@ -5856,7 +5856,7 @@ int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
     }
     offset += nrows;
     DpsLog(A, DPS_LOG_EXTRA, "%d records processed at %d", offset, rec_id);
-    rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&Res, nrows - 1, 1));
+    if (nrows > 0) rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&Res, nrows - 1, 1));
     DpsSQLFree(&Res);
     u = (nrows == url_num);
     if (u) DPSSLEEP(0);
@@ -6180,7 +6180,7 @@ int DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type
 	  }
 	  offset += nrows;
 	  DpsLog(A, DPS_LOG_EXTRA, "%d records processed at %d", offset, rec_id);
-	  rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nrows - 1, 1));
+	  if (nrows > 0) rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLres, nrows - 1, 1));
 	  DpsSQLFree(&SQLres);
 	  L->nitems += p;
 	  u = (nrows == url_num);
