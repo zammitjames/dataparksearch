@@ -109,6 +109,10 @@ static int DpsMySQLQuery(DPS_DB *db,DPS_SQLRES *R,const char *query){
 		    DPSSLEEP(20);
 		    continue;
 		  }
+		  if (db->async_in_process) {
+		    mysql_read_query_result(&db->mysql);
+		    db->async_in_process = 0;
+		  }
 		}
 		
 		if((mysql_query(&db->mysql,query))){
@@ -209,6 +213,10 @@ static int DpsMySQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query) {
 		  db->connected = 0;
 		  DPSSLEEP(20);
 		  continue;
+		}
+		if (db->async_in_process) {
+		  mysql_read_query_result(&db->mysql);
+		  db->async_in_process = 0;
 		}
 	  }
 	  if((mysql_send_query(&db->mysql, query, dps_strlen(query)))){
