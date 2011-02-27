@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2003 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -267,7 +267,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 #ifdef DEBUG_SEARCH
 	  stop_ticks = DpsStartTimer();
 	  total_ticks = stop_ticks - start_ticks;
-	  DpsLog(A, DPS_LOG_EXTRA, "OpenBase3 %03X in %.5f sec.", P->FileNo, (float)total_ticks / 1000);
+	  DpsLog(P->A, DPS_LOG_EXTRA, "OpenBase3 %03X in %.5f sec.", P->FileNo, (float)total_ticks / 1000);
 #endif
 	}
       break;
