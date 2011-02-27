@@ -379,6 +379,43 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 }
 
 
+static int PresentInURLCrd(DPS_URL_CRD *words, size_t words_count, size_t *start, const urlid_t url_id) {
+	register size_t m, l, r;
+	urlid_t umin, umax;
+	
+	if (words == NULL || words_count == 0) return 0;
+	if (start) l = *start;
+	else l = 0;
+	r = words_count - 1;
+
+	umin = words[l].url_id;
+	umax = words[r].url_id;
+
+	while(1) {
+	  if (l > r || url_id > umax) {
+	    if(start) *start = r;
+	    return 0;
+	  }
+	  if (url_id < umin) {
+	    return 0;
+	  }
+	  if (l == r || umin == umax) m = r;
+	  else m = l + (urlid_t)((r - l - 1) * ((dps_uint8)(url_id - umin)) / (umax -  umin));
+	  if (words[m].url_id > url_id) {
+	    r = m - 1;
+	    umax = words[r].url_id;
+	  } else if (words[m].url_id < url_id) {
+	    l = m + 1;
+	    umin = words[l].url_id;
+	  } else {
+	    while (m < words_count && words[m].url_id == url_id) m++;
+	    if (start) *start = m;
+	    return 1;
+	  }
+	  
+	}
+	return 0;
+}
 
 static int PresentInDelLog(DPS_LOGDEL *buf, size_t buf_count, size_t *start, const urlid_t url_id) {
 	register size_t m, l, r;
@@ -414,22 +451,6 @@ static int PresentInDelLog(DPS_LOGDEL *buf, size_t buf_count, size_t *start, con
 	  }
 	  
 	}
-
-/*
-	while(l < r) {
-		m = (l + r) / 2;
-		if(buf[m].url_id < url_id) { l = m + 1; continue; }
-		else if(buf[m].url_id > url_id) { r = m; continue; }
-		if(start) *start = m;
-		return buf[m].stamp;
-		
-	}
-	if(start) *start = r;
-	if(r == buf_count) return 0;
-	if(buf[r].url_id==url_id) {
-	  return buf[r].stamp;
-	}
-*/
 	return 0;
 }
 
@@ -739,16 +760,40 @@ static size_t RemoveOldCrds(DPS_URL_CRD *words, size_t n, DPS_LOGDEL *del, size_
 
   if (del_count == 0) return n;
 
-  for (i = 0; i < n; ) {
-    
-    u = (PresentInDelLog(del, del_count, /*NULL*/ &start, words[i].url_id) == 0);
-    curl = words[i].url_id;
-    for ( ; (i < n) && (words[i].url_id == curl); i++) {
+  if (del_count < n / 2 ) {
+    size_t z;
+
+    i = 0;
+    for (z = 0; z < del_count; z++) {
+
+      u = (PresentInURLCrd(words, n, &start, del[z].url_id) == 0);
       if (u) {
-	if (j < i) { words[j++] = words[i];} else { j++; }
+	if (i != j && start != i) {
+	  dps_memmove(words + j, words + i, (start - i) * sizeof(DPS_URL_CRD));
+	}
+	j += (start - i);
+	i = start;
       }
     }
+    if ((start > 0) && (start < n) && (i != j)) {
+      dps_memmove(words + j, words + start, (n - start) * sizeof(DPS_URL_CRD));
+      j += (n - start);
+    }
 
+  } else {
+
+    for (i = 0; i < n; ) {
+    
+      u = (PresentInDelLog(del, del_count, /*NULL*/ &start, words[i].url_id) == 0);
+      curl = words[i].url_id;
+      if (u) {
+	for ( ; (i < n) && (words[i].url_id == curl); i++) {
+	  if (j < i) { words[j++] = words[i];} else { j++; }
+	}
+      } else {
+	for ( ; (i < n) && (words[i].url_id == curl); i++);
+      }
+    }
   }
   return j;
 }
@@ -765,10 +810,13 @@ static size_t RemoveOldCrdDbs(DPS_URL_CRD_DB *words, size_t n, DPS_LOGDEL *del, 
     
     u = (PresentInDelLog(del, del_count, /*NULL*/ &start, words[i].url_id) == 0);
     curl = words[i].url_id;
-    for ( ; (i < n) && (words[i].url_id == curl); i++) {
-      if (u) words[j++] = words[i];
+    if (u) {
+      for ( ; (i < n) && (words[i].url_id == curl); i++) {
+	words[j++] = words[i];
+      }
+    } else {
+      for ( ; (i < n) && (words[i].url_id == curl); i++);
     }
-
   }
   return j;
 }
@@ -915,8 +963,8 @@ typedef struct {
 } DPS_TODEL;
 
 static int cmp_todel(const DPS_TODEL *t1, const DPS_TODEL *t2) {
-	if(t1->rec_id < t2->rec_id) return -1;
-	if(t1->rec_id > t2->rec_id) return 1;
+  if((unsigned long)t1->rec_id < (unsigned long)t2->rec_id) return -1;
+  if((unsigned long)t1->rec_id > (unsigned long)t2->rec_id) return 1;
 	return 0;
 }
 
@@ -926,7 +974,7 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 				     DPS_LOGWORD *log_buf, size_t n, DPS_LOGDEL *del_buf, size_t del_count) {
   DPS_URL_CRD *data;
   size_t i, j, p, z, len, n_add, n_old, n_old_new;
-  DPS_TODEL *todel = (DPS_TODEL*)DpsMalloc(1024 * sizeof(*todel)), *found, key;
+  DPS_TODEL *todel = (DPS_TODEL*)DpsMalloc(1024 * sizeof(*todel)), *startdel, *found, key;
   size_t ndel = 0, mdel = 1024;
 
 #ifdef DEBUG_SEARCH
@@ -976,13 +1024,18 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 
     if (ndel > 1) DpsSort(todel, ndel, sizeof(*todel), (qsort_cmp)cmp_todel);
 
-
+    mdel = ndel;
+    startdel = todel;
     for (i = 0; i < n; i += n_add) {
       for(n_add = 1; (i + n_add < n) && (log_buf[i].wrd_id == log_buf[i + n_add].wrd_id); n_add++);
 /**************/
       key.rec_id = P->rec_id = log_buf[i].wrd_id;
-      found = (ndel == 0) ? NULL : dps_bsearch(&key, todel, ndel, sizeof(*found), (qsort_cmp)cmp_todel);
-      if (found != NULL) found->flag = 1;
+      found = (ndel == 0) ? NULL : dps_bsearch(&key, startdel, mdel, sizeof(*found), (qsort_cmp)cmp_todel);
+      if (found != NULL) {
+	found->flag = 1;
+	mdel -= (found - startdel);
+	startdel = found;
+      }
       if ((data = (DPS_URL_CRD*)DpsBaseARead(P, &len)) == NULL) {
 	len = 0;
 	data = (DPS_URL_CRD*)DpsMalloc(n_add * sizeof(DPS_URL_CRD));
@@ -1056,7 +1109,6 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 
 /*    DpsBaseClose(P);*/
 
-
     for (i = 0; i < ndel; i++) {
 /**************/
       if (todel[i].flag > 0) continue;
@@ -1072,7 +1124,9 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 	if (n_old_new != n_old) {
 	  P->rec_id = todel[i].rec_id;
 	  if (n_old_new) DpsBaseWrite(P, data, n_old_new * sizeof(DPS_URL_CRD));
-	  else DpsBaseDelete(P);
+	  else { 
+	    DpsBaseDelete(P);
+	  }
 	}
       }
       DPS_FREE(data);
