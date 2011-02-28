@@ -2542,7 +2542,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	    if (skip_same_site && !is_not_same_site) {
 	      urlid_t site_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Site_id", 0);
 	      urlid_t ot_site_id = 0;
-	      if (site_id == 0) {
+	      if (site_id == 0 && !(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, k, qu);
 
 		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
@@ -2737,7 +2737,7 @@ static int DpsDeleteLinks(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	const char *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	int rc;
 
-	dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE ot=%s%i%s AND ot!=k AND valid='f'", qu, url_id, qu);
+	dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE ot=%s%i%s AND valid='f'", qu, url_id, qu);
 	rc = DpsSQLAsyncQuery(db, NULL, qbuf);
 /*	if (db->DBSQL_SUBSELECT) {
 	  dps_snprintf(qbuf, sizeof(qbuf), "DELETE FROM links WHERE (k,ot) IN (SELECT k,ot FROM links l, url u1, url u2 WHERE l.k=%s%i%s AND l.ot=u1.rec_id AND u2.rec_id=%s%i%s AND u1.site_id=u2.site_id AND l.k!=l.ot)", qu, url_id, qu, qu, url_id, qu);
