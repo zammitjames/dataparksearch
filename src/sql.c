@@ -2369,7 +2369,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	    if(DPS_OK!=(rc=DpsSQLAsyncQuery(db, NULL, qbuf))) {
 	      DPS_FREE(qbuf); return rc;
 	    }
-	    if (/*(!Indexer->Flags.use_crc32_url_id) &&*/ Indexer->Flags.collect_links) {
+	    if ((!Indexer->Flags.use_crc32_url_id) && Indexer->Flags.collect_links) {
 	      dps_snprintf(qbuf, 4 * len + 512, "SELECT rec_id FROM url WHERE url='%s'", e_url);
 	      if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
 		DPS_FREE(qbuf); return rc;
@@ -2409,7 +2409,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	    if (skip_same_site && !is_not_same_site) {
 	      urlid_t site_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Site_id", 0);
 	      urlid_t ot_site_id = 0;
-	      if (site_id == 0) {
+	      if (site_id == 0 && !(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, rec_id, qu);
 
 		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
@@ -2429,7 +2429,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 		is_not_same_site = (site_id != ot_site_id);
 	      } else is_not_same_site = 1; /* treat any new doc as one from different site */
 	    } else is_not_same_site = 1;
-#if 1
+#if 0
 	      if (1 /*ot != rec_id*/ /*k*/) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT count(*) FROM links WHERE ot=%s%i%s AND k=%s%i%s",  
 			     qu, rec_id, qu, qu, rec_id, qu);
