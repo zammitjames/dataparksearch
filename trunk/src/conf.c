@@ -385,6 +385,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 		if (Indexer->Hrefs.nhrefs > 1024) DpsStoreHrefs(Indexer);
 	}
 	DpsMatchFree(&C->Srv->Match);
+	DpsMatchListFree(&C->Srv->HTDBsec);
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 	return DPS_OK;
@@ -1192,6 +1193,7 @@ static int add_srv_db(void *Cfg, size_t ac, char **av) {
 
 	DpsDBListFree(&dbl);
 	DpsMatchFree(&C->Srv->Match);
+	DpsMatchListFree(&C->Srv->HTDBsec);
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 	return DPS_OK;
