@@ -19,6 +19,7 @@
 #include "dps_charsetutils.h"
 #include <locale.h>
 #include <strings.h>
+#include "apr_strings.h"
 
 #define DEBUG 0
 /*#define DEBUG_MEM 1*/
