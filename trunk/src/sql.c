@@ -1626,7 +1626,7 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 			goto unlock_StoreWordsMulti;
 		
 		/* Insert new word */
-		if(db->DBType==DPS_DB_MYSQL){
+		if(db->DBSQL_MULTINSERT) { /* MySQL & PgSQL */
 			int have_words=0;
 			char * qb,*qe;
 			size_t step=4096,mlen=4096,len,i;
@@ -1634,9 +1634,9 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 			qb=(char*)DpsMalloc(mlen);
 			if (qb == NULL) goto unlock_StoreWordsMulti;
 			if(db->DBMode==DPS_DBMODE_MULTI){
-				sprintf(qb,"INSERT INTO %s (url_id,word,intag) VALUES ",tbl_nm);
+				sprintf(qb,"INSERT INTO %s(url_id,word,intag)VALUES",tbl_nm);
 			}else{
-				sprintf(qb,"INSERT INTO %s (url_id,word_id,intag) VALUES ",tbl_nm);
+				sprintf(qb,"INSERT INTO %s(url_id,word_id,intag)VALUES",tbl_nm);
 			}
 			qe=qb+dps_strlen(qb);
 
@@ -1665,9 +1665,7 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 					}
 					qe = qe + dps_strlen(qe);
 					
-					/* Insert 64k packets max to stay */
-					/* under MySQL's default limit. */
-					if((qe-qb)>=64*1024){
+					if((qe - qb) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE){
 						if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qb))) {
 							DPS_FREE(qb);
 							goto unlock_StoreWordsMulti;
@@ -1803,7 +1801,7 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 		goto unlock_StoreWordsSingle;
 	
 	/* Insert new words */
-	if(0 /*db->DBType==DPS_DB_MYSQL*/) {
+	if(db->DBSQL_MULTINSERT) { /* MySQL & PgSQL */
 		if(Doc->Words.nwords){
 			size_t nstored=0;
 			char * qb,*qe;
@@ -2145,6 +2143,72 @@ static int DpsStoreCrossWords(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db)
 		}
 	}
 	/* Insert new words */
+	if(db->DBSQL_MULTINSERT) { /* MySQL & PgSQL */
+	  int have_words = 0;
+	  char *qb, *qe;
+	  size_t step = 4096, mlen = 4096, len;
+
+	  qb = (char*)DpsMalloc(mlen);
+	  if (qb == NULL) goto unlock_DpsStoreCrossWords;
+	  if(crcmode){
+	    sprintf(qb,"INSERT INTO %s(ref_id,url_id,word_id,intag)VALUES", table);
+	  }else{
+	    sprintf(qb,"INSERT INTO %s(ref_id,url_id,word,intag)VALUES", table);
+	  }
+	  qe = qb + dps_strlen(qb);
+
+	  for(i=0;i<Doc->CrossWords.ncrosswords;i++){
+	    if((Doc->CrossWords.CrossWord[i].weight == 0) || (Doc->CrossWords.CrossWord[i].referree_id == 0)) continue;
+	    {
+	      int weight = DPS_WRDCOORDL(Doc->CrossWords.CrossWord[i].pos, Doc->CrossWords.CrossWord[i].weight, Doc->CrossWords.CrossWord[i].ulen);
+
+	      DpsConv(&Indexer->uni_lc, lcsword, lcslen, 
+		      (char*)Doc->CrossWords.CrossWord[i].uword, sizeof(dpsunicode_t) * (Doc->CrossWords.CrossWord[i].ulen + 1));
+
+	      len = (qe - qb);
+	      if((len + 128 + ((crcmode) ? 64 : (18 * Indexer->WordParam.max_word_len))) >= mlen) {
+		mlen += step;
+		qb = (char*)DpsRealloc(qb, mlen);
+		if (qb == NULL) goto unlock_DpsStoreCrossWords;
+		qe = qb + len;
+	      }
+	      if(have_words)dps_strcpy(qe++,",");
+	      have_words++;
+
+	      if(crcmode){
+		sprintf(qe,"(%s%i%s,%s%i%s,%d,%d)", qu, referrer, qu, qu, Doc->CrossWords.CrossWord[i].referree_id, qu,
+			DpsStrHash32(lcsword), weight);
+	      }else{
+		/* Escape text to track it  */
+		DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
+
+		sprintf(qe,"(%s%i%s,%s%i%s,'%s',%d)", qu, referrer, qu, qu, Doc->CrossWords.CrossWord[i].referree_id, qu,
+			word_escaped, weight);
+	      }
+	      qe = qe + dps_strlen(qe);
+
+	      if((qe - qb) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE) {
+		if(DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qb))) {
+				DpsDocFree(&U);
+				DPS_FREE(qb);
+				goto unlock_DpsStoreCrossWords;
+		}
+		/* Init query again */
+		if(crcmode){
+		  sprintf(qb,"INSERT INTO %s(ref_id,url_id,word_id,intag)VALUES", table);
+		}else{
+		  sprintf(qb,"INSERT INTO %s(ref_id,url_id,word,intag)VALUES", table);
+		}
+		qe = qb + dps_strlen(qb);
+		have_words = 0;
+	      }
+	    }
+	  }
+	  if (have_words) rc = DpsSQLAsyncQuery(db, NULL, qb);
+	  DPS_FREE(qb);
+	  if(DPS_OK != rc) goto unlock_DpsStoreCrossWords;
+
+	} else
 	for(i=0;i<Doc->CrossWords.ncrosswords;i++){
 		if(Doc->CrossWords.CrossWord[i].weight && Doc->CrossWords.CrossWord[i].referree_id){
 		  int weight = DPS_WRDCOORDL(Doc->CrossWords.CrossWord[i].pos, Doc->CrossWords.CrossWord[i].weight, Doc->CrossWords.CrossWord[i].ulen);
@@ -2234,6 +2298,9 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	rec_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	old_hops = (urlid_t)DpsVarListFindInt(&Doc->Sections, "hops", 0);
 	url_seed = (crc32_rec_id = (urlid_t)DpsStrHash32(e_url)) & 0xFFF /*& 0xFF*/;
+	if (!(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
+	  DpsVarListReplaceInt(&Doc->Sections, "Site_id", DpsServerGetSiteId(Indexer, Doc->Server ? Doc->Server : Indexer->Conf->Cfg_Srv, Doc));
+	}
 
 	if (rec_id == 0 || Indexer->Flags.use_crc32_url_id) {
 
@@ -2409,14 +2476,9 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 	    if (skip_same_site && !is_not_same_site) {
 	      urlid_t site_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Site_id", 0);
 	      urlid_t ot_site_id = 0;
-	      if (site_id == 0 && !(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
-		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, rec_id, qu);
-
-		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); return rc;
-		}
-		if (DpsSQLNumRows(&SQLRes)) site_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
-		DpsSQLFree(&SQLRes);
+	      if (site_id == 0) {
+		site_id = (urlid_t)DpsServerGetSiteId(Indexer, Doc->Server ? Doc->Server : Indexer->Conf->Cfg_Srv, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Site_id", (int)site_id);
 	      }
 	      if (site_id != 0) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, ot, qu);
@@ -2500,6 +2562,9 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	e_url = DpsVarListFindStr(&Doc->Sections, "E_URL", NULL);
 	qbuf = (char*)DpsMalloc(24 * len + 512);
 	if (qbuf == NULL) return DPS_ERROR;
+	if (!(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
+	  DpsVarListReplaceInt(&Doc->Sections, "Site_id", DpsServerGetSiteId(Indexer, Doc->Server ? Doc->Server : Indexer->Conf->Cfg_Srv, Doc));
+	}
 
 	if (e_url == NULL) {
 
@@ -2542,14 +2607,9 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	    if (skip_same_site && !is_not_same_site) {
 	      urlid_t site_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Site_id", 0);
 	      urlid_t ot_site_id = 0;
-	      if (site_id == 0 && !(Indexer->flags & DPS_FLAG_FAST_HREF_CHECK)) {
-		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, k, qu);
-
-		if(DPS_OK != (rc = DpsSQLQuery(db, &SQLRes, qbuf))) {
-		  DPS_FREE(qbuf); if (need_free_e_url) DPS_FREE(e_url); DPS_FREE(lc_url); return rc;
-		}
-		if (DpsSQLNumRows(&SQLRes)) site_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
-		DpsSQLFree(&SQLRes);
+	      if (site_id == 0) {
+		site_id = (urlid_t)DpsServerGetSiteId(Indexer, Doc->Server ? Doc->Server : Indexer->Conf->Cfg_Srv, Doc);
+		DpsVarListReplaceInt(&Doc->Sections, "Site_id", (int)site_id);
 	      }
 	      if (site_id != 0) {
 		dps_snprintf(qbuf, 4 * len + 512, "SELECT site_id FROM url WHERE rec_id=%s%i%s", qu, ot, qu);
@@ -3066,25 +3126,29 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 /* No need delete from links here, it has been done before */
 	
-	len=0;
-	for (r = 0; r < 256; r++)
-	for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
-	        size_t l = Doc->Sections.Root[r].Var[i].curlen + 
-		  (Doc->Sections.Root[r].Var[i].name ? dps_strlen(Doc->Sections.Root[r].Var[i].name) : 0);
+	  len=0; 
+	  {
+	    size_t l;
+	    for (r = 0; r < 256; r++)
+	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
+		l = Doc->Sections.Root[r].Var[i].curlen;
+		if ((l == 0) && (Doc->Sections.Root[r].Var[i].val != NULL)) l += dps_strlen(Doc->Sections.Root[r].Var[i].val);
+		l += (Doc->Sections.Root[r].Var[i].name) ? dps_strlen(Doc->Sections.Root[r].Var[i].name) : 0;
 		if(len < l)
-			len = l;
-	}
+		  len = l;
+	      }
+	  }
 	if(!len) {
 	  if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
 	  return DPS_OK;
 	}
 	
-	qbuf=(char*)DpsMalloc(2 * len + 128);
+	qbuf=(char*)DpsMalloc(4 * len + 128);
 	if (qbuf == NULL) {
 	  if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
 	  return DPS_ERROR;
 	}
-	arg=(char*)DpsMalloc(2 * len + 128);
+	arg=(char*)DpsMalloc(4 * len + 128);
 	if (arg == NULL) {
 	  DPS_FREE(qbuf);
 	  if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
@@ -3103,9 +3167,17 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  u = 1;
 	}
 
-	if (Indexer->Flags.URLInfoSQL) {
-	  for (r = 0; r < 256; r++)
-	    for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
+	if(db->DBSQL_MULTINSERT) { /* MySQL & PgSQL */
+	  int have_inserts = 0;
+	  char *qe;
+	  size_t step = 4 * len + 128, mlen = 4 * len + 128, buflen;
+
+	  sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES");
+	  qe = qbuf + dps_strlen(qbuf);
+
+	  if (Indexer->Flags.URLInfoSQL) {
+	    for (r = 0; r < 256; r++)
+	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
 		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
@@ -3113,8 +3185,6 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   !strcasecmp(Sec->name, "URL") ||
 		   !strcasecmp(Sec->name, "DP_ID") ||
 		   !strcasecmp(Sec->name, "Status") ||
-/*		   !strcasecmp(Sec->name, "Tag") ||*/
-/*		   !strcasecmp(Sec->name, "Category") || */
 		   !strcasecmp(Sec->name, "Z") ||
 		   !strcasecmp(Sec->name, "Pop_Rank") ||
 		   !strcasecmp(Sec->name, "Content-Length")
@@ -3123,18 +3193,117 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   strcasecmp(Sec->name, "Title") &&
 		   strcasecmp(Sec->name, "Charset") &&
 		   strcasecmp(Sec->name, "Content-Type") &&
+		   strcasecmp(Sec->name, "Content-Language")
+		    ) continue;
+
+		buflen = qe - qbuf;
+		if((buflen + len + 10) >= mlen){
+		  mlen += step;
+		  qbuf = (char*)DpsRealloc(qbuf, mlen);
+		  if (qbuf == NULL) {
+		    if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
+		    DPS_FREE(arg);
+		    return DPS_ERROR;
+		  }
+		  qe = qbuf + buflen;
+		}
+		if(have_inserts) dps_strcpy(qe++, ",");
+		have_inserts++;
+
+		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		qe = qe + dps_strlen(qe);
+		if((qe - qbuf) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE) {
+		  if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
+		    if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
+		    DPS_FREE(qbuf);
+		    DPS_FREE(arg);
+		    return rc;
+		  }
+		  /* Init query again */
+		  sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES");
+		  qe = qbuf + dps_strlen(qbuf);
+		  have_inserts = 0;
+		}
+	      }
+	  } else if (u == 0) {
+	    for (r = 0; r < 256; r++)
+	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
+		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
+
+		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
+		if( (Sec->maxlen == 0) || (
+		   strcasecmp(Sec->name, "Charset") &&
+		   strcasecmp(Sec->name, "Content-Type") &&
 		   strcasecmp(Sec->name, "Tag") &&
-/*		   strcasecmp(Sec->name, "Category") &&*/
+		   strcasecmp(Sec->name, "Category") &&
+		   strcasecmp(Sec->name, "Content-Language")
+		   )) continue;
+
+		buflen = qe - qbuf;
+		if((buflen + len + 10) >= mlen){
+		  mlen += step;
+		  qbuf = (char*)DpsRealloc(qbuf, mlen);
+		  if (qbuf == NULL) {
+		    if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
+		    DPS_FREE(arg);
+		    return DPS_ERROR;
+		  }
+		  qe = qbuf + buflen;
+		}
+		if(have_inserts) dps_strcpy(qe++, ",");
+		have_inserts++;
+
+		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		qe = qe + dps_strlen(qe);
+		if((qe - qbuf) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE) {
+		  if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
+		    if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
+		    DPS_FREE(qbuf);
+		    DPS_FREE(arg);
+		    return rc;
+		  }
+		  /* Init query again */
+		  sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES");
+		  qe = qbuf + dps_strlen(qbuf);
+		  have_inserts = 0;
+		}
+	      }
+	  }
+
+	  if(have_inserts) rc = DpsSQLAsyncQuery(db, NULL, qbuf);
+
+	} else {
+
+	  if (Indexer->Flags.URLInfoSQL) {
+	    for (r = 0; r < 256; r++)
+	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
+		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
+
+		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
+		if (
+		   !strcasecmp(Sec->name, "URL") ||
+		   !strcasecmp(Sec->name, "DP_ID") ||
+		   !strcasecmp(Sec->name, "Status") ||
+		   !strcasecmp(Sec->name, "Z") ||
+		   !strcasecmp(Sec->name, "Pop_Rank") ||
+		   !strcasecmp(Sec->name, "Content-Length")
+		   ) continue;
+		if( ((/*Sec->section == 0 &&*/ Sec->maxlen == 0) || u) && 
+		   strcasecmp(Sec->name, "Title") &&
+		   strcasecmp(Sec->name, "Charset") &&
+		   strcasecmp(Sec->name, "Content-Type") &&
 		   strcasecmp(Sec->name, "Content-Language")
 		    ) continue;
 
 		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
-		sprintf(qbuf, "INSERT INTO urlinfo (url_id,sname,sval) VALUES (%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
-	    }
-	} else if (u == 0) {
-	  for (r = 0; r < 256; r++)
-	    for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
+	      }
+	  } else if (u == 0) {
+	    for (r = 0; r < 256; r++)
+	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
 		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
@@ -3147,10 +3316,12 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   )) continue;
 
 		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
-		sprintf(qbuf, "INSERT INTO urlinfo (url_id,sname,sval) VALUES (%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
-	    }
+	      }
+	  }
 	}
+
 	if (Indexer->Flags.URLInfoSQL) DpsSQLEnd(db);
 	DPS_FREE(qbuf);
 	DPS_FREE(arg);
