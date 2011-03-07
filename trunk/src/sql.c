@@ -1355,7 +1355,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	int             need_free_e_url = 0;
 	size_t          i, l, len;
 	
-	l = (len = (e_url == NULL) ? (24 * dps_strlen(url)) : dps_strlen(e_url)) + 1;
+	l = (len = ((e_url == NULL) ? (24 * dps_strlen(url)) : dps_strlen(e_url))) + 1;
 	if (e_url == NULL) {
 		
 	  doccs = DpsGetCharSetByID(Doc->charset_id);
@@ -4880,7 +4880,7 @@ int DpsTrackSQL(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *db) {
 
 	DpsSQLResInit(&sqlRes);
 
-	escaped_len = 4 * dps_strlen(words);
+	escaped_len = 4 * dps_strlen(words) + 1;
 	qbuf_len = escaped_len + 4096;
 
 	if ((qbuf = (char*)DpsMalloc(qbuf_len)) == NULL) return DPS_ERROR;

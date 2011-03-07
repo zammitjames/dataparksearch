@@ -181,7 +181,7 @@ static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int
 
 	if (insert_flag) {
 	  char buf[2*PATH_MAX];
-	  char path_esc[PATH_MAX];
+	  char path_esc[2*PATH_MAX];
 	  url_id = DpsStrHash32(robot->hostinfo);
 
 	  if (A->flags & DPS_FLAG_UNOCON) {
@@ -191,7 +191,7 @@ static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int
 	  }
 
 	  DpsDBEscStr(db->DBType, path_esc, DPS_NULL2EMPTY(path), dps_min(PATH_MAX,dps_strlen(DPS_NULL2EMPTY(path))));
-	  dps_snprintf(buf, sizeof(buf), "INSERT INTO robots (cmd,ordre,added_time,hostinfo,path) VALUES(%d,%d,%d,'%s','%s')",
+	  dps_snprintf(buf, sizeof(buf), "INSERT INTO robots(cmd,ordre,added_time,hostinfo,path)VALUES(%d,%d,%d,'%s','%s')",
 		       cmd, robot->nrules, A->now, robot->hostinfo, path_esc);
 	  DpsSQLAsyncQuery(db, NULL, buf);
 
