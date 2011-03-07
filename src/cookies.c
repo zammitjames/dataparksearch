@@ -1,4 +1,4 @@
-/* Copyright (C) 2006-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2006-2011 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,8 +33,8 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
 		  dps_uint4 expires, int insert_flag) {
 #ifdef HAVE_SQL
 
-  char buf[2*PATH_MAX];
-  char path_esc[PATH_MAX];
+  char buf[3*PATH_MAX];
+  char path_esc[2*PATH_MAX];
   DPS_COOKIES *Cookies = &Indexer->Cookies;
   DPS_COOKIE *Coo;
   DPS_DB *db;
@@ -59,7 +59,7 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
       Coo->value = DpsStrdup(value);
 /*      Coo->expires = expires;*/
       if (insert_flag) {
-	dps_snprintf(buf, sizeof(buf), "UPDATE cookies SET value='%s', expires=%d WHERE domain='%s' AND path='%s' AND name='%s' AND secure='%c'",
+	dps_snprintf(buf, sizeof(buf), "UPDATE cookies SET value='%s',expires=%d WHERE domain='%s' AND path='%s' AND name='%s' AND secure='%c'",
 		     value, expires, domain, path_esc, name, secure);
 	DpsSQLAsyncQuery(db, NULL, buf);
       }
@@ -93,7 +93,7 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
 		   domain, path_esc, name, secure);
       DpsSQLAsyncQuery(db, NULL, buf);
     }
-    dps_snprintf(buf, sizeof(buf), "INSERT INTO cookies (expires,secure,domain,path,name,value) VALUES (%d,'%c','%s','%s','%s','%s')",
+    dps_snprintf(buf, sizeof(buf), "INSERT INTO cookies(expires,secure,domain,path,name,value)VALUES(%d,'%c','%s','%s','%s','%s')",
 		 expires, secure, domain, path_esc, name, value);
     DpsSQLAsyncQuery(db, NULL, buf);
   }
