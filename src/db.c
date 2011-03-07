@@ -1921,6 +1921,8 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 		db->DBSQL_IN=1;
 		db->DBSQL_LIMIT=1;
 		db->DBSQL_GROUP=1;
+		db->DBSQL_SUBSELECT = 1;
+		db->DBSQL_MULTINSERT = 1;
 	}
 #endif
 #if (HAVE_DP_PGSQL||HAVE_ODBC)
@@ -1936,6 +1938,7 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 		db->DBSQL_GROUP=1;
 		db->DBSQL_SELECT_FROM_DELETE=0;
 		db->DBSQL_SUBSELECT = 1;
+		db->DBSQL_MULTINSERT = 1;
 	}
 #endif
 #if (HAVE_IBASE||HAVE_ODBC)

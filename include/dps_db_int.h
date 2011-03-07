@@ -179,7 +179,7 @@ static const size_t dictlen[NDICTS]={2,2,2,3,4,5,6,7,8,9,10,11,12,16,16,16,16,32
 #define	DPS_URL_SELECT_CACHE_SIZE	1024
 #define	DPS_URL_DUMP_CACHE_SIZE		100000
 #define URL_LOCK_TIME			4*60*60
-#define DPS_MAX_MULTI_INSERT_QSIZE	16*1024
+#define DPS_MAX_MULTI_INSERT_QSIZE	60*1024
 #define NDOCS_QUERY			"SELECT count(*) FROM url"
 
 #define DPS_SQL_UNKNOWN	0
@@ -250,6 +250,7 @@ typedef struct struct_dps_db {
 	int	   DBSQL_TRUNCATE;
 	int	   DBSQL_SELECT_FROM_DELETE;
         int        DBSQL_SUBSELECT;
+        int        DBSQL_MULTINSERT;
 	
 	int	connected;
         int     TrackQuery;             /* =1, if track queries into this db */
