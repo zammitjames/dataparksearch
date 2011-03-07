@@ -165,7 +165,7 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 				  url->path = (char*)DpsStrdup("/");
 				}
 			}
-			if((hostname=strchr(url->hostinfo,'@'))){
+			if((hostname=strrchr(url->hostinfo,'@'))){
 				/* Username and password is given  */
 				/* Store auth string user:password */
 				*hostname=0;
@@ -312,7 +312,7 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	}
 	if (url->hostinfo != NULL) {
 	  DpsRTrim(url->hostinfo, ".");
-	  s = strchr(url->hostinfo, '@');
+	  s = strrchr(url->hostinfo, '@');
 	  for (s = (s == NULL) ? url->hostinfo : s + 1; *s; s++) *s = (char)dps_tolower((int)*s);
 	}
 	if (url->schema != NULL) for (s = url->schema; *s; s++) *s = (char)dps_tolower((int)*s);
