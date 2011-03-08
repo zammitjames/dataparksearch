@@ -454,11 +454,11 @@ Server http://www.server.ext/
 
 </sect1>
 
-<sect1 id="register">
+<!-- sect1 id="register">
 <title>Installation registration</title>
 <para>If you use <application>DataparkSearch</application> to build search on public accessible web site, you may
 register this site on <ulink url="http://www.dataparksearch.org/usersmap">our users page</ulink>.
 </para>
-</sect1>
+</sect1-->
 
 </chapter>

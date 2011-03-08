@@ -552,6 +552,20 @@ typedef struct {
 	DPS_HOST_ADDR	*host_addr;
 } DPS_HOSTLIST;
 
+
+typedef struct {
+  struct sockaddr_in addr;
+  time_t last_used;
+  int    neterrors;
+} DPS_IP_ADDR;
+
+typedef struct {
+  size_t nip_addr;
+  size_t mip_addr;
+  DPS_IP_ADDR *ip_addr;
+} DPS_IPLIST;
+
+
 /** Used in FTP sessions */
 typedef struct dps_conn_struct {
         int	status;
@@ -574,6 +588,7 @@ typedef struct dps_conn_struct {
         int     charset_id;
         char	*buf;
         DPS_HOST_ADDR *Host;
+        DPS_IP_ADDR   *IP;
         struct	dps_conn_struct *connp;
 } DPS_CONN;
 

@@ -614,7 +614,15 @@ void DpsHostListFree(DPS_HOSTLIST *List){
 		DPS_FREE(List->host_addr[i].hostname);
 	
 	DPS_FREE(List->host_addr);
-	List->nhost_addr=0;
+	List->nhost_addr = List->mhost_addr = 0;
+	return;
+}
+
+
+void DpsIPListFree(DPS_IPLIST *List){
+	
+	DPS_FREE(List->ip_addr);
+	List->nip_addr = List->mip_addr = 0;
 	return;
 }
 

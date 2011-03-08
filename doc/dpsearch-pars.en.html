@@ -84,7 +84,7 @@ NAME="PARS"
 >3.9. External parsers</A
 ></H1
 ><A
-NAME="AEN1408"
+NAME="AEN1403"
 ></A
 ><P
 ><SPAN
@@ -159,7 +159,7 @@ CLASS="FILENAME"
 defined there.</P
 ><P
 ><A
-NAME="AEN1435"
+NAME="AEN1430"
 ></A
 >
 If you want to index local files or via <TT
@@ -182,7 +182,7 @@ CLASS="PROGRAMLISTING"
 ><LI
 ><P
 ><A
-NAME="AEN1443"
+NAME="AEN1438"
 ></A
 >
 Add parsers</P
@@ -190,7 +190,7 @@ Add parsers</P
 >Add lines with parsers definitions. Lines have the following format with three arguments:
 				<PRE
 CLASS="PROGRAMLISTING"
->Mime &lt;from_mime&gt; &lt;to_mime&gt; &lt;command line&gt;</PRE
+>Mime &lt;from_mime&gt; &lt;to_mime&gt; [&lt;command line&gt;]</PRE
 >
 				</P
 ><P
@@ -233,6 +233,20 @@ temporary files will be removed when parser exists. Note that result
 of usage of this parser will be absolutely  the same with the previous
 one, but they use different execution mode: file-&gt;stdout and
 file-&gt;file correspondingly.</P
+><P
+>If the &lt;command line&gt; parameter is omitted this means both MIME type are synonyms. 
+E.g. some sites can supply incorrect type for MP3 files as <KBD
+CLASS="USERINPUT"
+>application/mp3</KBD
+>. 
+You can alter it into correct one <KBD
+CLASS="USERINPUT"
+>audio/mpeg</KBD
+> and therefore process them:
+				<PRE
+CLASS="PROGRAMLISTING"
+>Mime application/mp3 audio/mpeg</PRE
+></P
 ></LI
 ></OL
 ></DIV
@@ -246,7 +260,7 @@ NAME="PARSERTIMEOUT"
 ></H2
 ><P
 ><A
-NAME="AEN1459"
+NAME="AEN1458"
 ></A
 >
 To avoid a indexer hang on parser execution, you may specify the amount of time in seconds for parser execution in your 
@@ -292,7 +306,7 @@ NAME="PARS-CHAR"
 >3.9.5. Charsets and parsers</A
 ></H2
 ><A
-NAME="AEN1472"
+NAME="AEN1471"
 ></A
 ><P
 >Some parsers can produce output in other charset
@@ -315,7 +329,7 @@ NAME="PARS-UDMURL"
 >3.9.6. DPS_URL environment variable</A
 ></H2
 ><A
-NAME="AEN1479"
+NAME="AEN1478"
 ></A
 ><P
 >When executing a parser <B
@@ -334,7 +348,7 @@ NAME="PARS-LINKS"
 >3.9.7. Some third-party parsers</A
 ></H2
 ><A
-NAME="AEN1485"
+NAME="AEN1484"
 ></A
 ><P
 ></P
@@ -586,7 +600,7 @@ NAME="LIBEXTRACTOR"
 >3.9.8. libextractor library</A
 ></H2
 ><A
-NAME="AEN1566"
+NAME="AEN1565"
 ></A
 ><P
 ><SPAN
@@ -623,7 +637,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1579"
+NAME="AEN1578"
 ></A
 ><P
 ><B

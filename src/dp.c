@@ -436,8 +436,6 @@ int main() {
     }
     t_dps = TimerEnd();
 
-    fprintf(stderr, " -- a[N]:%d d[N]:%d\n", a[N], d[N]);
-
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
       strcpy(d, a);
