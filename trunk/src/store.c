@@ -579,7 +579,7 @@ static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsu
   return NULL;
 }
 
-
+#if 0
 static char * DpsStrWWL(char **p, DPS_WIDEWORDLIST *wwl, char *c, size_t *len, size_t minwlen, int NOprefixHL) {
   register char sc;
   register size_t i;
@@ -623,7 +623,7 @@ static char * DpsStrWWL(char **p, DPS_WIDEWORDLIST *wwl, char *c, size_t *len, s
   if (*p + minwlen < s) *p = s - minwlen;
   return NULL;
 }
-
+#endif
 
 /** Make document excerpts on query words forms 
  */
@@ -893,15 +893,19 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < uni + ulen) && DpsUniNSpace(*end); i++) end++;
     while ((start < end) && !DpsUniNSpace(*start)) start++;
     if (start < end) {
+      register int flag = 0;
+      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(prevend+i)) { flag = 1; break; }
       if (oi[0]) DpsUniStrCat(oi, mark);
-      if ((start != uni) && (start != prevend)) DpsUniStrCat(oi, prefix_dot);
+      if (flag) {
+	if ((start != uni) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
+      }
       ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
-      if ((end != uni + ulen) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
     }
     p = prevend = end;
     prevlen = len;
     if (end == np) p++;
   }
+  if (oi[0] && (end != uni + ulen) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
 
   {
     register dpsunicode_t *cc;
@@ -1252,7 +1256,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     while ((start < end) && !DpsUniNSpace(*start)) start++;
     if (start < end) {
       if (oi[0]) DpsUniStrCat(oi, mark);
-      if ((start != uni) && (start != prevend)) DpsUniStrCat(oi, prefix_dot);
+      if ((start != uni) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
       ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
       if ((end != uni + ulen) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
     }
@@ -1299,23 +1303,35 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
 /** Make value excerpts on query words forms 
  */
 
-char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, size_t size, size_t padding) {
-  static const unsigned char prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
+char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value, size_t size, size_t padding) {
+  DPS_CONV bc_uni, uni_bc;
+  static const dpsunicode_t prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
   int NOprefixHL = 0;
+  DPS_CHARSET *bcs = NULL, *sys_int;
   size_t *wlen, i, maxwlen = 0, minwlen = query->WordParam.max_word_len;
-  unsigned char *start, *end, *prevend, ures, *p, *oi, *np;
-  unsigned char *c;
-  unsigned char *Source = NULL, *SourceToFree = NULL;
-  size_t DocSize = dps_strlen(value);
+  dpsunicode_t *start, *end, *prevend, ures, *p, *oi, *np;
+  dpsunicode_t *c;
+  dpsunicode_t *Source = NULL;
+  size_t DocSize = dps_strlen(bc_value), osl;
+  char *os;
  
   if (DocSize == 0) return NULL;
+  if (Res->WWList.nwords == 0) return NULL;
+  if (!(sys_int=DpsGetCharSet("sys-int")))
+    return NULL;
+
+  bcs = query->Conf->bcs;
+  if (!bcs) bcs = DpsGetCharSet(DpsVarListFindStr(&query->Vars, "LocalCharset", "iso-8859-1"));
+  if (!bcs) return NULL;
+  DpsConvInit(&bc_uni, bcs, sys_int, query->Conf->CharsToEscape, DPS_RECODE_HTML);
+  DpsConvInit(&uni_bc, sys_int, bcs, query->Conf->CharsToEscape, DPS_RECODE_HTML);
   
   if (!query->Flags.make_prefixes) {
     const char *doclang = DpsVarListFindStr(&query->Conf->Vars, "Locale", "");
     if ( strncasecmp(doclang, "zh", 2) && strncasecmp(doclang, "th", 2) && strncasecmp(doclang, "ja", 2) && strncasecmp(doclang, "ko", 2) ) NOprefixHL = 1;
   }
 
-  c = (unsigned char *) DpsMalloc(Res->WWList.nwords * sizeof(char) + 1);
+  c = (dpsunicode_t *) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t) + 1);
   if (c == NULL) {  return NULL; }
   wlen = (size_t *) DpsMalloc(Res->WWList.nwords * sizeof(size_t) + 1);
   if (wlen == NULL) {
@@ -1323,45 +1339,53 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, si
     return NULL;
   }
   for (i = 0; i < Res->WWList.nwords; i++) {
-    wlen[i] = Res->WWList.Word[i].len - 1;
-    c[i] = (unsigned char)dps_tolower((int)Res->WWList.Word[i].word[0]);
+    wlen[i] = Res->WWList.Word[i].ulen - 1;
+    c[i] = DpsUniToLower(Res->WWList.Word[i].uword[0]);
     if (wlen[i] > maxwlen) maxwlen = wlen[i];
     if (wlen[i] < minwlen) minwlen = wlen[i];
   }
 
-  if ((oi = (unsigned char *)DpsMalloc(128 + 2 * (size + 4 * query->WordParam.max_word_len + 2 * padding + maxwlen) * sizeof(unsigned char))) == NULL) {
+  if ((oi = (dpsunicode_t *)DpsMalloc(128 + 2 * (size + 4 * query->WordParam.max_word_len + 2 * padding + maxwlen) * sizeof(dpsunicode_t))) == NULL) {
     DPS_FREE(c); DPS_FREE(wlen);
     return NULL;
   }
   oi[0]=0;
 
-  Source = SourceToFree = (unsigned char*)DpsStrdup(value);
+  if ((Source = (dpsunicode_t *)DpsMalloc((14 * DocSize + 1) * sizeof(dpsunicode_t))) == NULL) {
+    DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(oi);
+    return NULL;
+  }
+  DpsConv(&bc_uni, (char*)Source, (14 * DocSize + 1) * sizeof(dpsunicode_t), bc_value, DocSize);
 
-  for (p = prevend = Source; dps_strlen((const char*)oi) < size; ) {
+  for (p = prevend = Source; DpsUniLen(oi) < size; ) {
 
-    np  = (unsigned char*)DpsStrWWL((char**)&p, &(Res->WWList), (char*)c, wlen, minwlen, NOprefixHL);
+    np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, minwlen, NOprefixHL);
 
     if (np == NULL) break;
 
     p = np;
     start = dps_max(dps_max(p - padding, Source), prevend);
     end = dps_min(p + maxwlen + 1 + padding, Source + DocSize);
-    for (i = 0; (i < 2 * query->WordParam.max_word_len) && (start > Source) && !isspace(*start); i++) start--;
-    for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < Source + DocSize) && !isspace(*end); i++) end++;
-    while ((start < end) && isspace(*start)) start++;
-    if (start < end) {
-      if (oi[0]) dps_strcat((char*)oi, (const char*)mark);
-      if ((start != Source) && (start != prevend)) dps_strcat((char*)oi, (const char*)prefix_dot);
-      ures = *end; *end = 0; dps_strcat((char*)oi, (const char*)start); *end = ures;
-      if ((end != Source + DocSize) && (*(end-1) != 0x2e) ) dps_strcat((char*)oi, (const char*)suffix_dot);
+    for (i = 0; (i < 2 * query->WordParam.max_word_len) && (start > Source) && DpsUniNSpace(*start); i++) start--;
+    for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < Source + DocSize) && DpsUniNSpace(*end); i++) end++;
+    while ((start < end) && !DpsUniNSpace(*start)) start++;
+    if (start < end - 1) {
+      register int flag = 0;
+      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(prevend+i)) { flag = 1; break; }
+      if (oi[0]) DpsUniStrCat(oi, mark);
+      if (flag) {
+	if ((start != Source) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
+      }
+      ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
     }
     p = prevend = end;
     if (end == np) p++;
   }
+  if (oi[0] && (end != Source + DocSize) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
 
   {
-    register unsigned char *cc;
-    for(cc = (unsigned char*)oi; *cc; cc++) {
+    register dpsunicode_t *cc;
+    for(cc = oi; *cc; cc++) {
       switch(*cc) {
       case 9:
       case 10:
@@ -1374,12 +1398,21 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, si
     }
   }
 
-  DPS_FREE(c); DPS_FREE(wlen);
+  DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(Source);
   if (*oi == '\0') {
-    DPS_FREE(oi); return (char *)Source;
+    DPS_FREE(oi);
+    return NULL;
   }
-  DPS_FREE(Source);
-  return (char*)oi;
+
+  osl = (DpsUniLen(oi) + 1) * sizeof(char);
+  if ((os = (char *)DpsMalloc(osl * 16)) == NULL) {
+    DPS_FREE(oi);
+    return NULL;
+  }
+  DpsConv(&uni_bc, os, osl * 16, (char*)oi, sizeof(*oi) * osl);
+
+  DPS_FREE(oi);
+  return (char*)os;
 
 }
 
