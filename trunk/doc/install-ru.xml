@@ -446,12 +446,12 @@ Server http://www.server.ext/
 
 </sect1>
 
-<sect1 id="register">
+<!--sect1 id="register">
 <title>Регистрация установки</title>
 <para>Если вы используете <application>DataparkSearch</application> для организации поиска на публично доступном веб-сервере,
 вы можете сообщить нам об этом на нашем сайте, на
 <ulink url="http://www.dataparksearch.org/usersmap">странице наших пользователей</ulink>.
 </para>
-</sect1>
+</sect1-->
 
 </chapter>

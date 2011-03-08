@@ -5,7 +5,7 @@ SQL>'SELECT status, docsize, hops, crc32, pop_rank, url FROM url ORDER BY status
 200	807	1	-793917724	0.033333	http://site/testpage12.html
 200	1023	1	-698026567	0.033333	http://site/testpage10.html
 200	987	1	-469491884	0.033333	http://site/testpage3.html
-200	674	0	-406466600	0.0	http://site/
+200	674	0	-406466600	0	http://site/
 200	1041	1	-362033472	0.033333	http://site/testpage11.html
 200	828	1	-108949651	0.033333	http://site/testpage5.html
 200	941	1	661376835	0.033333	http://site/testpage6.html

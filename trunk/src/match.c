@@ -160,6 +160,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			}else{
 				res=DpsWildCmp(string,Match->pattern);
 			}
+			if (res == -1) res = 1;
 			break;
 		case DPS_MATCH_SUBNET:
 			for(i = 0; i < nparts; i++) Parts[i].beg = Parts[i].end = -1;

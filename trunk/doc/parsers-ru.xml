@@ -55,7 +55,7 @@ AddType text/html *.html
 Добавление парсеров</para>
 				<para>Добавление строк с определениями парсеров. Эти строки имеюют следующий формат с треми аргументами:
 				<programlisting>
-Mime &lt;from_mime&gt; &lt;to_mime&gt; &lt;command line&gt;
+Mime &lt;from_mime&gt; &lt;to_mime&gt; [&lt;command line&gt;]
 </programlisting>
 				</para>
 
@@ -92,6 +92,13 @@ Mime application/msword text/plain "/usr/bin/catdoc -a $1 >$2"
 этого парсера будет абсолютно таким же, как и предыдущего, они отличаютя только сопсобом выполнения: 
 файл-&gt;<literal>stdout</literal> и файл-&gt;файл соответственно.</para>
 
+<para>Если параметр &lt;command line&gt; опущен, это означает, что два MIME-типа являются синонимами. 
+Например, некоторые сайты отдают MP3 файлы с неправильным MIME-типом <userinput>application/mp3</userinput>. 
+Вы можете исправить его на корректный <userinput>audio/mpeg</userinput> и тем самым обработать его:
+				<programlisting>
+Mime application/mp3 audio/mpeg
+</programlisting>
+</para>
 			</listitem>
 		</orderedlist>
 	</sect2>

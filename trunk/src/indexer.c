@@ -2113,7 +2113,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			min_size = (size_t)DpsVarListFindUnsigned(&Indexer->Vars, "MinDocSize", 0);
 			skip_too_small = (cont_len < min_size);
 
-			if (skip_too_small) {
+			if (skip_too_small && Doc->method != DPS_METHOD_CHECKMP3ONLY) {
 			  Doc->method = DPS_METHOD_HEAD;
 			  DpsLog(Indexer, DPS_LOG_EXTRA, "Too small content size (%d < %d), CheckOnly.", cont_len, min_size); 
 			}
