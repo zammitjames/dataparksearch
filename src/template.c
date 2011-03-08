@@ -332,6 +332,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 			    newvalue[cnv->obytes] = '\0';
 			    c2 = strrchr(newvalue, '\2');
 			    c3 = strrchr(newvalue, '\3');
+			    DpsRTrim(newvalue, ". ");
 			    if ((c2 != NULL) && ((c3 == NULL) || (c2 > c3))) {
 			      dps_strcpy(newvalue + cnv->obytes, "\3...");
 			    } else {
@@ -952,7 +953,7 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 		}else
 		if(!strcasecmp(cmd, "sp") || !strcasecmp(cmd, "sy") || !strcasecmp(cmd, "s")) {
 		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL))) {
-		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
+		    DpsVarListInsStr(vars, tok, DPS_NULL2EMPTY(lt));
 		    DpsVarListInsStr(&Agent->Vars, tok, DPS_NULL2EMPTY(lt));
 		  }
 		}else
@@ -1257,7 +1258,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	t->GrBeg = DpsStrdup(DpsVarListFindStrTxt(vars, "GrBeg", ""));
 	t->GrEnd = DpsStrdup(DpsVarListFindStrTxt(vars, "GrEnd", ""));
 	DPS_FREE(t->ExcerptMark);
-	t->ExcerptMark = DpsStrdup(DpsVarListFindStrTxt(vars, "ExcerptMark", " ... "));
+	t->ExcerptMark = DpsStrdup(DpsVarListFindStrTxt(vars, "ExcerptMark", " "));
 	
 	unics = DpsGetCharSet("sys-int");
 	DpsConvInit(&Agent->uni_lc, unics, Env->lcs, Env->CharsToEscape, DPS_RECODE_HTML);
