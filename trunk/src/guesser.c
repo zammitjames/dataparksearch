@@ -1528,10 +1528,15 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        DPS_FREE(mapstat);
      }
      if (*DPS_NULL2EMPTY(charset) == '\0') {
-       DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = "iso8859-1");
+       if(use_meta && (*meta_charset != '\0')) DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = meta_charset);
+       else if (*server_charset != '\0') DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = server_charset);
+       else DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = "iso8859-1");
+       
      }
      if (*DPS_NULL2EMPTY(lang) == '\0') {
-       DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = "en");
+       if(use_meta && (*meta_lang != '\0')) DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = meta_lang);
+       else if (*server_lang != '\0') DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = server_lang);
+       else DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = "en");
      }
      
 #ifdef DEBUG_GUESSER
