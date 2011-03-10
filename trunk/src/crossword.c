@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 #include "dps_common.h"
 #include "dps_utils.h"
 #include "dps_crossword.h"
+#include "dps_unicode.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,4 +80,18 @@ void DpsCrossListFree(DPS_CROSSLIST * CrossList) {
 DPS_CROSSLIST * DpsCrossListInit(DPS_CROSSLIST * List){
 	bzero((void*)List, sizeof(*List));
 	return(List);
+}
+
+
+int DpsCrossCmp(const void *p1, const void *p2) {
+  const DPS_CROSSWORD *w1 = (DPS_CROSSWORD*)p1;
+  const DPS_CROSSWORD *w2 = (DPS_CROSSWORD*)p2;
+  if (w1->ulen < w2->ulen) return -1;
+  if (w1->ulen > w2->ulen) return 1;
+  
+  return DpsUniStrCaseCmp(w1->uword, w2->uword);
+}
+
+int DpsCrossListSort(DPS_CROSSLIST *List) {
+  if (List->ncrosswords > 1) DpsSort(List->CrossWord, List->ncrosswords, sizeof(DPS_CROSSWORD), (qsort_cmp)DpsCrossCmp);
 }

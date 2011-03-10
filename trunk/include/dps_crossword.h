@@ -23,5 +23,8 @@ extern int DpsCrossListAdd(DPS_DOCUMENT * Doc, DPS_CROSSWORD * CrossWord);
 extern int DpsCrossListAddFantom(DPS_DOCUMENT * Doc, DPS_CROSSWORD * CrossWord);
 extern void DpsCrossListFree(DPS_CROSSLIST * List);
 extern DPS_CROSSLIST * DpsCrossListInit(DPS_CROSSLIST * List);
+extern int DpsCrossCmp(const void *p1, const void *p2);
+extern int DpsCrossListSort(DPS_CROSSLIST *List);
+
 
 #endif

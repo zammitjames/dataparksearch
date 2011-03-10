@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -72,6 +72,20 @@ int DpsWordListFree(DPS_WORDLIST * List){
 DPS_WORDLIST * DpsWordListInit(DPS_WORDLIST * List){
 	bzero((void*)List, sizeof(*List));
 	return(List);
+}
+
+
+int DpsWordCmp(const void *p1, const void *p2) {
+  const DPS_WORD *w1 = (DPS_WORD*)p1;
+  const DPS_WORD *w2 = (DPS_WORD*)p2;
+  if (w1->ulen < w2->ulen) return -1;
+  if (w1->ulen > w2->ulen) return 1;
+  
+  return DpsUniStrCaseCmp(w1->uword, w2->uword);
+}
+
+int DpsWordListSort(DPS_WORDLIST *List) {
+  if (List->nwords > 1) DpsSort(List->Word, List->nwords, sizeof(DPS_WORD), (qsort_cmp)DpsWordCmp);
 }
 
 
