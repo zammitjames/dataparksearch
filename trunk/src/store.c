@@ -527,10 +527,10 @@ static void DpsNextCharE_stored(void *d) {
 
 
 
-static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsunicode_t *c, size_t *len, size_t minwlen, int NOprefixHL) {
+static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsunicode_t *c, size_t *len, dpsunicode_t *pos, size_t minwlen, int NOprefixHL) {
   register dpsunicode_t sc;
-  register size_t i;
-  register dpsunicode_t *s = *p;
+  register int i, min_i;
+  register dpsunicode_t *s = *p, *min_p;
 /*  DPS_CHARSET *k = DpsGetCharSet("koi8-r"), *int_sys = DpsGetCharSet("sys-int");
   DPS_CONV uni_lc;
   char str[100000];
@@ -548,17 +548,32 @@ static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsu
   
     while ((sc = DpsUniToLower(*s)) != 0) {
       s++;
+      min_i = -1;
       for(i = 0; i < wwl->nwords; i++) {
+	if (pos[i] == NULL) continue;
 	if (sc != c[i]) continue;
-	if (wwl->Word[i].origin & DPS_WORD_ORIGIN_STOP) continue;
-	if ((len[i] > 0) && (DpsUniStrNCaseCmp(s, &(wwl->Word[i].uword[1]), len[i]) != 0)) continue;
-	if ((DpsUniCType(s[len[i]]) <= DPS_UNI_BUKVA) && /*(s[len[i]] != 0) &&*/ (s[len[i]] >= 0x30 ) && DpsUniNSpace(s[len[i]])) continue;
+	if (min_i > 0 && pos[i] > min_p - 1) continue;
+	min_i = i;
+	min_p = s;
+      }
+      if (min_i > 0) {
+	if ((len[min_i] > 0) && (DpsUniStrNCaseCmp(s, &(wwl->Word[min_i].uword[1]), len[min_i]) != 0)) {
+	  s = pos[min_i] + 1;
+	  pos[min_i] = DpsUniStrChrLower(s, c[min_i]);
+	  continue;
+	}
+	if ((DpsUniCType(s[len[min_i]]) <= DPS_UNI_BUKVA) && (s[len[min_i]] >= 0x30 ) && DpsUniNSpace(s[len[min_i]])) {
+	  s = pos[min_i] + 1;
+	  pos[min_i] = DpsUniStrChrLower(s, c[min_i]);
+	  continue;
+	}
 	s--;
 	return s;
       }
-/*      for (i = 0; (i < minwlen) && (*s != 0); i++) s++;*/
+#if 0
       while(/*(*s != 0) &&*/ (DpsUniCType(*s) <= DPS_UNI_BUKVA)) s++;
       while((*s != 0) && (DpsUniCType(*s) > DPS_UNI_BUKVA)) s++;
+#endif
     }
 
   } else {
@@ -642,6 +657,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   char *os;
   int s = -1, r = -1;
   size_t *wlen, i, len, maxwlen = 0, minwlen = query->WordParam.max_word_len, ulen, prevlen, osl, index_limit;
+  dpsunicode_t *wpos;
   DPS_CONV dc_uni, uni_bc;
   const char *hello = "E\0";
   dpshash32_t rec_id;
@@ -680,6 +696,11 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     DPS_FREE(c);
     return NULL;
   }
+  wpos = (dpsunicode_t *) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t) + 1);
+  if (wpos == NULL) {
+    DPS_FREE(c); DPS_FREE(wlen);
+    return NULL;
+  }
   for (i = 0; i < Res->WWList.nwords; i++) {
     wlen[i] = Res->WWList.Word[i].ulen - 1;
     c[i] = DpsUniToLower(Res->WWList.Word[i].uword[0]);
@@ -688,7 +709,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   }
 
   if ((oi = (dpsunicode_t *)DpsMalloc(2 * (dps_max(size + 2 * query->WordParam.max_word_len, Res->WWList.maxulen + 4 * (query->WordParam.max_word_len + padding) + 8) + 1) * sizeof(dpsunicode_t))) == NULL) {
-    DPS_FREE(c); DPS_FREE(wlen);
+    DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos);
     return NULL;
   }
   oi[0]=0;
@@ -696,13 +717,13 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   DocSize = DpsVarListFindInt(&Doc->Sections, "Content-Length", DPS_MAXDOCSIZE) + 2 * DPS_DOCHUNKSIZE;
 
   if ((DocSize == 0) ||  ((HEnd = HDoc = (char *)DpsMalloc(2 * DocSize + 4)) == NULL) ) {
-    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen);
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos);
     return NULL;
   }
   HDoc[0]='\0';
 
   if ( (uni = (dpsunicode_t *)DpsMalloc((DocSize + 10) * sizeof(dpsunicode_t)) ) == NULL) {
-    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc);
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc);
     return NULL;
   }
 
@@ -782,18 +803,18 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 	  goto oncemore;
 	}
 #endif
-      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+	DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
       return NULL;
     }
     DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
     DpsRecvall(r, &ChunkSize, sizeof(ChunkSize), 360);
     if (ChunkSize == 0) {
-      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
       return NULL;
     }
 
     if ((tag.Content = (char*)DpsMalloc(ChunkSize+10)) == NULL) {
-      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+      DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
       return NULL;
     }
     DpsRecvall(r, tag.Content, ChunkSize, 360);
@@ -836,7 +857,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   }
 
   if (HEnd == HDoc) {
-    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
     if (!tag.finished) {
       tag.chunks = 0;
       if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
@@ -853,11 +874,15 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     uni[ulen] = 0;
   }
 
+  for (i = 0; i < Res->WWList.nwords; i++) {
+    if (Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_STOP) wpos[i] = NULL;
+    else wpos[i] = DpsUniStrChrLower(uni, c[i]);
+  }
 
   for (p = prevend = uni; DpsUniLen(oi) < size; ) {
 
 
-    while(((np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, minwlen, NOprefixHL)) == NULL) 
+    while(((np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, wpos, minwlen, NOprefixHL)) == NULL) 
 	  && (htok != NULL) && ((index_limit == 0) || (ulen < index_limit) )) {
 
       while(htok && ((len - prevlen) < (size_t)(8 * maxwlen + 16 * padding + 1)) ) {
@@ -924,7 +949,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 
   osl = (DpsUniLen(oi) + 1) * sizeof(char);
   if ((os = (char *)DpsMalloc(osl * 16)) == NULL) {
-    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
+    DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
     DPS_FREE(SourceToFree);
     return NULL;
   }
@@ -936,7 +961,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     tag.chunks = 0;
     if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
   }
-  DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(oi); DPS_FREE(HDoc); DPS_FREE(uni);
+  DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(oi); DPS_FREE(HDoc); DPS_FREE(uni);
   if (needFreeSource) { DPS_FREE(SourceToFree); } else { DPS_FREE(tag.Content); }
   return os;
 }
@@ -955,7 +980,7 @@ struct ex_point {
 };
 
 
-
+#if 0
 char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding) {
   static const dpsunicode_t prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
   char *HDoc,*HEnd;
@@ -1298,7 +1323,7 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
   if (needFreeSource) { DPS_FREE(SourceToFree); } else { DPS_FREE(tag.Content); }
   return os;
 }
-
+#endif
 
 /** Make value excerpts on query words forms 
  */
@@ -1309,6 +1334,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
   int NOprefixHL = 0;
   DPS_CHARSET *bcs = NULL, *sys_int;
   size_t *wlen, i, maxwlen = 0, minwlen = query->WordParam.max_word_len;
+  dpsunicode_t *wpos;
   dpsunicode_t *start, *end, *prevend, ures, *p, *oi, *np;
   dpsunicode_t *c;
   dpsunicode_t *Source = NULL;
@@ -1338,6 +1364,11 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
     DPS_FREE(c);
     return NULL;
   }
+  wpos = (dpsunicode_t *) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t) + 1);
+  if (wpos == NULL) {
+    DPS_FREE(c); DPS_FREE(wlen);
+    return NULL;
+  }
   for (i = 0; i < Res->WWList.nwords; i++) {
     wlen[i] = Res->WWList.Word[i].ulen - 1;
     c[i] = DpsUniToLower(Res->WWList.Word[i].uword[0]);
@@ -1346,20 +1377,25 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
   }
 
   if ((oi = (dpsunicode_t *)DpsMalloc(128 + 2 * (size + 4 * query->WordParam.max_word_len + 2 * padding + maxwlen) * sizeof(dpsunicode_t))) == NULL) {
-    DPS_FREE(c); DPS_FREE(wlen);
+    DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos);
     return NULL;
   }
   oi[0]=0;
 
   if ((Source = (dpsunicode_t *)DpsMalloc((14 * DocSize + 1) * sizeof(dpsunicode_t))) == NULL) {
-    DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(oi);
+    DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(oi);
     return NULL;
   }
   DpsConv(&bc_uni, (char*)Source, (14 * DocSize + 1) * sizeof(dpsunicode_t), bc_value, DocSize);
 
+  for (i = 0; i < Res->WWList.nwords; i++) {
+    if (Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_STOP) wpos[i] = NULL;
+    else wpos[i] = DpsUniStrChrLower(Source, c[i]);
+  }
+
   for (p = prevend = Source; DpsUniLen(oi) < size; ) {
 
-    np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, minwlen, NOprefixHL);
+    np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, wpos, minwlen, NOprefixHL);
 
     if (np == NULL) break;
 
@@ -1398,7 +1434,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
     }
   }
 
-  DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(Source);
+  DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(Source);
   if (*oi == '\0') {
     DPS_FREE(oi);
     return NULL;

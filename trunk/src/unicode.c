@@ -452,6 +452,29 @@ dpsunicode_t *DpsUniStrChr(const dpsunicode_t *p, dpsunicode_t ch) {
         /* NOTREACHED */
 }
 
+
+dpsunicode_t *DpsUniStrChrLower(const dpsunicode_t *p, dpsunicode_t ch) { /* ch must be in lower register */
+
+        for (;; ++p) {
+  	        if (DpsUniToLower(*p) == ch)
+                        return ((dpsunicode_t *)p);
+                if (*p == '\0')
+                        return (NULL);
+        }
+        /* NOTREACHED */
+}
+
+
+dpsunicode_t *DpsUniRTrim(dpsunicode_t *p, dpsunicode_t *delim) {
+  int len = (int)DpsUniLen(p);
+  while((len > 0) && DpsUniStrChr(delim, p[len - 1] )) {
+    p[len - 1] = 0;
+    len--;
+  }
+  return p;
+}
+
+
 static int dps_is_delim(const dpsunicode_t *delim, dpsunicode_t c) {
     register const dpsunicode_t *spanp;
     register dpsunicode_t sc;
