@@ -233,7 +233,7 @@ static int DpsSubSectionMatchFind(DPS_AGENT *Indexer, int log_level, DPS_MATCHLI
 /*	  DpsVarListReplaceInt(&Doc->Sections, "Server_id", M->server_id);*/
 	}else{
 	  if (DpsNeedLog(log_level))
-	    sprintf(reason, "No conditional subsection detected");
+	    dps_snprintf(reason, PATH_MAX, "No conditional subsection detected");
 	  *subsection = NULL;
 	}
 #ifdef WITH_PARANOIA
@@ -2162,30 +2162,50 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			}
 			
 			/* Remove StopWords */
-			DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
-			for(wordnum = 0; wordnum < Doc->Words.nwords; wordnum++) {
-				const dpsunicode_t	*w = Doc->Words.Word[wordnum].uword;
-				size_t		wlen = Doc->Words.Word[wordnum].ulen;
-				
-				if(wlen > Indexer->WordParam.max_word_len ||
-				   wlen < Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords, w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL)
-				{
-					Doc->Words.Word[wordnum].coord=0;
-				}	
+			/*			DPS_GETLOCK(Indexer,DPS_LOCK_CONF);*/
+			DpsWordListSort(&Doc->Words);
+			if (Doc->Words.nwords > 0) {
+			  DPS_WORD *p_word = Doc->Words.Word;
+			  size_t wlen = Doc->Words.Word[0].ulen;
+			  int rc = (wlen > Indexer->WordParam.max_word_len ||
+				    wlen < Indexer->WordParam.min_word_len ||
+				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
+			  if (rc) p_word->coord = 0;
+			  for(wordnum = 1; wordnum < Doc->Words.nwords; wordnum++) {
+			    if (DpsWordCmp(p_word, Doc->Words.Word + wordnum) == 0) {
+			      if (rc) Doc->Words.Word[wordnum].coord = 0;
+			    } else {
+			      p_word = Doc->Words.Word + wordnum;
+			      rc = (wlen > Indexer->WordParam.max_word_len ||
+				    wlen < Indexer->WordParam.min_word_len ||
+				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
+			      if (rc) p_word->coord = 0;
+			    }
+			  }
 			}
-			for(wordnum = 0; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
-				const dpsunicode_t	*w = Doc->CrossWords.CrossWord[wordnum].uword;
-				size_t		wlen = Doc->CrossWords.CrossWord[wordnum].ulen;
-				
-				if(wlen>Indexer->WordParam.max_word_len ||
-				   wlen<Indexer->WordParam.min_word_len ||
-				   DpsStopListFind(&Indexer->Conf->StopWords,w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "") != NULL)
-				{
-					Doc->CrossWords.CrossWord[wordnum].weight=0;
-				}	
+
+			DpsCrossListSort(&Doc->CrossWords);
+			if (Doc->CrossWords.ncrosswords > 0) {
+			  DPS_CROSSWORD *p_word = Doc->CrossWords.CrossWord;
+			  size_t wlen = Doc->CrossWords.CrossWord[0].ulen;
+			  int rc = (wlen > Indexer->WordParam.max_word_len ||
+				    wlen < Indexer->WordParam.min_word_len ||
+				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
+			  if (rc) p_word->weight = 0;
+			  for(wordnum = 1; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
+			    if (DpsWordCmp(p_word, Doc->CrossWords.CrossWord + wordnum) == 0) {
+			      if (rc) Doc->CrossWords.CrossWord[wordnum].weight = 0;
+			    } else {
+			      p_word = Doc->CrossWords.CrossWord + wordnum;
+			      rc = (wlen > Indexer->WordParam.max_word_len ||
+				    wlen < Indexer->WordParam.min_word_len ||
+				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
+			      if (rc) p_word->weight = 0;
+			    }
+			  }
+
 			}
-			DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+			/*			DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);*/
 			if (Indexer->Flags.collect_links && (status == 200 || status == 206 || status == 302) )
 			  if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_MARKTODEL))) {
 			    DpsDocFree(Doc);
@@ -2432,6 +2452,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	
 	
 	if(result!=DPS_OK){
+	        DPS_FREE(aliasurl); DPS_FREE(origurl);
 		DpsDocFree(Doc);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
@@ -2490,6 +2511,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {
 	  if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_PASNEO))) {
+	    DPS_FREE(origurl); DPS_FREE(aliasurl);
 	    DpsDocFree(Doc);
 	    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
@@ -2666,33 +2688,53 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		  size_t wordnum;
 		  const char *lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
 		  /* Remove StopWords */
-		  DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
-		  for(wordnum = 0; wordnum < Doc->Words.nwords; wordnum++) {
-		    const dpsunicode_t	*w = Doc->Words.Word[wordnum].uword;
-		    size_t		wlen = Doc->Words.Word[wordnum].ulen;
-				
-		    if(wlen > Indexer->WordParam.max_word_len ||
-		       wlen < Indexer->WordParam.min_word_len ||
-		       DpsStopListFind(&Indexer->Conf->StopWords, w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL)
-		      {
-			Doc->Words.Word[wordnum].coord=0;
-		      }	
+		  /*		  DPS_GETLOCK(Indexer,DPS_LOCK_CONF);*/
+		  DpsWordListSort(&Doc->Words);
+		  if (Doc->Words.nwords > 0) {
+		    DPS_WORD *p_word = Doc->Words.Word;
+		    size_t wlen = Doc->Words.Word[0].ulen;
+		    int rc = (wlen > Indexer->WordParam.max_word_len ||
+			      wlen < Indexer->WordParam.min_word_len ||
+			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
+		    if (rc) p_word->coord = 0;
+		    for(wordnum = 1; wordnum < Doc->Words.nwords; wordnum++) {
+		      if (DpsWordCmp(p_word, Doc->Words.Word + wordnum) == 0) {
+			if (rc) Doc->Words.Word[wordnum].coord = 0;
+		      } else {
+			p_word = Doc->Words.Word + wordnum;
+			rc = (wlen > Indexer->WordParam.max_word_len ||
+			      wlen < Indexer->WordParam.min_word_len ||
+			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
+			if (rc) p_word->coord = 0;
+		      }
+		    }
 		  }
-		  for(wordnum = 0; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
-		    const dpsunicode_t	*w = Doc->CrossWords.CrossWord[wordnum].uword;
-		    size_t		wlen = Doc->CrossWords.CrossWord[wordnum].ulen;
-	    
-		    if(wlen>Indexer->WordParam.max_word_len ||
-		       wlen<Indexer->WordParam.min_word_len ||
-		       DpsStopListFind(&Indexer->Conf->StopWords,w, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "") != NULL)
-		      {
-			Doc->CrossWords.CrossWord[wordnum].weight=0;
-		      }	
+
+		  DpsCrossListSort(&Doc->CrossWords);
+		  if (Doc->CrossWords.ncrosswords > 0) {
+		    DPS_CROSSWORD *p_word = Doc->CrossWords.CrossWord;
+		    size_t wlen = Doc->CrossWords.CrossWord[0].ulen;
+		    int rc = (wlen > Indexer->WordParam.max_word_len ||
+			      wlen < Indexer->WordParam.min_word_len ||
+			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
+		    if (rc) p_word->weight = 0;
+		    for(wordnum = 1; wordnum < Doc->CrossWords.ncrosswords; wordnum++) {
+		      if (DpsWordCmp(p_word, Doc->CrossWords.CrossWord + wordnum) == 0) {
+			if (rc) Doc->CrossWords.CrossWord[wordnum].weight = 0;
+		      } else {
+			p_word = Doc->CrossWords.CrossWord + wordnum;
+			rc = (wlen > Indexer->WordParam.max_word_len ||
+			      wlen < Indexer->WordParam.min_word_len ||
+			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
+			if (rc) p_word->weight = 0;
+		      }
+		    }
 		  }
-		  DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+		  /*		  DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);*/
 		  if (Indexer->Flags.collect_links && (status == 200 || status == 206 || status == 302) )
 		    if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_MARKTODEL))) {
 		      DpsDocFree(Doc);
+		      DPS_FREE(origurl); DPS_FREE(aliasurl);
 		      TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
 		      DpsViolationExit(Indexer->handle, paran);

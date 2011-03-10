@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -28,6 +28,8 @@ extern int DpsWordListAdd(DPS_DOCUMENT* Doc, DPS_WORD *word, int where);
 extern int DpsWordListAddFantom(DPS_DOCUMENT* Doc, DPS_WORD *word, int where);
 extern int DpsWordListFree(DPS_WORDLIST * List);
 extern DPS_WORDLIST * DpsWordListInit(DPS_WORDLIST * List);
+extern int DpsWordListSort(DPS_WORDLIST * List);
+extern int DpsWordCmp(const void *p1, const void *p2);
 
 
 extern DPS_WIDEWORDLIST * DpsWideWordListInit(DPS_WIDEWORDLIST * List);
