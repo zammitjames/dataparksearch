@@ -130,20 +130,12 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
     Item.section_name = D->sec;
     DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Doc->Sections, D->sec))) {
-/*    Item.section = Sec->section;
-    Item.strict = Sec->strict;
-    Item.section_name = D->sec;*/
-    DpsSGMLUnescape(Item.str);
     DpsHTMLParseBuf(D->Indexer, D->Doc,  D->sec, Item.str);
   } else {
-/*    Item.section = D->body_sec;
-    Item.strict = D->body_strict;
-    Item.section_name = "body";*/
-    DpsSGMLUnescape(Item.str);
     DpsHTMLParseBuf(D->Indexer, D->Doc, "body", Item.str);
   }
 #ifdef DEBUG_XML
-  fprintf(stderr, "sec: %s\nsecpath: %s\nItem.sec:%s str: %s\n\n", 
+  fprintf(stderr, " -- sec: %s\nsecpath: %s\nItem.sec:%s str: %s\n\n", 
 	  DPS_NULL2EMPTY(D->sec), DPS_NULL2EMPTY(D->secpath), Item.section_name, Item.str);
 #endif
   DpsFree(Item.str);
@@ -284,7 +276,7 @@ static int DpsXMLScan (DPS_XML_PARSER *p, DPS_XML_ATTR *a) {
 
 #if DEBUG_XML
   { char *tt = DpsStrndup(a->beg, a->end-a->beg);
-    fprintf(stderr, "LEX=%s[%d] : %s : at line %d pos %d\n", DpsLex2str(lex), a->end-a->beg, tt,
+    fprintf(stderr, " -- LEX=%s[%d] : %s : at line %d pos %d\n", DpsLex2str(lex), a->end-a->beg, tt,
 	    DpsXMLErrorLineno(p),
 	    DpsXMLErrorPos(p)
 	    );
@@ -352,13 +344,13 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
   p->end = str + len;
 
 #ifdef DEBUG_XML
-  fprintf(stderr, "DpsXMLParser: level %d  len %d\n", level, len);
+  fprintf(stderr, " -- DpsXMLParser: level %d  len %d\n", level, len);
 #endif
 
   if (level > 2) {
     sprintf(p->errstr, "0: too deep recursion on '[]'");
 #ifdef DEBUG_XML
-    fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+    fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
     return DPS_XML_ERROR;
   }
@@ -377,7 +369,7 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
 
       if (level && lex == DPS_XML_RSB) {
 #ifdef DEBUG_XML
-	fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
 	return DPS_XML_OK;
       }
@@ -391,7 +383,7 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
         }
         if (DPS_XML_OK != DpsXMLLeave(p, a.beg, a.end-a.beg)) {
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
           return(DPS_XML_ERROR);
 	}
@@ -435,19 +427,19 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
 
         if (DPS_XML_OK != rc) {
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
 	  dps_strcpy(p->errstr, parser.errstr);
 	  return DPS_XML_ERROR;
 	}
 #if DEBUG_XML
-	fprintf(stderr, " LEX=%s\n", DpsLex2str(lex));
+	fprintf(stderr, " --  LEX=%s\n", DpsLex2str(lex));
 #endif
 /*
 	lex = DpsXMLScan(p, &a);
 	if (level && lex == DPS_XML_RSB) {
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser[%d]: leave level %d\n", __LINE__, level);
+	  fprintf(stderr, " -- DpsXMLParser[%d]: leave level %d\n", __LINE__, level);
 #endif	
 	  return DPS_XML_OK;
 	}
@@ -459,21 +451,21 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
       if (DPS_XML_IDENT == lex) {
         if (DPS_XML_OK != DpsXMLEnter(p, a.beg, a.end-a.beg)) {
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
           return(DPS_XML_ERROR);
 	}
       } else if (DPS_XML_LSB) {
         if (DPS_XML_OK != DpsXMLEnter(p, "|", 1)) {
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
           return(DPS_XML_ERROR);
 	}
       } else {
         sprintf(p->errstr, "3: %s unexpected (ident or '/' wanted)", DpsLex2str(lex));
 #ifdef DEBUG_XML
-	fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
         return(DPS_XML_ERROR);
       }
@@ -507,7 +499,7 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
 
           if (DPS_XML_OK != rc) {
 #ifdef DEBUG_XML
-	    fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	    fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
 	    dps_strcpy(p->errstr, parser.errstr);
 	    return DPS_XML_ERROR;
@@ -520,7 +512,7 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
                 (DPS_XML_OK != DpsXMLValue(p, b.beg, b.end - b.beg)) ||
                 (DPS_XML_OK != DpsXMLLeave(p, a.beg, a.end - a.beg))) {
 #ifdef DEBUG_XML
-	      fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	      fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
               return(DPS_XML_ERROR);
 	    }
@@ -533,13 +525,13 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
             if ((DPS_XML_OK != DpsXMLEnter(p, a.beg, a.end - a.beg)) ||
                 (DPS_XML_OK != DpsXMLLeave(p, a.beg, a.end - a.beg))) {
 #ifdef DEBUG_XML
-	      fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	      fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
               return(DPS_XML_ERROR);
 	    }
           } else {
 #if DEBUG_XML
-	    fprintf(stderr, ".LEX=%s\n", DpsLex2str(lex));
+	    fprintf(stderr, " -- .LEX=%s\n", DpsLex2str(lex));
 #endif
 	    /* Do nothing */
           }
@@ -550,7 +542,7 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
       }
 
 #if DEBUG_XML
-      fprintf(stderr, ":LEX=%s level:%d\n", DpsLex2str(lex), level);
+      fprintf(stderr, " -- :LEX=%s level:%d\n", DpsLex2str(lex), level);
 #endif
       if (lex == DPS_XML_SLASH) {
         if (DPS_XML_OK != DpsXMLLeave(p, NULL, 0)) {
@@ -564,14 +556,14 @@ int DpsXMLParser (DPS_XML_PARSER *p, int level, const char *str, size_t len) {
 gt:
       if (level && lex == DPS_XML_RSB) {
 #ifdef DEBUG_XML
-	fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
 	return DPS_XML_OK;
       }
 
       if (square) {
 #ifdef DEBUG_XML
-	fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
 	if (lex != DPS_XML_RSB) {
           sprintf(p->errstr, "7: %s unexpected (']' wanted)", DpsLex2str(lex));
@@ -590,13 +582,13 @@ gt:
         if (lex != DPS_XML_QUESTION) {
           sprintf(p->errstr, "6: %s unexpected ('?' wanted)", DpsLex2str(lex));
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
           return(DPS_XML_ERROR);
         }
         if (DPS_XML_OK != DpsXMLLeave(p, NULL, 0)) {
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
           return(DPS_XML_ERROR);
 	}
@@ -606,7 +598,7 @@ gt:
       if (exclam) {
         if (DPS_XML_OK != DpsXMLLeave(p, NULL, 0)) {
 #ifdef DEBUG_XML
-	  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
           return(DPS_XML_ERROR);
 	}
@@ -615,7 +607,7 @@ gt:
       if (lex != DPS_XML_GT) {
         sprintf(p->errstr, "5: %s unexpected ('>' wanted)", DpsLex2str(lex));
 #ifdef DEBUG_XML
-	fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+	fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
         return(DPS_XML_ERROR);
       }
@@ -646,7 +638,7 @@ gt:
     }
   }
 #ifdef DEBUG_XML
-  fprintf(stderr, "DpsXMLParser: leave level %d\n", level);
+  fprintf(stderr, " -- DpsXMLParser: leave level %d\n", level);
 #endif	
   return(DPS_XML_OK);
 }
