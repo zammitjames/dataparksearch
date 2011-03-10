@@ -1922,7 +1922,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	
 	
 	if(result!=DPS_OK){
-		DpsDocFree(Doc);
+	        DpsDocFree(Doc); DPS_FREE(origurl); DPS_FREE(aliasurl);
 		if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 		TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
@@ -1982,7 +1982,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 
 	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {
 	  if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_PASNEO))) {
-	    DpsDocFree(Doc);
+	    DpsDocFree(Doc); DPS_FREE(origurl); DPS_FREE(aliasurl);
 	    if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 	    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
@@ -2163,7 +2163,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			
 			/* Remove StopWords */
 			/*			DPS_GETLOCK(Indexer,DPS_LOCK_CONF);*/
-			DpsWordListSort(&Doc->Words);
+			/*DpsWordListSort(&Doc->Words);*/
 			if (Doc->Words.nwords > 0) {
 			  DPS_WORD *p_word = Doc->Words.Word;
 			  size_t wlen = Doc->Words.Word[0].ulen;
@@ -2184,7 +2184,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			  }
 			}
 
-			DpsCrossListSort(&Doc->CrossWords);
+			/*DpsCrossListSort(&Doc->CrossWords);*/
 			if (Doc->CrossWords.ncrosswords > 0) {
 			  DPS_CROSSWORD *p_word = Doc->CrossWords.CrossWord;
 			  size_t wlen = Doc->CrossWords.CrossWord[0].ulen;
@@ -2208,7 +2208,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			/*			DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);*/
 			if (Indexer->Flags.collect_links && (status == 200 || status == 206 || status == 302) )
 			  if(DPS_OK != (result = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_LINKS_MARKTODEL))) {
-			    DpsDocFree(Doc);
+			    DpsDocFree(Doc); DPS_FREE(origurl); DPS_FREE(aliasurl);
 			    if (base) DpsURLFree(baseURL); DpsURLFree(newURL); DPS_FREE(newhref);
 			    TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
@@ -2689,7 +2689,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		  const char *lang = DpsVarListFindStr(&Doc->Sections,"Content-Language","");
 		  /* Remove StopWords */
 		  /*		  DPS_GETLOCK(Indexer,DPS_LOCK_CONF);*/
-		  DpsWordListSort(&Doc->Words);
+		  /*DpsWordListSort(&Doc->Words);*/
 		  if (Doc->Words.nwords > 0) {
 		    DPS_WORD *p_word = Doc->Words.Word;
 		    size_t wlen = Doc->Words.Word[0].ulen;
@@ -2710,7 +2710,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		    }
 		  }
 
-		  DpsCrossListSort(&Doc->CrossWords);
+		  /*DpsCrossListSort(&Doc->CrossWords);*/
 		  if (Doc->CrossWords.ncrosswords > 0) {
 		    DPS_CROSSWORD *p_word = Doc->CrossWords.CrossWord;
 		    size_t wlen = Doc->CrossWords.CrossWord[0].ulen;
