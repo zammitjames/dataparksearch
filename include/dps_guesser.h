@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -27,10 +27,18 @@ typedef struct {
   size_t hits, miss, diff;
 } DPS_MAPSTAT;
 
+
 typedef struct {
   int        id;
   const char *name;
 } DPS_LANG_ALIAS;
+
+
+typedef struct {
+  const int  charset_id;
+  const char *lang;
+} DPS_CHARSET_BY_LANG;
+
 
 enum {
   DPS_LANG_AB  = 0,
