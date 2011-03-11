@@ -300,7 +300,7 @@ DPS_VARLIST * DpsVarListInit(DPS_VARLIST *l){
 
 
 void DpsVarListFree(DPS_VARLIST * vars){
-	size_t i, r;
+	register size_t i, r;
 	for (r = 0; r < 256; r++) {
 	  for (i = 0; i < vars->Root[r].nvars; i++) {
 		DPS_FREE(vars->Root[r].Var[i].name);

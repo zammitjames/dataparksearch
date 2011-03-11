@@ -211,8 +211,10 @@ typedef struct {
         char            *section;
         char            *subsection;
 	char		*pattern;
+        size_t          pat_len;
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
         char            *idn_pattern;
+        size_t          idn_len;
 #endif
 	char		*arg;
         char            *dbaddr;
