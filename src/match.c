@@ -124,10 +124,15 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
 #endif
-/*	
-	fprintf(stderr, "DpsMatchExec: '%s' -> '%s'['%s'] '%s'\n",string, DPS_NULL2EMPTY(Match->pattern), DPS_NULL2EMPTY(Match->idn_pattern), DpsMatchTypeStr(Match->match_type));
-*/
-	
+	/*
+#if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
+	fprintf(stderr, " -- DpsMatchExec: '%s' -> '%s'(%d)['%s'(%d)] '%s'\n", string, DPS_NULL2EMPTY(Match->pattern), Match->pat_len,
+		DPS_NULL2EMPTY(Match->idn_pattern), Match->idn_len, DpsMatchTypeStr(Match->match_type));
+#else
+	fprintf(stderr, " -- DpsMatchExec: '%s' -> '%s'(%d) '%s'\n", string, DPS_NULL2EMPTY(Match->pattern), Match->pat_len,
+		DpsMatchTypeStr(Match->match_type));
+#endif
+	*/
 	switch(Match->match_type){
 		case DPS_MATCH_REGEX:
 		        if (!Match->compiled) if (DPS_OK != (res = DpsMatchComp(Match, regerrstr, sizeof(regerrstr) - 1))) {
@@ -191,12 +196,12 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			break;
 		case DPS_MATCH_BEGIN:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
-			slen = dps_strlen(DPS_NULL2EMPTY(Match->pattern));
+			slen = Match->pat_len;
 			if(Match->case_sense){
 			  res=strncasecmp(DPS_NULL2EMPTY(Match->pattern),string,slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
-				  slen = dps_strlen(DPS_NULL2EMPTY(Match->idn_pattern));
+				  slen = Match->idn_len;
 				  if (slen) res = strncasecmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
 				}
 #endif
@@ -204,7 +209,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			  res=strncmp(DPS_NULL2EMPTY(Match->pattern),string,slen);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 				if (res) {
-				  slen = dps_strlen(DPS_NULL2EMPTY(Match->idn_pattern));
+				  slen = Match->idn_len;
 				  if (slen) res = strncmp(DPS_NULL2EMPTY(Match->idn_pattern), string, slen);
 				}
 #endif
@@ -226,7 +231,7 @@ int DpsMatchExec(DPS_MATCH * Match, const char * string, const char *net_string,
 			break;
 		case DPS_MATCH_END:
 			for(i=0;i<nparts;i++)Parts[i].beg=Parts[i].end=-1;
-			plen = dps_strlen(DPS_NULL2EMPTY(Match->pattern));
+			plen = Match->pat_len;
 			slen = dps_strlen(string);
 			if(slen<plen){
 				res=1;
@@ -303,7 +308,7 @@ int DpsMatchApply(char *res, size_t size, const char *string, const char *rpl,
 			break;
 			
 		case DPS_MATCH_BEGIN:
-		  len = dps_snprintf(res, size - 1, "%s%s", rpl, string + dps_strlen(DPS_NULL2EMPTY(Match->pattern)));
+		  len = dps_snprintf(res, size - 1, "%s%s", rpl, string + Match->pat_len);
 			break;
 		case DPS_MATCH_SUBSTR:
 			len = dps_snprintf(res, size - 1, "%s", rpl);
@@ -344,8 +349,10 @@ int DpsMatchListAdd(DPS_AGENT *A, DPS_MATCHLIST *L, DPS_MATCH *M, char *err, siz
 	N=&L->Match[L->nmatches++];
 	DpsMatchInit(N);
 	N->pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(M->pattern));
+	N->pat_len = dps_strlen(N->pattern);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	N->idn_pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(M->idn_pattern));
+	N->idn_len = dps_strlen(N->idn_pattern);
 #endif
 	N->match_type=M->match_type;
 	N->case_sense=M->case_sense;

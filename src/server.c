@@ -205,8 +205,10 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  DpsVarListReplaceLst(&new->Vars, &srv->Vars, NULL, "*");
 	
 	  new->Match.pattern = (char*)DpsStrdup(urlstr);
+	  new->Match.pat_len = dps_strlen(new->Match.pattern);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	  new->Match.idn_pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(srv->Match.idn_pattern));
+	  new->Match.idn_len = dps_strlen(new->Match.idn_pattern);
 #endif
 	  new->Match.nomatch = srv->Match.nomatch;
 	  new->Match.case_sense = srv->Match.case_sense;
@@ -334,23 +336,22 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
     key.site_id = server_id;
     res = dps_bsearch(&pkey, Agent->Conf->SrvPnt, Agent->Conf->total_srv_cnt, sizeof(DPS_SERVER*), cmpsrvpnt); 
     if (res != NULL) {
-      Res = *res;
-      {
-	const char      *alias = DpsVarListFindStr(&Res->Vars,"Alias",NULL);
-	size_t          aliastrlen;
-	int             follow = DpsVarListFindInt(&Res->Vars, "Follow", DPS_FOLLOW_PATH);
+      DPS_SERVER      *pRes = *res;
+      int             follow = DpsVarListFindInt(&pRes->Vars, "Follow", DPS_FOLLOW_PATH);
 
-	if(follow == DPS_FOLLOW_WORLD || !DpsMatchExec(&Res->Match, url, net, &conn.sin, NS, P) ) {
-	  if((aliastr != NULL) && (alias != NULL)) {
-	    aliastrlen = 128 + dps_strlen(url) + dps_strlen(alias) + dps_strlen(Res->Match.pattern);
-	    *aliastr = (char*)DpsMalloc(aliastrlen + 1);
-	    if (*aliastr != NULL)
-	      DpsMatchApply(*aliastr, aliastrlen, url, alias, &Res->Match, 10, P);
-	  }
+      if(follow == DPS_FOLLOW_WORLD || !DpsMatchExec(&pRes->Match, url, net, &conn.sin, NS, P) ) {
+	const char      *alias = DpsVarListFindStr(&pRes->Vars,"Alias",NULL);
+
+	if((aliastr != NULL) && (alias != NULL)) {
+	  size_t          aliastrlen = 128 + dps_strlen(url) + dps_strlen(alias) + dps_strlen(pRes->Match.pattern);
+	  *aliastr = (char*)DpsMalloc(aliastrlen + 1);
+	  if (*aliastr != NULL)
+	    DpsMatchApply(*aliastr, aliastrlen, url, alias, &pRes->Match, 10, P);
 	}
       }
+      
       TRACE_OUT(Agent);
-      return Res;
+      return pRes;
     }
   }
 	
@@ -387,15 +388,14 @@ DPS_SERVER * DpsServerFind(DPS_AGENT *Agent, urlid_t server_id, const char *url,
 
     for(i = 0; (i < List->nservers) && (List->Server[i].ordre <= cur_idx); i++) {
       DPS_SERVER      *srv = &List->Server[i];
-      const char      *alias = DpsVarListFindStr(&srv->Vars,"Alias",NULL);
-      size_t          aliastrlen;
       int             follow = DpsVarListFindInt(&srv->Vars, "Follow", DPS_FOLLOW_PATH);
       
       if(follow == DPS_FOLLOW_WORLD || !DpsMatchExec(&srv->Match, url, net, &conn.sin, NS, P) ) {
+	const char      *alias = DpsVarListFindStr(&srv->Vars,"Alias",NULL);
 	cur_idx = srv->ordre;
 	Res = srv;
 	if((aliastr != NULL) && (alias != NULL)) {
-	  aliastrlen = 128 + dps_strlen(url) + dps_strlen(alias) + dps_strlen(srv->Match.pattern);
+	  size_t          aliastrlen = 128 + dps_strlen(url) + dps_strlen(alias) + dps_strlen(srv->Match.pattern);
 	  *aliastr = (char*)DpsMalloc(aliastrlen + 1);
 	  if (*aliastr != NULL)
 	    DpsMatchApply(*aliastr, aliastrlen, url, alias, &srv->Match, 10, P);
