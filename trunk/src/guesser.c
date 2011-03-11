@@ -47,6 +47,40 @@
 #endif
 
 
+DPS_CHARSET_BY_LANG dps_charset_lang[] = { /* This array is sorted by language name */
+  {DPS_CHARSET_UTF8,    "ar"},             /* see: http://dev.w3.org/html5/spec/Overview.html#determining-the-character-encoding */
+  {DPS_CHARSET_8859_5,  "be"},
+  {DPS_CHARSET_CP1251,  "bg"},
+  {DPS_CHARSET_8859_2,  "cs"},
+  {DPS_CHARSET_UTF8,    "cy"},
+  {DPS_CHARSET_UTF8,    "fa"},
+  {DPS_CHARSET_CP1255,  "he"},
+  {DPS_CHARSET_UTF8,    "hr"},
+  {DPS_CHARSET_8859_2,  "hu"},
+  {DPS_CHARSET_SJIS,    "ja"},  /* 	Windows-31J, which is CP932, Microsoft's extended Shift-JIS */
+  {DPS_CHARSET_UTF8,    "kk"},
+  {DPS_CHARSET_EUC_KR,  "ko"},  /* 	windows-949, which is Microsoft's variant of EUC-KR */
+  {DPS_CHARSET_CP1254,  "ku"},
+  {DPS_CHARSET_CP1257,  "lt"},
+  {DPS_CHARSET_8859_13, "lv"},
+  {DPS_CHARSET_UTF8,    "mk"},
+  {DPS_CHARSET_UTF8,    "or"},
+  {DPS_CHARSET_8859_2,  "pl"},
+  {DPS_CHARSET_UTF8,    "ro"},
+  {DPS_CHARSET_CP1251,  "ru"},
+  {DPS_CHARSET_CP1250,  "sk"},
+  {DPS_CHARSET_8859_2,  "sl"},
+  {DPS_CHARSET_UTF8,    "sr"},
+  {DPS_CHARSET_CP874,   "th"},
+  {DPS_CHARSET_CP1254,  "tr"},
+  {DPS_CHARSET_CP1251,  "uk"},
+  {DPS_CHARSET_UTF8,    "vi"},
+  {DPS_CHARSET_GB18030, "zh-CN"},
+  {DPS_CHARSET_BIG5,    "zh-TW"},
+                                /* All other locales 	windows-1252 */
+  { 0, NULL }
+};
+
 
 DPS_LANG_ALIAS dps_language[] = { /* This table is ordered by language ID */
   {DPS_LANG_AB, "ab" },
@@ -1139,35 +1173,37 @@ void DpsLangMapListSave(DPS_LANGMAPLIST *List) {
 
 void DpsBuildLangMap(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
   size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
-  const char * end1 = text + maplen - DPS_LM_MAXGRAM1;
+  /*  const char * end1 = text + maplen - DPS_LM_MAXGRAM1;*/
   const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
   register const char *p;
-  size_t pas1 = (textlen < 2048) ? 1 : DPS_LM_MAXGRAM1;
-  size_t pas2 = (textlen < 2048) ? 1 : DPS_LM_MAXGRAM2;
+  register size_t ngl;
 
-  for(p = text; p < end1; p += pas1) {
+  for(p = text; p < end2; p++) {
     register unsigned int hindex;
-    hindex = DpsHash32(p, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
-    map->memb3[hindex].count++;
-  }
-  for(p = text; p < end2; p += pas2) {
-    register unsigned int hindex;
-    hindex = DpsHash32(p, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
-    map->memb6[hindex].count++;
+    for (ngl = 1; ngl <= DPS_LM_MAXGRAM1; ngl++) {
+      hindex = DpsHash32(p, ngl) & DPS_LM_HASHMASK;
+      map->memb3[hindex].count++;
+    }
+    for (ngl = DPS_LM_MAXGRAM1 + 1; ngl <= DPS_LM_MAXGRAM2; ngl++) {
+      hindex = DpsHash32(p, ngl) & DPS_LM_HASHMASK;
+      map->memb6[hindex].count++;
+    }
   }
   map->nbytes += maplen;
 }
 
 void DpsBuildLangMap6(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
   size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
-  const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
+  const char * end2 = text + maplen - DPS_LM_MAXGRAM1;
   register const char *p;
-  size_t pas2 = (textlen < 2048) ? 1 : DPS_LM_MAXGRAM2;
+  register size_t ngl;
   
-  for(p = text; p < end2; p += pas2) {
+  for(p = text; p < end2; p++) {
     register unsigned int hindex;
-    hindex = DpsHash32(p, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
-    map->memb6[hindex].count++;
+    for (ngl = 1; ngl <= DPS_LM_MAXGRAM1; ngl++) {
+      hindex = DpsHash32(p, ngl) & DPS_LM_HASHMASK;
+      map->memb6[hindex].count++;
+    }
   }
   map->nbytes += maplen;
 }
@@ -1527,6 +1563,7 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        }
        DPS_FREE(mapstat);
      }
+
      if (*DPS_NULL2EMPTY(charset) == '\0') {
        if(use_meta && (*meta_charset != '\0')) DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = meta_charset);
        else if (*server_charset != '\0') DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = server_charset);
