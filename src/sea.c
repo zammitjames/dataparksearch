@@ -156,7 +156,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
       for (j = i + 1/*0*/; j < List.nitems; j++) {
 /*	if (i == j) { links[i * List.nitems + j] = 1.0 / List.nitems; continue; }*/
 	MapStat.map = &List.Sent[j].LangMap;
-	DpsCheckLangMap6(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, 4 * DPS_LM_TOPCNT + 2);
+	DpsCheckLangMap6(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, DPS_LM_TOPCNT * DPS_LM_TOPCNT, 2 * DPS_LM_TOPCNT);
 /*	links[i * List.nitems + j] =  (double)(DPS_LM_TOPCNT - MapStat.miss) / (double)(MapStat.hits + MapStat.miss + 1);*/
 /*	links[j * List.nitems + i] = links[i * List.nitems + j] = List.nitems / ((double)MapStat.hits + 1.0);*/
 

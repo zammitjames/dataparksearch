@@ -268,11 +268,11 @@ extern int DpsLMcmpIndex(const DPS_LANGITEM *m1, const DPS_LANGITEM *m2);
 
 extern void  DpsBuildLangMap(DPS_LANGMAP * map, const char * text, size_t text_len, size_t max_nbytes, int StrFlag);
 extern void  DpsPrepareLangMap(DPS_LANGMAP * map);
-extern void  DpsCheckLangMap(DPS_LANGMAP * map, DPS_LANGMAP * text, DPS_MAPSTAT *mstat, size_t InfMiss);
+extern void  DpsCheckLangMap(DPS_LANGMAP * map, DPS_LANGMAP * text, DPS_MAPSTAT *mstat, size_t InfMiss, size_t InfHits);
 
 extern void  DpsBuildLangMap6(DPS_LANGMAP * map, const char * text, size_t text_len, size_t max_nbytes, int StrFlag);
 extern void  DpsPrepareLangMap6(DPS_LANGMAP * map);
-extern void  DpsCheckLangMap6(DPS_LANGMAP * map, DPS_LANGMAP * text, DPS_MAPSTAT *mstat, size_t InfMiss);
+extern void  DpsCheckLangMap6(DPS_LANGMAP * map, DPS_LANGMAP * text, DPS_MAPSTAT *mstat, size_t InfMiss, size_t InfHits);
 
 extern void  DpsLangMapListFree(DPS_LANGMAPLIST *);
 extern void DpsLangMapListSave(DPS_LANGMAPLIST *List);

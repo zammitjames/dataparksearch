@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -186,7 +186,8 @@ int main(int argc, char ** argv){
 	}else{
 		size_t i;
 		DPS_MAPSTAT * mapstat;
-		float InfMiss = 1000*DPS_LM_TOPCNT + 1;
+		size_t InfMiss = DPS_LM_TOPCNT * DPS_LM_TOPCNT + 1;
+		size_t InfHits = 2 * DPS_LM_TOPCNT;
 		
 		/* Prepare map to comparison */
 		DpsPrepareLangMap(&mchar);
@@ -207,7 +208,7 @@ int main(int argc, char ** argv){
 		/* and store in mapstat structure */
 
 		for(i = 0; i < env.nmaps; i++){
-			DpsCheckLangMap(&env.Map[i], &mchar, &mapstat[i], InfMiss);
+		  DpsCheckLangMap(&env.Map[i], &mchar, &mapstat[i], InfMiss, InfHits);
 			mapstat[i].map = &env.Map[i];
 		}
 
