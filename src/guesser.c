@@ -1194,13 +1194,13 @@ void DpsBuildLangMap(DPS_LANGMAP * map, const char * text, size_t textlen, size_
 
 void DpsBuildLangMap6(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
   size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
-  const char * end2 = text + maplen - DPS_LM_MAXGRAM1;
+  const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
   register const char *p;
   register size_t ngl;
   
   for(p = text; p < end2; p++) {
     register unsigned int hindex;
-    for (ngl = 1; ngl <= DPS_LM_MAXGRAM1; ngl++) {
+    for (ngl = DPS_LM_MAXGRAM1 + 1; ngl <= DPS_LM_MAXGRAM2; ngl++) {
       hindex = DpsHash32(p, ngl) & DPS_LM_HASHMASK;
       map->memb6[hindex].count++;
     }

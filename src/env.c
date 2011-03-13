@@ -63,7 +63,7 @@ DPS_ENV *DpsEnvInit(DPS_ENV *Conf){
 	Conf->Flags.OptimizeAtUpdate = 0;
 	Conf->Flags.do_excerpt = 1;
 	Conf->Flags.PopRankNeoIterations = 3;
-	Conf->Flags.GuesserBytes = 8192;
+	Conf->Flags.GuesserBytes = 512;
 	Conf->Flags.robots_period = 604800;   /* one week */
 	Conf->Flags.URLInfoSQL = 1;
 	Conf->Flags.SRVInfoSQL = 1;

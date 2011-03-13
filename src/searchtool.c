@@ -1853,9 +1853,9 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
   register double y_distance;
 #endif
 
-  if (D[DPS_N_PHRASE] == 0) y_phrase = x; else y_phrase = x / D[DPS_N_PHRASE];
-  if (D[DPS_N_EXACT] == 0) y_exact = x; else y_exact = x / D[DPS_N_EXACT];
-  y_origin = x * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
+  if (D[DPS_N_PHRASE] == 0) y_phrase = x; else y_phrase = xy / D[DPS_N_PHRASE];
+  if (D[DPS_N_EXACT] == 0) y_exact = x; else y_exact = xy / D[DPS_N_EXACT];
+  y_origin = xy * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
 
 
 #ifdef WITH_REL_WRDCOUNT
@@ -2298,9 +2298,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	  xy += xy_o[tt];
 #ifdef WITH_REL_WRDCOUNT
 	  if (Res->items[tt].order_origin & DPS_WORD_ORIGIN_STOP) continue;
-/*	  if (count[tt])*/
-	    sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-/*	  else sum += 20000;*/
+	  sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
 #endif
 	}
 	D[DPS_N_ORIGIN] = tt;
@@ -2310,11 +2308,11 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 	D[DPS_N_ORIGIN] -= Res->max_order_inquery;
 /*	xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
-	D[DPS_N_WRDCOUNT] = phr_n - 2;
-	D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT] /*n_order_inquery*/;
+	D[DPS_N_WRDCOUNT] = phr_n;
+	D[DPS_N_COUNT] = (dps_uint4)sum /* * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT]*/ /*n_order_inquery*/;
       
 #ifdef WITH_REL_TRACK
-	Track[j].D_wrdcount = phr_n - 2;
+	Track[j].D_wrdcount = phr_n;
 	Track[j].D_n_count = D[DPS_N_COUNT];
 	Track[j].D_n_origin = D[DPS_N_ORIGIN];
 #endif
@@ -2388,9 +2386,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
       xy += xy_o[tt];
 #ifdef WITH_REL_WRDCOUNT
       if (Res->items[tt].order_origin & DPS_WORD_ORIGIN_STOP) continue;
-/*      if (count[tt])*/
-	sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
-/*      else sum += 20000;*/
+      sum += ((count[tt] > median) ? (count[tt] - median) : (median - count[tt]));
 #endif
     }
     D[DPS_N_ORIGIN] = tt;
@@ -2400,11 +2396,11 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     D[DPS_N_ORIGIN] -= Res->max_order_inquery;
     /*    xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
-    D[DPS_N_WRDCOUNT] = phr_n - 2;
-    D[DPS_N_COUNT] = (dps_uint4)sum * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT] /*n_order_inquery*/;
+    D[DPS_N_WRDCOUNT] = phr_n;
+    D[DPS_N_COUNT] = (dps_uint4)sum /* * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT]*/ /*n_order_inquery*/;
   
 #ifdef WITH_REL_TRACK
-    Track[j].D_wrdcount = phr_n - 2;
+    Track[j].D_wrdcount = phr_n;
     Track[j].D_n_count = D[DPS_N_COUNT];
     Track[j].D_n_origin = D[DPS_N_ORIGIN];
 #endif

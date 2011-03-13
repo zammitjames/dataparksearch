@@ -3,8 +3,8 @@ History
 -------
 
 Latest snapshot:
-	* Asynchronous queries to MySQL were fixed.
 	* Multi-inserts were added for crossdict/ncrossdict and urlinfo tables.
+	* Asynchronous queries to MySQL were fixed.
 	* Added support for JSON string encoding for search template meta-variables.
 	* It can now specify regex pattern for HTDBDoc and HTDBText commands to parse URL into htdb:/ parameters.
 	* Added performance assessment for some libc functions at configuration.

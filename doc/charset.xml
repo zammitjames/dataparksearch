@@ -143,7 +143,7 @@ LangMapUpdate yes
 </para>
 
 <para id="guesser-bytes"><indexterm><primary>Command</primary><secondary>GuesserBytes</secondary></indexterm>
-By default, <application>DataparkSearch</application> uses only first 8192 bytes of each file indexed to detect language and charset.
+By default, <application>DataparkSearch</application> uses only first 512 bytes of each file indexed to detect language and charset.
 You may change this value using <command>GuesserBytes</command> command. Use value of 0 to use all text from document indexed.
 <programlisting>
 GuesserBytes 16384

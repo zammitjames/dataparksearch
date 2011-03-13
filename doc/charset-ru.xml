@@ -205,7 +205,7 @@ LangMapUpdate yes
 </para>
 
 <para><indexterm><primary>Команда</primary><secondary>GuesserBytes</secondary></indexterm>
-По умолчанию, <application>DataparkSearch</application> использует только первые 8192 байт каждого индексируемого файла для 
+По умолчанию, <application>DataparkSearch</application> использует только первые 512 байт каждого индексируемого файла для 
 определения языка и кодировки. Вы можете изменить это значение при помощи команды <command>GuesserBytes</command>. 
 Используйте значение 0 для учёта всего такста индексируемого документа.
 <programlisting>

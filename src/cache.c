@@ -101,9 +101,9 @@
 #define DPS_BINARY 0
 #endif
 
-
+/*
 #define DEBUG_SEARCH 1
-
+*/
 #define WAIT_TIME 36000 /* 10 hours */
 
 /* uncomment this to enable MODE_ALL realisation via search limits */
@@ -1005,7 +1005,7 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
       return DPS_ERROR;
     }
     while (read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) == sizeof(DPS_BASEITEM)) {
-      if (P->Item.rec_id != 0) {
+      if ((P->Item.rec_id != 0) && (P->Item.size > 0)) {
 	if (ndel >= mdel) {
 	  mdel += 1024;
 	  todel = (DPS_TODEL*)DpsRealloc(todel, mdel * sizeof(*todel));
@@ -1022,7 +1022,16 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
       }
     }
 
-    if (ndel > 1) DpsSort(todel, ndel, sizeof(*todel), (qsort_cmp)cmp_todel);
+    if (ndel > 1) {
+      DpsSort(todel, ndel, sizeof(*todel), (qsort_cmp)cmp_todel);
+      for (j = i = 1; i < ndel; i++) {
+	if (todel[i].rec_id != todel[i-1].rec_id) {
+	  if (i != j) todel[j] = todel[i];
+	  j++;
+	}
+      }
+      ndel = j;
+    }
 
     mdel = ndel;
     startdel = todel;
@@ -1856,7 +1865,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	
 #ifdef DEBUG_SEARCH
 	ticks = DpsStartTimer() - ticks;
-	DpsLog(Indexer, DPS_LOG_INFO, "    Query prepared in ... %.4f sec.", (float)ticks / 1000);
+	DpsLog(Indexer, DPS_LOG_EXTRA, "    Query prepared in ... %.4f sec.", (float)ticks / 1000);
 	DpsLog(Indexer, DPS_LOG_EXTRA, "    wf=%s", DpsVarListFindStr(&Indexer->Vars, "wf", ""));
 #endif
 
