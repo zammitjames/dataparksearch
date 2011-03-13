@@ -1351,6 +1351,9 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #else /* For versions 0.6.x */
 	    struct EXTRACTOR_PluginList *plugins = EXTRACTOR_plugin_add_defaults(EXTRACTOR_OPTION_DEFAULT_POLICY);
 	    DPS_CLS CLS;
+
+	    DpsLog(Indexer, DPS_LOG_EXTRA, "Executing Libextractor parser");
+
 	    CLS.Indexer = Indexer;
 	    CLS.Doc = Doc;
 	    EXTRACTOR_extract(plugins, NULL, Doc->Buf.buf, Doc->Buf.size, &Dps_MetaDataProcessor, &CLS);
@@ -1521,19 +1524,6 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "after");
 
 	/* Guesser stuff */	
-	if(Indexer->Flags.nmaps && Doc->method != DPS_METHOD_DISALLOW) {
-	  register size_t t;
-	  int flag = Indexer->Flags.update_lm;
-
-	  bzero((void*)Indexer->LangMap, sizeof(DPS_LANGMAP));
-	  for (t = 0; t <= DPS_LM_HASHMASK; t++) Indexer->LangMap->memb3[t].index=Indexer->LangMap->memb6[t].index=t;
-	  for(t = 0; t < Doc->TextList.nitems; t++) {
-	    DPS_TEXTITEM *Item = &Doc->TextList.Items[t];
-	    DpsBuildLangMap(Indexer->LangMap, Item->str, dps_strlen(Item->str), Indexer->Flags.GuesserBytes, flag);
-	    if (Indexer->Flags.GuesserBytes > 0 && Indexer->LangMap->nbytes >= Indexer->Flags.GuesserBytes) break;
-	  }
-	}
-			
 	DpsGuessCharSet(Indexer, Doc, &Indexer->Conf->LangMaps, Indexer->LangMap);
 				
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Guesser bytes: %d, Lang: %s, Charset: %s", Indexer->Flags.GuesserBytes,

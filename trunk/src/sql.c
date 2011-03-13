@@ -3403,8 +3403,8 @@ static int DpsFindOrigin(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc,DPS_DB *db){
 
 int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	char		sortstr[128] = "";
+	char		lmtstr[128]="";
 	char		updstr[64]="";
-	char		lmtstr[64]="";
 	size_t		i = 0, j, nrows, qbuflen, start_target;
 	size_t		url_num;
 /*	size_t          rec_id = (size_t)DpsVarListFindUnsigned(&Indexer->Conf->Vars, "PopRank_rec_id", 0);*/
@@ -3460,11 +3460,11 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    sprintf(updstr, " FOR UPDATE ");
 #if HAVE_ORACLE8
 	    if(db->DBDriver==DPS_DB_ORACLE8){
-	      sprintf(lmtstr, " AND ROWNUM <=%d",url_num); 
+	      sprintf(lmtstr, " AND ROWNUM<=%d",url_num); 
 	    }
 #endif
 	    if(!lmtstr[0])
-	      sprintf(lmtstr, " AND ROWNUM <=%d", url_num); 
+	      sprintf(lmtstr, " AND ROWNUM<=%d", url_num); 
 	    break;
 	  case DPS_DB_SAPDB:
 	    sprintf(updstr, " WITH LOCK ");
