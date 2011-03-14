@@ -379,44 +379,6 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 }
 
 
-static int PresentInURLCrd(DPS_URL_CRD *words, size_t words_count, size_t *start, const urlid_t url_id) {
-	register size_t m, l, r;
-	urlid_t umin, umax;
-	
-	if (words == NULL || words_count == 0) return 0;
-	if (start) l = *start;
-	else l = 0;
-	r = words_count - 1;
-
-	umin = words[l].url_id;
-	umax = words[r].url_id;
-
-	while(1) {
-	  if (l > r || url_id > umax) {
-	    if(start) *start = r;
-	    return 0;
-	  }
-	  if (url_id < umin) {
-	    return 0;
-	  }
-	  if (l == r || umin == umax) m = r;
-	  else m = l + (urlid_t)((r - l - 1) * ((dps_uint8)(url_id - umin)) / (umax -  umin));
-	  if (words[m].url_id > url_id) {
-	    r = m - 1;
-	    umax = words[r].url_id;
-	  } else if (words[m].url_id < url_id) {
-	    l = m + 1;
-	    umin = words[l].url_id;
-	  } else {
-	    while (m < words_count && words[m].url_id == url_id) m++;
-	    if (start) *start = m;
-	    return 1;
-	  }
-	  
-	}
-	return 0;
-}
-
 static int PresentInDelLog(DPS_LOGDEL *buf, size_t buf_count, size_t *start, const urlid_t url_id) {
 	register size_t m, l, r;
 	urlid_t umin, umax;
@@ -512,6 +474,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	size_t		i, curwrd, lcslen;
 	urlid_t		url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	int             cached_sd, cached_rv, rc;
+	int		prev_status = DpsVarListFindInt(&Doc->Sections, "PrevStatus", 0);
 	char            *lcsword;
 	char		reply;
 
@@ -547,7 +510,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 	cmd.stamp = Indexer->now;
 	cmd.url_id = url_id;
-	cmd.cmd = DPS_LOGD_CMD_WORD;
+	cmd.cmd = (prev_status == 0) ? DPS_LOGD_CMD_NEWORD : DPS_LOGD_CMD_WORD;
 
 	wrd = (DPS_LOGD_WRD*)DpsMalloc((cmd.nwords + 1) * sizeof(DPS_LOGD_WRD));
 	if (wrd == NULL) {
@@ -707,7 +670,7 @@ pairs which are newer than (url_id) from
 delete log will remane in "words" array 
 */
 
-#if 1
+#if 0
 
 size_t DpsRemoveOldWords(DPS_LOGWORD *words, size_t n, DPS_LOGDEL *del, size_t del_count) {
   size_t i, j = 0;
@@ -735,17 +698,35 @@ size_t DpsRemoveOldWords(DPS_LOGWORD *words, size_t n, DPS_LOGDEL *del, size_t d
 #else
 
 size_t DpsRemoveOldWords(DPS_LOGWORD *words, size_t n, DPS_LOGDEL *del, size_t del_count) {
-  register size_t w = 0, d = 0, c = 0;
+  register size_t i, j = 0;
+  size_t start = 0;
 
-  while(1) {
-    if (w >= n) break;
-    while((d < del_count) && (del[d].url_id < words[w].url_id)) d++;
-    if (d >= del_count) break;
-    while((w < n) && (words[w].url_id < del[d].url_id)) words[c++] = words[w++];
-    while((w < n) && (words[w].url_id == del[d].url_id) && (words[w].stamp < del[d].stamp)) w++;
-    d++;
+  if (del_count == 0 || n == 0) return n;
+
+  while(j < n && words[j].url_id < del[start].url_id) j++;
+  i = j;
+  do {
+    while(i < n && words[i].url_id == del[start].url_id) {
+      if (words[i].stamp >= del[start].stamp) {
+	if (i != j) words[j] = words[i];
+	j++;
+      } 
+      i++;
+    }
+    if (i == n) break;
+    if (++start == del_count) break;
+    while(i < n && words[i].url_id < del[start].url_id) {
+      if (i != j) words[j] = words[i];
+      j++;
+      i++;
+    }
+  } while(1);
+  if (i < n) { 
+    if (j != i) dps_memmove(words + j, words + i, (n - i) * sizeof(DPS_URL_CRD));
+    j += (n - i);
   }
-  return c;
+
+  return j;
 }
 #endif
 
@@ -755,69 +736,26 @@ size_t DpsRemoveOldWords(DPS_LOGWORD *words, size_t n, DPS_LOGDEL *del, size_t d
 static size_t RemoveOldCrds(DPS_URL_CRD *words, size_t n, DPS_LOGDEL *del, size_t del_count) {
   register size_t i, j = 0;
   size_t start = 0;
-  int u;
-  urlid_t curl;
 
-  if (del_count == 0) return n;
+  if (del_count == 0 || n == 0) return n;
 
-  if (del_count < n / 2 ) {
-    size_t z;
-
-    i = 0;
-    for (z = 0; z < del_count; z++) {
-
-      u = (PresentInURLCrd(words, n, &start, del[z].url_id) == 0);
-      if (u) {
-	if (i != j && start != i) {
-	  dps_memmove(words + j, words + i, (start - i) * sizeof(DPS_URL_CRD));
-	}
-	j += (start - i);
-	i = start;
-      }
+  while(j < n && words[j].url_id < del[start].url_id) j++;
+  i = j;
+  do {
+    while(i < n && words[i].url_id == del[start].url_id) i++;
+    if (i == n) break;
+    if (++start == del_count) break;
+    while(i < n && words[i].url_id < del[start].url_id) {
+      if (i != j) words[j] = words[i];
+      j++;
+      i++;
     }
-    if ((start > 0) && (start < n) && (i != j)) {
-      dps_memmove(words + j, words + start, (n - start) * sizeof(DPS_URL_CRD));
-      j += (n - start);
-    }
-
-  } else {
-
-    for (i = 0; i < n; ) {
-    
-      u = (PresentInDelLog(del, del_count, /*NULL*/ &start, words[i].url_id) == 0);
-      curl = words[i].url_id;
-      if (u) {
-	for ( ; (i < n) && (words[i].url_id == curl); i++) {
-	  if (j < i) { words[j++] = words[i];} else { j++; }
-	}
-      } else {
-	for ( ; (i < n) && (words[i].url_id == curl); i++);
-      }
-    }
+  } while(1);
+  if (i < n) {
+    if (j != i)dps_memmove(words + j, words + i, (n - i) * sizeof(DPS_URL_CRD));
+    j += (n - i);
   }
-  return j;
-}
 
-static size_t RemoveOldCrdDbs(DPS_URL_CRD_DB *words, size_t n, DPS_LOGDEL *del, size_t del_count) {
-  register size_t i, j = 0;
-  size_t start = 0;
-  int u;
-  urlid_t curl;
-
-  if (del_count == 0) return n;
-
-  for (i = 0; i < n; ) {
-    
-    u = (PresentInDelLog(del, del_count, /*NULL*/ &start, words[i].url_id) == 0);
-    curl = words[i].url_id;
-    if (u) {
-      for ( ; (i < n) && (words[i].url_id == curl); i++) {
-	words[j++] = words[i];
-      }
-    } else {
-      for ( ; (i < n) && (words[i].url_id == curl); i++);
-    }
-  }
   return j;
 }
 
@@ -974,7 +912,7 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 				     DPS_LOGWORD *log_buf, size_t n, DPS_LOGDEL *del_buf, size_t del_count) {
   DPS_URL_CRD *data;
   size_t i, j, p, z, len, n_add, n_old, n_old_new;
-  DPS_TODEL *todel = (DPS_TODEL*)DpsMalloc(1024 * sizeof(*todel)), *startdel, *found, key;
+  DPS_TODEL *todel = (DPS_TODEL*)DpsMalloc(1024 * sizeof(*todel)), *startdel, *enddel;
   size_t ndel = 0, mdel = 1024;
 
 #ifdef DEBUG_SEARCH
@@ -1022,6 +960,10 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
       }
     }
 
+#ifdef DEBUG_SEARCH
+    DpsLog(Indexer, DPS_LOG_EXTRA, "-- del read in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
+
     if (ndel > 1) {
       DpsSort(todel, ndel, sizeof(*todel), (qsort_cmp)cmp_todel);
       for (j = i = 1; i < ndel; i++) {
@@ -1033,17 +975,19 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
       ndel = j;
     }
 
-    mdel = ndel;
+#ifdef DEBUG_SEARCH
+    DpsLog(Indexer, DPS_LOG_EXTRA, "-- del sorted in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
+
     startdel = todel;
+    enddel = (ndel > 1) ? todel + (ndel - 1) : todel; 
     for (i = 0; i < n; i += n_add) {
       for(n_add = 1; (i + n_add < n) && (log_buf[i].wrd_id == log_buf[i + n_add].wrd_id); n_add++);
 /**************/
-      key.rec_id = P->rec_id = log_buf[i].wrd_id;
-      found = (ndel == 0) ? NULL : dps_bsearch(&key, startdel, mdel, sizeof(*found), (qsort_cmp)cmp_todel);
-      if (found != NULL) {
-	found->flag = 1;
-	mdel -= (found - startdel);
-	startdel = found;
+      P->rec_id = log_buf[i].wrd_id;
+      if (ndel > 0) {
+	while(startdel < enddel && startdel->rec_id < P->rec_id) startdel++;
+	if (startdel->rec_id == P->rec_id) startdel->flag = 1;
       }
       if ((data = (DPS_URL_CRD*)DpsBaseARead(P, &len)) == NULL) {
 	len = 0;
@@ -1056,6 +1000,9 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 	}
 	n_old = 0;
       } else {
+#ifdef DEBUG_SEARCH
+	DpsLog(Indexer, DPS_LOG_EXTRA, "-- old read in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
 	data = (DPS_URL_CRD*)DpsRealloc(data, len + n_add * sizeof(DPS_URL_CRD));
 	if (data == NULL) {
 	  DPS_FREE(todel);
@@ -1103,6 +1050,10 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
       }
 #endif
 
+#ifdef DEBUG_SEARCH
+    DpsLog(Indexer, DPS_LOG_EXTRA, "-- merged in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
+
       P->rec_id = log_buf[i].wrd_id;
       if (DPS_OK != DpsBaseWrite(P, data, (n_old + n_add) * sizeof(DPS_URL_CRD))) {
 	DPS_FREE(data);
@@ -1113,29 +1064,39 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 	return DPS_ERROR;
       }
       DPS_FREE(data);
+
+#ifdef DEBUG_SEARCH
+      DpsLog(Indexer, DPS_LOG_EXTRA, "-- written in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
+
     }
 /*************/
 
-/*    DpsBaseClose(P);*/
-
-    for (i = 0; i < ndel; i++) {
+    if (del_count > 0)
+      for (i = 0; i < ndel; i++) {
 /**************/
       if (todel[i].flag > 0) continue;
       P->rec_id = todel[i].rec_id;
       if ((data = (DPS_URL_CRD*)DpsBaseARead(P, &len)) == NULL) {
 	P->rec_id = todel[i].rec_id;
 	DpsBaseDelete(P);
-	continue;
+#ifdef DEBUG_SEARCH
+	DpsLog(Indexer, DPS_LOG_EXTRA, "-- flaged read/deleted in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
       } else {
 	n_old = len / sizeof(DPS_URL_CRD);
 /*	DpsSortSearchWordsByURL(data, n_old);*/
 	n_old_new = RemoveOldCrds(data, n_old, del_buf, del_count);
+#ifdef DEBUG_SEARCH
+	DpsLog(Indexer, DPS_LOG_EXTRA, "-- flaged read/cleaned in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
+	P->rec_id = todel[i].rec_id;
 	if (n_old_new != n_old) {
-	  P->rec_id = todel[i].rec_id;
 	  if (n_old_new) DpsBaseWrite(P, data, n_old_new * sizeof(DPS_URL_CRD));
-	  else { 
-	    DpsBaseDelete(P);
-	  }
+	  else DpsBaseDelete(P);
+#ifdef DEBUG_SEARCH
+	  DpsLog(Indexer, DPS_LOG_EXTRA, "-- flaged written in %.4f sec.", (float)(DpsStartTimer() - total_ticks) / 1000);
+#endif
 	}
       }
       DPS_FREE(data);
@@ -1147,10 +1108,10 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 
 #ifdef DEBUG_SEARCH
     total_ticks = DpsStartTimer() - total_ticks;
-    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated in %.2f sec., docs:%d, nwrd:%d, ndel:%d", log_num, (float)total_ticks / 1000, del_count, n, ndel);
+    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated in %.2f sec., nwrd:%d, ndel:%d", log_num, (float)total_ticks / 1000, n, ndel);
     if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("Log %03X updated in %.2f sec., ndel:%d", log_num, (float)total_ticks / 1000, ndel);
 #else
-    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated, docs:%d, nwrd:%d, ndel:%d", log_num, del_count, n, ndel);
+    DpsLog(Indexer, DPS_LOG_EXTRA, "Log %03X updated, nwrd:%d, ndel:%d", log_num, n, ndel);
     if (DpsNeedLog(DPS_LOG_EXTRA)) dps_setproctitle("Log %03X updated", log_num);
 #endif
 
@@ -3060,54 +3021,51 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	CacheLogDels = (size_t)DpsVarListFindInt(&Agent->Vars, "CacheLogDels", 10240);
 	CacheLogWords = (size_t)DpsVarListFindInt(&Agent->Vars, "CacheLogWords", 1024);
 
-	if (Env->logs_only) {
+	if (cmd.cmd != DPS_LOGD_CMD_NEWORD) {
+	  if (Env->logs_only) {
 
-/**	  DPS_GETLOCK(Agent, DPS_LOCK_CACHED);**/
-/*	  logd = db->LOGD;*/
+	    if (logd->wrd_buf[logd->cur_del_buf].ndel == CacheLogDels) logd->cur_del_buf++;
+	    if (logd->cur_del_buf == NWrdFiles) {
 
-	  if (logd->wrd_buf[logd->cur_del_buf].ndel == CacheLogDels) logd->cur_del_buf++;
-	  if (logd->cur_del_buf == NWrdFiles) {
-
-	    DpsWriteLock(db->del_fd);
-	    for (i = 0; i < NWrdFiles; i++) {
-	      if (logd->wrd_buf[i].ndel == 0) continue;
-	      if((ssize_t)(logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL)) != write(db->del_fd, logd->wrd_buf[i].del_buf, logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL))) {
-		sprintf(db->errstr, "Can't write to del.log: %s\n", strerror(errno));
-		db->errcode = 1;
-		DpsUnLock(db->del_fd);
-/**		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);**/
-		TRACE_OUT(Agent);
-		return DPS_ERROR;
+	      DpsWriteLock(db->del_fd);
+	      for (i = 0; i < NWrdFiles; i++) {
+		if (logd->wrd_buf[i].ndel == 0) continue;
+		if((ssize_t)(logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL)) != write(db->del_fd, logd->wrd_buf[i].del_buf, logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL))) {
+		  sprintf(db->errstr, "Can't write to del.log: %s\n", strerror(errno));
+		  db->errcode = 1;
+		  DpsUnLock(db->del_fd);
+		  TRACE_OUT(Agent);
+		  return DPS_ERROR;
+		}
+		logd->wrd_buf[i].ndel = 0;
 	      }
-	      logd->wrd_buf[i].ndel = 0;
+	      DpsUnLock(db->del_fd);
+	      logd->cur_del_buf = 0;
 	    }
-	    DpsUnLock(db->del_fd);
-	    logd->cur_del_buf = 0;
-	  }
-	  nrec = logd->wrd_buf[logd->cur_del_buf].ndel;
-	  logd->wrd_buf[logd->cur_del_buf].del_buf[nrec] = logdel;
-	  logd->wrd_buf[logd->cur_del_buf].ndel++;
-/**	  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED);**/
+	    nrec = logd->wrd_buf[logd->cur_del_buf].ndel;
+	    logd->wrd_buf[logd->cur_del_buf].del_buf[nrec] = logdel;
+	    logd->wrd_buf[logd->cur_del_buf].ndel++;
 
-	} else {
+	  } else {
 	      
-	  for (i = 0; i < NWrdFiles; i++) {
-	    DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
-	    nrec = logd->wrd_buf[i].ndel;
-	    if (nrec == CacheLogDels /*|| ( (nrec > CacheLogDels - DPS_INF_DEL) && (nrec + (rand() % DPS_INF_DEL) > CacheLogDels))*/ ) {
-	      DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
-		     i, logd->wrd_buf[i].nrec, logd->wrd_buf[i].ndel);
-	      if(DPS_OK != DpsLogdSaveBuf(Agent, Env, i)) {
-		DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
-		TRACE_OUT(Agent);
-		return DPS_ERROR;
+	    for (i = 0; i < NWrdFiles; i++) {
+	      DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
+	      nrec = logd->wrd_buf[i].ndel;
+	      if (nrec == CacheLogDels /*|| ( (nrec > CacheLogDels - DPS_INF_DEL) && (nrec + (rand() % DPS_INF_DEL) > CacheLogDels))*/ ) {
+		DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
+		       i, logd->wrd_buf[i].nrec, logd->wrd_buf[i].ndel);
+		if(DPS_OK != DpsLogdSaveBuf(Agent, Env, i)) {
+		  DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
+		  TRACE_OUT(Agent);
+		  return DPS_ERROR;
+		}
+		nrec = 0;
 	      }
-	      nrec = 0;
+	      logd->wrd_buf[i].del_buf[nrec] = logdel;
+	      logd->wrd_buf[i].ndel++;
+	      DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
+/*	      DPSSLEEP(0);*/
 	    }
-	    logd->wrd_buf[i].del_buf[nrec] = logdel;
-	    logd->wrd_buf[i].ndel++;
-	    DPS_RELEASELOCK(Agent, DPS_LOCK_CACHED_N(i));
-/*	    DPSSLEEP(0);*/
 	  }
 	}
 
