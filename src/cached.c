@@ -342,7 +342,9 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 	  in_flush++;
 	  DpsFlushAllBufs(Agent, 1); /* Rotate del logs */
 	  in_flush--;
-	} else if (client->cmd.cmd == DPS_LOGD_CMD_WORD || client->cmd.cmd == DPS_LOGD_CMD_DELETE) {
+	} else if (client->cmd.cmd == DPS_LOGD_CMD_WORD 
+		   || client->cmd.cmd == DPS_LOGD_CMD_NEWORD 
+		   || client->cmd.cmd == DPS_LOGD_CMD_DELETE) {
 	  register size_t dbnum;
 	  register int rc;
 	  DPS_DB *db;
