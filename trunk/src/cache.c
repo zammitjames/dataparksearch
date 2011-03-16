@@ -337,8 +337,9 @@ int DpsCloseCache(DPS_AGENT *A, int shared, int light) {
 void DpsRotateDelLog(DPS_AGENT *A) {
   DPS_DB *db;
   char del_log_name[PATH_MAX];
-  int split_fd, nbytes;
+  int split_fd, nbytes, log_fd;
   size_t i, dbfrom = 0, dbto =  (A->flags & DPS_FLAG_UNOCON) ? A->Conf->dbl.nitems : A->dbl.nitems;
+  size_t NFiles, log_num;
 
   TRACE_IN(A, "DpsRotateDelLog");
 
@@ -347,7 +348,55 @@ void DpsRotateDelLog(DPS_AGENT *A) {
     if(db->DBMode != DPS_DBMODE_CACHE) continue;
     if (db->del_fd <= 0) continue;
 
-    dps_snprintf(del_log_name, PATH_MAX, "%s%s", db->log_dir, "del-split.log");
+    NFiles = (db->WrdFiles > 0) ? (int)db->WrdFiles : DpsVarListFindInt(&A->Vars, "WrdFiles", 0x300);
+    for(log_num = 0; log_num < NFiles; log_num++) {
+
+	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X-split.log", db->log_dir, log_num);
+	if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
+	  time_t t = time(NULL);
+	  struct tm *tim = localtime(&t);
+	  char time_pid[128];
+	
+	  strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+	  t = dps_strlen(time_pid);
+	  dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
+	  
+	  sprintf(db->errstr, "Can't open '%s' for writing: %s\n", del_log_name, strerror(errno));
+	  DpsLog(A, DPS_LOG_ERROR, "%s %s", time_pid, db->errstr);
+	  return;
+	}
+
+	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X.log", db->log_dir, log_num);
+	if((log_fd = DpsOpen3(del_log_name, O_RDWR | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
+	  time_t t = time(NULL);
+	  struct tm *tim = localtime(&t);
+	  char time_pid[128];
+	
+	  strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+	  t = dps_strlen(time_pid);
+	  dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
+	  
+	  sprintf(db->errstr, "Can't open '%s' for writing: %s\n", del_log_name, strerror(errno));
+	  DpsLog(A, DPS_LOG_ERROR, "%s %s", time_pid, db->errstr);
+	  DpsClose(split_fd);
+	  return;
+	}
+
+	DpsWriteLock(log_fd);
+  
+	lseek(log_fd, (off_t)0, SEEK_SET);
+	while((nbytes = read(log_fd, del_log_name, PATH_MAX)) > 0) {
+	  write(split_fd, del_log_name, (size_t)nbytes);
+	}
+	DpsClose(split_fd);
+	lseek(log_fd, (off_t)0, SEEK_SET);
+	ftruncate(log_fd, (off_t)0);
+  
+	DpsUnLock(log_fd);
+	DpsClose(log_fd);
+    }
+
+    dps_snprintf(del_log_name, sizeof(del_log_name), "%s%s", db->log_dir, "del-split.log");
 
     if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
       time_t t = time(NULL);
