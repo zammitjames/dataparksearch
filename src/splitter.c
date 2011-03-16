@@ -196,7 +196,7 @@ int main(int argc,char **argv, char **envp) {
 		for(log = from; log <= to; log++) {
 
 		  /* Open log file */
-		  dps_snprintf(dname, sizeof(dname), "%s%c%s%c%03X.log", P.vardir, DPSSLASH, DPS_SPLDIR, DPSSLASH, log);
+		  dps_snprintf(dname, sizeof(dname), "%s%c%s%c%03X-split.log", P.vardir, DPSSLASH, DPS_SPLDIR, DPSSLASH, log);
 		  if((log_fd = DpsOpen2(dname, O_RDWR|DPS_BINARY)) < 0){
 		    if (errno == ENOENT) {
 		      DpsLog(Indexer, DPS_LOG_DEBUG, "Can't open '%s': (%d) %s", dname, errno, strerror(errno));
