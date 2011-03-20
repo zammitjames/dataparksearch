@@ -101,6 +101,7 @@ __C_LINK int __DPSCALL DpsInflate(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   Doc->Buf.allocated_size = Doc->Buf.size + 1;
 
   if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size)) == NULL) {
+    Doc->Buf.allocated_size = 0;
     return -1;
   }
 
@@ -210,6 +211,7 @@ __C_LINK int __DPSCALL DpsUnGzip(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   Doc->Buf.allocated_size = Doc->Buf.size + 1;
 
   if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+    Doc->Buf.allocated_size = 0;
     return -1;
   }
 
@@ -257,6 +259,7 @@ __C_LINK int __DPSCALL DpsUncompress(DPS_AGENT *query, DPS_DOCUMENT *Doc) {
   Doc->Buf.size = gap + Len;
   Doc->Buf.allocated_size = Doc->Buf.size + 1;
   if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size)) == NULL) {
+    Doc->Buf.allocated_size = 0;
     return -1;
   }
 
@@ -310,6 +313,7 @@ int DpsUnchunk(DPS_AGENT *query, DPS_DOCUMENT *Doc, const char *ce) {
   Doc->Buf.buf = (char*)buf;
   Doc->Buf.allocated_size = Doc->Buf.size + 1;
   if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size)) == NULL) {
+    Doc->Buf.allocated_size = 0;
     return DPS_ERROR;
   }
   Doc->Buf.content = Doc->Buf.buf + gap;

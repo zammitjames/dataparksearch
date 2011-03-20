@@ -3493,6 +3493,12 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	} else if ( (Indexer->flags & (DPS_FLAG_SORT_HOPS | DPS_FLAG_SORT_EXPIRED | DPS_FLAG_SORT_POPRANK)) 
 	     || (Indexer->flags & DPS_FLAG_SORT_SEED)  ) {
 	  int notfirst = 0;
+
+	  if (DpsVarListFind(&Indexer->Vars, "status") == NULL) {
+	    sprintf(sortstr, "%s", "ORDER BY url.status");
+	    notfirst = 1;
+	  }
+
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
 	    notfirst = 1;
@@ -3535,6 +3541,8 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",s.pop_weight" : "ORDER BY s.pop_weight");
 	    notfirst = 1;
 	  }
+	} else { /* No sorting flag specified, order by status */
+	    sprintf(sortstr, "%s", "ORDER BY url.status");
 	}
 		
 			
@@ -5654,6 +5662,7 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 	if (Doc->Buf.allocated_size <= DPS_NET_BUF_SIZE) {
 	  Doc->Buf.allocated_size = DPS_NET_BUF_SIZE;
 	  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+	    Doc->Buf.allocated_size = 0;
 	    rc = DPS_NET_ALLOC_ERROR;
 	    goto HTDBexit;
 	  }
@@ -5750,11 +5759,14 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			if (Doc->Buf.allocated_size <= Doc->Buf.size + content_length + 1) {
 			  Doc->Buf.allocated_size += content_length + 1;
 			  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+			    Doc->Buf.allocated_size = 0;
 			    rc = DPS_NET_ALLOC_ERROR;
+/*
 			    if (have_words)
 			      sprintf(Doc->Buf.buf,"HTTP/1.0 200 OK\r\n\r\n");
 			    else
 			      sprintf(Doc->Buf.buf,"HTTP/1.0 404 Not Found\r\n\r\n");
+*/
 			    goto HTDBexit;
 			  }
 			}

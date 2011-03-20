@@ -135,6 +135,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 		  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 		  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		    Doc->Buf.allocated_size = 0;
 		    close(rd[0]);
 		    wait(NULL);
 		    return NULL;
@@ -147,6 +148,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		  if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 		    Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 		    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		      Doc->Buf.allocated_size = 0;
 		      close(rd[0]);
 		      wait(NULL);
 		      return NULL;
@@ -226,6 +228,7 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 		  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 		  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		    Doc->Buf.allocated_size = 0;
 		    close(rd[0]);
 		    wait(NULL);
 		    return NULL;
@@ -238,6 +241,7 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		  if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 		    Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 		    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		      Doc->Buf.allocated_size = 0;
 		      close(rd[0]);
 		      wait(NULL);
 		      return NULL;
@@ -314,6 +318,7 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 		  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 		  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		    Doc->Buf.allocated_size = 0;
 		    return NULL;
 		  }
 		}
@@ -323,6 +328,7 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		  if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 		    Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 		    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		      Doc->Buf.allocated_size = 0;
 		      return NULL;
 		    }
 		  }
@@ -388,6 +394,7 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	  if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 	    Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 	    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+	      Doc->Buf.allocated_size = 0;
 	      return NULL;
 	    }
 	  }
@@ -397,6 +404,7 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	    if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 	      Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 	      if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		Doc->Buf.allocated_size = 0;
 		return NULL;
 	      }
 	    }
