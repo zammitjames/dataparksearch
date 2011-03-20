@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -48,6 +48,7 @@ __C_LINK int __DPSCALL DpsMirrorGET(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
      struct stat    sb;
      time_t         nowtime;
      size_t          str_len, estr_len;
+     size_t         allocated_size = 32;
      int       have_headers=0;
      int       mirror_period=DpsVarListFindInt(&Doc->Sections,"MirrorPeriod",-1);
      const char     *mirror_data = DpsVarListFindStr(&Doc->Sections,"MirrorRoot",NULL);
@@ -61,7 +62,6 @@ __C_LINK int __DPSCALL DpsMirrorGET(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
      }
 
      Doc->Buf.size = 0;
-     Doc->Buf.allocated_size = 5;
      nowtime = Indexer->now;
      
      if(mirror_period <= 0)return(DPS_MIRROR_NOT_FOUND);
@@ -99,13 +99,13 @@ __C_LINK int __DPSCALL DpsMirrorGET(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
              DPS_FREE(estr); DPS_FREE(str);
           return DPS_MIRROR_NOT_FOUND;
      }
-     Doc->Buf.allocated_size += sb.st_size;
      if (nowtime > sb.st_mtime + mirror_period ) {
           DpsClose(fbody);
           DpsLog(Indexer, DPS_LOG_EXTRA, "%s is older then %d secs", str, mirror_period);
           DPS_FREE(estr); DPS_FREE(str);
           return DPS_MIRROR_EXPIRED;
      }
+     allocated_size += sb.st_size;
 
      if(mirror_hdrs){
           dps_snprintf(str, str_len, "%s"DPSSLASHSTR"%s"DPSSLASHSTR"%s%s%s.header", 
@@ -116,21 +116,25 @@ __C_LINK int __DPSCALL DpsMirrorGET(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_U
 	      DPS_FREE(estr); DPS_FREE(str);
 	      return DPS_MIRROR_NOT_FOUND;
 	    }
-	    Doc->Buf.allocated_size += sb.st_size;
-	    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
-	      DPS_FREE(estr); DPS_FREE(str);
+	    allocated_size += sb.st_size;
+	    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, allocated_size + 1)) == NULL) {
+	      DPS_FREE(estr); DPS_FREE(str); 
+	      Doc->Buf.allocated_size = 0;
 	      return DPS_MIRROR_NOT_FOUND;
-	    }
+	    } 
+	    Doc->Buf.allocated_size = allocated_size;
 	    size = read(fheader, Doc->Buf.buf, Doc->Buf.allocated_size);
 	    DpsClose(fheader);
 	    dps_strcpy(Doc->Buf.buf + size, "\r\n\r\n");
 	    have_headers = 1;
           }
      } else {
-       if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+       if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, allocated_size + 1)) == NULL) {
 	 DPS_FREE(estr); DPS_FREE(str);
+	 Doc->Buf.allocated_size = 0;
 	 return DPS_MIRROR_NOT_FOUND;
        }
+       Doc->Buf.allocated_size = allocated_size;
      }
      if(!have_headers){
           /* header file not found   */

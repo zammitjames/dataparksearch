@@ -97,6 +97,7 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
               zstream.avail_out = 2 * DocSize + 128 /*sizeof(gz_header) */;
               CDoc = zstream.next_out = (Byte *) DpsMalloc(2 * DocSize + 128 /*sizeof(gz_header) + 1*/);
               if (zstream.next_out == NULL) {
+		deflateEnd(&zstream);
                 return DPS_ERROR;
               }
               deflate(&zstream, Z_FINISH);
@@ -175,11 +176,17 @@ static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t 
 		zstream.zalloc = Z_NULL;
 		zstream.zfree = Z_NULL;
 		zstream.opaque = Z_NULL;
-		if ((read(P.Sfd, CDoc, Doc->Buf.size) != (ssize_t)Doc->Buf.size)
-		    || (inflateInit2(&zstream, 15) != Z_OK)) {
+		if (read(P.Sfd, CDoc, Doc->Buf.size) != (ssize_t)Doc->Buf.size) {
 		  Doc->Buf.size = 0;
 		  DpsBaseClose(&P);
 		  DPS_FREE(CDoc);
+		  return DPS_ERROR;
+		}
+		if (Z_OK != inflateInit2(&zstream, 15)) {
+		  Doc->Buf.size = 0;
+		  DpsBaseClose(&P);
+		  DPS_FREE(CDoc);
+		  inflateEnd(&zstream);
 		  return DPS_ERROR;
 		}
 		inflate(&zstream, Z_FINISH);
@@ -333,6 +340,7 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
 				  (Doc->Buf.buf == NULL) ||
 				  ((nread = DpsRecvall(r, Doc->Buf.buf, content_size, 360)) < 0)
 				  ) ) {
+	Doc->Buf.allocated_size = 0;
 	return -2;
       }
   
@@ -1792,6 +1800,7 @@ int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, char *Client) {
       if (DpsRecvall(ns, &chunk, sizeof(chunk), 360) < 0) {
 	DocSize = 0;
 	DpsSend(sd, &DocSize, sizeof(DocSize), 0); 
+	inflateEnd(&zstream);
 	ABORT(DPS_ERROR);
       }
       if (chunk == 0) break;

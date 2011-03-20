@@ -341,6 +341,7 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	   if (Doc->Buf.allocated_size <= Doc->Buf.size + buf_size) {
 	     Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 	     if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+	       Doc->Buf.allocated_size = 0;
 	       res = DPS_NET_ALLOC_ERROR;
 	       break;
 	     }
@@ -464,6 +465,7 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
 		if (Doc->Buf.allocated_size <= Doc->Buf.size + buf_size) {
 		  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 		  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		    Doc->Buf.allocated_size = 0;
 		    res = DPS_NET_ALLOC_ERROR;
 		    break;
 		  }
@@ -567,6 +569,7 @@ static int DpsFTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc)
 				  if (Doc->Buf.allocated_size < (size_t)Doc->connp.connp->buf_len + 128) {
 				    Doc->Buf.allocated_size = Doc->connp.connp->buf_len + 128;
 				    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+				      Doc->Buf.allocated_size = 0;
 				      res = DPS_NET_ALLOC_ERROR;
 				    }
 				  } 
@@ -624,6 +627,7 @@ static int DpsFTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc)
 					  if (Doc->Buf.allocated_size < (size_t)Doc->connp.connp->buf_len + 128) {
 					    Doc->Buf.allocated_size = Doc->connp.connp->buf_len + 128;
 					    if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+					      Doc->Buf.allocated_size = 0;
 					      res = DPS_NET_ALLOC_ERROR;
 					    }
 					  } 
@@ -1009,6 +1013,7 @@ static int DpsNNTPGet(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc){
 		if ((size_t)gap + 4096 > Doc->Buf.allocated_size) {
 		  Doc->Buf.allocated_size += 4096 + DPS_NET_BUF_SIZE;
 		  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1)) == NULL) {
+		    Doc->Buf.allocated_size = 0;
 		    break;
 		  }
 		  end = Doc->Buf.buf + gap;
@@ -1432,6 +1437,7 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 				if (gap >= Doc->Buf.allocated_size - 2*PATH_MAX + 32) {
 				  Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
 				  if ((e = (char*)DpsRealloc(Doc->Buf.buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
+				    Doc->Buf.allocated_size = 0;
 				    break;
 				  }
 				  Doc->Buf.buf = e;
@@ -1491,6 +1497,7 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 		    Doc->Buf.allocated_size = size_to_read = (size_t)(sb.st_size + l);
 		  }
 		  if ((Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, (size_t)Doc->Buf.allocated_size + 1)) == NULL) {
+		    Doc->Buf.allocated_size = 0;
 		    DpsClose(fd);
 		    return -1;
 		  }
@@ -1534,6 +1541,7 @@ static int DpsBuildHTTPRequest(DPS_DOCUMENT *Doc){
 	
 	Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1);
 	if (Doc->Buf.buf == NULL) {
+	  Doc->Buf.allocated_size = 0;
 	  DPS_FREE(url); DPS_FREE(eurl);
 	  return DPS_ERROR;
 	}

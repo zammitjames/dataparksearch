@@ -286,6 +286,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
   return DPS_OK;
 }
 
+
 __C_LINK int __DPSCALL DpsBaseClose(DPS_BASE_PARAM *P) {
   TRACE_IN(P->A, "DpsBaseClose");
 /*  if (P->opened && (P->mode == DPS_WRITE_LOCK) ) {
@@ -303,10 +304,10 @@ __C_LINK int __DPSCALL DpsBaseClose(DPS_BASE_PARAM *P) {
   if (P->opened){
     DpsClose(P->Sfd); 
     DpsClose(P->Ifd); 
-    DPS_FREE(P->Ifilename);
-    DPS_FREE(P->Sfilename);
     P->opened = 0;
   }
+  DPS_FREE(P->Ifilename);
+  DPS_FREE(P->Sfilename);
   TRACE_OUT(P->A);
   return DPS_OK;
 }
