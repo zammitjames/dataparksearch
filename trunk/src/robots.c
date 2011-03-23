@@ -151,7 +151,7 @@ static DPS_ROBOT* DpsRobotAddEmpty(DPS_ROBOTS *Robots, const char *hostinfo, tim
 	return r;
 }
 
-static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, char *path, int insert_flag) {
+static int AddRobotRule(DPS_AGENT *A, DPS_ROBOT *robot, int cmd, const char *path, int insert_flag) {
 #ifdef HAVE_SQL
   DPS_DB *db;
   dpshash32_t url_id;

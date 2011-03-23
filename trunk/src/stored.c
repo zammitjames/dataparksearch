@@ -81,7 +81,7 @@ static char * time_pid_info(void){
 	time_t t;
 	t=time(NULL);
 	tim=localtime(&t);
-	strftime(time_pid,sizeof(time_pid),"%a %d %T",tim);
+	strftime(time_pid,sizeof(time_pid),"%a %d %H:%M:%S",tim);
 	sprintf(time_pid+dps_strlen(time_pid)," [%d]",(int)getpid());
 	return(time_pid);
 }

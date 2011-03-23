@@ -596,8 +596,11 @@ typedef unsigned int dps_uint8;
 typedef unsigned long dpshash64_t;
 typedef unsigned long dps_uint8;
 #else
+#error No 64-bit integer detected. Giving up.
+/*
 typedef unsigned long long dpshash64_t;
 typedef unsigned long long dps_uint8;
+*/
 #endif
 
 #if (SIZEOF_CHARP == SIZEOF_INT)
