@@ -76,7 +76,7 @@
 #endif
 
 #ifdef HAVE_ZLIB
-static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, char *Client) {
+static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, const char *Client) {
   z_stream zstream;
   DPS_BASE_PARAM P;
   int rc = DPS_OK;
@@ -136,7 +136,7 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
 }
 
 
-static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t dbnum, char *Client) {
+static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t dbnum, const char *Client) {
   Byte *CDoc = NULL;
   z_stream zstream;
   DPS_BASE_PARAM P;
@@ -213,7 +213,7 @@ static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t 
 	    return DPS_OK;
 }
 
-static int DpsStoreDeleteRec(DPS_AGENT *Agent, int sd, urlid_t rec_id, char *Client) {
+static int DpsStoreDeleteRec(DPS_AGENT *Agent, int sd, urlid_t rec_id, const char *Client) {
   size_t DocSize = 0, dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
   DPS_BASE_PARAM P;
   DPS_DB *db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[dbnum] : &Agent->dbl.db[dbnum];
@@ -535,7 +535,7 @@ static void DpsNextCharE_stored(void *d) {
 
 
 
-static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsunicode_t *c, size_t *len, dpsunicode_t *pos, size_t minwlen, int NOprefixHL) {
+static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsunicode_t *c, size_t *len, dpsunicode_t **pos, size_t minwlen, int NOprefixHL) {
   register dpsunicode_t sc;
   register int i, min_i;
   register dpsunicode_t *s = *p, *min_p;
@@ -665,7 +665,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   char *os;
   int s = -1, r = -1;
   size_t *wlen, i, len, maxwlen = 0, minwlen = query->WordParam.max_word_len, ulen, prevlen, osl, index_limit;
-  dpsunicode_t *wpos;
+  dpsunicode_t **wpos;
   DPS_CONV dc_uni, uni_bc;
   const char *hello = "E\0";
   dpshash32_t rec_id;
@@ -704,7 +704,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     DPS_FREE(c);
     return NULL;
   }
-  wpos = (dpsunicode_t *) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t) + 1);
+  wpos = (dpsunicode_t **) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t*) + 1);
   if (wpos == NULL) {
     DPS_FREE(c); DPS_FREE(wlen);
     return NULL;
@@ -927,7 +927,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     while ((start < end) && !DpsUniNSpace(*start)) start++;
     if (start < end) {
       register int flag = 0;
-      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(prevend+i)) { flag = 1; break; }
+      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(*(prevend+i))) { flag = 1; break; }
       if (oi[0]) DpsUniStrCat(oi, mark);
       if (flag) {
 	if ((start != uni) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
@@ -1342,7 +1342,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
   int NOprefixHL = 0;
   DPS_CHARSET *bcs = NULL, *sys_int;
   size_t *wlen, i, maxwlen = 0, minwlen = query->WordParam.max_word_len;
-  dpsunicode_t *wpos;
+  dpsunicode_t **wpos;
   dpsunicode_t *start, *end, *prevend, ures, *p, *oi, *np;
   dpsunicode_t *c;
   dpsunicode_t *Source = NULL;
@@ -1372,7 +1372,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
     DPS_FREE(c);
     return NULL;
   }
-  wpos = (dpsunicode_t *) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t) + 1);
+  wpos = (dpsunicode_t **) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t*) + 1);
   if (wpos == NULL) {
     DPS_FREE(c); DPS_FREE(wlen);
     return NULL;
@@ -1415,7 +1415,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
     while ((start < end) && !DpsUniNSpace(*start)) start++;
     if (start < end - 1) {
       register int flag = 0;
-      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(prevend+i)) { flag = 1; break; }
+      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(*(prevend+i))) { flag = 1; break; }
       if (oi[0]) DpsUniStrCat(oi, mark);
       if (flag) {
 	if ((start != Source) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
@@ -1466,7 +1466,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
                     DpsBaseClose(&P); \
               return (x);
 
-int DpsStoreDelete(DPS_AGENT *Agent, int ns, int sd, char *Client) {
+int DpsStoreDelete(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
   urlid_t rec_id;
 
   if (DpsRecvall(ns, &rec_id, sizeof(rec_id), 360) < 0) {
@@ -1480,7 +1480,7 @@ int DpsStoreDelete(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 }
 
 
-int DpsStoredOptimize(DPS_AGENT *Agent, int ns, char *Client) {
+int DpsStoredOptimize(DPS_AGENT *Agent, int ns, const char *Client) {
   unsigned int NFiles = DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
   DPS_BASE_PARAM P;
   size_t i, dbfrom = 0, dbto =  (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
@@ -1504,7 +1504,7 @@ int DpsStoredOptimize(DPS_AGENT *Agent, int ns, char *Client) {
 }
 
 
-int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
+int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
 
 #if defined HAVE_SQL && defined HAVE_ZLIB
   DPS_BASE_PARAM P;
@@ -1686,7 +1686,7 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, char *Client) {
   return DPS_OK;
 }
 
-int DpsStoreFind(DPS_AGENT *Agent, int ns, int sd, char *Client) {
+int DpsStoreFind(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
   urlid_t rec_id;
   size_t DocSize = 0, dbnum;
   DPS_BASE_PARAM P;
@@ -1731,7 +1731,7 @@ int DpsStoreFind(DPS_AGENT *Agent, int ns, int sd, char *Client) {
   return DPS_OK;
 }
 
-int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, char *Client) {
+int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
 
 #ifdef HAVE_ZLIB
   urlid_t rec_id;
@@ -1833,7 +1833,7 @@ int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 
 }
 
-int DpsStoreGet(DPS_AGENT *Agent, int ns, int sd, char *Client) {
+int DpsStoreGet(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
 
 #ifdef HAVE_ZLIB
   urlid_t rec_id;
@@ -1862,7 +1862,7 @@ int DpsStoreGet(DPS_AGENT *Agent, int ns, int sd, char *Client) {
 #endif
 }
 
-int DpsStoreSave(DPS_AGENT *Agent, int ns, char *Client) {
+int DpsStoreSave(DPS_AGENT *Agent, int ns, const char *Client) {
 
 #ifdef HAVE_ZLIB
   urlid_t rec_id;

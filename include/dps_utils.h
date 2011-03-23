@@ -19,6 +19,8 @@
 #ifndef _DPS_UTILS_H
 #define _DPS_UTILS_H
 
+#include "dps_config.h"
+
 #include <stdio.h>
 
 /* for time_t */
@@ -30,8 +32,12 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <sys/types.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#else
+extern char **environ;
+#endif
 
-#include "dps_config.h"
 #include "dps_charsetutils.h"
 
 /* This is used in DpsTime_t2Str and in its callers */
@@ -49,9 +55,6 @@
 extern int ARGC;
 extern char **ARGV;
 extern char **ENVP;
-#ifndef environ
-extern char **environ;
-#endif
 #ifdef HAVE_SETPROCTITLE
 #define dps_setproctitle setproctitle
 #else
@@ -214,8 +217,8 @@ extern int dps_heapsort(void *base, size_t nmemb, size_t size, int (*compar)(con
 
 #define TRACE_IN(A, fn)  {						\
   register int trace_i;							\
-  register unsigned long ticks = DpsStartTimer();                       \
-  fprintf(A->TR, "%lu [%d] in ", ticks, A->handle);		        \
+  register unsigned long trace_ticks = DpsStartTimer();                       \
+  fprintf(A->TR, "%lu [%d] in ", trace_ticks, A->handle);		        \
   for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
   A->level++;								\
   fprintf(A->TR, "%s at %s:%d\n", fn, __FILE__, __LINE__);		\
@@ -223,8 +226,8 @@ extern int dps_heapsort(void *base, size_t nmemb, size_t size, int (*compar)(con
 }
 #define TRACE_OUT(A)   {						\
   register int trace_i;		 				        \
-  register unsigned long ticks = DpsStartTimer();                       \
-  fprintf(A->TR, "%lu [%d] out", ticks, A->handle);		        \
+  register unsigned long trace_ticks = DpsStartTimer();                       \
+  fprintf(A->TR, "%lu [%d] out", trace_ticks, A->handle);		        \
   if (A->level) A->level--;						\
   for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
   fprintf(A->TR, "at %s:%d\n", __FILE__, __LINE__);		        \
@@ -233,8 +236,8 @@ extern int dps_heapsort(void *base, size_t nmemb, size_t size, int (*compar)(con
 
 #define TRACE_LINE(A) {                                                 \
   register int trace_i;						        \
-  register unsigned long ticks = DpsStartTimer();                       \
-  fprintf(A->TR, "%lu [%d] got", ticks, A->handle);		\
+  register unsigned long trace_ticks = DpsStartTimer();                       \
+  fprintf(A->TR, "%lu [%d] got", trace_ticks, A->handle);		\
   for (trace_i = 0; trace_i < A->level; trace_i++) fprintf(A->TR, "-"); \
   fprintf(A->TR, "the %s:%d\n", __FILE__, __LINE__);	        	\
   fflush(A->TR);							\
