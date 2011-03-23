@@ -19,8 +19,8 @@ required.
 
 		<para>
 			<emphasis>PostgreSQL notes</emphasis>: If you
-want to build <application>DataparkSearch</application> with <application>PostgreSQL</application>, 7.3.x or later release
-required. <application>PostgreSQL</application> 8.1 is recommended for better performance.</para>
+want to build <application>DataparkSearch</application> with <application>PostgreSQL</application>, 8.2 or later release
+required. The latest <application>PostgreSQL</application> version is recommended for the fresh install.</para>
 
 		<para>
 			<emphasis>iODBC notes</emphasis>: iodbc-2.50.22a is known to work.</para>

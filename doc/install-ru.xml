@@ -21,7 +21,7 @@
 		<para>
 			<emphasis>О <application>PostgreSQL</application></emphasis>: Если вы хотите собрать
 <application>DataparkSearch</application> с поддержкой <application>PostgreSQL</application>,
-вам потребуется версия 7.3.x или старше. <application>PostgreSQL</application> 8.1 рекомендуется для лучшей производительности.
+вам потребуется версия 8.2 или старше. Для новой установки рекомендуется поставить последнюю версию <application>PostgreSQL</application>.
 </para>
 
 		<para>

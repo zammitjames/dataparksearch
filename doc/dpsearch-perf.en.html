@@ -164,8 +164,42 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
+NAME="SEARCH-CACHE"
+>5.3.2. Search results caching</A
+></H2
+><A
+NAME="AEN3616"
+></A
+><P
+></P
+><P
+>Use "<B
+CLASS="COMMAND"
+>Cache yes</B
+>" command in your <TT
+CLASS="FILENAME"
+>search.htm</TT
+> template (or in <TT
+CLASS="FILENAME"
+>searchd.conf</TT
+> file, if
+<SPAN
+CLASS="APPLICATION"
+>searchd</SPAN
+> is used) to enable search results cache. That allows to reduce significantly the answer time for repeating queries.</P
+><P
+>If you use search results caching, please note you need to empty <TT
+CLASS="FILENAME"
+>var/cache</TT
+> directory after each indexing/reindexing.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
 NAME="MFS-REC"
->5.3.2. Memory based filesystem (mfs) usage recommendation</A
+>5.3.3. Memory based filesystem (mfs) usage recommendation</A
 ></H2
 ><P
 >If you use cache storage mode and you have enough RAM on your PC, 
@@ -198,13 +232,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="URLINFO-CMD"
->5.3.3. <B
+>5.3.4. <B
 CLASS="COMMAND"
 >URLInfoSQL</B
 > command</A
 ></H2
 ><A
-NAME="AEN3626"
+NAME="AEN3639"
 ></A
 ><P
 >For dbmode cache, you may use <B
@@ -218,14 +252,41 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
+NAME="SRVINFO-CMD"
+>5.3.5. <B
+CLASS="COMMAND"
+>SRVInfoSQL</B
+>command</A
+></H2
+><A
+NAME="AEN3647"
+></A
+><P
+>With the <B
+CLASS="COMMAND"
+>SRVInfoSQL no</B
+> command you can switch off storing auxiliary data into "srvinfo" SQL-table.
+In this case this table can not be used to load configuration with <B
+CLASS="COMMAND"
+>LoadServerTable</B
+> command (See <A
+HREF="dpsearch-srvtable.en.html#SRVTABLE-LOAD"
+>Section 3.8.1</A
+>&#62;).</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
 NAME="MARKFORINDEX-CMD"
->5.3.4. <B
+>5.3.6. <B
 CLASS="COMMAND"
 >MarkForIndex</B
 > command</A
 ></H2
 ><A
-NAME="AEN3634"
+NAME="AEN3657"
 ></A
 ><P
 >By default, <SPAN
@@ -248,13 +309,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="CHECKINSERTSQL-CMD"
->5.3.5. <B
+>5.3.7. <B
 CLASS="COMMAND"
 >CheckInsertSQL</B
 > command</A
 ></H2
 ><A
-NAME="AEN3644"
+NAME="AEN3667"
 ></A
 ><P
 >By default, <SPAN
@@ -277,7 +338,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="PERF-MYSQL"
->5.3.6. MySQL performance</A
+>5.3.8. MySQL performance</A
 ></H2
 ><P
 >MySQL users may declare <SPAN
@@ -327,7 +388,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="PERF-OPTIMIZATION"
->5.3.7. Post-indexing optimization</A
+>5.3.9. Post-indexing optimization</A
 ></H2
 ><P
 >This article was supplied by Randy Winch <CODE
@@ -389,7 +450,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="ARES"
->5.3.8. Asynchronous resolver library</A
+>5.3.10. Asynchronous resolver library</A
 ></H2
 ><P
 >Using <A
