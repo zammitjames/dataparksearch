@@ -159,8 +159,42 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
+NAME="SEARCH-CACHE"
+>5.3.2. Кэширование результатов поиска</A
+></H2
+><A
+NAME="AEN3824"
+></A
+><P
+></P
+><P
+>Используйте команду "<B
+CLASS="COMMAND"
+>Cache yes</B
+>" в вашем поисковом шаблоне <TT
+CLASS="FILENAME"
+>search.htm</TT
+> (или в файле конфигурации <TT
+CLASS="FILENAME"
+>searchd.conf</TT
+>, если используется <SPAN
+CLASS="APPLICATION"
+>searchd</SPAN
+>) для включения кэша результатов поиска.
+Это позволит значительно сократить время поиска при повторных запросах.</P
+><P
+>Если вы используете кэширование результатов поиска, пожалуйста, не забудьте очищать директорию <TT
+CLASS="FILENAME"
+>var/cache</TT
+> после каждого сеанса индексирования/переиндексирования.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
 NAME="MFS-REC"
->5.3.2. Рекомендация использовать файловую систему в памяти (mfs)</A
+>5.3.3. Рекомендация использовать файловую систему в памяти (mfs)</A
 ></H2
 ><P
 >Если вы планируете использовать cache mode и имеете достаточно оперативной памяти на вашем компьютере, 
@@ -192,10 +226,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="URLINFO-CMD"
->5.3.3. Команда URLInfoSQL</A
+>5.3.4. Команда <B
+CLASS="COMMAND"
+>URLInfoSQL</B
+></A
 ></H2
 ><A
-NAME="AEN3833"
+NAME="AEN3847"
 ></A
 ><P
 >Для способа хранения cache вы можете использовать команду <B
@@ -209,11 +246,41 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="MARKFORINDEX-CMD"
->5.3.4. Команда MarkForIndex</A
+NAME="SRVINFO-CMD"
+>5.3.5. Команда <B
+CLASS="COMMAND"
+>SRVInfoSQL</B
+></A
 ></H2
 ><A
-NAME="AEN3840"
+NAME="AEN3855"
+></A
+><P
+>При помощи команды <B
+CLASS="COMMAND"
+>SRVInfoSQL no</B
+> вы можете выключить запись вспомогательной информации в SQL-таблицу "srvinfo".
+В этом случае содержимое таблицы не может быть использовано для загрузки конфигурации командой <B
+CLASS="COMMAND"
+>LoadServerTable</B
+> (См. <A
+HREF="dpsearch-srvtable.ru.html#SRVTABLE-LOAD"
+>&#1056;&#1072;&#1079;&#1076;. 3.8.1</A
+>&#62;).</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="MARKFORINDEX-CMD"
+>5.3.6. Команда <B
+CLASS="COMMAND"
+>MarkForIndex</B
+></A
+></H2
+><A
+NAME="AEN3865"
 ></A
 ><P
 >По умолчанию, <SPAN
@@ -237,13 +304,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="CHECKINSERTSQL-CMD"
->5.3.5. Команда <B
+>5.3.7. Команда <B
 CLASS="COMMAND"
 >CheckInsertSQL</B
 ></A
 ></H2
 ><A
-NAME="AEN3850"
+NAME="AEN3875"
 ></A
 ><P
 >По умолчанию, <SPAN
@@ -266,7 +333,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="PERF-MYSQL"
->5.3.6. Производительность <SPAN
+>5.3.8. Производительность <SPAN
 CLASS="APPLICATION"
 >MySQL</SPAN
 ></A
@@ -327,7 +394,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="PERF-OPTIMIZATION"
->5.3.7. Оптимизация после индексирования</A
+>5.3.9. Оптимизация после индексирования</A
 ></H2
 ><P
 >Этот раздел был добавлен Randy Winch <CODE
@@ -401,7 +468,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="ARES"
->5.3.8. Библиотека асинхронного резолвера</A
+>5.3.10. Библиотека асинхронного резолвера</A
 ></H2
 ><P
 >Использование <A
@@ -477,7 +544,7 @@ ALIGN="right"
 VALIGN="top"
 >Поддержка SearchD
 <A
-NAME="AEN3896"
+NAME="AEN3921"
 ></A
 ></TD
 ></TR

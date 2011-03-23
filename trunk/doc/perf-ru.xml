@@ -27,6 +27,17 @@
 </para>
 </sect2>
 
+
+<sect2 id="search-cache">
+<title>Кэширование результатов поиска</title>
+<indexterm><primary>Команда</primary><secondary>Cache</secondary></indexterm>
+<para><para>Используйте команду "<command>Cache yes</command>" в вашем поисковом шаблоне <filename>search.htm</filename> (или в файле конфигурации <filename>searchd.conf</filename>, если используется <application>searchd</application>) для включения кэша результатов поиска.
+Это позволит значительно сократить время поиска при повторных запросах.</para>
+<para>
+Если вы используете кэширование результатов поиска, пожалуйста, не забудьте очищать директорию <filename>var/cache</filename> после каждого сеанса индексирования/переиндексирования.
+</para>
+</sect2>
+
 <sect2 id="mfs-rec">
 <title>Рекомендация использовать файловую систему в памяти (mfs)</title>
 <para>Если вы планируете использовать cache mode и имеете достаточно оперативной памяти на вашем компьютере, 
@@ -40,15 +51,23 @@
 </sect2>
 
 <sect2 id="urlinfo-cmd">
-<title>Команда URLInfoSQL</title>
-<indexterm><primary>Команда</primary><secondary>URLinfoSQL</secondary></indexterm>
+<title>Команда <command>URLInfoSQL</command></title>
+<indexterm><primary>Команда</primary><secondary>URLInfoSQL</secondary></indexterm>
 <para>Для способа хранения cache вы можете использовать команду <command>URLInfoSQL no</command> для выключения сохранения
 информации об URL в SQL-базе. Однако использовав эту команду, вы потеряете возможность использовать лимиты по языку и типу документов.
 </para>
 </sect2>
 
+<sect2 id="srvinfo-cmd">
+<title>Команда <command>SRVInfoSQL</command></title>
+<indexterm><primary>Команда</primary><secondary>SRVInfoSQL</secondary></indexterm>
+<para>При помощи команды <command>SRVInfoSQL no</command> вы можете выключить запись вспомогательной информации в SQL-таблицу "srvinfo".
+В этом случае содержимое таблицы не может быть использовано для загрузки конфигурации командой <command>LoadServerTable</command> (См. <xref linkend="srvtable-load"/>).
+</para>
+</sect2>
+
 <sect2 id="markforindex-cmd">
-<title>Команда MarkForIndex</title>
+<title>Команда <command>MarkForIndex</command></title>
 <indexterm><primary>Команда</primary><secondary>MarkForIndex</secondary></indexterm>
 <para>По умолчанию, <application>DataparkSearch</application> помечает все URL, отбираемые к индексированию, как ожидающие индексирования
 через 4 часа. 
