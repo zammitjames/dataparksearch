@@ -1273,12 +1273,14 @@ static void *dpsearch_server_init(
   return Agent;
 }
 
+
 #ifdef APACHE1
 static void dpsearch_child_exit( server_rec *s, pool *p ) {
   DPS_AGENT *Agent = ap_get_module_config( s->module_config, &dpsearch_module );
   ShutdownDpsearch(Agent);
 }
 #endif
+
 
 static const char *cmd_template(cmd_parms *cmd, void *mconfig, const char *template_filename) {
   DPS_AGENT *Agent = ap_get_module_config( cmd->server->module_config, &dpsearch_module );
@@ -1300,9 +1302,10 @@ static const char *cmd_template(cmd_parms *cmd, void *mconfig, const char *templ
     DpsVarListReplaceLst(&Agent->Vars, &Agent->Conf->Vars, NULL, "*");
     Agent->tmpl.Env_Vars = &Agent->Vars;
   }
-
+  DPS_FREE(old_tmplt);
   return NULL;
 }
+
 
 static const char *cmd_storedoc_template(cmd_parms *cmd, void *mconfig, const char *template_filename) {
   DPS_AGENT *Agent = ap_get_module_config( cmd->server->module_config, &dpsearch_module );
@@ -1338,7 +1341,7 @@ static const char *cmd_searchd_conf(cmd_parms *cmd, void *mconfig, const char *w
 #ifdef APACHE2
 		 0,
 #endif
-		 cmd->server, "Can't load searchd config file '%s'", word1);
+		 cmd->server, "Can't load config file '%s': %s", word1, Agent->Conf->errstr);
   }
 /*  DpsUniRegCompileAll(Agent->Conf);*/
   DpsOpenLog("mod_dpsearch", Agent->Conf, 1);
