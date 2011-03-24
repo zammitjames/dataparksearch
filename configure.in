@@ -200,6 +200,9 @@ AC_CHECK_SIZEOF(long)
 AC_CHECK_SIZEOF(long long)
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(void*)
+AC_CHECK_SIZEOF(float)
+AC_CHECK_SIZEOF(double)
+AC_CHECK_SIZEOF(time_t)
 dnl AC_CHECK_SIZEOF(off_t)
 
 

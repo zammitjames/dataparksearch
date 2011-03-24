@@ -1094,11 +1094,13 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 		  res = DpsFindWordsSearchd(A, Res, db);
 		  break;
 	        default:
+		  res = DPS_OK;
 #ifdef HAVE_SQL
 		  DPS_FREE(db->where)
 #endif
 		  ;
 	    }
+	    if (DPS_OK != res) DpsLog(A, DPS_LOG_ERROR, "FindWordsSearchd err: %s", A->Conf->errstr); 
 	  }
 	  dbto++;
 	  if (A->flags & DPS_FLAG_UNOCON) {
@@ -1131,11 +1133,14 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 		  } else {
 #ifdef HAVE_SQL
 		    res = DpsFindWordsSQL(A, Res, db);
+#else
+		    res = DPS_OK;
 #endif
 		  }
 		  Res->offset = 1;
 		  break;
 	    }
+	    if (DPS_OK != res) DpsLog(A, DPS_LOG_ERROR, "2FindWordsSearchd err: %s", A->Conf->errstr); 
 	    wrdX[i] = Res->CoordList.Coords;
 	    udtX[i] = Res->CoordList.Data;
 #ifdef WITH_REL_TRACK
@@ -1728,6 +1733,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 		Res=NULL;
 	}
 	A->Res = Res;
+	/*	DpsLog(A,DPS_LOG_DEBUG,"Exit DpsFind");*/
 	TRACE_OUT(A);
 	return Res;
 }
