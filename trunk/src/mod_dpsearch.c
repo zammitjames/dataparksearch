@@ -627,6 +627,7 @@ static int dpsearch_handler(request_rec *r) {
       }
     }
 /*#endif*/
+    url = NULL;
   }
 
   DpsVarListAddEnviron(&Agent->Vars, "ENV");
@@ -1141,7 +1142,7 @@ static int dpsearch_handler(request_rec *r) {
 		  }
 #endif
 		}
-
+		
 		DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&ap_rprintf, r, NULL, 0, &Agent->tmpl, "res");
 #ifdef WITH_GOOGLEGRP
 		if ((sc == 0) && (site_id == prev_site_id)) {
