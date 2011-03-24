@@ -350,27 +350,29 @@ typedef struct{
 typedef struct {
         urlid_t         url_id;
         urlid_t         site_id;
-        time_t          last_mod_time;
+        dps_uint8       last_mod_time;
         double          pop_rank;
 } DPS_URLDATA;
+
 
 #ifdef WITH_REL_TRACK
 typedef struct {
   double x, xy, y;
 #ifdef WITH_REL_DISTANCE
-  int D_distance;
+  dps_uint4 D_distance;
 #endif
 #ifdef WITH_REL_POSITION
-  int D_position;
-  int D_firstpos;
+  dps_uint4 D_position;
+  dps_uint4 D_firstpos;
 #endif
 #ifdef WITH_REL_WRDCOUNT
-  int D_wrdcount;
+  dps_uint4 D_wrdcount;
 #endif
-  int D_n_count;
-  int D_n_origin;
+  dps_uint4 D_n_count;
+  dps_uint4 D_n_origin;
 } DPS_URLTRACK;
 #endif
+
 
 typedef struct {
   size_t nrec;
@@ -802,22 +804,36 @@ typedef struct dps_search_limit {
 
 
 typedef struct {
-        size_t		order, order_inquery;
-	size_t		count;
+        dps_uint4	order, order_inquery;
+	dps_uint4	count;
+	dps_uint4	len, ulen;
+        dps_int4    	origin;
 	dpshash32_t	crcword;
 	char		*word;
 	dpsunicode_t	*uword;
-	size_t		len, ulen;
-/*        ssize_t          q;*/
-        int     	origin;
 } DPS_WIDEWORD;
 
 typedef struct {
-	size_t		nuniq;
-	size_t		nwords;
-        size_t          maxulen;
+        dps_uint4	order, order_inquery;
+	dps_uint4	count;
+	dps_uint4	len, ulen;
+        dps_int4    	origin;
+	dpshash32_t	crcword;
+} DPS_WIDEWORD_EX;
+
+
+typedef struct {
+	dps_uint4	nuniq;
+	dps_uint4	nwords;
+        dps_uint4       maxulen;
 	DPS_WIDEWORD	*Word;
 } DPS_WIDEWORDLIST;
+
+typedef struct {
+	dps_uint4	nuniq;
+	dps_uint4	nwords;
+        dps_uint4       maxulen;
+} DPS_WIDEWORDLIST_EX;
 
 
 typedef struct {
@@ -1245,8 +1261,8 @@ typedef struct {
 
 
 typedef struct {
-	size_t	cmd;
-	size_t	len;
+	dps_uint4       cmd;
+        dps_uint4       len;
 } DPS_SEARCHD_PACKET_HEADER;
 
 

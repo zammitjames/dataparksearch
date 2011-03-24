@@ -61,13 +61,13 @@
 #endif
 #include <errno.h>
 
-
+/*
 #define DEBUG_SDP
+*/
 
-
-
+/*
 #define DEBUG_SEARCH
-
+*/
 
 ssize_t DpsSearchdSendPacket(int fd,const DPS_SEARCHD_PACKET_HEADER *hdr,const void *data){
 	ssize_t nsent = 0;
@@ -220,7 +220,7 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 		nrecv = DpsRecvall(cl->searchd, &hdr, sizeof(hdr), 360);
 		
 		if(nrecv!=sizeof(hdr)){
-			DpsLog(query, DPS_LOG_ERROR, "Received incomplete header from searchd (%d bytes)", (int)nrecv);
+		  DpsLog(query, DPS_LOG_ERROR, "Received incomplete header from searchd (%d bytes, errno:%d)", (int)nrecv, errno);
 			TRACE_OUT(query);
 			return(DPS_ERROR);
 		}else{
@@ -303,7 +303,7 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	return rc;
 }
 
-static int DpsSearchdSendWordRequest(DPS_AGENT *query, DPS_DB *cl, const char * q) {
+static int DpsSearchdSendWordRequest(const DPS_AGENT *query, const DPS_DB *cl, const char *q) {
 	DPS_SEARCHD_PACKET_HEADER hdr;
 	ssize_t	nsent;
 	size_t  nitems =  (query->flags & DPS_FLAG_UNOCON) ? query->Conf->dbl.nitems : query->dbl.nitems;
@@ -311,8 +311,8 @@ static int DpsSearchdSendWordRequest(DPS_AGENT *query, DPS_DB *cl, const char * 
 	TRACE_IN(query, "DpsSearchdSendWordRequest");
 	
 	hdr.cmd = (nitems > 1) ? DPS_SEARCHD_CMD_WORDS_ALL : DPS_SEARCHD_CMD_WORDS;
-	hdr.len=dps_strlen(q);
-	nsent=DpsSearchdSendPacket(cl->searchd, &hdr, q);
+	hdr.len = dps_strlen(q);
+	nsent = DpsSearchdSendPacket(cl->searchd, &hdr, q);
 
 	TRACE_OUT(query);
 	return DPS_OK;
@@ -330,8 +330,9 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 	char	*msg;
 	int	done=0, rc = DPS_OK;
 	char *wbuf, *p;
-	DPS_WIDEWORDLIST *wwl;
-	DPS_WIDEWORD *ww;
+	DPS_WIDEWORDLIST_EX *wwl;
+	DPS_WIDEWORD *ww_ex;
+	DPS_WIDEWORD ww;
 	size_t i;
 
 	TRACE_IN(query, "DpsSearchdGetWordResponse");
@@ -341,7 +342,7 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 	while(!done){
 	  nrecv = DpsRecvall(cl->searchd, &hdr, sizeof(hdr), 360);
 	  if(nrecv!=sizeof(hdr)){
-	    sprintf(query->Conf->errstr,"Received incomplete header from searchd (%d bytes)",(int)nrecv);
+	    sprintf(query->Conf->errstr,"Received incomplete header from searchd (%d bytes,errno:%d)",(int)nrecv, errno);
 	    TRACE_OUT(query);
 	    return DPS_ERROR;;
 	  }
@@ -357,7 +358,7 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 				}
 				nrecv = DpsRecvall(cl->searchd, msg, hdr.len, 360);
 				msg[nrecv]='\0';
-				sprintf(query->Conf->errstr,"Searchd error: '%s'",msg);
+				sprintf(query->Conf->errstr,"Searchd error: '%s',received:%d", msg, nrecv);
 				rc = DPS_ERROR;
 				DPS_FREE(msg);
 				done=1;
@@ -459,25 +460,33 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 				Res->PerSite = NULL;
 			        if ((wbuf = p = (char *)DpsXmalloc(hdr.len + 1)) != NULL) 
 				  if (DpsRecvall(cl->searchd, wbuf, hdr.len, 360))  {
-				    wwl = (DPS_WIDEWORDLIST *)p;
-				    p += sizeof(DPS_WIDEWORDLIST);
+				    wwl = (DPS_WIDEWORDLIST_EX *)p;
+				    p += sizeof(DPS_WIDEWORDLIST_EX);
 #ifdef DEBUG_SDP
 				    DpsLog(query, DPS_LOG_ERROR, "wbuf :%x, wwl: %x, p: %x hdr.len:%d\n", wbuf, wwl, p, hdr.len);
 				    DpsLog(query, DPS_LOG_ERROR, "Received WWL nwords=%d nuniq=%d\n", wwl->nwords, wwl->nuniq);
 #endif
 /*				    DpsWideWordListFree(&Res->WWList);*/
 				    for(i = 0; i < wwl->nwords; i++) {
-				      ww = (DPS_WIDEWORD *)p;
-				      p += sizeof(DPS_WIDEWORD);
-				      ww->word = p;
+				      ww_ex = (DPS_WIDEWORD_EX *)p;
+				      p += sizeof(DPS_WIDEWORD_EX);
+				      ww.order = ww_ex->order;
+				      ww.order_inquery = ww_ex->order_inquery;
+				      ww.count = ww_ex->count;
+				      ww.len = ww_ex->len;
+				      ww.ulen = ww_ex->ulen;
+				      ww.origin = ww_ex->origin;
+				      ww.crcword = ww_ex->crcword;
+
+				      ww.word = p;
 #ifdef DEBUG_SDP
-				      DpsLog(query, DPS_LOG_ERROR, "Word {%d}: %s\n", ww->len+1, ww->word);
+				      DpsLog(query, DPS_LOG_ERROR, "Word {%d}: %s\n", ww.len+1, ww.word);
 #endif
-				      p += ww->len + 1;
+				      p += ww.len + 1;
 				      p += sizeof(dpsunicode_t) - ((SDPALIGN)p % sizeof(dpsunicode_t));
-				      ww->uword = (dpsunicode_t*)p;
-				      p += sizeof(dpsunicode_t) * (ww->ulen + 1);
-				      DpsWideWordListAdd(&Res->WWList, ww, DPS_WWL_STRICT);
+				      ww.uword = (dpsunicode_t*)p;
+				      p += sizeof(dpsunicode_t) * (ww.ulen + 1);
+				      DpsWideWordListAdd(&Res->WWList, &ww, DPS_WWL_STRICT);
 				    }
 				    Res->WWList.nuniq = wwl->nuniq;
 				    DPS_FREE(wbuf);

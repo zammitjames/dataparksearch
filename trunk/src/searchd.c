@@ -582,9 +582,9 @@ static int do_client(DPS_AGENT *Agent, int client){
 				  nsent = DpsSearchdSendPacket(server, &hdr, p);
 
 				  hdr.cmd = DPS_SEARCHD_CMD_WWL;
-				  hdr.len = sizeof(DPS_WIDEWORDLIST);
+				  hdr.len = sizeof(DPS_WIDEWORDLIST_EX);
 				  for (i = 0; i < Res->WWList.nwords; i++) {
-				    hdr.len += sizeof(DPS_WIDEWORD) 
+				    hdr.len += sizeof(DPS_WIDEWORD_EX) 
 				      + sizeof(char) * (Res->WWList.Word[i].len + 1) 
 				      + sizeof(dpsunicode_t) * (Res->WWList.Word[i].ulen + 1) 
 				      + sizeof(int);
@@ -595,11 +595,11 @@ static int do_client(DPS_AGENT *Agent, int client){
 					done=1;
 					break;
 				  }
-				  dps_memcpy(p, &(Res->WWList), sizeof(DPS_WIDEWORDLIST));
-				  p += sizeof(DPS_WIDEWORDLIST);
+				  dps_memcpy(p, &(Res->WWList), sizeof(DPS_WIDEWORDLIST_EX));
+				  p += sizeof(DPS_WIDEWORDLIST_EX);
 				  for (i = 0; i < Res->WWList.nwords; i++) {
-				    dps_memcpy(p, &(Res->WWList.Word[i]), sizeof(DPS_WIDEWORD));
-				    p += sizeof(DPS_WIDEWORD);
+				    dps_memcpy(p, &(Res->WWList.Word[i]), sizeof(DPS_WIDEWORD_EX));
+				    p += sizeof(DPS_WIDEWORD_EX);
 				    dps_memcpy(p, Res->WWList.Word[i].word, Res->WWList.Word[i].len + 1);
 				    p += Res->WWList.Word[i].len + 1;
 				    p += sizeof(dpsunicode_t) - ((SDPALIGN)p % sizeof(dpsunicode_t));
@@ -665,7 +665,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 				hdr.cmd=DPS_SEARCHD_CMD_WORDS;
 				hdr.len = /*Res->CoordList.ncoords*/ Res->num_rows * sizeof(DPS_URL_CRD_DB);
 				nsent=DpsSearchdSendPacket(server, &hdr, &Res->CoordList.Coords[Res->first]);
-				DpsLog(Agent,verb,"Sent words packet %d bytes cmd=%d len=%d nwords=%d",(int)nsent,hdr.cmd,hdr.len,Res->CoordList.Coords);
+				DpsLog(Agent,verb,"Sent words packet %d bytes cmd=%d len=%d nwords=%d",(int)nsent,hdr.cmd,hdr.len,Res->num_rows/*Res->CoordList.ncoords*/);
 
 #ifdef HAVE_ASPELL
 				if (Agent->Flags.use_aspellext && Agent->naspell > 0) {
@@ -718,7 +718,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 
 static void usage(void){
 
-	fprintf(stderr, "\nsearchd from %s-%s-%s\n(C)1998-2003, LavTech Corp.\n(C)2003-2007, Datapark Corp.\n\n\
+	fprintf(stderr, "\nsearchd from %s-%s-%s\n(C)1998-2003, LavTech Corp.\n(C)2003-2011, DataPark Ltd.\n\n\
 Usage: searchd [OPTIONS]\n\
 \n\
 Options are:\n\
