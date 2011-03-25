@@ -312,7 +312,7 @@ size_t dps_strlen(const char *src) {
 #define STARTLEN 1
 #define NOTALIGN 1
 
-#define N 10000 // array size
+#define N 10000 /* array size */
 char a0[N + 8];
 
 int main() {

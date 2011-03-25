@@ -5,6 +5,11 @@
 #Listen 127.0.0.1:7003
 
 #
+# Unix-socket to answer requests on it
+#
+#Socket searchd.sock
+
+#
 # Database parameters
 #
 DBAddr mysql://foo:bar@localhost/search/?dbmode=cache

@@ -50,6 +50,9 @@
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
+#ifdef HAVE_SYS_UN_H
+#include <sys/un.h>
+#endif
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif
@@ -93,8 +96,7 @@ ssize_t DpsSearchdSendPacket(int fd,const DPS_SEARCHD_PACKET_HEADER *hdr,const v
 #define INADDR_NONE ((unsigned long) -1)
 #endif
 
-static int open_host(char *hostname,int port, int timeout)
-{
+static int open_host(char *hostname, int port) {
 	int net;
 	struct hostent *host;
 	struct sockaddr_in sa_in;
@@ -128,14 +130,48 @@ static int open_host(char *hostname,int port, int timeout)
 	return(net);
 }
 
+static int open_socket(DPS_AGENT *A, char *unix_socket) {
+  char unix_path[128];
+  struct sockaddr_un unix_addr;
+  int sockfd, saddrlen;
 
-int DpsSearchdConnect(DPS_DB *cl) {
+  if (DpsRelVarName(A->Conf, unix_path, sizeof(unix_path), unix_socket) < 105) {
+  } else {
+    DpsLog(A, DPS_LOG_ERROR, "Unix socket name '%s' is too large", unix_path);
+    return(DPS_NET_CANT_CONNECT);
+  }
+  if ((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
+    DpsLog(A, DPS_LOG_ERROR, "unix socket() error %d", errno);
+    return(DPS_NET_CANT_CONNECT);
+  }
+  DpsSockOpt(A, sockfd);
+
+  bzero((void*)&unix_addr, sizeof(unix_addr));
+  unix_addr.sun_family = AF_UNIX;
+  dps_strncpy(unix_addr.sun_path, unix_path, sizeof(unix_addr.sun_path));
+  saddrlen = sizeof(unix_addr.sun_family) + dps_strlen(unix_addr.sun_path);
+
+  if(connect(sockfd, (struct sockaddr *)&unix_addr, sizeof (unix_addr))) {
+    DpsLog(A, DPS_LOG_ERROR, "unix socket '%s' connect() error (%d) %s", unix_path, errno, strerror(errno));
+    return(DPS_NET_CANT_CONNECT);
+  }
+
+  return sockfd;
+}
+
+
+int DpsSearchdConnect(DPS_AGENT *A, DPS_DB *cl) {
   int res = DPS_OK;
-	
-  cl->searchd = open_host(cl->addrURL.hostname, cl->addrURL.port ? cl->addrURL.port : DPS_SEARCHD_PORT, 0);
+
+  if (cl->DBSock) {
+    cl->searchd = open_socket(A, cl->DBSock);
+    /*    DpsLog(A, DPS_LOG_ERROR, "Can't connect to searchd on socket '%s'", cl->DBSock);*/
+  } else {
+    cl->searchd = open_host(cl->addrURL.hostname, cl->addrURL.port ? cl->addrURL.port : DPS_SEARCHD_PORT);
+    /*    DpsLog(A, DPS_LOG_ERROR, "Can't connect to searchd at '%s:%d'", host, port);*/
+  }
   if(cl->searchd <= 0) {
     cl->searchd = 0;
-/*		DpsLog(query, DPS_LOG_ERROR, "Can't connect to searchd at '%s:%d'", host, port);*/
     res = DPS_ERROR;
   }
   return res;

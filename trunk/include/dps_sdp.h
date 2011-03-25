@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@ extern int DpsSearchdGetWordResponse(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *
 extern int DpsSearchdCatAction(DPS_AGENT *A, DPS_CATEGORY *C, int cmd, void *vdb);
 extern int DpsSearchdURLAction(DPS_AGENT *A, DPS_DOCUMENT *D, int cmd, void *vdb);
 extern int DpsResAddDocInfoSearchd(DPS_AGENT * query, DPS_DB *cl, DPS_RESULT * Res, size_t clnum);
-extern int DpsSearchdConnect(DPS_DB *cl);
+extern int DpsSearchdConnect(DPS_AGENT *A, DPS_DB *cl);
 extern void DpsSearchdClose(DPS_DB *cl);
 extern int DpsCloneListSearchd(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_RESULT *Res, DPS_DB *db);
 extern ssize_t DpsSearchdSendPacket(int fd, const DPS_SEARCHD_PACKET_HEADER *hdr, const void *data);
