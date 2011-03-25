@@ -383,7 +383,7 @@ int DpsCarryLimitWrite(DPS_AGENT *Indexer, FILE *f, urlid_t *data, size_t num) {
 	  j=-1;
 	  continue;
         }
-        if ( elems=elems_coded(avail,size,bits,i,n-1) )
+        if ( (elems=elems_coded(avail,size,bits,i,n-1)) )
           break;
       }
  

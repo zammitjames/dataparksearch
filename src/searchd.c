@@ -45,6 +45,7 @@
 #include <string.h>
 #include <strings.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
@@ -104,7 +105,7 @@
 
 static	fd_set mask;
 static DPS_CHILD Children[DPS_CHILDREN_LIMIT];
-/*static*/ int clt_sock;
+/*static*/ int clt_sock, sockfd;
 static int my_generation = 0;
 static pid_t parent_pid = 0;
 static size_t MaxClients = 1;
@@ -838,14 +839,20 @@ static int client_main(DPS_ENV *Env, size_t handle) {
       continue;
     }
 
-    if (FD_ISSET(clt_sock, &msk)) {
+    if (FD_ISSET(sockfd, &msk)) {
+      if ((ns = accept(sockfd, (struct sockaddr *) &client_addr, &addrlen)) == -1) {
+	DpsLog(Agent, DPS_LOG_ERROR, "accept() error %d %s", errno, strerror(errno));
+	DpsEnvFree(Agent->Conf);
+	DpsAgentFree(Agent);
+	exit(1);
+      }
+    } else if (FD_ISSET(clt_sock, &msk)) {
       if ((ns = accept(clt_sock, (struct sockaddr *) &client_addr, &addrlen)) == -1) {
 	DpsLog(Agent, DPS_LOG_ERROR, "accept() error %d %s", errno, strerror(errno));
 	DpsEnvFree(Agent->Conf);
 	DpsAgentFree(Agent);
 	exit(1);
       }
-/*      break;*/
     }
 /*    DpsAcceptMutexUnlock(Agent);*/
     DpsLog(Agent, DPS_LOG_EXTRA, "Connect %s", inet_ntoa(client_addr.sin_addr));
@@ -867,6 +874,7 @@ static int client_main(DPS_ENV *Env, size_t handle) {
 
   }
   if (clt_sock > 0) dps_closesocket(clt_sock);
+  if (sockfd > 0) dps_closesocket(sockfd);
 
   return res;
 }
@@ -1300,7 +1308,8 @@ int main(int argc, char **argv, char **envp) {
 
 		if (unix_socket != NULL) {
 		  char unix_path[128];
-		  int sockfd, saddrlen;
+		  int saddrlen;
+		  int old_umask;
 		  if (DpsRelVarName(Conf, unix_path, sizeof(unix_path), unix_socket) < 105) {
 		  } else {
 		    DpsLog(Agent, DPS_LOG_ERROR, "Unix socket name '%s' is too large", unix_path);
@@ -1324,13 +1333,17 @@ int main(int argc, char **argv, char **envp) {
 		  dps_strncpy(unix_addr.sun_path, unix_path, sizeof(unix_addr.sun_path));
 		  saddrlen = sizeof(unix_addr.sun_family) + dps_strlen(unix_addr.sun_path);
 
+		  old_umask = umask( ~((S_IRWXU | S_IRWXG | S_IRWXO) & 0777));
+
 		  if (bind(sockfd, (struct sockaddr *)&unix_addr, saddrlen) == -1) {
 			DpsLog(Agent, DPS_LOG_ERROR, "Can't bind unix socket: error %d %s", errno, strerror(errno));
+			umask(old_umask);
 			DpsAgentFree(Agent);
 			DpsEnvFree(Conf);
 			unlink(dps_pid_name);
 			exit(1);
 		  }
+		  umask(old_umask);
 		  /* Backlog 64 is enough? */
 		  if (listen(sockfd, 64) == -1) {
 			DpsLog(Agent, DPS_LOG_ERROR, "listen() unix socket error %d %s", errno, strerror(errno));
@@ -1339,6 +1352,7 @@ int main(int argc, char **argv, char **envp) {
 			unlink(dps_pid_name);
 			exit(1);
 		  }
+		  chmod(unix_path, S_IRWXU | S_IRWXG | S_IRWXO);
 		  FD_SET(sockfd, &mask);
 		  
 		}

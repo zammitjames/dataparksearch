@@ -1514,7 +1514,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  if (label != NULL && db->label != NULL && strcasecmp(db->label, label)) continue;
 	  switch(db->DBType) {
 		case DPS_DB_SEARCHD:
-		  res = DpsSearchdConnect(db);
+		  res = DpsSearchdConnect(A, db);
 		  break;
 		default:
 			break;
