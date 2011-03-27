@@ -528,11 +528,22 @@ urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Do
 	} else level++;
 	pd = e;
 	if (level == Indexer->Flags.MaxSiteLevel) {
-	  dps_memcpy(e - 6, "http://", 7);
-	  psite = e - 6;
+	  if (strncasecmp(e, ".www.", 5) == 0) {
+	    dps_memcpy(e - 2, "http://", 7);
+	    psite = e - 2;
+	  } else {
+	    dps_memcpy(e - 6, "http://", 7);
+	    psite = e - 6;
+	  }
 	  break;
 	}
-      } else if (*e == '/') break;
+      } else if (*e == '/') {
+	if (strncasecmp(e, "/www.", 5) == 0) {
+	  dps_memcpy(e - 2, "http://", 7);
+	  psite = e - 2;
+	}
+	break;
+      }
     }
   
     {
