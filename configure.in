@@ -1090,6 +1090,24 @@ else
 	AC_MSG_RESULT([no])
 fi
 
+tcmalloc=no
+TCMALLOC_LFLAGS=""
+AC_MSG_CHECKING(for libtcmalloc)
+AC_ARG_WITH(tcmalloc,
+[  --without-tcmalloc           disable support for libtcmalloc],
+[tcmalloc=$withval],
+[tcmalloc=no])
+
+AC_MSG_RESULT([$tcmalloc])
+if test "$tcmalloc" != "no" ; then
+	if test "$tcmalloc" = "minimal"; then
+		AC_CHECK_LIB(tcmalloc_minimal, malloc, TCMALLOC_LFLAGS="-ltcmalloc_minimal")
+	else
+		AC_CHECK_LIB(tcmalloc, malloc, TCMALLOC_LFLAGS="-ltcmalloc")
+	fi
+fi
+AC_SUBST(TCMALLOC_LFLAGS)
+
 
 dmalloc=no
 AC_MSG_CHECKING(for DMALLOC memory debugger support)

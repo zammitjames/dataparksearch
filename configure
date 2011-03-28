@@ -826,6 +826,7 @@ BOEHMGC_INCLUDE
 BOEHMGC_LFLAGS
 DMALLOC_INCLUDE
 DMALLOC_LFLAGS
+TCMALLOC_LFLAGS
 PTHREAD_LDADD
 PTHREAD_LFLAGS
 PTHREAD_CFLAGS
@@ -999,6 +1000,7 @@ enable_http
 enable_ftp
 enable_news
 enable_gprofiler
+with_tcmalloc
 enable_dmalloc
 enable_boehmgc
 enable_efence
@@ -1761,6 +1763,7 @@ Optional Packages:
                           Default value is 2000.
   --with-lesswrdunifactor=NUM Define NUM as factor of non-uniform words count distribution in relevance calculation.
                           Default value is 20.
+  --without-tcmalloc           disable support for libtcmalloc
   --with-openssl=DIR    Include Openssl support.  DIR is the Openssl
                           base install directory, defaults to /usr/local/ssl.
   --without-zlib          disable HTTP Content-Encoding support
@@ -5303,13 +5306,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:5306: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:5309: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5309: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:5312: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5312: output\"" >&5)
+  (eval echo "\"\$as_me:5315: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6515,7 +6518,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6518 "configure"' > conftest.$ac_ext
+  echo '#line 6521 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8041,11 +8044,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8044: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8047: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8048: \$? = $ac_status" >&5
+   echo "$as_me:8051: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8380,11 +8383,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8383: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8386: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8387: \$? = $ac_status" >&5
+   echo "$as_me:8390: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8485,11 +8488,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8488: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8491: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8492: \$? = $ac_status" >&5
+   echo "$as_me:8495: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8540,11 +8543,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8543: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8546: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8547: \$? = $ac_status" >&5
+   echo "$as_me:8550: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10924,7 +10927,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10927 "configure"
+#line 10930 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11020,7 +11023,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 11023 "configure"
+#line 11026 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14911,6 +14914,108 @@ else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
+
+tcmalloc=no
+TCMALLOC_LFLAGS=""
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libtcmalloc" >&5
+$as_echo_n "checking for libtcmalloc... " >&6; }
+
+# Check whether --with-tcmalloc was given.
+if test "${with_tcmalloc+set}" = set; then :
+  withval=$with_tcmalloc; tcmalloc=$withval
+else
+  tcmalloc=no
+fi
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $tcmalloc" >&5
+$as_echo "$tcmalloc" >&6; }
+if test "$tcmalloc" != "no" ; then
+	if test "$tcmalloc" = "minimal"; then
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for malloc in -ltcmalloc_minimal" >&5
+$as_echo_n "checking for malloc in -ltcmalloc_minimal... " >&6; }
+if test "${ac_cv_lib_tcmalloc_minimal_malloc+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ltcmalloc_minimal  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char malloc ();
+int
+main ()
+{
+return malloc ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_tcmalloc_minimal_malloc=yes
+else
+  ac_cv_lib_tcmalloc_minimal_malloc=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_tcmalloc_minimal_malloc" >&5
+$as_echo "$ac_cv_lib_tcmalloc_minimal_malloc" >&6; }
+if test "x$ac_cv_lib_tcmalloc_minimal_malloc" = x""yes; then :
+  TCMALLOC_LFLAGS="-ltcmalloc_minimal"
+fi
+
+	else
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for malloc in -ltcmalloc" >&5
+$as_echo_n "checking for malloc in -ltcmalloc... " >&6; }
+if test "${ac_cv_lib_tcmalloc_malloc+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ltcmalloc  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char malloc ();
+int
+main ()
+{
+return malloc ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_tcmalloc_malloc=yes
+else
+  ac_cv_lib_tcmalloc_malloc=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_tcmalloc_malloc" >&5
+$as_echo "$ac_cv_lib_tcmalloc_malloc" >&6; }
+if test "x$ac_cv_lib_tcmalloc_malloc" = x""yes; then :
+  TCMALLOC_LFLAGS="-ltcmalloc"
+fi
+
+	fi
+fi
+
 
 
 dmalloc=no
