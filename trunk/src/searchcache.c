@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -126,10 +126,9 @@ int DpsSearchCacheClean(DPS_AGENT *query) {
 	size_t prefix_len;
 
 	dps_snprintf(param, sizeof(param), "%s%scache%s", vardir, DPSSLASHSTR, DPSSLASHSTR);
-	dps_snprintf(filen, sizeof(filen), "%s%s%d.%s",
+	dps_snprintf(filen, sizeof(filen), "%s%s%d.",
 		     appname?appname:"", appname?"-":"",
-		     DpsVarListFindInt(&query->Conf->Vars, "Listen", 0),
-		     DpsVarListFindStr(&query->Conf->Vars, "label", ""));
+		     DpsVarListFindInt(&query->Conf->Vars, "Listen", 0));
 	prefix_len = dps_strlen(filen);
 	dir = opendir(param);
 	if (!dir) return DPS_ERROR;

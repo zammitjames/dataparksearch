@@ -45,9 +45,11 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
 #endif
 
   if (Indexer->flags & DPS_FLAG_UNOCON) {
+    if (Indexer->Conf->dbl.nitems == 0) return DPS_OK;
     DPS_GETLOCK(Indexer, DPS_LOCK_DB);
     db = &Indexer->Conf->dbl.db[url_id % Indexer->Conf->dbl.nitems];
   } else {
+    if (Indexer->dbl.nitems == 0) return DPS_OK;
     db = &Indexer->dbl.db[url_id % Indexer->dbl.nitems];
   }
   DpsDBEscStr(db->DBType, path_esc, DPS_NULL2EMPTY(path), dps_min(PATH_MAX,dps_strlen(DPS_NULL2EMPTY(path))));

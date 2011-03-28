@@ -260,6 +260,30 @@ test-cached/search.res \
 test-cached/search2.res
 
 
+test_searchd_FILES =\
+test-searchd/htdocs/testpage1.html \
+test-searchd/htdocs/testpage2.html \
+test-searchd/htdocs/testpage3.html \
+test-searchd/htdocs/testpage4.html \
+test-searchd/htdocs/testpage5.html \
+test-searchd/htdocs/testpage6.html \
+test-searchd/htdocs/testpage7.html \
+test-searchd/htdocs/testpage8.html \
+test-searchd/htdocs/testpage9.html \
+test-searchd/htdocs/testpage10.html \
+test-searchd/htdocs/testpage11.html \
+test-searchd/htdocs/testpage12.html \
+test-searchd/htdocs/testpage13.html \
+test-searchd/indexer.conf \
+test-searchd/searchd.conf \
+test-searchd/query.res \
+test-searchd/query.tst \
+test-searchd/test.cmd \
+test-searchd/search.htm \
+test-searchd/search.res \
+test-searchd/search2.res
+
+
 
 EXTRA_DIST = dps_test-run \
  ${test_follow_FILES}   \
@@ -277,6 +301,7 @@ EXTRA_DIST = dps_test-run \
  ${test_boolean_FILES} \
  ${test_parsehtml_FILES} \
  ${test_cache_FILES} \
- ${test_cached_FILES}
+ ${test_cached_FILES} \
+ ${test_searchd_FILES}
 
 

@@ -26,52 +26,52 @@ EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php
 	timezones.lst timezones.inc charset-Makefile.am dp-Makefile.am dp.c dps_memcpy.inc
 
 splitter_SOURCES = splitter.c
-splitter_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+splitter_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 splitter_LDFLAGS = @PTHREAD_LFLAGS@
 splitter_CFLAGS = @PTHREAD_CFLAGS@
 
 searchd_SOURCES = searchd.c
-searchd_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+searchd_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 searchd_LDFLAGS = @PTHREAD_LFLAGS@
 searchd_CFLAGS = @PTHREAD_CFLAGS@
 
 stored_SOURCES = stored.c
-stored_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+stored_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 stored_LDFLAGS = @PTHREAD_LFLAGS@
 stored_CFLAGS = @PTHREAD_CFLAGS@
 
 indexer_SOURCES = main.c
-indexer_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+indexer_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 indexer_LDFLAGS = @PTHREAD_LFLAGS@
 indexer_CFLAGS = @PTHREAD_CFLAGS@
 
 search_cgi_SOURCES = search.c
-search_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+search_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 search_cgi_LDFLAGS = @PTHREAD_LFLAGS@
 search_cgi_CFLAGS = @PTHREAD_CFLAGS@
 
 storedoc_cgi_SOURCES = storedoc.c
-storedoc_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+storedoc_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 storedoc_cgi_LDFLAGS = @PTHREAD_LFLAGS@
 storedoc_cgi_CFLAGS = @PTHREAD_CFLAGS@
 
 filler_cgi_SOURCES = filler.c
-filler_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+filler_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 filler_cgi_LDFLAGS = @PTHREAD_LFLAGS@
 filler_cgi_CFLAGS = @PTHREAD_CFLAGS@
 
 dpguesser_SOURCES = dpguesser.c
-dpguesser_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+dpguesser_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 dpguesser_LDFLAGS = @PTHREAD_LFLAGS@  
 dpguesser_CFLAGS = @PTHREAD_CFLAGS@
 
 dpconv_SOURCES = dpconv.c
-dpconv_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+dpconv_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 dpconv_LDFLAGS = @PTHREAD_LFLAGS@  
 dpconv_CFLAGS = @PTHREAD_CFLAGS@
 
 cached_SOURCES = cached.c
-cached_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la
+cached_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 cached_LDFLAGS = @PTHREAD_LFLAGS@  
 cached_CFLAGS = @PTHREAD_CFLAGS@
 
@@ -126,7 +126,7 @@ doc.c contentencoding.c vars.c db.c sdp.c textlist.c dps_image.c \
 result.c synonym.c match.c store.c template.c guesser.c base.c \
 mirror.c sqldbms.c mkind.c chinese.c parsexml.c wild.c hash.c indexertool.c acronym.c sea.c \
 efence.c ef_page.c ef_print.c filence.c
-libdpsearch_mod_la_LIBADD = libdp.la @MODLIB@
+libdpsearch_mod_la_LIBADD = libdp.la @MODLIB@ 
 
 if APACHEMODULE
 libdpsearch_mod_la_CFLAGS = -DAPACHE@APACHE_VER@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS) $(APACHE_NOTEST_CPPFLAGS) $(APACHE_EXTRA_CPPFLAGS) $(APACHE_EXTRA_CFLAGS)
@@ -149,12 +149,12 @@ endif
 
 if THREADSLESS
 
-mod_dpsearch_so_LDADD = libdpsearch_mod.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la
+mod_dpsearch_so_LDADD = libdpsearch_mod.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la 
 libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@
 
 else
 
-mod_dpsearch_so_LDADD = libdpsearch.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la
+mod_dpsearch_so_LDADD = libdpsearch.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la 
 libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS)
 
 endif
@@ -229,7 +229,7 @@ if PHPMODULE
 dpsearch_so_SOURCES=php.c
 dpsearch_so_CFLAGS=-fpic -DCOMPILE_DL=1 @PHP_INCLUDES@
 dpsearch_so_LDFLAGS=-shared -L/usr/local/lib -rdynamic
-dpsearch_so_LDADD=libdpsearch.la libdpcharset.la libdp.la
+dpsearch_so_LDADD=libdpsearch.la libdpcharset.la libdp.la 
 
 endif
 
@@ -300,9 +300,10 @@ LIBS = @LIBS@ @STATIC_LFLAGS@ \
 @ORACLE7_LFLAGS@ \
 @SAPDB_LFLAGS@ \
 @SSL_LFLAGS@ \
-@DMALLOC_LFLAGS@ \
 @BOEHMGC_LFLAGS@ \
-@MECAB_LFLAGS@ 
+@MECAB_LFLAGS@ \
+@DMALLOC_LFLAGS@ \
+@TCMALLOC_LFLAGS@
 
 LDADD = @LDADD@ libdp.la
 
