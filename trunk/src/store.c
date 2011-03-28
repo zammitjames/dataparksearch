@@ -120,7 +120,9 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
 		rc = DPS_ERROR;
               }
 
+	      DPS_FREE(CDoc);
 	      DpsBaseClose(&P);
+
 	      if (rc == DPS_OK) DpsLog(Agent, DPS_LOG_EXTRA, "[%s] Stored rec_id: %x Size: %d Ratio: %5.2f%%", Client,
 				       rec_id, DocSize, 100.0 * zstream.total_out / DocSize);
 
@@ -128,7 +130,6 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
 		DpsBaseOptimize(&P, ((int)rec_id) >> DPS_BASE_BITS);
 	      }
 
-	      DPS_FREE(CDoc);
 	      return rc;
 /* /store operations */
 	    }
