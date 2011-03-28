@@ -2225,7 +2225,6 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 
 __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_uint8 lflags) {
 	DPS_CFG		Cfg;
-	DPS_SERVER	Srv;
 	int		rc=DPS_OK;
 	const char	*dbaddr=NULL;
 	size_t i, len = 0;
@@ -2234,10 +2233,20 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
 	void * paran = DpsViolationEnter(paran);
 #endif
 	
-	DpsServerInit(&Srv);
 	bzero((void*)&Cfg, sizeof(Cfg));
 	Cfg.Indexer = Indexer;
-	Indexer->Conf->Cfg_Srv = Cfg.Srv = &Srv;
+	if (Indexer->Conf->Cfg_Srv != NULL) {
+	  DpsServerFree(Indexer->Conf->Cfg_Srv);
+	  DPS_FREE(Indexer->Conf->Cfg_Srv);
+	}
+	if ((Indexer->Conf->Cfg_Srv = Cfg.Srv = (DPS_SERVER*)DpsMalloc(sizeof(DPS_SERVER))) == NULL) {
+	  dps_snprintf(Indexer->Conf->errstr,  sizeof(Indexer->Conf->errstr) - 1, "Unable to alloc DPS_SERVER");
+#ifdef WITH_PARANOIA
+	  DpsViolationExit(-1, paran);
+#endif
+	  return DPS_ERROR;
+	}
+	DpsServerInit(Cfg.Srv);
 	Cfg.flags=lflags;
 	Cfg.level=0;
 	
@@ -2298,7 +2307,7 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
     Indexer->Conf->Flags.nmaps = Indexer->Flags.nmaps = (Indexer->Conf->LangMaps.nmaps > 0);
 
 freeex:
-	DpsServerFree(&Srv);
+    /*	DpsServerFree(&Srv);*/
 #ifdef WITH_PARANOIA
 	DpsViolationExit(-1, paran);
 #endif
