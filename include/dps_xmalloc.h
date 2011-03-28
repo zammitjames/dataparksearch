@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2005 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,8 @@
 #define _DPS_XMALLOC_H
 
 #ifndef EFENCE
+
+#include <stddef.h>
 
 extern void * DpsXmalloc(size_t size);
 extern void * DpsXrealloc(void *ptr, size_t newsize);
