@@ -164,7 +164,7 @@ static void DpsChineseListAddBundle(DPS_CHINALIST *List, DPS_CHINAWORD * chinawo
 
 
 static void DpsChineseListAdd(DPS_CHINALIST *List, DPS_CHINAWORD * chinaword){
-  dpsunicode_t *nfc = DpsUniNormalizeNFC(NULL, DpsUniDup(chinaword->word));
+  dpsunicode_t *nfc = DpsUniNormalizeNFC(NULL, chinaword->word);
   DPS_CHINAWORD cw = *chinaword;
   cw.word = nfc;
   DpsChineseListAddBundle(List, &cw);
