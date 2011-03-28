@@ -104,6 +104,11 @@ void DpsEnvFree(DPS_ENV * Env){
 	  }*/
 	  DPS_FREE(Env->URLDataFile);
 	}
+	if (Env->Cfg_Srv != NULL) {
+	  DpsServerFree(Env->Cfg_Srv);
+	  DPS_FREE(Env->Cfg_Srv);
+	}
+
 	DpsDBListFree(&Env->dbl);
 	DpsResultFree(&Env->Targets);
 	DpsParserListFree(&Env->Parsers);
