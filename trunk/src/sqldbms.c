@@ -290,7 +290,13 @@ static int DpsPgSQLQuery(DPS_DB *db, DPS_SQLRES *res, const char *q){
 	for (i = 0; i < 3; i++) {
 	  if(!db->connected){
 	        DpsPgSQLInitDB(db);
-		if(db->errcode) res->pgsqlres=NULL;
+		if(db->errcode) {
+		  PQfinish(db->pgsql);
+		  db->connected=0;
+		  res->pgsqlres = NULL;
+		  DPSSLEEP(20);
+		  continue;
+		}
 	  }
 	
 	  if(db->connected)
@@ -368,7 +374,13 @@ static int DpsPgSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *res, const char *q) {
   for (i = 0; i < 3; i++) {
     if(!db->connected){
       DpsPgSQLInitDB(db);
-      if(db->errcode) res->pgsqlres = NULL;
+      if(db->errcode) {
+	PQfinish(db->pgsql);
+	db->connected=0;
+	res->pgsqlres = NULL;
+	DPSSLEEP(20);
+	continue;
+      }
     }
 	
     if(db->connected)
@@ -3018,18 +3030,22 @@ void DpsSQLClose(DPS_DB *db){
 	if(!db->connected)return;
 
 #if defined(HAVE_DP_PGSQL)
-	if (1 /*db->async_in_process*/) {
-	  /* Wait async query in process */
-	  PGresult  *pgsqlres;
-	  while ((pgsqlres = PQgetResult(db->pgsql))) {
-	    if (PQstatus(db->pgsql) == CONNECTION_BAD) { 
-	      PQfinish(db->pgsql); /* db error occured, trying reconnect */
-	      db->connected=0;
-	      break;
+	if(db->DBDriver==DPS_DB_PGSQL){
+	  if (1 /*db->async_in_process*/) {
+	    /* Wait async query in process */
+	    PGresult  *pgsqlres;
+	    while ((pgsqlres = PQgetResult(db->pgsql))) {
+	      if (PQstatus(db->pgsql) == CONNECTION_BAD) { 
+		PQfinish(db->pgsql); /* db error occured, trying reconnect */
+		db->connected=0;
+		break;
+	      }
+	      PQclear(pgsqlres);
 	    }
-	    PQclear(pgsqlres);
+	    db->async_in_process = 0;
 	  }
-	  db->async_in_process = 0;
+	  PQfinish(db->pgsql);
+	  goto ret;
 	}
 #endif
 
@@ -3037,13 +3053,6 @@ void DpsSQLClose(DPS_DB *db){
 #if HAVE_DP_MYSQL
 	if(db->DBDriver==DPS_DB_MYSQL){
 		mysql_close(&db->mysql);
-		goto ret;
-	}
-#endif
-	
-#if HAVE_DP_PGSQL
-	if(db->DBDriver==DPS_DB_PGSQL){
-		PQfinish(db->pgsql);
 		goto ret;
 	}
 #endif
