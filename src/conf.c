@@ -990,7 +990,7 @@ static int add_spell(void *Cfg, size_t ac,char **av){
 	if(C->flags&DPS_FLAG_SPELL){
 		char	fname[PATH_MAX];
 		DpsRelEtcName(Conf,fname,sizeof(fname)-1,av[3]);
-		if(DpsImportDictionary(Conf,av[1],av[2],fname,0,"")){
+		if(DpsImportDictionary(C->Indexer, av[1], av[2], fname, 0, "")) {
 		  dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Can't load dictionary :%s", fname);
 		  return DPS_ERROR;
 		}
@@ -2305,6 +2305,10 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
 	}
     DpsVarListAddStr(&Indexer->Conf->Vars, "IndexDocSizeLimit", DpsVarListFindStr(&Indexer->Conf->Cfg_Srv->Vars, "IndexDocSizeLimit", "0"));
     Indexer->Conf->Flags.nmaps = Indexer->Flags.nmaps = (Indexer->Conf->LangMaps.nmaps > 0);
+#ifdef HAVE_ASPELL
+    aspell_config_replace(Indexer->aspell_config, "home-dir", DpsVarListFindStr(&Indexer->Conf->Vars, "EtcDir", DPS_CONF_DIR));
+    aspell_config_replace(Indexer->aspell_config, "use-other-dicts", "true");
+#endif
 
 freeex:
     /*	DpsServerFree(&Srv);*/

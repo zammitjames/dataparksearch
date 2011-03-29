@@ -27,6 +27,7 @@
 #include "dps_hash.h"
 #include "dps_vars.h"
 #include "dps_charsetutils.h"
+#include "dps_log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -373,25 +374,60 @@ int DpsSpellAdd(DPS_SPELLLIST *List, const dpsunicode_t *word, const char *flag,
 }
 
 
-__C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, const char *charset,
+__C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, const char *charset,
 				   const char *filename, int skip_noflag, const char *first_letters){
         struct stat     sb;
 	char *str, *data = NULL, *cur_n = NULL;	
 	char *lstr;	
-	dpsunicode_t *ustr;	
+	dpsunicode_t *ustr;
+	DPS_ENV  *Conf = query->Conf;	
 	DPS_CHARSET *sys_int;
 	DPS_CHARSET *dict_charset;
 	DPS_CONV touni;
 	DPS_CONV fromuni;
 	int             fd;
 	char            savebyte;
+#if defined HAVE_ASPELL
+	DPS_CHARSET *utf8;
+	DPS_CONV toutf8;
+	AspellCanHaveError *ret;
+	AspellSpeller *speller = NULL;
+	int use_aspellext = Conf->Flags.use_aspellext;
+
+	if (use_aspellext) {
+	  aspell_config_replace(query->aspell_config, "lang", lang);
+	  /*
+	  fprintf(stderr, " -- Using: %s\n", aspell_config_retrieve(query->aspell_config, "lang"));
+	  fprintf(stderr, " -- Using: %s\n", aspell_config_retrieve(query->aspell_config, "encoding"));
+	  fprintf(stderr, " -- Using: %s\n", aspell_config_retrieve(query->aspell_config, "home-dir"));
+	  fprintf(stderr, " -- Using: %s\n", aspell_config_retrieve(query->aspell_config, "personal-path"));
+	  */
+	  ret = new_aspell_speller(query->aspell_config);
+	  if (aspell_error(ret) != 0) {
+	    DpsLog(query, DPS_LOG_ERROR, "ImportDictionary: aspell error: %s", aspell_error_message(ret));
+	    delete_aspell_can_have_error(ret);
+	    use_aspellext = 0;
+	  } else {
+	    speller = to_aspell_speller(ret);
+	  }
+	}
+#endif
 
 	if ((lstr = (char*) DpsMalloc(2048)) == NULL) {
-	  DPS_FREE(str);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
 	  return DPS_ERROR; 
 	}
 	if ((ustr = (dpsunicode_t*) DpsMalloc(8192)) == NULL) {
 	  DPS_FREE(lstr);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
 	  return DPS_ERROR; 
 	}
 
@@ -400,8 +436,27 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	if ((dict_charset == NULL) || (sys_int == NULL)) {
 	  DPS_FREE(lstr);
 	  DPS_FREE(ustr);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
 	  return DPS_ERROR;
 	}
+#ifdef HAVE_ASPELL
+	utf8 = DpsGetCharSet("UTF-8");
+	if (utf8 == NULL) {
+	  DPS_FREE(lstr);
+	  DPS_FREE(ustr);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
+	  return DPS_ERROR;
+	}
+	DpsConvInit(&toutf8, sys_int, utf8, Conf->CharsToEscape, 0);
+#endif
 	
 	DpsConvInit(&touni, dict_charset, sys_int, Conf->CharsToEscape, 0);
 	DpsConvInit(&fromuni, sys_int, dict_charset, Conf->CharsToEscape, 0);
@@ -410,10 +465,22 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	  fprintf(stderr, "Unable to stat synonyms file '%s': %s", filename, strerror(errno));
 	  DPS_FREE(lstr);
 	  DPS_FREE(ustr);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
 	  return DPS_ERROR;
 	}
 	if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
 	  fprintf(stderr, "Unable to open synonyms file '%s': %s", filename, strerror(errno));
+	  DPS_FREE(lstr);
+	  DPS_FREE(ustr);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
 	  return DPS_ERROR;
 	}
 	if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
@@ -421,6 +488,11 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	  DpsClose(fd);
 	  DPS_FREE(lstr);
 	  DPS_FREE(ustr);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
 	  return DPS_ERROR;
 	}
 	if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
@@ -429,6 +501,11 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	  DpsClose(fd);
 	  DPS_FREE(lstr);
 	  DPS_FREE(ustr);
+#ifdef HAVE_ASPELL
+	  if (use_aspellext) {
+	    delete_aspell_speller(speller);
+	  }
+#endif
 	  return DPS_ERROR;
 	}
 	data[sb.st_size] = '\0';
@@ -474,14 +551,26 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 		/* Dont load words if first letter is not required */
 		/* It allows to optimize loading at  search time   */
 		if(*first_letters) {
-			DpsConv(&fromuni, lstr, 2048, ((const char*)ustr),(size_t)res);
+			DpsConv(&fromuni, lstr, 2048, ((const char*)ustr),(size_t)4096);
 			if(!strchr(first_letters,lstr[0]))
 				goto loop_continue;
 		}
+#ifdef HAVE_ASPELL
+		if (use_aspellext) {
+			DpsConv(&toutf8, lstr, 2048, ((const char*)ustr),(size_t)res);
+			aspell_speller_add_to_personal(speller, lstr, -1);
+		}
+#endif
 		res = DpsSpellAdd(&Conf->Spells,ustr,flag,lang);
 		if (res != DPS_OK) {
 		  DPS_FREE(lstr);
 		  DPS_FREE(ustr); DPS_FREE(data);
+#ifdef HAVE_ASPELL
+		  if (use_aspellext) {
+		    aspell_speller_save_all_word_lists(speller);
+		    delete_aspell_speller(speller);
+		  }
+#endif
 		  return res;
 		}
 		if (Conf->Flags.use_accentext) {
@@ -491,6 +580,12 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 		    if (res != DPS_OK) {
 		      DPS_FREE(lstr);
 		      DPS_FREE(ustr); DPS_FREE(data); DPS_FREE(af_uwrd);
+#ifdef HAVE_ASPELL
+		      if (use_aspellext) {
+			aspell_speller_save_all_word_lists(speller);
+			delete_aspell_speller(speller);
+		      }
+#endif
 		      return res;
 		    }
 		  }
@@ -502,6 +597,12 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 		      if (res != DPS_OK) {
 			DPS_FREE(lstr);
 			DPS_FREE(ustr); DPS_FREE(data); DPS_FREE(de_uwrd);
+#ifdef HAVE_ASPELL
+			if (use_aspellext) {
+			  aspell_speller_save_all_word_lists(speller);
+			  delete_aspell_speller(speller);
+			}
+#endif
 			return res;
 		      }
 		    }
@@ -523,6 +624,12 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, con
 	DPS_FREE(data);
 	DPS_FREE(lstr);
 	DPS_FREE(ustr);
+#ifdef HAVE_ASPELL
+	if (use_aspellext) {
+	  aspell_speller_save_all_word_lists(speller);
+	  delete_aspell_speller(speller);
+	}
+#endif
 	return DPS_OK;
 }
 
