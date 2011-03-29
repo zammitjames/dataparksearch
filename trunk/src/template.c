@@ -1269,6 +1269,8 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	DpsConvInit(&Agent->utf_uni, utfcs, unics, Env->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&Agent->utf_lc, utfcs, Env->lcs, Env->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&Agent->uni_utf, unics, utfcs, Env->CharsToEscape, DPS_RECODE_HTML);
+	aspell_config_replace(Agent->aspell_config, "home-dir", DpsVarListFindStr(vars, "EtcDir", DPS_CONF_DIR));
+	aspell_config_replace(Agent->aspell_config, "use-other-dicts", "true");
 #endif
 	
 #ifdef HAVE_SQL

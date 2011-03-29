@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ typedef struct {
 extern __C_LINK DPS_SPELL ** __DPSCALL DpsNormalizeWord(DPS_AGENT *Indexer, DPS_WIDEWORD *word, DPS_PSPELL *FZ);
 extern __C_LINK DPS_WIDEWORDLIST * __DPSCALL DpsAllForms(DPS_AGENT *Indexer, DPS_WIDEWORD *word);
 extern __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV *Conf, const char *lang, const char *charset, const char *filename);
-extern __C_LINK int __DPSCALL DpsImportDictionary(DPS_ENV * Conf, const char *lang, const char *charset, 
+extern __C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, const char *charset, 
 						  const char *filename, int skip_noflag, const char *first_letters);
 extern __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV *Conf, const char *lang, const char *charset, const char *filename);
 
