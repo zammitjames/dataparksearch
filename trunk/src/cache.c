@@ -1035,7 +1035,7 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 /**************/
       P->rec_id = log_buf[i].wrd_id;
       if (ndel > 0) {
-	while(startdel < enddel && startdel->rec_id < P->rec_id) startdel++;
+	while(startdel < enddel && (unsigned long)startdel->rec_id < (unsigned long)P->rec_id) startdel++;
 	if (startdel->rec_id == P->rec_id) startdel->flag = 1;
       }
       if ((data = (DPS_URL_CRD*)DpsBaseARead(P, &len)) == NULL) {
@@ -1063,7 +1063,7 @@ __C_LINK int __DPSCALL DpsProcessBuf(DPS_AGENT *Indexer, DPS_BASE_PARAM *P, size
 	n_old = RemoveOldCrds(data, n_old, del_buf, del_count);
       }
 #if 0
-      fprintf(stderr, "==== LOG_BUF ====\n");
+      fprintf(stderr, "==== LOG_BUF %x ====\n", log_buf[i].wrd_id);
 
       {
 	size_t q;
