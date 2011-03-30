@@ -63,7 +63,7 @@ static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RE
 	char param[4*1024];
 	const char *vardir = DpsVarListFindStr(Conf_Vars, "VarDir", DPS_VAR_DIR);
 	const char *appname = DpsVarListFindStr(Conf_Vars, "appname", NULL);
-	size_t bytes;
+	int bytes;
 	
 	bytes = dps_snprintf(param, sizeof(param)-1, "%s.%s.%d.%s.%s.%s.%s.%s.%s.%s.%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s-%s-%s-%s-%d",
 			     DpsVarListFindStr(Conf_Vars, "m", ""),
@@ -162,28 +162,28 @@ int __DPSCALL DpsSearchCacheStore(DPS_AGENT * query, DPS_RESULT *Res){
 #ifdef DEBUG_CACHE
 	  fprintf(stderr, "found:%d, grand_total:%d ncoords:%d\n", Res->total_found, Res->grand_total, Res->CoordList.ncoords );	
 #endif
-	  write(fd, &Res->total_found, sizeof(Res->total_found));
-	  write(fd, &Res->grand_total, sizeof(Res->grand_total));
+	  (void)write(fd, &Res->total_found, sizeof(Res->total_found));
+	  (void)write(fd, &Res->grand_total, sizeof(Res->grand_total));
 
 			
-	  write(fd, &(Res->WWList),sizeof(DPS_WIDEWORDLIST)); 
+	  (void)write(fd, &(Res->WWList),sizeof(DPS_WIDEWORDLIST)); 
 	  for (i = 0; i< Res->WWList.nwords; i++) {
-	    write(fd, &(Res->WWList.Word[i]), sizeof(DPS_WIDEWORD));
-/*	    write(fd, Res->WWList.Word[i].word, Res->WWList.Word[i].len);
-	    write(fd, Res->WWList.Word[i].uword, sizeof(dpsunicode_t) * Res->WWList.Word[i].ulen);*/
+	    (void)write(fd, &(Res->WWList.Word[i]), sizeof(DPS_WIDEWORD));
+/*	    (void)write(fd, Res->WWList.Word[i].word, Res->WWList.Word[i].len);
+	    (void)write(fd, Res->WWList.Word[i].uword, sizeof(dpsunicode_t) * Res->WWList.Word[i].ulen);*/
 	  }
 			
-	  write(fd, Res->CoordList.Coords, Res->CoordList.ncoords * sizeof(DPS_URL_CRD_DB));
-	  write(fd, Res->CoordList.Data, Res->CoordList.ncoords * sizeof(DPS_URLDATA));
+	  (void)write(fd, Res->CoordList.Coords, Res->CoordList.ncoords * sizeof(DPS_URL_CRD_DB));
+	  (void)write(fd, Res->CoordList.Data, Res->CoordList.ncoords * sizeof(DPS_URLDATA));
 #ifdef WITH_REL_TRACK
-	  write(fd, Res->CoordList.Track, Res->CoordList.ncoords * sizeof(DPS_URLTRACK));
+	  (void)write(fd, Res->CoordList.Track, Res->CoordList.ncoords * sizeof(DPS_URLTRACK));
 #endif
 	  if (Res->PerSite) {
-	    write(fd, &Res->total_found, sizeof(Res->total_found));
-	    write(fd, Res->PerSite, Res->CoordList.ncoords * sizeof(size_t));
+	    (void)write(fd, &Res->total_found, sizeof(Res->total_found));
+	    (void)write(fd, Res->PerSite, Res->CoordList.ncoords * sizeof(size_t));
 	  } else {
 	    size_t topcount = 0;
-	    write(fd, &topcount, sizeof(topcount));
+	    (void)write(fd, &topcount, sizeof(topcount));
 	  }
 			
 	  DpsClose(fd);
@@ -204,7 +204,7 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 #ifdef WITH_REL_TRACK
 	DPS_URLTRACK *trk = NULL;
 #endif
-	int bytes;
+	ssize_t bytes;
 	DPS_WIDEWORDLIST wwl;
 	DPS_WIDEWORD ww;
 	size_t i;
@@ -233,7 +233,7 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 	  DpsClose(fd);
 	  return DPS_ERROR;
 	}
-	if (sb.st_size < sizeof(Res->total_found) + sizeof(DPS_WIDEWORDLIST)) {
+	if (sb.st_size < (off_t)(sizeof(Res->total_found) + sizeof(DPS_WIDEWORDLIST))) {
 	  DpsClose(fd);
 	  unlink(fname);
 	  return DPS_ERROR;
@@ -357,7 +357,7 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 		DpsClose(fd);
 		return DPS_ERROR;
 	}
-	Res->CoordList.ncoords = bytes/sizeof(*wrd);
+	Res->CoordList.ncoords = (size_t)bytes / sizeof(*wrd);
 	if(-1==(bytes=read(fd, dat, Res->total_found/* page_size*/ * sizeof(*dat) ))){
 		DpsClose(fd);
 		return DPS_ERROR;
