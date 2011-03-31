@@ -118,7 +118,8 @@ void *dps_memcpy(void *dst0, const void *src0, size_t length) {
   if ((DPS_PNTYPE)dst0 < (DPS_PNTYPE)src0) { /* copy forward */
     register char *dst = (char*)dst0;
     register const char *src = (const char*)src0;
-    t = (unsigned int)src & wmask;
+    t = (size_t)src & wmask;
+
     if (t) {
     	if (length < wsize) {
 		t = length;
@@ -164,7 +165,8 @@ void *dps_memcpy(void *dst0, const void *src0, size_t length) {
   } else { /* copy backward */
     register char *dst = (char*)dst0 + length;
     register const char *src = (const char *)src0 + length;
-    t = (unsigned int)src & wmask;
+    t = (size_t)src & wmask;
+
     if (t) {
 	if (length < wsize) {
 		t = length;
