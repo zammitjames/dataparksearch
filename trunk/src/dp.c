@@ -159,7 +159,8 @@ char * dps_strncpy(char *dst0, const char *src0, size_t length) {
   if (length) {
     register size_t n = length / 8;
     register size_t r = (length % 8);
-    register char *dst = dst0, *src = src0;
+    register char *dst = dst0;
+    register const char *src = src0;
     if (r == 0) r = 8; else n++;
     if (!(dst[0] = src[0])) { dst++; src++; goto dps_strncpy_second_pas; }
     if (r > 1) { if (!(dst[1] = src[1])) { dst += 2; src += 2; goto dps_strncpy_second_pas; }
@@ -185,7 +186,7 @@ char * dps_strncpy(char *dst0, const char *src0, size_t length) {
 dps_strncpy_second_pas:
     if (dst < dst0 + length) {
       size_t t, restlen = length - (size_t)(dst - dst0);
-      t = (unsigned int)dst & strncpy_wmask;
+      t = (size_t)dst & strncpy_wmask;
       if (t) {
     	if (restlen < strncpy_wsize) {
 		t = restlen;
@@ -198,9 +199,9 @@ dps_strncpy_second_pas:
       }
       t = restlen / strncpy_wsize;
       if (t) {
+	register dps_strncpy_word *wdst = (dps_strncpy_word*)dst;
 	n = t / 8;
     	r = (t % 8 );
-	register dps_strncpy_word *wdst = (dps_strncpy_word*)dst;
     	if (r == 0) r = 8; else n++;
     	wdst[0] = (dps_strncpy_word)0;
     	if (r > 1) { wdst[1] = (dps_strncpy_word)0;
@@ -312,7 +313,7 @@ size_t dps_strlen(const char *src) {
 #define STARTLEN 1
 #define NOTALIGN 1
 
-#define N 10000 /* array size */
+#define N 20000 /* array size */
 char a0[N + 8];
 
 int main() {

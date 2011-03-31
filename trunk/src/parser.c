@@ -104,7 +104,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	int wr[2];
 	int rd[2];    
 	pid_t pid;    
-	size_t gap = Doc->Buf.content - Doc->Buf.buf;
+	size_t gap = (size_t)(Doc->Buf.content - Doc->Buf.buf);
 
 	/* Create write and read pipes */
 	if (pipe(wr) == -1){
@@ -143,7 +143,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		}
 
 		while ( (rs = read(rd[0], Doc->Buf.buf + Doc->Buf.size, DPS_NET_BUF_SIZE)) > 0) {
-		  Doc->Buf.size += rs;
+		  Doc->Buf.size += (size_t)rs;
 		  if (Doc->Buf.size >= Doc->Buf.max_size) break;
 		  if (Doc->Buf.size + DPS_NET_BUF_SIZE > Doc->Buf.allocated_size) {
 		    Doc->Buf.allocated_size += DPS_NET_BUF_SIZE;
@@ -174,7 +174,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 			close(rd[1]);
 
 			/* Send string to be parsed */
-			write(wr[1], Doc->Buf.content, Doc->Buf.size - gap);
+			(void)write(wr[1], Doc->Buf.content, Doc->Buf.size - gap);
 			close(wr[1]);
 
 			_exit(0);
@@ -194,7 +194,7 @@ static char *parse1(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 			init_signals();
 			alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 
-			system(cmd);
+			(void)system(cmd);
 			DpsUnsetEnv("DPS_URL");
 			_exit(0);
 		}
@@ -274,7 +274,7 @@ static char *parse2(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 		init_signals();
 		alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 
-		system(cmd);
+		(void)system(cmd);
 		DpsUnsetEnv("DPS_URL");
 		close (rd[1]);
 		_exit(rc);
@@ -308,7 +308,7 @@ static char *parse3(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	  DpsSetEnv("DPS_URL",url);
 	  init_signals();
 	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
-	  system(cmd);
+	  (void)system(cmd);
 	  DpsUnsetEnv("DPS_URL");
 	  _exit(0);
 	}
@@ -369,7 +369,7 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	  /* Parent process */
 	  close(wr[0]);
 	  /* Send string to be parsed */
-	  write(wr[1], Doc->Buf.content, Doc->Buf.size - gap);
+	  (void)write(wr[1], Doc->Buf.content, Doc->Buf.size - gap);
 	  close(wr[1]);
 
 	  waitpid(pid, &status, 0);
@@ -384,7 +384,7 @@ static char *parse4(DPS_AGENT * Agent, DPS_DOCUMENT *Doc, const char *url, const
 	  init_signals();
 	  alarm((unsigned int) DpsVarListFindInt(&Agent->Vars, "ParserTimeOut", 300) );
 
-	  system(cmd);
+	  (void)system(cmd);
 	  DpsUnsetEnv("DPS_URL");
 	  _exit(0);
 	}
@@ -452,7 +452,7 @@ static char *parse_file (DPS_AGENT * Agent, DPS_PARSER * parser, DPS_DOCUMENT *D
 		umask((mode_t)022);
 		fd = DpsOpen3(fnames[0], O_RDWR | O_CREAT | DPS_BINARY, DPS_IWRITE);
 		/* Write to the temporary file */
-		write(fd, Doc->Buf.content, Doc->Buf.size - gap);
+		(void)write(fd, Doc->Buf.content, Doc->Buf.size - gap);
 		DpsClose(fd);
 	}
 

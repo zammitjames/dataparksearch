@@ -796,7 +796,7 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 		Server->site_id		= DPS_ATOI(DpsSQLValue(&SQLRes, i, 0));
 		DpsMatchFree(&Server->Match);
 		Server->Match.pattern	= strdupnull(DpsSQLValue(&SQLRes,i,1));
-		Server->ordre		= DPS_ATOI(DpsSQLValue(&SQLRes, i, 6));
+		Server->ordre		= DPS_ATOU(DpsSQLValue(&SQLRes, i, 6));
 		Server->command		= *DpsSQLValue(&SQLRes, i, 4);
 		Server->weight		= (float)DPS_ATOF(DpsSQLValue(&SQLRes, i, 5));
 		
@@ -820,8 +820,8 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 		Server->Match.match_type	= DpsVarListFindInt(&Server->Vars, "match_type", DPS_MATCH_BEGIN);
 		Server->Match.case_sense	= (dps_uint2)DpsVarListFindInt(&Server->Vars, "case_sense", 1);
 		Server->Match.nomatch	= DpsVarListFindInt(&Server->Vars, "nomatch", 0);
-		Server->MaxHops = DpsVarListFindInt(&Server->Vars, "MaxHops", DPS_DEFAULT_MAX_HOPS);
-		Server->MaxDepth = DpsVarListFindInt(&Server->Vars, "MaxDepth", DPS_DEFAULT_MAX_DEPTH);
+		Server->MaxHops = DpsVarListFindUnsigned(&Server->Vars, "MaxHops", DPS_DEFAULT_MAX_HOPS);
+		Server->MaxDepth = DpsVarListFindUnsigned(&Server->Vars, "MaxDepth", DPS_DEFAULT_MAX_DEPTH);
 		Server->MinSiteWeight = (float)DpsVarListFindDouble(&Server->Vars, "MinSiteWeight", 0.0);
 		Server->MinServerWeight = (float)DpsVarListFindDouble(&Server->Vars, "MinServerWeight", 0.0);
 		DPS_FREE(Server->Match.arg);
@@ -1598,7 +1598,7 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 		if(prev_dictlen==dictlen[n])continue;
 		prev_dictlen=dictlen[n];
 
-		sprintf(tbl_nm, "%s%d", tablename, dictlen[n]);
+		sprintf(tbl_nm, "%s%zu", tablename, dictlen[n]);
 		if(1){
 			switch(db->DBType){
 				case DPS_DB_PGSQL:
@@ -1958,9 +1958,9 @@ static int DpsDeleteAllFromDict(DPS_AGENT *Indexer,DPS_DB *db){
 		for(i=MINDICT;i<MAXDICT;i++){
 			if(last!=DICTNUM(i)){
 				if (db->DBSQL_TRUNCATE)
-					sprintf(qbuf,"TRUNCATE TABLE dict%d",DICTNUM(i));
+					sprintf(qbuf,"TRUNCATE TABLE dict%zu",DICTNUM(i));
 				else
-					sprintf(qbuf,"DELETE FROM dict%d",DICTNUM(i));
+					sprintf(qbuf,"DELETE FROM dict%zu",DICTNUM(i));
 
 				if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf)))
 					return rc;
@@ -1972,9 +1972,9 @@ static int DpsDeleteAllFromDict(DPS_AGENT *Indexer,DPS_DB *db){
 		for(i=MINDICT;i<MAXDICT;i++){
 			if(last!=DICTNUM(i)){
 				if (db->DBSQL_TRUNCATE)
-					sprintf(qbuf,"TRUNCATE TABLE ndict%d",DICTNUM(i));
+					sprintf(qbuf,"TRUNCATE TABLE ndict%zu",DICTNUM(i));
 				else
-					sprintf(qbuf,"DELETE FROM ndict%d",DICTNUM(i));
+					sprintf(qbuf,"DELETE FROM ndict%zu",DICTNUM(i));
 	
 				if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf)))
 					return(DPS_ERROR);
@@ -3460,11 +3460,11 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    sprintf(updstr, " FOR UPDATE ");
 #if HAVE_ORACLE8
 	    if(db->DBDriver==DPS_DB_ORACLE8){
-	      sprintf(lmtstr, " AND ROWNUM<=%d",url_num); 
+	      sprintf(lmtstr, " AND ROWNUM<=%zu",url_num); 
 	    }
 #endif
 	    if(!lmtstr[0])
-	      sprintf(lmtstr, " AND ROWNUM<=%d", url_num); 
+	      sprintf(lmtstr, " AND ROWNUM<=%zu", url_num); 
 	    break;
 	  case DPS_DB_SAPDB:
 	    sprintf(updstr, " WITH LOCK ");
@@ -3973,7 +3973,7 @@ int DpsClearDBSQL(DPS_AGENT *Indexer, DPS_DB *db) {
 			url_num = DpsVarListFindInt(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DELETE_CACHE_SIZE);
 
 			if(db->DBSQL_LIMIT){
-				sprintf(limit," LIMIT %d", url_num);
+				sprintf(limit," LIMIT %zu", url_num);
 			}
 			sprintf(qbuf,"SELECT url.rec_id,url.url,url.charset_id FROM url%s WHERE url.rec_id<>%s0%s %s %s %s", 
 				db->from, qu, qu, where[0] ? "AND" : "",  where, limit);
@@ -4033,7 +4033,7 @@ int DpsClearDBSQL(DPS_AGENT *Indexer, DPS_DB *db) {
 					case DPS_DBMODE_MULTI:
 						for(i=MINDICT;i<MAXDICT;i++){
 							if(last!=DICTNUM(i)){
-								sprintf(qbuf,"DELETE FROM dict%d WHERE url_id in (%s)",DICTNUM(i),urlin);
+								sprintf(qbuf,"DELETE FROM dict%zu WHERE url_id in (%s)",DICTNUM(i),urlin);
 								if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf))) {
 								        DpsSQLFree(&SQLres);
 									return rc;
@@ -4045,7 +4045,7 @@ int DpsClearDBSQL(DPS_AGENT *Indexer, DPS_DB *db) {
 					case DPS_DBMODE_MULTI_CRC:
 						for(i=MINDICT;i<MAXDICT;i++){
 							if(last!=DICTNUM(i)){
-								sprintf(qbuf,"DELETE FROM ndict%d WHERE url_id in (%s)",DICTNUM(i),urlin);
+								sprintf(qbuf,"DELETE FROM ndict%zu WHERE url_id in (%s)",DICTNUM(i),urlin);
 								if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf))) {
 								        DpsSQLFree(&SQLres);
 									return rc;
@@ -4585,10 +4585,10 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 				
 		    switch(db->DBMode){
 		    case DPS_DBMODE_MULTI:
-		      sprintf(tablename, "dict%d", tlst);
+		      sprintf(tablename, "dict%zu", tlst);
 		      break;
 		    case DPS_DBMODE_MULTI_CRC:
-		      sprintf(tablename, "ndict%d", tlst);
+		      sprintf(tablename, "ndict%zu", tlst);
 		      break;
 		    case DPS_DBMODE_SINGLE_CRC:
 		      dps_strcpy(tablename, "ndict");
@@ -5636,7 +5636,7 @@ static char * include_params(const char *src,char *path,char *dst, size_t start,
 		get_path_part(path,e,i);
 		while(*e)e++;
 	}
-	if (limit) sprintf(e, " LIMIT %u OFFSET %d", limit, start);
+	if (limit) sprintf(e, " LIMIT %zu OFFSET %zu", limit, start);
 	else *e = '\0';
 	return(dst);
 }
