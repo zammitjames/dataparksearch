@@ -103,7 +103,7 @@ int Dps_ftp_connect(DPS_AGENT *Agent, DPS_CONN *connp, char *hostname, int port,
 		connp->connp->port = port - 1;
 	}
 
-	connp->timeout = timeout;
+	connp->timeout = (size_t)timeout;
 	
 	if (!hostname)
 		return -1;
@@ -514,8 +514,8 @@ ssize_t Dps_ftp_size(DPS_CONN *c, char *path) {
 		c->err = code;
 		return -1;
 	}
-	sscanf(c->buf, "213 %u", &len);
-	return len;
+	sscanf(c->buf, "213 %zu", &len);
+	return (ssize_t)len;
 }
 
 int Dps_ftp_rest(DPS_CONN *c, size_t rest) {

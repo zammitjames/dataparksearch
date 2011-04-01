@@ -215,7 +215,7 @@ void DpsInitMutexes(void) {
 
 	MuMu = (DPS_MUTEX*)DpsMalloc((DpsNsems + 1) * sizeof(DPS_MUTEX));
 	if (MuMu == NULL) {
-	  fprintf(stderr, "DataparkSearch: Can't alloc for %u mutexes\n", DpsNsems);
+	  fprintf(stderr, "DataparkSearch: Can't alloc for %zu mutexes\n", DpsNsems);
 	  exit(1);
 	}
 

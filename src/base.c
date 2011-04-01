@@ -869,7 +869,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	    lseek(P->Sfd, posold, SEEK_SET)
 	    ) {
 	  lseek(P->Sfd, pos, SEEK_SET);
-	  write(P->Sfd, buffer, (size_t)nread);
+	  (void)write(P->Sfd, buffer, (size_t)nread);
 	  rsize += (size_t)nread;
 	  posold += (off_t)nread;
 	  pos += (off_t)nread;
@@ -907,7 +907,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 		lseek(P->Sfd, posold, SEEK_SET)
 		) {
 	      lseek(P->Sfd, pos, SEEK_SET);
-	      write(P->Sfd, buffer, (size_t)nread);
+	      (void)write(P->Sfd, buffer, (size_t)nread);
 	      rsize += (size_t)nread;
 	      posold += (off_t)nread;
 	      pos += (off_t)nread;
@@ -936,7 +936,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
       /*if (gain != 0 || OptimizeRatio == 0 || error_cnt > 0)*/ {
 
 	posold = lseek(P->Ifd, (off_t)0, SEEK_END);
-	ftruncate(P->Ifd, (off_t)0);
+	(void)ftruncate(P->Ifd, (off_t)0);
 	lseek(P->Ifd, (off_t)0, SEEK_SET);
 
 	if ((hTable = (DPS_BASEITEM *)DpsXmalloc(sizeof(DPS_BASEITEM) * DPS_HASH_PRIME)) == NULL) {

@@ -184,19 +184,19 @@ dps_uint4 DpsHrefFrom(const char *str) {
 int DpsWeightFactorsInit(const char *wf, int *res){
 	size_t len;
 	int flag = 0;
+        register size_t sn;
 	
 	len = dps_strlen(wf);
 
 	if (len == 0) {
-	  register size_t sn;
 	  for(sn = 0; sn < 256; sn++) {
 		res[sn] = 1;
 	  }
 	} else {
+	  register const char *p;
 	  if (len > 255) len = 255;
-	  register size_t sn;
-	  register const char *p = wf + len - 1;
 
+	  p = wf + len - 1;
 	  for (sn = 1; sn < 256; sn++) {
 	    if ((res[sn] = DpsHex2Int((int)*p)) == 0) flag = 1;
 	    if (p > wf) p--;
@@ -1948,7 +1948,7 @@ static int srv_rpl_time_var(void *Cfg, size_t ac,char **av){
 	} else {
 	  char str[64];
 	  int hops = 0;
-	  sscanf(av[1], "%u", &hops);
+	  sscanf(av[1], "%d", &hops);
 	  if (hops >= DPS_DEFAULT_MAX_HOPS) {
 		dps_snprintf(Conf->errstr,  sizeof(Conf->errstr) - 1, "hops %s is too big", av[1]);
 		return DPS_ERROR;
@@ -2105,7 +2105,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 #endif
 	
 	if ((str0 = (char*)DpsMalloc(str0size)) == NULL) {
-		sprintf(Cfg->Indexer->Conf->errstr, "Can't alloc %d bytes at '%s': %d", str0size, __FILE__, __LINE__);
+		sprintf(Cfg->Indexer->Conf->errstr, "Can't alloc %zu bytes at '%s': %d", str0size, __FILE__, __LINE__);
 #ifdef WITH_PARANOIA
 		DpsViolationExit(-1, paran);
 #endif
@@ -2173,7 +2173,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 			if (str0len + str1len >= str0size) {
 			  str0size += 4096 + str1len;
 			  if ((str0 = (char*)DpsRealloc(str0, str0size)) == NULL) {
-			    sprintf(Cfg->Indexer->Conf->errstr, "Can't realloc %d bytes at '%s': %d", str0size, __FILE__, __LINE__);
+			    sprintf(Cfg->Indexer->Conf->errstr, "Can't realloc %zu bytes at '%s': %d", str0size, __FILE__, __LINE__);
 #ifdef WITH_PARANOIA
 			    DpsViolationExit(-1, paran);
 #endif
@@ -2194,7 +2194,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 		if(DPS_OK != (rc=DpsEnvAddLine(Cfg,str0))){
 			char	err[2048];
 			dps_strncpy(err, Cfg->Indexer->Conf->errstr, 2048);
-			sprintf(Cfg->Indexer->Conf->errstr,"%s:%d: %s",cname,line,err);
+			dps_snprintf(Cfg->Indexer->Conf->errstr, sizeof(Cfg->Indexer->Conf->errstr), "%s:%zu: %s", cname, line, err);
 			break;
 		}
 		

@@ -322,7 +322,7 @@ extern __C_LINK DPS_CHARSET * __DPSCALL DpsGetCharSet(const char * name);
 extern __C_LINK DPS_CHARSET * __DPSCALL DpsGetCharSetByID(int id);
 extern  const char * DpsCharsetCanonicalName(const char * alias);
 
-extern __C_LINK void __DPSCALL DpsConvInit(DPS_CONV *c, DPS_CHARSET *from, DPS_CHARSET *to, char *CharsToEscape, int fl);
+extern __C_LINK void __DPSCALL DpsConvInit(DPS_CONV *c, DPS_CHARSET *from, DPS_CHARSET *to, const char *CharsToEscape, int fl);
 #ifdef DEBUG_CONV
 extern __C_LINK int  __DPSCALL _DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t slen, const char *file, int line);
 #define DpsConv(c, d, dl, s, sl) _DpsConv(c, d, dl, s, sl, __FILE__, __LINE__)

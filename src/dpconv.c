@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@ static void display_charsets(void){
 		if(cs->family != DPS_CHARSET_UNKNOWN)
 			c[n++]=*cs;
 	}
-	fprintf(stderr,"\n%d charsets available:\n",n);
+	fprintf(stderr,"\n%d charsets available:\n", (int)n);
 
 	DpsSort(c,n,sizeof(DPS_CHARSET),&cmpgrp);
 	for(i=0;i<n;i++){
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
 	int html_from = 0, html_to = 0;
 	char *from_buf, *uni_buf, *to_buf;
 	int ch, help = 0, verbose = 0, NFC = 0, NFD = 0;
-        char *CharsToEscape = "\"&<>";
+        const char *CharsToEscape = "\"&<>";
 
 	while ((ch = getopt(argc, argv, "CDEehv?t:f:")) != -1){
 		switch (ch) {
@@ -179,7 +179,7 @@ int main(int argc, char **argv) {
 	  exit(1);
 	}
 	if ((uni_buf = (char*)DpsMalloc(4 * DPCONV_BUF_SIZE * sizeof(int))) == NULL) {
-	  if (verbose) fprintf(stderr, "Can't alloc memory, %d bytes", 4 * DPCONV_BUF_SIZE * sizeof(int));
+	  if (verbose) fprintf(stderr, "Can't alloc memory, %d bytes", (int)4 * DPCONV_BUF_SIZE * sizeof(int));
 	  exit(1);
 	}
  

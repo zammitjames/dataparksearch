@@ -334,7 +334,7 @@ int main(int argc, char **argv, char **envp) {
 	  size_t i;
 	  for (i = 0; i < argc; i++) {
 	    if ((DpsARGV[i] = DpsStrdup(argv[i])) == NULL) {
-	      fprintf(stderr, "Can't duplicate DpsARGV[%d]\n", i);
+	      fprintf(stderr, "Can't duplicate DpsARGV[%d]\n", (int)i);
 	      exit(-1);
 	    }
 	  }
@@ -374,7 +374,7 @@ int main(int argc, char **argv, char **envp) {
 	}
 
 	sprintf(pidbuf,"%d\n",(int)getpid());
-	write(pid_fd,&pidbuf,dps_strlen(pidbuf));
+	(void)write(pid_fd,&pidbuf,dps_strlen(pidbuf));
 	DpsClose(pid_fd);
 
 	init_signals();

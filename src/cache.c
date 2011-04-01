@@ -357,7 +357,7 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 	  struct tm *tim = localtime(&t);
 	  char time_pid[128];
 	
-	  strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+	  strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
 	  t = dps_strlen(time_pid);
 	  dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
 	  
@@ -372,7 +372,7 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 	  struct tm *tim = localtime(&t);
 	  char time_pid[128];
 	
-	  strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+	  strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
 	  t = dps_strlen(time_pid);
 	  dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
 	  
@@ -386,11 +386,11 @@ void DpsRotateDelLog(DPS_AGENT *A) {
   
 	lseek(log_fd, (off_t)0, SEEK_SET);
 	while((nbytes = read(log_fd, del_log_name, PATH_MAX)) > 0) {
-	  write(split_fd, del_log_name, (size_t)nbytes);
+	  (void)write(split_fd, del_log_name, (size_t)nbytes);
 	}
 	DpsClose(split_fd);
 	lseek(log_fd, (off_t)0, SEEK_SET);
-	ftruncate(log_fd, (off_t)0);
+	(void)ftruncate(log_fd, (off_t)0);
   
 	DpsUnLock(log_fd);
 	DpsClose(log_fd);
@@ -403,7 +403,7 @@ void DpsRotateDelLog(DPS_AGENT *A) {
       struct tm *tim = localtime(&t);
       char time_pid[128];
 	
-      strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+      strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
       t = dps_strlen(time_pid);
       dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
       
@@ -416,11 +416,11 @@ void DpsRotateDelLog(DPS_AGENT *A) {
   
     lseek(db->del_fd, (off_t)0, SEEK_SET);
     while((nbytes = read(db->del_fd, del_log_name, PATH_MAX)) > 0) {
-      write(split_fd, del_log_name, (size_t)nbytes);
+      (void)write(split_fd, del_log_name, (size_t)nbytes);
     }
     DpsClose(split_fd);
     lseek(db->del_fd, (off_t)0, SEEK_SET);
-    ftruncate(db->del_fd, (off_t)0);
+    (void)ftruncate(db->del_fd, (off_t)0);
   
     DpsUnLock(db->del_fd);
   }
@@ -1715,7 +1715,7 @@ int DpsURLDataLoadCache(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db) {
 		  TRACE_OUT(A);
 		  return DPS_ERROR;
 		}
-		read(fd, D, (size_t)sb.st_size);
+		(void)read(fd, D, (size_t)sb.st_size);
 		nrec = (size_t)(sb.st_size / sizeof(DPS_URLDATA));
 		first = 0;
 		DpsUnLock(fd);
@@ -1794,7 +1794,7 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 		  return DPS_ERROR;
 		}
 /*		DF[filenum].mtime = sb.st_mtime;*/
-		read(fd, &DF[filenum].URLData[DF[filenum].nrec], (size_t)sb.st_size);
+		(void)read(fd, &DF[filenum].URLData[DF[filenum].nrec], (size_t)sb.st_size);
 		DpsUnLock(fd);
 		DF[filenum].nrec += nrec;
 		mem_used += nrec *  sizeof(DPS_URLDATA);
@@ -2598,7 +2598,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	      sprintf(Env->errstr, "mmap: %d: %s", errno, strerror(errno));
 	      return DPS_ERROR;
 	    }
-	    ftruncate(fd, (off_t) WrdBufSize);
+	    (void)ftruncate(fd, (off_t) WrdBufSize);
 	    DpsClose(fd);
 #elif defined(HAVE_SHAREDMEM_SYSV)
 	    if ((fd = shmget(ftok(shm_name, 0), WrdBufSize, IPC_CREAT | SHM_R | SHM_W | (SHM_R>>3) | (SHM_R>>6) )) < 0) {
@@ -2818,7 +2818,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	    }
 	    if (fd > 0) {
 	      DpsWriteLock(fd);
-	      write(fd, &Item, sizeof(DPS_URLDATA));
+	      (void)write(fd, &Item, sizeof(DPS_URLDATA));
 	      DpsUnLock(fd);
 	    }
 	  }
@@ -2912,7 +2912,7 @@ int DpsURLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  if (F != NULL) {
 	    int searchd_pid;
 
-	    fscanf(F, "%d", &searchd_pid);
+	    (void)fscanf(F, "%d", &searchd_pid);
 	    fclose(F);
 	  
 	    DpsLog(Indexer, DPS_LOG_EXTRA, "Sending HUP signal to searchd, pid:%d", searchd_pid);
@@ -2933,7 +2933,7 @@ void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs) {
   struct tm *tim = localtime(&t);
   char time_pid[128];
 
-  strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+  strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
   t = dps_strlen(time_pid);
   dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
   DpsLog(Agent, DPS_LOG_INFO, "%s Flushing all buffers... ", time_pid);
@@ -2945,7 +2945,7 @@ void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs) {
       if (db->errcode) {
 	t = time(NULL);
 	tim = localtime(&t);
-	strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+	strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
 	t = dps_strlen(time_pid);
 	dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
 	DpsLog(Agent, DPS_LOG_ERROR, "%s Error: %s", time_pid, db->errstr);
@@ -2954,7 +2954,7 @@ void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs) {
     }
     t = time(NULL);
     tim = localtime(&t);
-    strftime(time_pid, sizeof(time_pid), "%a %d %T", tim);
+    strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
     t = dps_strlen(time_pid);
     dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
     DpsLog(Agent, DPS_LOG_ERROR, "%s Shutdown", time_pid);
@@ -3625,7 +3625,7 @@ int DpsCacheConvert(DPS_AGENT *Indexer) {
     DpsClose(new_fd);
     DpsUnLock(old_fd);
     DpsClose(old_fd);
-    system(command);
+    (void)system(command);
     DpsLog(Indexer, DPS_LOG_INFO, "Done %s", filename);
   }
 
@@ -3656,7 +3656,7 @@ int DpsCacheConvert(DPS_AGENT *Indexer) {
     DpsClose(new_fd);
     DpsUnLock(old_fd);
     DpsClose(old_fd);
-    system(command);
+    (void)system(command);
     DpsLog(Indexer, DPS_LOG_INFO, "Done %s", filename);
   }
 
@@ -3687,7 +3687,7 @@ int DpsCacheConvert(DPS_AGENT *Indexer) {
     DpsClose(new_fd);
     DpsUnLock(old_fd);
     DpsClose(old_fd);
-    system(command);
+    (void)system(command);
     DpsLog(Indexer, DPS_LOG_INFO, "Done %s", filename);
   }
 			  
