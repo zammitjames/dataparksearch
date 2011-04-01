@@ -1424,8 +1424,8 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		      elements = aspell_word_list_elements(suggestions);
 		      if ((asug = (char*)aspell_string_enumeration_next(elements)) != NULL) {
 			tlen = dps_strlen(asug);
-			write(rd[1], &tlen, sizeof(tlen));
-			write(rd[1], asug, tlen);
+			(void)write(rd[1], &tlen, sizeof(tlen));
+			(void)write(rd[1], asug, tlen);
 		      }
 		      delete_aspell_string_enumeration(elements);
 		      close(2); /* close STDERR */
@@ -2141,7 +2141,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   if (DPS_OK != DpsCalcBoolItems(query, Res)) {TRACE_OUT(query); return; }
   if(!Res->CoordList.ncoords || Res->nitems == 0) {TRACE_OUT(query); return; }
 
-  DpsLog(query, DPS_LOG_EXTRA, "\tBoolean.nrecords:%d", Res->CoordList.ncoords);
+  /*  DpsLog(query, DPS_LOG_EXTRA, "\tBoolean.nrecords:%d", Res->CoordList.ncoords);*/
 /*  DpsSortSearchWordsByURL(Res->CoordList.Coords, Res->CoordList.ncoords);*/
 
 
@@ -3124,6 +3124,9 @@ int DpsParseQueryString(DPS_AGENT * Agent,DPS_VARLIST * vars,char * query_string
 		} else if (strcasecmp(tok, "DoExcerpt") == 0) {
 		  int res = !strcasecmp(str, "yes");
 		  Agent->Flags.do_excerpt = res;
+		} else if (strcasecmp(tok, "EtcDir") == 0
+			   || strcasecmp(tok, "VarDir") == 0) {
+		  /* do nothing, don't allow to override those variables from a query */
 		} else {
 		  if (strncasecmp(tok, "ul", 2) == 0) DpsVarListAddStr(vars, tok, str);
 		  else DpsVarListReplaceStr(vars, tok, str);

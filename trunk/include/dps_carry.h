@@ -78,7 +78,7 @@ do {									\
       word |= __value[__pvalue];					\
     }									\
     w= word;								\
-    fwrite((char*)&w,sizeof(w),1,__wfile);				\
+    (void)fwrite((char*)&w,sizeof(w),1,__wfile);			\
     __wremaining = 32;							\
     __pvalue = 0;							\
 } while(0)	

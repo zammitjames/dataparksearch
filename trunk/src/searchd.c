@@ -39,6 +39,7 @@
 #include "dps_hash.h"
 #include "dps_charsetutils.h"
 #include "dps_searchcache.h"
+#include "dps_url.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -218,7 +219,59 @@ static void TrackSighandler(int sign){
 }
 
 /*************************************************************/
+#define REST_REQ_SIZE 4096
 
+static int do_RESTful(DPS_AGENT *Agent, int client, const DPS_SEARCHD_PACKET_HEADER *hdr) {
+  char		template_name[PATH_MAX+6]="";
+  DPS_VARLIST	query_vars;
+  DPS_ENV *Env = Agent->Conf;
+  const char *p = (const char*)hdr;
+  const char *conf_dir;
+  char *query_string;
+  char *self;
+  char *template_filename = NULL;
+  size_t len;
+  ssize_t nrecv;
+
+  while (*p != '\0' && *p != ' ') p++; /* skip command name, it's only GET implemented */
+  if (*p == ' ') p++;
+  if (*p == '\0') return DPS_ERROR;
+  query_string = (char*)DpsMalloc(REST_REQ_SIZE);
+  if (query_string == NULL) return DPS_ERROR;
+
+  len = sizeof(*hdr) - (p - (const char*)hdr);
+  dps_memcpy(query_string, p, len);
+
+  nrecv = DpsRecvall(client, query_string + len, REST_REQ_SIZE - len, 600);
+  if (nrecv < 0) {
+    DpsLog(Agent, DPS_ERROR, "RESTful command rceiving error nrecv=%d", (int)nrecv);
+    DPS_FREE(query_string);
+    return DPS_ERROR;
+  }
+  query_string[nrecv + len] = '\0';
+
+  conf_dir = DpsVarListFindStr(&Env->Vars, "EtcDir", DPS_CONF_DIR);
+  DpsVarListInit(&query_vars);
+  DpsParseQStringUnescaped(&query_vars, query_string);
+  DpsParseQueryString(Agent, &Env->Vars, query_string);
+
+  template_filename = (char*)DpsStrdup(DpsVarListFindStr(&Env->Vars, "tmplt", "search.htm"));
+  dps_snprintf(template_name, sizeof(template_name), "%s/%s", conf_dir, 
+	       (p = strrchr(template_filename, DPSSLASH)) ? (p+1) : template_filename);
+  self = DpsVarListFindStr(&Env->Vars, "PATH_INFO", "");
+
+  DpsVarListReplaceStr(&Agent->Conf->Vars, "tmplt", template_filename);
+  DPS_FREE(template_filename);
+
+  Agent->tmpl.Env_Vars = &Env->Vars;
+
+  DpsURLNormalizePath(template_name);
+
+  DPS_FREE(query_string);
+  return DPS_OK;
+}
+
+/*************************************************************/
 
 static int do_client(DPS_AGENT *Agent, int client){
 	char buf[1024]="";
@@ -236,7 +289,6 @@ static int do_client(DPS_AGENT *Agent, int client){
 	int		page_size;
 	int pre_server, server;
 	const char *bcharset;
-	unsigned char *p;
 	size_t ExcerptSize, ExcerptPadding;
 #ifdef __irix__
 	int addrlen;
@@ -265,8 +317,13 @@ static int do_client(DPS_AGENT *Agent, int client){
 		nrecv = DpsRecvall(client, &hdr, sizeof(hdr), 60);
 		if(nrecv != sizeof(hdr)){
 			DpsLog(Agent,verb,"Received incomplete header nrecv=%d", (int)nrecv);
+			if (!strcasecmp((char*)&hdr, "GET ")) do_RESTful(Agent, client, &hdr);
 			break;
 		}else{
+		        if (!strcasecmp((char*)&hdr, "GET ")) {
+			  do_RESTful(Agent, client, &hdr);
+			  break;
+			}
 			DpsLog(Agent,verb,"Received header cmd=%d len=%d", hdr.cmd, hdr.len);
 		}
 		switch(last_cmd = hdr.cmd){
@@ -1114,7 +1171,7 @@ int main(int argc, char **argv, char **envp) {
 	  }
 	}
 	sprintf(pidbuf, "%d\n", (int)getpid());
-	write(pid_fd, &pidbuf, dps_strlen(pidbuf));
+	(void)write(pid_fd, &pidbuf, dps_strlen(pidbuf));
 	DpsClose(pid_fd);
 
 	bzero(Children, DPS_CHILDREN_LIMIT * sizeof(DPS_CHILD));

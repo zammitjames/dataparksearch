@@ -68,12 +68,11 @@ static void DpsPrintLangMap(DPS_LANGMAP * map){
 	  }
 	}
 	for(i = 0; i < DPS_LM_TOPCNT; i++) {
-		char * s;
 		if(!map->memb3[i].count)break;
-		printf("%03x\t%d\n",map->memb3[i].index, map->memb3[i].count);
+		printf("%03x\t%d\n", (unsigned int)map->memb3[i].index, (int)map->memb3[i].count);
 	}
 
-	printf("Length: %d\n", DPS_LM_MAXGRAM2);
+	printf("Length: %d\n", (int)DPS_LM_MAXGRAM2);
 	DpsSort(map->memb6, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), &DpsLMcmpCount);
 	minv = (map->memb6[DPS_LM_TOPCNT - 1].count > 8000) ? 8000 : map->memb6[DPS_LM_TOPCNT - 1].count;
 	ratio = ((double) map->memb6[DPS_LM_TOPCNT - 1].count) / minv;
@@ -83,9 +82,8 @@ static void DpsPrintLangMap(DPS_LANGMAP * map){
 	  }
 	}
 	for(i = 0; i < DPS_LM_TOPCNT; i++) {
-		char * s;
 		if(!map->memb6[i].count)break;
-		printf("%03x\t%d\n",map->memb6[i].index, map->memb6[i].count);
+		printf("%03x\t%d\n", (unsigned int)map->memb6[i].index, (int)map->memb6[i].count);
 	}
 	printf("#\n");
 }
@@ -150,7 +148,7 @@ int main(int argc, char ** argv){
 		}
 
 		if(verbose){
-			fprintf(stderr, "%d maps found\n", env.nmaps);
+			fprintf(stderr, "%d maps found\n", (int)env.nmaps);
 		}
 	}
 	
@@ -199,7 +197,7 @@ int main(int argc, char ** argv){
 		/* Allocate memory for comparison statistics */
 		mapstat = (DPS_MAPSTAT *)DpsMalloc((env.nmaps + 1) * sizeof(DPS_MAPSTAT));
 		if (mapstat == NULL) {
-		  fprintf(stderr, "Can't alloc %d bytes at %s:%d\n", env.nmaps * sizeof(DPS_MAPSTAT), __FILE__, __LINE__);
+		  fprintf(stderr, "Can't alloc %d bytes at %s:%d\n", (int)env.nmaps * sizeof(DPS_MAPSTAT), __FILE__, __LINE__);
 		  exit(1);
 		}
 
@@ -218,7 +216,7 @@ int main(int argc, char ** argv){
 
 		/* Display results. Best language is shown first. */
 		for(i = 0; (i < env.nmaps) && (i < n); i++){
-			printf("%dh %dm\t%s\t%s\n",mapstat[i].hits, mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);
+			printf("%dh %dm\t%s\t%s\n", (int)mapstat[i].hits, (int)mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);
 		}
 
 		/* Free variables */

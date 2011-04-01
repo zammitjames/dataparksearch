@@ -71,7 +71,7 @@ Options are:\n\
 
 int main(int argc,char **argv, char **envp) {
   int ch, sleeps = 1, optimize = 0, obi = 0;
-  size_t from = 0, to = 0xFFF, p_to = 0;
+  unsigned int from = 0, to = 0xFFF, p_to = 0;
 	DPS_ENV * Env;
 	const char * config_name = DPS_CONF_DIR "/cached.conf";
 
@@ -89,10 +89,10 @@ int main(int argc,char **argv, char **envp) {
 	while ((ch = getopt(argc, argv, "blt:f:op:w:v:h?")) != -1){
 		switch (ch) {
 			case 'f':
-				sscanf(optarg,"%x", &from);
+				sscanf(optarg, "%x", &from);
 				break;	
 			case 't': 
-				sscanf(optarg,"%x", &p_to);
+				sscanf(optarg, "%x", &p_to);
 				break;
 			case 'w':
 			        DpsVarListReplaceStr(&Env->Vars, "VarDir", optarg);
@@ -175,7 +175,7 @@ int main(int argc,char **argv, char **envp) {
 		if (sb.st_size != 0) {
 		  del_buf=(DPS_LOGDEL*)DpsMalloc((size_t)sb.st_size + 1);
 		  if (del_buf == NULL) {
-		    fprintf(stderr, "Can't alloc %d bytes at %s:%d\n", (size_t)sb.st_size, __FILE__, __LINE__);
+		    fprintf(stderr, "Can't alloc %d bytes at %s:%d\n", (int)sb.st_size, __FILE__, __LINE__);
 		    exit(0);
 		  }
 		  del_count=read(dd,del_buf,(size_t)sb.st_size)/sizeof(DPS_LOGDEL);
@@ -214,7 +214,7 @@ int main(int argc,char **argv, char **envp) {
 		    if (log_buf != NULL) {
 		      unlink(dname);
 		      bytes = read(log_fd,log_buf,(size_t)sb.st_size);
-		      ftruncate(log_fd, (off_t)0);
+		      (void)ftruncate(log_fd, (off_t)0);
 		      DpsUnLock(log_fd);
 		      DpsClose(log_fd);
 		      

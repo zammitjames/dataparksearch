@@ -24,7 +24,7 @@
 #include "dps_unidata.h"
 
 
-void __DPSCALL DpsConvInit(DPS_CONV *cnv, DPS_CHARSET *from, DPS_CHARSET *to, char *CharsToEscape, int fl) {
+void __DPSCALL DpsConvInit(DPS_CONV *cnv, DPS_CHARSET *from, DPS_CHARSET *to, const char *CharsToEscape, int fl) {
   cnv->from=from;
   cnv->to=to;
   cnv->flags=fl;

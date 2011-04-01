@@ -195,7 +195,7 @@ static char *Logd_time_pid_info(void) {
 	time_t t=time(NULL);
 	struct tm *tim = localtime(&t);
 	
-	strftime(time_pid,sizeof(time_pid), "%a %d %T", tim);
+	strftime(time_pid,sizeof(time_pid), "%a %d %H:%M:%S", tim);
 	t = strlen(time_pid);
 	dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
 	return(time_pid);
@@ -740,7 +740,7 @@ int main(int argc,char **argv, char **envp) {
 		goto err2;
 	}
 	sprintf(pidbuf,"%d\n",(int)getpid());
-	write(pid_fd,&pidbuf,strlen(pidbuf));
+	(void)write(pid_fd, &pidbuf, strlen(pidbuf));
 	close(pid_fd);
 	
 	/* Initialize variables */

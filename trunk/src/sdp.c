@@ -32,6 +32,7 @@
 #include "dps_log.h"
 #include "dps_socket.h"
 #include "dps_charsetutils.h"
+#include "dps_conf.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -394,7 +395,7 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 				}
 				nrecv = DpsRecvall(cl->searchd, msg, hdr.len, 360);
 				msg[nrecv]='\0';
-				sprintf(query->Conf->errstr,"Searchd error: '%s',received:%d", msg, nrecv);
+				sprintf(query->Conf->errstr,"Searchd error: '%s',received:%d", msg, (int)nrecv);
 				rc = DPS_ERROR;
 				DPS_FREE(msg);
 				done=1;
@@ -504,8 +505,10 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 #endif
 /*				    DpsWideWordListFree(&Res->WWList);*/
 				    for(i = 0; i < wwl->nwords; i++) {
-				      ww_ex = (DPS_WIDEWORD_EX *)p;
+/*				      ww_ex = (DPS_WIDEWORD_EX *)((void*)&p[0]);*/
+				      dps_memcpy((char*)&ww, p, sizeof(DPS_WIDEWORD_EX));
 				      p += sizeof(DPS_WIDEWORD_EX);
+/*
 				      ww.order = ww_ex->order;
 				      ww.order_inquery = ww_ex->order_inquery;
 				      ww.count = ww_ex->count;
@@ -513,7 +516,7 @@ int DpsSearchdGetWordResponse(DPS_AGENT *query,DPS_RESULT *Res,DPS_DB *cl) {
 				      ww.ulen = ww_ex->ulen;
 				      ww.origin = ww_ex->origin;
 				      ww.crcword = ww_ex->crcword;
-
+*/				      
 				      ww.word = p;
 #ifdef DEBUG_SDP
 				      DpsLog(query, DPS_LOG_ERROR, "Word {%d}: %s\n", ww.len+1, ww.word);

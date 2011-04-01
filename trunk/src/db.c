@@ -1429,7 +1429,7 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 	  if (Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_STOP) {
 	    sprintf(DPS_STREND(wordinfo),"%s%s: stopword", (*wordinfo) ? ", " : "",  Res->WWList.Word[i].word);
 	  } else {
-	    sprintf(DPS_STREND(wordinfo),"%s%s: %d / %d",  (*wordinfo) ? ", " : "", Res->WWList.Word[i].word, Res->WWList.Word[i].count, ccount );
+	    sprintf(DPS_STREND(wordinfo),"%s%s: %d / %zu",  (*wordinfo) ? ", " : "", Res->WWList.Word[i].word, Res->WWList.Word[i].count, ccount );
 	  }
 	}
 	
@@ -1451,7 +1451,7 @@ static int WordInfo(DPS_VARLIST *Env_Vars, DPS_RESULT *Res) {
 	  if (Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_STOP) {
 		  sprintf(DPS_STREND(wordinfo),"%s%s: stopword", (*wordinfo) ? ", " : "",  Res->WWList.Word[i].word);
 	  } else {
-		  sprintf(DPS_STREND(wordinfo),"%s%s: %d", 
+		  sprintf(DPS_STREND(wordinfo),"%s%s: %zu", 
 			  (*wordinfo) ? ", " : "", Res->WWList.Word[i].word, ccount );
 	  }
 	}

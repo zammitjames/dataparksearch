@@ -204,8 +204,7 @@ static int CreateOrDrop(DPS_AGENT *A, enum dps_indcmd cmd) {
     prm.display= DpsDisplaySQLQuery;
     prm.prompt= sqlmonprompt;
     DpsSQLMonitor(A, A->Conf,&prm);
-    printf("%d queries sent, %d succeeded, %d failed\n",
-      prm.nqueries, prm.ngood, prm.nbad);
+    printf("%d queries sent, %d succeeded, %d failed\n", (int)prm.nqueries, (int)prm.ngood, (int)prm.nbad);
     fclose(infile);
     if (db->DBMode == DPS_DBMODE_CACHE) {
       const char *vardir = DpsVarListFindStr(&Conf.Vars, "VarDir", DPS_VAR_DIR);
@@ -271,7 +270,7 @@ static void display_charsets(void){
           if(cs->family != DPS_CHARSET_UNKNOWN)
                c[n++]=*cs;
      }
-     fprintf(stderr,"\n%d charsets available:\n",n);
+     fprintf(stderr,"\n%d charsets available:\n", (int)n);
 
      DpsSort(c,n,sizeof(DPS_CHARSET),&cmpgrp);
      for(i=0;i<n;i++){
@@ -510,8 +509,8 @@ static void DpsFeatures(DPS_VARLIST *V){
 
 static int usage(int level){
 
-     fprintf(stderr, "\nindexer from %s-%s-%s\n\(C)1998-2003, LavTech Corp.\
-\n(C)2003-2007, Datapark Corp.\n\
+     static char *usage_info = "\n(C)1998-2003, LavTech Corp.\
+\n(C)2003-2011, DataPark Ltd.\n\
 \n\
 Usage: indexer [OPTIONS]  [configfile]\n\
 \n\
@@ -612,8 +611,8 @@ Misc. options:\n\
 "  -h,-?           print help page and exit\n\
   -hh             print more help and exit\n\
 \n\
-\n",
-     PACKAGE,VERSION,DPS_DBTYPE);
+\n";
+     fprintf(stderr, "\nindexer from %s-%s-%s\n%s\n", PACKAGE, VERSION, DPS_DBTYPE, usage_info);
      
      if(level>1)display_charsets();
      return(0);
@@ -1132,7 +1131,7 @@ static char * time_pid_info(void){
      time_t t;
      t=time(NULL);
      tim=localtime(&t);
-     strftime(time_pid,sizeof(time_pid),"%a %d %T",tim);
+     strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
      sprintf(time_pid+dps_strlen(time_pid)," [%d]",(int)getpid());
      return(time_pid);
 }
@@ -1141,7 +1140,7 @@ static char * time_pid_info(void){
 
 static int DpsConfirm(const char *msg)
 {
-        char str[5];
+        char str[8];
         printf("%s",msg);
         return (fgets(str,sizeof(str),stdin) && !strncmp(str,"YES",3));
 }
@@ -1383,7 +1382,7 @@ int main(int argc, char **argv, char **envp) {
        size_t i;
        for (i = 0; i < argc; i++) {
 	 if ((DpsARGV[i] = DpsStrdup(argv[i])) == NULL) {
-	   fprintf(stderr, "Can't duplicate DpsARGV[%d]\n", i);
+	   fprintf(stderr, "Can't duplicate DpsARGV[%d]\n", (int)i);
 	   exit(-1);
 	 }
        }
@@ -1653,7 +1652,7 @@ int main(int argc, char **argv, char **envp) {
                          goto ex;
                     }
                     sprintf(pidbuf,"%d\n",(int)getpid());
-                    write(pid_fd,&pidbuf,dps_strlen(pidbuf));
+                    (void)write(pid_fd,&pidbuf,dps_strlen(pidbuf));
 		    DpsClose(pid_fd);
                     atexit(&exitproc);
                }

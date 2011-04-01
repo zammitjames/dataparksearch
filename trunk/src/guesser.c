@@ -910,8 +910,8 @@ static DPS_LANGMAP *FindLangMap(DPS_LANGMAPLIST *L, const char *lang, const char
     o = &L->Map[L->nmaps];
   }
   if (o == NULL || L->Map == NULL) {
-    fprintf(stderr, "Can't alloc/realloc for language map (%s, %s), nmaps: %d (%d)", lang, charset, 
-		 L->nmaps + 1, (L->nmaps + 1) * sizeof(DPS_LANGMAP) );
+    fprintf(stderr, "Can't alloc/realloc for language map (%s, %s), nmaps: %d (%lu)", lang, charset, 
+		 (int)L->nmaps + 1, (long unsigned)(L->nmaps + 1) * sizeof(DPS_LANGMAP) );
     return NULL;
   }
   bzero((void*)o, sizeof(DPS_LANGMAP));
@@ -959,7 +959,7 @@ __C_LINK int __DPSCALL DpsLoadLangMapFile(DPS_LANGMAPLIST *L, const char * filen
        return DPS_ERROR;
      }
      if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
-       fprintf(stderr, "Unable to alloc %d bytes", (size_t)sb.st_size);
+       fprintf(stderr, "Unable to alloc %d bytes", (int)sb.st_size);
        DpsClose(fd);
        return DPS_ERROR;
      }
@@ -1135,7 +1135,7 @@ void DpsLangMapListSave(DPS_LANGMAPLIST *List) {
          fprintf(out, "Charset:  %s\n", Cmap->charset);
          fprintf(out, "\n\n");
 
-	 fprintf(out, "Length:   %d\n", DPS_LM_MAXGRAM1);
+	 fprintf(out, "Length:   %d\n", (int)DPS_LM_MAXGRAM1);
          DpsPreSort(Cmap->memb3, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), &DpsLMcmpCount);
 	 minv = (Cmap->memb3[DPS_LM_TOPCNT - 1].count > 8000) ? 8000 : Cmap->memb3[DPS_LM_TOPCNT - 1].count;
 	 ratio = ((double) Cmap->memb3[DPS_LM_TOPCNT - 1].count) / minv;
@@ -1146,10 +1146,10 @@ void DpsLangMapListSave(DPS_LANGMAPLIST *List) {
 	 }
          for(j = 0; j < DPS_LM_TOPCNT; j++) {
           if(!Cmap->memb3[j].count) break;
-          fprintf(out, "%03x\t%u\n", Cmap->memb3[j].index, Cmap->memb3[j].count);
+          fprintf(out, "%03x\t%u\n", (unsigned int)Cmap->memb3[j].index, (unsigned int)Cmap->memb3[j].count);
          }
 
-	 fprintf(out, "Length:   %d\n", DPS_LM_MAXGRAM2);
+	 fprintf(out, "Length:   %d\n", (int)DPS_LM_MAXGRAM2);
          DpsPreSort(Cmap->memb6, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), &DpsLMcmpCount);
 	 minv = (Cmap->memb6[DPS_LM_TOPCNT - 1].count > 8000) ? 8000 : Cmap->memb6[DPS_LM_TOPCNT - 1].count;
 	 ratio = ((double) Cmap->memb6[DPS_LM_TOPCNT - 1].count) / minv;
@@ -1160,7 +1160,7 @@ void DpsLangMapListSave(DPS_LANGMAPLIST *List) {
 	 }
          for(j = 0; j < DPS_LM_TOPCNT; j++) {
           if(!Cmap->memb6[j].count) break;
-          fprintf(out, "%03x\t%u\n", Cmap->memb6[j].index, Cmap->memb6[j].count);
+          fprintf(out, "%03x\t%u\n", (unsigned int)Cmap->memb6[j].index, (unsigned int)Cmap->memb6[j].count);
          }
 
          fprintf(out, "#\n");

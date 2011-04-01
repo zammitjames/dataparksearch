@@ -3260,11 +3260,11 @@ __C_LINK int __DPSCALL DpsSQLMonitor(DPS_AGENT *A, DPS_ENV *Env, DPS_SQLMON_PARA
 		      } else {
 			A->dbl.currdbnum= newnum;
 		      }
-                         sprintf(msg,"Connection changed to #%d", (A->flags & DPS_FLAG_UNOCON) ? Env->dbl.currdbnum : A->dbl.currdbnum);
+                         sprintf(msg,"Connection changed to #%d", (int)((A->flags & DPS_FLAG_UNOCON) ? Env->dbl.currdbnum : A->dbl.currdbnum));
                          prm->prompt(prm, DPS_SQLMON_MSG_PROMPT, msg);
                          prm->prompt(prm, DPS_SQLMON_MSG_PROMPT, "\n");
                     }else{
-                         sprintf(msg,"Wrong connection number %d",newnum);
+                         sprintf(msg,"Wrong connection number %d", (int)newnum);
                          prm->prompt(prm, DPS_SQLMON_MSG_ERROR, msg);
                          prm->prompt(prm, DPS_SQLMON_MSG_ERROR, "\n");
                     }

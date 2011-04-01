@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/time.h>
 
 #if (SIZEOF_VOIDP == SIZEOF_INT)
