@@ -535,19 +535,27 @@ static void DpsNextCharE_stored(void *d) {
 }
 
 
+/*#include <syslog.h>*/
 
 static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsunicode_t *c, size_t *len, dpsunicode_t **pos, size_t minwlen, int NOprefixHL) {
   register dpsunicode_t sc;
   register int i, min_i;
   register dpsunicode_t *s = *p, *min_p;
-/*  DPS_CHARSET *k = DpsGetCharSet("koi8-r"), *int_sys = DpsGetCharSet("sys-int");
+  /*
+  DPS_CHARSET *k = DpsGetCharSet("koi8-r"), *int_sys = DpsGetCharSet("sys-int");
   DPS_CONV uni_lc;
   char str[100000];
 
-  DpsConvInit(&uni_lc, int_sys, k, DPS_RECODE_HTML);
+  DpsConvInit(&uni_lc, int_sys, k, "", DPS_RECODE_HTML);
   DpsConv(&uni_lc, str, sizeof(str), s, sizeof(int) * (DpsUniLen(s) + 1));
 
-  fprintf(stdout, "WWL: %s\n", str);*/
+#if defined HAVE_SYSLOG_H && defined WITH_SYSLOG
+  syslog(LOG_ERR, " -- NoPrefixHL:%d WWL: %s", NOprefixHL, str);
+#define ___ syslog(LOG_ERR, " -- %d", __LINE__);
+#else
+  fprintf(stdout, " -- WWL: %s\n", str);
+#endif
+  */
 
   if (wwl->nwords == 0) return NULL;
 
@@ -561,11 +569,11 @@ static dpsunicode_t * DpsUniStrWWL(dpsunicode_t **p, DPS_WIDEWORDLIST *wwl, dpsu
       for(i = 0; i < wwl->nwords; i++) {
 	if (pos[i] == NULL) continue;
 	if (sc != c[i]) continue;
-	if (min_i > 0 && pos[i] > min_p - 1) continue;
+	if (min_i >= 0 && (pos[i] > min_p - 1)) continue;
 	min_i = i;
 	min_p = s;
       }
-      if (min_i > 0) {
+      if (min_i >= 0) {
 	if ((len[min_i] > 0) && (DpsUniStrNCaseCmp(s, &(wwl->Word[min_i].uword[1]), len[min_i]) != 0)) {
 	  s = pos[min_i] + 1;
 	  pos[min_i] = DpsUniStrChrLower(s, c[min_i]);
