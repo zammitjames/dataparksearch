@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -118,7 +118,7 @@ extern size_t DpsNsems;
 /* Accept global locking */
 void DpsAcceptMutexChildCleanup(void);
 void DpsAcceptMutexCleanup(void);
-void DpsAcceptMutexInit(char *var_dir); 
+void DpsAcceptMutexInit(const char *var_dir, const char *app); 
 void DpsAcceptMutexChildInit(void);
 void DpsAcceptMutexLock(DPS_AGENT *Agent);
 void DpsAcceptMutexUnlock(DPS_AGENT *Agent);
