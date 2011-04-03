@@ -49,6 +49,27 @@
 #include <linux/version.h>
 #endif
 
+
+int dps_closesocket(int socket) {
+  char junk[2048];
+        fd_set fds;
+        struct timeval tv;
+	int rfd;
+
+  (void)shutdown(socket, SHUT_WR);
+  tv.tv_sec = (long)2;
+  tv.tv_usec = 0;
+  for(;;) {
+    FD_ZERO(&fds);
+    FD_SET(socket, &fds);
+    rfd = select(socket+1, &fds, 0, 0, &tv);
+    if (rfd <= 0) break;
+    if (read(socket, junk, sizeof(junk)) <= 0) break;
+  }
+  (void)close(socket);
+}
+
+
 void socket_close( DPS_CONN *connp ){
 	if (!connp)
 		return;
