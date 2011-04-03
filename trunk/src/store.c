@@ -247,16 +247,14 @@ __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const ch
 
 #ifdef HAVE_ZLIB
   const char *hello = "S\0";
-  /*  char result[8];*/
   int s, r;
-/*  size_t content_size = Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf);*/
-  size_t content_size = Doc->Buf.size;
+  const char *content = (Doc->Buf.pattern) ? Doc->Buf.pattern : Doc->Buf.buf;
+  size_t content_size = (Doc->Buf.pattern) ? dps_strlen(Doc->Buf.pattern) : Doc->Buf.size;
   urlid_t rec_id = DpsURL_ID(Doc, origurl);
   size_t dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
 
   if ((Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
-/*    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, Doc->Buf.content, content_size, "") : DPS_OK;*/
-    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, (Byte*)Doc->Buf.buf, content_size, "") : DPS_OK;
+    return (Agent->Flags.do_store) ? DoStore(Agent, rec_id, (Byte*)content, content_size, "") : DPS_OK;
   }
 
   r = Agent->Demons.Demon[dbnum].stored_rv;
@@ -265,17 +263,9 @@ __C_LINK int __DPSCALL DpsStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const ch
   DpsSend(s, hello, 1, 0);
   DpsSend(s, &rec_id, sizeof(rec_id), 0);
   DpsSend(s, &content_size, sizeof(content_size), 0);
-/*  DpsSend(s, Doc->Buf.content, content_size, 0);*/
-  DpsSend(s, Doc->Buf.buf, content_size, 0);
+  DpsSend(s, content, content_size, 0);
 
   return DPS_OK;
-/*  
-  if (DpsRecvall(r, result, 1) < 0) {
-    return DPS_ERROR;
-  }
-  
-  return (*result == 'O') ? DPS_OK : DPS_ERROR;
-*/  
 #else
   return DPS_OK;
 #endif
