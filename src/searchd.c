@@ -399,7 +399,6 @@ static int do_client(DPS_AGENT *Agent, int client){
 				ExcerptSize = (size_t)DpsVarListFindInt(&Agent->Vars, "ExcerptSize", 256);
 				ExcerptPadding = (size_t)DpsVarListFindInt(&Agent->Vars, "ExcerptPadding", 40);
 	
-
 				for(i=0;i<Res->num_rows;i++){
 					size_t		ulen;
 					size_t		olen;
@@ -838,7 +837,7 @@ static int client_main(DPS_ENV *Env, size_t handle) {
     DpsVarListDel(&Agent->Vars, "CP");
     *Env->errstr = '\0';
 */
-/*    DpsAcceptMutexLock(Agent);*/
+    DpsAcceptMutexLock(Agent);
 
     msk = mask;
     tval.tv_sec = 60;
@@ -877,12 +876,12 @@ static int client_main(DPS_ENV *Env, size_t handle) {
     }
 
     if(mdone) {
-/*      DpsAcceptMutexUnlock(Agent);*/
+      DpsAcceptMutexUnlock(Agent);
       break;
     }
 
     if(sel == 0) {
-/*      DpsAcceptMutexUnlock(Agent);*/
+      DpsAcceptMutexUnlock(Agent);
       continue;
     }
     if(sel == -1) {
@@ -892,12 +891,13 @@ static int client_main(DPS_ENV *Env, size_t handle) {
       default:
 	DpsLog(Agent, DPS_LOG_WARN, "FIXME select error %d %s", errno, strerror(errno));
       }
-/*      DpsAcceptMutexUnlock(Agent);*/
+      DpsAcceptMutexUnlock(Agent);
       continue;
     }
 
     if (FD_ISSET(sockfd, &msk)) {
       if ((ns = accept(sockfd, (struct sockaddr *) &client_addr, &addrlen)) == -1) {
+	DpsAcceptMutexUnlock(Agent);
 	DpsLog(Agent, DPS_LOG_ERROR, "accept() error %d %s", errno, strerror(errno));
 	DpsEnvFree(Agent->Conf);
 	DpsAgentFree(Agent);
@@ -905,13 +905,14 @@ static int client_main(DPS_ENV *Env, size_t handle) {
       }
     } else if (FD_ISSET(clt_sock, &msk)) {
       if ((ns = accept(clt_sock, (struct sockaddr *) &client_addr, &addrlen)) == -1) {
+	DpsAcceptMutexUnlock(Agent);
 	DpsLog(Agent, DPS_LOG_ERROR, "accept() error %d %s", errno, strerror(errno));
 	DpsEnvFree(Agent->Conf);
 	DpsAgentFree(Agent);
 	exit(1);
       }
     }
-/*    DpsAcceptMutexUnlock(Agent);*/
+    DpsAcceptMutexUnlock(Agent);
     DpsLog(Agent, DPS_LOG_EXTRA, "Connect %s", inet_ntoa(client_addr.sin_addr));
     
     dps_snprintf(addr, sizeof(addr)-1, inet_ntoa(client_addr.sin_addr));
@@ -1211,7 +1212,7 @@ int main(int argc, char **argv, char **envp) {
 		if (pvar_dir == NULL) var_dir = DpsVarListFindStr(&Conf->Vars, "VarDir", DPS_VAR_DIR);
 		else var_dir = pvar_dir;
 
-/*		DpsAcceptMutexInit(var_dir);*/
+		DpsAcceptMutexInit(var_dir, "searchd");
 		DpsUniRegCompileAll(Conf);
 
 		DpsOpenLog("searchd", Conf, log2stderr);

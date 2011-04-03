@@ -529,7 +529,7 @@ static void dps_remove_sync_sigs(sigset_t *sig_mask) {
 /* APR logic to remove SIGUSR2 not copied */
 }
 
-void DpsAcceptMutexInit(char *var_dir) {
+void DpsAcceptMutexInit(const char *var_dir, const char *app) {
     pthread_mutexattr_t mattr;
     int fd;
 
@@ -622,7 +622,7 @@ static int lock_fd = -1;
 #define DpsAcceptMutexCleanup(x)
 #define DpsAcceptMutexChildInit(x)
 
-void DpsAcceptMutexInit(char *var_dir) {
+void DpsAcceptMutexInit(const char *var_dir, const char *app) {
   char lock_fname[PATH_MAX];
 
     lock_it.l_whence = SEEK_SET;	/* from current point */
@@ -636,7 +636,7 @@ void DpsAcceptMutexInit(char *var_dir) {
     unlock_it.l_type = F_UNLCK;		/* set exclusive/write lock */
     unlock_it.l_pid = 0;		/* pid not actually interesting */
 #if 1
-    dps_snprintf(lock_fname, sizeof(lock_fname), "%s.lock", var_dir);
+    dps_snprintf(lock_fname, sizeof(lock_fname), "%s/%s.lock", var_dir, app);
     lock_fd = open(lock_fname, O_CREAT | O_WRONLY | O_EXCL, 0644);
     if (lock_fd == -1) {
 	fprintf(stderr, "Cannot open lock file: %s\n", lock_fname);
