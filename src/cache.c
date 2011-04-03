@@ -3705,7 +3705,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
   urlid_t rec_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
   int sent, cached_sd, cached_rv, res;
   ssize_t recvt;
-  size_t tlen;
+  dps_uint4 tlen;
   char    *textbuf;
   char reply;
 
@@ -3713,7 +3713,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
   textbuf = DpsDocToTextBuf(Doc, 0, 1);
   if (textbuf == NULL) { TRACE_OUT(A); return DPS_ERROR; }
-  tlen = dps_strlen(textbuf) + 1;
+  tlen = (dps_uint4)dps_strlen(textbuf) + 1;
 
   cached_sd = A->Demons.nitems ? A->Demons.Demon[db->dbnum].cached_sd : 0;
   cached_rv = A->Demons.nitems ? A->Demons.Demon[db->dbnum].cached_rv : 0;
