@@ -564,7 +564,6 @@
 #define DPSSLASHSTR		"/"
 #define DPSSLEEP(x)		sleep(x)
 #define DPS_MSLEEP(x)		usleep(1000*(x))
-#define dps_closesocket(x)		close(x)
 #define DPS_IWRITE		0644
 
 #if SIZEOF_SHORT == 2

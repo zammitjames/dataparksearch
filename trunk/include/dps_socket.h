@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -20,13 +20,14 @@
 #define _DPS_SOCKET_H
 
 /* Net status flags */
-#define	DPS_NET_NOTCONNECTED	0
-#define	DPS_NET_CONNECTED		1
+#define	DPS_NET_NOTCONNECTED	        0
 #define	DPS_NET_CONNECTED		1
 /* Net timeouts */
 #define	DPS_NET_ACC_TIMEOUT		20
 #define	DPS_NET_READ_TIMEOUT		20
 
+
+int dps_closesocket(int socket);
 
 void socket_close(DPS_CONN *connp );
 int socket_open(DPS_CONN *connp );
