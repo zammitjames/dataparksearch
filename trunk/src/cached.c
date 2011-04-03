@@ -262,7 +262,7 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 	if (client->cmd.cmd == DPS_LOGD_CMD_URLINFO) {
 	  DPS_BASE_PARAM P;
 	  urlid_t rec_id = client->cmd.url_id;
-	  size_t tlen;
+	  dps_uint4 tlen;
 	  char *textbuf;
 
 #if defined(WITH_TRACE) && defined(DEBUG_LOGD)
@@ -273,7 +273,7 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 	    DpsLog(Agent, DPS_LOG_ERROR, "DpsRecvall error %s:%d ", __FILE__, __LINE__);  
 	    return DPS_ERROR;
 	  }
-	  if ((textbuf = (char*)DpsMalloc(tlen+1)) == NULL) {
+	  if ((textbuf = (char*)DpsMalloc((size_t)tlen+1)) == NULL) {
 	    DpsLog(Agent, DPS_LOG_ERROR, "Can't alloc memory (%u bytes) %s:%d ", tlen+1, __FILE__, __LINE__);  
 	    if (DpsSend(client->send_fd, "F", 1, 0) != 1) return DPS_ERROR;
 	    return DPS_ERROR;
@@ -366,7 +366,7 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 static void usage(void){
 
   fprintf(stderr, "\ncached from %s-%s-%s\
-\n(C)1998-2003, LavTech Corp.\n(C)2003-2007, Datapark Corp.\nUsage: cached [OPTIONS] [configfile]\n\n\
+\n(C)1998-2003, LavTech Corp.\n(C)2003-2011, DataPark Ltd.\nUsage: cached [OPTIONS] [configfile]\n\n\
 Options are:\n\
   -w /path      choose alternative working /var directory\n\
   -p xxx        listen port xxx\n\

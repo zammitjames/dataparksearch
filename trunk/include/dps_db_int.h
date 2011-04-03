@@ -22,10 +22,10 @@
 #include <limits.h>
 
 typedef struct {
-	time_t	stamp;
-	urlid_t	url_id;
-	int	cmd;
-	size_t	nwords;
+  dps_uint8 stamp;
+  dps_uint4 cmd;
+  dps_uint4 nwords;
+  urlid_t   url_id;
 } DPS_LOGD_CMD;
 
 typedef struct {
