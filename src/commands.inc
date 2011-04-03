@@ -65,6 +65,8 @@
 	{"DoExcerpt",		1,1,	env_rpl_bool_var},
 	{"DoStore",		1,1,	env_rpl_bool_var},
 	{"EtcDir",		1,1,	env_rpl_var},
+	{"ExcerptPadding",      1,1,    env_rpl_var},
+	{"ExcerptSize",         1,1,    env_rpl_var},
 	{"ExpireAt",            0,5,    srv_rpl_var},
 	{"FastHrefCheck",	1,1,	env_rpl_bool_var},
 	{"FillDictionary",      1,1,    env_rpl_bool_var},
