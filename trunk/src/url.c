@@ -244,7 +244,59 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 			}
 		}
 	}else{
+	  if (s[0] == '/' && s[1] == '/') { /* have hostinfo without scheme */
+	    char	*ss,*hostname;
+	    url->specific = (char*)DpsStrdup(s);
+	    /* Have hostinfo */
+	    if((ss = strchr(url->specific+2, '/'))) {
+	      /* Have hostname with path */
+	      *ss = 0;
+	      url->hostinfo = (char*)DpsStrdup(url->specific + 2);
+	      *ss = '/';
+	      url->path = (char*)DpsStrdup(ss);
+	    } else {
+	      /* Hostname without path */
+	      if ((ss = strchr(url->specific + 2, '?'))) {
+		/* Have hostname with parameters */
+		*ss = 0;
+		url->hostinfo = (char*)DpsStrdup(url->specific + 2);
+		*ss='?';
+		url->path = (char*)DpsStrdup("/");
+	      }else {
+		url->hostinfo = (char*)DpsStrdup(url->specific + 2);
+		url->path = (char*)DpsStrdup("/");
+	      }
+	    }
+	    if((hostname=strrchr(url->hostinfo,'@'))){
+	      /* Username and password is given  */
+	      /* Store auth string user:password */
+	      *hostname=0;
+	      url->auth = (char*)DpsStrdup(url->hostinfo);
+	      *hostname='@';
+	      hostname++;
+	    }else{
+	      hostname = url->hostinfo;
+	    }
+	    /*
+	      FIXME:
+	      for(h=hostname;*h;h++){
+	        if( *h>='A' && *h<='Z')
+	          *h=(*h)-'A'+'a';
+	      }
+	    */
+	
+	    if((ss=strchr(hostname,':'))){
+	      *ss=0;
+	      url->hostname = (char*)DpsStrdup(hostname);
+	      *ss=':';
+	      url->port = atoi(ss+1);
+	    }else{
+	      url->hostname = (char*)DpsStrdup(hostname);
+	      url->port=0;
+	    }
+	  } else {
 		url->path = (char*)DpsStrdup(s);
+	  }
 	}
 
 	/* Cat an anchor if exist */
