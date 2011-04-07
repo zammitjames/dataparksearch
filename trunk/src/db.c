@@ -359,6 +359,7 @@ int DpsExecActions(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, char action) {
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	qbuf[0] = '\0';
 	DpsPrintTextTemplate(Indexer, NULL, NULL, qbuf, sizeof(qbuf), &t, buf /*cbuf*/);
+	DpsLog(Indexer, DPS_LOG_DEBUG, "ActionSQL.%c: %s", action, qbuf);
 	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	if (DPS_OK != DpsSQLAsyncQuery(db, NULL, qbuf)) DpsLog(Indexer, DPS_ERROR, "ActionSQL error");
 	if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
