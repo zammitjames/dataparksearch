@@ -48,6 +48,7 @@
 #include "dps_indexer.h"
 #include "dps_textlist.h"
 #include "dps_charsetutils.h"
+#include "dps_template.h"
 
 #ifdef HAVE_SQL
 
@@ -5697,6 +5698,18 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		int have_words = 0;
 		DPS_VAR	*Sec;
 		DPS_TEXTITEM	Item;
+		DPS_TEMPLATE t;
+		char *buf = NULL;
+
+		if ((buf = (char*)DpsMalloc(qbuf_len)) == NULL) {
+		  rc = DPS_ERROR;
+		  goto HTDBexit;
+		}
+		*buf = '\0';
+
+		bzero(&t, sizeof(t));
+		t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
+		t.Env_Vars = &Doc->Sections;
 
 		dps_snprintf(real_path,sizeof(real_path)-1,"%s%s",realURL.path,realURL.filename);
 		real_path[sizeof(real_path)-1]='\0';
@@ -5715,7 +5728,9 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		    } else {
 		      include_params(Srv->HTDBsec.Match[i].subsection, real_path, qbuf, 0, 0);
 		    }
-		    if(DPS_OK != (rc = DpsSQLQuery(&db, &SQLres, qbuf))) {
+		    DpsPrintTextTemplate(Indexer,NULL,NULL, buf, qbuf_len-1, &t, qbuf);
+		    if(DPS_OK != (rc = DpsSQLQuery(&db, &SQLres, buf))) {
+		      DPS_FREE(buf);
 		      goto HTDBexit;
 		    }
 		    for (j = 0; j < DpsSQLNumRows(&SQLres); j++){
@@ -5752,6 +5767,7 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		        sprintf(Doc->Buf.buf,"HTTP/1.0 200 OK\r\n\r\n");
 		      else
 		        sprintf(Doc->Buf.buf,"HTTP/1.0 404 Not Found\r\n\r\n");
+		      DPS_FREE(buf);
 		      goto HTDBexit;
 		    }
 		    for (r = 0; r < DpsSQLNumRows(&SQLres); r ++) {
@@ -5767,7 +5783,8 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			    else
 			      sprintf(Doc->Buf.buf,"HTTP/1.0 404 Not Found\r\n\r\n");
 */
-			    goto HTDBexit;
+			    DPS_FREE(buf);
+  			    goto HTDBexit;
 			  }
 			}
 			dps_strcat(Doc->Buf.buf, DpsSQLValue(&SQLres, i, 0));
@@ -5780,6 +5797,8 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		    else
 		        sprintf(Doc->Buf.buf,"HTTP/1.0 404 Not found\r\n\r\n");
 		}
+		DpsTemplateFree(&t);
+		DPS_FREE(buf);
 	}else{
 		size_t	start = 0;
 		urlid_t	url_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
