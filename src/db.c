@@ -2264,7 +2264,7 @@ int DpsTrackSearchd(DPS_AGENT * query, DPS_RESULT *Res) {
     return DPS_OK; /* do not store empty queries */
   }
 
-  escaped_len = 4 * dps_strlen(words);
+  escaped_len = 4 * dps_strlen(words) + 1;
   qbuf_len = escaped_len + 4096;
 
   if ((qbuf = (char*)DpsMalloc(qbuf_len)) == NULL) {
@@ -2293,7 +2293,7 @@ int DpsTrackSearchd(DPS_AGENT * query, DPS_RESULT *Res) {
       }
 
       /* Escape text to track it  */
-      DpsDBEscStr(db->DBType, text_escaped, words, dps_strlen(words));
+      (void)DpsDBEscStr(db, text_escaped, words, dps_strlen(words));
 
       dps_snprintf(qbuf + sizeof(long), qbuf_len - sizeof(long), "%s\2%s\2%d\2%d\2%d",
 		   IP, text_escaped, qtime = (int)time(NULL), Res->total_found, Res->work_time

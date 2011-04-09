@@ -1068,7 +1068,7 @@ static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	len = ((Server->Match.pattern) ? dps_strlen(Server->Match.pattern) : 0) + ((alias) ? dps_strlen(alias) : 0) + 2048;
 	buf = (char*)DpsMalloc(len + 1);
 	arg = (char*)DpsMalloc(len + 1);
-	arg_insert = (char*)DpsMalloc(len + 1);
+	arg_insert = (char*)DpsMalloc(2*len + 1);
 	if (buf == NULL) {
 		dps_strcpy(db->errstr, "Out of memory");
 		db->errcode = 1;
@@ -1090,7 +1090,7 @@ static int DpsServerTableAdd(DPS_AGENT *A, DPS_SERVER *Server, DPS_DB *db) {
 	/* Convert URL to LocalCharset */
 	DpsConv(&dc_lc, arg, len, DPS_NULL2EMPTY(Server->Match.pattern), dps_strlen(DPS_NULL2EMPTY(Server->Match.pattern)) + 1);
 	/* Escape URL string */
-	DpsDBEscStr(db->DBType, arg_insert, arg, dps_strlen(arg));
+	(void)DpsDBEscStr(db, arg_insert, arg, dps_strlen(arg));
 	
 	dps_snprintf(server_weight, sizeof(server_weight), "%f", Server->weight);
 	DpsDBEscDoubleStr(server_weight);
@@ -1214,9 +1214,9 @@ command, parent, ordre, weight, url, pop_weight \
 		    strcasecmp(Sec->name, "Tag")
 		    )
 		   ){
-			arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		  (void)DpsDBEscStr(db, arg_insert, Sec->val, dps_strlen(Sec->val));
 			dps_snprintf(buf, len, "INSERT INTO srvinfo (srv_id,sname,sval) VALUES (%s%i%s,'%s','%s')",
-				qu, Server->site_id, qu, Sec->name, arg);
+				qu, Server->site_id, qu, Sec->name, arg_insert);
 			if(DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, buf)))break;
 		}
 	      }
@@ -1236,7 +1236,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	DPS_SQLRES	SQLRes;
 	size_t len = ((Server->Match.pattern)?dps_strlen(Server->Match.pattern):0) + 1024;
 	char *buf = (char*)DpsMalloc(len + 1);
-	char *arg = (char*)DpsMalloc(len + 1);
+	char *arg = (char*)DpsMalloc(2*len + 1);
 	int res, id = 0, i;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	
@@ -1323,7 +1323,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 		       qu, (have_data) ? Server->parent : 0, qu,
 		       (have_data) ? DPS_ATOI(DpsSQLValue(&SQLRes, 0, 3)) : 0,
 		       (have_data) ? DpsSQLValue(&SQLRes, 0, 4) : "1.0",
-	       DpsDBEscStr(db->DBType, arg, DPS_NULL2EMPTY(Server->Match.pattern), dps_strlen(DPS_NULL2EMPTY(Server->Match.pattern)) )
+	       DpsDBEscStr(db, arg, DPS_NULL2EMPTY(Server->Match.pattern), dps_strlen(DPS_NULL2EMPTY(Server->Match.pattern)) )
 		 );
 	  res = DpsSQLAsyncQuery(db, NULL, buf);
 	  DpsSQLFree(&SQLRes);
@@ -1380,7 +1380,7 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	  /* Convert URL to LocalCharset */
 	  DpsConv(&dc_lc, lc_url, l, url, len + 1);
 	  /* Escape URL string */
-	  DpsDBEscStr(db->DBType, e_url, lc_url, dps_strlen(lc_url));
+	  (void)DpsDBEscStr(db, e_url, lc_url, dps_strlen(lc_url));
 	  DpsVarListAddStr(&Doc->Sections, "E_URL", e_url);
 	}
 
@@ -1486,7 +1486,7 @@ static int DpsFindMessage(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db){
 	if (qbuf == NULL) { DPS_FREE(eid); return DPS_ERROR; }
 
 	/* Escape URL string */
-	DpsDBEscStr(db->DBType, eid, message_id, len);
+	(void)DpsDBEscStr(db, eid, message_id, len);
 	
 	dps_snprintf(qbuf, 4 * len + 128, 
 		 "SELECT rec_id FROM url u, urlinfo i WHERE u.rec_id=i.url_id AND i.sname='Message-ID' AND i.sval='%s'", eid);
@@ -1659,7 +1659,7 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 					if(have_words)dps_strcpy(qe++,",");
 					have_words++;
 					if(db->DBMode==DPS_DBMODE_MULTI){
-					  DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
+					  (void)DpsDBEscStr(db, word_escaped, lcsword, dps_strlen(lcsword));
 					  sprintf(qe,"(%s%i%s,'%s',%d)", qu, url_id, qu, word_escaped, Doc->Words.Word[i].coord);
 					}else{
 					  sprintf(qe,"(%s%i%s,%d,%d)", qu, url_id, qu, DpsStrHash32(lcsword), Doc->Words.Word[i].coord);
@@ -1697,7 +1697,7 @@ static int StoreWordsMulti(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 				len = dps_strlen(lcsword);
 				if (DICTNUM(len) == dictlen[n]){
 					if(db->DBMode==DPS_DBMODE_MULTI){
-					  DpsDBEscStr(db->DBType, word_escaped, lcsword, len);
+					  (void)DpsDBEscStr(db, word_escaped, lcsword, len);
 					  dps_snprintf(qbuf, sizeof(qbuf) - 1, 
 						       "INSERT INTO %s (url_id,word,intag) VALUES(%s%i%s,'%s',%d)",
 						       tbl_nm, qu, url_id, qu, word_escaped, Doc->Words.Word[i].coord);
@@ -1845,7 +1845,7 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 					if(i>nstored)*qe++=',';
 
 					if(db->DBMode==DPS_DBMODE_SINGLE){
-					  DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
+					  (void)DpsDBEscStr(db, word_escaped, lcsword, dps_strlen(lcsword));
 					  dps_snprintf(qe, mlen - (size_t)(qe - qb), "('%s',%d,%d)", word_escaped, url_id, Doc->Words.Word[i].coord);
 					  qe = DPS_STREND(qe);
 					}else
@@ -1873,7 +1873,7 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 				(char*)Doc->Words.Word[i].uword, sizeof(dpsunicode_t) * (Doc->Words.Word[i].ulen + 1));
 
 			if(db->DBMode == DPS_DBMODE_SINGLE || db->DBMode == DPS_DBMODE_CACHE) {
-			  DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
+			  (void)DpsDBEscStr(db, word_escaped, lcsword, dps_strlen(lcsword));
 			  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO dict (url_id,word,intag)VALUES(%s%i%s,'%s',%d)", qu, url_id, qu, 
 				  word_escaped, Doc->Words.Word[i].coord);
 			}else{
@@ -2181,7 +2181,7 @@ static int DpsStoreCrossWords(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db)
 			DpsStrHash32(lcsword), weight);
 	      }else{
 		/* Escape text to track it  */
-		DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
+		(void)DpsDBEscStr(db, word_escaped, lcsword, dps_strlen(lcsword));
 
 		sprintf(qe,"(%s%i%s,%s%i%s,'%s',%d)", qu, referrer, qu, qu, Doc->CrossWords.CrossWord[i].referree_id, qu,
 			word_escaped, weight);
@@ -2223,7 +2223,7 @@ static int DpsStoreCrossWords(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db)
 				  DpsStrHash32(lcsword), weight);
 			}else{
 			  /* Escape text to track it  */
-			  DpsDBEscStr(db->DBType, word_escaped, lcsword, dps_strlen(lcsword));
+			  (void)DpsDBEscStr(db, word_escaped, lcsword, dps_strlen(lcsword));
 
 			  sprintf(qbuf,"INSERT INTO %s (ref_id,url_id,word,intag) VALUES(%s%i%s,%s%i%s,'%s',%d)",
 				  table, qu, referrer, qu, qu, Doc->CrossWords.CrossWord[i].referree_id, qu,
@@ -2584,7 +2584,7 @@ static int DpsAddLink(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  /* Convert URL to LocalCharset */
 	  DpsConv(&dc_lc, lc_url, 24 * len,  url, len + 1);
 	  /* Escape URL string */
-	  DpsDBEscStr(db->DBType, e_url, lc_url, dps_strlen(lc_url));
+	  (void)DpsDBEscStr(db, e_url, lc_url, dps_strlen(lc_url));
 	  DpsVarListAddStr(&Doc->Sections, "E_URL", e_url);
 	}
 	
@@ -3125,7 +3125,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	  }
 /*	}*/
 
-/* No need delete from links here, it has been done before */
+/* No need to delete from links here, it has been done before */
 	
 	  len=0; 
 	  {
@@ -3171,7 +3171,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	if(db->DBSQL_MULTINSERT) { /* MySQL & PgSQL */
 	  int have_inserts = 0;
 	  char *qe;
-	  size_t step = 4 * len + 128, mlen = 4 * len + 128, buflen;
+	  size_t step = dps_max(4096, 4 * len + 128), mlen = 4 * len + 128, buflen;
 
 	  sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES");
 	  qe = qbuf + dps_strlen(qbuf);
@@ -3198,7 +3198,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		    ) continue;
 
 		buflen = qe - qbuf;
-		if((buflen + len + 10) >= mlen){
+		if((buflen + len + 32) >= mlen){
 		  mlen += step;
 		  qbuf = (char*)DpsRealloc(qbuf, mlen);
 		  if (qbuf == NULL) {
@@ -3211,7 +3211,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		if(have_inserts) dps_strcpy(qe++, ",");
 		have_inserts++;
 
-		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
 		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		qe = qe + dps_strlen(qe);
 		if((qe - qbuf) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE) {
@@ -3242,7 +3242,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   )) continue;
 
 		buflen = qe - qbuf;
-		if((buflen + len + 10) >= mlen){
+		if((buflen + len + 32) >= mlen){
 		  mlen += step;
 		  qbuf = (char*)DpsRealloc(qbuf, mlen);
 		  if (qbuf == NULL) {
@@ -3255,7 +3255,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		if(have_inserts) dps_strcpy(qe++, ",");
 		have_inserts++;
 
-		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
 		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		qe = qe + dps_strlen(qe);
 		if((qe - qbuf) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE) {
@@ -3298,7 +3298,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   strcasecmp(Sec->name, "Content-Language")
 		    ) continue;
 
-		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
 		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
 	      }
@@ -3316,7 +3316,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   strcasecmp(Sec->name, "Content-Language")
 		   )) continue;
 
-		arg = DpsDBEscStr(db->DBType, arg, Sec->val, dps_strlen(Sec->val));
+		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
 		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
 	      }
@@ -4518,7 +4518,7 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 	register DPS_URL_CRD_DB *Crd;
 	int		word_match;
 	int		wf[256];
-	char	        escwrd[1000];
+	char	        *escwrd;
 	const char	*where;
 	int		use_crosswords;
 	int		rc;
@@ -4547,6 +4547,17 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 	  return DPS_ERROR;
 	}
 
+	for(z = wordnum = 0; wordnum < Res->nitems; wordnum++) {
+	  if (Res->items[z].cmd != DPS_STACK_WORD) continue;
+	  if (z < Res->items[wordnum].len) z = Res->items[wordnum].len;
+	}
+	if ((escwrd = (char*)DpsMalloc(2 * z + 1)) == NULL) {
+	  DpsLog(query, DPS_LOG_ERROR, "Can't alloc %d bytes at %s:%d", 2 * z + 1, __FILE__, __LINE__);
+	  DPS_FREE(pmerg);
+	  TRACE_OUT(query);
+	  return DPS_ERROR;
+	}
+
 	/* Now find each word */
 	for(wordnum = 0; wordnum < Res->nitems; wordnum++) {
 		size_t	numrows, tnum, tmin, tmax, tlst = 0;
@@ -4562,7 +4573,7 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 		}
 		if (z < wordnum) continue;
 	  
-		DpsDBEscStr(db->DBType, escwrd, Res->items[wordnum].word, Res->items[wordnum].len);
+		(void)DpsDBEscStr(db, escwrd, Res->items[wordnum].word, Res->items[wordnum].len);
 
 		if((db->DBMode==DPS_DBMODE_MULTI)&&(word_match!=DPS_MATCH_FULL)){
 			/* This is for substring search!  */
@@ -4662,6 +4673,8 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		      }
 		    }
 		    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLres,qbuf))) {
+		      DPS_FREE(pmerg);
+		      DPS_FREE(escwrd);
 		      TRACE_OUT(query);
 		      return rc;
 		    }
@@ -4679,6 +4692,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		    if (pmerg[tlst].pbegin == NULL) {
 		      DpsSQLFree(&SQLres);
 		      for (i = tmin; i <= MAXMULTI + 1; i++) { DPS_FREE(pmerg[i].pbegin); DPS_FREE(pmerg[i].db_pbegin); }
+		      DPS_FREE(escwrd);
 		      DPS_FREE(pmerg);
 		      TRACE_OUT(query);
 		      return DPS_ERROR;
@@ -4767,6 +4781,8 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		    }
 		  }
 		  if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLres,qbuf))) {
+		    DPS_FREE(pmerg);
+		    DPS_FREE(escwrd);
 		    TRACE_OUT(query);
 		    return rc;
 		  }
@@ -4783,6 +4799,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 		  if (pmerg[idx].pbegin == NULL) {
 		    DpsSQLFree(&SQLres);
 		    for (i = tmin; i <= MAXMULTI + 1; i++) { DPS_FREE(pmerg[i].pbegin); DPS_FREE(pmerg[i].db_pbegin); }
+		    DPS_FREE(escwrd);
 		    DPS_FREE(pmerg);
 		    TRACE_OUT(query);
 		    return DPS_ERROR;
@@ -4866,6 +4883,7 @@ SELECT url_id,intag FROM %s,url WHERE %s.word%s AND url.rec_id=%s.url_id ORDER B
 	  Res->CoordList.ncoords += pmerg[i]->count;
 	}
 */
+	DPS_FREE(escwrd);
 	DPS_FREE(pmerg);
 	DpsSortAndGroupByURL(query, Res, db);
 	
@@ -4896,7 +4914,7 @@ int DpsTrackSQL(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *db) {
 	if ((text_escaped = (char*)DpsMalloc(escaped_len)) == NULL) { DPS_FREE(qbuf); return DPS_ERROR; }
 	
 	/* Escape text to track it  */
-	DpsDBEscStr(db->DBType, text_escaped, words, dps_strlen(words));
+	(void)DpsDBEscStr(db, text_escaped, words, dps_strlen(words));
 	
 	dps_snprintf(qbuf, qbuf_len - 1, "INSERT INTO qtrack (ip,qwords,qtime,found,wtime) VALUES ('%s','%s',%d,%d,%d)",
 		     IP, text_escaped, qtime = (int)time(NULL), Res->total_found, Res->work_time

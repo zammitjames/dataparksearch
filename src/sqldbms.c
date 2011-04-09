@@ -2558,30 +2558,36 @@ char * DpsDBEscDoubleStr(char *from) {
 }
 
 
-char * DpsDBEscStr(int DBType,char *to,const char *from,size_t len){
+char * DpsDBEscStr(DPS_DB *db, char *to, const char *from, size_t len) {
 	char *s;
 
 	if(!from)return(NULL);
 	if(!to)to=(char*)DpsMalloc(len*2+1);
 
 #ifdef HAVE_DP_MYSQL
-	if(DBType==DPS_DB_MYSQL){
-		mysql_escape_string(to,from,len);
+	if(db->DBType == DPS_DB_MYSQL) {
+	  if (db->connected)
+	        mysql_real_escape_string(&db->mysql, to, from, len);
+	  else
+	        mysql_escape_string(to, from, len);
 		return(to);
 	}
 #endif
 #ifdef HAVE_DP_PGSQL
-	if(DBType==DPS_DB_PGSQL){
-		PQescapeString(to, from, len);
+	if(db->DBType == DPS_DB_PGSQL) {
+	  if (db->connected)
+	        PQescapeStringConn(db->pgsql, to, from, len, NULL);
+	  else
+	        PQescapeString(to, from, len);
 		return(to);
 	}
 #endif
 	s=to;
-	if (DBType == DPS_DB_ORACLE7 || DBType == DPS_DB_ORACLE8  ||
-	    DBType == DPS_DB_MSSQL || DBType == DPS_DB_DB2 ||
-	    DBType == DPS_DB_IBASE || DBType == DPS_DB_SAPDB ||
-	    DBType == DPS_DB_SQLITE || DBType == DPS_DB_ACCESS ||
-	    DBType == DPS_DB_SQLITE3 || DBType == DPS_DB_MIMER)
+	if (db->DBType == DPS_DB_ORACLE7 || db->DBType == DPS_DB_ORACLE8  ||
+	    db->DBType == DPS_DB_MSSQL || db->DBType == DPS_DB_DB2 ||
+	    db->DBType == DPS_DB_IBASE || db->DBType == DPS_DB_SAPDB ||
+	    db->DBType == DPS_DB_SQLITE || db->DBType == DPS_DB_ACCESS ||
+	    db->DBType == DPS_DB_SQLITE3 || db->DBType == DPS_DB_MIMER)
 	 {
 	    while(*from){
 		switch(*from){
