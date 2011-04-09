@@ -1628,7 +1628,7 @@ int DpsGetURL(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc, const char *origurl) {
 	  }
 #ifdef HAVE_SQL
 	  else if(!strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "htdb")) {
-		res = DpsHTDBGet(Indexer, Doc);
+	        res = DpsHTDBGet(Indexer, Doc, 0);
 	  }
 #endif
 #ifdef WITH_FILE
@@ -1660,6 +1660,11 @@ int DpsGetURL(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc, const char *origurl) {
 	  }
 #endif
 	}
+#ifdef HAVE_SQL
+	if(strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "htdb")) {/* Get HTDBText sections for non htdb: documents if they're defined */
+	  res = DpsHTDBGet(Indexer, Doc, 1);
+	}
+#endif
 
 	/* Add NULL terminator */
 	if (Doc->Buf.buf) {

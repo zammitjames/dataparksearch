@@ -385,7 +385,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 		if (Indexer->Hrefs.nhrefs > 1024) DpsStoreHrefs(Indexer);
 	}
 	DpsMatchFree(&C->Srv->Match);
-	DpsMatchListFree(&C->Srv->HTDBsec);
+	/*	DpsMatchListFree(&C->Srv->HTDBsec);*/
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 	return DPS_OK;
@@ -1193,7 +1193,7 @@ static int add_srv_db(void *Cfg, size_t ac, char **av) {
 
 	DpsDBListFree(&dbl);
 	DpsMatchFree(&C->Srv->Match);
-	DpsMatchListFree(&C->Srv->HTDBsec);
+	/*	DpsMatchListFree(&C->Srv->HTDBsec);*/
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 	return DPS_OK;
@@ -1720,7 +1720,7 @@ static int srv_htdb(void *Cfg, size_t ac,char **av){
 	size_t i, j;
 	if (ac == 1) {
 	  for (i = j = 0; i < C->Srv->HTDBsec.nmatches; i++) {
-	    if (strcasecmp(av[0], DPS_NULL2EMPTY(C->Srv->Match.arg))) {
+	    if (strcasecmp(av[0], DPS_NULL2EMPTY(C->Srv->HTDBsec.Match[i].arg))) {
 	      if (i != j) {
 		DpsMatchFree(&C->Srv->HTDBsec.Match[j]);
 		C->Srv->HTDBsec.Match[j] = C->Srv->HTDBsec.Match[i];
@@ -1733,7 +1733,8 @@ static int srv_htdb(void *Cfg, size_t ac,char **av){
 	  }
 	} else if (ac == 2 && !strcasecmp(av[0], "HTDBText")) {
 	  for (i = j = 0; i < C->Srv->HTDBsec.nmatches; i++) {
-	    if (strcasecmp(av[0], DPS_NULL2EMPTY(C->Srv->Match.arg)) || strcasecmp(av[1], DPS_NULL2EMPTY(C->Srv->Match.section))) {
+	    if (strcasecmp(av[0], DPS_NULL2EMPTY(C->Srv->HTDBsec.Match[i].arg)) 
+		|| strcasecmp(av[1], DPS_NULL2EMPTY(C->Srv->HTDBsec.Match[i].section))) {
 	      if (i != j) {
 		DpsMatchFree(&C->Srv->HTDBsec.Match[j]);
 		C->Srv->HTDBsec.Match[j] = C->Srv->HTDBsec.Match[i];

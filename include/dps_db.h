@@ -159,7 +159,7 @@ extern int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode);
 extern unsigned int     DpsGetCategoryId(DPS_ENV *Conf, char *category);
 
 extern int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res);
-extern int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc);
+extern int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc, int flag_short);
 
 extern int DpsCheckUrlid(DPS_AGENT *A, urlid_t id);
 extern int DpsCheckReferrer(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc);
