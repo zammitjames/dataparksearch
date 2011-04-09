@@ -983,6 +983,10 @@ typedef struct {
   struct sockaddr_in    bind_addr;        /**< address for outbound connections      */
         time_t          hold_cache;       /**< How time in secs hold search cache    */
         time_t          robots_period;    /**< How time in secs hold robots.txt data */
+        size_t          GuesserBytes;     /**< Number of bytes used for language and charset guessing */
+        size_t          SEASentences;     /**< Maximal number of sentenses using by SEA */
+        size_t          SEASentenceMinLength; /**< minimal length of the sentence to use in SEA */
+        size_t          MaxCrawlDelay;    /**< Maximum Crawl-delay seconds to wait */
         int             do_store;         /**< Compressed copies storage flag        */
         int             do_excerpt;       /**< Document Excerpts making flag         */
 	int		CVS_ignore;	  /**< Skip CVS directgories - for tests     */
@@ -1002,7 +1006,6 @@ typedef struct {
         int             PreloadURLData;
         int             cold_var;         /**< Do not use file locking for read-only operations */
         int             PopRankNeoIterations;
-        size_t          GuesserBytes;     /**< Number of bytes used for language and charset guessing */
         int             skip_unreferred;
         int             rel_nofollow;     /**< Flag to obi rel="nofollow" attribute */
         int             track_hops;
@@ -1015,15 +1018,13 @@ typedef struct {
         int             mark_for_index;
         int             use_date_header;  /**< Use Date: HTTP header if Last-Modified: is not specified */
         int             MaxSiteLevel;     /**< Maximum level of hostname for site_id */
-        size_t          SEASentences;     /**< Maximal number of sentenses using by SEA */
-        size_t          SEASentenceMinLength; /**< minimal length of the sentence to use in SEA */
         int             Resegment;        /**< Resegmenting flags for East-Asian languages */
         int             PagesInGroup;     /**< Number of additional pages from same site when google-like groupping is enabled */
         int             LongestTextItems; /**< Number of longest text items to index */
         int             SubDocLevel;      /**< Maximum nested level for sub-documents */
         int             SubDocCnt;        /**< Maximum number of subdocuments to be indexed */
-        size_t          MaxCrawlDelay;    /**< Maximum Crawl-delay seconds to wait */
         dps_uint4       SkipHrefIn;       /**< Flag to skip some HTML tags from new href lookup */
+        dps_uint4       expire;           /**< Flag to process to expired documents */
    enum dps_prmethod    poprank_method;
    enum dps_indcmd      cmd;
 } DPS_FLAGS;

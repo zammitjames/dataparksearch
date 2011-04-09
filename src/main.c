@@ -1543,7 +1543,11 @@ int main(int argc, char **argv, char **envp) {
           if(url_filename){
                res=DpsURLFile(&Main,url_filename,DPS_URL_FILE_REINDEX);
           }else{
-               res = DpsURLAction(&Main, NULL, DPS_URL_ACTION_EXPIRE);
+	    if (cfg_url_number != 0x7FFFFFFF || max_index_time > 0 || max_index_size > 0 ) {
+	      Conf.Flags.expire = 1;
+	    } else {
+	      res = DpsURLAction(&Main, NULL, DPS_URL_ACTION_EXPIRE);
+	    }
           }
           if(res!=DPS_OK){
                DpsLog(&Main,DPS_LOG_ERROR,"Error: '%s'",DpsEnvErrMsg(Main.Conf));

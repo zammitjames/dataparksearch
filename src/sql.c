@@ -3406,6 +3406,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	char		sortstr[128] = "";
 	char		lmtstr[128]="";
 	char		updstr[64]="";
+	char            nitstr[64]="";
 	size_t		i = 0, j, nrows, qbuflen, start_target;
 	size_t		url_num;
 /*	size_t          rec_id = (size_t)DpsVarListFindUnsigned(&Indexer->Conf->Vars, "PopRank_rec_id", 0);*/
@@ -3545,22 +3546,28 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	} else { /* No sorting flag specified, order by status */
 	    sprintf(sortstr, "%s", "ORDER BY url.status");
 	}
-		
+	
+
+	if (Indexer->Flags.cmd == DPS_IND_POPRANK) {
+	  dps_snprintf(nitstr, sizeof(nitstr), "next_index_time>%lu", (unsigned long)nit);
+	} else if (Indexer->Flags.expire) {
+	  nitstr[0] = '\0';
+	} else {
+	  dps_snprintf(nitstr, sizeof(nitstr), "next_index_time<=%lu", (unsigned long)Indexer->now);
+	}
 			
 	if(db->DBSQL_LIMIT){
-	  dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%lu %s %s %s %s LIMIT %d%s",
-		       select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from, 
-		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
-		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
-		       where[0] ? "AND" : "", where, smallbuf, sortstr, url_num, updstr);
+	  dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s %s %s %s %s LIMIT %d%s",
+		       select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from,
+		       nitstr,
+		       (where[0] && nitstr[0]) ? "AND" : "", where, smallbuf, sortstr, url_num, updstr);
 	}else{
 	  db->res_limit=url_num;
 	  if(!qbuf[0])
-	    dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s%lu %s %s %s %s %s %s",
-			 select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from, 
-			 (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
-			 (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
-			 where[0] ? "AND" : "", where, smallbuf, lmtstr, sortstr, updstr);
+	    dps_snprintf(qbuf, qbuflen, "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id%s%s%s FROM url%s WHERE %s %s %s %s %s %s %s",
+			 select_referer, select_seed, (Indexer->Flags.cmd & DPS_IND_POPRANK) ? ",next_index_time" : "", db->from,
+			 nitstr,
+			 (where[0] && nitstr[0]) ? "AND" : "", where, smallbuf, lmtstr, sortstr, updstr);
 	}
 	if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
 
