@@ -34,7 +34,7 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
 #ifdef HAVE_SQL
 
   char buf[3*PATH_MAX];
-  char path_esc[2*PATH_MAX];
+  char path_esc[2*PATH_MAX+1];
   DPS_COOKIES *Cookies = &Indexer->Cookies;
   DPS_COOKIE *Coo;
   DPS_DB *db;
@@ -52,7 +52,7 @@ int DpsCookiesAdd(DPS_AGENT *Indexer, const char *domain, const char * path, con
     if (Indexer->dbl.nitems == 0) return DPS_OK;
     db = &Indexer->dbl.db[url_id % Indexer->dbl.nitems];
   }
-  DpsDBEscStr(db->DBType, path_esc, DPS_NULL2EMPTY(path), dps_min(PATH_MAX,dps_strlen(DPS_NULL2EMPTY(path))));
+  (void)DpsDBEscStr(db, path_esc, DPS_NULL2EMPTY(path), dps_min(PATH_MAX,dps_strlen(DPS_NULL2EMPTY(path))));
 
   for (i = 0; i < Cookies->ncookies; i++) {
     Coo = &Cookies->Cookie[i];

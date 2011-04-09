@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,8 +19,10 @@
 #ifndef DPS_SQLDBMS_H
 #define DPS_SQLDBMS_H
 
+#include "dps_db_int.h"
+
 char            *DpsDBEscDoubleStr(char *from);
-char		*DpsDBEscStr(int DBType,char *to,const char *from,size_t len);
+char		*DpsDBEscStr(DPS_DB *db, char *to, const char *from, size_t len);
 extern int       _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *R, const char *query, const char *file, const int line);
 #if defined(HAVE_DP_PGSQL) || defined(HAVE_DP_MYSQL)
 extern int       _DpsSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query, const char *file, const int line);
