@@ -5662,8 +5662,8 @@ static char * include_params(const char *src,char *path,char *dst, size_t start,
 
 #define MAXHSIZE	8192 /*4096*/	/* TUNE */
 
-int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
-	char		*qbuf;
+int DpsHTDBGet(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, int flag_short) {
+	char		*qbuf = NULL;
 	char		*end=Doc->Buf.buf;
 	DPS_SQLRES	SQLres;
 	DPS_URL		realURL;
@@ -5675,7 +5675,28 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 	DPS_SERVER      *Srv = Doc->Server;
 	int		rc = DPS_OK, have_htdbtext = 0;
 	size_t          i, j, k, r, len = 0, qbuf_len;
+	char            real_path[PATH_MAX]="";
+	DPS_MATCH_PART  Parts[10];
+	size_t          nparts = 10, content_length;
+	int             have_words = 0;
+	DPS_VAR	        *Sec;
+	DPS_TEXTITEM	Item;
+	DPS_TEMPLATE    t;
+	char            *buf = NULL;
 	
+	if (flag_short) {
+	  if (Srv == NULL) return DPS_OK;
+	  if (Srv->HTDBsec.nmatches == 0) return DPS_OK;
+	}
+
+	for (i = 0; i < Srv->HTDBsec.nmatches; i++) {
+	  r = dps_strlen(Srv->HTDBsec.Match[i].subsection);
+	  if (len < r) len = r;
+	  if (!strcasecmp(Srv->HTDBsec.Match[i].arg, "HTDBText")) have_htdbtext = 1;
+	  else htdbdoc = Srv->HTDBsec.Match[i].subsection;
+	}
+	if (flag_short && have_htdbtext == 0) return DPS_OK;
+
 	DpsSQLResInit(&SQLres);
 
 	if (Doc->Buf.allocated_size <= DPS_NET_BUF_SIZE) {
@@ -5692,13 +5713,6 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 	DpsURLInit(&realURL);
 	DpsURLParse(&realURL,url);
 
-	for (i = 0; i < Srv->HTDBsec.nmatches; i++) {
-	  r = dps_strlen(Srv->HTDBsec.Match[i].subsection);
-	  if (len < r) len = r;
-	  if (!strcasecmp(Srv->HTDBsec.Match[i].arg, "HTDBText")) have_htdbtext = 1;
-	  else htdbdoc = Srv->HTDBsec.Match[i].subsection;
-	}
-
 	if ((qbuf = (char*)DpsMalloc(qbuf_len = 4 * 1024 + dps_strlen(url) + len + dps_strlen(htdblist) )) == NULL) 
 	  return DPS_ERROR;
 	*qbuf = '\0';
@@ -5709,67 +5723,65 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 	}
 	DpsDBSetAddr(&db, htdbaddr, DPS_OPEN_MODE_READ);
 
+
+	if ((buf = (char*)DpsMalloc(qbuf_len)) == NULL) {
+	  rc = DPS_ERROR;
+	  goto HTDBexit;
+	}
+	*buf = '\0';
+
+	bzero(&t, sizeof(t));
+	t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
+	t.Env_Vars = &Doc->Sections;
+
+	dps_snprintf(real_path, sizeof(real_path)-1, "%s%s", realURL.path, realURL.filename);
+	real_path[sizeof(real_path)-1]='\0';
+
+	bzero((void*)&Item, sizeof(Item));
+	if (have_htdbtext) {
+	  Item.href = NULL;
+
+	  for (i = 0; i < Srv->HTDBsec.nmatches; i++) {
+	    if (strcasecmp(Srv->HTDBsec.Match[i].arg, "HTDBText")) continue;
+	    Sec = DpsVarListFind(&Doc->Sections, Srv->HTDBsec.Match[i].section);
+	    if (Sec  == NULL) continue;
+	    if (DPS_MATCH_REGEX == Srv->HTDBsec.Match[i].match_type) {
+	      if (DpsMatchExec(&Srv->HTDBsec.Match[i], real_path, real_path, NULL, nparts, Parts)) continue;
+	      DpsMatchApply(qbuf, qbuf_len-1, real_path, Srv->HTDBsec.Match[i].subsection, &Srv->HTDBsec.Match[i], nparts, Parts);
+	    } else {
+	      include_params(Srv->HTDBsec.Match[i].subsection, real_path, qbuf, 0, 0);
+	    }
+	    DpsPrintTextTemplate(Indexer,NULL,NULL, buf, qbuf_len-1, &t, qbuf);
+	    if(DPS_OK != (rc = DpsSQLQuery(&db, &SQLres, buf))) {
+	      DPS_FREE(buf);
+	      goto HTDBexit;
+	    }
+	    for (j = 0; j < DpsSQLNumRows(&SQLres); j++){
+	      if (!strcasecmp(Sec->name, "Pop_Rank") || !strcasecmp(Sec->name, "Meta-Language") || !strcasecmp(Sec->name, "Meta-Charset")) {
+		DpsVarListReplaceStr(&Doc->Sections, Sec->name, DpsSQLValue(&SQLres, j, 0));
+	      } else {
+		for (k = 0; k < SQLres.nCols; k++) {
+		  Item.section = Sec->section;
+		  Item.strict = Sec->strict;
+		  Item.str = DpsSQLValue(&SQLres, j, k);
+		  Item.section_name = Sec->name;
+		  Item.len = dps_strlen(Item.str);
+		  Indexer->nbytes += Item.len;
+		  DpsTextListAdd(&Doc->TextList, &Item);
+		  have_words = 1;
+		}
+	      }
+	    }
+	    DpsSQLFree(&SQLres);
+	  }
+	}
+
+	DpsTemplateFree(&t);
+	DPS_FREE(buf);
+	if (flag_short) goto HTDBexit;
+
 	if(realURL.filename != NULL) {
-		char real_path[PATH_MAX]="";
-                DPS_MATCH_PART  Parts[10];
-		size_t nparts = 10, content_length;
-		int have_words = 0;
-		DPS_VAR	*Sec;
-		DPS_TEXTITEM	Item;
-		DPS_TEMPLATE t;
-		char *buf = NULL;
 
-		if ((buf = (char*)DpsMalloc(qbuf_len)) == NULL) {
-		  rc = DPS_ERROR;
-		  goto HTDBexit;
-		}
-		*buf = '\0';
-
-		bzero(&t, sizeof(t));
-		t.HlBeg = t.HlEnd = t.GrBeg = t.GrEnd = t.ExcerptMark = NULL;
-		t.Env_Vars = &Doc->Sections;
-
-		dps_snprintf(real_path,sizeof(real_path)-1,"%s%s",realURL.path,realURL.filename);
-		real_path[sizeof(real_path)-1]='\0';
-
-                bzero((void*)&Item, sizeof(Item));
-		if (have_htdbtext) {
-		  Item.href = NULL;
-
-		  for (i = 0; i < Srv->HTDBsec.nmatches; i++) {
-		    if (strcasecmp(Srv->HTDBsec.Match[i].arg, "HTDBText")) continue;
-		    Sec = DpsVarListFind(&Doc->Sections, Srv->HTDBsec.Match[i].section);
-		    if (Sec  == NULL) continue;
-		    if (DPS_MATCH_REGEX == Srv->HTDBsec.Match[i].match_type) {
-		      if (DpsMatchExec(&Srv->HTDBsec.Match[i], real_path, real_path, NULL, nparts, Parts)) continue;
-		      DpsMatchApply(qbuf, qbuf_len-1, real_path, Srv->HTDBsec.Match[i].subsection, &Srv->HTDBsec.Match[i], nparts, Parts);
-		    } else {
-		      include_params(Srv->HTDBsec.Match[i].subsection, real_path, qbuf, 0, 0);
-		    }
-		    DpsPrintTextTemplate(Indexer,NULL,NULL, buf, qbuf_len-1, &t, qbuf);
-		    if(DPS_OK != (rc = DpsSQLQuery(&db, &SQLres, buf))) {
-		      DPS_FREE(buf);
-		      goto HTDBexit;
-		    }
-		    for (j = 0; j < DpsSQLNumRows(&SQLres); j++){
-		      if (!strcasecmp(Sec->name, "Pop_Rank") || !strcasecmp(Sec->name, "Meta-Language") || !strcasecmp(Sec->name, "Meta-Charset")) {
-			DpsVarListReplaceStr(&Doc->Sections, Sec->name, DpsSQLValue(&SQLres, j, 0));
-		      } else {
-			for (k = 0; k < SQLres.nCols; k++) {
-			  Item.section = Sec->section;
-			  Item.strict = Sec->strict;
-			  Item.str = DpsSQLValue(&SQLres, j, k);
-			  Item.section_name = Sec->name;
-			  Item.len = dps_strlen(Item.str);
-			  Indexer->nbytes += Item.len;
-			  DpsTextListAdd(&Doc->TextList, &Item);
-			  have_words = 1;
-			}
-		      }
-		    }
-		    DpsSQLFree(&SQLres);
-		  }
-		}
 		
 		if (htdbdoc != NULL) {
 		  for (i = 0; i < Srv->HTDBsec.nmatches; i++) {
@@ -5785,7 +5797,6 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		        sprintf(Doc->Buf.buf,"HTTP/1.0 200 OK\r\n\r\n");
 		      else
 		        sprintf(Doc->Buf.buf,"HTTP/1.0 404 Not Found\r\n\r\n");
-		      DPS_FREE(buf);
 		      goto HTDBexit;
 		    }
 		    for (r = 0; r < DpsSQLNumRows(&SQLres); r ++) {
@@ -5801,7 +5812,6 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 			    else
 			      sprintf(Doc->Buf.buf,"HTTP/1.0 404 Not Found\r\n\r\n");
 */
-			    DPS_FREE(buf);
   			    goto HTDBexit;
 			  }
 			}
@@ -5815,8 +5825,6 @@ int DpsHTDBGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc) {
 		    else
 		        sprintf(Doc->Buf.buf,"HTTP/1.0 404 Not found\r\n\r\n");
 		}
-		DpsTemplateFree(&t);
-		DPS_FREE(buf);
 	}else{
 		size_t	start = 0;
 		urlid_t	url_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
