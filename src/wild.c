@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -70,8 +70,8 @@ int DpsWildCmp(const char *str, const char *wexp) {
       }
     }
     if (str[x] != '\0') return 1;
-    while(wexp[y] == '*' || wexp[y] == '?') y++;
-    if (wexp[y] == '\0') return 0;
+    while(wexp[y] == '*' /* || wexp[y] == '?'*/) y++;
+    if (wexp[y] == '\0' || wexp[y] == '$') return 0;
     return -1;
 }
 
@@ -123,8 +123,8 @@ int DpsWildCaseCmp(const char *str, const char *wexp) {
       }
     }
     if (str[x] != '\0') return 1;
-    while(wexp[y] == '*' || wexp[y] == '?') y++;
-    if (wexp[y] == '\0') return 0;
+    while(wexp[y] == '*' /* || wexp[y] == '?'*/) y++;
+    if (wexp[y] == '\0' || wexp[y] == '$') return 0;
     return -1;
 }
 
@@ -151,10 +151,11 @@ int DpsUniWildCmp(const dpsunicode_t *str, const dpsunicode_t *wexp) {
       }
     }
     if (str[x] != (dpsunicode_t)'\0') return 1;
-    while(wexp[y] == (dpsunicode_t)'*' || wexp[y] == (dpsunicode_t)'?') y++;
-    if (wexp[y] == (dpsunicode_t)'\0') return 0;
+    while(wexp[y] == (dpsunicode_t)'*' /* || wexp[y] == (dpsunicode_t)'?' */) y++;
+    if (wexp[y] == (dpsunicode_t)'\0' || wexp[y] == (dpsunicode_t)'$') return 0;
     return -1;
 }
+
 
 int DpsUniWildCaseCmp(const dpsunicode_t *str, const dpsunicode_t *wexp) {
     register size_t x, y;
@@ -176,7 +177,7 @@ int DpsUniWildCaseCmp(const dpsunicode_t *str, const dpsunicode_t *wexp) {
 
 
     if (str[x] != (dpsunicode_t)'\0') return 1;
-    while(wexp[y] == (dpsunicode_t)'*' || wexp[y] == (dpsunicode_t)'?') y++;
-    if (wexp[y] == (dpsunicode_t)'\0') return 0;
+    while(wexp[y] == (dpsunicode_t)'*' /* || wexp[y] == (dpsunicode_t)'?' */) y++;
+    if (wexp[y] == (dpsunicode_t)'\0' || wexp[y] == (dpsunicode_t)'$') return 0;
     return -1;
 }
