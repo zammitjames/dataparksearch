@@ -1538,7 +1538,7 @@ int main(int argc, char **argv, char **envp) {
      }
      
      if(expire){
-          int  res;
+          int  res = DPS_OK;
           
           if(url_filename){
                res=DpsURLFile(&Main,url_filename,DPS_URL_FILE_REINDEX);
