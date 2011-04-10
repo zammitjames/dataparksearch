@@ -572,6 +572,18 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 			  DpsViolationExit(Indexer->handle, paran);
 #endif
 			  return r;
+
+			} else if (!DpsWildCmp(rurl, robot->Rule[j].path)) {
+			  DpsLog(Indexer, DPS_LOG_DEBUG, "ROBOTS wild: %s, URL: %s  cmd: %s", 
+				 robot->Rule[j].path, rurl, DpsMethodStr(robot->Rule[j].cmd));
+			  r = &robot->Rule[j];
+			  if (rurlen > PATH_MAX) DPS_FREE(rurl);
+			  DpsDocFree(HostDoc);
+#ifdef WITH_PARANOIA
+			  DpsViolationExit(Indexer->handle, paran);
+#endif
+			  return r;
+
 			} else if (robot->Rule[j].cmd == DPS_METHOD_HOST) {
 			  char robohost[512];
 			  dps_snprintf(robohost, sizeof(robohost), "http://%s/", robot->Rule[j].path);
