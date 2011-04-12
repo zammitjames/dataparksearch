@@ -1,4 +1,4 @@
-dnl Copyright (c) 2005 Datapark corp. All reserved.
+dnl Copyright (c) 2005,2011 DataPark Ltd. All reserved.
 dnl
 dnl  Copyright (c) 1999, 2000 Sascha Schumann. All rights reserved.
 dnl 
@@ -33,21 +33,16 @@ dnl
 dnl Check whether the current setup can use POSIX threads calls
 dnl
 AC_DEFUN([PTHREADS_CHECK_COMPILE], [
-AC_TRY_RUN( [
+dnl it was AC_TRY_RUN below
+AC_TRY_COMPILE( [
 #include <pthread.h>
-#include <stddef.h>
+#include <stddef.h>],[
 
-void *thread_routine(void *data) {
-    return data;
-}
-
-int main() {
     pthread_t thd;
     pthread_mutexattr_t mattr;
-    int data = 1;
     pthread_mutexattr_init(&mattr);
-    return pthread_create(&thd, NULL, thread_routine, &data);
-} ], [ 
+    return pthread_create(&thd, NULL, NULL, NULL);
+  ], [ 
   pthreads_working="yes"
   ], [
   pthreads_working="no"
@@ -59,8 +54,13 @@ AC_TRY_LINK( [
 #include <pthread.h>
 ] ,
 [
+        pthread_t th;
 	pthread_attr_t type;
+	pthread_join(th,0);
 	pthread_attr_init(&type);
+	pthread_cleanup_push(0,0);
+	pthread_create(0,0,0,0);
+	pthread_cleanup_pop(0);
 ], pthreads_working="yes", 
    pthreads_working="no"
 ) ] )dnl
@@ -91,15 +91,17 @@ CFLAGS="$save_CFLAGS"
 AC_CACHE_CHECK(for pthreads_cflags,ac_cv_pthreads_cflags,[
 ac_cv_pthreads_cflags=""
 if test "$pthreads_working" != "yes"; then
-  for flag in -kthread -pthread -pthreads -mthreads -Kthread -threads -mt -qthreaded; do 
+  for flag in "-kthread -pthread -pthreads -mthreads -Kthread -threads -mt -qthreaded"; do 
     ac_save="$CFLAGS"
     CFLAGS="$CFLAGS $flag"
     PTHREADS_CHECK_COMPILE
-    CFLAGS="$ac_save"
     if test "$pthreads_working" = "yes"; then
       ac_cv_pthreads_cflags="$flag"
       PTHREAD_LFLAGS="$PTHREAD_LFLAGS $flag"
+      AC_MSG_RESULT([$flag])
       break
+    else
+      CFLAGS="$ac_save"
     fi
   done
 fi
@@ -130,6 +132,7 @@ if test "$pthreads_working" != "yes"; then
     if test "$pthreads_working" = "yes"; then
       ac_cv_pthreads_lib="$lib"
       PTHREAD_LDADD="$PTHREAD_LDADD -l$lib"
+      AC_MSG_RESULT([$lib])
       break
     fi
   done
