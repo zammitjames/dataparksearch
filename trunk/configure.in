@@ -882,8 +882,10 @@ if test "$pthreads" != no; then
             PTHREAD_LDADD=""
             ;;
         *)
-            PTHREAD_CFLAGS="-D_REENTRANT"
-            PTHREAD_LDADD="-lpthread"
+#            PTHREAD_CFLAGS="-D_REENTRANT"
+#            PTHREAD_LDADD="-lpthread"
+            PTHREAD_CFLAGS="-pthread"
+            PTHREAD_LDADD="-pthread"
             ;;
     esac
 

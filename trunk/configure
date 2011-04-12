@@ -14414,8 +14414,10 @@ if test "$pthreads" != no; then
             PTHREAD_LDADD=""
             ;;
         *)
-            PTHREAD_CFLAGS="-D_REENTRANT"
-            PTHREAD_LDADD="-lpthread"
+#            PTHREAD_CFLAGS="-D_REENTRANT"
+#            PTHREAD_LDADD="-lpthread"
+            PTHREAD_CFLAGS="-pthread"
+            PTHREAD_LDADD="-pthread"
             ;;
     esac
 
@@ -14437,28 +14439,26 @@ if test -n "$ac_cv_pthreads_cflags"; then
 fi
 
 
-if test "$cross_compiling" = yes; then :
-  pthreads_working="no"
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 #include <pthread.h>
 #include <stddef.h>
+int
+main ()
+{
 
-void *thread_routine(void *data) {
-    return data;
-}
 
-int main() {
     pthread_t thd;
     pthread_mutexattr_t mattr;
-    int data = 1;
     pthread_mutexattr_init(&mattr);
-    return pthread_create(&thd, NULL, thread_routine, &data);
+    return pthread_create(&thd, NULL, NULL, NULL);
+
+  ;
+  return 0;
 }
 _ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
+if ac_fn_c_try_compile "$LINENO"; then :
 
   pthreads_working="yes"
 
@@ -14467,10 +14467,7 @@ else
   pthreads_working="no"
 
 fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 LIBS="$save_LIBS"
 CFLAGS="$save_CFLAGS"
 
@@ -14482,32 +14479,30 @@ else
 
 ac_cv_pthreads_cflags=""
 if test "$pthreads_working" != "yes"; then
-  for flag in -kthread -pthread -pthreads -mthreads -Kthread -threads -mt -qthreaded; do
+  for flag in "-kthread -pthread -pthreads -mthreads -Kthread -threads -mt -qthreaded"; do
     ac_save="$CFLAGS"
     CFLAGS="$CFLAGS $flag"
 
-if test "$cross_compiling" = yes; then :
-  pthreads_working="no"
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 #include <pthread.h>
 #include <stddef.h>
+int
+main ()
+{
 
-void *thread_routine(void *data) {
-    return data;
-}
 
-int main() {
     pthread_t thd;
     pthread_mutexattr_t mattr;
-    int data = 1;
     pthread_mutexattr_init(&mattr);
-    return pthread_create(&thd, NULL, thread_routine, &data);
+    return pthread_create(&thd, NULL, NULL, NULL);
+
+  ;
+  return 0;
 }
 _ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
+if ac_fn_c_try_compile "$LINENO"; then :
 
   pthreads_working="yes"
 
@@ -14516,15 +14511,15 @@ else
   pthreads_working="no"
 
 fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-    CFLAGS="$ac_save"
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
     if test "$pthreads_working" = "yes"; then
       ac_cv_pthreads_cflags="$flag"
       PTHREAD_LFLAGS="$PTHREAD_LFLAGS $flag"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $flag" >&5
+$as_echo "$flag" >&6; }
       break
+    else
+      CFLAGS="$ac_save"
     fi
   done
 fi
@@ -14563,8 +14558,13 @@ int
 main ()
 {
 
+        pthread_t th;
 	pthread_attr_t type;
+	pthread_join(th,0);
 	pthread_attr_init(&type);
+	pthread_cleanup_push(0,0);
+	pthread_create(0,0,0,0);
+	pthread_cleanup_pop(0);
 
   ;
   return 0;
@@ -14592,8 +14592,13 @@ int
 main ()
 {
 
+        pthread_t th;
 	pthread_attr_t type;
+	pthread_join(th,0);
 	pthread_attr_init(&type);
+	pthread_cleanup_push(0,0);
+	pthread_create(0,0,0,0);
+	pthread_cleanup_pop(0);
 
   ;
   return 0;
@@ -14611,6 +14616,8 @@ rm -f core conftest.err conftest.$ac_objext \
     if test "$pthreads_working" = "yes"; then
       ac_cv_pthreads_lib="$lib"
       PTHREAD_LDADD="$PTHREAD_LDADD -l$lib"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $lib" >&5
+$as_echo "$lib" >&6; }
       break
     fi
   done
