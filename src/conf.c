@@ -624,9 +624,16 @@ static int add_subsection_match(void *Cfg, size_t ac,char **av) {
     } else {
 
       char    err[128] = "";
+      char    buf[64];
 
       M.arg = av[0];
-      M.subsection = av[1];
+      if (strcasecmp(av[0], "CategoryIf")) {
+	M.subsection = av[1];
+      } else {
+	unsigned int cid = DpsGetCategoryId(Conf, av[1]);
+	dps_snprintf(buf, 64, "%u", cid);
+	M.subsection = buf;
+      }
       M.pattern = av[i];
 
       if(DPS_OK != DpsMatchListAdd(C->Indexer, &Conf->SubSectionMatch, &M, err, sizeof(err), ++C->ordre)) {

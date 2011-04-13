@@ -6252,6 +6252,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 	  if (u) DPSSLEEP(0);
 	}
 
+
 	pL = 0;
 	nL = L->nitems;
 
@@ -6330,6 +6331,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 	  u = (nrows == url_num);
 	  if (u) DPSSLEEP(0);
 	}
+
 
 	DpsVarListFree(&cat);
 	DPS_FREE(qbuf);
