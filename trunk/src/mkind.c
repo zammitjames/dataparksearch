@@ -126,7 +126,7 @@ static int MakeNestedIndex(DPS_AGENT *Indexer, DPS_UINT8URLIDLIST *L, const char
      prev=0;
      for(k=0; k < L->nitems; k++) {
           data[k] = L->Item[k].url_id;
-          if((k == L->nitems-1) || (L->Item[k].hi != L->Item[prev].hi) || (L->Item[k].lo != L->Item[prev].lo)) {
+          if((L->Item[k].hi != L->Item[prev].hi) || (L->Item[k].lo != L->Item[prev].lo)) {
                if(nind==mind){
                     mind+=1000;
                     ind=(DPS_UINT8_POS_LEN*)DpsRealloc(ind,mind*sizeof(DPS_UINT8_POS_LEN));
@@ -139,14 +139,31 @@ static int MakeNestedIndex(DPS_AGENT *Indexer, DPS_UINT8URLIDLIST *L, const char
                ind[nind].hi = L->Item[prev].hi;
                ind[nind].lo = L->Item[prev].lo;
                ind[nind].pos = prev * sizeof(*data);
-               if (k == L->nitems - 1) ind[nind].len = (k - prev + 1) * sizeof(*data);
-               else ind[nind].len = (k - prev) * sizeof(*data);
+               ind[nind].len = (k - prev) * sizeof(*data);
                DpsLog(Indexer, DPS_LOG_DEBUG, "%08X%08X - %d %d\n", ind[nind].hi, ind[nind].lo, (int)ind[nind].pos, ind[nind].len);
                nind++;
                
                prev=k;
           }
      }
+
+     if(nind == mind) {
+       mind += 1;
+       ind = (DPS_UINT8_POS_LEN*)DpsRealloc(ind, mind * sizeof(DPS_UINT8_POS_LEN));
+       if(!ind) {
+	 DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc %d bytes [%s:%d]", mind * sizeof(DPS_UINT8_POS_LEN), __FILE__, __LINE__);
+	 goto err1;
+       }
+     }
+     /* Fill index */
+     ind[nind].hi = L->Item[prev].hi;
+     ind[nind].lo = L->Item[prev].lo;
+     ind[nind].pos = prev * sizeof(*data);
+     ind[nind].len = (k - prev) * sizeof(*data);
+     DpsLog(Indexer, DPS_LOG_DEBUG, "%08X%08X - %d %d\n", ind[nind].hi, ind[nind].lo, (int)ind[nind].pos, ind[nind].len);
+     nind++;
+
+
      ndata = L->nitems;
      ClearIndex8(L);
      
@@ -216,7 +233,7 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
      prev=0;
      for(k=0; k < L->nitems; k++) {
           data[k] = L->Item[k].url_id;
-          if((k == L->nitems-1) || (L->Item[k].val != L->Item[prev].val)) {
+          if((L->Item[k].val != L->Item[prev].val)) {
                if(nind==mind){
                     mind+=1000;
                     ind=(DPS_UINT4_POS_LEN*)DpsRealloc(ind,mind*sizeof(DPS_UINT4_POS_LEN));
@@ -228,14 +245,30 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
                /* Fill index */
                ind[nind].val = L->Item[prev].val;
                ind[nind].pos = prev * sizeof(*data);
-               if (k == L->nitems - 1) ind[nind].len = (k - prev + 1) * sizeof(*data);
-               else ind[nind].len = (k - prev) * sizeof(*data);
+               ind[nind].len = (k - prev) * sizeof(*data);
                DpsLog(Indexer, DPS_LOG_DEBUG, "%d - pos:%x len:%d\n", ind[nind].val, (int)ind[nind].pos, ind[nind].len);
                nind++;
                
                prev=k;
           }
      }
+
+     if(nind == mind) {
+       mind += 1;
+       ind=(DPS_UINT4_POS_LEN*)DpsRealloc(ind,mind*sizeof(DPS_UINT4_POS_LEN));
+       if(!ind){
+	 fprintf(stderr,"Error3: %s\n",strerror(errno));
+	 goto err1;
+       }
+     }
+     /* Fill index */
+     ind[nind].val = L->Item[prev].val;
+     ind[nind].pos = prev * sizeof(*data);
+     ind[nind].len = (k - prev) * sizeof(*data);
+     DpsLog(Indexer, DPS_LOG_DEBUG, "%d - pos:%x len:%d\n", ind[nind].val, (int)ind[nind].pos, ind[nind].len);
+     nind++;
+
+
      ndata = L->nitems;
      ClearIndex4(L);
     
