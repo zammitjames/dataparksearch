@@ -662,7 +662,11 @@ int main(int argc,char **argv, char **envp) {
 	
 	DpsInitMutexes();
 	Conf = DpsEnvInit(NULL);
-	if (Conf == NULL) exit(1);
+	if (Conf == NULL) {
+	  DpsDestroyMutexes();
+	  DpsDeInit();
+	  exit(1);
+	}
 	DpsSetLockProc(Conf, DpsLockProc);
 		
 	while ((ch = getopt(argc, argv, "fhlv:w:p:s:?")) != -1){
@@ -687,6 +691,9 @@ int main(int argc,char **argv, char **envp) {
 			case '?':
 			default:
 				usage();
+			        DpsEnvFree(Conf);
+				DpsDestroyMutexes();
+				DpsDeInit();
 				return 1;
 				break;
 		}
@@ -710,6 +717,9 @@ int main(int argc,char **argv, char **envp) {
 	Agent = DpsAgentInit(NULL, Conf, 0);
 	if (Agent == NULL) {
 	  fprintf(stderr, "Can't alloc Agent at %s:%d", __FILE__, __LINE__);
+	  DpsEnvFree(Conf);
+	  DpsDestroyMutexes();
+	  DpsDeInit();
 	  return DPS_ERROR;
 	}
 
@@ -718,6 +728,8 @@ int main(int argc,char **argv, char **envp) {
 	if(DPS_OK != DpsEnvLoad(Agent, config_name, (dps_uint8)0)){
 		fprintf(stderr, "%s\n", DpsEnvErrMsg(Conf));
 		DpsEnvFree(Conf);
+		DpsDestroyMutexes();
+		DpsDeInit();
 		return DPS_ERROR;
 	}
 		
@@ -766,11 +778,17 @@ int main(int argc,char **argv, char **envp) {
 #ifdef HAVE_PTHREAD_SETCONCURRENCY_PROT
 	  if (pthread_setconcurrency(FD_SETSIZE + 3) != 0) {
 	    DpsLog(A, DPS_LOG_ERROR, "Can't set %d concurrency threads", FD_SETSIZE + 3);
+	    DpsEnvFree(Conf);
+	    DpsDestroyMutexes();
+	    DpsDeInit();
 	    return DPS_ERROR;
 	  }
 #elif HAVE_THR_SETCONCURRENCY_PROT
 	  if (thr_setconcurrency(FD_SETSIZE + 3) != NULL) {
 	    DpsLog(A, DPS_LOG_ERROR, "Can't set %d concurrency threads", FD_SETSIZE + 3);
+	    DpsEnvFree(Conf);
+	    DpsDestroyMutexes();
+	    DpsDeInit();
 	    return DPS_ERROR;
 	  }
 #endif
@@ -900,6 +918,9 @@ int main(int argc,char **argv, char **envp) {
 		    if ((pid = fork() ) == -1) {
 		      DpsLog(Agent, DPS_LOG_ERROR, "%s fork() error %d %s", Logd_time_pid_info(), errno, strerror(errno));
 		      unlink(dps_pid_name);
+		      DpsEnvFree(Conf);
+		      DpsDestroyMutexes();
+		      DpsDeInit();
 		      exit(1);
 		    }
 		    if (pid == 0) { /* child process */
@@ -907,6 +928,9 @@ int main(int argc,char **argv, char **envp) {
 
 		      thread_flush_limits(Indexer);
 		    
+		      DpsEnvFree(Conf);
+		      DpsDestroyMutexes();
+		      DpsDeInit();
 #if defined(HAVE_SEMAPHORE_H) || defined(HAVE_SYS_SEM_H)
 		      exit(0);
 		    }
@@ -1093,6 +1117,11 @@ int main(int argc,char **argv, char **envp) {
 		    if ((pid = fork() ) == -1) {
 		      DpsLog(Agent, DPS_LOG_ERROR, "%s fork() error %d %s", Logd_time_pid_info(), errno, strerror(errno));
 		      unlink(dps_pid_name);
+		      DpsAgentFree(Agent);
+		      DpsEnvFree(Conf);
+		      DpsDestroyMutexes();
+		      deinit_client(&cl);
+		      DpsDeInit();
 		      exit(1);
 		    }
 		    if (pid == 0) { /* child process */
@@ -1100,6 +1129,11 @@ int main(int argc,char **argv, char **envp) {
 
 		      thread_child(C);
 
+		      DpsAgentFree(Agent);
+		      DpsEnvFree(Conf);
+		      DpsDestroyMutexes();
+		      deinit_client(&cl);
+		      DpsDeInit();
 #if defined(HAVE_SEMAPHORE_H) || defined(HAVE_SYS_SEM_H)
 		      exit(0);
 		    }
@@ -1148,6 +1182,7 @@ int main(int argc,char **argv, char **envp) {
 	DpsEnvFree(Conf);
 	DpsDestroyMutexes();
 	deinit_client(&cl);
+	DpsDeInit();
 	unlink(dps_pid_name);
 #ifdef EFENCE
      fprintf(stderr, "Memory leaks checking\n");
@@ -1175,6 +1210,7 @@ err2:
 	DpsEnvFree(Conf);
 	DpsDestroyMutexes();
 	deinit_client(&cl);
+	DpsDeInit();
 #ifdef EFENCE
      fprintf(stderr, "Memory leaks checking\n");
      DpsEfenceCheckLeaks();

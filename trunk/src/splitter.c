@@ -104,7 +104,10 @@ int main(int argc,char **argv, char **envp) {
 			case 'h':
 			case '?':
 			default:
-				usage();
+			  usage();
+			  DpsEnvFree(Env);
+			  DpsDestroyMutexes();
+			  DpsDeInit();
 				return 1;
 				break;
 		}
@@ -114,6 +117,9 @@ int main(int argc,char **argv, char **envp) {
 
 	if(argc > 1) {
 		usage();
+		DpsEnvFree(Env);
+		DpsDestroyMutexes();
+		DpsDeInit();
 		return 1;
 	} else if (argc == 1) {
 	        config_name = argv[0];
@@ -137,6 +143,8 @@ int main(int argc,char **argv, char **envp) {
 		if(DPS_OK != DpsEnvLoad(Indexer, config_name, (dps_uint8)0)){
 		  fprintf(stderr, "%s\n", DpsEnvErrMsg(Env));
 		  DpsEnvFree(Env);
+		  DpsDestroyMutexes();
+		  DpsDeInit();
 		  return DPS_ERROR;
 		}
 		DpsOpenLog("splitter", Env, log2stderr);
@@ -251,6 +259,7 @@ int main(int argc,char **argv, char **envp) {
 	
 	DpsEnvFree(Env);
 	DpsDestroyMutexes();
+	DpsDeInit();
 
 #ifdef EFENCE
 	fprintf(stderr, "Memory leaks checking\n");
