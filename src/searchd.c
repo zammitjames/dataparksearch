@@ -40,6 +40,7 @@
 #include "dps_charsetutils.h"
 #include "dps_searchcache.h"
 #include "dps_url.h"
+#include "dps_template.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,6 +62,7 @@
 #include <sys/un.h>
 #endif
 #include <errno.h>
+#include <locale.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -220,18 +222,34 @@ static void TrackSighandler(int sign){
 
 /*************************************************************/
 #define REST_REQ_SIZE 4096
+#define MAX_PS 1000
 
 static int do_RESTful(DPS_AGENT *Agent, int client, const DPS_SEARCHD_PACKET_HEADER *hdr) {
   char		template_name[PATH_MAX+6]="";
   DPS_VARLIST	query_vars;
   DPS_ENV *Env = Agent->Conf;
+  DPS_RESULT	*Res;
   const char *p = (const char*)hdr;
   const char *conf_dir;
-  char *query_string;
+  const char      *ResultContentType;
+  char *query_string, *pp;
   char *self;
   char *template_filename = NULL;
+  char		*nav = NULL;
+  char		*url = NULL;
+  char		*searchwords = NULL;
+  char		*storedstr = NULL;
+  char  *bcharset, *lcharset;
   size_t len;
   ssize_t nrecv;
+  int res = DPS_OK;
+  size_t          catcolumns = 0;
+  ssize_t		page1,page2,npages,ppp=10;
+  int		page_size, page_number, have_p = 1;
+  size_t		i, swlen = 0, nav_len, storedlen;
+#ifdef WITH_GOOGLEGRP
+  int             site_id, prev_site_id = 0;
+#endif
 
   while (*p != '\0' && *p != ' ') p++; /* skip command name, it's only GET implemented */
   if (*p == ' ') p++;
@@ -242,13 +260,14 @@ static int do_RESTful(DPS_AGENT *Agent, int client, const DPS_SEARCHD_PACKET_HEA
   len = sizeof(*hdr) - (p - (const char*)hdr);
   dps_memcpy(query_string, p, len);
 
-  nrecv = DpsRecvall(client, query_string + len, REST_REQ_SIZE - len, 600);
+  nrecv = DpsRecvstr(client, query_string + len, REST_REQ_SIZE - len, 600);
   if (nrecv < 0) {
     DpsLog(Agent, DPS_ERROR, "RESTful command rceiving error nrecv=%d", (int)nrecv);
     DPS_FREE(query_string);
     return DPS_ERROR;
   }
   query_string[nrecv + len] = '\0';
+  for(pp = query_string; *pp != '\0'; pp++) if (' ' == *pp) { *pp = '\0'; break; }
 
   conf_dir = DpsVarListFindStr(&Env->Vars, "EtcDir", DPS_CONF_DIR);
   DpsVarListInit(&query_vars);
@@ -267,8 +286,467 @@ static int do_RESTful(DPS_AGENT *Agent, int client, const DPS_SEARCHD_PACKET_HEA
 
   DpsURLNormalizePath(template_name);
 
+#define RESTexit(rc) \
+	DpsVarListFree(&query_vars); \
+	DPS_FREE(template_filename); \
+	DPS_FREE(query_string); \
+	return (rc);
+
+  if ( (strncmp(template_name, conf_dir, dps_strlen(conf_dir)) || (res = DpsTemplateLoad(Agent, Env, &Agent->tmpl, template_name)))) {
+    DpsLog(Agent, DPS_LOG_ERROR, "Can't load template: '%s' %s\n", template_name, Env->errstr);
+    if (strcmp(template_name, "search.htm")) { /* trying load default template */
+      DPS_FREE(template_filename);
+      template_filename = (char*)DpsStrdup("search.htm");
+      dps_snprintf(template_name, sizeof(template_name), "%s/%s", conf_dir, template_filename);
+
+      if ((res = DpsTemplateLoad(Agent, Env, &Agent->tmpl, template_name))) {
+
+	DpsLog(Agent, DPS_LOG_ERROR, "Can't load default template: '%s' %s\n", template_name, Env->errstr);
+	DpsSockPrintf(&client, "%s\n", Env->errstr);
+	RESTexit(DPS_ERROR);
+      }
+    } else {
+      DpsSockPrintf(&client, "%s\n", Env->errstr);
+      RESTexit(DPS_ERROR);
+    }
+  }
+
+  /* set locale if specified */
+  if ((url = DpsVarListFindStr(&Env->Vars, "Locale", NULL)) != NULL) {
+    setlocale(LC_COLLATE, url);
+    setlocale(LC_CTYPE, url);
+    setlocale(LC_ALL, url);
+    { char *p;
+      if ((p = strchr(url, '.')) != NULL) {
+	*p = '\0';
+	DpsVarListReplaceStr(&Env->Vars, "g-lc", url);
+	*p = '.';
+      }
+    }
+    url = NULL;
+  }
+
+  /* Call again to load search Limits if need */
+  DpsParseQueryString(Agent, &Env->Vars, query_string);
+
+  DpsVarListAddLst(&Agent->Vars, &Env->Vars, NULL, "*");
+  Agent->tmpl.Env_Vars = &Agent->Vars;
+  /* This is for query tracking */
+  DpsVarListAddStr(&Agent->Vars, "QUERY_STRING", query_string);
+  DpsVarListAddStr(&Agent->Vars, "self", self);
+
+  bcharset = DpsVarListFindStr(&Agent->Vars, "BrowserCharset", "iso-8859-1");
+  Env->bcs = DpsGetCharSet(bcharset);
+  lcharset = DpsVarListFindStr(&Agent->Vars, "LocalCharset", "iso-8859-1");
+  Env->lcs = DpsGetCharSet(lcharset);
+  if(!Env->bcs) {
+    DpsSockPrintf(&client, "Unknown BrowserCharset '%s' in template '%s'\n", bcharset, template_name);
+    RESTexit(DPS_ERROR);
+  }
+  if(!Env->lcs) {
+    DpsSockPrintf(&client, "Unknown LocalCharset '%s' in template '%s'\n", lcharset, template_name);
+    RESTexit(DPS_ERROR);
+  }
+
+  ppp = DpsVarListFindInt(&Agent->Vars, "PagesPerScreen", 10);
+  ResultContentType = DpsVarListFindStr(&Agent->Vars, "ResultContentType", "text/html");
+
+  res         = DpsVarListFindInt(&Agent->Vars, "ps", DPS_DEFAULT_PS);
+  page_size   = dps_min(res, MAX_PS);
+  page_number = DpsVarListFindInt(&Agent->Vars, "p", 0);
+  if (page_number == 0) {
+    page_number = DpsVarListFindInt(&Agent->Vars, "np", 0);
+    DpsVarListReplaceInt(&Agent->Vars, "p", page_number + 1);
+    have_p = 0;
+  } else page_number--;
+	
+  res = DpsVarListFindInt(&Agent->Vars, "np", 0) * page_size;
+  DpsVarListAddInt(&Agent->Vars, "pn", res);
+
+  catcolumns = (size_t)atoi(DpsVarListFindStr(&Agent->Vars, "CatColumns", ""));
+
+  if(NULL == (Res = DpsFind(Agent))) {
+    DpsVarListAddStr(&Agent->Vars, "E", DpsEnvErrMsg(Agent->Conf));
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "top");
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "error");
+    TRACE_LINE(Agent);
+    goto end;
+  }
+	
+  DpsVarListAddInt(&Agent->Vars, "first", (int)Res->first);
+  DpsVarListAddInt(&Agent->Vars, "last", (int)Res->last);
+  DpsVarListAddInt(&Agent->Vars, "total", (int)Res->total_found);
+  DpsVarListAddInt(&Agent->Vars, "grand_total", (int)Res->grand_total);
+
+#ifdef HAVE_ASPELL
+  { const char *q_save;
+    if (Res->Suggest != NULL) {
+      q_save = DpsStrdup(DpsVarListFindStr(&query_vars, "q", ""));
+      DpsVarListReplaceStr(&query_vars, "q", Res->Suggest);
+      DpsBuildPageURL(&query_vars, &url);
+      DpsVarListReplaceStr(&Agent->Vars, "Suggest_q", Res->Suggest);
+      DpsVarListReplaceStr(&Agent->Vars, "Suggest_url", url);
+      DpsVarListReplaceStr(&query_vars, "q", q_save);
+      DPS_FREE(q_save);
+    }
+  }
+#endif
+  TRACE_LINE(Agent);
+
+  { 
+    const char *s_save = DpsStrdup(DpsVarListFindStr(&query_vars, "s", ""));
+    int p_save = DpsVarListFindInt(&query_vars, "p", 0);
+    int np_save = DpsVarListFindInt(&query_vars, "np", 0);
+    if (p_save == 0) {
+      DpsVarListReplaceInt(&query_vars, "np", 0);
+    } else {
+      DpsVarListReplaceInt(&query_vars, "p", 1);
+      DpsVarListDel(&query_vars, "np");
+    }
+    DpsVarListDel(&query_vars, "s");
+    DpsBuildPageURL(&query_vars, &url);
+    DpsVarListReplaceStr(&Agent->Vars, "FirstPage", url);
+    if (*s_save != '\0') DpsVarListReplaceStr(&query_vars, "s", s_save);
+    if (np_save) DpsVarListReplaceInt(&query_vars, "np", np_save);
+    if (p_save) DpsVarListReplaceInt(&query_vars, "p", p_save);
+    DPS_FREE(s_save);
+  }
+
+  DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "top");
+
+  if((Res->WWList.nwords == 0) && (Res->nitems - Res->ncmds == 0) && (Res->num_rows == 0)){
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "noquery");
+    TRACE_LINE(Agent);
+    goto freeres;
+  }
+	
+  if(Res->num_rows == 0) {
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "notfound");
+    TRACE_LINE(Agent);
+    goto freeres;
+  }
+
+  for (i = 0; i < Res->WWList.nwords; i++) {
+    swlen += (8 * Res->WWList.Word[i].len) + 2;
+  }
+  if ((searchwords = DpsXmalloc(swlen + 1)) != NULL) {
+    int z=0;
+    for (i = 0; i < Res->WWList.nwords; i++) {
+      if (Res->WWList.Word[i].count > 0) {
+	sprintf(DPS_STREND(searchwords), (z)?"+%s":"%s", Res->WWList.Word[i].word);
+	z++;
+      }
+    }
+  }
+  storedstr = DpsRealloc(storedstr, storedlen = (1024 + 10 * swlen) );
+  if (storedstr == NULL) {
+    DpsSockPrintf(&client, "Can't realloc storedstr\n");
+    res = DPS_ERROR;
+    goto freeres;
+  }
+
+  npages = (Res->total_found/(page_size?page_size:20)) + ((Res->total_found % (page_size?page_size:20) != 0 ) ?  1 : 0);
+  page1 = page_number-ppp/2;
+  page2 = page_number+ppp/2;
+  if(page1 < 0) {
+    page2 -= page1;
+    page1 = 0;
+  } else if(page2 > npages) {
+    page1 -= (page2 - npages);
+    page2 = npages;
+  }
+  if(page1 < 0) page1 = page1 = 0;
+  if(page2 > npages) page2 = npages;
+  nav = (char *)DpsRealloc(nav, nav_len = (size_t)(page2 - page1 + 2) * (1024 + 1024)); 
+	                                                    /* !!! 1024 - limit for navbar0/navbar1 template size */ 
+  if (nav == NULL) {
+    DpsSockPrintf(&client, "Can't realloc nav\n");
+    res = DPS_ERROR;
+    goto freeres;
+  }
+  nav[0] = '\0';
+  TRACE_LINE(Agent);
+
+  /* build NL NB NR */
+  for(i = (size_t)page1; i < (size_t)page2; i++){
+    DpsVarListReplaceInt(&query_vars, (have_p) ? "p" : "np", (int)i + have_p);
+    DpsBuildPageURL(&query_vars, &url);
+    DpsVarListReplaceStr(&Agent->Vars, "NH", url);
+    DpsVarListReplaceInt(&Agent->Vars, "NP", (int)(i+1));
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, NULL, DPS_STREND(nav), nav_len - strlen(nav), 
+		     &Agent->tmpl, (i == (size_t)page_number)?"navbar0":"navbar1");
+  }
+  DpsVarListAddStr(&Agent->Vars, "NB", nav);
+	
+  DpsVarListReplaceInt(&query_vars, (have_p) ? "p" : "np", page_number - 1 + have_p);
+  DpsBuildPageURL(&query_vars, &url);
+  DpsVarListReplaceStr(&Agent->Vars, "NH", url);
+
+  if(Res->first == 1) {/* First page */
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, NULL, nav, nav_len, &Agent->tmpl, "navleft_nop");
+    DpsVarListReplaceStr(&Agent->Vars, "NL", nav);
+  }else{
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, NULL, nav, nav_len, &Agent->tmpl, "navleft");
+    DpsVarListReplaceStr(&Agent->Vars, "NL", nav);
+  }
+	
+  DpsVarListReplaceInt(&query_vars, (have_p) ? "p" : "np", page_number + 1 + have_p);
+  DpsBuildPageURL(&query_vars, &url);
+  DpsVarListReplaceStr(&Agent->Vars, "NH", url);
+
+  if(Res->last >= Res->total_found) {/* Last page */
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, NULL, nav, nav_len, &Agent->tmpl, "navright_nop");
+    DpsVarListReplaceStr(&Agent->Vars, "NR", nav);
+  } else {
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, NULL, nav, nav_len, &Agent->tmpl, "navright");
+    DpsVarListReplaceStr(&Agent->Vars, "NR", nav);
+  }
+	
+  DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "restop");
+
+  for(i = 0; i < Res->num_rows; i++) {
+    DPS_DOCUMENT	*Doc = &Res->Doc[i];
+    DPS_CATEGORY	C;
+    char		*clist;
+    const char	*u, *dm;
+    char		*eu, *edm;
+    char		*ct, *ctu;
+    size_t		cl, sc, r, clistsize;
+    urlid_t		dc_url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
+    urlid_t		dc_origin_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Origin-ID", 0);
+		
+    /* Skip clones */
+    if(dc_origin_id) continue;
+		
+    clist = (char*)DpsMalloc(2048); 
+    if (clist == NULL) {
+      DpsSockPrintf(&client, "Can't alloc clist\n");
+      res = DPS_ERROR;
+      goto freeres;
+    }
+    clist[0] = '\0';
+    clistsize = 0;
+    for(cl = 0; cl < Res->num_rows; cl++) {
+      DPS_DOCUMENT	*Clone = &Res->Doc[cl];
+      urlid_t		cl_origin_id = (urlid_t)DpsVarListFindInt(&Clone->Sections, "Origin-ID", 0);
+			
+      if ((dc_url_id == cl_origin_id) && cl_origin_id){
+	DPS_VARLIST	CloneVars;
+				
+	DpsVarListInit(&CloneVars);
+	DpsVarListAddLst(&CloneVars, &Agent->Vars, NULL, "*");
+	DpsVarListReplaceLst(&CloneVars, &Doc->Sections, NULL, "*");
+	DpsVarListReplaceLst(&CloneVars, &Clone->Sections, NULL, "*");
+	clist = (char*)DpsRealloc(clist, (clistsize = dps_strlen(clist)) + 2048);
+	if (clist == NULL) {
+	  DpsSockPrintf(&client, "Can't realloc clist\n");
+	  res = DPS_ERROR;
+	  goto freeres;
+	}
+	Agent->tmpl.Env_Vars = &CloneVars;
+	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, NULL, clist + clistsize, 2048, &Agent->tmpl, "clone");
+	DpsVarListFree(&CloneVars);
+      }
+    }
+    Agent->tmpl.Env_Vars = &Agent->Vars;
+    clistsize += 2048;
+		
+    DpsVarListReplaceStr(&Agent->Vars, "CL", clist);
+    DpsVarListReplaceInt(&Agent->Vars, "DP_ID", dc_url_id);
+		
+    DpsVarListReplace(&Agent->Vars, DpsVarListFind(&Doc->Sections, "Alias"));
+
+    DpsVarListReplaceStr(&Agent->Vars, "title", "[no title]");
+
+    /* Pass all found user-defined sections */
+    for (r = 0; r < 256; r++)
+      for (sc = 0; sc < Doc->Sections.Root[r].nvars; sc++) {
+	DPS_VAR *S = &Doc->Sections.Root[r].Var[sc];
+	DpsVarListReplace(&Agent->Vars, S);
+      }
+		
+    bzero((void*)&C, sizeof(C));
+    dps_strncpy(C.addr, DpsVarListFindStr(&Doc->Sections, "Category", "0"), sizeof(C.addr));
+    if(catcolumns && !DpsCatAction(Agent, &C, DPS_CAT_ACTION_PATH)){
+      char *catpath = NULL, *pp;
+      size_t c, l = 2;
+
+      for(c = (catcolumns > C.ncategories) ? (C.ncategories - catcolumns) : 0; c < C.ncategories; c++) 
+	l += 32 + dps_strlen(C.Category[c].path) + dps_strlen(C.Category[c].name);
+      pp = catpath = (char*)DpsMalloc(l);
+      if (catpath != NULL) {
+	*catpath = '\0';
+	for(c = (catcolumns > C.ncategories) ? (C.ncategories - catcolumns) : 0; c < C.ncategories; c++) {
+	  sprintf(pp, " &gt; <a href=\"?c=%s\">%s</a> ", C.Category[c].path, C.Category[c].name);
+	  pp += dps_strlen(pp);
+	}
+	DpsVarListReplaceStr(&Agent->Vars, "DY", catpath);
+	DPS_FREE(catpath);
+      }
+    }
+    DPS_FREE(C.Category);
+
+    u =  DpsVarListFindStrTxt(&Agent->Vars, "URL", "");
+    eu = (char*)DpsMalloc(dps_strlen(u)*10 + 64);
+    if (eu == NULL) {
+      DpsSockPrintf(&client, "Can't alloc eu\n");
+      res = DPS_ERROR;
+      goto freeres;
+    }
+    DpsEscapeURL(eu, u);
+
+    dm = DpsVarListFindStr(&Agent->Vars, "Last-Modified", "");
+    edm = (char*)DpsMalloc(dps_strlen(dm)*10 + 10);
+    if (edm == NULL) {
+      DpsSockPrintf(&client, "Can't alloc edm\n");
+      res = DPS_ERROR;
+      goto freeres;
+    }
+    DpsEscapeURL(edm, dm);
+
+    ct = DpsVarListFindStr(&Agent->Vars, "Content-Type", "");
+    ctu = (char*)DpsMalloc(dps_strlen(ct) * 10 + 10);
+    if (ctu == NULL) {
+      DpsSockPrintf(&client, "Can't alloc ctu\n");
+      res = DPS_ERROR;
+      goto freeres;
+    }
+    DpsEscapeURL(ctu, ct);
+
+    dps_snprintf(storedstr, storedlen, "%s?rec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
+		 DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi"),
+		 DpsURL_ID(Doc, NULL), 
+		 DpsVarListFindStr(&Agent->Vars, "label", ""),
+		 edm, /* Last-Modified escaped */
+		 sc = DpsVarListFindInt(&Agent->Vars, "Content-Length", 0),
+		 DpsVarListFindStr(&Agent->Vars, "Content-Language", ""),
+		 DpsVarListFindStr(&Agent->Vars, "Charset", ""),
+		 eu, /* URL escaped */
+		 ctu, /* Content-Type escaped */
+		 searchwords
+		 );
+
+    if (sc >= 10485760) {
+      dps_snprintf(eu, 64, "%dM", sc / 1048576);
+    } else if (sc >= 1048576) {
+      dps_snprintf(eu, 64, "%.1fM", (double)sc / 1048576);
+    } else if (sc >= 10240) {
+      dps_snprintf(eu, 64, "%dK", sc / 1024);
+    } else if (sc >= 1024) {
+      dps_snprintf(eu, 64, "%.1fK", (double)sc / 1024);
+    } else {
+      dps_snprintf(eu, 64, "%d", sc);
+    }
+
+    DpsVarListReplaceStr(&Agent->Vars, "FancySize", eu);
+
+    DpsFree(eu);
+    DpsFree(edm);
+    DpsFree(ctu);
+
+    if ((DpsVarListFindStr(&Doc->Sections, "Z", NULL) == NULL)) {
+      DpsVarListReplaceInt(&Agent->Vars, "ST", 1);
+      DpsVarListReplaceStr(&Agent->Vars, "stored_href", storedstr);
+    } else {
+      DpsVarListReplaceInt(&Agent->Vars, "ST", 0);
+      DpsVarListReplaceStr(&Agent->Vars, "stored_href", "");
+    }
+		
+    if (Res->PerSite) {
+      DpsVarListReplaceUnsigned(&Agent->Vars, "PerSite", Res->PerSite[i + Res->offset * (Res->first - 1)]);
+    }
+
+    /* put Xres sections if any */
+    for (r = 2; r <= Res->num_rows; r++) {
+      if ((i + 1) % r == 0) {
+	dps_snprintf(template_name, sizeof(template_name), "%dres", r);
+	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, template_name);
+      }
+    }
+    if ( (sc = DpsVarListFindInt(&Agent->Vars, "site", 0)) == 0) {
+      DpsVarListReplaceInt(&query_vars, (have_p) ? "p" : "np", have_p);
+      DpsVarListReplaceInt(&query_vars, "site", 
+#ifdef WITH_GOOGLEGRP
+			   site_id = 
+#endif
+			   DpsVarListFindInt(&Doc->Sections, "Site_id", 0));
+      DpsBuildPageURL(&query_vars, &url);
+      DpsVarListReplaceStr(&Agent->Vars, "sitelimit_href", url);
+#ifdef WITH_GOOGLEGRP
+      if (site_id == prev_site_id) {
+	DpsVarListAddStr(&Agent->Vars, "grouped", "yes");
+	DpsSockPrintf(&client, "%s", Agent->tmpl.GrBeg);
+      }
+#endif
+    }
+
+    DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "res");
+#ifdef WITH_GOOGLEGRP
+    if ((sc == 0) && (site_id == prev_site_id)) {
+      DpsVarListDel(&Agent->Vars, "grouped");
+      DpsSockPrintf(&client, "%s", Agent->tmpl.GrEnd);
+    }
+    prev_site_id = site_id;
+#endif
+    /* put resX sections if any */
+    for (r = 2; r <= Res->num_rows; r++) {
+      if ((i + 1) % r == 0) {
+	dps_snprintf(template_name, sizeof(template_name), "res%d", r);
+	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, template_name);
+      }
+    }
+
+    /* Revoke all found user-defined sections */
+    for (r = 0; r < 256; r++)
+      for(sc = 0; sc < Doc->Sections.Root[r].nvars; sc++){
+	DPS_VAR *S = &Doc->Sections.Root[r].Var[sc];
+	DpsVarListDel(&Agent->Vars, S->name);
+      }
+    DpsVarListDel(&Agent->Vars, "body"); /* remoke "body" if it's not in doc's info and made from Excerpt */
+		
+    DpsFree(clist);
+  }
+  TRACE_LINE(Agent);
+  DpsVarListReplaceInt(&Agent->Vars, (have_p) ? "p" : "np", page_number + have_p);
+  DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "resbot");
+  DPS_FREE(searchwords);
+  DPS_FREE(storedstr);
+	
+
+  res = DPS_OK;
+
+freeres:
+  DpsResultFree(Res);
+	
+end:
+  DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "bottom");
+  close(client); /* Too early closure ? */
+
+#ifdef HAVE_ASPELL
+  if (Agent->Flags.use_aspellext && Agent->naspell > 0) {
+    register size_t i;
+#ifdef UNIONWAIT
+    union wait status;
+#else
+    int status;
+#endif
+    for (i = 0; i < Agent->naspell; i++) {
+      if (Agent->aspell_pid[i]) {
+	kill(Agent->aspell_pid[i], SIGTERM);
+	Agent->aspell_pid[i] = 0;
+      }
+    }
+    while(waitpid(-1, &status, WNOHANG) > 0);
+    Agent->naspell = 0;
+  }
+#endif /* HAVE_ASPELL*/	
+
+  DpsVarListFree(&query_vars);
+  DPS_FREE(template_filename);
   DPS_FREE(query_string);
-  return DPS_OK;
+  DPS_FREE(url);
+  DPS_FREE(nav);
+  return res;
 }
 
 /*************************************************************/
@@ -314,13 +792,13 @@ static int do_client(DPS_AGENT *Agent, int client){
 		char * tok, * lt;
 		
 		DpsLog(Agent,verb,"Waiting for command header");
-		nrecv = DpsRecvall(client, &hdr, sizeof(hdr), 60);
+		nrecv = DpsRecvall(client, &hdr, sizeof(hdr), 360);
 		if(nrecv != sizeof(hdr)){
 			DpsLog(Agent,verb,"Received incomplete header nrecv=%d", (int)nrecv);
-			if (!strcasecmp((char*)&hdr, "GET ")) do_RESTful(Agent, client, &hdr);
+			if (!strncasecmp((char*)&hdr, "GET ", 4)) do_RESTful(Agent, client, &hdr);
 			break;
 		}else{
-		        if (!strcasecmp((char*)&hdr, "GET ")) {
+		  if (!strncasecmp((char*)&hdr, "GET ", 4)) {
 			  do_RESTful(Agent, client, &hdr);
 			  break;
 			}
