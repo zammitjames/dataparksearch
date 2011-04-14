@@ -238,9 +238,9 @@ if APACHEMODULE
 if APACHE2
 	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR); 
 	if test -f .libs/mod_dpsearch.so$(EXEEXT); then \
-		$(APXS) -i -n dpsearch .libs/mod_dpsearch.so$(EXEEXT); \
+		$(APXS) -i -S LIBEXECDIR=$(DESTDIR)$(APACHE_MODDIR) -n dpsearch .libs/mod_dpsearch.so$(EXEEXT); \
 	else \
-		$(APXS) -i -n dpsearch mod_dpsearch.so$(EXEEXT); \
+		$(APXS) -i -S LIBEXECDIR=$(DESTDIR)$(APACHE_MODDIR) -n dpsearch mod_dpsearch.so$(EXEEXT); \
 	fi
 else
 	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR);
