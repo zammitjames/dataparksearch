@@ -282,8 +282,7 @@ int main(int argc, char **argv, char **envp) {
 		DpsParseQueryString(Agent,&Env->Vars,query_string);
 
 		DPS_FREE(template_filename);
-		template_filename = (char*)DpsStrdup(DpsVarListFindStr(&Env->Vars, "tmplt", ""));
-		if (*template_filename == '\0') { DPS_FREE(template_filename); template_filename = (char*)DpsStrdup("search.htm"); }
+		template_filename = (char*)DpsStrdup(DpsVarListFindStr(&Env->Vars, "tmplt", "search.htm"));
 	
 		/*// Get template name from command line variable &tmplt */
 		if(!template_name[0])
@@ -306,7 +305,8 @@ int main(int argc, char **argv, char **envp) {
 	    dps_snprintf(template_name, sizeof(template_name), "%s/%s", conf_dir, template_filename);
 
 	    if ((res = DpsTemplateLoad(Agent, Env, &Agent->tmpl, template_name))) {
-
+	      
+	        fprintf(stderr, "Can't load default template: '%s' %s\n", template_name, Env->errstr);
 		if(httpd)printf("Content-Type: text/plain\r\n\r\n");
 		printf("%s\n",Env->errstr);
 		DpsVarListFree(&query_vars);
@@ -503,7 +503,6 @@ int main(int argc, char **argv, char **envp) {
 		DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "top");
 		DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "error");
 		TRACE_LINE(Agent);
-		if (Res != NULL) goto freeres;
 		goto end;
 	}
 	

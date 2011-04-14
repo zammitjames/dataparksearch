@@ -42,7 +42,9 @@ int socket_getname(DPS_CONN *connp, struct sockaddr_in *sa_in);
 void socket_buf_clear(DPS_CONN *connp);
 
 extern ssize_t DpsRecvall(int s, void *buf, size_t len, size_t time_to_wait);
+extern ssize_t DpsRecvstr(int s, void *buf, size_t len, size_t time_to_wait);
 extern ssize_t DpsSend(int s, const void *msg, size_t len, int flags);
 extern void DpsSockOpt(DPS_AGENT *A, int socket);
+extern int DpsSockPrintf(int *socket, const char *fmt, ...);
 
 #endif

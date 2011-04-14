@@ -378,6 +378,32 @@ ssize_t DpsRecvall(int s, void *buf, size_t len, size_t time_to_wait) {
 	return (r < 0) ? r : received;
 }
 
+ssize_t DpsRecvstr(int s, void *buf, size_t len, size_t time_to_wait) {
+
+	ssize_t received = 0, r = 0;
+	char *b = buf;
+	time_t start = time(NULL);
+	int notdone = 1;
+	size_t i;
+
+	if (len == 0) return received;
+	while (notdone && (size_t)received < len) {
+
+	  if ((r = read(s, b + received, dps_min(len - received, DPS_BLKLEN))) > 0) {
+	        for (i = 0; i < r; i++) if(b[received + i] == '\0' || b[received + i] == '\n') notdone = 0;
+		received += r;
+	  }
+	  if ( ((r < 0) && (errno != EINTR))  /* || have_sigint || have_sigterm */
+	       || have_sigpipe
+	       ) break;
+	  if (r == 0) {
+	    if (time_to_wait > 0 && ((size_t)(time(NULL) - start) > time_to_wait)) break;
+	    DPS_MSLEEP(1);
+	  }
+	}
+	return (r < 0) ? r : received;
+}
+
 
 #endif
 
@@ -428,6 +454,20 @@ void DpsSockOpt(DPS_AGENT *A, int dps_socket) {
       fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
   }
 #endif
+}
+
+
+int DpsSockPrintf(int *socket, const char *fmt, ...) {
+	char buf[4096];
+	va_list ap;
+	size_t len;
+
+	va_start(ap,fmt);
+	vsnprintf(buf, sizeof(buf), fmt, ap);
+	va_end(ap);
+	len = dps_strlen(buf);
+	if ((ssize_t)len != DpsSend(*socket, buf, len, 0)) return DPS_ERROR;
+	return DPS_OK;
 }
 
 
