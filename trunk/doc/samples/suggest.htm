@@ -1,10 +1,10 @@
 <!--variables
-DBAddr		searchd://v.sochi.org.ru/
-DBAddr		searchd://v.sochi.org.ru/?label=sochi
-DBAddr		searchd://v.sochi.org.ru/?label=phones
-DBAddr		searchd://v.sochi.org.ru/?label=qsimilar
+DBAddr		searchd://v.sochi.org.ru/?socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=sochi&socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=phones&socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=qsimilar&socket=/usr/local/dpsearch/var/dpsearchd.sock
 StoredocURL     /cgi-bin/storedoc.cgi
-LocalCharset 	koi8-r
+LocalCharset 	utf-8
 BrowserCharset  UTF-8
 MakePrefixes yes
 DoExcerpt no
@@ -19,16 +19,21 @@ HlEnd </span>
 GrBeg 
 GrEnd 
 Locale ru_RU.UTF-8
-MakePrefixes yes
 #ResultContentType text/html
 -->
 
 <!--top-->
-<html><head><title></title></head><body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>$&(q)</title>
+</head>
+<body>
 <!--/top-->
 
 <!--bottom-->
-</body></html>
+</body>
+</html>
 <!--/bottom-->
 
 <!--restop-->
@@ -70,7 +75,7 @@ MakePrefixes yes
 
 
 <!--notfound-->
-&nbsp;
+
 <!--/notfound-->
 
 <!--noquery-->

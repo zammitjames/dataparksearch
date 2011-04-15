@@ -30,16 +30,18 @@ AC_PREFIX_DEFAULT(/usr/local/dpsearch)
 dnl Check if build env is sane
 AM_SANITY_CHECK
 
+dnl Enable shared libs by default (to disable - place AM_DISABLE_SHARED)
+AC_PROG_LIBTOOL
+dnl AM_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+
 dnl Check for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 
 AM_PROG_CC_C_O
 
-dnl Enable shared libs by default (to disable - place AM_DISABLE_SHARED)
-AC_PROG_LIBTOOL
-dnl AM_PROG_LIBTOOL
-AC_SUBST(LIBTOOL_DEPS)
+LT_INIT
 
 dnl Check if we are little or big endian
 AC_C_BIGENDIAN

@@ -1,6 +1,6 @@
 <!--variables
-DBAddr		searchd://v.sochi.org.ru/
-DBAddr		searchd://v.sochi.org.ru/?label=sochi
+DBAddr		searchd://v.sochi.org.ru/?socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=sochi&socket=/usr/local/dpsearch/var/dpsearchd.sock
 StoredocURL     /cgi-bin/storedoc.cgi
 LocalCharset 	utf-8
 BrowserCharset  UTF-8
@@ -21,6 +21,8 @@ ReplaceVar Justine.lng "Страницы Интернет о Жюстин Эне
 ReplaceVar Job.lng "Работа в Сочи"
 ReplaceVar Ads.lng "Объявления в Сочи"
 ReplaceVar Dpsearch.lng "Сайт DataparkSearch"
+ReplaceVar Sochived.lng "Сочинский краевед"
+ReplaceVar sochinews.lng "Новости"
 ReplaceVar near.lng "все слова рядом"
 ReplaceVar NZ.lng "Поиск по Новой Зеландии"
 ReplaceVar Oregon.lng "Поиск по университету Орегона"
@@ -105,7 +107,6 @@ ReplaceVar qwords.lng "Слова запроса"
 ReplaceVar sochi24.lng "Сочи-24"
 ReplaceVar translate.lng "перевод"
 ReplaceVar lastmod.lng "На дату:"
-ReplaceVar Sochived.lng "Сочинский краевед"
 
 <!IF NAME="c" CONTENT="01">
 <!IF NAME="label" CONTENT="">
@@ -118,15 +119,13 @@ MaxWordLength 64
 DetectClones no
 ExcerptSize 160
 ExcerptPadding 72
-ExcerptMark <br>
+ExcerptMark &nbsp;
 HlBeg <span class="rhl">
 HlEnd </span>
 GrBeg <div class="group">
 GrEnd </div>
 DateFormat %d.%m.%Y
 m near
-sp 1
-sy 0
 -->
 
 <!--top-->
@@ -145,6 +144,7 @@ sy 0
     <link href="/css/therm2.css" rel="stylesheet" type="text/css">
  </HEAD>
 <!-- BrowserCharset: $(BrowserCharset) -->
+<!-- $* of q: $*(q) -->
 <body>
 
 <div id="form">
@@ -157,6 +157,7 @@ sy 0
 <!ELIF NAME="c" CONTENT="0101"><a href="http://inet-sochi.ru/job/">$(Job.lng)</a>
 <!ELIF NAME="c" CONTENT="0102"><a href="http://inet-sochi.ru/ads/">$(Ads.lng)</a>
 <!ELIF NAME="c" CONTENT="010N"><a href="http://sochived.info/">$(Sochived.lng)</a>
+<!ELIF NAME="c" CONTENT="010S"><a href="http://inet-sochi.ru/news/">$(sochinews.lng)</a>
 <!ELIF NAME="site" CONTENT="-572280698"><a href="http://www.dataparksearch.org/">$(Dpsearch.lng)</a> 
 <!ELIF NAME="site" CONTENT="-1483588461"><a href="http://www.dataparksearch.org/">$(Dpsearch.lng)</a> 
 <!ELIF NAME="label" CONTENT="sochi"><a href="http://inet-sochi.ru/">$(Sochi.org.ru.lng)</a>
@@ -392,7 +393,11 @@ initTimer(100);
 <!--/bottom-->
 
 <!--restop-->
-<!-- WE: $(WA) -->
+<!-- WE: $(WE) -->
+<!-- WA: $(WA) -->
+<!-- WS: $(WS) -->
+<!-- W: $(W) -->
+
 <div class="news">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr><td colspan="2" align="left" class="serp">
@@ -435,7 +440,7 @@ $(Order).&nbsp;<!-- $(DP_ID), site_id: $(Site_ID), ST: $(ST) - $(FancySize) $(by
  --><!IF NAME="Title" CONTENT="[no title]">
 	 <!IF NAME="MP3.Artist" CONTENT="">$(notitle.lng)<!ELSE>$(artist.lng): $&(MP3.Artist)<!ENDIF>
 	 <!ELIKE NAME="Title" CONTENT="/tmp/ind*">$(notitle.lng)
-    <!ELSE>$&(Title:cite:72)<!ENDIF><!-- 
+    <!ELSE>$&(Title:cite:62)<!ENDIF><!-- 
 --></a></div>
 <div class="serp2" style="margin-left:20px;">
 <!IF NAME="MP3.Album" CONTENT=""> <!ELSE><span class="result">$(album.lng): </span> 
@@ -445,7 +450,7 @@ $&(MP3.Song)<br><!ENDIF>
 <!IF NAME="MP3.Year" CONTENT=""> <!ELSE><span class="result">$(year.lng): </span>
 $&(MP3.Year)<br><!ENDIF>
 <!IF NAME="Body" CONTENT=""><!IFNOT NAME="sea" CONTENT=""><div class="serp3"><small class="restop">$(summary.lng):</small> <small>$&(sea:cite:350)</small></div><!ENDIF><!ELSE><small>$&(Body:350)</small><br><!ENDIF></div>
-<div class="serp2" style="margin-left:20px;"><small class="result">$&(URL.host)$&(URL.path:36)$&(URL.file:33:right)<IFNOT NAME="url.query_string" CONTENT="">$&(url.query_string:right:20)<!ENDIF>
+<div class="serp2" style="margin-left:20px;"><small class="result">$&(URL.host:idnd)$&(URL.path:36)$&(URL.file:33:right)<IFNOT NAME="url.query_string" CONTENT="">$&(url.query_string:right:20)<!ENDIF>
 	      <!IFNOT NAME="stored_href" CONTENT=""> &nbsp;&nbsp;<a onmousedown="return clk('$(DP_ID)','$(Order)');" href="$(stored_href)" title="$(lastmod.lng) $(Last-Modified)">$(stcopy.lng)</a><!ENDIF>
 <!IFLIKE NAME="Content-Language" CONTENT="ru*"><!ELSE> &nbsp;&nbsp;<a href="http://translate.google.com/translate?js=y&amp;prev=_t&amp;hl=ru&amp;ie=UTF-8&amp;layout=1&amp;eotf=1&amp;u=$%(url)&amp;sl=auto&amp;tl=ru" title="$&(Content-Language) -> ru">$(translate.lng)</a><!ENDIF>
 	      <!IFNOT NAME="sitelimit_href" CONTENT=""> &nbsp;&nbsp;<a href="$(self)$(sitelimit_href)" title="$(allresfrom.lng) $(url.host)">$(more.lng)
@@ -494,21 +499,6 @@ $(CL)</div>
 <td rowspan="2" valign="top" align="left" style="width:14em; border-right:1px solid #f4f4f4;">
 <!-- ads here -->
 <!IF NAME="label" CONTENT="sochi"><div id="rutubeArea">&nbsp;</div><!ENDIF>
-<div id="begun">
-<script type="text/javascript">
-<!IFLIKE NAME="ENV.SERVER_NAME" CONTENT="*sochi.org.ru">
-   var begun_auto_pad = 90069626; // pad id
-   var begun_block_id = 112889598;
-<!ELIF NAME="ENV.SERVER_NAME" CONTENT="inet-sochi.ru">
-   var begun_auto_pad = 205864980; // pad id
-   var begun_block_id = 205865660;
-<!ELSE>
-   var begun_auto_pad = 90026481; // pad id
-   var begun_block_id = 112888603;
-<!ENDIF>
-document.write('<script src=\"http://autocontext.begun.ru/autocontext2.js\" type=\"text/javascript\"' + '\>\<\/script>');
-</script>
-</div>
 </td>
 </tr>
 </table>

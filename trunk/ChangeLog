@@ -3,6 +3,7 @@ History
 -------
 
 Latest snapshot:
+	* RESTful interface has been added for searchd. Only the GET operation is supported.
 	* Multi-inserts were added for crossdict/ncrossdict and urlinfo tables.
 	* Asynchronous queries to MySQL were fixed.
 	* Added support for JSON string encoding for search template meta-variables.

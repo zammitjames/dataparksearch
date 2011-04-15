@@ -2516,11 +2516,7 @@ timezones.inc: timezones.lst
 
 install-exec-local: @APACHE_MODULE@ @PHP_MODULE@
 @APACHE2_TRUE@@APACHEMODULE_TRUE@	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR); 
-@APACHE2_TRUE@@APACHEMODULE_TRUE@	if test -f .libs/mod_dpsearch.so$(EXEEXT); then \
-@APACHE2_TRUE@@APACHEMODULE_TRUE@		$(APXS) -i -n dpsearch .libs/mod_dpsearch.so$(EXEEXT); \
-@APACHE2_TRUE@@APACHEMODULE_TRUE@	else \
-@APACHE2_TRUE@@APACHEMODULE_TRUE@		$(APXS) -i -n dpsearch mod_dpsearch.so$(EXEEXT); \
-@APACHE2_TRUE@@APACHEMODULE_TRUE@	fi
+@APACHE2_TRUE@@APACHEMODULE_TRUE@	$(APXS) -i -S LIBEXECDIR=$(DESTDIR)$(APACHE_MODDIR) -n dpsearch mod_dpsearch.la
 @APACHE2_FALSE@@APACHEMODULE_TRUE@	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR);
 @APACHE2_FALSE@@APACHEMODULE_TRUE@	$(LIBTOOL) --mode=install $(INSTALL) mod_dpsearch.so $(DESTDIR)$(APACHE_MODDIR);
 @PHPMODULE_TRUE@	$(LIBTOOL) --mode=install $(INSTALL) dpsearch.so @PHP_EXTENSION_DIR@

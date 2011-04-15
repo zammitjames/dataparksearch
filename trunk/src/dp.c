@@ -62,6 +62,8 @@ char* zeroarr(int N) {
     return a;
 }
 
+char *dps_strcpy1(char *dst0, const char *src0);
+char *dps_strcpy2(char *dst0, const char *src0);
 size_t dps_strlen(const char *src);
 
 #else /* DPS_CONFIGURE */
@@ -93,30 +95,56 @@ size_t dps_strlen(const char *src);
 #include "dps_memcpy.inc"
 
 
-#if defined DPS_USE_STRCPY_UNALIGNED || defined DPS_CONFIGURE
+#if defined DPS_USE_STRCPY1_UNALIGNED || defined DPS_CONFIGURE
 
-char *dps_strcpy(char *dst0, const char *src0) {
+#if defined DPS_CONFIGURE
+char *dps_strcpy1(char *dst0, const char *src0) 
+#else
+char *dps_strcpy(char *dst0, const char *src0) 
+#endif
+{
   register char *dst = dst0;
   register const char *src = src0;
   while ((*dst++ = *src++));
   return dst0;
-#if 0
-  register size_t n = strlen(src0);
-  return memmove(dst0, src0, n + 1);
-#endif
 }
 #endif /* DPS_USE_STRCPY_ALIGNED */
 
 
-#if defined DPS_USE_STRNCPY_UNALIGNED || defined DPS_CONFIGURE
+#if defined DPS_USE_STRCPY2_UNALIGNED || defined DPS_CONFIGURE
 
-#if 0
-char * strncpy(char *dst0, const char *src0, size_t length) {
-  register size_t n = dps_strlen(src0) + 1;
-  return dps_memmove(dst0, src0, (n < length) ? n : length);
+#if defined DPS_CONFIGURE
+char *dps_strcpy2(char *dst0, const char *src0) 
+#else
+char *dps_strcpy(char *dst0, const char *src0)
+#endif
+{
+  register size_t n = strlen(src0);
+  return memmove(dst0, src0, n + 1);
+}
+#endif /* DPS_USE_STRCPY_ALIGNED */
+
+
+
+#if defined DPS_USE_STRNCPY1_UNALIGNED || defined DPS_CONFIGURE
+
+#if defined DPS_CONFIGURE
+char * dps_strncpy1(char *dst0, const char *src0, size_t length)
+#else
+char * dps_strncpy(char *dst0, const char *src0, size_t length)
+#endif
+{
+  register size_t n = strlen(src0);
+  register char *dst = dps_memmove(dst0, src0, (n < length) ? n : length);
+  if (n < length) bzero(dst + n, (length - n));
+  return dst;
 }
 
-#else
+#endif
+
+
+
+#if defined DPS_USE_STRNCPY2_UNALIGNED || defined DPS_CONFIGURE
 
 typedef long long dps_strncpy_word;  /* up to 32 bytes long */
 #define strncpy_wsize sizeof(dps_strncpy_word)
@@ -156,7 +184,12 @@ typedef long long dps_strncpy_word;  /* up to 32 bytes long */
 	if (t > 30) { dst[30] = '\0'; \
 	}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
-char * dps_strncpy(char *dst0, const char *src0, size_t length) {
+#if defined DPS_CONFIGURE
+char * dps_strncpy2(char *dst0, const char *src0, size_t length)
+#else
+char * dps_strncpy(char *dst0, const char *src0, size_t length)
+#endif
+{
   if (length) {
     register size_t n = length / 8;
     register size_t r = (length % 8);
@@ -235,15 +268,14 @@ dps_strncpy_second_pas:
   return dst0;
 }
 
-#endif
-#endif /* DPS_USE_STRNCPY_ALIGNED */
+#endif /* DPS_USE_STRNCPY2_ALIGNED */
 
 
 #if defined DPS_USE_STRCAT_UNALIGNED || defined DPS_CONFIGURE
 
 char * dps_strcat(char *dst0, const char *src0) {
   register size_t n = dps_strlen(dst0);
-  dps_strcpy((char*)dst0 + n, src0);
+  strcpy((char*)dst0 + n, src0);
   return dst0;
 }
 #endif /* DPS_USE_STRCAT_ALIGNED */
@@ -253,7 +285,7 @@ char * dps_strcat(char *dst0, const char *src0) {
 
 char * dps_strncat(char *dst0, const char *src0, size_t length) {
   register size_t n = dps_strlen(dst0);
-  dps_strncpy((char*)dst0 + n, src0, length);
+  strncpy((char*)dst0 + n, src0, length);
   return dst0;
 }
 #endif /* DPS_USE_STRNCAT_ALIGNED */
@@ -313,6 +345,7 @@ size_t dps_strlen(const char *src) {
 
 #define STARTLEN 1
 #define NOTALIGN 1
+#define DPS_MIN(x,y) ((x)<(y)?(x):(y))
 
 #define N 20000 /* array size */
 char a0[N + 8];
@@ -320,7 +353,7 @@ char a0[N + 8];
 int main() {
   size_t i, j, z = 0;
   FILE *cfg = fopen("src/dp.inc", "w");
-  double t_dps, t_lib;
+  double t_dps, t_dps2, t_lib;
 
   for (i=0; i<N; i++) {
     a0[i] = (char)(1 + (rand() % 255));
@@ -338,6 +371,7 @@ int main() {
     }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
       memcpy(d, a, i);
@@ -345,10 +379,11 @@ int main() {
     }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_MEMCPY_ALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_MEMCPY_ALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\n\tdps:%g lib:%g, memcpy aligned\n", t_dps, t_lib);
 
     /***************/
 
@@ -368,10 +403,11 @@ int main() {
       }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_MEMCPY_UNALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_MEMCPY_UNALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, memcpy unaligned\n", t_dps, t_lib);
 
     /* ###################################### */
 
@@ -389,10 +425,11 @@ int main() {
     }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_MEMMOVE_ALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_MEMMOVE_ALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, memmove aligned\n", t_dps, t_lib);
 
     /***************/
 
@@ -412,10 +449,11 @@ int main() {
       }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_MEMMOVE_UNALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_MEMMOVE_UNALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, memmove unaligned\n", t_dps, t_lib);
 
 
 
@@ -433,11 +471,20 @@ int main() {
 
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
-      dps_strcpy(d, a);
-      dps_strcpy(a, d);
+      dps_strcpy1(d, a);
+      dps_strcpy1(a, d);
     }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    TimerStart();
+    for (i = N; i > STARTLEN; i--) {
+      dps_strcpy2(d, a);
+      dps_strcpy2(a, d);
+    }
+    t_dps2 = TimerEnd();
+
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
       strcpy(d, a);
@@ -445,21 +492,33 @@ int main() {
     }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRCPY_ALIGNED%s\n\n", t_dps, t_lib,
-	    (t_lib < t_dps) ? "/*" : "",
-	    (t_lib < t_dps) ? "*/" : ""
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRCPY%d_ALIGNED%s\n\n", DPS_MIN(t_dps,t_dps2), t_lib,
+	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "/*" : "", (t_dps < t_dps2) ? 1 : 2,
+	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
+    printf("\tdps1:%g dps2:%g lib:%g, strcpy aligned\n", t_dps, t_dps2, t_lib);
 
     /***************/
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N; i > STARTLEN; i--) {
-	dps_strcpy(d+z, a+z);
-	dps_strcpy(a+z, d+z);
+	dps_strcpy1(d+z, a+z);
+	dps_strcpy1(a+z, d+z);
       }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    TimerStart();
+    for (z =0; z < 8; z++)
+      for (i = N; i > STARTLEN; i--) {
+	dps_strcpy2(d+z, a+z);
+	dps_strcpy2(a+z, d+z);
+      }
+    t_dps2 = TimerEnd();
+
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N; i > STARTLEN; i--) {
@@ -468,21 +527,32 @@ int main() {
       }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRCPY_UNALIGNED%s\n\n", t_dps, t_lib,
-	    (t_lib < t_dps) ? "/*" : "",
-	    (t_lib < t_dps) ? "*/" : ""
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRCPY%d_UNALIGNED%s\n\n", DPS_MIN(t_dps,t_dps2), t_lib,
+	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "/*" : "", (t_dps < t_dps2) ? 1 : 2,
+	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
 
+    printf("\tdps1:%g dps2:%g lib:%g, strcpy unaligned\n", t_dps, t_dps2, t_lib);
 
     /* ###################################### */
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
-      dps_strncpy(d, a, i);
-      dps_strncpy(a, d, i);
+      dps_strncpy1(d, a, i);
+      dps_strncpy1(a, d, i);
     }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    TimerStart();
+    for (i = N; i > STARTLEN; i--) {
+      dps_strncpy2(d, a, i);
+      dps_strncpy2(a, d, i);
+    }
+    t_dps2 = TimerEnd();
+
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
       strncpy(d, a, i);
@@ -490,21 +560,33 @@ int main() {
     }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRNCPY_ALIGNED%s\n\n", t_dps, t_lib,
-	    (t_lib < t_dps) ? "/*" : "",
-	    (t_lib < t_dps) ? "*/" : ""
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRNCPY%d_ALIGNED%s\n\n", DPS_MIN(t_dps,t_dps2), t_lib,
+	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "/*" : "", (t_dps < t_dps2) ? 1 : 2,
+	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
+    printf("\tdps1:%g dps2:%g lib:%g, strncpy aligned\n", t_dps, t_dps2, t_lib);
 
     /***************/
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N; i > STARTLEN; i--) {
-	dps_strncpy(d+z, a, i);
-	dps_strncpy(a, d+z, i);
+	dps_strncpy1(d+z, a, i);
+	dps_strncpy1(a, d+z, i);
       }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    TimerStart();
+    for (z =0; z < 8; z++)
+      for (i = N; i > STARTLEN; i--) {
+	dps_strncpy2(d+z, a, i);
+	dps_strncpy2(a, d+z, i);
+      }
+    t_dps2 = TimerEnd();
+
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N; i > STARTLEN; i--) {
@@ -513,10 +595,11 @@ int main() {
       }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRNCPY_UNALIGNED%s\n\n", t_dps, t_lib,
-	    (t_lib < t_dps) ? "/*" : "",
-	    (t_lib < t_dps) ? "*/" : ""
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRNCPY%d_UNALIGNED%s\n\n", DPS_MIN(t_dps,t_dps2), t_lib,
+	    (t_lib < DPS_MIN(t_dps2,t_dps)) ? "/*" : "", (t_dps < t_dps2) ? 1 : 2,
+	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
+    printf("\tdps1:%g dps2:%g lib:%g, strncpy unaligned\n", t_dps, t_dps2, t_lib);
 
 
 
@@ -527,6 +610,7 @@ int main() {
 
     /* ###################################### */
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N-1; i > STARTLEN; i--) {
       d[0] = '\0';
@@ -536,6 +620,7 @@ int main() {
     }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N-1; i > STARTLEN; i--) {
       d[0] = '\0';
@@ -545,13 +630,15 @@ int main() {
     }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRCAT_ALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRCAT_ALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, strcat aligned\n", t_dps, t_lib);
 
     /***************/
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N - z - 1; i > STARTLEN; i--) {
@@ -562,6 +649,7 @@ int main() {
       }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N - z - 1; i > STARTLEN; i--) {
@@ -572,16 +660,18 @@ int main() {
       }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRCAT_UNALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRCAT_UNALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, strcat unaligned\n", t_dps, t_lib);
 
 
 
 
     /* ###################################### */
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
       d[0] = '\0';
@@ -591,6 +681,7 @@ int main() {
     }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (i = N; i > STARTLEN; i--) {
       d[0] = '\0';
@@ -600,13 +691,15 @@ int main() {
     }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRNCAT_ALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRNCAT_ALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, strncat aligned\n", t_dps, t_lib);
 
     /***************/
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N - z; i > STARTLEN; i--) {
@@ -617,6 +710,7 @@ int main() {
       }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
     for (z =0; z < 8; z++)
       for (i = N - z; i > STARTLEN; i--) {
@@ -627,10 +721,11 @@ int main() {
       }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRNCAT_UNALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRNCAT_UNALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, strncat unaligned\n", t_dps, t_lib);
 
 
 
@@ -638,26 +733,29 @@ int main() {
 
     /* ###################################### */
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
-    for (z =0; z < N/8; z++)
+    /*    for (z =0; z < N/8; z++)*/
     for (i = N-1; i > STARTLEN; i--) {
       dps_strlen(a+i);
       dps_strlen(d+i);
     }
     t_dps = TimerEnd();
 
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
     TimerStart();
-    for (z =0; z < N/8; z++)
+    /*for (z =0; z < N/8; z++)*/
     for (i = N-1; i > STARTLEN; i--) {
       strlen(a+i);
       strlen(d+i);
     }
     t_lib = TimerEnd();
 
-    fprintf(cfg, "/* dps:%lf vs. lib:%lf */\n%s#define DPS_USE_STRLEN_ALIGNED%s\n\n", t_dps, t_lib,
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRLEN_ALIGNED%s\n\n", t_dps, t_lib,
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
+    printf("\tdps:%g lib:%g, strlen aligned\n", t_dps, t_lib);
 
 
 
@@ -666,6 +764,7 @@ int main() {
     free(a);
   }
 
+  printf("\t");
   fclose(cfg);
   return 0;
 }

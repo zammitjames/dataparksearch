@@ -151,22 +151,16 @@ svn checkout http://dataparksearch.googlecode.com/svn/trunk/ dataparksearch-read
 	</sect1>
 
 	<sect1 id="disclaimer">
-		<title>Disclaimer
-                <indexterm><primary>Disclaimer of DataparkSearch</primary></indexterm>
+		<title>Отказ от ответственности и гарантий
+                <indexterm><primary>Отказ от ответственности и гарантий</primary></indexterm>
                 </title>
-		<para>This program is free software; you can
-redistribute it and/or modify it under the terms of the GNU General
-Public License as published by the Free Software Foundation; either
-version 2 of the License, or (at your option) any later version.  See
-<filename>COPYING</filename> file for details.</para>
+		<para>Эта программа является свободным программным обеспечением; вы пожете распространять или модифицировать её в соответствии
+		с условиями Общей публичной лицензии GNU (GNU General
+Public License) опубликованной Фондом Свободного ПО (Free Software Foundation); либо в Версии 2 этой Лицензии, либо (на ваше усмотрение) более поздней версии.  Подробнее см. файл <filename>COPYING</filename>.</para>
 
-		<para>This program is distributed in the hope that it
-will be useful, but WITHOUT ANY WARRANTY; without even the implied
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
-the GNU General Public License for more details. </para>
+		<para>Эта программа распространяется в надежде, что она будет вам полезна, но БЕЗ КАКОЙ ЛИБО-ГАРАНТИИ; даже без подразумеваемой гарантии КОММЕРЧЕСКОЙ ЦЕННОСТИ или ПРИГОДНОСТИ ДЛЯ КАКОЙ-ЛИБО ОПРЕДЕЛЕННОЙ ЦЕЛИ. См. подробности в Общей публичной лицензии GNU.</para>
 
-		<para>You should have received a copy of the GNU
-General Public License along with this program; if not, write to the
+		<para>Вы должны были получить копию Общей публичной лицензии GNU вместе с копией этой программы; если это не так, обратитесь в Фонд свободного программного обеспеченияя по адресу: 
 Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA </para>
 

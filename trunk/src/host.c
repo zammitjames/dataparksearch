@@ -364,12 +364,12 @@ static void DpsResolver(DPS_AGENT *Indexer) {
       rc = DpsGetHostByName(Indexer, &connp, hostname);
       if (rc != 0) {
 	connp.err = DPS_NET_CANT_RESOLVE;
-	write(Indexer->rcv_pipe[1], &connp.err, sizeof(connp.err));
+	(void)write(Indexer->rcv_pipe[1], &connp.err, sizeof(connp.err));
       } else {
-	write(Indexer->rcv_pipe[1], &connp.err, sizeof(connp.err));
-	write(Indexer->rcv_pipe[1], &connp.n_sinaddr, sizeof(connp.n_sinaddr));
+	(void)write(Indexer->rcv_pipe[1], &connp.err, sizeof(connp.err));
+	(void)write(Indexer->rcv_pipe[1], &connp.n_sinaddr, sizeof(connp.n_sinaddr));
 	for(i = 0; i < connp.n_sinaddr; i++) {
-	  write(Indexer->rcv_pipe[1], &connp.sinaddr[i], sizeof(connp.sinaddr[0]));
+	  (void)write(Indexer->rcv_pipe[1], &connp.sinaddr[i], sizeof(connp.sinaddr[0]));
 	}
       }
 
@@ -385,11 +385,11 @@ static void DpsResolver(DPS_AGENT *Indexer) {
 static void DpsGetResolver(DPS_AGENT *Indexer, DPS_CONN *connp, const char *hostname) {
   size_t i, len = dps_strlen(DPS_NULL2EMPTY(hostname)) + 1;
 
-  write(Indexer->snd_pipe[1], &len, sizeof(len));
-  write(Indexer->snd_pipe[1], DPS_NULL2EMPTY(hostname), len);
+  (void)write(Indexer->snd_pipe[1], &len, sizeof(len));
+  (void)write(Indexer->snd_pipe[1], DPS_NULL2EMPTY(hostname), len);
   len = dps_strlen(DPS_NULL2EMPTY(connp->hostname));
-  write(Indexer->snd_pipe[1], &len, sizeof(len));
-  write(Indexer->snd_pipe[1], DPS_NULL2EMPTY(connp->hostname), len);
+  (void)write(Indexer->snd_pipe[1], &len, sizeof(len));
+  (void)write(Indexer->snd_pipe[1], DPS_NULL2EMPTY(connp->hostname), len);
 
   Read(Indexer->rcv_pipe[0], &connp->err, sizeof(connp->err));
   if (connp->err == 0) {
@@ -404,8 +404,8 @@ static void DpsGetResolver(DPS_AGENT *Indexer, DPS_CONN *connp, const char *host
 
 
 int DpsResolverStart(DPS_AGENT *Indexer) {
-  pipe(Indexer->rcv_pipe);
-  pipe(Indexer->snd_pipe);
+  (void)pipe(Indexer->rcv_pipe);
+  (void)pipe(Indexer->snd_pipe);
 
   if ((Indexer->resolver_pid = fork()) == 0) { /* child process */
 
@@ -437,7 +437,7 @@ int DpsResolverFinish(DPS_AGENT *Indexer) {
   int status;
 
   len = 0;
-  write(Indexer->snd_pipe[1], &len, sizeof(len));
+  (void)write(Indexer->snd_pipe[1], &len, sizeof(len));
   waitpid(Indexer->resolver_pid, &status, 0);
 
   if (Indexer->rcv_pipe[0] >= 0) close(Indexer->rcv_pipe[0]);
