@@ -646,7 +646,7 @@ interval between consecutive fetches.
 <sect3 id="maxcrawldelay_cmd">
 <title><command>MaxCrawlDelay</command> command</title>
 <para><indexterm><primary>Command</primary><secondary>MaxCrawlDelay</secondary></indexterm>
-When <application>indexer</application> is ready to index an URL from a server for which the Crawl-deley interval since previous access isn't expired yet, it waits until this period will be expired, 
+When <application>indexer</application> is ready to index an URL from a server for which the Crawl-deley interval isn't expired yet since previous access, it waits until this period will be expired, 
 if waiting peiod is less than amount of time specified by <command>MaxCrawlDelay</command> command. If the waiting period is greater or equal to this value, selected URL is posponed in indexing for the time remained.
 </para>
 <programlisting>

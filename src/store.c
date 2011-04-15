@@ -664,6 +664,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   char *os;
   int s = -1, r = -1;
   size_t *wlen, i, len, maxwlen = 0, minwlen = query->WordParam.max_word_len, ulen, prevlen, osl, index_limit;
+  size_t gap_len = dps_max(1024, 16 * size);
   dpsunicode_t **wpos;
   DPS_CONV dc_uni, uni_bc;
   const char *hello = "E\0";
@@ -843,10 +844,10 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 
 
   htok = DpsHTMLToken(Source, &last, &tag);
-  for (len = 0; (len < (size_t)(8 * maxwlen + 16 * padding + 1)) && htok; ) {
+  for (len = 0; (len < (size_t)(gap_len /*8 * maxwlen + 16 * padding + 1*/)) && htok; ) {
     switch(tag.type) {
     case DPS_HTML_TXT:
-      if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+      if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0) && tag.visible[tag.level]) {
 	dps_memcpy(HEnd, htok, (size_t)(last - htok));
 	HEnd += (size_t)(last - htok);
 	HEnd[0] = ' ';
@@ -856,7 +857,10 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
       }
       break;
     case DPS_HTML_COM:
+      break;
     case DPS_HTML_TAG:
+      DpsHTMLParseTag(query, &tag, Doc);
+      break;
     default:
       break;
     }
@@ -892,10 +896,10 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     while(((np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, wpos, minwlen, NOprefixHL)) == NULL) 
 	  && (htok != NULL) && ((index_limit == 0) || (ulen < index_limit) )) {
 
-      while(htok && ((len - prevlen) < (size_t)(8 * maxwlen + 16 * padding + 1)) ) {
+      while(htok && ((len - prevlen) < (size_t)(gap_len /*8 * maxwlen + 16 * padding + 1*/)) ) {
 	switch(tag.type) {
 	case DPS_HTML_TXT:
-	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
+	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0) && tag.visible[tag.level]) {
 	    dps_memcpy(HEnd, htok, (size_t)(last-htok));
 	    HEnd += (size_t)(last - htok);
 	    HEnd[0] = ' ';
@@ -905,7 +909,10 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 	  }
 	  break;
 	case DPS_HTML_COM:
-	case DPS_HTML_TAG:
+	  break;
+	case DPS_HTML_TAG:	 
+	  DpsHTMLParseTag(query, &tag, Doc);
+	  break;
 	default:
 	  break;
 	}
@@ -920,8 +927,9 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 
     p = np;
     start = dps_max(dps_max(p - padding, uni), prevend);
-    end = dps_min(p + maxwlen + 1 + padding, uni + ulen);
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (start > uni) && DpsUniNSpace(*start); i++) start--;
+
+    end = dps_min(start + 2 * padding/*p + maxwlen + 1 + padding*/, uni + ulen);
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < uni + ulen) && DpsUniNSpace(*end); i++) end++;
     while ((start < end) && !DpsUniNSpace(*start)) start++;
     if (start < end) {
@@ -1408,8 +1416,9 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
 
     p = np;
     start = dps_max(dps_max(p - padding, Source), prevend);
-    end = dps_min(p + maxwlen + 1 + padding, Source + DocSize);
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (start > Source) && DpsUniNSpace(*start); i++) start--;
+
+    end = dps_min(start + 2 * padding/*p + maxwlen + 1 + padding*/, Source + DocSize);
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < Source + DocSize) && DpsUniNSpace(*end); i++) end++;
     while ((start < end) && !DpsUniNSpace(*start)) start++;
     if (start < end - 1) {

@@ -170,8 +170,8 @@
 и отвечая на вопросы, выберите нужную конфигурацию <application>DataparkSearch</application>
 После того, как вы выберите все опции, этот скрипт запустит <literal>./configure</literal> с выбранными вами ключами.
 Он также создаст файл <filename>create install.options</filename>
-содержащий ваши настройки, и которые будут использованы при следующих запусках этого скрипта.
-После того, как процес конфигурирования будет завершен, создайте и проинсталируйте <application>DataparkSearch</application>
+содержащий ваши настройки, которые будут использованы при следующих запусках этого скрипта.
+После того, как процесс конфигурирования будет завершен, создайте и проинсталируйте <application>DataparkSearch</application>
 как описано в разделе 3.
 </para>
 
@@ -258,12 +258,12 @@
 				<para>
 					<userinput>./configure --with-openssl</userinput>
 				</para>
-				<para>или, в случае, когда, библиотека OpenSSL установлена не в стандартной пути:</para>
+				<para>или, в случае, когда, библиотека OpenSSL установлена не в стандартной директории:</para>
 				<para>
 					<userinput>./configure --with-openssl=/path/to/library</userinput>
 				</para>
 				<note>
-					<para>Пожалйста, имейте в виду, что установка библиотеки OpenSSL на вашем компьютере
+					<para>Пожалуйста, имейте в виду, что установка библиотеки OpenSSL на вашем компьютере
 необходима для поддержки HTTPS.</para>
 
 				</note>
@@ -297,7 +297,7 @@
 
 				<para>
 <indexterm><primary>DMALLOC</primary></indexterm>
-Для включения пооддержки <ulink url="http://sourceforge.net/projects/dmalloc/">отладчика памяти DMALLOC</ulink>
+Для включения поддержки <ulink url="http://sourceforge.net/projects/dmalloc/">отладчика памяти DMALLOC</ulink>
 используйте ключ <option>--enable-dmalloc</option>. </para>
 
 				<para>Кодировки euc-kr, big5, gb2312, tscii, gujarati и shift-jis не поддерживаются по умолчанию.
@@ -311,7 +311,7 @@
 				<para>
 					<userinput>./configure --with-extra-charsets=tscii</userinput>
 				</para>
-				<para>Для включения поддержки симейства кодировок китайского или японского языков:</para>
+				<para>Для включения поддержки семейства кодировок китайского или японского языков:</para>
 				<para>
 					<userinput>./configure --with-extra-charsets=chinese</userinput>
 или
@@ -350,7 +350,7 @@
 <listitem><para>Создайте файлы конфигурации.</para>
 <para>Для этого в директории конфигурационных файлов ( по умолчанию это <filename>/usr/local/dpsearch/etc/</filename>) скопируйте <filename>indexer.conf-dist</filename> 
 в <filename>indexer.conf</filename> и <filename>search.htm-dist</filename> в <filename>search.htm</filename>. Затем отредактируйте <filename>indexer.conf</filename> и <filename>search.htm</filename>
-согласно вашим потребностям. В основном вам только необходимо отредактировать команду <command>DBAddr</command> в обоих файлах указав соединение с SQL-сервером и необходимый dbmode.</para>
+согласно вашим потребностям. В основном вам необходимо только отредактировать команду <command>DBAddr</command> в обоих файлах указав соединение с SQL-сервером и необходимый dbmode.</para>
 </listitem>
 			<listitem>
 				<para>Создайте sql-таблицы</para>
@@ -416,7 +416,7 @@
 </listitem>
 		</itemizedlist>
 		<para>Если информация выше не помогла вам, пожалуйста, отправьте описание вашей проблемы на список рассылки
-<email>dataparksearch@yahoogroups.com</email> (пажалуйста, при возможности пишите на английском).
+<email>dataparksearch@yahoogroups.com</email> (пожалуйста, при возможности пишите на английском).
 </para>
 	</sect1>
 
@@ -425,7 +425,7 @@
 		<para>Вы можете создать дистрибутив исполняемых модулей для вашей системы и передать его нам.
 Мы выложим этот дистрибутив на нашем сайте для остальных пользователей.
 Для создания дистрибутива исполняемых модулей используйте команду <command>make bin-dist</command>,
-затем выложите полуный .gz в доступном по сети месте и отправьте сообщение об этом на <email>general@mnogosearch.org</email>
+затем выложите полученный .gz в доступном по сети месте и отправьте сообщение об этом на <email>general@mnogosearch.org</email>
 (пожалуйста, пишите только на английском) или на <email>ru@mnogosearch.org</email> 
 (пожалуйста, пишите только на русском).</para>
 
@@ -434,14 +434,14 @@
 <sect1 id="quick-usage">
 <title>Простая рутина использования</title>
 <para>Перед первым запуском <command>indexer</command>, вам необходимо указать пространство индексирования (см. <xref linkend="follow" />). 
-В простом случае, когда вам необходимо индексировать один сайт, необходимов добавить команду <command>Server</command>, 
+В простом случае, когда вам необходимо индексировать один сайт, необходимо добавить команду <command>Server</command>, 
 аналогичную указанной ниже в ваш файл конфигурации <filename>indexer.conf</filename>:
 <programlisting>
 Server http://www.server.ext/
 </programlisting>
 </para>
 
-<para>Запустите <command>indexer</command> для индексирвоания ваших данных и записи информации об URL:</para>
+<para>Запустите <command>indexer</command> для индексирования ваших данных и записи информации об URL:</para>
 <para><userinput>sh$ /usr/local/dpsearch/sbin/indexer -W</userinput></para>
 
 </sect1>

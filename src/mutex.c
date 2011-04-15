@@ -472,7 +472,7 @@ __C_LINK int __DPSCALL DpsSetLockProc(DPS_ENV * Conf,
    Accept global locking
 */ 
 
-#ifdef HAVE_PTHREAD
+#if 0 /* defined HAVE_PTHREAD */
 
 static pthread_mutex_t *accept_mutex = (void*)(caddr_t) -1;
 static int have_accept_mutex;

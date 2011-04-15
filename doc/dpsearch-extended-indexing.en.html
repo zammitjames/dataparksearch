@@ -370,6 +370,16 @@ CLASS="PROGRAMLISTING"
 ><P
 >		in this case the regex pattern specified is matched against the full path and filename of the URL.
 		</P
+><P
+>For the <B
+CLASS="COMMAND"
+>HTDBText</B
+> command it is possible to use search template meta-variables (as for example, $(DP_ID), $(URL), etc.) to form a sql-query. E.g.:
+<PRE
+CLASS="PROGRAMLISTING"
+>HTDBText hint "SELECT hint FROM hints WHERE url = '$(url)'"</PRE
+>
+		</P
 ></DIV
 ><DIV
 CLASS="SECT3"
@@ -566,7 +576,7 @@ NAME="EXEC"
 >3.11.2. Indexing binaries output (exec: and cgi: virtual URL schemes)</A
 ></H2
 ><A
-NAME="AEN2769"
+NAME="AEN2772"
 ></A
 ><P
 ><SPAN
@@ -740,11 +750,11 @@ NAME="MIRROR"
 >3.11.3. Mirroring</A
 ></H2
 ><A
-NAME="AEN2812"
+NAME="AEN2815"
 ></A
 ><P
 ><A
-NAME="AEN2815"
+NAME="AEN2818"
 ></A
 >
 You may specify a path to root dir to enable sites mirroring
@@ -755,7 +765,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2820"
+NAME="AEN2823"
 ></A
 >
 You may specify as well root directory of mirrored document's headers indexer will store HTTP headers to local disk too.
@@ -766,7 +776,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2825"
+NAME="AEN2828"
 ></A
 >
 You may specify period during which earlier mirrored files will be used while indexing instead of real downloading.
@@ -850,10 +860,10 @@ NAME="DATA-ACQ"
 >3.11.4. Data acquisition</A
 ></H2
 ><A
-NAME="AEN2845"
+NAME="AEN2848"
 ></A
 ><A
-NAME="AEN2847"
+NAME="AEN2850"
 ></A
 ><P
 >With <B

@@ -1,7 +1,11 @@
 <!--variables
-DBAddr		searchd://localhost/?label=rutube
+DBAddr		searchd://v.sochi.org.ru/?socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=sochi&socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=phones&socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=qsimilar&socket=/usr/local/dpsearch/var/dpsearchd.sock
+DBAddr		searchd://v.sochi.org.ru/?label=rutube&socket=/usr/local/dpsearch/var/dpsearchd.sock
 StoredocURL     /cgi-bin/storedoc.cgi
-LocalCharset 	koi8-r
+LocalCharset 	utf-8
 BrowserCharset  UTF-8
 DoExcerpt no
 
@@ -17,7 +21,7 @@ GrBeg <!-- -->
 GrEnd <!-- -->
 Locale fr_FR.UTF-8
 
-ReplaceVar head.lng "Video @ 43N 39E"
+ReplaceVar head.lng "Video @ Internet de Sotchi"
 ReplaceVar pages.lng "Pages"
 ReplaceVar main.lng "Vidéos rechercher"
 ReplaceVar prev.lng "Précédent"
@@ -30,7 +34,7 @@ ReplaceVar otherse.lng "dans d'autres moteurs de recherche"
 ReplaceVar yandex.lng "Yandex"
 ReplaceVar rambler.lng "Rambler"
 ReplaceVar nigma.lng "Nigma"
-ReplaceVar 43n39e.ru.lng "Runet heads"
+ReplaceVar 43n39e.ru.lng "L'Internet de Sotchi"
 
 ReplaceVar sortedby.lng "triés par"
 ReplaceVar isort.lng "importance"
@@ -39,7 +43,7 @@ ReplaceVar dsort.lng "date"
 ReplaceVar psort.lng "popularité"
 
 ReplaceVar showndocs.lng "Les documents"
-ReplaceVar iz.lng "of"
+ReplaceVar iz.lng ""
 ReplaceVar found.lng "sur un total de"
 ReplaceVar stime.lng "Rechercher effectu&eacute;e en"
 ReplaceVar sec.lng "sec."
@@ -53,9 +57,10 @@ ReplaceVar ToFind.lng "Rechercher"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="ru">
   <head>
-    <title>$&(head.lng): $&(q)</title>
-    <link href="http://sochi.org.ru/css/therm2.css" rel="stylesheet" type="text/css">
-    <link href="http://sochi.org.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <title>$&(q) :: $&(head.lng)</title>
+    <link href="http://inet-sochi.ru/css/therm2.css" rel="stylesheet" type="text/css">
+    <link href="http://inet-sochi.ru/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="$(self)?q=$%(q)&amp;c=$&(c)&amp;site=$&(site)&amp;m=$&(m)&amp;sp=$&(sp)&amp;sy=$&(sy)&amp;&amp;s=$&(s)&amp;label=$&(label)&amp;tmplt=rss8.htm.fr">
 </head>
 <!-- BrowserCharset: $(BrowserCharset) -->
 <body id="dir"> 
@@ -71,11 +76,10 @@ ReplaceVar ToFind.lng "Rechercher"
 			<input type="hidden" name="sy" value="$*(sy)">
 			<input type="hidden" name="sp" value="$*(sp)">
 			<input type="hidden" name="s" value="$*(s)">
-			<input type="hidden" name="tmplt" value="vi8.htm.ru">
+			<input type="hidden" name="tmplt" value="vi8.htm.fr">
 		        <input type="hidden" name="m" value="all">
 			<input type="hidden" name="label" value="rutube">
 			<input type="hidden" name="GroupBySite" value="no">
-			<input type="hidden" name="wf" value="F1F1">
 			<table width="100%" border="0" cellpadding="2" cellspacing="0">
 			    <tr>
 			      <td width="99%" style="vertical-align: middle;">
@@ -98,7 +102,7 @@ ReplaceVar ToFind.lng "Rechercher"
 </table>
 <!IFNOT NAME="q" CONTENT="">
 <small>$(SearchFor.lng) &laquo;$&(q)&raquo; $(otherse.lng):<br>&nbsp;&nbsp;&nbsp;
-<a href="http://www.43n39e.ru/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&np=0&GroupBySite=$&(GroupBySite)&s=IRPD&ps=10&wf=F1F1&tmplt=janus.htm.ru">$(43n39e.ru.lng)</a> &#150;
+<a href="http://inet-sochi.ru/cgi-bin/search.cgi?q=$%(q:utf-8)&m=$&(m)&g=$&(g)&sp=$&(sp)&sy=$&(sy)&np=0&GroupBySite=$&(GroupBySite)&s=IRPD&ps=10&tmplt=janus.htm.fr&label=sochi">$(43n39e.ru.lng)</a> &#150;
 <a href="http://www.google.com/search?ie=UTF-8&amp;hl=en&amp;q=$%(q:utf-8)">Google</a> &#150;
 <a href="http://www.yandex.ru/yandsearch?text=$%(q:cp1251)&amp;stype=www">$(yandex.lng)</a> &#150;
 <a href="http://search.rambler.ru/cgi-bin/rambler_search?english=0&and=1&words=$%(q:koi8-r)">$(rambler.lng)</a> &#150;
@@ -112,21 +116,20 @@ ReplaceVar ToFind.lng "Rechercher"
 
 <!--restop-->
 <tr><td style="color: #666"><div align="left" style="float: left">
-<small>&nbsp;$(showndocs.lng) <b>$(first)</b>-<b>$(last)</b> $(iz.lng) <b>$(total)</b> $(found.lng).</small>
+<small>&nbsp;$(showndocs.lng) <b>$(first)</b>-<b>$(last)</b> $(iz.lng) $(found.lng) <b>$(total)</b>.</small>
 </div>
 <div align="right">
 <small>$(stime.lng):&nbsp;<b>$(SearchTime)</b> $(sec.lng)&nbsp;</small>
 </div>
 </td></tr>
-<tr><td valign="bottom">
-<table align="center" border="0" cellspacing="0" cellpadding="3"><tr><td>$(pages.lng):</td>$(NL)$(NB)$(NR)</tr></table></td></tr>
-<tr><td align="left" valign="middle"><small>&nbsp;$(sortedby.lng):&nbsp;
-<!IF NAME="s" CONTENT="DRP">
-<a href="$(FirstPage)&s=RPD">$(rsort.lng)</a>&nbsp;|&nbsp;<span class="hl">$(dsort.lng)</span><!ELSE>
-<span class="hl">$(rsort.lng)</span>&nbsp;|&nbsp;<a href="$(FirstPage)&s=DRP">$(dsort.lng)</a>
-<!ENDIF></small></td></tr>
 <tr><td align="left" valign="top">
 <!--/restop-->
+
+
+<!--6res-->
+</td></tr>
+<tr><td align="left" valign="top">
+<!--/6res-->
 
 
 <!--res-->
@@ -134,14 +137,19 @@ ReplaceVar ToFind.lng "Rechercher"
 <small class="restop"><a class="restop" href="$(url)">$&(title:128)</a></small><br>
 <small class="restop"><a class="restop" href="$(url)">
 <!IFNOT NAME="ytid" VALUE=""><img src="http://img.youtube.com/vi/$(ytid)/default.jpg" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a> 
+<!ELSEIFNOT NAME="smid" VALUE=""><img src="http://$(smid).2.jpg" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a>
+<!ELSEIFNOT NAME="ivid" VALUE=""><img src="http://$(ivid).2.jpg" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a>
+<!ELSEIFNOT NAME="vesid" VALUE=""><img src="http://pics.vesti.ru/$(vesid).jpg" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a>
+<!ELSEIFNOT NAME="neid" VALUE=""><img src="http://image.newstube.ru/$(neid)" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a>
+<!ELSEIFNOT NAME="viid" VALUE=""><img src="http://$(viid)_100.jpg" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a>
 <!ELSEIFNOT NAME="myvi" VALUE=""><!IF NAME="ruid" VALUE=""><!SET NAME="ruid" CONTENT="a"><!ENDIF><img src="http://fs-$*(ruid).myvi.ru/$*(myvi).th1" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a>
-<!ELSE><img src="http://img.rutube.ru/thumbs/$&(ruid)-2.jpg" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a><!ENDIF>
+<!ELSE><img src="http://img-4.rutube.ru/thumbs/$&(ruid)-2.jpg" border="0" style="padding: 0.5em; border: #777 1px solid; background-color: #eee"></a><!ENDIF>
 </small><br>
 <!IFNOT NAME="meta.description" CONTENT=""><div class="serp2"><small>$&(meta.description:256)</small></div>
 <!ELSE>
   <!IFNOT NAME="meta.keywords" CONTENT=""><div class="serp2"><small>$&(meta.keywords:256)</small></div><!ENDIF>
 <!ENDIF>
-<small class="result">$(Last-Modified) - $(Score)</small>
+<small class="result">$(Last-Modified)<!-- $(Score)--></small>
 </div>
 <!--/res-->
 

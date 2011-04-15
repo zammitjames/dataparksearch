@@ -141,6 +141,11 @@ HTDBText header "SELECT header FROM news WHERE section=$1 AND article=$2" "^/sec
 		<para>
 		in this case the regex pattern specified is matched against the full path and filename of the URL.
 		</para>
+		<para>For the <command>HTDBText</command> command it is possible to use search template meta-variables (as for example, $(DP_ID), $(URL), etc.) to form a sql-query. E.g.:
+<programlisting>
+HTDBText hint "SELECT hint FROM hints WHERE url = '$(url)'"
+</programlisting>
+		</para>
 	</sect3>
 	<sect3 id="htdb-fulltext">
 		<title>Creating full text index</title>
