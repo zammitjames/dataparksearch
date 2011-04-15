@@ -203,6 +203,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
                }
 
 	       Env->Acronyms.nacronyms++;
+	       Env->Acronyms.sorted = 0;
                
           }
      loop_continue:
@@ -240,8 +241,11 @@ static int cmpacr(const void * v1, const void * v2) {
 }
 
 __C_LINK void __DPSCALL DpsAcronymListSort(DPS_ACRONYMLIST * List) {
-     if(List->Acronym != NULL && List->nacronyms > 1)
+
+  if(List->Acronym != NULL && List->sorted == 0 && List->nacronyms > 1) {
           DpsSort(List->Acronym, List->nacronyms, sizeof(DPS_ACRONYM), &cmpacr);
+	  List->sorted = 1;
+  }
 }
 
 

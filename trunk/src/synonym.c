@@ -172,6 +172,8 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
 		   Env->Synonyms.Synonym[Env->Synonyms.nsynonyms].p.count = 
 		     Env->Synonyms.Synonym[Env->Synonyms.nsynonyms].s.count = (size_t)((flag_th) ? key : 0);
                    Env->Synonyms.nsynonyms++;
+
+		   Env->Synonyms.sorted = 0;
                  }
                }
 
@@ -223,8 +225,9 @@ static int cmpsynback(const void * v1,const void * v2){
      return(DpsUniStrCmp((*s1)->s.uword, (*s2)->s.uword));
 }
 
+
 __C_LINK void __DPSCALL DpsSynonymListSort(DPS_SYNONYMLIST * List){
-  if (List->Synonym != NULL) {
+  if (List->Synonym != NULL && List->sorted == 0) {
     if (List->nsynonyms > 1)
       DpsSort(List->Synonym, List->nsynonyms, sizeof(DPS_SYNONYM), &cmpsyn);
     if ((List->Back = (DPS_SYNONYM**)DpsRealloc(List->Back, (List->nsynonyms + 1) * sizeof(DPS_SYNONYM*))) != NULL) {
@@ -233,6 +236,7 @@ __C_LINK void __DPSCALL DpsSynonymListSort(DPS_SYNONYMLIST * List){
       if (List->nsynonyms > 1)
 	DpsSort(List->Back, List->nsynonyms, sizeof(DPS_SYNONYM*), &cmpsynback);
     }
+    List->sorted = 1;
   }
 }
 

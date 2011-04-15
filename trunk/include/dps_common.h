@@ -706,19 +706,21 @@ typedef struct Tree_struct {
 } Tree_struct;
 
 typedef struct {
-	size_t		naffixes;
-	size_t		maffixes;
-	DPS_AFFIX	*Affix;
 	Tree_struct	PrefixTree[DPS_LANGPERDOC];
 	Tree_struct	SuffixTree[DPS_LANGPERDOC];
+	DPS_AFFIX	*Affix;
+	size_t		naffixes;
+	size_t		maffixes;
+        int             sorted;
 } DPS_AFFIXLIST;
 
 typedef struct {
+	Tree_struct	SpellTree[DPS_LANGPERDOC];
+	DPS_SPELL	*Spell;
 	size_t		nspell;
 	size_t		mspell;
         size_t          nLang;
-	DPS_SPELL	*Spell;
-	Tree_struct	SpellTree[DPS_LANGPERDOC];
+        int             sorted;
 } DPS_SPELLLIST;
 
 /* Ispell END */
@@ -736,11 +738,12 @@ typedef struct qreg_struct {
 } DPS_QUFFIX;
 
 typedef struct {
-	size_t		nrecs;
-	size_t		mrecs;
-	DPS_QUFFIX	*Quffix;
 	Tree_struct	PrefixTree[DPS_LANGPERDOC];
 	Tree_struct	SuffixTree[DPS_LANGPERDOC];
+	DPS_QUFFIX	*Quffix;
+	size_t		nrecs;
+	size_t		mrecs;
+        int             sorted;
 } DPS_QUFFIXLIST;
 
 
@@ -842,10 +845,11 @@ typedef struct {
 } DPS_SYNONYM;
 
 typedef struct {
-	size_t		nsynonyms;
-	size_t		msynonyms;
 	DPS_SYNONYM	*Synonym;
 	DPS_SYNONYM	**Back;
+	size_t		nsynonyms;
+	size_t		msynonyms;
+        int             sorted;
 } DPS_SYNONYMLIST;
 
 
@@ -856,9 +860,10 @@ typedef struct {
 } DPS_ACRONYM;
 
 typedef struct {
+	DPS_ACRONYM	*Acronym;
 	size_t		nacronyms;
 	size_t		macronyms;
-	DPS_ACRONYM	*Acronym;
+        int             sorted;
 } DPS_ACRONYMLIST;
 
 

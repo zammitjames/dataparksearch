@@ -359,6 +359,7 @@ static int cmpquffix(const void *s1,const void *s2){
   return lc;
 }
 
+
 int DpsSpellAdd(DPS_SPELLLIST *List, const dpsunicode_t *word, const char *flag, const char *lang) {
 	if(List->nspell>=List->mspell){
 		List->mspell += 1024; /* was: 1024 * 20 */
@@ -370,6 +371,7 @@ int DpsSpellAdd(DPS_SPELLLIST *List, const dpsunicode_t *word, const char *flag,
 	dps_strncpy(List->Spell[List->nspell].lang,lang,5);
 	List->Spell[List->nspell].lang[5] = List->Spell[List->nspell].flag[10] = '\0';
 	List->nspell++;
+	List->sorted = 0;
 	return DPS_OK;
 }
 
@@ -777,6 +779,7 @@ int DpsAffixAdd(DPS_AFFIXLIST *List, const char *flag, const char * lang, const 
 	List->Affix[List->naffixes].replen  = DpsUniLen(repl);
 	List->Affix[List->naffixes].findlen = DpsUniLen(find);
 	List->naffixes++;
+	List->sorted = 0;
 	return DPS_OK;
 }
 
@@ -803,6 +806,7 @@ int DpsQuffixAdd(DPS_QUFFIXLIST *List, const char *flag, const char * lang, cons
 	List->Quffix[List->nrecs].replen  = DpsUniLen(repl);
 	List->Quffix[List->nrecs].findlen = DpsUniLen(find);
 	List->nrecs++;
+	List->sorted = 0;
 	return DPS_OK;
 }
 
@@ -1254,11 +1258,11 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
 
 
 
-
 __C_LINK void __DPSCALL DpsSortDictionary(DPS_SPELLLIST * List){
   int  j, CurLet = -1, Let;size_t i;
   char *CurLang = NULL;
 
+  if (List->sorted) return;
         if (List->nspell > 1) DpsSort((void*)List->Spell, List->nspell, sizeof(DPS_SPELL), cmpspell);
 	for(i = 0; i < List->nspell; i++) {
 	  if (CurLang == NULL || strncmp(CurLang, List->Spell[i].lang, 2) != 0) {
@@ -1280,13 +1284,16 @@ __C_LINK void __DPSCALL DpsSortDictionary(DPS_SPELLLIST * List){
 	  }
 	  List->SpellTree[List->nLang-1].Right[Let] = i;
 	}
+	List->sorted = 1;
 }
+
 
 __C_LINK void __DPSCALL DpsSortAffixes(DPS_AFFIXLIST *List, DPS_SPELLLIST *SL) {
   int  CurLetP = -1, CurLetS = -1, Let, cl = -1;
   char *CurLangP = NULL, *CurLangS = NULL;
   DPS_AFFIX *Affix; size_t i, j;
 
+  if (List->sorted) return;
   if (List->naffixes > 1)
     DpsSort((void*)List->Affix,List->naffixes,sizeof(DPS_AFFIX),cmpaffix);
 
@@ -1340,6 +1347,7 @@ __C_LINK void __DPSCALL DpsSortAffixes(DPS_AFFIXLIST *List, DPS_SPELLLIST *SL) {
       List->SuffixTree[cl].Right[Let] = i;
     }
   }
+  List->sorted = 1;
 }
 
 
@@ -1348,6 +1356,7 @@ void DpsSortQuffixes(DPS_QUFFIXLIST *List, DPS_SPELLLIST *SL) {
   char *CurLangP = NULL;
   DPS_QUFFIX *Qreg; size_t i, j;
 
+  if (List->sorted) return;
   if (List->nrecs > 1)
     DpsSort((void*)List->Quffix, List->nrecs, sizeof(DPS_QUFFIX), cmpquffix);
 
@@ -1379,6 +1388,7 @@ void DpsSortQuffixes(DPS_QUFFIXLIST *List, DPS_SPELLLIST *SL) {
     }
     List->PrefixTree[cl].Right[Let] = i;
   }
+  List->sorted = 1;
 }
 
 
