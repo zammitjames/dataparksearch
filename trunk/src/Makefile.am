@@ -237,11 +237,7 @@ install-exec-local: @APACHE_MODULE@ @PHP_MODULE@
 if APACHEMODULE
 if APACHE2
 	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR); 
-	if test -f .libs/mod_dpsearch.so$(EXEEXT); then \
-		$(APXS) -i -S LIBEXECDIR=$(DESTDIR)$(APACHE_MODDIR) -n dpsearch .libs/mod_dpsearch.so$(EXEEXT); \
-	else \
-		$(APXS) -i -S LIBEXECDIR=$(DESTDIR)$(APACHE_MODDIR) -n dpsearch mod_dpsearch.so$(EXEEXT); \
-	fi
+	$(APXS) -i -S LIBEXECDIR=$(DESTDIR)$(APACHE_MODDIR) -n dpsearch mod_dpsearch.la
 else
 	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR);
 	$(LIBTOOL) --mode=install $(INSTALL) mod_dpsearch.so $(DESTDIR)$(APACHE_MODDIR);
