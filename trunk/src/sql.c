@@ -4530,7 +4530,7 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 	register DPS_URL_CRD_DB *Crd;
 	int		word_match;
 	int		wf[256];
-	char	        *escwrd;
+	char	        *escwrd = NULL;
 	const char	*where;
 	int		use_crosswords;
 	int		rc;
@@ -4560,7 +4560,7 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 	}
 
 	for(z = wordnum = 0; wordnum < Res->nitems; wordnum++) {
-	  if (Res->items[z].cmd != DPS_STACK_WORD) continue;
+	  if (Res->items[wordnum].cmd != DPS_STACK_WORD) continue;
 	  if (z < Res->items[wordnum].len) z = Res->items[wordnum].len;
 	}
 	if ((escwrd = (char*)DpsMalloc(2 * z + 1)) == NULL) {
