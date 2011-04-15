@@ -47,15 +47,32 @@
 /******************* Template functions ********************/
 
 
-static size_t out_string(DPS_OUTPUTFUNCTION dps_out, void *stream, char * dst, size_t dst_len, const char * src) {
-	if(src){
-		if(stream) dps_out(stream, "%s", src);
-		if(dst){
-			dps_strncat(dst, src, dst_len - 1);
-			return(dps_strlen(src));
-		}
-	}
-	return 0;
+static size_t out_string(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void *stream, char * dst, size_t dst_len, const char * src, int json) {
+  DPS_CONV  mybc;
+  size_t len;
+  char *json_value = NULL;
+
+  if(src) {
+
+    if (json) {
+      len = dps_strlen(src);
+      if ((json_value = (char*)DpsMalloc(48 * len + 1)) != NULL) {
+	DpsConvInit(&mybc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_JSON_TO);
+	DpsConv(&mybc, json_value, 48 * len, src, len);
+      } else return 0;
+    }
+    if (stream) {
+      dps_out(stream, "%s", (json) ? json_value : src);
+    }
+    if (dst) {
+      dps_strncat(dst, src, dst_len - 1);
+      len = dps_strlen((json) ? json_value : src);
+      DPS_FREE(json_value);
+      return len;
+    }
+  }
+  DPS_FREE(json_value);
+  return 0;
 }
 
 static char * HiLightDup(const char *src, const char *beg, const char *end, const char *mark) {
@@ -125,7 +142,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 	DPS_CONV bc_bc, bc_bc_txt, bc_vc, *cnv = &bc_bc;
 	DPS_CHARSET *vcs = NULL;
 	const char * s;
-	char *newvalue = NULL, *cite_value = NULL, *json_value = NULL;
+	char *newvalue = NULL, *cite_value = NULL;
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	char *idn_value = NULL;
 #endif
@@ -251,15 +268,6 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					}
 					if(!value)value=empty;
 					else {
-					  if (DPS_VAR_JSON == json) {
-					    DPS_CONV  mybc;
-					    size_t len = 48 * dps_strlen(value);
-					    DpsConvInit(&mybc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_JSON_TO);
-					    if ((json_value = (char*)DpsRealloc(json_value, len + 1)) != NULL) {
-					      DpsConv(&mybc, json_value, len, value, len);
-					      value = json_value;
-					    }
-					  }
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 					  if (idn == DPS_VAR_IDN_DECODE) {
 					    DPS_CHARSET *uni_cs;
@@ -357,14 +365,14 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 		        case '*':
 				eval = DpsRemoveHiLightDup(value);
 				if (eval == NULL) break;
-				dlen+=out_string(dps_out, stream, dst + dlen, dst_len - dlen, eval);
+				dlen += out_string(A, dps_out, stream, dst + dlen, dst_len - dlen, eval, (DPS_VAR_JSON == json));
 				DPS_FREE(eval);
 				break;
 			case '&':
 			case '^':
 			        eval = HiLightDup(value, tmplt->HlBeg, tmplt->HlEnd, tmplt->ExcerptMark);
 				if (eval == NULL) break;
-				dlen+=out_string(dps_out, stream, dst + dlen, dst_len - dlen, eval);
+				dlen += out_string(A, dps_out, stream, dst + dlen, dst_len - dlen, eval, (DPS_VAR_JSON == json));
 				DPS_FREE(eval);
 				break;
 			case '%':
@@ -373,7 +381,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 				eval2 =( char*)DpsMalloc(dps_strlen(eval) * 3 + 1);
 				if (eval2 != NULL) {
 				  DpsEscapeURL(eval2, eval);
-				  dlen += out_string(dps_out, stream, dst + dlen, dst_len - dlen, eval2);
+				  dlen += out_string(A, dps_out, stream, dst + dlen, dst_len - dlen, eval2, (DPS_VAR_JSON == json));
 				}
 				DPS_FREE(eval); DPS_FREE(eval2);
 				break;
@@ -388,7 +396,6 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 	}
 	DPS_FREE(newvalue);
 	DPS_FREE(cite_value);
-	DPS_FREE(json_value);
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
 	DPS_FREE(idn_value);
 #endif
