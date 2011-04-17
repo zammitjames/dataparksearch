@@ -215,6 +215,7 @@
 /*   This program is free software; you can redistribute it and/or modify      */
 	{"TrackDBAddr",         1,1,    env_rpl_var},
 	{"TrackHops",           1,1,    env_rpl_bool_var},
+	{"TZ",                  1,1,    env_rpl_var},
 	{"URL",			1,1,	add_url},
 	{"URLCharset",	        0,1,	srv_rpl_charset},
 	{"URLDAddr",		1,1,	env_rpl_var},

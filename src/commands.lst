@@ -84,6 +84,7 @@
 	{"MaxClients",          1,1,    env_rpl_var},
 	{"LogLevel",            1,1,    env_rpl_var},
 	{"Locale",              1,1,    env_rpl_var},
+	{"TZ",                  1,1,    env_rpl_var},
 	{"CharsToEscape",       1,1,    env_rpl_var},
 	{"Socket",		1,1,	env_rpl_var},
 	{"ExcerptSize",         1,1,    env_rpl_var},
