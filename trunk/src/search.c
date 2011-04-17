@@ -342,6 +342,12 @@ int main(int argc, char **argv, char **envp) {
 /*#endif*/
 	  url = NULL;
 	}
+	/* set TZ if specified */
+	if ((url = DpsVarListFindStr(&Env->Vars, "TZ", NULL)) != NULL) {
+	  setenv("TZ", url, 1);
+	  tzset();
+	  url = NULL;
+	}
 	
 	/* Call again to load search Limits if need */
 	DpsParseQueryString(Agent, &Env->Vars, query_string);

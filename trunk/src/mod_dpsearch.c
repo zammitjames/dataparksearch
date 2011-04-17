@@ -163,6 +163,8 @@ static int dpstoredoc_handler(request_rec *r) {
 
   /* set locale if specified */
   if ((last = DpsVarListFindStr(&Agent->Vars, "Locale", NULL)) != NULL) {
+    setlocale(LC_COLLATE, last);
+    setlocale(LC_CTYPE, last);
     setlocale(LC_ALL, last);
 #ifdef HAVE_ASPELL
     { char *p;
@@ -173,6 +175,11 @@ static int dpstoredoc_handler(request_rec *r) {
       }
     }
 #endif
+  }
+  /* set TZ if specified */
+  if ((last = DpsVarListFindStr(&Env->Vars, "TZ", NULL)) != NULL) {
+    setenv("TZ", last, 1);
+    tzset();
   }
 
   DpsVarListAddEnviron(&Agent->Vars, "ENV");
@@ -617,6 +624,8 @@ static int dpsearch_handler(request_rec *r) {
 
   /* set locale if specified */
   if ((url = DpsVarListFindStr(&Agent->Vars, "Locale", NULL)) != NULL) {
+    setlocale(LC_COLLATE, url);
+    setlocale(LC_CTYPE, url);
     setlocale(LC_ALL, url);
 /*#ifdef HAVE_ASPELL*/
     { char *p;
@@ -627,6 +636,12 @@ static int dpsearch_handler(request_rec *r) {
       }
     }
 /*#endif*/
+    url = NULL;
+  }
+  /* set TZ if specified */
+  if ((url = DpsVarListFindStr(&Env->Vars, "TZ", NULL)) != NULL) {
+    setenv("TZ", url, 1);
+    tzset();
     url = NULL;
   }
 
