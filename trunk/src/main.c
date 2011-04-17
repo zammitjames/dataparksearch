@@ -626,9 +626,13 @@ Misc. options:\n\
 static int DpsIndexerEnvLoad(DPS_AGENT *Indexer, const char *fname, dps_uint8 lflags) {
      int rc;
      if (DPS_OK == (rc = DpsEnvLoad(Indexer, fname, lflags))){
+          if ((NULL == DpsAgentDBLSet(Indexer, Indexer->Conf))) {
+	    sprintf(Indexer->Conf->errstr, "Can't set DBList at %s:%d", __FILE__, __LINE__);
+	    return DPS_ERROR;
+	  }
           rc = (Indexer->flags & DPS_FLAG_UNOCON) ? (Indexer->Conf->dbl.nitems == 0) : (Indexer->dbl.nitems == 0);
           if (rc) {
-               sprintf(Indexer->Conf->errstr, "Error: '%s': No required DBAddr commands were specified", fname);
+               sprintf(Indexer->Conf->errstr, "Error: '%s': No DBAddr command was specified", fname);
                rc= DPS_ERROR;
           } else {
 	    size_t i, tix, cpnt;
@@ -1409,6 +1413,7 @@ int main(int argc, char **argv, char **envp) {
 
      if((argc>1) || (help)){
           usage(help);
+	  DpsAgentFree(&Main);
           DpsEnvFree(&Conf);
           return(1);
      }
@@ -1507,7 +1512,7 @@ int main(int argc, char **argv, char **envp) {
           prm.display= DpsDisplaySQLQuery;
           prm.prompt= sqlmonprompt;
           DpsSQLMonitor(&Main, &Conf, &prm);
-          exit(0);
+	  goto ex;
      }
      
      if(url_filename && strcmp(url_filename,"-")) {
