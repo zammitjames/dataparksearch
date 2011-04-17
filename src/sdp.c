@@ -340,7 +340,7 @@ int __DPSCALL DpsResAddDocInfoSearchd(DPS_AGENT * query,DPS_DB *cl,DPS_RESULT * 
 	return rc;
 }
 
-static int DpsSearchdSendWordRequest(const DPS_AGENT *query, const DPS_DB *cl, const char *q) {
+static int DpsSearchdSendWordRequest(DPS_AGENT *query, const DPS_DB *cl, const char *q) {
 	DPS_SEARCHD_PACKET_HEADER hdr;
 	ssize_t	nsent;
 	size_t  nitems =  (query->flags & DPS_FLAG_UNOCON) ? query->Conf->dbl.nitems : query->dbl.nitems;

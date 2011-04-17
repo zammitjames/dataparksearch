@@ -113,6 +113,23 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
   return DPS_OK;
 }
 
+DPS_DBLIST * DpsAgentDBLSet(DPS_AGENT *result, DPS_ENV *Env) {
+  DPS_DBLIST *DBL = NULL;
+  size_t i;
+  if (Env->flags & DPS_FLAG_UNOCON) {
+    DBL = &Env->dbl;
+  } else {
+    DBL = &result->dbl;
+    for (i = 0 ; i < Env->dbl.nitems; i++) {
+      if (DPS_OK != DpsDBListAdd(DBL, Env->dbl.db[i].DBADDR, Env->dbl.db[i].open_mode)) {
+	DBL = NULL;
+	break;
+      }
+    }
+  }
+  return DBL;
+}
+
 
 __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, int handle){
   size_t i, z;
@@ -158,16 +175,10 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 
 	DpsVarListAddLst(&result->Vars, &Env->Vars, NULL, "*");
 
-	if (Env->flags & DPS_FLAG_UNOCON) {
-	  DBL = &Env->dbl;
-	} else {
-	  DBL = &result->dbl;
-	  for (i = 0 ; i < Env->dbl.nitems; i++) {
-	    if (DPS_OK != DpsDBListAdd(DBL, Env->dbl.db[i].DBADDR, Env->dbl.db[i].open_mode)) {
-	      DpsAgentFree(result);
-	      return NULL;
-	    }
-	  }
+	DBL = DpsAgentDBLSet(result, Env);
+	if (NULL == DBL) {
+	  DpsAgentFree(result);
+	  return NULL;
 	}
 
 /* Init demons connections */

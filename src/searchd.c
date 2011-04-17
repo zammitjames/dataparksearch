@@ -269,6 +269,8 @@ static int do_RESTful(DPS_AGENT *Agent, int client, const DPS_SEARCHD_PACKET_HEA
   query_string[nrecv + len] = '\0';
   for(pp = query_string; *pp != '\0'; pp++) if (' ' == *pp) { *pp = '\0'; break; }
 
+  DpsLog(Agent, DPS_LOG_EXTRA, "RESTful query: %s", query_string);
+
   conf_dir = DpsVarListFindStr(&Env->Vars, "EtcDir", DPS_CONF_DIR);
   DpsVarListInit(&query_vars);
   DpsParseQStringUnescaped(&query_vars, query_string);
@@ -286,11 +288,7 @@ static int do_RESTful(DPS_AGENT *Agent, int client, const DPS_SEARCHD_PACKET_HEA
 
   DpsURLNormalizePath(template_name);
 
-#define RESTexit(rc) \
-	DpsVarListFree(&query_vars); \
-	DPS_FREE(template_filename); \
-	DPS_FREE(query_string); \
-	return (rc);
+#define RESTexit(rc) res = rc; goto farend;
 
   if ( (strncmp(template_name, conf_dir, dps_strlen(conf_dir)) || (res = DpsTemplateLoad(Agent, Env, &Agent->tmpl, template_name)))) {
     DpsLog(Agent, DPS_LOG_ERROR, "Can't load template: '%s' %s\n", template_name, Env->errstr);
@@ -740,6 +738,10 @@ end:
     Agent->naspell = 0;
   }
 #endif /* HAVE_ASPELL*/	
+
+farend:
+
+  (void)DpsVarListDelLst(&Env->Vars, &query_vars, NULL, "*");
 
   DpsVarListFree(&query_vars);
   DPS_FREE(template_filename);
@@ -1262,6 +1264,11 @@ Options are:\n\
   -s n          sleep n seconds before starting\n\
   -w /path      choose alternative working /var directory\n\
   -f            run foreground, don't demonize\n\
+"
+#ifdef HAVE_PTHREAD
+"  -U              use one connection to DB for all threads\n"
+#endif
+"\
   -h,-?         print this help page and exit\n\
 \n\
 \n", PACKAGE,VERSION,DPS_DBTYPE);
@@ -1591,6 +1598,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 
 int main(int argc, char **argv, char **envp) {
         struct sockaddr_in old_server_addr;
+	dps_uint8 flags = DPS_FLAG_SPELL | DPS_FLAG_ADD_SERV;
 	int done = 0, demonize = 1;
 	int ch=0, pid_fd;
 	int nport=DPS_SEARCHD_PORT;
@@ -1606,7 +1614,7 @@ int main(int argc, char **argv, char **envp) {
 	DpsInitMutexes();
 	parent_pid = getpid();
 
-	while ((ch = getopt(argc, argv, "fhl?v:w:s:")) != -1){
+	while ((ch = getopt(argc, argv, "Ufhl?v:w:s:")) != -1){
 		switch (ch) {
 			case 'l':
 				log2stderr=0;
@@ -1620,6 +1628,9 @@ int main(int argc, char **argv, char **envp) {
 				break;
 		        case 'f':
 			        demonize = 0;
+				break;
+		        case 'U':
+			        flags |= DPS_FLAG_UNOCON;
 				break;
 			case 'h':
 			case '?':
@@ -1663,7 +1674,6 @@ int main(int argc, char **argv, char **envp) {
 		DPS_AGENT * Agent;
 		DPS_ENV * Conf=NULL;
 		int verb = DPS_LOG_EXTRA;
-		dps_uint8 flags = DPS_FLAG_SPELL | DPS_FLAG_UNOCON | DPS_FLAG_ADD_SERV;
 		int res = 0, internaldone = 0;
 		const char *lstn, *unix_socket;
 
@@ -1686,6 +1696,13 @@ int main(int argc, char **argv, char **envp) {
 		Agent->flags = Conf->flags = flags; /*DPS_FLAG_UNOCON | DPS_FLAG_ADD_SERV;*/
 
 		res = DpsEnvLoad(Agent, config_name, flags);
+		if ((NULL == DpsAgentDBLSet(Agent, Conf))) {
+		  fprintf(stderr, "Can't set DBList at %s:%d", __FILE__, __LINE__);
+		  DpsAgentFree(Agent);
+		  DpsEnvFree(Conf);
+		  unlink(dps_pid_name);
+		  exit(2);
+		}
 		
 		if (pvar_dir == NULL) var_dir = DpsVarListFindStr(&Conf->Vars, "VarDir", DPS_VAR_DIR);
 		else var_dir = pvar_dir;

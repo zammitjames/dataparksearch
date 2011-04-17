@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
+/* Copyright (C) 2008-2011 DataPark Ltd. All rights reserved.
+   Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,5 +25,6 @@ extern __C_LINK DPS_AGENT *	__DPSCALL DpsAgentInit(DPS_AGENT *Indexer, DPS_ENV *
 extern __C_LINK void		__DPSCALL DpsAgentFree(DPS_AGENT *Indexer);
 extern __C_LINK void		__DPSCALL DpsAgentSetAction(DPS_AGENT *Indexer, int action);
 extern __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer);
+extern DPS_DBLIST * DpsAgentDBLSet(DPS_AGENT *result, DPS_ENV *Env);
 
 #endif
