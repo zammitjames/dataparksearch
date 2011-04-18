@@ -21,6 +21,10 @@
 
 #include "dps_db_int.h"
 
+#if !defined(PQescapeStringConn)
+#define PQescapeStringConn(a,b,c,d,e) PQescapeString((b),(c),(d))
+#endif
+
 char            *DpsDBEscDoubleStr(char *from);
 char		*DpsDBEscStr(DPS_DB *db, char *to, const char *from, size_t len);
 extern int       _DpsSQLQuery(DPS_DB *db, DPS_SQLRES *R, const char *query, const char *file, const int line);
