@@ -659,7 +659,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   DPS_CHARSET *bcs = NULL, *dcs = NULL, *sys_int;
   DPS_HTMLTOK tag;
   DPS_VAR ST;
-  dpsunicode_t *start, *end, *prevend, *uni, ures, *p, *oi, *np, add;
+  dpsunicode_t *start, *prevstart, *end, *prevend, *uni, ures, *p, *oi, *np, add;
   dpsunicode_t *c;
   char *os;
   int s = -1, r = -1;
@@ -890,6 +890,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     else wpos[i] = DpsUniStrChrLower(uni, c[i]);
   }
 
+  prevstart = NULL;
   for (p = prevend = uni; DpsUniLen(oi) < size; ) {
 
 
@@ -932,14 +933,19 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     end = dps_min(start + 2 * padding/*p + maxwlen + 1 + padding*/, uni + ulen);
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < uni + ulen) && DpsUniNSpace(*end); i++) end++;
     while ((start < end) && !DpsUniNSpace(*start)) start++;
-    if (start < end) {
-      register int flag = 0;
-      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(*(prevend+i))) { flag = 1; break; }
-      if (oi[0]) DpsUniStrCat(oi, mark);
-      if (flag) {
-	if ((start != uni) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
+
+    if (DpsUniStrNCaseCmp(prevstart, start, dps_min(query->WordParam.min_word_len + 2, prevend - prevstart)) != 0) {
+
+      if (start < end - 1) {
+	register int flag = 0;
+	for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(*(prevend+i))) { flag = 1; break; }
+	if (oi[0]) DpsUniStrCat(oi, mark);
+	if (flag) {
+	  if ((start != uni) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
+	}
+	ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
+	prevstart = start;
       }
-      ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
     }
     p = prevend = end;
     prevlen = len;
@@ -1350,7 +1356,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
   DPS_CHARSET *bcs = NULL, *sys_int;
   size_t *wlen, i, maxwlen = 0, minwlen = query->WordParam.max_word_len;
   dpsunicode_t **wpos;
-  dpsunicode_t *start, *end, *prevend, ures, *p, *oi, *np;
+  dpsunicode_t *start, *prevstart, *end, *prevend, ures, *p, *oi, *np;
   dpsunicode_t *c;
   dpsunicode_t *Source = NULL;
   size_t DocSize = dps_strlen(bc_value), osl;
@@ -1408,6 +1414,7 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
     else wpos[i] = DpsUniStrChrLower(Source, c[i]);
   }
 
+  prevstart = NULL;
   for (p = prevend = Source; DpsUniLen(oi) < size; ) {
 
     np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, wpos, minwlen, NOprefixHL);
@@ -1421,14 +1428,19 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
     end = dps_min(start + 2 * padding/*p + maxwlen + 1 + padding*/, Source + DocSize);
     for (i = 0; (i < 2 * query->WordParam.max_word_len) && (end < Source + DocSize) && DpsUniNSpace(*end); i++) end++;
     while ((start < end) && !DpsUniNSpace(*start)) start++;
-    if (start < end - 1) {
-      register int flag = 0;
-      for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(*(prevend+i))) { flag = 1; break; }
-      if (oi[0]) DpsUniStrCat(oi, mark);
-      if (flag) {
-	if ((start != Source) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
+
+    if (DpsUniStrNCaseCmp(prevstart, start, dps_min(query->WordParam.min_word_len + 2, prevend - prevstart)) != 0) {
+
+      if (start < end - 1) {
+	register int flag = 0;
+	for (i = 1; prevend + i < start; i++) if (DpsUniNSpace(*(prevend+i))) { flag = 1; break; }
+	if (oi[0]) DpsUniStrCat(oi, mark);
+	if (flag) {
+	  if ((start != Source) && (start > prevend + 1)) DpsUniStrCat(oi, prefix_dot);
+	}
+	ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
+	prevstart = start;
       }
-      ures = *end; *end = 0; DpsUniStrCat(oi, start); *end = ures;
     }
     p = prevend = end;
     if (end == np) p++;
