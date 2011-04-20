@@ -724,7 +724,7 @@ freeres:
 	
 end:
   DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "bottom");
-  close(client); /* Too early closure ? */
+  dps_closesocket(client); /* Too early closure ? */
 
 #ifdef HAVE_ASPELL
   if (Agent->Flags.use_aspellext && Agent->naspell > 0) {
@@ -800,7 +800,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 		char * tok, * lt;
 		
 		DpsLog(Agent,verb,"Waiting for command header");
-		nrecv = DpsRecvall(client, &hdr, sizeof(hdr), 360);
+		nrecv = DpsRecvall(client, &hdr, sizeof(hdr), 5);
 		if(nrecv != sizeof(hdr)){
 			DpsLog(Agent,verb,"Received incomplete header nrecv=%d", (int)nrecv);
 			if (!strncasecmp((char*)&hdr, "GET ", 4)) do_RESTful(Agent, client, &hdr);
