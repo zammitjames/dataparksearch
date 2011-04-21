@@ -69,7 +69,7 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 
   if (P->opened) DpsBaseClose(P);
 
-  if (P->NFiles == 0) P->NFiles = DpsVarListFindInt(&P->A->Vars, "BaseFiles", 0x100);
+  if (P->NFiles == 0) P->NFiles = DpsVarListFindUnsigned(&P->A->Vars, "BaseFiles", 0x100);
   P->FileNo =  DPS_FILENO(P->rec_id, P->NFiles);
 
   hash = DPS_HASH(P->rec_id);
@@ -753,10 +753,11 @@ static int cmpsi(const void *s1, const void *s2) {
   return 0;
 }
 
+
 extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
   struct	stat sb;
   urlid_t base, base_from, base_to;
-  long ActualSize, OriginalSize, i, nitems;
+  long unsigned ActualSize, OriginalSize, i, nitems;
   off_t pos, posold, NewItemPos, SSize;
   dps_uint8 diff, gain;
   double dr = 0.0, cr = 0.0;
@@ -771,7 +772,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 
   P->mode = DPS_WRITE_LOCK;
   if (sbase < 0) {
-    base_from = 0; base_to = P->NFiles;
+    base_from = 0; base_to = (urlid_t)P->NFiles;
   } else {
     base_from = sbase; base_to = sbase + 1;
   }
@@ -807,12 +808,12 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
     OriginalSize = 0;
     while(read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) == sizeof(DPS_BASEITEM)) {
       if ((P->Item.rec_id != 0) && ((dps_uint8)P->Item.offset < (dps_uint8)SSize) && (P->Item.size > 0)) {
-	ActualSize += (long)P->Item.size;
-	OriginalSize += (long)(P->Item.orig_size ? P->Item.orig_size : P->Item.size);
+	ActualSize += (long unsigned)P->Item.size;
+	OriginalSize += (long unsigned)(P->Item.orig_size ? P->Item.orig_size : P->Item.size);
 	nitems++;
       }
     }
-    dr = (nitems) ? fabs(100.0 * ((long)SSize - ActualSize) / (SSize + 1)) : 0.0;
+    dr = (nitems) ? fabs(100.0 * ((long unsigned)SSize - ActualSize) / ((double)SSize + 1.0)) : 0.0;
     cr = (nitems) ? fabs(100.0 * ActualSize / (OriginalSize + 1)) : 0.0;
 
     DpsLog(P->A, DPS_LOG_EXTRA, "Optimize: %s/%s base 0x%X, %ld recs defrag: %.2f%% Ratio: %.2f%% Data: %ld File: %ld", 
@@ -847,15 +848,15 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
       pos = (off_t)0;
       posold = (off_t)0;
       if (nitems > 0) {
-	if ((long)si[0].Item.offset < (long)SSize) {
-	  posold = si[0].Item.offset;
+	if ((long unsigned)si[0].Item.offset < (long unsigned)SSize) {
+	  posold = (off_t)si[0].Item.offset;
 	} else {
 	  si[0].Item.offset = (off_t)0;
 	  si[0].Item.size = 0;
 	}
       }
       if (nitems > 1) {
-	if (si[0].Item.size > (rsize = si[1].Item.offset - si[0].Item.offset)) {
+	if (si[0].Item.size > (rsize = (size_t)(si[1].Item.offset - si[0].Item.offset))) {
 	  DpsLog(P->A, DPS_LOG_ERROR, "si[0] size adjusted by offset: %ld -> %ld", (long)si[0].Item.size, (long)rsize);
 	  si[0].Item.size = rsize;
 	  error_cnt++;
@@ -884,16 +885,16 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
       }
       
       for (i = 0; i < nitems - 1; i++) {
-	if ((long)si[i + 1].Item.offset > (long)SSize) {
+	if ((long unsigned)si[i + 1].Item.offset > (long unsigned)SSize) {
 	  DpsLog(P->A, DPS_LOG_ERROR, "si[%ld] too long offset: %ld > %ld, removing", i , (long)si[i + 1].Item.offset, (long)SSize);
 	  si[i + 1].Item.size = 0;
 	  si[i + 1].Item.offset = si[i].Item.offset + si[i].Item.size;
 	  error_cnt++;
 	} else {
-	  pos = si[i].Item.offset + si[i].Item.size;
-	  posold = si[i + 1].Item.offset;
+	  pos = (off_t)(si[i].Item.offset + si[i].Item.size);
+	  posold = (off_t)si[i + 1].Item.offset;
 	  if (i < nitems - 2) {
-	    if (si[i + 1].Item.size > (rsize = si[i + 2].Item.offset - si[i + 1].Item.offset)) {
+	    if (si[i + 1].Item.size > (rsize = (size_t)(si[i + 2].Item.offset - si[i + 1].Item.offset))) {
 	      DpsLog(P->A, DPS_LOG_ERROR, "si[%ld] size adjusted by offset: %ld -> %ld", i + 1, (long)si[i + 1].Item.size, (long)rsize );
 	      si[i + 1].Item.size = rsize;
 	      error_cnt++;
@@ -923,7 +924,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	}
       }
       posold = SSize;
-      pos = (nitems) ? (si[nitems - 1].Item.offset + si[nitems - 1].Item.size) : (off_t)0;
+      pos = (nitems) ? (off_t)(si[nitems - 1].Item.offset + si[nitems - 1].Item.size) : (off_t)0;
       if (ftruncate(P->Sfd, (off_t)(pos)) != 0) {
 	DpsLog(P->A, DPS_LOG_ERROR, "ftruncate error (pos:%ld): %d (%s) [%s:%d]", pos, errno, strerror(errno), __FILE__, __LINE__);
       }
@@ -970,7 +971,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	  }
 	  if (P->Item.rec_id != P->rec_id) {
 	    if (P->mishash && P->Item.rec_id != 0) {
-	      if ((P->Item.next = NewItemPos = (dps_uint8)lseek(P->Ifd, (off_t)0, SEEK_END)) == (dps_uint8)-1) {
+	      if ((P->Item.next = (dps_uint8)(NewItemPos = lseek(P->Ifd, (off_t)0, SEEK_END))) == (dps_uint8)-1) {
 		DpsBaseClose(P);
 		DPS_FREE(si);
 		return DPS_ERROR;
@@ -985,7 +986,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 		DPS_FREE(si);
 		return DPS_ERROR;
 	      }
-	      P->CurrentItemPos = NewItemPos;
+	      P->CurrentItemPos = (dps_uint8)NewItemPos;
 	    }
 	  }
 	  P->Item = si[i].Item;
