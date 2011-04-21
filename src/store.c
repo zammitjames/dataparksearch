@@ -1311,6 +1311,11 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     if (end == np) p++;
   }
 
+  if (!tag.finished) {
+    tag.chunks = 0;
+    if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
+  }
+
   {
     register dpsunicode_t *cc;
     for(cc = oi; *cc; cc++) {
@@ -1336,10 +1341,6 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
   
   DpsConv(&uni_bc, os, osl * 16, (char*)oi, sizeof(*oi) * osl);
   
-  if (!tag.finished) {
-    tag.chunks = 0;
-    if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
-  }
   DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(oi); DPS_FREE(HDoc); DPS_FREE(uni);
   if (needFreeSource) { DPS_FREE(SourceToFree); } else { DPS_FREE(tag.Content); }
   return os;
