@@ -1299,5 +1299,6 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 
 	DpsVarListAddLst(vars, &Srv.Vars, NULL, "Request.*");
 	DpsServerFree(&Srv);
+	Agent->Flags = Env->Flags;
 	return DPS_OK;
 }
