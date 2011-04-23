@@ -2502,14 +2502,17 @@ int DpsURLDataPreload(DPS_AGENT *Agent) {
 	dbto =  (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
 	if (Agent->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Agent, DPS_LOCK_CONF);
 
+	DpsLog(Agent, DPS_LOG_ERROR, " URLDataPreoad:%d  Conf.nitems:%d  Agent.nitems:%d", __LINE__, Agent->Conf->dbl.nitems, Agent->dbl.nitems);
 	for (i = dbfrom; i < dbto; i++) {
 	    db = (Agent->Conf->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[i] : &Agent->dbl.db[i];
 	    if (Agent->Conf->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Agent, DPS_LOCK_DB);
 
 	    if (db->DBMode == DPS_DBMODE_CACHE) {
+	DpsLog(Agent, DPS_LOG_ERROR, " URLDataPreoad:%d", __LINE__);
 	      rc = DpsURLDataPreloadCache(Agent, db);
 	    } else {
 #ifdef HAVE_SQL
+	DpsLog(Agent, DPS_LOG_ERROR, " URLDataPreoad:%d", __LINE__);
 	      rc = DpsURLDataPreloadSQL(Agent, db);
 #endif
 	    }

@@ -17,6 +17,11 @@
 */
 
 /*#define DEBUG_MEM 1*/
+/*#define MALLOC_STATS*/
+
+#if defined MALLOC_STATS
+extern void malloc_stats(void);
+#endif
 
 #include "dpsearch.h"
 #include "dps_sqldbms.h"
@@ -779,6 +784,9 @@ static void * thread_main(void *arg){
      int notarget = 0;
      int URLSize;
      time_t now;
+#if defined MALLOC_STATS
+     int tick = 0;
+#endif
 
      TRACE_IN(Indexer, "thread_main");
 
@@ -1054,6 +1062,12 @@ static void * thread_main(void *arg){
                DpsLog(Indexer,DPS_LOG_DEBUG,"Sleeping %d millisecond(s)", milliseconds);
                Indexer->nsleepsecs += milliseconds * (DPS_MSLEEP(milliseconds) == 0);
           }
+#if defined MALLOC_STATS
+	       if (Indexer->handle == 0 && ++tick == 10) {
+		 malloc_stats();
+		 tick = 0;
+	       }
+#endif
      }
 
      if(res != DPS_ERROR){
@@ -1078,7 +1092,7 @@ static void * thread_main(void *arg){
 #ifdef DEBUG_MEM
 	    mprotect(ThreadIndexers, (maxthreads + 2) * sizeof(DPS_AGENT*), PROT_READ | PROT_WRITE);
 #endif
-	    for (z = 0 ; z < total_threads; z++)
+	    for (z = 1 ; z < total_threads; z++)
 	      if (ThreadIndexers[z])  pthread_kill(threads[z], SIGALRM); /* wake-up sleeping threads */
 #ifdef DEBUG_MEM
 	    mprotect(ThreadIndexers, (maxthreads + 2) * sizeof(DPS_AGENT*), PROT_READ);
@@ -1100,7 +1114,7 @@ static void * thread_main(void *arg){
 	  mprotect(ThreadIndexers, (maxthreads + 2) * sizeof(DPS_AGENT*), PROT_READ | PROT_WRITE);
 #endif
 
-     ThreadIndexers[Indexer->handle - 1] = NULL;
+     ThreadIndexers[Indexer->handle] = NULL;
 
 #ifdef DEBUG_MEM
 	  mprotect(ThreadIndexers, (maxthreads + 2) * sizeof(DPS_AGENT*), PROT_READ);
@@ -1115,7 +1129,7 @@ static void * thread_main(void *arg){
      TRACE_OUT(Indexer);
 
 #ifdef HAVE_PTHREAD
-     DpsAgentFree(Indexer);
+     if (Indexer->handle) DpsAgentFree(Indexer);
 #endif
  
      return NULL;
@@ -1200,6 +1214,9 @@ static int DpsIndex(DPS_AGENT *A) {
        int gagap[4096];
 #endif
           int i;
+#if defined MALLOC_STATS
+	  int tick = 0;
+#endif
 
 #ifdef HAVE_PTHREAD_SETCONCURRENCY_PROT
 	  if (pthread_setconcurrency(maxthreads + 1) != 0) {
@@ -1242,7 +1259,7 @@ static int DpsIndex(DPS_AGENT *A) {
 
 */
 
-	for(i = 0; i < maxthreads; i++) {
+	for(i = 0; i < maxthreads - 1; i++) {
 	    DPS_AGENT *Indexer;
 
 	    DPS_GETLOCK(A, DPS_LOCK_THREAD);
@@ -1251,7 +1268,7 @@ static int DpsIndex(DPS_AGENT *A) {
 #ifdef DEBUG_MEM
 	  mprotect(ThreadIndexers, (maxthreads + 2) * sizeof(DPS_AGENT*), PROT_READ | PROT_WRITE);
 #endif
-	    ThreadIndexers[i] = Indexer;
+	    ThreadIndexers[i + 1] = Indexer;
 #ifdef DEBUG_MEM
 	  mprotect(ThreadIndexers, (maxthreads + 2) * sizeof(DPS_AGENT*), PROT_READ);
 #endif
@@ -1301,7 +1318,7 @@ static int DpsIndex(DPS_AGENT *A) {
 #ifdef DEBUG_MEM
 	      mprotect(threads, (maxthreads + 1) * sizeof(pthread_t), PROT_READ | PROT_WRITE);
 #endif
-	      if (pthread_create(&threads[i], &attr, &thread_main, Indexer) == 0) {
+	      if (pthread_create(&threads[i + 1], &attr, &thread_main, Indexer) == 0) {
 		DPS_GETLOCK(A, DPS_LOCK_THREAD);
 		total_threads++; /* = i + 1;*/
 		DPS_RELEASELOCK(A,DPS_LOCK_THREAD);
@@ -1314,6 +1331,12 @@ static int DpsIndex(DPS_AGENT *A) {
 	    if (milliseconds) DPS_MSLEEP(500 + milliseconds);
 	    else DPS_MSLEEP(620);
           }
+	Main.flags = flags;
+	DPS_GETLOCK(A, DPS_LOCK_THREAD);
+	total_threads++;
+	ThreadIndexers[0] = &Main;
+	DPS_RELEASELOCK(A,DPS_LOCK_THREAD);
+	thread_main(&Main);
           while(1) {
                int num;
                DPS_GETLOCK(A,DPS_LOCK_THREAD);
@@ -1321,6 +1344,12 @@ static int DpsIndex(DPS_AGENT *A) {
                DPS_RELEASELOCK(A,DPS_LOCK_THREAD);
                DPSSLEEP(1);
                if(!num)break;
+#if defined MALLOC_STATS
+	       if (++tick == 10) {
+		 malloc_stats();
+		 tick = 0;
+	       }
+#endif
           }
           DPS_FREE(threads);
      }
@@ -1343,6 +1372,7 @@ static int DpsIndex(DPS_AGENT *A) {
 extern char *malloc_options = "axH>>>R";
 #endif
 #endif
+
 
 int main(int argc, char **argv, char **envp) {
      char      *language=NULL,*affix=NULL,*dictionary=NULL, *env;

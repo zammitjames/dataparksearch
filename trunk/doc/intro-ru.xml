@@ -21,6 +21,9 @@
 
 	<para><indexterm><primary>Changelog</primary></indexterm>
 Последние изменения можно найти <ulink url="http://www.dataparksearch.org/ChangeLog">на нашем web-сервере</ulink>.</para>
+	
+	<para><indexterm><primary>Twitter</primary></indexterm>
+Оперативная информация об изменениях в DatapakSearch доступна в Твиттере: <ulink url="http://twitter.com/dataparksearch">@dataparksearch</ulink>.</para>
 
 	<sect1 id="features">
 		<title>Возможности <application>DataparkSearch</application>
