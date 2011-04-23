@@ -146,18 +146,18 @@
 <indexterm><primary>Помощь проекту</primary></indexterm>
 
 <para>Если вам наравится <application>DataparkSearch Engine</application> и вы хотите поддержать его дальнейшее развитие, 
-пожалуйста, окажите материальную поддержку проекту <ulink url="http://order.kagi.com/?6CYPQ">через Kagi</ulink> или <ulink url="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZTJBFWQUMTDPG">через PayPal</ulink>. Лубая сумма будет с благодарностью принята. 
+пожалуйста, окажите материальную поддержку проекту <ulink url="http://order.kagi.com/?6CYPQ">через Kagi</ulink> или <ulink url="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZTJBFWQUMTDPG">через PayPal</ulink>. Любая сумма будет с благодарностью принята. 
 </para>
 
-<para>The following individuals have made donations to support <application>DataparkSearch</application> development, and deserve credit for it:</para>
+<!--para>The following individuals have made donations to support <application>DataparkSearch</application> development, and deserve credit for it:</para>
 
-<itemizedlist id="donors">
+<itemizedlist id="donors"-->
 <!-- title>List of Donors</title -->
 <!--listitem><para>Mr. Haidut, <ulink url="http://arudius.sourceforge.net/">Arudius</ulink> project.
 </para></listitem-->
-<listitem><para>Many people prefer not to be listed, and the details of many others were not recorded (If anyone wishes to send details of their donation, we would be very happy to include them).
+<!--listitem><para>Many people prefer not to be listed, and the details of many others were not recorded (If anyone wishes to send details of their donation, we would be very happy to include them).
 </para></listitem>
-</itemizedlist>
+</itemizedlist-->
 
 </appendix>
 

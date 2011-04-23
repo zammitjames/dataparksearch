@@ -678,6 +678,7 @@ R2		  256
 Synonym		  synonym/english.syn
 ResultContentType text/xml
 Locale            ru_Ru.KOI8-R
+TZ                Australia/Sydney
 --&gt;
 </programlisting>
 </para>
@@ -786,6 +787,12 @@ $(R1) и $(R2).</para>
 Команда <command>Locale</command> используется для указания заголовка для задания LC_ALL локали при выдаче результатов
 поиска. 
 Значение по умолчанию: <literal>не определено</literal> (используется установленное ранее значение).
+</para>
+
+<para>
+<indexterm><primary>Команда</primary><secondary>TZ</secondary></indexterm>
+Команда <command>TZ</command> ипользуется для задания часового пояса для дат, выводимых на страницах результатов поиска.
+Значение по умолчанию: <literal>используются системные установки</literal>.
 </para>
 
 <para id="mkprefix-template"><indexterm><primary>Команда</primary><secondary>MakePrefixes</secondary></indexterm>

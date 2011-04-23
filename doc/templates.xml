@@ -741,6 +741,7 @@ R2		  256
 Synonym		  synonym/english.syn
 ResultContentType text/xml
 Locale            fr_FR.ISO_8859-1
+TZ                Australia/Sydney
 --&gt;
 </programlisting>
 		</informalexample>
@@ -850,8 +851,14 @@ Default value: <literal>text/html</literal>.
 
 <para>
 <indexterm><primary>Command</primary><secondary>Locale</secondary></indexterm>
-<command>Locale</command> command is uses to specify LC_ALL locale settings for search results output. 
+<command>Locale</command> command is used to specify LC_ALL locale settings for search results output. 
 Default value: <literal>unspecified</literal> (uses the value specified before in system settings).
+</para>
+
+<para>
+<indexterm><primary>Command</primary><secondary>TZ</secondary></indexterm>
+<command>TZ</command> command is used to specify time zone for timestamps shown on search results pages.
+Default value: <literal>system default</literal>.
 </para>
 
 <para><indexterm><primary>Command</primary><secondary>MakePrefixes</secondary></indexterm>

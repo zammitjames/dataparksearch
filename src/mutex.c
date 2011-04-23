@@ -196,7 +196,7 @@ void DpsGetSemLimit(void) {
 
 #if defined(CAS_MUTEX)
 
-static inline char CAS(dps_mutex_t *target, dps_mutex_t exchange, dps_mutex_t compare) {
+static inline char CAS(volatile dps_mutex_t *target, dps_mutex_t exchange, dps_mutex_t compare) {
   char ret;
   __asm__ __volatile__ (
 			"lock\n\t"

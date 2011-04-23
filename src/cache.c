@@ -1758,16 +1758,19 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	char fname[PATH_MAX];
 
 	TRACE_IN(Agent, "DpsURLDataPreloadCache");
+	DpsLog(Agent, DPS_LOG_ERROR, " DpsURLDataPreloadCache");
 
 	if (Agent->Conf->URLDataFile == NULL) {
 	  size_t nitems = (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
 	  if ((Agent->Conf->URLDataFile = (DPS_URLDATA_FILE**)DpsXmalloc(nitems * sizeof(DPS_URLDATA_FILE*))) == NULL) {
+	    DpsLog(Agent, DPS_LOG_ERROR, " DpsURLDataPreloadCache %d", __LINE__);
 	    TRACE_OUT(Agent);
 	    return DPS_ERROR;
 	  }
 	}
 	if (Agent->Conf->URLDataFile[db->dbnum] == NULL) {
 	  if ((Agent->Conf->URLDataFile[db->dbnum] = (DPS_URLDATA_FILE*)DpsXmalloc(NFiles * sizeof(DPS_URLDATA_FILE))) == NULL) {
+	    DpsLog(Agent, DPS_LOG_ERROR, " DpsURLDataPreloadCache %d", __LINE__);
 	    TRACE_OUT(Agent);
 	    return DPS_ERROR;
 	  }
@@ -1803,6 +1806,7 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	      }
 	    }
 	}
+	    DpsLog(Agent, DPS_LOG_ERROR, " DpsURLDataPreloadCache %d", __LINE__);
 
 	DpsLog(Agent, DPS_LOG_INFO, "URL data preloaded. %u bytes of memory used", mem_used);
 	TRACE_OUT(Agent);
