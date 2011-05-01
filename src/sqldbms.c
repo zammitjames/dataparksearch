@@ -2560,12 +2560,24 @@ char * DpsDBEscDoubleStr(char *from) {
 
 char * DpsDBEscStr(DPS_DB *db, char *to, const char *from, size_t len) {
 	char *s;
+#if defined(HAVE_DP_MYSQL) || defined(HAVE_DP_PGSQL)
+	size_t	i;
+#endif
 
 	if(!from)return(NULL);
 	if(!to)to=(char*)DpsMalloc(len*2+1);
 
 #ifdef HAVE_DP_MYSQL
 	if(db->DBType == DPS_DB_MYSQL) {
+	  for(i = 0; i < 3; i++) {
+	    if(!db->connected) {
+	      int rc = DpsMySQLInit(db);
+	      if (DPS_OK == rc && db->connected) break;
+	      mysql_close(&db->mysql);
+	      db->connected = 0;
+	      DPSSLEEP(20);
+	    }
+	  }
 	  if (db->connected)
 	        mysql_real_escape_string(&db->mysql, to, from, len);
 	  else
@@ -2575,6 +2587,16 @@ char * DpsDBEscStr(DPS_DB *db, char *to, const char *from, size_t len) {
 #endif
 #ifdef HAVE_DP_PGSQL
 	if(db->DBType == DPS_DB_PGSQL) {
+	  for (i = 0; i < 3; i++) {
+	    if(!db->connected) {
+	      DpsPgSQLInitDB(db);
+	      if(db->errcode) {
+		PQfinish(db->pgsql);
+		db->connected = 0;
+		DPSSLEEP(20);
+	      } else break;
+	    }
+	  }
 	  if (db->connected)
 	        PQescapeStringConn(db->pgsql, to, from, len, NULL);
 	  else
