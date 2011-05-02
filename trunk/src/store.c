@@ -1443,8 +1443,8 @@ char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *bc_value,
 	prevstart = start;
       }
     }
-    p = prevend = end;
-    if (end == np) p++;
+    prevend = end;
+    if (++p < end) p = end;
   }
   if (oi[0] && (end != Source + DocSize) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
 
