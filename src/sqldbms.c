@@ -252,6 +252,7 @@ static int DpsMySQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query) {
 
 static int DpsPgSQLInitDB(DPS_DB *db){
 	char port[8];
+	int rc;
 
 	sprintf(port,"%d",db->addrURL.port);
 	db->pgsql = PQsetdbLogin(db->DBSock ? db->DBSock:db->addrURL.hostname, db->addrURL.port?port:0, 0, 0, db->DBName, db->DBUser, db->DBPass);
@@ -267,7 +268,8 @@ static int DpsPgSQLInitDB(DPS_DB *db){
 		return DPS_ERROR;
 	  }
 	}
-	return DPS_OK;
+	rc = DpsSQLAsyncQuery(db, NULL, "set standard_conforming_strings to on");
+	return rc;
 }
 
 static int DpsPgSQLQuery(DPS_DB *db, DPS_SQLRES *res, const char *q){
@@ -356,21 +358,9 @@ static int DpsPgSQLQuery(DPS_DB *db, DPS_SQLRES *res, const char *q){
 
 
 static int DpsPgSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *res, const char *q) {
-  size_t i, rc;
+  size_t i, rc = 0;
 
   db->errcode = 0;
-  if (db->connected /*&& db->async_in_process*/) {
-    /* Wait async query in progress */
-    while ((res->pgsqlres = PQgetResult(db->pgsql))) {
-      if (PQstatus(db->pgsql) == CONNECTION_BAD) { 
-	PQfinish(db->pgsql); /* db error occured, trying reconnect */
-	db->connected=0;
-	break;
-      }
-      PQclear(res->pgsqlres);
-    }
-    db->async_in_process = 0;
-  }
   for (i = 0; i < 3; i++) {
     if(!db->connected){
       DpsPgSQLInitDB(db);
@@ -383,11 +373,24 @@ static int DpsPgSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *res, const char *q) {
       }
     }
 	
+    if (db->connected /*&& db->async_in_process*/) {
+      /* Wait async query in progress */
+      while ((res->pgsqlres = PQgetResult(db->pgsql))) {
+	if (PQstatus(db->pgsql) == CONNECTION_BAD) { 
+	  PQfinish(db->pgsql); /* db error occured, trying reconnect */
+	  db->connected=0;
+	  break;
+	}
+	PQclear(res->pgsqlres);
+      }
+      db->async_in_process = 0;
+    }
+
     if(db->connected)
       rc = PQsendQuery(db->pgsql, q);
     if (rc) break;
     sprintf(db->errstr, "%s", PQerrorMessage(db->pgsql) ? PQerrorMessage(db->pgsql) : "<empty>");
-    fprintf(stderr, "rc:%d - %s\n", rc, db->errstr);
+    fprintf(stderr, "PgAsyncQuery error - %s\n", db->errstr);
 
     PQfinish(db->pgsql); /* db error occured, trying reconnect */
     db->connected = 0;
