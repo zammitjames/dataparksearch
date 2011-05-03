@@ -69,9 +69,7 @@ dps_carry.h \
 dps_acronym.h \
 dps_sea.h \
 dps_filence.h \
-dps_cookies.h \
-malloc.c.h \
-nedmalloc.h
+dps_cookies.h 
 
 
 
