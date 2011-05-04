@@ -3532,11 +3532,11 @@ dpsunicode_t *DpsUniSegment(DPS_AGENT *Indexer, dpsunicode_t *ustr, const char *
 	    DPS_RELEASELOCK(Indexer, DPS_LOCK_SEGMENTER);
 #else
 	    DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-#ifdef HAVE_PTHREAD
+#if defined HAVE_PTHREAD && defined mecab_lock
 	    mecab_lock(Indexer->Conf->mecab);
 #endif
 	    eucstr_seg = mecab_sparse_tostr(Indexer->Conf->mecab, eucstr);
-#ifdef HAVE_PTHREAD
+#if defined HAVE_PTHREAD && defined mecab_unlock
 	    mecab_unlock(Indexer->Conf->mecab);
 #endif
 	    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
