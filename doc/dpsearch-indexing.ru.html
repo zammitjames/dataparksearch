@@ -101,7 +101,7 @@ HREF="dpsearch-http-codes.ru.html"
 HREF="dpsearch-content-enc.ru.html"
 >Поддержка Content-Encoding
 <A
-NAME="AEN784"
+NAME="AEN780"
 ></A
 ></A
 ></DT
@@ -130,7 +130,7 @@ HREF="dpsearch-aliases.ru.html"
 HREF="dpsearch-srvtable.ru.html"
 >ServerTable
 <A
-NAME="AEN1437"
+NAME="AEN1433"
 ></A
 ></A
 ></DT
@@ -139,7 +139,7 @@ NAME="AEN1437"
 HREF="dpsearch-pars.ru.html"
 >Внешние парсеры
 <A
-NAME="AEN1482"
+NAME="AEN1478"
 ></A
 ></A
 ></DT
@@ -166,7 +166,7 @@ HREF="dpsearch-syslog.ru.html"
 HREF="dpsearch-stored.ru.html"
 >Хранение сжатых копий документов
 <A
-NAME="AEN3122"
+NAME="AEN3118"
 ></A
 ></A
 ></DT
@@ -676,17 +676,10 @@ NAME="AEN703"
 ></A
 ></H2
 ><P
->Пользователи <SPAN
-CLASS="APPLICATION"
->MySQL</SPAN
-> и <SPAN
-CLASS="APPLICATION"
->PostgreSQL</SPAN
->
-могут запускать несколько <B
+>Возможно запускать одновременно несколько <B
 CLASS="COMMAND"
 >indexer</B
-> одновременно с одним и тем же файлом конфигурации
+> с одним и тем же файлом конфигурации
 <TT
 CLASS="FILENAME"
 >indexer.conf</TT
@@ -697,22 +690,16 @@ CLASS="COMMAND"
 использующих базу данных <SPAN
 CLASS="APPLICATION"
 >MySQL</SPAN
->. <B
+>. По умолчанию, <B
 CLASS="COMMAND"
->Indexer</B
-> использует механизм
-блокировки <SPAN
-CLASS="APPLICATION"
->MySQL</SPAN
-> и <SPAN
-CLASS="APPLICATION"
->PostgreSQL</SPAN
-> для избежания двойного
+>indexer</B
+> помечает документы, 
+выбранные к индексированию, как устаревающие через 4 часа в будущем для избежания двойного
 индексирования одних и тех же документов разными одновременно работающими <B
 CLASS="COMMAND"
 >indexer</B
 >.
-Параллельное индексирование может работать некорректно с остальными поддерживаемыми SQL серверами.
+Однако это не дает 100% гарантии избежания повторного индексирования.
 Вы можете использовать многопоточную версию <B
 CLASS="COMMAND"
 >indexer</B

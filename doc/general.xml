@@ -205,13 +205,12 @@ validation purposes.</para>
 		<title>Parallel indexing</title>
 <indexterm><primary>Parallel indexing</primary></indexterm>
 
-		<para>MySQL and PostgreSQL users may run several
-indexers simultaneously with the same indexer.conf file. We have
-successfully tested 30 simultaneous indexers with MySQL
-database. Indexer uses MySQL and PostgreSQL locking mechanism to avoid
-double indexing of the same URL by different indexer. 
-Parallel indexing in the same database is not implemented for
-other back-ends yet. You may use multi-threaded version of indexer
+		<para>It is possible to run several
+indexers simultaneously with the same <filename>indexer.conf</filename> file. We have
+successfully tested 30 simultaneous indexers with <application>MySQL</application>
+database. By default, <command>indexer</command> marks documents selected for indexing as expired in 4 hours in the future to avoid
+double indexing of the same URL by different indexer. However this is not gives 100% garantee of avoiding such duplication.
+You may use multi-threaded version of indexer
 with any SQL  back-end though which does support several simultaneous
 connections. Multi-threaded indexer version uses own locking
 mechanism.</para>

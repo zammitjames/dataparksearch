@@ -122,7 +122,13 @@ NAME="Robots" Content="xxx"&gt;</literal>, где Content содержит
 SkipHrefIn "img, link, script"
 </programlisting>
 </para>
+
+<para><indexterm><primary>Команда</primary><secondary>DisableRelNoFollow</secondary></indexterm>
+По умолчанию, <application>DataparkSearch</application> не учитывает ссылки с атрибутом rel=nofollow. 
+Но вы можете изменить это поведение при помощи команды <command>"DisableRelNoFollow yes"</command>, которую необходимо указать в файле конфигурации <filename>indexer.conf</filename>.
+</para>
 	</sect1>
+
 	<sect1 id="htmlparser-comments">
 		<title>Комментарии</title>
 		<para>Если Вы индексируете свои собственные ресурсы и 

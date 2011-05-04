@@ -186,13 +186,12 @@
 		<title>Параллельное индекирование
 <indexterm><primary>Параллельное индексирование</primary></indexterm>
 </title>
-		<para>Пользователи <application>MySQL</application> и <application>PostgreSQL</application>
-могут запускать несколько <command>indexer</command> одновременно с одним и тем же файлом конфигурации
+		<para>Возможно запускать одновременно несколько <command>indexer</command> с одним и тем же файлом конфигурации
 <filename>indexer.conf</filename>. Мы успешно опробовали 30 одновременно работающих <command>indexer</command>
-использующих базу данных <application>MySQL</application>. <command>Indexer</command> использует механизм
-блокировки <application>MySQL</application> и <application>PostgreSQL</application> для избежания двойного
+использующих базу данных <application>MySQL</application>. По умолчанию, <command>indexer</command> помечает документы, 
+выбранные к индексированию, как устаревающие через 4 часа в будущем для избежания двойного
 индексирования одних и тех же документов разными одновременно работающими <command>indexer</command>.
-Параллельное индексирование может работать некорректно с остальными поддерживаемыми SQL серверами.
+Однако это не дает 100% гарантии избежания повторного индексирования.
 Вы можете использовать многопоточную версию <command>indexer</command> c любым SQL сервером, поддерживающим
 параллельные соединения с базой. Многопоточная версия использует свой собственный механизм блокировки.</para>
 
