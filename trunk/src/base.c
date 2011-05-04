@@ -93,8 +93,15 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 						   ,
 						   S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH
 						   )) < 0)) {
+      int err_no = errno;
+#ifdef HAVE_PTHREAD
+      char err_str[128];
+      (void)strerror_r(err_no, err_str, sizeof(err_str));
+#else
+      char *err_str = strerror(errno);
+#endif
       DpsLog(P->A, (mode == DPS_READ_LOCK && errno == ENOENT) ? DPS_LOG_DEBUG : DPS_LOG_ERROR, "Can't open/create file %s for %s [%s:%d] -- %d (%s)", 
-	     P->Ifilename, (mode == DPS_READ_LOCK) ? "read" : "write", __FILE__, __LINE__, errno, strerror(errno));
+	     P->Ifilename, (mode == DPS_READ_LOCK) ? "read" : "write", __FILE__, __LINE__, err_no, DPS_NULL2EMPTY(err_str));
       DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
       TRACE_OUT(P->A);
       return DPS_ERROR;
@@ -114,8 +121,15 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
       return DPS_ERROR;
     }
     if ( (wr = write(P->Ifd, hTable, sizeof(DPS_BASEITEM) * DPS_HASH_PRIME)) != sizeof(DPS_BASEITEM) * DPS_HASH_PRIME) {
+      int err_no = errno;
+#ifdef HAVE_PTHREAD
+      char err_str[128];
+      (void)strerror_r(err_no, err_str, sizeof(err_str));
+#else
+      char *err_str = strerror(errno);
+#endif
       DpsLog(P->A, DPS_LOG_ERROR, "Can't set new index for file %s\nwritten %d bytes of %d\nError: %d (%s)\nIfd:%d hTable:%x", 
-	     P->Ifilename, wr, sizeof(DPS_BASEITEM) * DPS_HASH_PRIME, errno, strerror(errno), P->Ifd, hTable);
+	     P->Ifilename, wr, sizeof(DPS_BASEITEM) * DPS_HASH_PRIME, err_no, DPS_NULL2EMPTY(err_str), P->Ifd, hTable);
       DPS_FREE(hTable);
       DpsUnLock(P->Ifd); 
 #if 1
@@ -510,8 +524,15 @@ __C_LINK int __DPSCALL DpsBaseWrite(DPS_BASE_PARAM *P, void *buffer, size_t len)
     }
   }
   if (write(P->Sfd, data, size) != (ssize_t)size) {
+    int err_no = errno;
+#ifdef HAVE_PTHREAD
+    char err_str[128];
+    (void)strerror_r(err_no, err_str, sizeof(err_str));
+#else
+    char *err_str = strerror(errno);
+#endif
     DpsLog(P->A, DPS_LOG_ERROR, "Can't write %ld bytes at %ld of file %s {%s:%d} [%d, %s]", 
-	   (long)size, (long)P->Item.offset, P->Sfilename, __FILE__, __LINE__, errno, strerror(errno));
+	   (long)size, (long)P->Item.offset, P->Sfilename, __FILE__, __LINE__, err_no, err_str);
     res = DPS_ERROR;
     goto DpsBaseWrite_exit;
   }
@@ -926,7 +947,14 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
       posold = SSize;
       pos = (nitems) ? (off_t)(si[nitems - 1].Item.offset + si[nitems - 1].Item.size) : (off_t)0;
       if (ftruncate(P->Sfd, (off_t)(pos)) != 0) {
-	DpsLog(P->A, DPS_LOG_ERROR, "ftruncate error (pos:%ld): %d (%s) [%s:%d]", pos, errno, strerror(errno), __FILE__, __LINE__);
+	int err_no = errno;
+#ifdef HAVE_PTHREAD
+	char err_str[128];
+	(void)strerror_r(err_no, err_str, sizeof(err_str));
+#else
+	char *err_str = strerror(errno);
+#endif
+	DpsLog(P->A, DPS_LOG_ERROR, "ftruncate error (pos:%ld): %d (%s) [%s:%d]", pos, err_no, err_str, __FILE__, __LINE__);
       }
       SSize = pos;
 
@@ -947,8 +975,15 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	  return DPS_ERROR;
 	}
 	if ( (wr = write(P->Ifd, hTable, sizeof(DPS_BASEITEM) * DPS_HASH_PRIME)) != sizeof(DPS_BASEITEM) * DPS_HASH_PRIME) {
+	  int err_no = errno;
+#ifdef HAVE_PTHREAD
+	  char err_str[128];
+	  (void)strerror_r(err_no, err_str, sizeof(err_str));
+#else
+	  char *err_str = strerror(errno);
+#endif
 	  DpsLog(P->A, DPS_LOG_ERROR, "[%s:%d] Can't set new index for file %s\nwritten %d bytes of %d\nError: %d (%s)",
-		 __FILE__, __LINE__, P->Ifilename, wr, sizeof(DPS_BASEITEM) * DPS_HASH_PRIME, errno, strerror(errno));
+		 __FILE__, __LINE__, P->Ifilename, wr, sizeof(DPS_BASEITEM) * DPS_HASH_PRIME, err_no, err_str);
 	  DPS_FREE(hTable);
 	  DpsBaseClose(P);
 	  DPS_FREE(si);
