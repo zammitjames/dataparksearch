@@ -288,7 +288,7 @@ Limit prm:strcrc32 "SELECT label, rec_id FROM labels" pgsql://u:p@localhost/site
 </table>
 </para>
 
-<para>Третьим, необязательным, пораметром <option>DBAddr</option> для команды <command>Limit</command> можно указать соединение к SQL-базе, отличной от базы, используемой для поиска.
+<para>Третьим, необязательным, параметром <option>DBAddr</option> для команды <command>Limit</command> можно указать соединение к SQL-базе, отличной от базы, используемой для поиска.
 </para>
 
 <para>В поисковом шаблоне <filename>search.htm</filename> или в файле конфигурации <filename>searchd.conf</filename> (если используется <command>searchd</command>) указывать необязательные параметры

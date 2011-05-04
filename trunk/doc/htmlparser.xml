@@ -116,6 +116,14 @@ However, you can specify the list of HTML which would be omitted in new href loo
 SkipHrefIn "img, link, script"
 </programlisting>
 </para>
+
+<para><indexterm><primary>Command</primary><secondary>DisableRelNoFollow</secondary></indexterm>
+By default, <application>DataparkSearch</application> does not follow links with rel=nofollow attribute specified. 
+But you can alter this behaviour with <command>"DisableRelNoFollow yes"</command> command. You need to put this command in your <filename>indexer.conf</filename> file.
+</para>
+
+
+
 	</sect1>
 	<sect1 id="htmlparser-comments">
 		<title>Comments</title>
