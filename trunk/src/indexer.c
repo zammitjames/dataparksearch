@@ -1799,10 +1799,10 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	DpsVarListDel(&Doc->Sections, "URL_ID");
 	DpsVarListDel(&Doc->Sections, "DP_ID");
 	DpsVarListDel(&Doc->Sections, "Content-Language");
-/*	DpsVarListDel(&Doc->Sections, "base.href");*/
 
 	DpsVarListReplaceStr(&Doc->Sections, "URL", newhref);
-	DpsVarListReplaceStr(&Doc->Sections, "base.href", (base) ? base : url);
+	if (base) DpsVarListReplaceStr(&Doc->Sections, "base.href", base);
+	else DpsVarListDel(&Doc->Sections, "base.href");
 	DpsVarListReplaceInt(&Doc->Sections, "crc32old", DpsVarListFindInt(&Doc->Sections, "crc32", 0));
 	if (lang != NULL) {
 	  Doc->fetched = 1;
