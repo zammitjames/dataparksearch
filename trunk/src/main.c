@@ -73,8 +73,8 @@ extern void malloc_stats(void);
 #endif
 
        dps_uint8 flags    = 0; /* For indexer            */
-       int total_threads  = 0; /* Total threads number         */
-       int sleep_threads  = 0; /* Number of sleepping threads      */
+volatile int total_threads  = 0; /* Total threads number         */
+volatile int sleep_threads  = 0; /* Number of sleepping threads      */
        int max_index_time = -1;
        int max_index_size = -1;
        int cfg_url_number = 0x7FFFFFFF;
@@ -1145,10 +1145,13 @@ static void exitproc(void){
 
 
 static char * time_pid_info(void){
-     struct tm * tim;
-     time_t t;
-     t=time(NULL);
-     tim=localtime(&t);
+     time_t t = time(NULL);
+#ifdef HAVE_PTHREAD
+     struct tm l_tim;
+     struct tm *tim = localtime_r(&t, &l_tim);
+#else
+     struct tm *tim = localtime(&t);
+#endif
      strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
      sprintf(time_pid+dps_strlen(time_pid)," [%d]",(int)getpid());
      return(time_pid);

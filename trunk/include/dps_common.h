@@ -800,7 +800,7 @@ typedef struct dps_search_limit {
         dps_uint4        f_hi;
         dps_uint4        f_lo;
         urlid_t          *data;
-#ifdef HAVE_PTHREADS
+#ifdef HAVE_PTHREAD
         pthread_t        tid;
 #endif
 } DPS_SEARCH_LIMIT;
@@ -1205,6 +1205,10 @@ typedef struct dps_indexer_struct{
         FILE *TR;
         int level;
 /*        char timebuf[32];*/
+#endif
+
+#ifdef HAVE_PTHREAD
+        unsigned int seed;
 #endif
 	
 } DPS_AGENT;

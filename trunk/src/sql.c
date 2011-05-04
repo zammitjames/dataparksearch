@@ -3519,7 +3519,11 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_SEED) {
-	    int dir = rand()%2;
+#ifdef HAVE_PTHREAD
+	    int dir = rand_r(&Indexer->seed) % 2;
+#else
+	    int dir = rand() % 2;
+#endif
 	    if(db->DBSQL_LIMIT){
 	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s %s LIMIT 10", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
@@ -3535,11 +3539,23 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
 	    if ((nrows = DpsSQLNumRows(&SQLRes)) > 0) {
 	      if (Indexer->flags & DPS_FLAG_SORT_SEED2) {
-		dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed%c=%s", (dir) ? '>' : '<', DpsSQLValue(&SQLRes, rand()%nrows, 0));
+		dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed%c=%s", (dir) ? '>' : '<', DpsSQLValue(&SQLRes, 
+#ifdef HAVE_PTHREAD
+													 rand_r(&Indexer->seed) % nrows,
+#else
+													 rand() % nrows,
+#endif
+													 0));
 		sprintf(DPS_STREND(sortstr), "%s %s", (notfirst) ? ",seed" : "ORDER BY seed", (dir) ? "" : "DESC");
 		notfirst = 1;
 	      } else {
-		dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes, rand()%nrows, 0));
+		dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed=%s", DpsSQLValue(&SQLRes, 
+#ifdef HAVE_PTHREAD
+										    rand_r(&Indexer->seed) % nrows,
+#else
+										    rand() % nrows, 
+#endif
+										    0));
 	      }
 	    }
 	    DpsSQLFree(&SQLRes);
@@ -4258,9 +4274,13 @@ static int DpsCatPath(DPS_AGENT *Indexer,DPS_CATEGORY *Cat,DPS_DB *db){
 /******************* Search stuff ************************************/
 
 int DpsCloneListSQL(DPS_AGENT * Indexer, DPS_VARLIST *Env_Vars, DPS_DOCUMENT *Doc, DPS_RESULT *Res, DPS_DB *db) {
-	size_t		i, nr, nadd;
 	char		qbuf[256];
 	char		buf[128];
+	time_t		last_mod_time;
+	size_t		i, nr, nadd;
+#ifdef HAVE_PTHREAD
+	struct tm       l_tim;
+#endif
 	DPS_SQLRES	SQLres;
 	urlid_t		origin_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
 	int		rc;
@@ -4300,7 +4320,6 @@ int DpsCloneListSQL(DPS_AGENT * Indexer, DPS_VARLIST *Env_Vars, DPS_DOCUMENT *Do
 	}
 	
 	for(i = 0; i < nadd; i++) {
-		time_t		last_mod_time;
 		DPS_DOCUMENT	*D = &Res->Doc[Res->num_rows + i];
 		
 		DpsDocInit(D);
@@ -4325,7 +4344,13 @@ int DpsCloneListSQL(DPS_AGENT * Indexer, DPS_VARLIST *Env_Vars, DPS_DOCUMENT *Do
 		DpsVarListAddInt(&D->Sections, "DP_ID", DPS_ATOI(DpsSQLValue(&SQLres,i,0)));
 		last_mod_time=atol(DpsSQLValue(&SQLres,i,2));
 		if (last_mod_time > 0) {
-		  if (strftime(buf, 128, format, localtime(&last_mod_time)) == 0) {
+		  if (strftime(buf, 128, format, 
+#ifdef HAVE_PTHREAD
+			       localtime_r(&last_mod_time, &l_tim)
+#else
+			       localtime(&last_mod_time)
+#endif
+			       ) == 0) {
 		    DpsTime_t2HttpStr(last_mod_time, buf);
 		  }
 		  DpsVarListReplaceStr(&D->Sections, "Last-Modified", buf);
@@ -4961,8 +4986,11 @@ DpsTrack_exit:
 }
 
 static void SQLResToDoc(DPS_ENV *Conf, DPS_DOCUMENT *D, DPS_SQLRES *sqlres, size_t i) {
-	time_t		last_mod_time;
 	char		dbuf[128];
+	time_t		last_mod_time;
+#ifdef HAVE_PTHREAD
+	struct tm       l_tim;
+#endif
 	const char	*format = DpsVarListFindStrTxt(&Conf->Vars, "DateFormat", "%a, %d %b %Y, %X %Z");
 	double          pr;
 	const char      *url;
@@ -4992,7 +5020,13 @@ static void SQLResToDoc(DPS_ENV *Conf, DPS_DOCUMENT *D, DPS_SQLRES *sqlres, size
 	DPS_FREE(dc_url);
 
 	if ((last_mod_time = atol(DpsSQLValue(sqlres,i,2))) > 0) {
-	  if (strftime(dbuf, 128, format, localtime(&last_mod_time)) == 0) {
+	  if (strftime(dbuf, 128, format, 
+#ifdef HAVE_PTHREAD
+		       localtime_r(&last_mod_time, &l_tim)
+#else
+		       localtime(&last_mod_time)
+#endif
+		       ) == 0) {
 	    DpsTime_t2HttpStr(last_mod_time, dbuf);
 	  }
 	  DpsVarListReplaceStr(&D->Sections,"Last-Modified",dbuf);
@@ -5017,6 +5051,9 @@ static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
   long offset = 0L;
   double PRmin, PRmax;
   time_t last_mod_time, diff;
+#ifdef HAVE_GMTIME_R
+  struct tm l_tim;
+#endif
   int u = 1, rc = DPS_OK;
   size_t len, url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLSelectCacheSize", DPS_URL_SELECT_CACHE_SIZE);
   urlid_t rec_id = 0;
@@ -5071,7 +5108,13 @@ static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
     for(i = 0; i < nrows; i++) {
 
       last_mod_time = atol(DpsSQLValue(&SQLres, i, 1));
-      strftime(timestr, sizeof(timestr), "%Y-%m-%dT%H:%M:%S+00:00", gmtime(&last_mod_time));
+      strftime(timestr, sizeof(timestr), "%Y-%m-%dT%H:%M:%S+00:00", 
+#ifdef HAVE_GMTIME_R
+	       gmtime_r(&last_mod_time, &l_tim)
+#else
+	       gmtime(&last_mod_time)
+#endif
+	       );
 
       diff = A->now - last_mod_time;
       if (diff < 3600) freq = "hourly";

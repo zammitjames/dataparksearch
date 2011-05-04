@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2006 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2011 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,8 +79,7 @@ static int get_month(char * month)
  * Bug report was submitted by Nagy Erno <ned@elte.hu>
  */
 
-char * DpsDateParse(const char * datestring)
-{
+char * DpsDateParse(const char * datestring) {
 	
 	/* buffers */
 	char year  [BUFF] = "";
@@ -103,6 +102,7 @@ char * DpsDateParse(const char * datestring)
 	char * copyref = NULL;
 	/* we need this for the different types */
 	int offset = 0;
+	char *tok, savec;
 	/* initialize everythign nicely */
 	tokens[0] = date;
 	tokens[1] = month;
@@ -126,10 +126,10 @@ char * DpsDateParse(const char * datestring)
 		/* split up the string*/
 		pos = 0;
 		prev = copy;
-		next = strtok(copy," -");
+		next = dps_strtok_r(copy, " -", &tok, &savec);
 		while(pos < 4)
 		{
-			if((next = strtok(NULL," -")) == NULL) /* last element */
+		        if((next = dps_strtok_r(NULL, " -", &tok, &savec)) == NULL) /* last element */
 				len = dps_strlen(prev);
 			else
 				len = (size_t) (next-prev);
@@ -139,7 +139,7 @@ char * DpsDateParse(const char * datestring)
 			/* preparations for the next run*/
 			prev = next;
 			++pos;
-			 /*next = strtok(NULL," ");*/
+			 /*next = dps_strtok_r(NULL, " ", &tok, &savec);*/
 		}
 
 

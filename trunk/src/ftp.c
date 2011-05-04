@@ -330,9 +330,9 @@ int Dps_ftp_login(DPS_CONN *connp, char *user, char *passwd){
 }
 
 static int ftp_parse_list(DPS_CONN *connp, char *path){
-	char *line, *buf_in, *ch, *buf_out, *tok, *fname;
+  char *line, *buf_in, *ch, *buf_out, *tok, *fname, *line_tok;
         int len_h, len_f,len_p, i;
-	char *dir, savec;
+	char *dir, savec, line_savec;
 	size_t len,buf_len,cur_len;
 	
 	if (!connp->buf || !connp->buf_len)
@@ -348,13 +348,13 @@ static int ftp_parse_list(DPS_CONN *connp, char *path){
 	buf_out[0] = '\0';
 	line = dps_strtok_r(buf_in, "\r\n", &tok, &savec);
         do{
-    		if (!(fname = strtok(line, " ")))
+	        if (!(fname = dps_strtok_r(line, " ", &line_tok, &line_savec)))
 			continue;
 		/* drwxrwxrwx x user group size month date time file_name */
 		for(i=0; i<7; i++)
-            		if (!(fname = strtok(NULL, " ")))
+		        if (!(fname = dps_strtok_r(NULL, " ", &line_tok, &line_savec)))
 				break;
-		if (!(fname = strtok(NULL, "")))
+		if (!(fname = dps_strtok_r(NULL, "", &line_tok, &line_savec)))
 			continue;
 		len = 0 ;
 		len_f = len_h + len_p + dps_strlen(fname);

@@ -166,6 +166,9 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 	result->WordParam = Env->WordParam;
 	result->action = DPS_OK;
 	result->SpellLang = -1;
+#ifdef HAVE_PTHREAD
+	result->seed = (unsigned int)(result->now ^ (result->now << 2));
+#endif
 	result->LangMap = (DPS_LANGMAP*)DpsMalloc(sizeof(DPS_LANGMAP));
 	if (result->LangMap == NULL) {
 	  DpsAgentFree(result);
