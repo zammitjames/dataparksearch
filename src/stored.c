@@ -77,10 +77,13 @@ static int demonize = 1;
 
 
 static char * time_pid_info(void){
-	struct tm * tim;
-	time_t t;
-	t=time(NULL);
-	tim=localtime(&t);
+        time_t t = time(NULL);
+#ifdef HAVE_PTHREAD
+	struct tm l_tim;
+	struct tm *tim = localtime_r(&t, &l_tim);
+#else
+	struct tm *tim = localtime(&t);
+#endif
 	strftime(time_pid,sizeof(time_pid),"%a %d %H:%M:%S",tim);
 	sprintf(time_pid+dps_strlen(time_pid)," [%d]",(int)getpid());
 	return(time_pid);

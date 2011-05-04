@@ -1684,13 +1684,22 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 
 	{
 	  const char	*format = DpsVarListFindStrTxt(&A->Vars, "DateFormat", "%a, %d %b %Y, %X %Z");
+#ifdef HAVE_PTHREAD
+	  struct tm l_tim;
+#endif
 
 	  for(i = 0; i < num; i++) {
 	    time_t	last_mod_time = Res->CoordList.Data[i + (Res->first - 1) * Res->offset].last_mod_time;
 
 		DpsVarListReplaceInt(&Res->Doc[i].Sections,"Order",(int)(Res->first+i));
 		if (last_mod_time > 0) {
-		  if (strftime(str, sizeof(str), format, localtime(&last_mod_time)) == 0) {
+		  if (strftime(str, sizeof(str), format, 
+#ifdef HAVE_PTHREAD
+			       localtime_r(&last_mod_time, &l_tim)
+#else
+			       localtime(&last_mod_time)
+#endif
+			       ) == 0) {
 		    DpsTime_t2HttpStr(last_mod_time, str);
 		  }
 		  DpsVarListReplaceStr(&Res->Doc[i].Sections, "Last-Modified", str);
@@ -2502,17 +2511,14 @@ int DpsURLDataPreload(DPS_AGENT *Agent) {
 	dbto =  (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
 	if (Agent->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Agent, DPS_LOCK_CONF);
 
-	DpsLog(Agent, DPS_LOG_ERROR, " URLDataPreoad:%d  Conf.nitems:%d  Agent.nitems:%d", __LINE__, Agent->Conf->dbl.nitems, Agent->dbl.nitems);
 	for (i = dbfrom; i < dbto; i++) {
 	    db = (Agent->Conf->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[i] : &Agent->dbl.db[i];
 	    if (Agent->Conf->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Agent, DPS_LOCK_DB);
 
 	    if (db->DBMode == DPS_DBMODE_CACHE) {
-	DpsLog(Agent, DPS_LOG_ERROR, " URLDataPreoad:%d", __LINE__);
 	      rc = DpsURLDataPreloadCache(Agent, db);
 	    } else {
 #ifdef HAVE_SQL
-	DpsLog(Agent, DPS_LOG_ERROR, " URLDataPreoad:%d", __LINE__);
 	      rc = DpsURLDataPreloadSQL(Agent, db);
 #endif
 	    }

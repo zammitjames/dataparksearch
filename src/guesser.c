@@ -1109,14 +1109,19 @@ void DpsLangMapListFree(DPS_LANGMAPLIST *List){
 
 
 void DpsLangMapListSave(DPS_LANGMAPLIST *List) {
+     char time_str[128];
      size_t i, j, minv;
      FILE *out;
      DPS_LANGMAP *Cmap;
      char name[128];
      time_t t=time(NULL);
-     struct tm *tim = localtime(&t);
-     char time_str[128];
      double ratio;
+#ifdef HAVE_PTHREAD
+     struct tm l_tim;
+     struct tm *tim = localtime_r(&t, &l_tim);
+#else
+     struct tm *tim = localtime(&t);
+#endif
      
      for(i = 0; i < List->nmaps; i++) {
        Cmap = &List->Map[i];

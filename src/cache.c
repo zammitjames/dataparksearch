@@ -353,9 +353,14 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 
 	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X-split.log", db->log_dir, log_num);
 	if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
-	  time_t t = time(NULL);
-	  struct tm *tim = localtime(&t);
 	  char time_pid[128];
+	  time_t t = time(NULL);
+#ifdef HAVE_PTHREAD
+	  struct tm l_tim;
+	  struct tm *tim = localtime_r(&t, &l_tim);
+#else
+	  struct tm *tim = localtime(&t);
+#endif
 	
 	  strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
 	  t = dps_strlen(time_pid);
@@ -368,9 +373,14 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 
 	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X.log", db->log_dir, log_num);
 	if((log_fd = DpsOpen3(del_log_name, O_RDWR | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-	  time_t t = time(NULL);
-	  struct tm *tim = localtime(&t);
 	  char time_pid[128];
+	  time_t t = time(NULL);
+#ifdef HAVE_PTHREAD
+	  struct tm l_tim;
+	  struct tm *tim = localtime_r(&t, &l_tim);
+#else
+	  struct tm *tim = localtime(&t);
+#endif
 	
 	  strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
 	  t = dps_strlen(time_pid);
@@ -399,9 +409,14 @@ void DpsRotateDelLog(DPS_AGENT *A) {
     dps_snprintf(del_log_name, sizeof(del_log_name), "%s%s", db->log_dir, "del-split.log");
 
     if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
-      time_t t = time(NULL);
-      struct tm *tim = localtime(&t);
       char time_pid[128];
+      time_t t = time(NULL);
+#ifdef HAVE_PTHREAD
+      struct tm l_tim;
+      struct tm *tim = localtime_r(&t, &l_tim);
+#else
+      struct tm *tim = localtime(&t);
+#endif
 	
       strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
       t = dps_strlen(time_pid);
@@ -2931,11 +2946,16 @@ int DpsURLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 
 
 void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs) {
+  char time_pid[128];
   DPS_DB *db;
   size_t i, dbfrom = 0, dbto =  (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
   time_t t = time(NULL);
+#ifdef HAVE_PTHREAD
+  struct tm l_tim;
+  struct tm *tim = localtime_r(&t, &l_tim);
+#else
   struct tm *tim = localtime(&t);
-  char time_pid[128];
+#endif
 
   strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
   t = dps_strlen(time_pid);
@@ -2948,7 +2968,11 @@ void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs) {
       db = &Agent->Conf->dbl.db[i];
       if (db->errcode) {
 	t = time(NULL);
+#ifdef HAVE_PTHREAD
+	tim = localtime_r(&t, &l_tim);
+#else
 	tim = localtime(&t);
+#endif
 	strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
 	t = dps_strlen(time_pid);
 	dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
@@ -2957,7 +2981,11 @@ void DpsFlushAllBufs(DPS_AGENT *Agent, int rotate_logs) {
       DPS_RELEASELOCK(Agent, DPS_LOCK_DB);
     }
     t = time(NULL);
+#ifdef HAVE_PTHREAD
+    tim = localtime_r(&t, &l_tim);
+#else
     tim = localtime(&t);
+#endif
     strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
     t = dps_strlen(time_pid);
     dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
@@ -3104,7 +3132,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	    for (i = 0; i < NWrdFiles; i++) {
 	      DPS_GETLOCK(Agent, DPS_LOCK_CACHED_N(i));
 	      nrec = logd->wrd_buf[i].ndel;
-	      if (nrec == CacheLogDels /*|| ( (nrec > CacheLogDels - DPS_INF_DEL) && (nrec + (rand() % DPS_INF_DEL) > CacheLogDels))*/ ) {
+	      if (nrec == CacheLogDels) {
 		DpsLog(Agent, DPS_LOG_DEBUG, "num: %03x\t: nrec:%d ndel:%d", 
 		       i, logd->wrd_buf[i].nrec, logd->wrd_buf[i].ndel);
 		if(DPS_OK != DpsLogdSaveBuf(Agent, Env, i)) {

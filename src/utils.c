@@ -1197,23 +1197,20 @@ void DpsTime_t2HttpStr(time_t t, char *str) {
  */
 int DpsInitTZ(void){
 
-/*
-        time_t tt;
-	struct tm *tms;
-
-	tzset();
-	tms=localtime(&tt);*/
-	/* localtime sets the external variable timezone */
-/*	tz_offset = tms->tm_gmtoff;
-	return 0;
-*/
 #ifdef HAVE_TM_GMTOFF
 	time_t tclock;
 	struct tm *tim;
+#ifdef HAVE_PTHREAD
+	struct tm l_tim;
+#endif
         
 	tzset();
 	tclock = time(NULL);
-	tim=localtime(&tclock);
+#ifdef HAVE_PTHREAD
+	tim = localtime_r(&tclock, &l_tim);
+#else
+	tim = localtime(&tclock);
+#endif
         tz_offset = (long)tim->tm_gmtoff;
 	return 0;
 #else      
@@ -1223,8 +1220,13 @@ int DpsInitTZ(void){
 
 	tzset();
 	tt = time(NULL);
+#ifdef HAVE_PTHREAD
+	(void)gmtime_r(&tt, &gmt);
+	(void)localtime_r(&tt, &t);
+#else
         gmt = *gmtime(&tt);
         t = *localtime(&tt);
+#endif
         days = t.tm_yday - gmt.tm_yday;
         hours = ((days < -1 ? 24 : 1 < days ? -24 : days * 24)
                 + t.tm_hour - gmt.tm_hour);
@@ -1233,13 +1235,6 @@ int DpsInitTZ(void){
 	return 0;
 #endif /* HAVE_TM_GMTOFF */
 
-/* ONE MORE VARIANT - how many do we have?
-    struct timezone tz;
-
-    gettimeofday(NULL, &tz);
-    tz_offset=tz.tz_minuteswest*60;
-    return 0;
-*/
 }
 
 
