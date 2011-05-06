@@ -3525,15 +3525,15 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    int dir = rand() % 2;
 #endif
 	    if(db->DBSQL_LIMIT){
-	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s %s LIMIT 10", db->from, 
+	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s LIMIT 10", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
 			   (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
-		       where[0] ? "AND" : "", where, sortstr);
+		       where[0] ? "AND" : "", where);
 	    } else {
-	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s %s", db->from, 
+	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
 			   (Indexer->Flags.cmd == DPS_IND_POPRANK) ? (unsigned long)nit : (unsigned long)Indexer->now, 
-		       where[0] ? "AND" : "", where, sortstr);
+		       where[0] ? "AND" : "", where);
 	    }
 
 	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
