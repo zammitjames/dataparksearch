@@ -127,6 +127,7 @@
 #define DPS_MAX_HOST_ADDR                       16
 #define DPS_POPRANKSKIPSAMESITE                 "yes"
 #define DPS_CROSSWORDSSKIPSAMESITE              "yes"
+#define DPS_DETECTCLONES                        "no"
 
 /***********************************/
 

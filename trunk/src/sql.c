@@ -93,7 +93,8 @@
 */
 
 
-static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num, int need_count);
+static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num, int need_count,
+			    int detect_clones);
 
 
 #if HAVE_ORACLE8
@@ -2983,6 +2984,7 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 	  const char *method = DpsVarListFindStr(&Indexer->Vars, "PopRankMethod", "Goo");
 	  if ((Indexer->Flags.poprank_postpone == 0) && (Indexer->Flags.collect_links) && (strcasecmp(method, "Neo") == 0)) {
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
+	    int	      detect_clones = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "DetectClones", DPS_DETECTCLONES), "yes");
 	    size_t    url_num = (size_t)DpsVarListFindUnsigned(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	    res = DpsPopRankPasNeo(Indexer, db, DpsVarListFindStr(&Doc->Sections, "DP_ID", "0"), 
 #ifdef WITH_POPHOPS
@@ -2990,7 +2992,7 @@ static int DpsUpdateUrl(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 #else
 				   NULL,
 #endif
-				   skip_same_site, url_num, 0);
+				   skip_same_site, url_num, 0, detect_clones);
 	  }
 	}
 
@@ -3093,6 +3095,7 @@ WHERE rec_id=%s%s%s",
 	  const char *method = DpsVarListFindStr(&Indexer->Vars, "PopRankMethod", "Goo");
 	  if ((Indexer->Flags.poprank_postpone == 0) && (Indexer->Flags.collect_links) && (strcasecmp(method, "Neo") == 0)) {
 	    int	      skip_same_site = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
+	    int	      detect_clones = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "DetectClones", DPS_DETECTCLONES), "yes");
 	    size_t    url_num = (size_t)DpsVarListFindUnsigned(&Indexer->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	    rc = DpsPopRankPasNeo(Indexer, db, url_id, 
 #ifdef WITH_POPHOPS
@@ -3100,7 +3103,7 @@ WHERE rec_id=%s%s%s",
 #else
 				  NULL,
 #endif
-				  skip_same_site, url_num, 0);
+				  skip_same_site, url_num, 0, detect_clones);
 	  }
 	}
 	return rc;
@@ -6732,7 +6735,8 @@ typedef struct {
 } DPS_LNK;
 
 
-static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num, int need_count) {
+static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num, int need_count,
+			       int detect_clones) {
   char double_str[64];
   DPS_SQLRES	SQLres;
   const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
@@ -6921,17 +6925,19 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
   }
   if (to_update) {
     double pr, nPR = (di + Oi) / 2;
-    dps_snprintf(qbuf, sizeof(qbuf), 
+    if (detect_clones) {
+      dps_snprintf(qbuf, sizeof(qbuf), 
 "SELECT COUNT(*),MAX(u.pop_rank) FROM url u,url o WHERE o.rec_id=%s%s%s AND u.status>2000 AND u.crc32=o.crc32 AND u.site_id=o.site_id", 
-		 qu, rec_id, qu);
-    rc = DpsSQLQuery(db, &SQLres, qbuf);
-    if (rc == DPS_OK) {
-      if ( (DpsSQLNumRows(&SQLres) > 0) && (DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) > 0) ) {
-	pr = DPS_ATOF(DpsSQLValue(&SQLres, 0, 1));
-	if (pr > nPR) nPR = pr;
+		   qu, rec_id, qu);
+      rc = DpsSQLQuery(db, &SQLres, qbuf);
+      if (rc == DPS_OK) {
+	if ( (DpsSQLNumRows(&SQLres) > 0) && (DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) > 0) ) {
+	  pr = DPS_ATOF(DpsSQLValue(&SQLres, 0, 1));
+	  if (pr > nPR) nPR = pr;
+	}
       }
+      DpsSQLFree(&SQLres);
     }
-    DpsSQLFree(&SQLres);
     
     dps_snprintf(double_str, sizeof(double_str), "%.12f", nPR);
     dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
@@ -6947,7 +6953,7 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
 
 
 static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const char *hops_str, int skip_same_site, size_t url_num,
-			    int need_count) {
+			    int need_count, int detect_clones) {
   char		qbuf[512];
   char          double_str[64];
   DPS_SQLRES	SQLres;
@@ -6989,7 +6995,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
     dps_snprintf(qbuf, sizeof(qbuf), "SELECT uo.rec_id, uo.pop_rank, l.weight FROM links l, url uo WHERE l.k=%s%s%s AND uo.rec_id=l.ot", qu, rec_id, qu);
   }
   if(DPS_OK != (rc = DpsSQLQuery(db, &SQLres, qbuf))) {
-    /*DPS_FREE(IN);*/ return DpsPopRankPasNeoSQL(A, db, rec_id, hops_str, skip_same_site, url_num, need_count);
+    /*DPS_FREE(IN);*/ return DpsPopRankPasNeoSQL(A, db, rec_id, hops_str, skip_same_site, url_num, need_count, detect_clones);
   }
   jrows = DpsSQLNumRows(&SQLres);
   for (j = 0; j < jrows /*&& j < n_di*/; j++) {
@@ -7020,14 +7026,14 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
   n_Oi = DPS_ATOI(DpsSQLValue(&SQLres, 0, 0));
   DpsSQLFree(&SQLres);
   OUT = (DPS_LNK*)DpsMalloc((n_Oi + 1) * sizeof(DPS_LNK));
-  if (OUT == NULL) { DPS_FREE(OUT); return DpsPopRankPasNeoSQL(A, db, rec_id, hops_str, skip_same_site, url_num, need_count); }
+  if (OUT == NULL) { DPS_FREE(OUT); return DpsPopRankPasNeoSQL(A, db, rec_id, hops_str, skip_same_site, url_num, need_count, detect_clones); }
   if (skip_same_site) {
     dps_snprintf(qbuf, sizeof(qbuf), "SELECT uk.rec_id, uk.pop_rank, l.weight FROM links l, url uo, url uk WHERE uo.rec_id=l.ot AND uk.rec_id=l.k AND (uo.site_id<>uk.site_id OR l.k=l.ot) AND l.ot=%s%s%s", qu, rec_id, qu);
   } else {
     dps_snprintf(qbuf, sizeof(qbuf), "SELECT uo.rec_id, uo.pop_rank, l.weight FROM links l, url uo WHERE l.ot=%s%s%s AND uo.rec_id=l.k", qu, rec_id, qu);
   }
   if(DPS_OK != (rc = DpsSQLQuery(db, &SQLres, qbuf))) {
-    DPS_FREE(OUT); return DpsPopRankPasNeoSQL(A, db, rec_id, hops_str, skip_same_site, url_num, need_count);
+    DPS_FREE(OUT); return DpsPopRankPasNeoSQL(A, db, rec_id, hops_str, skip_same_site, url_num, need_count, detect_clones);
   }
   jrows = DpsSQLNumRows(&SQLres);
   for (j = 0; j < jrows && j < n_Oi; j++) {
@@ -7103,17 +7109,19 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
       }    
   
       nPR = ((n_Oi == 1) && (OUT[0].rec_id == rec_id_num) ) ? di : (di + Oi)/2;
-      dps_snprintf(qbuf, sizeof(qbuf), 
+      if (detect_clones) {
+	dps_snprintf(qbuf, sizeof(qbuf), 
 "SELECT COUNT(*),MAX(u.pop_rank) FROM url u,url o WHERE o.rec_id=%s%s%s AND u.status>2000 AND u.crc32=o.crc32 AND o.site_id=u.site_id", 
-		   qu, rec_id, qu);
-      rc = DpsSQLQuery(db, &SQLres, qbuf);
-      if (rc == DPS_OK) {
-	if ( (DpsSQLNumRows(&SQLres) > 0) && (DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) > 0) ) {
-	  pr = DPS_ATOF(DpsSQLValue(&SQLres, 0, 1));
-	  if (pr > nPR) nPR = pr;
+		     qu, rec_id, qu);
+	rc = DpsSQLQuery(db, &SQLres, qbuf);
+	if (rc == DPS_OK) {
+	  if ( (DpsSQLNumRows(&SQLres) > 0) && (DPS_ATOI(DpsSQLValue(&SQLres, 0, 0)) > 0) ) {
+	    pr = DPS_ATOF(DpsSQLValue(&SQLres, 0, 1));
+	    if (pr > nPR) nPR = pr;
+	  }
 	}
+	DpsSQLFree(&SQLres);
       }
-      DpsSQLFree(&SQLres);
       dps_snprintf(double_str, sizeof(double_str), "%.12f", nPR);
       dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
       DpsSQLAsyncQuery(db, NULL, qbuf);
@@ -7133,6 +7141,7 @@ static int DpsPopRankCalculateNeo(DPS_AGENT *A, DPS_DB *db) {
 	dps_uint4       nit = 0;
 	int             rc = DPS_ERROR, u = 1;
 	int		skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite",DPS_POPRANKSKIPSAMESITE),"yes");
+	int		detect_clones = !strcasecmp(DpsVarListFindStr(&A->Vars, "DetectClones", DPS_DETECTCLONES), "yes");
 	size_t          url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 	const char	*where;
 	char		qbuf[512];
@@ -7162,9 +7171,9 @@ static int DpsPopRankCalculateNeo(DPS_AGENT *A, DPS_DB *db) {
 	  for (i = 0; i < irows; i++) {
 
 #ifdef WITH_POPHOPS
-	    rc = DpsPopRankPasNeo(A, db, DpsSQLValue(&Res, i, 0), DpsSQLValue(&Res, i, 2), skip_same_site, url_num, 1);
+	    rc = DpsPopRankPasNeo(A, db, DpsSQLValue(&Res, i, 0), DpsSQLValue(&Res, i, 2), skip_same_site, url_num, 1, detect_clones);
 #else
-	    rc = DpsPopRankPasNeo(A, db, DpsSQLValue(&Res, i, 0), NULL, skip_same_site, url_num, 1);
+	    rc = DpsPopRankPasNeo(A, db, DpsSQLValue(&Res, i, 0), NULL, skip_same_site, url_num, 1, detect_clones);
 #endif
 	    if (rc != DPS_OK) goto Calc_unlockNeo;
 	    if (milliseconds > 0) DPS_MSLEEP(milliseconds);
@@ -7485,13 +7494,14 @@ int DpsURLActionSQL(DPS_AGENT * A, DPS_DOCUMENT * D, int cmd,DPS_DB *db){
   	        case DPS_URL_ACTION_PASNEO: 
 		  {
 		    int	   skip_same_site = !strcasecmp(DpsVarListFindStr(&A->Vars, "PopRankSkipSameSite", DPS_POPRANKSKIPSAMESITE), "yes");
+		    int	   detect_clones = !strcasecmp(DpsVarListFindStr(&A->Vars, "DetectClones", DPS_DETECTCLONES), "yes");
 		    size_t url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
 #ifdef WITH_POPHOPS
 		    res = DpsPopRankPasNeo(A, db, DpsVarListFindStr(&D->Sections, "DP_ID", "0"), 
-					   DpsVarListFindStr(&D->Sections, "Hops", "0"), skip_same_site, url_num, 0);
+					   DpsVarListFindStr(&D->Sections, "Hops", "0"), skip_same_site, url_num, 0, detect_clones);
 #else
 		    res = DpsPopRankPasNeo(A, db, DpsVarListFindStr(&D->Sections, "DP_ID", "0"), 
-					   NULL, skip_same_site, url_num, 0);
+					   NULL, skip_same_site, url_num, 0, detect_clones);
 #endif
 		  }
 			break;
