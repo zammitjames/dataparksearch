@@ -2327,7 +2327,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			 qu, DpsVarListFindInt(&Doc->Sections, "Content-Length", 0), qu,
 			 DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 					      (Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
-			 DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
+			 DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "0.25")),
 			 (int)Indexer->now, Doc->charset_id
 			 );
 
@@ -2359,7 +2359,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
-			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
+			   DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "0.25")),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;
@@ -2383,7 +2383,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
-			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
+			   DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "0.25")),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;
@@ -2399,7 +2399,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
-			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
+			   DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "0.25")),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;		
@@ -2415,7 +2415,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   DpsVarListFindInt(&Doc->Sections, "Content-Length", 0),
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
-			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
+			   DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "0.25")),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	      break;
@@ -2433,7 +2433,7 @@ static int DpsAddURL(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db) {
 			   qu, DpsVarListFindInt(&Doc->Sections, "Content-Length", 0), qu,
 			   DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, (Indexer->Flags.use_date_header == 2) ? "Date" : "Last-Modified", 
 						(Indexer->Flags.use_date_header) ? DpsVarListFindStr(&Doc->Sections, "Date", "") : "")),
-			   DpsVarListFindStr(&Doc->Sections, "weight", "0.25"),
+			   DpsDBEscDoubleStr(DpsVarListFindStr(&Doc->Sections, "weight", "0.25")),
 			   (int)Indexer->now, Doc->charset_id
 			   );
 	    }
