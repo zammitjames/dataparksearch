@@ -95,10 +95,19 @@ static int DpsMySQLQuery(DPS_DB *db,DPS_SQLRES *R,const char *query){
 	
 	db->errcode=0;
 	if (db->connected && db->async_in_process) {
-	  mysql_read_query_result(&db->mysql);
+	  if (mysql_read_query_result(&db->mysql)) {
+	    if((mysql_errno(&db->mysql)==CR_SERVER_LOST)||
+	       (mysql_errno(&db->mysql)==CR_SERVER_GONE_ERROR)||
+	       (mysql_errno(&db->mysql)==ER_SERVER_SHUTDOWN)) {
+	      mysql_close(&db->mysql);
+	      db->connected = 0;
+	    } else if((mysql_errno(&(db->mysql))!=ER_DUP_ENTRY) &&
+		      (mysql_errno(&(db->mysql))!=ER_DUP_KEY)){
+	      sprintf(db->errstr,"AsyncQuery Error\n\tMySQL driver: #%d: %s", mysql_errno(&db->mysql), mysql_error(&db->mysql));
+	    }
+	  }
 	  db->async_in_process = 0;
 	}
-
 	
 	for(i = 0; i < 3; i++) {
 	        if(!db->connected) {
@@ -199,10 +208,19 @@ static int DpsMySQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query) {
 	
 	db->errcode=0;
 	if (db->connected && db->async_in_process) {
-	  mysql_read_query_result(&db->mysql);
+	  if (mysql_read_query_result(&db->mysql)) {
+	    if((mysql_errno(&db->mysql)==CR_SERVER_LOST)||
+	       (mysql_errno(&db->mysql)==CR_SERVER_GONE_ERROR)||
+	       (mysql_errno(&db->mysql)==ER_SERVER_SHUTDOWN)) {
+	      mysql_close(&db->mysql);
+	      db->connected = 0;
+	    } else if((mysql_errno(&(db->mysql)) != ER_DUP_ENTRY) &&
+	       (mysql_errno(&(db->mysql)) != ER_DUP_KEY)){
+	      sprintf(db->errstr,"AsyncQuery Error\n\tMySQL driver: #%d: %s", mysql_errno(&db->mysql), mysql_error(&db->mysql));
+	    }
+	  }
 	  db->async_in_process = 0;
 	}
-
 	
 	for(i = 0; i < 3; i++) {
 	  if(!db->connected) {
@@ -237,7 +255,6 @@ static int DpsMySQLAsyncQuery(DPS_DB *db, DPS_SQLRES *R, const char *query) {
 				return DPS_OK;
 			}
 	  } else {
-/*	    mysql_read_query_result(&db->mysql);*/
 	    db->async_in_process = 1;
 	    return DPS_OK;
 	  }
@@ -283,6 +300,25 @@ static int DpsPgSQLQuery(DPS_DB *db, DPS_SQLRES *res, const char *q){
 	      PQfinish(db->pgsql); /* db error occured, trying reconnect */
 	      db->connected=0;
 	      break;
+	    }
+	    if (PQresultStatus(res->pgsqlres)!=PGRES_COMMAND_OK) {
+		if (PQerrorMessage(db->pgsql)) {
+		  sprintf(db->errstr, "%s", PQerrorMessage(db->pgsql));
+		} else {
+		  sprintf(db->errstr, "<empty>, status: %d", PQresultStatus(res->pgsqlres));
+		}
+		if(!(strcasestr(db->errstr, "duplicate") /* en */
+		   || strcasestr(db->errstr, "") /* ru */
+		   || strcasestr(db->errstr, "duplizierter") /* de */
+		   || strcasestr(db->errstr, "doppelter") /* de */
+		   || strcasestr(db->errstr, "duplicada") /* es */
+		   || strcasestr(db->errstr, "duplique") /* fr */
+		   || strcasestr(db->errstr, "duplicirani") /* hr */
+		   || strcasestr(db->errstr, "una chiave duplicata") /* it */
+		   || strcasestr(db->errstr, "chave duplicada") /* pt-BR */
+		     )) {
+		  fprintf(stderr, "AsyncQuery Error\n\tPgSQL-server message: %s\n\n", db->errstr);
+		}
 	    }
 	    PQclear(res->pgsqlres);
 	  }
@@ -380,6 +416,25 @@ static int DpsPgSQLAsyncQuery(DPS_DB *db, DPS_SQLRES *res, const char *q) {
 	  PQfinish(db->pgsql); /* db error occured, trying reconnect */
 	  db->connected=0;
 	  break;
+	}
+	if (PQresultStatus(res->pgsqlres)!=PGRES_COMMAND_OK) {
+		if (PQerrorMessage(db->pgsql)) {
+		  sprintf(db->errstr, "%s", PQerrorMessage(db->pgsql));
+		} else {
+		  sprintf(db->errstr, "<empty>, status: %d", PQresultStatus(res->pgsqlres));
+		}
+		if(!(strcasestr(db->errstr, "duplicate") /* en */
+		   || strcasestr(db->errstr, "") /* ru */
+		   || strcasestr(db->errstr, "duplizierter") /* de */
+		   || strcasestr(db->errstr, "doppelter") /* de */
+		   || strcasestr(db->errstr, "duplicada") /* es */
+		   || strcasestr(db->errstr, "duplique") /* fr */
+		   || strcasestr(db->errstr, "duplicirani") /* hr */
+		   || strcasestr(db->errstr, "una chiave duplicata") /* it */
+		   || strcasestr(db->errstr, "chave duplicada") /* pt-BR */
+		     )) {
+		  fprintf(stderr, "AsyncQuery Error\n\tPgSQL-server message: %s\n\n", db->errstr);
+		}
 	}
 	PQclear(res->pgsqlres);
       }
