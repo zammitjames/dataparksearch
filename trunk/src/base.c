@@ -828,12 +828,16 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
     ActualSize = 0;
     OriginalSize = 0;
     while(read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) == sizeof(DPS_BASEITEM)) {
+      nitems++;
       if ((P->Item.rec_id != 0) && ((dps_uint8)P->Item.offset < (dps_uint8)SSize) && (P->Item.size > 0)) {
 	ActualSize += (long unsigned)P->Item.size;
 	OriginalSize += (long unsigned)(P->Item.orig_size ? P->Item.orig_size : P->Item.size);
-	nitems++;
       }
     }
+    if (ftruncate(P->Ifd, (off_t)nitems * sizeof(DPS_BASEITEM)) != 0) {
+	dps_strerror(P->A, "ftruncate error (pos:%ld) [%s:%d]", (off_t)nitems * sizeof(DPS_BASEITEM), __FILE__, __LINE__);
+    }
+
     dr = (nitems) ? fabs(100.0 * ((long unsigned)SSize - ActualSize) / ((double)SSize + 1.0)) : 0.0;
     cr = (nitems) ? fabs(100.0 * ActualSize / (OriginalSize + 1)) : 0.0;
 
