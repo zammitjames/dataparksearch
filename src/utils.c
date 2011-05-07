@@ -63,6 +63,7 @@
 #include "dps_utils.h"
 #include "dps_charsetutils.h"
 #include "dps_xmalloc.h"
+#include "dps_log.h"
 
 
 char dps_pid_name[PATH_MAX];    /* EXT */
@@ -1590,6 +1591,48 @@ __C_LINK int __DPSCALL dps_snprintf(char *buf, size_t len, const char *fmt, ...)
        return ret;
 }
 
+void dps_strerror(DPS_AGENT *Agent, const char *fmt, ...) {
+  char buf[1024];
+#ifndef HAVE_VSNPRINTF
+  char *tmpbuf;
+  size_t need;
+#endif
+  va_list ap;
+  int ret;
+  int err_no = errno;
+#ifdef HAVE_PTHREAD
+  char err_str[128];
+  (void)strerror_r(err_no, err_str, sizeof(err_str));
+#else
+  char *err_str = DPS_NULL2EMPTY(strerror(errno));
+#endif
+       va_start(ap, fmt);
+
+#ifdef HAVE_VSNPRINTF
+       ret = vsnprintf(buf, sizeof(buf), fmt, ap);
+       buf[sizeof(buf)-1] = '\0';
+#else
+
+       need = dps_vsnprintf_len(fmt, ap);
+
+       if ((tmpbuf = (char *) DpsMalloc(need + 1)) == NULL)
+	 dps_strncpy(buf, "Oops! Out of memory in dps_strerror", sizeof(buf)-1);
+       else {
+               vsprintf(tmpbuf, fmt, ap);
+               dps_strncpy(buf, tmpbuf, sizeof(buf)-1);
+               DPS_FREE(tmpbuf);
+       }
+
+#endif /* HAVE_VSNPRINTF */
+
+       va_end(ap);
+       
+       if (Agent) {
+	 DpsLog(Agent, DPS_LOG_ERROR, "%s - (%d) %s", buf, err_no, err_str);
+       } else {
+	 fprintf(stderr, "%s - (%d) %s", buf, err_no, err_str);
+       }
+}
 
 
 /* Convert NPTR to a double.  If ENDPTR is not NULL, a pointer to the
