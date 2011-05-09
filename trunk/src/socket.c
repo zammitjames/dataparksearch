@@ -124,8 +124,7 @@ int socket_connect( DPS_CONN *connp){
 	    return 0;
 	    
 	  }
-	  fprintf(stderr, "connecting for %s:%d ", inet_ntoa(connp->sin.sin_addr), connp->port);
-	  fprintf(stderr, "errno:%d -- %s\n", errno, strerror(errno));
+	  dps_strerror(NULL, 0, "connecting for %s:%d error", inet_ntoa(connp->sin.sin_addr), connp->port);
 	}
 
 	connp->err = DPS_NET_CANT_CONNECT;
@@ -432,26 +431,17 @@ void DpsSockOpt(DPS_AGENT *A, int dps_socket) {
 
 #if !defined(sgi) && !defined(__sgi) && !defined(__irix__) && !defined(sun) && !defined(__sun) /* && !defined(__FreeBSD__)*/
   if (setsockopt(dps_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&so_tval, sizeof(so_tval)) != 0) {
-    if (A)
-      DpsLog(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-    else
-      fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
+    dps_strerror(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error", __FILE__, __LINE__);
   }
 #endif
 #if defined(SO_SNDLOWAT) && !defined(__linux__)
   if (setsockopt(dps_socket, SOL_SOCKET, SO_SNDLOWAT, (char *)&lowat, sizeof(lowat)) != 0) {
-    if (A)
-      DpsLog(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-    else
-      fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
+    dps_strerror(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error", __FILE__, __LINE__);
   }
 #endif
 #if defined(SO_RCVLOWAT) && (!defined(__linux__) || LINUX_VERSION_CODE >= 0x20400)
   if (setsockopt(dps_socket, SOL_SOCKET, SO_RCVLOWAT, (char *)&lowat, sizeof(lowat)) != 0) {
-    if (A)
-      DpsLog(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
-    else
-      fprintf(stderr, "%s [%d] setsockopt error: %d (%s)\n", __FILE__, __LINE__, errno, strerror(errno));
+    dps_strerror(A, DPS_LOG_EXTRA, "%s [%d] setsockopt error", __FILE__, __LINE__);
   }
 #endif
 }

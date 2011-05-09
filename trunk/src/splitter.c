@@ -172,8 +172,8 @@ int main(int argc,char **argv, char **envp) {
 		/* Open del log file */
 		dps_snprintf(dname,sizeof(dname),"%s%c%s%cdel-split.log", P.vardir, DPSSLASH, DPS_SPLDIR, DPSSLASH);
 		if((dd = DpsOpen2(dname, O_RDONLY | DPS_BINARY)) < 0) {
-			fprintf(stderr, "Can't open del log '%s': %s\n",dname,strerror(errno));
-			exit(DPS_ERROR);
+		  dps_strerror(NULL, 0, "Can't open del log '%s'", dname);
+		  exit(DPS_ERROR);
 		}
 
 		DpsLog(Indexer, DPS_LOG_DEBUG, "VarDir: %s, WrdFiles: %d [%x]", P.vardir, P.NFiles, P.NFiles);
@@ -207,11 +207,11 @@ int main(int argc,char **argv, char **envp) {
 		  dps_snprintf(dname, sizeof(dname), "%s%c%s%c%03X-split.log", P.vardir, DPSSLASH, DPS_SPLDIR, DPSSLASH, log);
 		  if((log_fd = DpsOpen2(dname, O_RDWR|DPS_BINARY)) < 0){
 		    if (errno == ENOENT) {
-		      DpsLog(Indexer, DPS_LOG_DEBUG, "Can't open '%s': (%d) %s", dname, errno, strerror(errno));
+		      dps_strerror(Indexer, DPS_LOG_DEBUG, "Can't open '%s'", dname);
 		      n = 0;
 /*		      continue;*/
 		    } else {
-		      DpsLog(Indexer, DPS_LOG_ERROR, "Can't open '%s': (%d) %s", dname, errno, strerror(errno));
+		      dps_strerror(Indexer, DPS_LOG_ERROR, "Can't open '%s'", dname);
 		      continue;
 		    }
 		  } else {

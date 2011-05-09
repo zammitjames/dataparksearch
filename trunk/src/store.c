@@ -116,7 +116,7 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
 	      P.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
 	      P.A = Agent;
 	      if (DpsBaseWrite(&P, CDoc, zstream.total_out) != DPS_OK) {
-		DpsLog(Agent, DPS_LOG_ERROR, "store/doc write error: %s", strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "store/doc write error");
 		rc = DPS_ERROR;
               }
 

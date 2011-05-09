@@ -189,7 +189,7 @@ int __DPSCALL DpsSearchCacheStore(DPS_AGENT * query, DPS_RESULT *Res){
 	  DpsClose(fd);
 	}else{
 #ifdef DEBUG_CACHE
-	  fprintf(stderr,"%s\n",strerror(errno));
+	  dps_strerror(NULL, 0, "debug");
 #endif
 	}
 	return DPS_OK;
@@ -221,14 +221,14 @@ int __DPSCALL DpsSearchCacheFind(DPS_AGENT * Agent, DPS_RESULT *Res) {
 	cache_file_name(fname, sizeof(fname), &Agent->Vars, Res);
 	if((fd = DpsOpen2(fname,O_RDONLY|DPS_BINARY)) < 0) {
 #ifdef DEBUG_CACHE
-	  fprintf(stderr, " %s open error %s\n", fname, strerror(errno));
+	  dps_strerror(NULL, 0, " %s open error", fname);
 #endif
 	  return DPS_ERROR;
 	}
 
 	if (fstat(fd, &sb)) {
 #ifdef DEBUG_CACHE
-	  fprintf(stderr, " %s [fd:%d] fstatr %s\n", fname, fd, strerror(errno));
+	  dps_strerror(NULL, 0, " %s [fd:%d] fstat", fname, fd);
 #endif
 	  DpsClose(fd);
 	  return DPS_ERROR;

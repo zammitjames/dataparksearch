@@ -61,5 +61,5 @@ fail !0 mdiff $(DPS_TEST_DIR)/search2-2.rej $(DPS_TEST_DIR)/search2.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/search2-2.rej
 
 fail !0 exec rm -rf $(DPS_TEST_DIR)/var/
-pass 0 exec  $(INDEXER) -Edrop $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
+#pass 0 exec  $(INDEXER) -Edrop $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 

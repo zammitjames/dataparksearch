@@ -1213,6 +1213,7 @@ static int add_srv_file(void *Cfg, size_t ac, char **av) {
         struct stat     sb;
 	DPS_CFG	*C = (DPS_CFG*)Cfg;
 	DPS_ENV	*Conf = C->Indexer->Conf;
+	DPS_AGENT *A = C->Indexer;
 	char **newav;
 	size_t i, p;
 	int url = 0;
@@ -1255,12 +1256,12 @@ static int add_srv_file(void *Cfg, size_t ac, char **av) {
 
 	    DpsRelEtcName(Conf, fname, sizeof(fname)-1, av[i]);
 	    if (stat(fname, &sb)) {
-	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Unable to stat file '%s': %s", fname, strerror(errno));
+	      dps_strerror(A, DPS_LOG_ERROR, "Unable to stat file '%s'", fname);
 	      DPS_FREE(newav);
 	      return DPS_ERROR;
 	    }
 	    if ((f = fopen(fname, "r")) == NULL) {
-	      dps_snprintf(Conf->errstr, sizeof(Conf->errstr) - 1, "Unable to open file '%s': %s", fname, strerror(errno));
+	      dps_strerror(A, DPS_LOG_ERROR, "Unable to open file '%s'", fname);
 	      DPS_FREE(newav);
 	      return DPS_ERROR;
 	    }
@@ -2107,7 +2108,8 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	int             fd;
 	size_t	line = 0, str0len = 0, str1len, str0size = 4096;
 	char            savebyte;
-#define Env Cfg->Indexer->Conf
+	DPS_ENV   *Env = Cfg->Indexer->Conf;
+	DPS_AGENT *A = Cfg->Indexer;
 #ifdef WITH_PARANOIA
 	void * paran = DpsViolationEnter(paran);
 #endif
@@ -2123,7 +2125,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	
 	/* Open config file */
 	if (stat(cname, &sb)) {
-	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to stat config file '%s': %s", cname, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "Unable to stat config file '%s'", cname);
 	  DPS_FREE(str0);
 #ifdef WITH_PARANOIA
 	  DpsViolationExit(-1, paran);
@@ -2131,7 +2133,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	  return DPS_ERROR;
 	}
 	if ((fd = open(cname, O_RDONLY)) <= 0) {
-	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to open config file '%s': %s", cname, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "Unable to open config file '%s'", cname);
 	  DPS_FREE(str0);
 #ifdef WITH_PARANOIA
 	  DpsViolationExit(-1, paran);
@@ -2148,7 +2150,7 @@ static int EnvLoad(DPS_CFG *Cfg,const char *cname){
 	  return DPS_ERROR;
 	}
 	if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to read config file '%s': %s", cname, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "Unable to read config file '%s'", cname);
 	  DPS_FREE(data);
 	  DPS_FREE(str0);
 	  close(fd);

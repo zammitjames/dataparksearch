@@ -1380,7 +1380,7 @@ static int client_main(DPS_ENV *Env, size_t handle) {
       case EINTR:	/* Child */
 	break;
       default:
-	DpsLog(Agent, DPS_LOG_WARN, "FIXME select error %d %s", errno, strerror(errno));
+	dps_strerror(Agent, DPS_LOG_WARN, "FIXME select error");
       }
       DpsAcceptMutexUnlock(Agent);
       continue;
@@ -1389,7 +1389,7 @@ static int client_main(DPS_ENV *Env, size_t handle) {
     if (FD_ISSET(sockfd, &msk)) {
       if ((ns = accept(sockfd, (struct sockaddr *) &client_addr, &addrlen)) == -1) {
 	DpsAcceptMutexUnlock(Agent);
-	DpsLog(Agent, DPS_LOG_ERROR, "accept() error %d %s", errno, strerror(errno));
+	dps_strerror(Agent, DPS_LOG_ERROR, "accept() error");
 	DpsEnvFree(Agent->Conf);
 	DpsAgentFree(Agent);
 	exit(1);
@@ -1397,7 +1397,7 @@ static int client_main(DPS_ENV *Env, size_t handle) {
     } else if (FD_ISSET(clt_sock, &msk)) {
       if ((ns = accept(clt_sock, (struct sockaddr *) &client_addr, &addrlen)) == -1) {
 	DpsAcceptMutexUnlock(Agent);
-	DpsLog(Agent, DPS_LOG_ERROR, "accept() error %d %s", errno, strerror(errno));
+	dps_strerror(Agent, DPS_LOG_ERROR, "accept() error");
 	DpsEnvFree(Agent->Conf);
 	DpsAgentFree(Agent);
 	exit(1);
@@ -1583,7 +1583,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 	    to_sleep = 0;
 	  }
 	} else {
-	  DpsLog(Agent, DPS_LOG_ERROR, "Can't open directory: %s, [%d:%s]", vardir, errno, strerror(errno));
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Can't open directory: %s", vardir);
 	}
 
 
@@ -1652,7 +1652,7 @@ int main(int argc, char **argv, char **envp) {
 	dps_snprintf(dps_pid_name, PATH_MAX, "%s%s%s", pvar_dir, DPSSLASHSTR, "searchd.pid");
 	pid_fd = DpsOpen3(dps_pid_name, O_CREAT|O_EXCL|O_WRONLY, 0644);
 	if(pid_fd < 0) {
-		fprintf(stderr, "Can't create '%s': %s\n", dps_pid_name, strerror(errno));
+	  dps_strerror(NULL, 0, "Can't create '%s'", dps_pid_name);
 		if(errno == EEXIST){
 		  fprintf(stderr, "It seems that another searchd is already running!\nRemove '%s' if it is not true.", dps_pid_name);
 		}
@@ -1756,7 +1756,7 @@ int main(int argc, char **argv, char **envp) {
 		}
 
 		if ((track_pid = fork() ) == -1) {
-		  DpsLog(Agent, DPS_LOG_ERROR, "fork() error %d %s", errno, strerror(errno));
+		  dps_strerror(Agent, DPS_LOG_ERROR, "fork() error");
 		  DpsAgentFree(Agent);
 		  DpsEnvFree(Conf);
 		  unlink(dps_pid_name);
@@ -1828,7 +1828,7 @@ int main(int argc, char **argv, char **envp) {
 		  }
 #ifdef SO_REUSEPORT
 		  if (setsockopt(clt_sock, SOL_SOCKET, SO_REUSEPORT, (char *)&on, sizeof(on)) != 0){
-			DpsLog(Agent, DPS_LOG_ERROR, "setsockopt() error %d", errno);
+			dps_strerror(Agent, DPS_LOG_ERROR, "setsockopt() error");
 			DpsAgentFree(Agent);
 			DpsEnvFree(Conf);
 			unlink(dps_pid_name);
@@ -1840,7 +1840,7 @@ int main(int argc, char **argv, char **envp) {
 		  for (i = 0; ;i++) {
 
 		    if (bind(clt_sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
-		      DpsLog(Agent, DPS_LOG_ERROR, "Can't bind: error %d %s", errno, strerror(errno));
+		      dps_strerror(Agent, DPS_LOG_ERROR, "Can't bind: error");
 		      if (i < 15) {
 			DPSSLEEP(1 + i * 3);
 			continue;
@@ -1855,7 +1855,7 @@ int main(int argc, char **argv, char **envp) {
 
 		  /* Backlog 64 is enough? */
 		  if (listen(clt_sock, 64) == -1) {
-			DpsLog(Agent, DPS_LOG_ERROR, "listen() error %d %s", errno, strerror(errno));
+			dps_strerror(Agent, DPS_LOG_ERROR, "listen() error");
 			DpsAgentFree(Agent);
 			DpsEnvFree(Conf);
 			unlink(dps_pid_name);
@@ -1895,7 +1895,7 @@ int main(int argc, char **argv, char **envp) {
 		  old_umask = umask( ~((S_IRWXU | S_IRWXG | S_IRWXO) & 0777));
 
 		  if (bind(sockfd, (struct sockaddr *)&unix_addr, saddrlen) == -1) {
-			DpsLog(Agent, DPS_LOG_ERROR, "Can't bind unix socket: error %d %s", errno, strerror(errno));
+			dps_strerror(Agent, DPS_LOG_ERROR, "Can't bind unix socket: error");
 			umask(old_umask);
 			DpsAgentFree(Agent);
 			DpsEnvFree(Conf);
@@ -1905,7 +1905,7 @@ int main(int argc, char **argv, char **envp) {
 		  umask(old_umask);
 		  /* Backlog 64 is enough? */
 		  if (listen(sockfd, 64) == -1) {
-			DpsLog(Agent, DPS_LOG_ERROR, "listen() unix socket error %d %s", errno, strerror(errno));
+			dps_strerror(Agent, DPS_LOG_ERROR, "listen() unix socket error");
 			DpsAgentFree(Agent);
 			DpsEnvFree(Conf);
 			unlink(dps_pid_name);

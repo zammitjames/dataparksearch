@@ -23,19 +23,19 @@
   <primaryie>Акценты над буквами
   </primaryie>
   <secondaryie>нечувствительный поиск,
-    <ulink url="dpsearch-fuzzy.ru.html#ACCENT" role="AEN6479">Поиск без учёта акцентов над буквами  </ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#ACCENT" role="AEN6477">Поиск без учёта акцентов над буквами  </ulink>
   </secondaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Акронимы и аббревиатуры,
-    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6500">Акронимы и аббревиатуры </ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6498">Акронимы и аббревиатуры </ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Алгоритм Построения Рефератов,
-    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6246">Алгоритм Построения Рефератов (SEA)</ulink>
+    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6244">Алгоритм Построения Рефератов (SEA)</ulink>
   </primaryie>
 </indexentry>
 
@@ -49,13 +49,13 @@
   <primaryie>Баги
   </primaryie>
   <secondaryie>сообщение о,
-    <ulink url="dpsearch-misc.ru.html#BUGS" role="AEN6540">Сообщение о багах</ulink>
+    <ulink url="dpsearch-misc.ru.html#BUGS" role="AEN6538">Сообщение о багах</ulink>
   </secondaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Булев поиск,
-    <ulink url="dpsearch-doingsearch.ru.html#SEARCH-BOOL" role="AEN5313">Булев поиск </ulink>
+    <ulink url="dpsearch-doingsearch.ru.html#SEARCH-BOOL" role="AEN5311">Булев поиск </ulink>
   </primaryie>
 </indexentry>
 
@@ -63,7 +63,7 @@
   <primaryie>Булевы запросы
   </primaryie>
   <secondaryie>релевантность,
-    <ulink url="dpsearch-rel.ru.html#REL-BOOL" role="AEN6216">Булевы запросы </ulink>
+    <ulink url="dpsearch-rel.ru.html#REL-BOOL" role="AEN6214">Булевы запросы </ulink>
   </secondaryie>
 </indexentry>
 
@@ -74,7 +74,7 @@
     <ulink url="dpsearch-stored.ru.html#EXCERPTS" role="AEN3299">Цитаты документов</ulink>
   </secondaryie>
   <secondaryie>реферат,
-    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6254">Алгоритм Построения Рефератов (SEA)</ulink>
+    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6252">Алгоритм Построения Рефератов (SEA)</ulink>
   </secondaryie>
 </indexentry>
 
@@ -100,13 +100,13 @@
 
 <indexentry>
   <primaryie>К вопросу производительности,
-    <ulink url="dpsearch-perf.ru.html" role="AEN3808">К вопросу производительности DataparkSearch</ulink>
+    <ulink url="dpsearch-perf.ru.html" role="AEN3806">К вопросу производительности DataparkSearch</ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Категории,
-    <ulink url="dpsearch-categories.ru.html" role="AEN4151">Категории </ulink>
+    <ulink url="dpsearch-categories.ru.html" role="AEN4149">Категории </ulink>
   </primaryie>
 </indexentry>
 
@@ -118,7 +118,7 @@
 
 <indexentry>
   <primaryie>Кодировки,
-    <ulink url="dpsearch-international.ru.html#CHARSET" role="AEN4227">Кодировки</ulink>
+    <ulink url="dpsearch-international.ru.html#CHARSET" role="AEN4225">Кодировки</ulink>
   </primaryie>
 </indexentry>
 
@@ -126,10 +126,10 @@
   <primaryie>Команда
   </primaryie>
   <secondaryie>AccentExtensions,
-    <ulink url="dpsearch-fuzzy.ru.html#ACCENT" role="AEN6482">Поиск без учёта акцентов над буквами  </ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#ACCENT" role="AEN6480">Поиск без учёта акцентов над буквами  </ulink>
   </secondaryie>
   <secondaryie>Acronym,
-    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6507">Акронимы и аббревиатуры </ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6505">Акронимы и аббревиатуры </ulink>
   </secondaryie>
   <secondaryie>ActionSQL,
     <ulink url="dpsearch-extended-indexing.ru.html#DATA-ACQ" role="AEN3046">Сбор данных</ulink>
@@ -139,12 +139,12 @@
     <ulink url="dpsearch-indexcmd.ru.html#ADDTYPE_CMD" role="AEN2447">Команда AddType</ulink>
   </secondaryie>
   <secondaryie>Affix,
-    <ulink url="dpsearch-fuzzy.ru.html#USING-ISPELL" role="AEN6358">Использование Ispell</ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#USING-ISPELL" role="AEN6356">Использование Ispell</ulink>
   </secondaryie>
   <secondaryie>Alias,
     <ulink url="dpsearch-aliases.ru.html#ALIAS-CONF" role="AEN1314">Команда Alias (из indexer.conf) </ulink>,
     <ulink url="dpsearch-aliases.ru.html#ALIAS-SEARCH" role="AEN1414">Алиасы в search.htm  </ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5882">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5880">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>AliasProg,
     <ulink url="dpsearch-aliases.ru.html#ALIAS-PROG" role="AEN1366">Команда AliasProg </ulink>
@@ -166,32 +166,32 @@
     <ulink url="dpsearch-htmlparser-bodypatterns.ru.html" role="AEN3446">Шаблоны для индексирования</ulink>
   </secondaryie>
   <secondaryie>BrowserCharset,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5834">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5832">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>Cache,
-    <ulink url="dpsearch-perf.ru.html#SEARCH-CACHE" role="AEN3834">Кэширование результатов поиска</ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5840">Секция Variables </ulink>
+    <ulink url="dpsearch-perf.ru.html#SEARCH-CACHE" role="AEN3832">Кэширование результатов поиска</ulink>,
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5838">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>CacheLogDels,
-    <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-STR" role="AEN3571">Структура индексов слов при способе хранения Cache</ulink>
+    <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-STR" role="AEN3569">Структура индексов слов при способе хранения Cache</ulink>
   </secondaryie>
   <secondaryie>CacheLogWords,
-    <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-STR" role="AEN3568">Структура индексов слов при способе хранения Cache</ulink>
+    <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-STR" role="AEN3566">Структура индексов слов при способе хранения Cache</ulink>
   </secondaryie>
   <secondaryie>Category,
-    <ulink url="dpsearch-categories.ru.html#CATEGORY_CMD" role="AEN4180">Команда Category</ulink>
+    <ulink url="dpsearch-categories.ru.html#CATEGORY_CMD" role="AEN4178">Команда Category</ulink>
   </secondaryie>
   <secondaryie>CategoryIf,
-    <ulink url="dpsearch-categories.ru.html#CATEGORYIF_CMD" role="AEN4190">Команда CategoryIf</ulink>
+    <ulink url="dpsearch-categories.ru.html#CATEGORYIF_CMD" role="AEN4188">Команда CategoryIf</ulink>
   </secondaryie>
   <secondaryie>CategoryTable,
-    <ulink url="dpsearch-categories.ru.html#CATTABLE" role="AEN4204">Загрузка таблицы категорий</ulink>
+    <ulink url="dpsearch-categories.ru.html#CATTABLE" role="AEN4202">Загрузка таблицы категорий</ulink>
   </secondaryie>
   <secondaryie>CharsToEscape,
-    <ulink url="dpsearch-international.ru.html#CHARSTOESCAPE" role="AEN4755">Команда CharsToEscape</ulink>
+    <ulink url="dpsearch-international.ru.html#CHARSTOESCAPE" role="AEN4753">Команда CharsToEscape</ulink>
   </secondaryie>
   <secondaryie>CheckInsertSQL,
-    <ulink url="dpsearch-perf.ru.html#CHECKINSERTSQL-CMD" role="AEN3885">Команда CheckInsertSQL</ulink>
+    <ulink url="dpsearch-perf.ru.html#CHECKINSERTSQL-CMD" role="AEN3883">Команда CheckInsertSQL</ulink>
   </secondaryie>
   <secondaryie>CheckMp3,
     <ulink url="dpsearch-indexcmd.ru.html#CHECKMP3_CMD" role="AEN2362">Команда CheckMp3</ulink>
@@ -203,10 +203,10 @@
     <ulink url="dpsearch-indexcmd.ru.html#CHECKONLY_CMD" role="AEN2340">Команда CheckOnly</ulink>
   </secondaryie>
   <secondaryie>ColdVar,
-    <ulink url="dpsearch-perf.ru.html" role="AEN3815">К вопросу производительности DataparkSearch</ulink>
+    <ulink url="dpsearch-perf.ru.html" role="AEN3813">К вопросу производительности DataparkSearch</ulink>
   </secondaryie>
   <secondaryie>CollectLinks,
-    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6140">Рейтинг популярности</ulink>
+    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6138">Рейтинг популярности</ulink>
   </secondaryie>
   <secondaryie>Cookies,
     <ulink url="dpsearch-indexcmd.ru.html#COOKIES_CMD" role="AEN2614">Команда Cookies</ulink>
@@ -215,22 +215,22 @@
     <ulink url="dpsearch-follow.ru.html#CRAWLDELAY_CMD" role="AEN1288">Команда CrawlDelay</ulink>
   </secondaryie>
   <secondaryie>CrossWords,
-    <ulink url="dpsearch-rel.ru.html#REL-CWORDS" role="AEN6229">Crosswords </ulink>
+    <ulink url="dpsearch-rel.ru.html#REL-CWORDS" role="AEN6227">Crosswords </ulink>
   </secondaryie>
   <secondaryie>CrossWordsSkipSameSite,
-    <ulink url="dpsearch-rel.ru.html#REL-CWORDS" role="AEN6237">Crosswords </ulink>
+    <ulink url="dpsearch-rel.ru.html#REL-CWORDS" role="AEN6235">Crosswords </ulink>
   </secondaryie>
   <secondaryie>DataparkSearchdConf,
-    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5400">Модуль mod_dpsearch для Apache httpd    </ulink>
+    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5398">Модуль mod_dpsearch для Apache httpd    </ulink>
   </secondaryie>
   <secondaryie>DataparkSearchTemplate,
-    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5403">Модуль mod_dpsearch для Apache httpd    </ulink>
+    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5401">Модуль mod_dpsearch для Apache httpd    </ulink>
   </secondaryie>
   <secondaryie>DataparkStoredocTemplate,
-    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5406">Модуль mod_dpsearch для Apache httpd    </ulink>
+    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5404">Модуль mod_dpsearch для Apache httpd    </ulink>
   </secondaryie>
   <secondaryie>DateFormat,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5903">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5901">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>DBAddr,
     <ulink url="dpsearch-indexcmd.ru.html#DBADDR_CMD" role="AEN2120">Команда DBAddr</ulink>
@@ -240,7 +240,7 @@
   </secondaryie>
   <secondaryie>DetectClones,
     <ulink url="dpsearch-clones.ru.html#DETECTCLONES_CMD" role="AEN883">Команда DetectClones</ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5845">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5843">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>DisableRelNoFollow,
     <ulink url="dpsearch-htmlparser-links.ru.html" role="AEN3424">Ссылки</ulink>
@@ -276,33 +276,33 @@
     <ulink url="dpsearch-stopwords.ru.html#FILLDICT" role="AEN855">Команда FillDictionary.</ulink>
   </secondaryie>
   <secondaryie>FlushCategoryTable,
-    <ulink url="dpsearch-categories.ru.html#FLUSHCATTABLE" role="AEN4217">Команда FlushCategoryTable </ulink>
+    <ulink url="dpsearch-categories.ru.html#FLUSHCATTABLE" role="AEN4215">Команда FlushCategoryTable </ulink>
   </secondaryie>
   <secondaryie>FlushServerTable,
     <ulink url="dpsearch-srvtable.ru.html#FLUSHSRVTABLE" role="AEN1471">Команда FlushServerTable </ulink>
   </secondaryie>
   <secondaryie>GroupBySite,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5850">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5848">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>GuesserBytes,
-    <ulink url="dpsearch-international.ru.html#CHARSET-GUESSER" role="AEN4677">Автоматическое распознавание кодировки</ulink>
+    <ulink url="dpsearch-international.ru.html#CHARSET-GUESSER" role="AEN4675">Автоматическое распознавание кодировки</ulink>
   </secondaryie>
   <secondaryie>GuesserUseMeta,
-    <ulink url="dpsearch-international.ru.html#CHARSETDETECT" role="AEN4622">Определение кодировки документа</ulink>
+    <ulink url="dpsearch-international.ru.html#CHARSETDETECT" role="AEN4620">Определение кодировки документа</ulink>
   </secondaryie>
   <secondaryie>HlBeg,
     <ulink url="dpsearch-stored.ru.html#STORED-SEARCH" role="AEN3290">Использование stored при поиске</ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5873">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5871">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>HlEnd,
     <ulink url="dpsearch-stored.ru.html#STORED-SEARCH" role="AEN3294">Использование stored при поиске</ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5876">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5874">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>HoldBadHrefs,
     <ulink url="dpsearch-indexcmd.ru.html#HOLDBADHREFS_CMD" role="AEN2411">Команда HoldBadHrefs</ulink>
   </secondaryie>
   <secondaryie>HoldCache,
-    <ulink url="dpsearch-srcache.ru.html" role="AEN6328">Кэш результатов поиска   </ulink>
+    <ulink url="dpsearch-srcache.ru.html" role="AEN6326">Кэш результатов поиска   </ulink>
   </secondaryie>
   <secondaryie>HrefOnly,
     <ulink url="dpsearch-indexcmd.ru.html#HREFONLY_CMD" role="AEN2352">Команда HrefOnly</ulink>
@@ -341,58 +341,58 @@
     <ulink url="dpsearch-indexcmd.ru.html#INDEXIF_CMD" role="AEN2383">Команда IndexIf</ulink>
   </secondaryie>
   <secondaryie>LangMap,
-    <ulink url="dpsearch-international.ru.html#CHARSET-GUESSER" role="AEN4636">Автоматическое распознавание кодировки</ulink>
+    <ulink url="dpsearch-international.ru.html#CHARSET-GUESSER" role="AEN4634">Автоматическое распознавание кодировки</ulink>
   </secondaryie>
   <secondaryie>LangMapFile,
-    <ulink url="dpsearch-international.ru.html#LANGMAPFILE_CMD" role="AEN4643">Команда LangMapFile</ulink>
+    <ulink url="dpsearch-international.ru.html#LANGMAPFILE_CMD" role="AEN4641">Команда LangMapFile</ulink>
   </secondaryie>
   <secondaryie>LangMapUpdate,
-    <ulink url="dpsearch-international.ru.html#CHARSET-GUESSER" role="AEN4671">Автоматическое распознавание кодировки</ulink>
+    <ulink url="dpsearch-international.ru.html#CHARSET-GUESSER" role="AEN4669">Автоматическое распознавание кодировки</ulink>
   </secondaryie>
   <secondaryie>Limit,
-    <ulink url="dpsearch-cachemode.ru.html#LIMITS" role="AEN3735">Использование лимитов при поиске</ulink>
+    <ulink url="dpsearch-cachemode.ru.html#LIMITS" role="AEN3733">Использование лимитов при поиске</ulink>
   </secondaryie>
   <secondaryie>Listen,
     <ulink url="dpsearch-stored.ru.html#STORED-START" role="AEN3171">Конфигурирование stored</ulink>
   </secondaryie>
   <secondaryie>LoadChineseList,
-    <ulink url="dpsearch-cjk.ru.html#ZH-SEGMENT" role="AEN4969">Сегментер фраз китайского языка </ulink>
+    <ulink url="dpsearch-cjk.ru.html#ZH-SEGMENT" role="AEN4967">Сегментер фраз китайского языка </ulink>
   </secondaryie>
   <secondaryie>LoadKoreanList,
-    <ulink url="dpsearch-cjk.ru.html#KO-SEGMENT" role="AEN5009">Сегментер фраз корейского языка </ulink>
+    <ulink url="dpsearch-cjk.ru.html#KO-SEGMENT" role="AEN5007">Сегментер фраз корейского языка </ulink>
   </secondaryie>
   <secondaryie>LoadThaiList,
-    <ulink url="dpsearch-cjk.ru.html#TH-SEGMENT" role="AEN4989">Сегментер фраз тайского языка </ulink>
+    <ulink url="dpsearch-cjk.ru.html#TH-SEGMENT" role="AEN4987">Сегментер фраз тайского языка </ulink>
   </secondaryie>
   <secondaryie>LocalCharset,
-    <ulink url="dpsearch-international.ru.html#RECODING" role="AEN4584">Перекодировка во время индексации</ulink>,
-    <ulink url="dpsearch-international.ru.html#LOCALCHARSET_CMD" role="AEN4711">Команда LocalCharset</ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5828">Секция Variables </ulink>
+    <ulink url="dpsearch-international.ru.html#RECODING" role="AEN4582">Перекодировка во время индексации</ulink>,
+    <ulink url="dpsearch-international.ru.html#LOCALCHARSET_CMD" role="AEN4709">Команда LocalCharset</ulink>,
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5826">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>Locale,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5934">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5932">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>Log2stderr,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5915">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5913">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>LogLevel,
     <ulink url="dpsearch-syslog.ru.html" role="AEN3066">Использование syslog</ulink>
   </secondaryie>
   <secondaryie>LogsOnly,
-    <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-START" role="AEN3632">Запуск способа хранения cache</ulink>
+    <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-START" role="AEN3630">Запуск способа хранения cache</ulink>
   </secondaryie>
   <secondaryie>LongestTextItems,
     <ulink url="dpsearch-indexcmd.ru.html#LONGESTTEXTITEMS_CMD" role="AEN2752">Команда LongestTextItems</ulink>
   </secondaryie>
   <secondaryie>MakePrefixes,
     <ulink url="dpsearch-indexcmd.ru.html#MKPREFIX-CMD" role="AEN2758">Команда MakePrefixes</ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5946">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5944">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>MarkForIndex,
-    <ulink url="dpsearch-perf.ru.html#MARKFORINDEX-CMD" role="AEN3875">Команда MarkForIndex</ulink>
+    <ulink url="dpsearch-perf.ru.html#MARKFORINDEX-CMD" role="AEN3873">Команда MarkForIndex</ulink>
   </secondaryie>
   <secondaryie>MaxClients,
-    <ulink url="dpsearch-searchd.ru.html#SEARCHD-START" role="AEN3989">Запуск searchd</ulink>
+    <ulink url="dpsearch-searchd.ru.html#SEARCHD-START" role="AEN3987">Запуск searchd</ulink>
   </secondaryie>
   <secondaryie>MaxCrawlDelay,
     <ulink url="dpsearch-follow.ru.html#MAXCRAWLDELAY_CMD" role="AEN1301">Команда MaxCrawlDelay</ulink>
@@ -416,7 +416,7 @@
     <ulink url="dpsearch-indexcmd.ru.html#MAXNETERRORS_CMD" role="AEN2568">Команда MaxNetErrors</ulink>
   </secondaryie>
   <secondaryie>MaxSiteLevel,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5867">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5865">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>MaxWordLength,
     <ulink url="dpsearch-indexcmd.ru.html#WORDLENGTHS_CMD" role="AEN2241">Команды указания длины слова</ulink>
@@ -452,7 +452,7 @@
     <ulink url="dpsearch-stored.ru.html" role="AEN3147">Хранение сжатых копий документов </ulink>
   </secondaryie>
   <secondaryie>NumSections,
-    <ulink url="dpsearch-rel.ru.html#RELEVANCY" role="AEN6052">Расчёт релевантности</ulink>
+    <ulink url="dpsearch-rel.ru.html#RELEVANCY" role="AEN6050">Расчёт релевантности</ulink>
   </secondaryie>
   <secondaryie>OptimizeAtUpdate,
     <ulink url="dpsearch-indexcmd.ru.html#OPTIMIZEATUPDATE_CMD" role="AEN2716">Команда OptimizeAtUpdate</ulink>
@@ -464,7 +464,7 @@
     <ulink url="dpsearch-stored.ru.html#STORED-START" role="AEN3213">Конфигурирование stored</ulink>
   </secondaryie>
   <secondaryie>PagesInGroup,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5862">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5860">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>ParserTimeOut,
     <ulink url="dpsearch-pars.ru.html#PARSERTIMEOUT" role="AEN1559">Воизбежание зависания парсера при выполнении</ulink>
@@ -477,37 +477,37 @@
     <ulink url="dpsearch-indexcmd.ru.html#PERIODBYHOPS_CMD" role="AEN2469">Команда PeriodByHops</ulink>
   </secondaryie>
   <secondaryie>PopRankFeedBack,
-    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6170">Метод расчёта популярности Goo</ulink>
+    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6168">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>PopRankMethod,
-    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6130">Рейтинг популярности</ulink>
+    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6128">Рейтинг популярности</ulink>
   </secondaryie>
   <secondaryie>PopRankNeoIterations,
-    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6204">Рейтинг популярности</ulink>
+    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6202">Рейтинг популярности</ulink>
   </secondaryie>
   <secondaryie>PopRankPostpone,
-    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6208">Рейтинг популярности</ulink>
+    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6206">Рейтинг популярности</ulink>
   </secondaryie>
   <secondaryie>PopRankShowCntRatio,
-    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6187">Метод расчёта популярности Goo</ulink>
+    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6185">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>PopRankShowCntWeight,
-    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6195">Метод расчёта популярности Goo</ulink>
+    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6193">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>PopRankSkipSameSite,
-    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6150">Рейтинг популярности</ulink>
+    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6148">Рейтинг популярности</ulink>
   </secondaryie>
   <secondaryie>PopRankUseShowCnt,
-    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6183">Метод расчёта популярности Goo</ulink>
+    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6181">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>PopRankUseTracking,
-    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6176">Метод расчёта популярности Goo</ulink>
+    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6174">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>PreloadLimit,
-    <ulink url="dpsearch-searchd.ru.html#SEARCHD-START" role="AEN3969">Запуск searchd</ulink>
+    <ulink url="dpsearch-searchd.ru.html#SEARCHD-START" role="AEN3967">Запуск searchd</ulink>
   </secondaryie>
   <secondaryie>PreloadURLData,
-    <ulink url="dpsearch-searchd.ru.html#SEARCHD-START" role="AEN3962">Запуск searchd</ulink>
+    <ulink url="dpsearch-searchd.ru.html#SEARCHD-START" role="AEN3960">Запуск searchd</ulink>
   </secondaryie>
   <secondaryie>ProvideReferer,
     <ulink url="dpsearch-indexcmd.ru.html#PROVIDEREF_CMD" role="AEN2743">Команда ProvideReferer</ulink>
@@ -519,10 +519,10 @@
     <ulink url="dpsearch-indexcmd.ru.html#PROXYAUTHBASIC_CMD" role="AEN2674">Команда ProxyAuthBasic</ulink>
   </secondaryie>
   <secondaryie>Quffix,
-    <ulink url="dpsearch-fuzzy.ru.html#QUFFIX" role="AEN6416">Модификация слов поисковых запросов</ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#QUFFIX" role="AEN6414">Модификация слов поисковых запросов</ulink>
   </secondaryie>
   <secondaryie>R*,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5890">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5888">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>ReadTimeOut,
     <ulink url="dpsearch-indexcmd.ru.html#READTIMEOUT_CMD" role="AEN2579">Команда ReadTimeOut</ulink>
@@ -537,26 +537,26 @@
     <ulink url="dpsearch-follow.ru.html#FILE_CMD" role="AEN1210">Команды ServerFile, RealmFile, SubnetFile и URLFile</ulink>
   </secondaryie>
   <secondaryie>RemoteCharset,
-    <ulink url="dpsearch-international.ru.html#DEFCHARSET" role="AEN4685">Кодировка документов по-умолчанию</ulink>,
-    <ulink url="dpsearch-international.ru.html#REMOTECHARSET_CMD" role="AEN4723">Команда RemoteCharset</ulink>
+    <ulink url="dpsearch-international.ru.html#DEFCHARSET" role="AEN4683">Кодировка документов по-умолчанию</ulink>,
+    <ulink url="dpsearch-international.ru.html#REMOTECHARSET_CMD" role="AEN4721">Команда RemoteCharset</ulink>
   </secondaryie>
   <secondaryie>ResegmentChinese,
-    <ulink url="dpsearch-cjk.ru.html" role="AEN4925">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
+    <ulink url="dpsearch-cjk.ru.html" role="AEN4923">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
   </secondaryie>
   <secondaryie>ResegmentJapanese,
-    <ulink url="dpsearch-cjk.ru.html" role="AEN4928">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
+    <ulink url="dpsearch-cjk.ru.html" role="AEN4926">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
   </secondaryie>
   <secondaryie>ResegmentKorean,
-    <ulink url="dpsearch-cjk.ru.html" role="AEN4931">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
+    <ulink url="dpsearch-cjk.ru.html" role="AEN4929">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
   </secondaryie>
   <secondaryie>ResegmentThai,
-    <ulink url="dpsearch-cjk.ru.html" role="AEN4934">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
+    <ulink url="dpsearch-cjk.ru.html" role="AEN4932">Сегментеры фраз японского, тайского, корейского и китайского языков</ulink>
   </secondaryie>
   <secondaryie>ResultContentType,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5928">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5926">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>ResultsLimit,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5921">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5919">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>ReverseAlias,
     <ulink url="dpsearch-aliases.ru.html#ALIAS-REVERSE" role="AEN1381">Команда ReverseAlias </ulink>
@@ -571,13 +571,13 @@
     <ulink url="dpsearch-follow.ru.html#ROBOTSPERIOD_CMD" role="AEN1276">Команда RobotsPeriod</ulink>
   </secondaryie>
   <secondaryie>SEASections,
-    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6277">Алгоритм Построения Рефератов (SEA)</ulink>
+    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6275">Алгоритм Построения Рефератов (SEA)</ulink>
   </secondaryie>
   <secondaryie>SEASentenceMinLength,
-    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6267">Алгоритм Построения Рефератов (SEA)</ulink>
+    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6265">Алгоритм Построения Рефератов (SEA)</ulink>
   </secondaryie>
   <secondaryie>SEASentences,
-    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6272">Алгоритм Построения Рефератов (SEA)</ulink>
+    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6270">Алгоритм Построения Рефератов (SEA)</ulink>
   </secondaryie>
   <secondaryie>Section,
     <ulink url="dpsearch-indexcmd.ru.html#SECTION_CMD" role="AEN2624">Команда Section</ulink>
@@ -604,10 +604,10 @@
     <ulink url="dpsearch-indexcmd.ru.html#SKIPUNREFERRED_CMD" role="AEN2726">Команда SkipUnreferred</ulink>
   </secondaryie>
   <secondaryie>Spell,
-    <ulink url="dpsearch-fuzzy.ru.html#USING-ISPELL" role="AEN6361">Использование Ispell</ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#USING-ISPELL" role="AEN6359">Использование Ispell</ulink>
   </secondaryie>
   <secondaryie>SRVInfoSQL,
-    <ulink url="dpsearch-perf.ru.html#SRVINFO-CMD" role="AEN3865">Команда SRVInfoSQL</ulink>
+    <ulink url="dpsearch-perf.ru.html#SRVINFO-CMD" role="AEN3863">Команда SRVInfoSQL</ulink>
   </secondaryie>
   <secondaryie>StopwordFile,
     <ulink url="dpsearch-stopwords.ru.html#STOPWORDFILE_CMD" role="AEN810">Команда StopwordFile</ulink>
@@ -637,33 +637,33 @@
     <ulink url="dpsearch-follow.ru.html#FILE_CMD" role="AEN1213">Команды ServerFile, RealmFile, SubnetFile и URLFile</ulink>
   </secondaryie>
   <secondaryie>Synonym,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5896">Секция Variables </ulink>,
-    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6451">Синонимы </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5894">Секция Variables </ulink>,
+    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6449">Синонимы </ulink>
   </secondaryie>
   <secondaryie>SyslogFacility,
     <ulink url="dpsearch-indexcmd.ru.html#SYSLOGFACILITY_CMD" role="AEN2228">Команда SyslogFacility</ulink>
   </secondaryie>
   <secondaryie>Tag,
-    <ulink url="dpsearch-subsections.ru.html#TAGS" role="AEN4099">Тэги </ulink>,
-    <ulink url="dpsearch-subsections.ru.html#TAG_CMD" role="AEN4110">Команда Tag</ulink>
+    <ulink url="dpsearch-subsections.ru.html#TAGS" role="AEN4097">Тэги </ulink>,
+    <ulink url="dpsearch-subsections.ru.html#TAG_CMD" role="AEN4108">Команда Tag</ulink>
   </secondaryie>
   <secondaryie>TagIf,
-    <ulink url="dpsearch-subsections.ru.html#TAGIF_CMD" role="AEN4121">Команда TagIf</ulink>
+    <ulink url="dpsearch-subsections.ru.html#TAGIF_CMD" role="AEN4119">Команда TagIf</ulink>
   </secondaryie>
   <secondaryie>TrackDBAddr,
-    <ulink url="dpsearch-track.ru.html" role="AEN6305">Регистрация поисковых запросов   </ulink>
+    <ulink url="dpsearch-track.ru.html" role="AEN6303">Регистрация поисковых запросов   </ulink>
   </secondaryie>
   <secondaryie>TrackHops,
     <ulink url="dpsearch-indexcmd.ru.html#TRACKHOPS_CMD" role="AEN2517">Команда TrackHops</ulink>
   </secondaryie>
   <secondaryie>TZ,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5940">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5938">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>URL,
     <ulink url="dpsearch-follow.ru.html#URL_CMD" role="AEN1172">Команда URL</ulink>
   </secondaryie>
   <secondaryie>URLCharset,
-    <ulink url="dpsearch-international.ru.html#URLCHARSET_CMD" role="AEN4737">Команда URLCharset</ulink>
+    <ulink url="dpsearch-international.ru.html#URLCHARSET_CMD" role="AEN4735">Команда URLCharset</ulink>
   </secondaryie>
   <secondaryie>URLDataFiles,
     <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-STR" role="AEN3555">Структура индексов слов при способе хранения Cache</ulink>
@@ -678,7 +678,7 @@
     <ulink url="dpsearch-follow.ru.html#FILE_CMD" role="AEN1204">Команды ServerFile, RealmFile, SubnetFile и URLFile</ulink>
   </secondaryie>
   <secondaryie>URLInfoSQL,
-    <ulink url="dpsearch-perf.ru.html#URLINFO-CMD" role="AEN3857">Команда URLInfoSQL</ulink>
+    <ulink url="dpsearch-perf.ru.html#URLINFO-CMD" role="AEN3855">Команда URLInfoSQL</ulink>
   </secondaryie>
   <secondaryie>URLSelectCacheSize,
     <ulink url="dpsearch-indexcmd.ru.html#URLSELECTCACHESIZE_CMD" role="AEN2274">Команда URLSelectCacheSize</ulink>
@@ -695,13 +695,13 @@
   <secondaryie>VarDir,
     <ulink url="dpsearch-indexcmd.ru.html#VARDIR_CMD" role="AEN2209">Команда VarDir</ulink>,
     <ulink url="dpsearch-stored.ru.html#STORED-START" role="AEN3187">Конфигурирование stored</ulink>,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5821">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5819">Секция Variables </ulink>
   </secondaryie>
   <secondaryie>VaryLang,
-    <ulink url="dpsearch-vary.ru.html" role="AEN5023">Поддержка мультиязычных веб серверов</ulink>
+    <ulink url="dpsearch-vary.ru.html" role="AEN5021">Поддержка мультиязычных веб серверов</ulink>
   </secondaryie>
   <secondaryie>Weight,
-    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6160">Метод расчёта популярности Goo</ulink>
+    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6158">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>WrdFiles,
     <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-STR" role="AEN3551">Структура индексов слов при способе хранения Cache</ulink>
@@ -710,13 +710,13 @@
 
 <indexentry>
   <primaryie>Кэш результатов поиска,
-    <ulink url="dpsearch-srcache.ru.html" role="AEN6315">Кэш результатов поиска   </ulink>
+    <ulink url="dpsearch-srcache.ru.html" role="AEN6313">Кэш результатов поиска   </ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Многоязычность,
-    <ulink url="dpsearch-multilang.ru.html" role="AEN4762">Создание многоязычных страниц поиска </ulink>
+    <ulink url="dpsearch-multilang.ru.html" role="AEN4760">Создание многоязычных страниц поиска </ulink>
   </primaryie>
 </indexentry>
 
@@ -766,7 +766,7 @@
 
 <indexentry>
   <primaryie>Параметры поиска,
-    <ulink url="dpsearch-doingsearch.ru.html#SEARCH_PARAMS" role="AEN5049">Параметры поиска </ulink>
+    <ulink url="dpsearch-doingsearch.ru.html#SEARCH_PARAMS" role="AEN5047">Параметры поиска </ulink>
   </primaryie>
 </indexentry>
 
@@ -786,85 +786,85 @@
   <primaryie>Переменная шаблона
   </primaryie>
   <secondaryie>$(Body),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5634">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5632">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(BrowserCharset),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5692">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5690">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(CL),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5686">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5684">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(Content-Length),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5650">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5648">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(Content-Type),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5640">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5638">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(DY),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5680">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5678">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(E),
-    <ulink url="dpsearch-templates.ru.html#ERROR-SECTION" role="AEN5799">Секция error</ulink>
+    <ulink url="dpsearch-templates.ru.html#ERROR-SECTION" role="AEN5797">Секция error</ulink>
   </secondaryie>
   <secondaryie>$(FancySize),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5655">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5653">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(first),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5551">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5549">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(grand_total),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5569">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5567">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(last),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5557">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5555">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(Last-Modified),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5645">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5643">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(meta.description),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5670">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5668">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(meta.keywords),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5675">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5673">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(ndocs),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5600">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5598">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(Order),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5660">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5658">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(PerSite),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5697">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5695">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(Pos),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5665">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5663">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(Score),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5628">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5626">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(sea),
-    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6251">Алгоритм Построения Рефератов (SEA)</ulink>
+    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6249">Алгоритм Построения Рефератов (SEA)</ulink>
   </secondaryie>
   <secondaryie>$(SearchTime),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5594">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5592">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(Title),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5623">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5621">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(total),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5563">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5561">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(URL),
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5618">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5616">Секция RES</ulink>
   </secondaryie>
   <secondaryie>$(W),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5581">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5579">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(WE),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5575">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5573">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>$(WS),
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5588">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5586">Секция RESTOP</ulink>
   </secondaryie>
 </indexentry>
 
@@ -876,7 +876,7 @@
 
 <indexentry>
   <primaryie>Помощь проекту,
-    <ulink url="dpsearch-donations.ru.html" role="AEN6816">Помощь проекту</ulink>
+    <ulink url="dpsearch-donations.ru.html" role="AEN6814">Помощь проекту</ulink>
   </primaryie>
 </indexentry>
 
@@ -888,19 +888,19 @@
 
 <indexentry>
   <primaryie>Регистрация поисковых запросов,
-    <ulink url="dpsearch-track.ru.html" role="AEN6284">Регистрация поисковых запросов   </ulink>
+    <ulink url="dpsearch-track.ru.html" role="AEN6282">Регистрация поисковых запросов   </ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Рейтинг популярности,
-    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6127">Рейтинг популярности</ulink>
+    <ulink url="dpsearch-rel.ru.html#POPRANK" role="AEN6125">Рейтинг популярности</ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Релевантность,
-    <ulink url="dpsearch-rel.ru.html" role="AEN6035">Релевантность </ulink>
+    <ulink url="dpsearch-rel.ru.html" role="AEN6033">Релевантность </ulink>
   </primaryie>
 </indexentry>
 
@@ -914,16 +914,16 @@
   <primaryie>Сегментер фраз
   </primaryie>
   <secondaryie>китайского языка,
-    <ulink url="dpsearch-cjk.ru.html#ZH-SEGMENT" role="AEN4958">Сегментер фраз китайского языка </ulink>
+    <ulink url="dpsearch-cjk.ru.html#ZH-SEGMENT" role="AEN4956">Сегментер фраз китайского языка </ulink>
   </secondaryie>
   <secondaryie>корейского языка,
-    <ulink url="dpsearch-cjk.ru.html#KO-SEGMENT" role="AEN5003">Сегментер фраз корейского языка </ulink>
+    <ulink url="dpsearch-cjk.ru.html#KO-SEGMENT" role="AEN5001">Сегментер фраз корейского языка </ulink>
   </secondaryie>
   <secondaryie>японского языка,
-    <ulink url="dpsearch-cjk.ru.html#JA-SEGMENT" role="AEN4943">Сегментер фраз японского языка </ulink>
+    <ulink url="dpsearch-cjk.ru.html#JA-SEGMENT" role="AEN4941">Сегментер фраз японского языка </ulink>
   </secondaryie>
   <secondaryie>тайского языка,
-    <ulink url="dpsearch-cjk.ru.html#TH-SEGMENT" role="AEN4983">Сегментер фраз тайского языка </ulink>
+    <ulink url="dpsearch-cjk.ru.html#TH-SEGMENT" role="AEN4981">Сегментер фраз тайского языка </ulink>
   </secondaryie>
 </indexentry>
 
@@ -931,49 +931,49 @@
   <primaryie>Секция шаблона
   </primaryie>
   <secondaryie>BOTTON,
-    <ulink url="dpsearch-templates.ru.html#BOTTOM-SECTION" role="AEN5532">Секция BOTTOM</ulink>
+    <ulink url="dpsearch-templates.ru.html#BOTTOM-SECTION" role="AEN5530">Секция BOTTOM</ulink>
   </secondaryie>
   <secondaryie>CLONE,
-    <ulink url="dpsearch-templates.ru.html#CLONE-SECTION" role="AEN5714">Секция CLONE</ulink>
+    <ulink url="dpsearch-templates.ru.html#CLONE-SECTION" role="AEN5712">Секция CLONE</ulink>
   </secondaryie>
   <secondaryie>error,
-    <ulink url="dpsearch-templates.ru.html#ERROR-SECTION" role="AEN5795">Секция error</ulink>
+    <ulink url="dpsearch-templates.ru.html#ERROR-SECTION" role="AEN5793">Секция error</ulink>
   </secondaryie>
   <secondaryie>navbar0,
-    <ulink url="dpsearch-templates.ru.html#NAVBAR0-SECTION" role="AEN5748">Секция navbar0</ulink>
+    <ulink url="dpsearch-templates.ru.html#NAVBAR0-SECTION" role="AEN5746">Секция navbar0</ulink>
   </secondaryie>
   <secondaryie>navbar1,
-    <ulink url="dpsearch-templates.ru.html#NAVBAR1-SECTION" role="AEN5766">Секция navbar1</ulink>
+    <ulink url="dpsearch-templates.ru.html#NAVBAR1-SECTION" role="AEN5764">Секция navbar1</ulink>
   </secondaryie>
   <secondaryie>navright, navright_nop,
-    <ulink url="dpsearch-templates.ru.html#NAVRIGHT-SECTION" role="AEN5757">Секции navright, navright_nop section</ulink>
+    <ulink url="dpsearch-templates.ru.html#NAVRIGHT-SECTION" role="AEN5755">Секции navright, navright_nop section</ulink>
   </secondaryie>
   <secondaryie>noquery,
-    <ulink url="dpsearch-templates.ru.html#NOQUERY-SECTION" role="AEN5786">Секция noquery</ulink>
+    <ulink url="dpsearch-templates.ru.html#NOQUERY-SECTION" role="AEN5784">Секция noquery</ulink>
   </secondaryie>
   <secondaryie>notfound,
-    <ulink url="dpsearch-templates.ru.html#NOTFOUND-SECTION" role="AEN5775">Секция notfound</ulink>
+    <ulink url="dpsearch-templates.ru.html#NOTFOUND-SECTION" role="AEN5773">Секция notfound</ulink>
   </secondaryie>
   <secondaryie>RES,
-    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5611">Секция RES</ulink>
+    <ulink url="dpsearch-templates.ru.html#RES-SECTION" role="AEN5609">Секция RES</ulink>
   </secondaryie>
   <secondaryie>RESBOT,
-    <ulink url="dpsearch-templates.ru.html#RESBOT-SECTION" role="AEN5726">Секция RESBOT</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESBOT-SECTION" role="AEN5724">Секция RESBOT</ulink>
   </secondaryie>
   <secondaryie>RESTOP,
-    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5544">Секция RESTOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#RESTOP-SECTION" role="AEN5542">Секция RESTOP</ulink>
   </secondaryie>
   <secondaryie>TOP,
-    <ulink url="dpsearch-templates.ru.html#TOP-SECTION" role="AEN5495">Секция TOP</ulink>
+    <ulink url="dpsearch-templates.ru.html#TOP-SECTION" role="AEN5493">Секция TOP</ulink>
   </secondaryie>
   <secondaryie>Variables,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5808">Секция Variables </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-VAR" role="AEN5806">Секция Variables </ulink>
   </secondaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Синонимы,
-    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6444">Синонимы </ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#SYNONYMS" role="AEN6442">Синонимы </ulink>
   </primaryie>
 </indexentry>
 
@@ -1026,13 +1026,13 @@
 
 <indexentry>
   <primaryie>Структура таблиц базы данных,
-    <ulink url="dpsearch-dbschema.ru.html" role="AEN6619">Структура таблиц базы данных</ulink>
+    <ulink url="dpsearch-dbschema.ru.html" role="AEN6617">Структура таблиц базы данных</ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Тэги,
-    <ulink url="dpsearch-subsections.ru.html#TAGS" role="AEN4095">Тэги </ulink>
+    <ulink url="dpsearch-subsections.ru.html#TAGS" role="AEN4093">Тэги </ulink>
   </primaryie>
 </indexentry>
 
@@ -1073,7 +1073,7 @@
 
 <indexentry>
   <primaryie>Шаблон,
-    <ulink url="dpsearch-templates.ru.html" role="AEN5456">Как создавать шаблоны результатов поиска </ulink>
+    <ulink url="dpsearch-templates.ru.html" role="AEN5454">Как создавать шаблоны результатов поиска </ulink>
   </primaryie>
 </indexentry>
 
@@ -1081,13 +1081,13 @@
   <primaryie>Шаблоны
   </primaryie>
   <secondaryie>секции,
-    <ulink url="dpsearch-templates.ru.html#TEMPLATES-SECT" role="AEN5473">Секции шаблона </ulink>
+    <ulink url="dpsearch-templates.ru.html#TEMPLATES-SECT" role="AEN5471">Секции шаблона </ulink>
   </secondaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Aspell,
-    <ulink url="dpsearch-fuzzy.ru.html#ASPELL" role="AEN6426">Aspell</ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#ASPELL" role="AEN6424">Aspell</ulink>
   </primaryie>
 </indexentry>
 
@@ -1105,7 +1105,7 @@
 
 <indexentry>
   <primaryie>Crosswords,
-    <ulink url="dpsearch-rel.ru.html#REL-CWORDS" role="AEN6225">Crosswords </ulink>
+    <ulink url="dpsearch-rel.ru.html#REL-CWORDS" role="AEN6223">Crosswords </ulink>
   </primaryie>
 </indexentry>
 
@@ -1117,13 +1117,13 @@
 
 <indexentry>
   <primaryie>dpconv,
-    <ulink url="dpsearch-international.ru.html#DPGUESSER" role="AEN4662">Создание собственных карт языков</ulink>
+    <ulink url="dpsearch-international.ru.html#DPGUESSER" role="AEN4660">Создание собственных карт языков</ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>dpguesser,
-    <ulink url="dpsearch-international.ru.html#DPGUESSER" role="AEN4653">Создание собственных карт языков</ulink>
+    <ulink url="dpsearch-international.ru.html#DPGUESSER" role="AEN4651">Создание собственных карт языков</ulink>
   </primaryie>
 </indexentry>
 
@@ -1146,13 +1146,13 @@
 
 <indexentry>
   <primaryie>Ispell,
-    <ulink url="dpsearch-fuzzy.ru.html#ISPELL" role="AEN6342">Ispell </ulink>
+    <ulink url="dpsearch-fuzzy.ru.html#ISPELL" role="AEN6340">Ispell </ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>libdpsearch,
-    <ulink url="dpsearch-lib.ru.html" role="AEN6577">Использование библиотеки libdpsearch </ulink>
+    <ulink url="dpsearch-lib.ru.html" role="AEN6575">Использование библиотеки libdpsearch </ulink>
   </primaryie>
 </indexentry>
 
@@ -1193,7 +1193,7 @@
 
 <indexentry>
   <primaryie>mod_dpsearch,
-    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5398">Модуль mod_dpsearch для Apache httpd    </ulink>
+    <ulink url="dpsearch-mod_dpsearch.ru.html" role="AEN5396">Модуль mod_dpsearch для Apache httpd    </ulink>
   </primaryie>
 </indexentry>
 
@@ -1201,7 +1201,7 @@
   <primaryie>Oracle
   </primaryie>
   <secondaryie>notes,
-    <ulink url="dpsearch-oracle.ru.html" role="AEN4015">Oracle notes </ulink>
+    <ulink url="dpsearch-oracle.ru.html" role="AEN4013">Oracle notes </ulink>
   </secondaryie>
 </indexentry>
 
@@ -1229,13 +1229,13 @@
   <primaryie>SEA
   </primaryie>
   <secondaryie>Алгоритм Построения Рефератов,
-    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6248">Алгоритм Построения Рефератов (SEA)</ulink>
+    <ulink url="dpsearch-rel.ru.html#SEA" role="AEN6246">Алгоритм Построения Рефератов (SEA)</ulink>
   </secondaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>searchd,
-    <ulink url="dpsearch-searchd.ru.html" role="AEN3931">Поддержка SearchD </ulink>
+    <ulink url="dpsearch-searchd.ru.html" role="AEN3929">Поддержка SearchD </ulink>
   </primaryie>
 </indexentry>
 

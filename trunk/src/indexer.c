@@ -615,7 +615,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 		  if (feof(url_file)) break;
 		  if (ferror(url_file)) {
 		    if (errno == EAGAIN) continue;
-		    DpsLog(Indexer, DPS_LOG_ERROR, "Error reading URL file %s: '%s'", (strcmp(fname, "-")) ? "<STDIN>" : fname, strerror(errno));
+		    dps_strerror(Indexer, DPS_LOG_ERROR, "Error reading URL file %s", (strcmp(fname, "-")) ? "<STDIN>" : fname);
 		    if(url_file != stdin) fclose(url_file);
 		    DpsURLFree(myurl);
 #ifdef WITH_PARANOIA

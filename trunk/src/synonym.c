@@ -54,11 +54,11 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
      char            savebyte;
      
      if (stat(filename, &sb)) {
-       fprintf(stderr, "Unable to stat synonyms file '%s': %s", filename, strerror(errno));
+       dps_strerror(NULL, 0, "Unable to stat synonyms file '%s'", filename);
        return DPS_ERROR;
      }
      if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
-       dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to open synonyms file '%s': %s", filename, strerror(errno));
+       dps_strerror(NULL, 0, "Unable to open synonyms file '%s'", filename);
        return DPS_ERROR;
      }
      if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
@@ -67,7 +67,7 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
        return DPS_ERROR;
      }
      if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-       dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to read synonym file '%s': %s", filename, strerror(errno));
+       dps_strerror(NULL, 0, "Unable to read synonym file '%s'", filename);
        DPS_FREE(data);
        DpsClose(fd);
        return DPS_ERROR;

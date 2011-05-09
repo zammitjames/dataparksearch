@@ -1088,13 +1088,13 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	Cfg.level = 0;
 
 	if (stat(tname, &sb)) {
-	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to stat template '%s': %s", tname, strerror(errno));
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Unable to stat template '%s'", tname);
 	  DpsServerFree(&Srv);
 	  return 1;
 	}
 	for (i = 0; (i < 5) && ((fd = DpsOpen2(tname, O_RDONLY)) <= 0); i++); 
 	if (fd <= 0) {
-	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to open template '%s': %s", tname, strerror(errno));
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Unable to open template '%s'", tname);
 	  DpsServerFree(&Srv);
 	  return 1;
 	}
@@ -1105,7 +1105,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	  return 1;
 	}
 	if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-	  dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "Unable to read template '%s': %s", tname, strerror(errno));
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Unable to read template '%s'", tname);
 	  DPS_FREE(data);
 	  DpsClose(fd);
 	  DpsServerFree(&Srv);

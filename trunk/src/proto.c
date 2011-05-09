@@ -140,11 +140,11 @@ int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigne
 	s_err = errno;			/* Save errno */
 	fcntl(s, F_SETFL, flags);
 	if ((res != 0) && (s_err != EINPROGRESS)){
+	  errno = s_err;		/* Restore errno              */
 #ifdef DEBUG
-	  fprintf(stderr, "exit at %s[%d]  errno: %d (%s)\n", __FILE__, __LINE__, s_err, strerror(s_err));
+	  dps_strerror(NULL, 0, "exit at %s[%d]", __FILE__, __LINE__);
 #endif
-		errno = s_err;		/* Restore errno              */
-		return(-1);		/* Unknown error, not timeout */
+	  return(-1);		/* Unknown error, not timeout */
 	}
 	if(!res)return(0);		/* Quickly connected */
 
@@ -192,7 +192,7 @@ static int open_host(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	  if (inet_ntop(AF_INET, &Agent->Flags.bind_addr.sin_addr, abuf, sizeof(abuf)) == NULL) {
 	    dps_snprintf(abuf, sizeof(abuf), "<unknow>");
 	  }
-	  DpsLog(Agent, DPS_LOG_ERROR, "bind() to %s error %d %s", abuf, errno, strerror(errno));
+	  dps_strerror(Agent, DPS_LOG_ERROR, "bind() to %s error", abuf);
 	  dps_closesocket(net);
 	  return DPS_NET_CANT_CONNECT;
 	} 
@@ -1367,14 +1367,21 @@ static int DpsFILEGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 	dps_strcpy(mystatname,openname);
 	
 	if(stat(mystatname,&sb)){
-		switch(errno){
-			case ENOENT: status=404;break; /* Not found */
-			case EACCES: status=403;break; /* Forbidden*/
-			default: status=500;
-		}
-		sprintf(Doc->Buf.buf,"HTTP/1.0 %d %s\r\nX-Reason: %s\r\n\r\n",status,DpsHTTPErrMsg(status),strerror(errno));
-		Doc->Buf.size=dps_strlen(Doc->Buf.buf);
-		return 0;
+	  int err_no = errno;
+#ifdef HAVE_PTHREAD
+	  char err_str[128];
+	  (void)strerror_r(err_no, err_str, sizeof(err_str));
+#else
+	  char *err_str = DPS_NULL2EMPTY(strerror(errno));
+#endif
+	  switch(err_no) {
+	  case ENOENT: status = 404; break; /* Not found */
+	  case EACCES: status = 403; break; /* Forbidden*/
+	  default: status = 500;
+	  }
+	  sprintf(Doc->Buf.buf, "HTTP/1.0 %d %s\r\nX-Reason: %s\r\n\r\n", status, DpsHTTPErrMsg(status), err_str);
+	  Doc->Buf.size = dps_strlen(Doc->Buf.buf);
+	  return 0;
 	}
 
 	/* If directory is given without ending "/"   */

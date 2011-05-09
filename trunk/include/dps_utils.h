@@ -150,7 +150,7 @@ extern char *dps_strtok_r(char *s, const char *delim, char **last, char *save);
 extern double dps_strtod (const char *nptr, char **endptr);
 #define dps_atof(x)         ((x) ? dps_strtod((x), (char **)NULL):0.0)
 
-extern void dps_strerror(DPS_AGENT *Agent, const char *fmt, ...);
+extern void dps_strerror(DPS_AGENT *Agent, int level, const char *fmt, ...);
 
 
 

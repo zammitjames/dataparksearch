@@ -258,7 +258,7 @@ static int client_action(DPS_AGENT *Agent, DPS_LOGD_CL * client){
 #endif
 	if (DpsSend(client->send_fd, "O", 1, 0) != 1) {
 #if defined(WITH_TRACE) && defined(DEBUG_LOGD)
-	  fprintf(Agent->TR, "[%d] client_action: OK failed ?! [%d]  error: %s\n", Agent->handle, __LINE__, strerror(errno));
+	  fprintf(Agent->TR, "[%d] client_action: OK failed ?! [%d]\n", Agent->handle, __LINE__);
 	  fflush(Agent->TR);
 #endif
 	  return DPS_ERROR;
@@ -749,7 +749,7 @@ int main(int argc,char **argv, char **envp) {
 	dps_snprintf(dps_pid_name, PATH_MAX, "%s%s%s", var_dir, DPSSLASHSTR, "cached.pid");
 	pid_fd=open(dps_pid_name, O_CREAT|O_EXCL|O_WRONLY, 0644);
 	if(pid_fd<0){
-		DpsLog(Agent, DPS_LOG_ERROR, "%s Can't create '%s': %s", Logd_time_pid_info(), dps_pid_name, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "%s Can't create '%s'", Logd_time_pid_info(), dps_pid_name);
 		if(errno==EEXIST){
 			DpsLog(Agent, DPS_LOG_ERROR, 
 				       "It seems that another cached is already running!\nRemove '%s' if it is not true.", dps_pid_name);
@@ -861,11 +861,11 @@ int main(int argc,char **argv, char **envp) {
 	server_addr.sin_port	= htons(port);
 	
 	if (bind(ctl_sock, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
-	  DpsLog_noagent(Conf, DPS_LOG_ERROR, "%s bind() port %d error %d %s", Logd_time_pid_info(), port, errno, strerror(errno));
+	  dps_strerror(Agent, DPS_LOG_ERROR, "%s bind() port %d error", Logd_time_pid_info(), port);
 	  goto err1;
 	}
 	if (listen(ctl_sock, DPS_CACHED_MAXCLNTS) < 0) {
-		DpsLog_noagent(Conf, DPS_LOG_ERROR, "%s listen() error %d %s", Logd_time_pid_info(), errno, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "%s listen() error", Logd_time_pid_info());
 		goto err1;
 	}
 
@@ -921,7 +921,7 @@ int main(int argc,char **argv, char **envp) {
 
 #if defined(HAVE_SEMAPHORE_H) || defined(HAVE_SYS_SEM_H)
 		    if ((pid = fork() ) == -1) {
-		      DpsLog(Agent, DPS_LOG_ERROR, "%s fork() error %d %s", Logd_time_pid_info(), errno, strerror(errno));
+		      dps_strerror(Agent, DPS_LOG_ERROR, "%s fork() error", Logd_time_pid_info());
 		      unlink(dps_pid_name);
 		      DpsEnvFree(Conf);
 		      DpsDestroyMutexes();
@@ -1019,19 +1019,19 @@ int main(int argc,char **argv, char **envp) {
 		  p = (unsigned char*) &server_addr.sin_port;
 	
 		  if ((cl.send_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		    DpsLog(Agent, DPS_LOG_ERROR, "CacheD socket() ERR: %d %s", errno, strerror(errno));
+		    dps_strerror(Agent, DPS_LOG_ERROR, "CacheD socket() ERR");
 		    close(cl.recv_fd);
 /*		    close(cl.send_fd);*/
 		    continue;
 		  }
 		  DpsSockOpt(Agent, cl.send_fd);
 		  if (bind(cl.send_fd, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
-		    DpsLog(Agent, DPS_LOG_ERROR, "CacheD ERR bind() error %d %s", errno, strerror(errno));
+		    dps_strerror(Agent, DPS_LOG_ERROR, "CacheD ERR bind() error");
 		    close(cl.recv_fd);
 		    continue;
 		  }
 		  if (listen(cl.send_fd, 1) < 0) {
-		    DpsLog(Agent, DPS_LOG_ERROR, "CacheD ERR listen() error %d %s\n", errno, strerror(errno));
+		    dps_strerror(Agent, DPS_LOG_ERROR, "CacheD ERR listen() error");
 		    close(cl.recv_fd);
 		    close(cl.send_fd);
 		    continue;
@@ -1039,7 +1039,7 @@ int main(int argc,char **argv, char **envp) {
 
 		  addrlen = sizeof(server_addr);
 		  if (getsockname(cl.send_fd, (struct sockaddr *)&server_addr, &addrlen) == -1) {
-		    DpsLog(Agent, DPS_LOG_ERROR, "CacheD ERR getsockname [%d] %s  %s:%d\n", errno, strerror(errno), __FILE__, __LINE__);
+		    dps_strerror(Agent, DPS_LOG_ERROR, "CacheD ERR getsockname at %s:%d", __FILE__, __LINE__);
 		    close(cl.recv_fd);
 		    close(cl.send_fd);
 		    continue;
@@ -1057,8 +1057,7 @@ int main(int argc,char **argv, char **envp) {
 		  
 		  bzero((void*)&his_addr, addrlen = sizeof(his_addr));
 		  if ((cl.send_fd = accept(cl.send_fd, (struct sockaddr *)&his_addr, &addrlen)) <= 0) {
-		    DpsLog(Agent, DPS_LOG_ERROR, 
-			   "CacheD ERR revert accept on port %d error %d %s\n", ntohs(server_addr.sin_port), errno, strerror(errno));
+		    dps_strerror(Agent, DPS_LOG_ERROR, "CacheD ERR revert accept on port %d error", ntohs(server_addr.sin_port));
 		    close(cl.recv_fd);
 		    close(cl.send_fd);
 		    continue;
@@ -1120,7 +1119,7 @@ int main(int argc,char **argv, char **envp) {
 
 #if defined(HAVE_SEMAPHORE_H) || defined(HAVE_SYS_SEM_H)
 		    if ((pid = fork() ) == -1) {
-		      DpsLog(Agent, DPS_LOG_ERROR, "%s fork() error %d %s", Logd_time_pid_info(), errno, strerror(errno));
+		      dps_strerror(Agent, DPS_LOG_ERROR, "%s fork() error", Logd_time_pid_info());
 		      unlink(dps_pid_name);
 		      DpsAgentFree(Agent);
 		      DpsEnvFree(Conf);

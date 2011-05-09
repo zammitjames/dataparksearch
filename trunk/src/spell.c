@@ -464,7 +464,7 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, c
 	DpsConvInit(&fromuni, sys_int, dict_charset, Conf->CharsToEscape, 0);
 	
 	if (stat(filename, &sb)) {
-	  fprintf(stderr, "Unable to stat synonyms file '%s': %s", filename, strerror(errno));
+	  dps_strerror(NULL, 0, "Unable to stat synonyms file '%s'", filename);
 	  DPS_FREE(lstr);
 	  DPS_FREE(ustr);
 #ifdef HAVE_ASPELL
@@ -475,7 +475,7 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, c
 	  return DPS_ERROR;
 	}
 	if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
-	  fprintf(stderr, "Unable to open synonyms file '%s': %s", filename, strerror(errno));
+	  dps_strerror(NULL, 0, "Unable to open synonyms file '%s'", filename);
 	  DPS_FREE(lstr);
 	  DPS_FREE(ustr);
 #ifdef HAVE_ASPELL
@@ -498,7 +498,7 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, c
 	  return DPS_ERROR;
 	}
 	if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-	  fprintf(stderr, "Unable to read synonym file '%s': %s", filename, strerror(errno));
+	  dps_strerror(NULL, 0, "Unable to read synonym file '%s'", filename);
 	  DPS_FREE(data);
 	  DpsClose(fd);
 	  DPS_FREE(lstr);
@@ -858,14 +858,14 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
 #endif
 
   if (stat(filename, &sb)) {
-    fprintf(stderr, "Unable to stat affixes file '%s': %s", filename, strerror(errno));
+    dps_strerror(NULL, 0, "Unable to stat affixes file '%s': %s", filename);
 #ifdef WITH_PARANOIA
     DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
   if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
-    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to open affixes file '%s': %s", filename, strerror(errno));
+    dps_strerror(NULL, 0, "Unable to open affixes file '%s'", filename);
 #ifdef WITH_PARANOIA
     DpsViolationExit(-1, paran);
 #endif
@@ -880,7 +880,7 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
     return 1;
   }
   if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to read affixes file '%s': %s", filename, strerror(errno));
+    dps_strerror(NULL, 0, "Unable to read affixes file '%s'", filename);
     DPS_FREE(data);
     DpsClose(fd);
 #ifdef WITH_PARANOIA
@@ -1080,14 +1080,14 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
 #endif
 
   if (stat(filename, &sb)) {
-    fprintf(stderr, "Unable to stat query regs file '%s': %s", filename, strerror(errno));
+    dps_strerror(NULL, 0, "Unable to stat query regs file '%s'", filename);
 #ifdef WITH_PARANOIA
     DpsViolationExit(-1, paran);
 #endif
     return 1;
   }
   if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
-    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to open query regs file '%s': %s", filename, strerror(errno));
+    dps_strerror(NULL, 0, "Unable to open query regs file '%s'", filename);
 #ifdef WITH_PARANOIA
     DpsViolationExit(-1, paran);
 #endif
@@ -1102,7 +1102,7 @@ __C_LINK int __DPSCALL DpsImportQuffixes(DPS_ENV * Conf,const char *lang, const 
     return 1;
   }
   if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-    dps_snprintf(Conf->errstr, sizeof(Conf->errstr)-1, "Unable to read query regs file '%s': %s", filename, strerror(errno));
+    dps_strerror(NULL, 0, "Unable to read query regs file '%s'", filename);
     DPS_FREE(data);
     DpsClose(fd);
 #ifdef WITH_PARANOIA

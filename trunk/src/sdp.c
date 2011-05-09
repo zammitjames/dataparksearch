@@ -153,7 +153,7 @@ static int open_socket(DPS_AGENT *A, char *unix_socket) {
   saddrlen = sizeof(unix_addr.sun_family) + dps_strlen(unix_addr.sun_path);
 
   if(connect(sockfd, (struct sockaddr *)&unix_addr, sizeof (unix_addr))) {
-    DpsLog(A, DPS_LOG_ERROR, "unix socket '%s' connect() error (%d) %s", unix_path, errno, strerror(errno));
+    dps_strerror(A, DPS_LOG_ERROR, "unix socket '%s' connect() error", unix_path);
     return(DPS_NET_CANT_CONNECT);
   }
 

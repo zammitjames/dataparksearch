@@ -217,7 +217,7 @@ static int CreateOrDrop(DPS_AGENT *A, enum dps_indcmd cmd) {
 
       if (mkdir(vardir, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) != 0) {
 	if (errno != EEXIST) {
-	  DpsLog(A, DPS_LOG_ERROR, "Can't create directory %s (%s)", vardir, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "Can't create directory %s", vardir);
 	  return DPS_ERROR;
 	}
       }
@@ -229,7 +229,7 @@ static int CreateOrDrop(DPS_AGENT *A, enum dps_indcmd cmd) {
 
 	if (mkdir(fname, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) != 0) {
 	  if (errno != EEXIST) {
-	    DpsLog(A, DPS_LOG_ERROR, "Can't create directory %s (%s)", fname, strerror(errno));
+	    dps_strerror(A, DPS_LOG_ERROR, "Can't create directory %s", fname);
 	    return DPS_ERROR;
 	  }
 	}
@@ -1473,7 +1473,7 @@ int main(int argc, char **argv, char **envp) {
        sprintf(pidname, "%s/%s", DPS_VAR_DIR, "indexer.pid");
        pid_fd = DpsOpen3(pidname, O_CREAT|O_EXCL|O_WRONLY, 0644);
        if(pid_fd < 0){
-	 fprintf(stderr,"%s Can't create '%s': %s\n", time_pid_info(), pidname, strerror(errno));
+	 dps_strerror(NULL, 0,"%s Can't create '%s'", time_pid_info(), pidname);
 	 if(errno == EEXIST){
 	   fprintf(stderr, "It seems that another indexer is already running!\n");
 	   fprintf(stderr, "Remove '%s' if it is not true.\n", pidname);
@@ -1552,7 +1552,7 @@ int main(int argc, char **argv, char **envp) {
           /* Make sure URL file is readable if not STDIN */
           FILE *url_file;
           if(!(url_file=fopen(url_filename,"r"))){
-               DpsLog(&Main,DPS_LOG_ERROR,"Error: can't open url file '%s': %s",url_filename, strerror(errno));
+               dps_strerror(&Main, DPS_LOG_ERROR, "Error: can't open url file '%s'", url_filename);
                goto ex;
           }
           fclose(url_file);
@@ -1686,7 +1686,7 @@ int main(int argc, char **argv, char **envp) {
                     sprintf(pidname,"%s/%s", DpsVarListFindStr(&Conf.Vars, "VarDir", DPS_VAR_DIR), "indexer.pid");
                     pid_fd = DpsOpen3(pidname, O_CREAT | O_EXCL | O_WRONLY, 0644);
                     if(pid_fd < 0){
-                         fprintf(stderr,"%s Can't create '%s': %s\n", time_pid_info(), pidname, strerror(errno));
+		         dps_strerror(NULL, 0, "%s Can't create '%s'", time_pid_info(), pidname);
                          if(errno == EEXIST){
                               fprintf(stderr,"It seems that another indexer is already running!\n");
                               fprintf(stderr,"Remove '%s' if it is not true.\n",pidname);

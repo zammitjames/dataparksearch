@@ -96,7 +96,7 @@
 
 
 
-static DPS_MUTEX *MuMu = NULL;
+static volatile DPS_MUTEX *MuMu = NULL;
 
 size_t DpsNsems = DPS_LOCK_MAX;
 
@@ -291,7 +291,7 @@ __C_LINK void __DPSCALL DpsInitMutexes(void) {
 
   dps_snprintf(sem_name, PATH_MAX,"%s%sSEM-V", DPS_VAR_DIR, DPSSLASHSTR);
   if ((fd = open(sem_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
-    fprintf(stderr, "%s open failed: %d: %s", sem_name, errno, strerror(errno));
+    dps_strerror(NULL, 0, "%s open failed", sem_name);
     exit(1);
   }
   close(fd);
@@ -315,7 +315,7 @@ __C_LINK void __DPSCALL DpsInitMutexes(void) {
 #endif
 		   );
   } else {
-    fprintf(stderr, "can't create semaphore %s ([%d] %s)\n", sem_name, errno, strerror(errno));
+    dps_strerror(NULL, 0, "can't create semaphore %s", sem_name);
 /*    unlink(sem_name);*/
     exit(1);
   }

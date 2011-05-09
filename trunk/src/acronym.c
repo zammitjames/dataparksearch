@@ -57,11 +57,11 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      dpsunicode_t    *t;
      
      if (stat(filename, &sb)) {
-       fprintf(stderr, "Unable to stat acronyms file '%s': %s", filename, strerror(errno));
+       dps_strerror(NULL, 0, "Unable to stat acronyms file '%s'", filename);
        return DPS_ERROR;
      }
      if ((fd = DpsOpen2(filename, O_RDONLY)) <= 0) {
-       dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to open acronyms file '%s': %s", filename, strerror(errno));
+       dps_strerror(NULL, 0, "Unable to open acronyms file '%s'", filename);
        return DPS_ERROR;
      }
      if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
@@ -70,7 +70,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
        return DPS_ERROR;
      }
      if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-       dps_snprintf(Env->errstr,sizeof(Env->errstr)-1, "Unable to read acronym file '%s': %s", filename, strerror(errno));
+       dps_strerror(NULL, 0, "Unable to read acronym file '%s'", filename);
        DPS_FREE(data);
        DpsClose(fd);
        return DPS_ERROR;
