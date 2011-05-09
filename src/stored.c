@@ -368,12 +368,12 @@ int main(int argc, char **argv, char **envp) {
 	sprintf(dps_pid_name,"%s/%s", var_dir, "stored.pid");
 	pid_fd = DpsOpen3(dps_pid_name, O_CREAT | O_EXCL | O_WRONLY, 0644);
 	if(pid_fd < 0){
-		fprintf(stderr,"%s Can't create '%s': %s\n", time_pid_info(), dps_pid_name, strerror(errno));
-		if(errno == EEXIST){
-			fprintf(stderr,"It seems that another stored is already running!\n");
-			fprintf(stderr,"Remove '%s' if it is not true.\n",dps_pid_name);
- 		}
-		exit(1);
+	  dps_strerror(NULL, 0, "%s Can't create '%s'", time_pid_info(), dps_pid_name);
+	  if(errno == EEXIST){
+	    fprintf(stderr,"It seems that another stored is already running!\n");
+	    fprintf(stderr,"Remove '%s' if it is not true.\n",dps_pid_name);
+	  }
+	  exit(1);
 	}
 
 	sprintf(pidbuf,"%d\n",(int)getpid());
@@ -419,7 +419,7 @@ int main(int argc, char **argv, char **envp) {
 
 
 	if ((opt_pid = fork() ) == -1) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "%s fork() error %d %s", time_pid_info(), errno, strerror(errno));
+	  dps_strerror(Agent, DPS_LOG_ERROR, "%s fork() error", time_pid_info());
 	  unlink(dps_pid_name);
 	  exit(1);
 	}
@@ -432,7 +432,7 @@ int main(int argc, char **argv, char **envp) {
 
 
 	if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-	  DpsLog(Agent, DPS_LOG_ERROR, "%s socket() error %d",time_pid_info(),errno);
+	  dps_strerror(Agent, DPS_LOG_ERROR, "%s socket() error",time_pid_info());
 	  DpsAgentFree(Agent);
 	  DpsEnvFree(Conf);
 	  unlink(dps_pid_name);
@@ -471,7 +471,7 @@ int main(int argc, char **argv, char **envp) {
 	
 
 	if (bind(s, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
-		DpsLog(Agent, DPS_LOG_ERROR, "%s bind() error %d %s", time_pid_info(), errno, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "%s bind() error", time_pid_info());
 		unlink(dps_pid_name);
 		DpsAgentFree(Agent);
 		DpsEnvFree(Conf);
@@ -479,7 +479,7 @@ int main(int argc, char **argv, char **envp) {
 	}
 
 	if (listen(s, DPS_STORED_MAXCLNTS) == -1) {
-		DpsLog(Agent, DPS_LOG_ERROR, "%s listen() error %d %s", time_pid_info(), errno, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "%s listen() error", time_pid_info());
 		unlink(dps_pid_name);
 		DpsAgentFree(Agent);
 		DpsEnvFree(Conf);
@@ -568,7 +568,7 @@ int main(int argc, char **argv, char **envp) {
 				case EINTR:	/* Child */
 					break;
 			        default:
-					DpsLog(Agent,verb,"FIXME select error %d %s",errno,strerror(errno));
+					dps_strerror(Agent, verb, "FIXME select error");
 			}
 			continue;
 		}
@@ -576,7 +576,7 @@ int main(int argc, char **argv, char **envp) {
 		bzero((void*)&client_addr, addrlen = sizeof(client_addr));
 	
 	  if ((ns = accept(s, (struct sockaddr *) &client_addr, &addrlen)) == -1) {
-	    DpsLog(Agent, DPS_LOG_ERROR, "%s accept() error %d %s", time_pid_info(), errno, strerror(errno));
+	    dps_strerror(Agent, DPS_LOG_ERROR, "%s accept() error", time_pid_info());
 	    unlink(dps_pid_name);
 	    exit(1);
 	  }
@@ -586,7 +586,7 @@ int main(int argc, char **argv, char **envp) {
 	  DpsLog(Agent, verb, "[%s] Accept", Client);
     
 	  if ((pid = fork() ) == -1) {
-	    DpsLog(Agent, DPS_LOG_ERROR, "%s fork() error %d %s", time_pid_info(), errno, strerror(errno));
+	    dps_strerror(Agent, DPS_LOG_ERROR, "%s fork() error", time_pid_info());
 	    unlink(dps_pid_name);
 	    exit(1);
 	  }
@@ -615,25 +615,25 @@ int main(int argc, char **argv, char **envp) {
 	      p = (unsigned char*) &server_addr.sin_port;
 	
 	      if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		DpsLog(Agent, DPS_LOG_ERROR, "StoreD socket() ERR: %d %s", errno, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "StoreD socket() ERR:");
                 close(ns);
                 exit(0);
               }
 	      DpsSockOpt(Agent, sd);
 	      if (bind(sd, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
-		DpsLog(Agent, DPS_LOG_ERROR, "StoreD ERR bind() error %d %s", errno, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "StoreD ERR bind() error");
 		close(ns);
 		exit(0);
 	      }
 	      if (listen(sd, 1) < 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, "StoreD ERR listen() error %d %s\n", errno, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "StoreD ERR listen() error");
 		close(ns);
 		exit(0);
 	      }
 
 	      addrlen = sizeof(server_addr);
 	      if (getsockname(sd, (struct sockaddr *)&server_addr, &addrlen) == -1) {
-		DpsLog(Agent, DPS_LOG_ERROR, "StoreD ERR getsockname [%d] %s  %s:%d\n", errno, strerror(errno), __FILE__, __LINE__);
+		dps_strerror(Agent, DPS_LOG_ERROR, "StoreD ERR getsockname %s:%d\n", __FILE__, __LINE__);
 		close(ns);
 		exit(0);
 	      }
@@ -649,8 +649,7 @@ int main(int argc, char **argv, char **envp) {
 		  
 	      bzero((void*)&his_addr, addrlen = sizeof(his_addr));
 	      if ((sd = accept(sd, (struct sockaddr *)&his_addr, &addrlen)) <= 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, 
-		       "StoreD ERR revert accept on port %d error %d %s\n", ntohs(server_addr.sin_port), errno, strerror(errno));
+		dps_strerror(Agent, DPS_LOG_ERROR, "StoreD ERR revert accept on port %d", ntohs(server_addr.sin_port));
 		close(ns);
 		exit(0);
 	      }
@@ -722,7 +721,7 @@ int main(int argc, char **argv, char **envp) {
 		    close(ns);
 		    exit(0);
 		  default:
-		    DpsLog(Agent, DPS_LOG_ERROR, "%s <hello> error %d %s", time_pid_info(), errno,buf /*strerror(errno)*/);
+		    DpsLog(Agent, DPS_LOG_ERROR, "%s <hello> error %d %s", time_pid_info(), errno, buf);
 		    continue;
 		  }
 

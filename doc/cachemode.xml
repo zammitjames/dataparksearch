@@ -17,8 +17,7 @@ however is kept in <application>SQL</application> database (tables <literal>url<
 Word index is divided into number of files specified by <command>WrdFiles</command> command (default value is 0x300).
 <indexterm><primary>Command</primary><secondary>URLDataFiles</secondary></indexterm>
 URLs sorting information is divided into number of files specified by <command>URLDataFiles</command> command (default value is 0x300).
-<note><para>Beware: you should have identical values for <command>WrdFiles</command> and <command>URLDataFiles</command> commands
-in all your configs.</para>
+<note><para>Beware: you should have identical values for WrdFiles and URLDataFiles commands in all your configs.</para>
 </note>
 </para>
 

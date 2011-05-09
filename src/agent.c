@@ -67,11 +67,11 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
   for (i = 0; i < Env->dbl.nitems; i++) {
     if (Env->dbl.db[i].stored_addr.sin_port != 0 && Indexer->Demons.Demon[i].stored_sd == 0) {
       if((Indexer->Demons.Demon[i].stored_sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR socket_sd: %s", strerror(errno));
+	dps_strerror(Indexer, DPS_LOG_ERROR, "StoreD ERR socket_sd");
 	return DPS_ERROR;
       }
       if((Indexer->Demons.Demon[i].stored_rv = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR socket_rv: %s", strerror(errno));
+	dps_strerror(Indexer, DPS_LOG_ERROR, "StoreD ERR socket_rv");
 	return DPS_ERROR;
       }
 
@@ -80,15 +80,15 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
 
       if(connect(Indexer->Demons.Demon[i].stored_sd, (struct sockaddr *)&Env->dbl.db[i].stored_addr, 
 		 sizeof(Env->dbl.db[i].stored_addr)) == -1) {
-	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR connect to %s: %s", 
-	       inet_ntoa(Env->dbl.db[i].stored_addr.sin_addr), strerror(errno));
+	dps_strerror(Indexer, DPS_LOG_ERROR, "StoreD ERR connect");
+	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR connect to %s", inet_ntoa(Env->dbl.db[i].stored_addr.sin_addr));
 	return DPS_ERROR;
       }
 
       /* revert connection */
 
       if (sizeof(port_str) != DpsRecvall(Indexer->Demons.Demon[i].stored_sd, port_str, sizeof(port_str), 360)) {
-	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR receiving port data: %s", strerror(errno));
+	dps_strerror(Indexer, DPS_LOG_ERROR, "StoreD ERR receiving port data");
 	return DPS_ERROR;
       }
       dps_addr = Env->dbl.db[i].stored_addr;
@@ -101,8 +101,8 @@ __C_LINK int DpsAgentStoredConnect(DPS_AGENT *Indexer) {
 	     inet_ntoa(Env->dbl.db[i].stored_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));
 
       if(connect(Indexer->Demons.Demon[i].stored_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
-	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR revert connect to %s:%d - %s", 
-	       inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));
+	dps_strerror(Indexer, DPS_LOG_ERROR, "StoreD ERR revert connect");
+	DpsLog(Indexer, DPS_LOG_ERROR, "StoreD ERR revert connect to %s:%d", inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port));
 	return DPS_ERROR;
       }
 
@@ -196,12 +196,12 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 
 	    if (DBL->db[i].stored_addr.sin_port != 0) {
 	      if((result->Demons.Demon[i].stored_sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		fprintf(stderr, "StoreD ERR socket: %s\n", strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "StoreD ERR socket");
 		DpsAgentFree(result);
 		return NULL;
 	      }
 	      if((result->Demons.Demon[i].stored_rv = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		fprintf(stderr, "StoreD ERR socket_rv: %s\n", strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "StoreD ERR socket_rv");
 		DpsAgentFree(result);
 		return NULL;
 	      }
@@ -211,14 +211,15 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 
 	      if(connect(result->Demons.Demon[i].stored_sd, (struct sockaddr *)&DBL->db[i].stored_addr, 
 			 sizeof(DBL->db[i].stored_addr)) == -1) {
-		fprintf(stderr, "StoreD ERR connect to %s: %s\n", inet_ntoa(DBL->db[i].stored_addr.sin_addr), strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "StoreD ERR connect");
+		fprintf(stderr, "StoreD ERR connect to %s\n", inet_ntoa(DBL->db[i].stored_addr.sin_addr));
 		DpsAgentFree(result);
 		return NULL;
 	      }
 	      /* revert connection */
 
 	      if (sizeof(port_str) != DpsRecvall(result->Demons.Demon[i].stored_sd, port_str, sizeof(port_str), 360)) {
-		fprintf(stderr, "StoreD ERR receiving port data: %s", strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "StoreD ERR receiving port data");
 		DpsAgentFree(result);
 		return NULL;
 	      }
@@ -232,8 +233,7 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 		      inet_ntoa(Env->dbl.db[i].stored_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));*/
 
 	      if(connect(result->Demons.Demon[i].stored_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
-		fprintf(stderr, "StoreD ERR revert connect to %s:%d - %s", 
-			inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "StoreD ERR revert connect to %s:%d", inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port));
 		DpsAgentFree(result);
 		return NULL;
 	      }
@@ -245,13 +245,13 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 	    if (DBL->db[i].cached_addr.sin_port != 0) {
 	      
 	      if((result->Demons.Demon[i].cached_sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		fprintf(stderr, "CacheD ERR socket_sd: %s\n", strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "CacheD ERR socket_sd");
 		DpsAgentFree(result);
 		return NULL;
 	      }
   
 	      if((result->Demons.Demon[i].cached_rv = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		fprintf(stderr, "CacheD ERR socket_rv: %s\n", strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "CacheD ERR socket_rv");
 		DpsAgentFree(result);
 		return NULL;
 	      }
@@ -266,7 +266,7 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 		}
 	      }
 	      if (z == 5) {
-		fprintf(stderr, "CacheD ERR connect to %s: %s\n", inet_ntoa(DBL->db[i].cached_addr.sin_addr), strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "CacheD ERR connect to %s", inet_ntoa(DBL->db[i].cached_addr.sin_addr));
 		DpsAgentFree(result);
 		return NULL;
 	      }
@@ -276,7 +276,7 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 
 
 	      if (sizeof(port_str) != DpsRecvall(result->Demons.Demon[i].cached_sd, port_str, sizeof(port_str), 360)) {
-		fprintf(stderr, "CacheD ERR receiving port data: %s", strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "CacheD ERR receiving port data");
 		DpsAgentFree(result);
 		return NULL;
 	      }
@@ -290,8 +290,7 @@ __C_LINK DPS_AGENT * __DPSCALL DpsAgentInit(DPS_AGENT *result, DPS_ENV * Env, in
 		      inet_ntoa(Env->dbl.db[i].cached_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));*/
 
 	      if(connect(result->Demons.Demon[i].cached_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
-		fprintf(stderr, "CacheD ERR revert connect to %s:%d - %s", 
-			inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));
+		dps_strerror(NULL, DPS_LOG_ERROR, "CacheD ERR revert connect to %s:%d", inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port));
 		DpsAgentFree(result);
 		return NULL;
 	      }

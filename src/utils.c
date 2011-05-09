@@ -1591,7 +1591,7 @@ __C_LINK int __DPSCALL dps_snprintf(char *buf, size_t len, const char *fmt, ...)
        return ret;
 }
 
-void dps_strerror(DPS_AGENT *Agent, const char *fmt, ...) {
+void dps_strerror(DPS_AGENT *Agent, int level, const char *fmt, ...) {
   char buf[1024];
 #ifndef HAVE_VSNPRINTF
   char *tmpbuf;
@@ -1628,7 +1628,7 @@ void dps_strerror(DPS_AGENT *Agent, const char *fmt, ...) {
        va_end(ap);
        
        if (Agent) {
-	 DpsLog(Agent, DPS_LOG_ERROR, "%s - (%d) %s", buf, err_no, err_str);
+	 DpsLog(Agent, level, "%s - (%d) %s", buf, err_no, err_str);
        } else {
 	 fprintf(stderr, "%s - (%d) %s", buf, err_no, err_str);
        }

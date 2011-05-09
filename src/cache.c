@@ -219,7 +219,7 @@ static int DpsCmp_urlid_t(const urlid_t *s1, const urlid_t *s2) {
 */
 
 
-static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, int shared);
+static int DpsLogdInit(DPS_AGENT *Agent, DPS_DB *db, const char* var_dir, size_t i, int shared);
 
 int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 	DPS_DB		*db;
@@ -251,12 +251,12 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 	      unsigned int ip[2];
       
 	      if((A->Demons.Demon[i].cached_sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		DpsLog(A, DPS_LOG_ERROR, "CacheD ERR socket_sd: %s", strerror(errno));
+		dps_strerror(A, DPS_LOG_ERROR, "CacheD ERR socket_sd");
 		return DPS_ERROR;
 	      }
   
 	      if((A->Demons.Demon[i].cached_rv = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		DpsLog(A, DPS_LOG_ERROR, "CacheD ERR socket_rv: %s", strerror(errno));
+		dps_strerror(A, DPS_LOG_ERROR, "CacheD ERR socket_rv");
 		return DPS_ERROR;
 	      }
 
@@ -264,14 +264,14 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 	      DpsSockOpt(A, A->Demons.Demon[i].cached_rv);
   
 	      if(connect(A->Demons.Demon[i].cached_sd, (struct sockaddr *)&db->cached_addr, sizeof(db->cached_addr)) == -1) {
-		DpsLog(A, DPS_LOG_ERROR, "CacheD ERR connect to %s: %s", inet_ntoa(db->cached_addr.sin_addr), strerror(errno));
+		dps_strerror(A, DPS_LOG_ERROR, "CacheD ERR connect to %s", inet_ntoa(db->cached_addr.sin_addr));
 		return DPS_ERROR;
 	      }
 
 	      /* revert connection */
 
 	      if (sizeof(port_str) != DpsRecvall(A->Demons.Demon[i].cached_sd, port_str, sizeof(port_str), 360)) {
-		DpsLog(A, DPS_LOG_ERROR, "CacheD ERR receiving port data: %s", strerror(errno));
+		dps_strerror(A, DPS_LOG_ERROR, "CacheD ERR receiving port data");
 		return DPS_ERROR;
 	      }
 	      dps_addr = db->cached_addr;
@@ -283,8 +283,7 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 	      DpsLog(A, DPS_LOG_DEBUG, "[%s] PORT: %s, decimal:%d", inet_ntoa(db->cached_addr.sin_addr), port_str, ntohs(dps_addr.sin_port));
 
 	      if(connect(A->Demons.Demon[i].cached_rv, (struct sockaddr *)&dps_addr, sizeof(dps_addr)) == -1) {
-		DpsLog(A, DPS_LOG_ERROR, "Cached ERR revert connect to %s:%d - %s", 
-			inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port), strerror(errno));
+		dps_strerror(A, DPS_LOG_ERROR, "Cached ERR revert connect to %s:%d", inet_ntoa(dps_addr.sin_addr), ntohs(dps_addr.sin_port));
 		return DPS_ERROR;
 	      }
 
@@ -293,8 +292,8 @@ int DpsOpenCache(DPS_AGENT *A, int shared, int light) {
 
 	    } else {
 	      if (!light) {
-		if(DPS_OK != DpsLogdInit(A->Conf, db, (db->vardir) ? db->vardir : vardir, i, shared)) {
-		  DpsLog(A, DPS_LOG_ERROR, "OpenCache error: %s", db->errstr);
+		if(DPS_OK != DpsLogdInit(A, db, (db->vardir) ? db->vardir : vardir, i, shared)) {
+		  DpsLog(A, DPS_LOG_ERROR, "OpenCache error");
 		  return DPS_ERROR;
 		}
 	      }
@@ -353,42 +352,13 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 
 	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X-split.log", db->log_dir, log_num);
 	if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
-	  char time_pid[128];
-	  time_t t = time(NULL);
-#ifdef HAVE_PTHREAD
-	  struct tm l_tim;
-	  struct tm *tim = localtime_r(&t, &l_tim);
-#else
-	  struct tm *tim = localtime(&t);
-#endif
-	
-	  strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
-	  t = dps_strlen(time_pid);
-	  dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
-	  
-	  sprintf(db->errstr, "Can't open '%s' for writing: %s\n", del_log_name, strerror(errno));
-	  DpsLog(A, DPS_LOG_ERROR, "%s %s", time_pid, db->errstr);
+	  dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s' for writing", del_log_name);
 	  return;
 	}
 
 	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X.log", db->log_dir, log_num);
 	if((log_fd = DpsOpen3(del_log_name, O_RDWR | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-	  char time_pid[128];
-	  time_t t = time(NULL);
-#ifdef HAVE_PTHREAD
-	  struct tm l_tim;
-	  struct tm *tim = localtime_r(&t, &l_tim);
-#else
-	  struct tm *tim = localtime(&t);
-#endif
-	
-	  strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
-	  t = dps_strlen(time_pid);
-	  dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
-	  
-	  sprintf(db->errstr, "Can't open '%s' for writing: %s\n", del_log_name, strerror(errno));
-	  DpsLog(A, DPS_LOG_ERROR, "%s %s", time_pid, db->errstr);
-	  DpsClose(split_fd);
+	  dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s' for writing", del_log_name);
 	  return;
 	}
 
@@ -409,21 +379,7 @@ void DpsRotateDelLog(DPS_AGENT *A) {
     dps_snprintf(del_log_name, sizeof(del_log_name), "%s%s", db->log_dir, "del-split.log");
 
     if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
-      char time_pid[128];
-      time_t t = time(NULL);
-#ifdef HAVE_PTHREAD
-      struct tm l_tim;
-      struct tm *tim = localtime_r(&t, &l_tim);
-#else
-      struct tm *tim = localtime(&t);
-#endif
-	
-      strftime(time_pid, sizeof(time_pid), "%a %d %H:%M:%S", tim);
-      t = dps_strlen(time_pid);
-      dps_snprintf(time_pid + t, sizeof(time_pid) - t, " [%d]", (int)getpid());
-      
-      sprintf(db->errstr, "Can't open '%s' for writing: %s\n", del_log_name, strerror(errno));
-      DpsLog(A, DPS_LOG_ERROR, "%s %s", time_pid, db->errstr);
+      dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s' for writing", del_log_name);
       return;
     }
 
@@ -501,15 +457,15 @@ int DpsDeleteURLFromCache(DPS_AGENT * Indexer, urlid_t url_id, DPS_DB *db){
 
 		sent = DpsSend(cached_sd, &cmd, sizeof(cmd), 0);
 		if(sent!=sizeof(cmd)){
-			DpsLog(Indexer, DPS_LOG_ERROR, "%s [%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
-			TRACE_OUT(Indexer);
-			return DPS_ERROR;
+		  dps_strerror(Indexer, DPS_LOG_ERROR, "%s [%d] Can't write to cached", __FILE__, __LINE__);
+		  TRACE_OUT(Indexer);
+		  return DPS_ERROR;
 		}
 		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
-			DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%d] %d, %s", __LINE__, recvt, strerror(errno));
-			TRACE_OUT(Indexer);
-			return DPS_ERROR;
+		    dps_strerror(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%d] %d", __LINE__, recvt);
+		    TRACE_OUT(Indexer);
+		    return DPS_ERROR;
 		  }
 		  DPSSLEEP(0);
 		}
@@ -635,10 +591,10 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 		sent = DpsSend(cached_sd, &cmd, sizeof(cmd), 0);
 		if(sent!=sizeof(cmd)){
-			DpsLog(Indexer, DPS_LOG_ERROR, "%s [%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
-			DPS_FREE(wrd); DPS_FREE(lcsword);
-			TRACE_OUT(Indexer);
-			return DPS_ERROR;
+		  dps_strerror(Indexer, DPS_LOG_ERROR, "%s [%d] Can't write to cached", __FILE__, __LINE__);
+		  DPS_FREE(wrd); DPS_FREE(lcsword);
+		  TRACE_OUT(Indexer);
+		  return DPS_ERROR;
 		}
 #if defined(WITH_TRACE) && defined(DEBUG_SEARCH)
 	  fprintf(Indexer->TR, "[%d] DpsStoreWordsCache: receiving reply for cmd\n", Indexer->handle);
@@ -646,7 +602,7 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, WAIT_TIME)) != 1) {
 	    if (recvt <= 0) {
-	      DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%d] %d, %s", __LINE__, recvt, strerror(errno));
+	      dps_strerror(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%d] %d", __LINE__, recvt);
 	      DPS_FREE(wrd); DPS_FREE(lcsword);
 	      TRACE_OUT(Indexer);
 	      return DPS_ERROR;
@@ -666,11 +622,11 @@ int DpsStoreWordsCache(DPS_AGENT * Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 		  sent = DpsSend(cached_sd, wrd, cmd.nwords * sizeof(DPS_LOGD_WRD), 0);
 		  if(sent != cmd.nwords * sizeof(DPS_LOGD_WRD)){
-			DpsLog(Indexer, DPS_LOG_ERROR, "[%s:%d] Can't write (%d of %d) to cached: %s", 
-			       __FILE__, __LINE__, sent, cmd.nwords * sizeof(DPS_LOGD_WRD), strerror(errno));
-			DPS_FREE(wrd); DPS_FREE(lcsword);
-			TRACE_OUT(Indexer);
-			return DPS_ERROR;
+		    dps_strerror(Indexer, DPS_LOG_ERROR, "[%s:%d] Can't write (%d of %d) to cached", 
+			   __FILE__, __LINE__, sent, cmd.nwords * sizeof(DPS_LOGD_WRD));
+		    DPS_FREE(wrd); DPS_FREE(lcsword);
+		    TRACE_OUT(Indexer);
+		    return DPS_ERROR;
 		  }
 #if defined(WITH_TRACE) && defined(DEBUG_SEARCH)
 	  fprintf(Indexer->TR, "[%d] DpsStoreWordsCache: receiving reply for wrd\n", Indexer->handle);
@@ -1269,8 +1225,8 @@ urlid_t* LoadNestedLimit(DPS_AGENT *Agent, DPS_DB *db, size_t lnum, size_t *size
 
 	dps_snprintf(fname, sizeof(fname), "%s%c%s%c%s.ind", vardir, DPSSLASH, DPS_TREEDIR, DPSSLASH, name);
 	if((ind_fd = DpsOpen2(fname, O_RDONLY | DPS_BINARY)) < 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't open '%s': %s", fname, strerror(errno));
-		goto err1;
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Can't open '%s'", fname);
+	  goto err1;
 	}
 	fstat(ind_fd, &sb);
 	if ((ind = (DPS_UINT8_POS_LEN*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
@@ -1280,9 +1236,9 @@ urlid_t* LoadNestedLimit(DPS_AGENT *Agent, DPS_DB *db, size_t lnum, size_t *size
 	}
 	if (sb.st_size != 0) {
 	  if(sb.st_size!=read(ind_fd,ind,(size_t)sb.st_size)){
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't read '%s': %s", fname, strerror(errno));
-		DpsClose(ind_fd);
-		goto err1;
+	    dps_strerror(Agent, DPS_LOG_ERROR, "Can't read '%s'", fname);
+	    DpsClose(ind_fd);
+	    goto err1;
 	  }
 	}
 	DpsClose(ind_fd);
@@ -1328,13 +1284,13 @@ urlid_t* LoadNestedLimit(DPS_AGENT *Agent, DPS_DB *db, size_t lnum, size_t *size
 	if (start != (size_t)-1) {
 	  dps_snprintf(fname, sizeof(fname), "%s%c%s%c%s.dat", vardir, DPSSLASH, DPS_TREEDIR, DPSSLASH, name);
 	  if((dat_fd = DpsOpen2(fname, O_RDONLY | DPS_BINARY)) < 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't open '%s': %s", fname, strerror(errno));
-		goto err1;
+	    dps_strerror(Agent, DPS_LOG_ERROR, "Can't open '%s'", fname);
+	    goto err1;
 	  }
 	  if(ind[start].pos != (dps_uint8)lseek(dat_fd, (off_t)ind[start].pos, SEEK_SET)){
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't seek '%s': %s", fname, strerror(errno));
-		DpsClose(dat_fd);
-		goto err1;
+	    dps_strerror(Agent, DPS_LOG_ERROR, "Can't seek '%s'", fname);
+	    DpsClose(dat_fd);
+	    goto err1;
 	  }
 	  len = (size_t)(ind[stop].pos + ind[stop].len - ind[start].pos);
 	  DpsLog(Agent, DPS_LOG_DEBUG, "len: %d", len);
@@ -1345,9 +1301,9 @@ urlid_t* LoadNestedLimit(DPS_AGENT *Agent, DPS_DB *db, size_t lnum, size_t *size
 		goto err1;
 	  }
 	  if(len != (size_t)read(dat_fd,data,len)){
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't read '%s': %s", fname, strerror(errno));
-		DpsClose(dat_fd);
-		goto err1;
+	    dps_strerror(Agent, DPS_LOG_ERROR, "Can't read '%s'", fname);
+	    DpsClose(dat_fd);
+	    goto err1;
 	  }
 	  if ((stop > start) && ((len / sizeof(*data)) > 1)) DpsSort(data, len / sizeof(*data), sizeof(urlid_t), (qsort_cmp)cmp_urlid_t);
 	} else {
@@ -1394,8 +1350,8 @@ urlid_t* LoadLinearLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uin
 
 	dps_snprintf(fname, sizeof(fname), "%s%c%s%c%s.ind", vardir, DPSSLASH, DPS_TREEDIR, DPSSLASH, name);
 	if((ind_fd = DpsOpen2(fname, O_RDONLY | DPS_BINARY)) < 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't open '%s': %s", fname, strerror(errno));
-		goto err1;
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Can't open '%s'", fname);
+	  goto err1;
 	}
 	fstat(ind_fd, &sb);
 	if ((ind = (DPS_UINT4_POS_LEN*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
@@ -1405,9 +1361,9 @@ urlid_t* LoadLinearLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uin
 	}
 	if (sb.st_size != 0) {
 	  if(sb.st_size!=read(ind_fd,ind,(size_t)sb.st_size)){
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't read '%s': %s", fname, strerror(errno));
-		DpsClose(ind_fd);
-		goto err1;
+	    dps_strerror(Agent, DPS_LOG_ERROR, "Can't read '%s'", fname);
+	    DpsClose(ind_fd);
+	    goto err1;
 	  }
 	}
 	DpsClose(ind_fd);
@@ -1428,13 +1384,13 @@ urlid_t* LoadLinearLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uin
 	}
 	dps_snprintf(fname, sizeof(fname), "%s%c%s%c%s.dat", vardir, DPSSLASH, DPS_TREEDIR, DPSSLASH, name);
 	if((dat_fd = DpsOpen2(fname, O_RDONLY | DPS_BINARY)) < 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't open '%s': %s", fname, strerror(errno));
-		goto err1;
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Can't open '%s'", fname);
+	  goto err1;
 	}
 	if(found->pos != (dps_uint8)lseek(dat_fd, (off_t)found->pos, SEEK_SET)) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't seek '%s': %s", fname, strerror(errno));
-		DpsClose(dat_fd);
-		goto err1;
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Can't seek '%s'", fname);
+	  DpsClose(dat_fd);
+	  goto err1;
 	}
 	if ((found->len == 0) || (data = (urlid_t*)DpsMalloc(found->len)) == NULL) {
 	  DpsLog(Agent, DPS_LOG_ERROR, "Can't alloc %d bytes at %s:%d", found->len, __FILE__, __LINE__);
@@ -1442,9 +1398,9 @@ urlid_t* LoadLinearLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uin
 	  goto err1;
 	}
 	if(found->len != (size_t)read(dat_fd,data,found->len)){
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't read '%s': %s", fname, strerror(errno));
-		DpsClose(dat_fd);
-		goto err1;
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Can't read '%s'", fname);
+	  DpsClose(dat_fd);
+	  goto err1;
 	}
 	DpsClose(dat_fd);
 
@@ -1521,8 +1477,8 @@ urlid_t* LoadTimeLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uint4
 
 	dps_snprintf(fname, sizeof(fname), "%s%c%s%c%s.ind", vardir, DPSSLASH, DPS_TREEDIR, DPSSLASH, name);
 	if((ind_fd = DpsOpen2(fname, O_RDONLY | DPS_BINARY)) < 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't open '%s': %s", fname, strerror(errno));
-		goto err1;
+	  dps_strerror(Agent, DPS_LOG_ERROR, "Can't open '%s'", fname);
+	  goto err1;
 	}
 	fstat(ind_fd, &sb);
 	if ((ind = (DPS_UINT4_POS_LEN*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
@@ -1532,9 +1488,9 @@ urlid_t* LoadTimeLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uint4
 	}
 	if (sb.st_size != 0) {
 	  if(sb.st_size!=read(ind_fd,ind,(size_t)sb.st_size)){
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't read '%s': %s", fname, strerror(errno));
-		DpsClose(ind_fd);
-		goto err1;
+	    dps_strerror(Agent, DPS_LOG_ERROR, "Can't read '%s'", fname);
+	    DpsClose(ind_fd);
+	    goto err1;
 	  }
 	}
 	DpsClose(ind_fd);
@@ -1583,13 +1539,13 @@ urlid_t* LoadTimeLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uint4
 
 	dps_snprintf(fname, sizeof(fname), "%s%c%s%c%s.dat", vardir, DPSSLASH, DPS_TREEDIR, DPSSLASH, name);
 	if((dat_fd = DpsOpen2(fname, O_RDONLY | DPS_BINARY)) < 0) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't open '%s': %s", fname, strerror(errno));
-		goto err1;
+	  dps_strerror(Agent, DPS_ERROR, "Can't open '%s'", fname);
+	  goto err1;
 	}
 	if(found1->pos != (dps_uint8)lseek(dat_fd, (off_t)found1->pos, SEEK_SET)) {
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't seek '%s': %s", fname, strerror(errno));
-		DpsClose(dat_fd);
-		goto err1;
+	  dps_strerror(Agent, DPS_ERROR, "Can't seek '%s'", fname);
+	  DpsClose(dat_fd);
+	  goto err1;
 	}
 	len = (size_t)(found2->pos + found2->len - found1->pos);
 	if (len == 0) {
@@ -1607,9 +1563,9 @@ urlid_t* LoadTimeLimit(DPS_AGENT *Agent, DPS_DB *db, const char *name, dps_uint4
 		goto err1;
 	  }
 	  if(len != (size_t)read(dat_fd,data,len)){
-		DpsLog(Agent, DPS_LOG_ERROR, "Can't read '%s': %s", fname, strerror(errno));
-		DpsClose(dat_fd);
-		goto err1;
+	    dps_strerror(Agent, DPS_LOG_ERROR, "Can't read '%s'", fname);
+	    DpsClose(dat_fd);
+	    goto err1;
 	  }
 	  *size = len / sizeof(*data);
 	}
@@ -1909,7 +1865,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	/* Open del log file */
 	dps_snprintf(dname, sizeof(dname), "%s%c%s%cdel.log", vardir, DPSSLASH, DPS_SPLDIR, DPSSLASH);
 	if((dd = DpsOpen2(dname, O_RDONLY | DPS_BINARY)) < 0) {
-	  DpsLog(Indexer, DPS_LOG_EXTRA, "Can't open del log '%s': %s", dname, strerror(errno));
+	  dps_strerror(Indexer, DPS_LOG_ERROR, "Can't open del log '%s'", dname);
  	} else {
 
 	  /* Allocate del buffer */
@@ -2425,7 +2381,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
 	  nbytes = logd->wrd_buf[log_num].nrec * sizeof(DPS_LOGWORD);
 	  DpsWriteLock(fd);
 	  if(nbytes != (size_t)write(fd, logd->wrd_buf[log_num].data,nbytes)){
-	    DpsLog(Indexer, DPS_LOG_ERROR, "Can't write %d nbytes to '%s': %s\n", nbytes, fname, strerror(errno));
+	    dps_strerror(Indexer, DPS_LOG_ERROR, "Can't write %d nbytes to '%s'", nbytes, fname);
 	    DpsUnLock(fd);
 	    DpsClose(fd);
 	    DpsBaseClose(&P);
@@ -2439,7 +2395,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
 /*	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
 	  logd->wrd_buf[log_num].nrec = 0;
 	}else{
-	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't open '%s': %s\n", fname, strerror(errno));
+	  dps_strerror(Indexer, DPS_LOG_ERROR, "Can't open '%s'", fname);
 	  DpsBaseClose(&P);
 /*	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
 /*	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CACHED);*/
@@ -2451,7 +2407,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
       if (logd->wrd_buf[log_num].ndel) 
 	if((ssize_t)(logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL)) != 
 	   write(db->del_fd, logd->wrd_buf[log_num].del_buf, logd->wrd_buf[log_num].ndel * sizeof(DPS_LOGDEL))) {
-	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't write to del.log: %s\n", strerror(errno));
+	  dps_strerror(Indexer, DPS_LOG_ERROR, "Can't write to del.log");
 	  db->errcode = 1;
 	  DpsUnLock(db->del_fd);
 	  DpsBaseClose(&P);
@@ -2579,8 +2535,9 @@ static int DpsLogdCloseLogs(DPS_AGENT *Agent) {
   return res;
 }
 
-static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, int shared) {
+static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, int shared) {
         char shm_name[PATH_MAX];
+	DPS_ENV *Env = A->Conf;
 	int fd;
 	size_t NWrdFiles = (db->WrdFiles) ? db->WrdFiles : (size_t)DpsVarListFindInt(&Env->Vars, "WrdFiles", 0x300);
 	size_t CacheLogWords = (size_t)DpsVarListFindInt(&Env->Vars, "CacheLogWords", 1024);
@@ -2599,33 +2556,33 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 
 	    dps_snprintf(shm_name, PATH_MAX, "%s%sLOGD.%d", var_dir, DPSSLASHSTR, i);
 	    if ((fd = DpsOpen3(shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
-		sprintf(Env->errstr, "%s open failed: %d: %s", shm_name, errno, strerror(errno));
-		return DPS_ERROR;
+	      dps_strerror(A, DPS_LOG_ERROR, "%s open failed", shm_name);
+	      return DPS_ERROR;
 	    }
 	    DpsClose(fd);
 #ifdef HAVE_SHAREDMEM_POSIX
 	    if ((fd = shm_open(shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
 	      dps_snprintf(shm_name, PATH_MAX, "%sLOGD.%d", DPSSLASHSTR, i);
 	      if ((fd = shm_open(shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
-		sprintf(Env->errstr, "shm_open (%s): %d: %s", shm_name, errno, strerror(errno));
+		dps_strerror(A, DPS_LOG_ERROR, "shm_open (%s)", shm_name);
 		return DPS_ERROR;
 	      }
 	    }
 /*	    fprintf(stderr, "Open LOGD shared: %s\n", shm_name);*/
 	    if ((db->LOGD.wrd_buf = (dps_wrd_buf*)
 		 mmap( NULL, WrdBufSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, (off_t)0)) == NULL) {
-	      sprintf(Env->errstr, "mmap: %d: %s", errno, strerror(errno));
+	      dps_strerror(A, DPS_LOG_ERROR, "mmap: %s:%d", __FILE__, __LINE__);
 	      return DPS_ERROR;
 	    }
 	    (void)ftruncate(fd, (off_t) WrdBufSize);
 	    DpsClose(fd);
 #elif defined(HAVE_SHAREDMEM_SYSV)
 	    if ((fd = shmget(ftok(shm_name, 0), WrdBufSize, IPC_CREAT | SHM_R | SHM_W | (SHM_R>>3) | (SHM_R>>6) )) < 0) {
-	      sprintf(Env->errstr, "shmget (%s): %d: %s", shm_name, errno, strerror(errno));
+	      dps_strerror(A, DPS_LOG_ERROR, "shmget (%s): %s:%s", shm_name, __FILE__, __LINE__);
 	      return DPS_ERROR;
 	    }
 	    if ((db->LOGD.wrd_buf = (dps_wrd_buf*)shmat( fd, NULL, 0)) == (void*)-1) {
-	      sprintf(Env->errstr, "shmat: %d: %s", errno, strerror(errno));
+	      dps_strerror(A, DPS_LOG_ERROR, "shmat: %s:%d", __FILE__, __LINE__);
 	      return DPS_ERROR;
 	    }
 #else
@@ -2635,8 +2592,8 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 
 	} else {
 	  if ((db->LOGD.wrd_buf = (dps_wrd_buf*)DpsXmalloc(WrdBufSize + 1)) == NULL) {
-		dps_strcpy(Env->errstr, "Out of memory");
-		return DPS_ERROR;
+	    DpsLog(A, DPS_LOG_ERROR, "Out of memory, %d at %s:%d", (int)WrdBufSize, __FILE__, __LINE__);
+	    return DPS_ERROR;
 	  }
 	}
 
@@ -2654,17 +2611,15 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 
 	    dps_snprintf(log_name, sizeof(log_name), "%s%s", db->log_dir, "del.log");
 	    if((db->del_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-		sprintf(db->errstr, "Can't open '%s': %s\n", log_name, strerror(errno));
-		db->errcode = 1;
-		return DPS_ERROR;
+	      dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
+	      return DPS_ERROR;
 	    }
 	    lseek(db->del_fd, (off_t)0, SEEK_END);
 
 	    if (Env->Flags.limits & DPS_LIMIT_CAT) {
 	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_CAT);
 	      if((db->cat_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-		sprintf(db->errstr, "Can't open '%s': %s\n", log_name,strerror(errno));
-		db->errcode = 1;
+		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
 	      }
 	      lseek(db->cat_fd, (off_t)0, SEEK_END);
@@ -2672,8 +2627,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	    if (Env->Flags.limits & DPS_LIMIT_TAG) {
 	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_TAG);
 	      if((db->tag_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-		sprintf(db->errstr, "Can't open '%s': %s\n", log_name,strerror(errno));
-		db->errcode = 1;
+		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
 	      }
 	      lseek(db->tag_fd, (off_t)0, SEEK_END);
@@ -2681,8 +2635,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	    if (Env->Flags.limits & DPS_LIMIT_TIME) {
 	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_TIME);
 	      if((db->time_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-		sprintf(db->errstr, "Can't open '%s': %s\n", log_name,strerror(errno));
-		db->errcode = 1;
+		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
 	      }
 	      lseek(db->time_fd, (off_t)0, SEEK_END);
@@ -2690,8 +2643,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	    if (Env->Flags.limits & DPS_LIMIT_LANG) {
 	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_LANG);
 	      if((db->lang_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-		sprintf(db->errstr, "Can't open '%s': %s\n", log_name, strerror(errno));
-		db->errcode = 1;
+		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
 	      }
 	      lseek(db->lang_fd, (off_t)0, SEEK_END);
@@ -2699,8 +2651,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	    if (Env->Flags.limits & DPS_LIMIT_CTYPE) {
 	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_CTYPE);
 	      if((db->ctype_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-		sprintf(db->errstr, "Can't open '%s': %s\n", log_name, strerror(errno));
-		db->errcode = 1;
+		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
 	      }
 	      lseek(db->ctype_fd, (off_t)0, SEEK_END);
@@ -2708,8 +2659,7 @@ static int DpsLogdInit(DPS_ENV *Env, DPS_DB *db, const char* var_dir, size_t i, 
 	    if (Env->Flags.limits & DPS_LIMIT_SITE) {
 	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_SITE);
 	      if((db->site_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
-		sprintf(db->errstr, "Can't open '%s': %s\n", log_name, strerror(errno));
-		db->errcode = 1;
+		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
 	      }
 	      lseek(db->site_fd, (off_t)0, SEEK_END);
@@ -2896,14 +2846,13 @@ int DpsURLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  if(cached_sd){
 		sent = DpsSend(cached_sd, &cmd, sizeof(cmd), 0);
 		if(sent!=sizeof(cmd)){
-			DpsLog(Indexer, DPS_LOG_ERROR, "[%s:%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
+			dps_strerror(Indexer, DPS_LOG_ERROR, "[%s:%d] Can't write to cached", __FILE__, __LINE__);
 			TRACE_OUT(Indexer);
 			return DPS_ERROR;
 		}
 		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
-			DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%s:%d], %d, %s", 
-			       __FILE__, __LINE__, recvt, strerror(errno));
+			dps_strerror(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%s:%d], %d", __FILE__, __LINE__, recvt);
 			TRACE_OUT(Indexer);
 			return DPS_ERROR;
 		  }
@@ -3023,14 +2972,13 @@ int DpsCachedFlush(DPS_AGENT *Indexer, DPS_DB *db) {
 	  if (flush_buffers) {
 		sent = DpsSend(cached_sd, &cmd, sizeof(cmd), 0);
 		if(sent!=sizeof(cmd)){
-			DpsLog(Indexer, DPS_LOG_ERROR, "[%s:%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
+			dps_strerror(Indexer, DPS_LOG_ERROR, "[%s:%d] Can't write to cached", __FILE__, __LINE__);
 			TRACE_OUT(Indexer);
 			return DPS_ERROR;
 		}
 		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
-			DpsLog(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%s:%d], %d, %s", 
-			       __FILE__, __LINE__, recvt, strerror(errno));
+			dps_strerror(Indexer, DPS_LOG_ERROR, "Can't receive from cached [%s:%d], %d", __FILE__, __LINE__, recvt);
 			TRACE_OUT(Indexer);
 			return DPS_ERROR;
 		  }
@@ -3112,8 +3060,7 @@ int DpsLogdStoreDoc(DPS_AGENT *Agent, DPS_LOGD_CMD cmd, DPS_LOGD_WRD *wrd, DPS_D
 	      for (i = 0; i < NWrdFiles; i++) {
 		if (logd->wrd_buf[i].ndel == 0) continue;
 		if((ssize_t)(logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL)) != write(db->del_fd, logd->wrd_buf[i].del_buf, logd->wrd_buf[i].ndel * sizeof(DPS_LOGDEL))) {
-		  sprintf(db->errstr, "Can't write to del.log: %s\n", strerror(errno));
-		  db->errcode = 1;
+		  dps_strerror(Agent, DPS_LOG_ERROR, "Can't write to del.log");
 		  DpsUnLock(db->del_fd);
 		  TRACE_OUT(Agent);
 		  return DPS_ERROR;
@@ -3305,7 +3252,7 @@ static int DpsLogdCachedCheck(DPS_AGENT *A, DPS_DB *db, int level) {
     if (dat_fd <= 0) {
       dat_fd = DpsOpen2(dat_name, O_RDONLY | DPS_BINARY);
       if (dat_fd <= 0) {
-	DpsLog(A, DPS_LOG_ERROR, "can't open file '%s', reason: %s", dat_name, strerror(errno));
+	dps_strerror(A, DPS_LOG_ERROR, "Can't open file '%s'", dat_name);
 	continue;
       }
     }
@@ -3584,13 +3531,13 @@ int DpsCachedCheck(DPS_AGENT *A, int level) {
 	  if(0/*cached_sd*/) {
 		sent = DpsSend(cached_sd, &cmd, sizeof(cmd), 0);
 		if(sent!=sizeof(cmd)){
-			DpsLog(A, DPS_LOG_ERROR, "[%s:%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
+			dps_strerror(A, DPS_LOG_ERROR, "[%s:%d] Can't write to cached", __FILE__, __LINE__);
 			TRACE_OUT(A);
 			return(DPS_ERROR);
 		}
 		while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
-			DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d]: %d %s",__FILE__,__LINE__,recvt, strerror(errno));
+			dps_strerror(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d]: %d",__FILE__,__LINE__, recvt);
 			TRACE_OUT(A);
 			return(DPS_ERROR);
 		  }
@@ -3763,7 +3710,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 		sent = DpsSend(cached_sd, &cmd, sizeof(DPS_LOGD_CMD), 0);
 		if(sent!=sizeof(DPS_LOGD_CMD)) {
-			DpsLog(A, DPS_LOG_ERROR, "%s [%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
+			dps_strerror(A, DPS_LOG_ERROR, "%s [%d] Can't write to cached", __FILE__, __LINE__);
 			DpsFree(textbuf);
 			TRACE_OUT(A);
 			return DPS_ERROR;
@@ -3775,7 +3722,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
-			DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d, %s",__FILE__,__LINE__,recvt, strerror(errno));
+			DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d",__FILE__,__LINE__, recvt);
 			DpsFree(textbuf);
 			TRACE_OUT(A);
 			return DPS_ERROR;
@@ -3798,7 +3745,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 		sent = DpsSend(cached_sd, &tlen, sizeof(tlen), 0);
 		if(sent != sizeof(tlen)){
-			DpsLog(A, DPS_LOG_ERROR, "%s [%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
+			dps_strerror(A, DPS_LOG_ERROR, "%s [%d] Can't write to cached", __FILE__, __LINE__);
 			DpsFree(textbuf);
 			TRACE_OUT(A);
 			return DPS_ERROR;
@@ -3809,7 +3756,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 	  while ((recvt = DpsRecvall(cached_rv, &reply, 1, WAIT_TIME)) != 1) {
 		  if (recvt <= 0) {
-			DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d, %s",__FILE__,__LINE__,recvt, strerror(errno));
+			dps_strerror(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d",__FILE__, __LINE__, recvt);
 			DpsFree(textbuf);
 			TRACE_OUT(A);
 			return DPS_ERROR;
@@ -3829,7 +3776,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 #endif
 		sent = DpsSend(cached_sd, textbuf, tlen, 0);
 		if(sent != (ssize_t)tlen){
-			DpsLog(A, DPS_LOG_ERROR, "%s [%d] Can't write to cached: %s", __FILE__, __LINE__, strerror(errno));
+			dps_strerror(A, DPS_LOG_ERROR, "%s [%d] Can't write to cached", __FILE__, __LINE__);
 			DpsFree(textbuf);
 			TRACE_OUT(A);
 			return DPS_ERROR;
@@ -3841,7 +3788,7 @@ int DpsAddURLCache(DPS_AGENT *A, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 	  while ((recvt = DpsRecvall(cached_rv, &reply, sizeof(char), WAIT_TIME)) != 1) {
 	    if (recvt <= 0) {
-	      DpsLog(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d, %s",__FILE__,__LINE__,recvt, strerror(errno));
+	      dps_strerror(A, DPS_LOG_ERROR, "Can't receive from cached [%s:%d] %d",__FILE__, __LINE__, recvt);
 	      DpsFree(textbuf);
 	      TRACE_OUT(A);
 	      return DPS_ERROR;

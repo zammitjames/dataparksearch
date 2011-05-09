@@ -87,6 +87,7 @@ static int DpsMySQLInit(DPS_DB *db){
 	  dps_snprintf(query, sizeof(query), "SET NAMES '%s'", db->DBCharset);
 	  DpsSQLAsyncQuery(db, NULL, query);
 	}
+	DpsSQLAsyncQuery(db, NULL, "SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
 	return DPS_OK;
 }
 

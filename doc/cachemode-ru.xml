@@ -20,8 +20,7 @@
 <indexterm><primary>Команда</primary><secondary>URLDataFiles</secondary></indexterm>
 Число файлов хранения дополнительной информации о документах задаётся командой <command>URLDataFiles</command>
 (по умолчанию - 0x300).
-<note>Внимание: вы должны иметь одаковые значения для <command>WrdFiles</command> и <command>URLDataFiles</command> во всех файлах
-конфигурации.
+<note>Внимание: вы должны иметь одинаковые значения для WrdFiles и URLDataFiles во всех файлах конфигурации.
 </note>
 </para>
 <para>
@@ -44,7 +43,7 @@ Volume = WrdFiles * (32 + 20 * CacheLogWords + 12 * CacheLogDels), для 64-битных
 
 	<sect2 id="cachemode-tools">
 		<title>Утилиты для способа хранения <literal>Cache</literal></title>
-		<para>При выборе способа хранения <literal>cache</literal> используютсся две дополнительные программы:
+		<para>При выборе способа хранения <literal>cache</literal> используются две дополнительные программы:
 <command>cached</command> и <command>splitter</command>.</para>
 
 <para> <command>cached</command> - демон, получающий по сети информацию о хранимых словах от
@@ -73,7 +72,7 @@ Volume = WrdFiles * (32 + 20 * CacheLogWords + 12 * CacheLogDels), для 64-битных
 
 				<para><filename>cached</filename> может принимать соединения по TCP от нескольких различных машин.
 Теоритический предел одновременных соединений равен 128. В старом режиме <filename>cached</filename>
-записывает полученную от <command>indexer</command> информацию поддиректорию <filename>/var/splitter/</filename> относительно
+записывает полученную от <command>indexer</command> информацию в поддиректорию <filename>/var/splitter/</filename> относительно
 корневой директории установки <application>DataparkSearch</application>.
 В новом режиме он записывает информацию в поддиректорию <filename>/var/tree/</filename>.</para>
 
@@ -292,7 +291,7 @@ Limit prm:strcrc32 "SELECT label, rec_id FROM labels" pgsql://u:p@localhost/site
 </para>
 
 <para>В поисковом шаблоне <filename>search.htm</filename> или в файле конфигурации <filename>searchd.conf</filename> (если используется <command>searchd</command>) указывать необязательные параметры
-<option>SQL-Request</option> и <option>DBAddr</option> нужно, они используются только при построении лимита.
+<option>SQL-Request</option> и <option>DBAddr</option> не нужно, они используются только при построении лимита.
 <programlisting>
 Limit prm:strcrc32
 </programlisting>

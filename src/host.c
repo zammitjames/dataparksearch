@@ -374,7 +374,7 @@ static void DpsResolver(DPS_AGENT *Indexer) {
       }
 
     } else if (size < 0) {
-      DpsLog(Indexer, DPS_LOG_ERROR, "%d (%s) Error pipe reading in resolver process %d, exiting", errno, strerror(errno), getpid());
+      dps_strerror(Indexer, DPS_LOG_ERROR, "Error pipe reading in resolver process %d, exiting", getpid());
       break;
     }
     DPSSLEEP(0);

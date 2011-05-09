@@ -610,7 +610,7 @@ static int perform(DPS_AGENT *query, DPS_RESULT *Res, DPS_BOOLSTACK *s, int com)
 				} else { found = ((pos1 + 16) >= pos2);
 				}
 				x1->pchecked = x1->pcur; x2->pchecked = x2->pcur;
-				while ((!found) /* && (x1->pchecked < x1->plast) && (x2->pchecked < x2->plast) && (x1->pchecked->url_id == x2->pchecked->url_id)*/ ) {
+				while (!found) {
 				  if (x1->pchecked->coord <= x2->pchecked->coord) {
 				    x1->pchecked++;
 				    pos1 = DPS_WRDPOS(x1->pchecked->coord);

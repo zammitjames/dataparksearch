@@ -196,15 +196,11 @@ int DpsChineseListLoad(DPS_AGENT *Agent, DPS_CHINALIST *List, const char *charse
      }
 
      if (stat(fname, &sb)) {
-       if (Agent->Conf->is_log_open) 
-	    DpsLog(Agent, DPS_LOG_ERROR, "Unable to stat FreqDic file '%s': %s", fname, strerror(errno));
-       else fprintf(stderr, "Unable to stat FrecDic file '%s': %s", fname, strerror(errno));
+       dps_strerror((Agent->Conf->is_log_open) ? Agent : NULL, DPS_LOG_ERROR, "Unable to stat FreqDic file '%s'", fname);
        return DPS_ERROR;
      }
      if ((fd = open(fname, O_RDONLY)) <= 0) {
-       if (Agent->Conf->is_log_open) 
-	    DpsLog(Agent, DPS_LOG_ERROR, "Unable to open FreqDic file '%s': %s", fname, strerror(errno));
-       else fprintf(stderr, "Unable to open FreqDic file '%s': %s", fname, strerror(errno));
+       dps_strerror((Agent->Conf->is_log_open) ? Agent : NULL, DPS_LOG_ERROR, "Unable to open FreqDic file '%s'", fname);
        return DPS_ERROR;
      }
      if ((data = (char*)DpsMalloc((size_t)sb.st_size + 1)) == NULL) {
@@ -215,9 +211,7 @@ int DpsChineseListLoad(DPS_AGENT *Agent, DPS_CHINALIST *List, const char *charse
        return DPS_ERROR;
      }
      if (read(fd, data, (size_t)sb.st_size) != (ssize_t)sb.st_size) {
-       if (Agent->Conf->is_log_open) 
-	 DpsLog(Agent, DPS_LOG_ERROR, "Unable to read FreqDic file '%s': %s", fname, strerror(errno));
-       else fprintf(stderr, "Unable to read FreqDic file '%s': %s", fname, strerror(errno));
+       dps_strerror((Agent->Conf->is_log_open) ? Agent : NULL, DPS_LOG_ERROR, "Unable to read FreqDic file '%s'", fname);
        DPS_FREE(data);
        close(fd);
        return DPS_ERROR;

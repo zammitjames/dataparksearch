@@ -6012,12 +6012,12 @@ int DpsLimit8SQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L,const char *field, int type
 	  L->Item = (DPS_UINT8URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT8URLID));
 	  if(L->Item == NULL) {
 /*	        DpsSQLEnd(db);*/
-		sprintf(db->errstr,"Error: %s",strerror(errno));
-		db->errcode=1;
-		DpsSQLFree(&SQLres);
-	        DPS_FREE(limit_query);
-	        DPS_FREE(qbuf);
-		return DPS_ERROR;
+	    dps_strerror(A, DPS_LOG_ERROR, "Error:");
+	    db->errcode=1;
+	    DpsSQLFree(&SQLres);
+	    DPS_FREE(limit_query);
+	    DPS_FREE(qbuf);
+	    return DPS_ERROR;
 	  }
 	  for(i = p = 0; i < nrows; i++) {
 		const char *val0 = DpsSQLValue(&SQLres, i, 0);
@@ -6088,7 +6088,7 @@ int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
     nrows = DpsSQLNumRows(&Res);
     L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT4URLID));
     if(L->Item == NULL) {
-      sprintf(db->errstr,"Error: %s",strerror(errno));
+      dps_strerror(A, DPS_LOG_ERROR, "Error:");
       db->errcode = 1;
       DpsSQLFree(&Res);
       return DPS_ERROR;
@@ -6128,7 +6128,7 @@ int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
     nrows = DpsSQLNumRows(&Res);
     L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT4URLID));
     if(L->Item == NULL) {
-      sprintf(db->errstr,"Error: %s",strerror(errno));
+      dps_strerror(A, DPS_LOG_ERROR, "Error:");
       db->errcode = 1;
       DpsSQLFree(&Res);
       return DPS_ERROR;
@@ -6245,7 +6245,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 
 	  L->Item = (DPS_UINT8URLID*)DpsRealloc(L->Item, (L->mitems = (L->nitems + nrows + 1)) * sizeof(DPS_UINT8URLID));
 	  if(L->Item == NULL) {
-	    sprintf(db->errstr,"Error: %s",strerror(errno));
+	    dps_strerror(A, DPS_LOG_ERROR,"Error:");
 	    db->errcode = 1;
 	    DpsSQLFree(&SQLres);
 	    DpsVarListFree(&cat);
@@ -6275,7 +6275,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 		if (L->nitems >= L->mitems) {
 		  L->Item = (DPS_UINT8URLID*)DpsRealloc(L->Item, (L->mitems = (L->nitems + 4096)) * sizeof(DPS_UINT8URLID));
 		  if(L->Item == NULL) {
-		    sprintf(db->errstr,"Error: %s",strerror(errno));
+		    dps_strerror(A, DPS_LOG_ERROR, "Error:");
 		    db->errcode = 1;
 		    DpsSQLFree(&SQLres);
 		    DpsVarListFree(&cat);
@@ -6322,7 +6322,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 
 	  L->Item = (DPS_UINT8URLID*)DpsRealloc(L->Item, (L->mitems = (L->nitems + nrows + 1)) * sizeof(DPS_UINT8URLID));
 	  if(L->Item == NULL) {
-	    sprintf(db->errstr,"Error: %s",strerror(errno));
+	    dps_strerror(A, DPS_LOG_ERROR, "Error:");
 	    db->errcode = 1;
 	    DpsSQLFree(&SQLres);
 	    DpsVarListFree(&cat);
@@ -6355,7 +6355,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 		if (L->nitems >= L->mitems) {
 		  L->Item = (DPS_UINT8URLID*)DpsRealloc(L->Item, (L->mitems = (L->nitems + 4096)) * sizeof(DPS_UINT8URLID));
 		  if(L->Item == NULL) {
-		    sprintf(db->errstr,"Error: %s",strerror(errno));
+		    dps_strerror(A, DPS_LOG_ERROR, "Error:");
 		    db->errcode = 1;
 		    DpsSQLFree(&SQLres);
 		    DpsVarListFree(&cat);
@@ -6398,7 +6398,7 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 #if 0
 	dps_snprintf(L->shm_name, PATH_MAX, "%s%sLINK.%d", var_dir, DPSSLASHSTR, A->handle);
 	if ((fd = DpsOpen3(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
-	  sprintf(db->errstr, "%s open failed: %d: %s", L->shm_name, errno, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "%s open failed", L->shm_name);
 	  return DPS_ERROR;
 	}
 #endif
@@ -6428,13 +6428,13 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
 	  dps_snprintf(L->shm_name, PATH_MAX, "%sLINK.%d", DPSSLASHSTR, A->handle);
 	  if ((fd = shm_open(L->shm_name, O_RDWR | O_CREAT, (mode_t)0644)) < 0) {
-	    DpsLog(A, DPS_LOG_ERROR, "shm_open (%s): %d: %s", L->shm_name, errno, strerror(errno));
+	    dps_strerror(A, DPS_LOG_ERROR, "shm_open (%s) error", L->shm_name);
 	    return DPS_ERROR;
 	  }
 	}
 	if (( L->Item = (DPS_UINT4URLID*)
 		 mmap( NULL, (nrows + 1) * sizeof(DPS_UINT4URLID), PROT_READ | PROT_WRITE, MAP_SHARED, fd, (off_t)0)) == NULL) {
-	  DpsLog (A, DPS_LOG_ERROR, "mmap: %d: %s", errno, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "mmap:");
 	  return DPS_ERROR;
 	}
 	ftruncate(fd, (off_t) (nrows + 1) * sizeof(DPS_UINT4URLID));
@@ -6442,11 +6442,11 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	L->mapped = 1;
 #elif 0 /* defined(HAVE_SHAREDMEM_SYSV) */
 	if ((fd = shmget(ftok(L->shm_name, 0), (nrows+1)*sizeof(DPS_UINT4URLID), IPC_CREAT|SHM_R|SHM_W|(SHM_R>>3)|(SHM_R>>6) )) < 0) {
-	  DpsLog(A, DPS_LOG_ERROR, "shmget (%s): %d: %s", L->shm_name, errno, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "shmget (%s)", L->shm_name);
 	  return DPS_ERROR;
 	}
 	if ((L->Item = (DPS_UINT4URLID*)shmat( fd, NULL, 0)) == (void*)-1) {
-	  DpsLog(A, DPS_LOG_ERROR, "shmat: %d: %s", errno, strerror(errno));
+	  dps_strerror(A, DPS_LOG_ERROR, "shmat:");
 	  return DPS_ERROR;
 	}
 	L->mapped = 1;
@@ -6454,7 +6454,7 @@ int DpsLimitLinkSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const char *field, int 
 	L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (nrows + 1) * sizeof(DPS_UINT4URLID));
 #endif
 	if(L->Item == NULL) {
-	  DpsLog(A, DPS_LOG_ERROR, "Error: %s (alloc: %d bytes",strerror(errno), (nrows + 1) * sizeof(DPS_UINT4URLID) );
+	  dps_strerror(A, DPS_LOG_ERROR, "Error alloc %d bytes", (nrows + 1) * sizeof(DPS_UINT4URLID) );
 	  db->errcode = 1;
 	  DpsSQLFree(&SQLres);
 	  DPS_FREE(qbuf);
@@ -6517,12 +6517,12 @@ int DpsLimit4SQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L,const char *field, int type
 	  L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT4URLID));
 	  if(L->Item == NULL) {
 /*	        DpsSQLEnd(db);*/
-		sprintf(db->errstr,"Error: %s",strerror(errno));
-		db->errcode=0;
-		DpsSQLFree(&SQLres);
-	        DPS_FREE(limit_query);
-	        DPS_FREE(qbuf);
-		return DPS_ERROR;
+	    dps_strerror(NULL, 0, "Error:");
+	    db->errcode=0;
+	    DpsSQLFree(&SQLres);
+	    DPS_FREE(limit_query);
+	    DPS_FREE(qbuf);
+	    return DPS_ERROR;
 	  }
 	  for(i = p = 0; i < nrows; i++) {
 		const char *val0 = DpsSQLValue(&SQLres, i, 0);
@@ -6603,11 +6603,11 @@ __C_LINK int __DPSCALL DpsSQLLimit8(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const c
 	  nrows = DpsSQLNumRows(&SQLres);
 	  L->Item = (DPS_UINT8URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT8URLID));
 	  if(L->Item == NULL) {
-	    DpsLog(A, DPS_LOG_ERROR, "Error: %d %s", errno, strerror(errno));
-		db->errcode=0;
-		DpsSQLFree(&SQLres);
-	        DPS_FREE(qbuf);
-		return DPS_ERROR;
+	    dps_strerror(A, DPS_LOG_ERROR, "Error:");
+	    db->errcode=0;
+	    DpsSQLFree(&SQLres);
+	    DPS_FREE(qbuf);
+	    return DPS_ERROR;
 	  }
 	  for(i = p = 0; i < nrows; i++) {
 		const char *val0 = DpsSQLValue(&SQLres, i, 0);
@@ -6665,11 +6665,11 @@ __C_LINK int __DPSCALL DpsSQLLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const c
 	  nrows = DpsSQLNumRows(&SQLres);
 	  L->Item = (DPS_UINT4URLID*)DpsRealloc(L->Item, (L->nitems + nrows + 1) * sizeof(DPS_UINT4URLID));
 	  if(L->Item == NULL) {
-	    DpsLog(A, DPS_LOG_ERROR, "Error: %d %s", errno, strerror(errno));
-		db->errcode=0;
-		DpsSQLFree(&SQLres);
-	        DPS_FREE(qbuf);
-		return DPS_ERROR;
+	    dps_strerror(A, DPS_LOG_ERROR, "Error:");
+	    db->errcode=0;
+	    DpsSQLFree(&SQLres);
+	    DPS_FREE(qbuf);
+	    return DPS_ERROR;
 	  }
 	  for(i = p = 0; i < nrows; i++) {
 		const char *val0 = DpsSQLValue(&SQLres, i, 0);

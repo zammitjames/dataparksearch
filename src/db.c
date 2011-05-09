@@ -2150,7 +2150,6 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 
 	  if ((hp = gethostbyname(stored_host)) == 0 ) {
 	    DPS_FREE(stored_host); DPS_FREE(cached_host);
-/*	    fprintf(stderr, "StoreD ERR gethostbyname: %s", hstrerror(h_errno));*/
 #ifdef WITH_PARANOIA
 	    DpsViolationExit(-1, paran);
 #endif
@@ -2172,7 +2171,6 @@ int DpsDBSetAddr(DPS_DB *db, const char *dbaddr, int mode){
 
 	  if ((hp = gethostbyname(cached_host)) == 0 ) {
 	    DPS_FREE(stored_host); DPS_FREE(cached_host);
-/*	    fprintf(stderr, "CachedOpen ERR gethostbyname: %s", hstrerror(h_errno));*/
 #ifdef WITH_PARANOIA
 	    DpsViolationExit(-1, paran);
 #endif
@@ -2296,7 +2294,7 @@ int DpsTrackSearchd(DPS_AGENT * query, DPS_RESULT *Res) {
       dps_snprintf(fullname, sizeof(fullname), "%s%strack.%d.%d.%d", vardir, DPSSLASHSTR, query->handle, i, time(NULL));
       if ((fd = open(fullname, O_WRONLY | O_CREAT | DPS_BINARY, DPS_IWRITE)) <= 0) {
 	char errstr[1024];
-	dps_snprintf(errstr, sizeof(errstr), "DpsTrackSearchd: couldn't open track file (%s) for writing: %s", fullname, strerror(errno));
+	dps_strerror(query, DPS_LOG_ERROR, "DpsTrackSearchd: couldn't open track file (%s) for writing", fullname);
 	DpsLog(query, DPS_LOG_ERROR, errstr );
 	return DPS_ERROR;
       }

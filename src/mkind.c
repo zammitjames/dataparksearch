@@ -80,11 +80,11 @@ static void ClearIndex4(DPS_UINT4URLIDLIST *L) {
      if (L->mapped) {
 #ifdef HAVE_SHAREDMEM_POSIX
        if (munmap(L->Item, (L->nitems + 1) * sizeof(DPS_UINT4URLID))) {
-	 fprintf(stderr, "Can't shmdt '%s': %s\n", L->shm_name, strerror(errno));
+	 dps_strerror(NULL, 0, "Can't shmdt '%s'", L->shm_name);
        }
 #elif defined(HAVE_SHAREDMEM_SYSV)
        if (shmdt(L->Item)) {
-	 fprintf(stderr, "Can't shmdt '%s': %s\n", L->shm_name, strerror(errno));
+	 dps_strerror(NULL, 0, "Can't shmdt '%s'", L->shm_name);
        }
 #endif       
        unlink(L->shm_name);
@@ -169,12 +169,12 @@ static int MakeNestedIndex(DPS_AGENT *Indexer, DPS_UINT8URLIDLIST *L, const char
      
      dps_snprintf(fname,sizeof(fname)-1,"%s%c%s%c%s.dat", vardir,DPSSLASH, DPS_TREEDIR,DPSSLASH, lim_name);
      if((dat_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
-       DpsLog(Indexer, DPS_LOG_ERROR, "Can't open '%s': %s [%s:%d]", fname, strerror(errno), __FILE__, __LINE__);
+       dps_strerror(Indexer, DPS_LOG_ERROR, "Can't open '%s' [%s:%d]", fname, __FILE__, __LINE__);
        goto err1;
      }
      DpsWriteLock(dat_fd);
      if((ndata * sizeof(*data)) != (size_t)write(dat_fd, data, ndata * sizeof(*data))) {
-       DpsLog(Indexer, DPS_LOG_ERROR, "Can't write '%s': %s [%s:%d]", fname, strerror(errno), __FILE__, __LINE__);
+       dps_strerror(Indexer, DPS_LOG_ERROR, "Can't write '%s' [%s:%d]", fname, __FILE__, __LINE__);
        goto err1;
      }
      DpsUnLock(dat_fd);
@@ -183,12 +183,12 @@ static int MakeNestedIndex(DPS_AGENT *Indexer, DPS_UINT8URLIDLIST *L, const char
 
      dps_snprintf(fname,sizeof(fname)-1,"%s%c%s%c%s.ind", vardir, DPSSLASH,DPS_TREEDIR, DPSSLASH, lim_name);
      if((ind_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
-       DpsLog(Indexer, DPS_LOG_ERROR, "Can't open '%s': %s [%s:%d]", fname, strerror(errno), __FILE__, __LINE__);
+       dps_strerror(Indexer, DPS_LOG_ERROR, "Can't open '%s' [%s:%d]", fname, __FILE__, __LINE__);
        goto err1;
      }
      DpsWriteLock(ind_fd);
      if((nind*sizeof(DPS_UINT8_POS_LEN)) != (size_t)write(ind_fd,ind,nind*sizeof(DPS_UINT8_POS_LEN))){
-       DpsLog(Indexer, DPS_LOG_ERROR, "Can't write '%s': %s [%s:%d]", fname, strerror(errno), __FILE__, __LINE__);
+       dps_strerror(Indexer, DPS_LOG_ERROR, "Can't write '%s' [%s:%d]", fname, __FILE__, __LINE__);
           goto err1;
      }
      DpsUnLock(ind_fd);
@@ -222,13 +222,13 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
      
      data = (urlid_t*)DpsMalloc((L->nitems + 1) * sizeof(*data));
      if(!data){
-          fprintf(stderr,"Error1: %s\n",strerror(errno));
-          goto err1;
+       dps_strerror(NULL, 0, "Error1:");
+       goto err1;
      }
      ind=(DPS_UINT4_POS_LEN*)DpsMalloc(mind*sizeof(DPS_UINT4_POS_LEN));
      if(!ind){
-          fprintf(stderr,"Error2: %s\n",strerror(errno));
-          goto err1;
+       dps_strerror(NULL, 0, "Error2:");
+       goto err1;
      }
      prev=0;
      for(k=0; k < L->nitems; k++) {
@@ -238,8 +238,8 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
                     mind+=1000;
                     ind=(DPS_UINT4_POS_LEN*)DpsRealloc(ind,mind*sizeof(DPS_UINT4_POS_LEN));
                     if(!ind){
-                         fprintf(stderr,"Error3: %s\n",strerror(errno));
-                         goto err1;
+		      dps_strerror(NULL, 0, "Error3:");
+		      goto err1;
                     }
                }
                /* Fill index */
@@ -257,7 +257,7 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
        mind += 1;
        ind=(DPS_UINT4_POS_LEN*)DpsRealloc(ind,mind*sizeof(DPS_UINT4_POS_LEN));
        if(!ind){
-	 fprintf(stderr,"Error3: %s\n",strerror(errno));
+	 dps_strerror(NULL, 0, "Error4:");
 	 goto err1;
        }
      }
@@ -274,13 +274,13 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
     
      dps_snprintf(fname,sizeof(fname),"%s%c%s%c%s.dat", vardir,DPSSLASH, DPS_TREEDIR, DPSSLASH, lim_name);
      if((dat_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
-          fprintf(stderr,"Can't open '%s': %s\n",fname,strerror(errno));
-          goto err1;
+       dps_strerror(NULL, 0, "Can't open '%s'", fname);
+       goto err1;
      }
      DpsWriteLock(dat_fd);
      if((ndata * sizeof(*data)) != (size_t)write(dat_fd, data, ndata * sizeof(*data))) {
-          fprintf(stderr,"Can't write '%s': %s\n",fname,strerror(errno));
-          goto err1;
+       dps_strerror(NULL, 0, "Can't write '%s'", fname);
+       goto err1;
      }
      DpsUnLock(dat_fd);
      DpsClose(dat_fd);
@@ -288,13 +288,13 @@ static int MakeLinearIndex(DPS_AGENT *Indexer, DPS_UINT4URLIDLIST *L, const char
 
      dps_snprintf(fname,sizeof(fname),"%s%c%s%c%s.ind", vardir,DPSSLASH, DPS_TREEDIR, DPSSLASH, lim_name);
      if((ind_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
-          fprintf(stderr,"Can't open '%s': %s\n",fname,strerror(errno));
-          goto err1;
+       dps_strerror(NULL, 0, "Can't open '%s'", fname);
+       goto err1;
      }
      DpsWriteLock(ind_fd);
      if((nind*sizeof(DPS_UINT4_POS_LEN)) != (size_t)write(ind_fd,ind,nind*sizeof(DPS_UINT4_POS_LEN))){
-          fprintf(stderr,"Can't write '%s': %s\n",fname,strerror(errno));
-          goto err1;
+       dps_strerror(NULL, 0, "Can't write '%s'", fname);
+       goto err1;
      }
      DpsUnLock(ind_fd);
      DpsClose(ind_fd);
@@ -339,15 +339,15 @@ static int MakeLinearIndexLinks(DPS_AGENT *Indexer, const char *lim_name, DPS_DB
 
      dps_snprintf(fname,sizeof(fname),"%s%c%s%c%s.dat", vardir,DPSSLASH, DPS_TREEDIR, DPSSLASH, lim_name);
      if((dat_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
-          fprintf(stderr,"Can't open '%s': %s\n",fname,strerror(errno));
-          goto err_IndexLinks;
+       dps_strerror(NULL, 0, "Can't open '%s'", fname);
+       goto err_IndexLinks;
      }
      DpsWriteLock(dat_fd);
 
      dps_snprintf(fname,sizeof(fname),"%s%c%s%c%s.ind", vardir,DPSSLASH, DPS_TREEDIR, DPSSLASH, lim_name);
      if((ind_fd = DpsOpen3(fname, O_CREAT | O_WRONLY | O_TRUNC | DPS_BINARY, DPS_IWRITE)) < 0) {
-          fprintf(stderr,"Can't open '%s': %s\n",fname,strerror(errno));
-          goto err_IndexLinks;
+       dps_strerror(NULL, 0, "Can't open '%s'", fname);
+       goto err_IndexLinks;
      }
      DpsWriteLock(ind_fd);
 
@@ -377,14 +377,14 @@ static int MakeLinearIndexLinks(DPS_AGENT *Indexer, const char *lim_name, DPS_DB
 	 ind.len = nrows * sizeof(urlid_t);
 
 	 if((sizeof(DPS_UINT4_POS_LEN)) != (size_t)write(ind_fd, &ind, sizeof(DPS_UINT4_POS_LEN))) {
-	   DpsLog(Indexer, DPS_LOG_ERROR, "Can't write index of '%s': %s\n", lim_name, strerror(errno));
+	   dps_strerror(Indexer, DPS_LOG_ERROR, "Can't write index of '%s'", lim_name);
 	   goto err_IndexLinks;
 	 }
 	 prev += nrows;
 	 for (j = 0; j < nrows; j++) {
 	   url_id = DPS_ATOI(DpsSQLValue(&Res, j, 0));
 	   if((sizeof(urlid_t)) != (size_t)write(dat_fd, &url_id, sizeof(urlid_t))) {
-	     DpsLog(Indexer, DPS_LOG_ERROR, "Can't write data of '%s': %s\n", lim_name, strerror(errno));
+	     dps_strerror(Indexer, DPS_LOG_ERROR, "Can't write data of '%s'", lim_name);
 	     goto err_IndexLinks;
 	   }
 	 }
