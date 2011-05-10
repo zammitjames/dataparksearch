@@ -2062,7 +2062,7 @@ static inline dps_uint4 DpsCalcCosineWeightUltra(dps_uint4 *R, double x, double 
 }
 
 #define DPS_WORD_ORIGIN_MAX 7
-static dps_uint4 DpsOriginIndex(int origin) {
+static inline dps_uint4 DpsOriginIndex(int origin) {
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 6;
   if (origin & DPS_WORD_ORIGIN_ASPELL)  return 5;
   if (origin & DPS_WORD_ORIGIN_ACRONYM) return 4;
@@ -2072,7 +2072,7 @@ static dps_uint4 DpsOriginIndex(int origin) {
   return DPS_WORD_ORIGIN_MAX;
 }
 
-static dps_uint4 DpsOriginWeightFull(int origin) {  /* Weight for origin can be from 1 to 15 */
+static inline dps_uint4 DpsOriginWeightFull(int origin) {  /* Weight for origin can be from 1 to 15 */
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x01;
   if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x02;
   if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x04; /*0x14;*/
@@ -2083,7 +2083,7 @@ static dps_uint4 DpsOriginWeightFull(int origin) {  /* Weight for origin can be 
   return 0;
 }
 
-static dps_uint4 DpsOriginWeightFast(int origin) {  /* Weight for origin can be from 1 to 15 */
+static inline dps_uint4 DpsOriginWeightFast(int origin) {  /* Weight for origin can be from 1 to 15 */
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x1;
   if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x3;
   if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x5;
@@ -2093,7 +2093,7 @@ static dps_uint4 DpsOriginWeightFast(int origin) {  /* Weight for origin can be 
   return 0;
 }
 
-static dps_uint4 DpsOriginWeightUltra(int origin) {  /* Weight for origin can be from 1 to 15 */
+static inline dps_uint4 DpsOriginWeightUltra(int origin) {  /* Weight for origin can be from 1 to 15 */
   if (origin & DPS_WORD_ORIGIN_ASPELL)  return 0x010;
   if (origin & DPS_WORD_ORIGIN_SYNONYM) return 0x050;
   if (origin & DPS_WORD_ORIGIN_ACRONYM) return 0x050;
