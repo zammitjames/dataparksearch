@@ -751,6 +751,57 @@ static int DpsSitemapParse(DPS_AGENT *Indexer, const char *content) {
 }
 
 
+static char *dps_robots_normalise(const char *s) { /* robots.txt path normalisation, blame to Google */
+  char *norm = (char*)DpsMalloc(2 * dps_strlen(s) + 1);
+  char *d = norm;
+  int prev_asterisk = 0, prev_dollar = 0, prev_slash = 0;
+  if (norm != NULL) {
+    do {
+      switch(*s) {
+      case '\0':
+      case '\r':
+      case '\n':
+	break;
+      case '$':
+	prev_dollar = 1;
+	prev_slash = 0;
+	prev_asterisk = 0;
+	*d++ = *s++;
+	break;
+      case '?':
+	if (prev_asterisk) *d++ = '\\';
+	*d++ = *s++;
+	prev_asterisk = 0;
+	prev_slash = 0;
+	prev_dollar = 0;
+	break;
+      case '\\':
+	if (!prev_slash) prev_slash = 1; else prev_slash = 0;
+	prev_asterisk = 0; 
+	prev_dollar = 0;
+	*d++ = *s++;
+	break;
+      case '*': 
+	if (!prev_asterisk) *d++ = *s++;
+        prev_asterisk = !prev_slash;
+	prev_slash = 0;
+	prev_dollar = 0;
+	break;
+      default: 
+	prev_asterisk = 0; 
+	prev_slash = 0;
+	prev_dollar = 0;
+	*d++ = *s++;
+	break;
+      }
+    } while(*s != '\0' && *s != '\n' && *s != '\r');
+    if (prev_dollar) d--;
+    *d = '\0';
+  }
+  return norm;
+}
+
+
 int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, const char *hostinfo) {
         DPS_ENV *Conf = Indexer->Conf;
         DPS_ROBOTS *Robots = &Conf->Robots;
@@ -823,10 +874,13 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			e=s+9;DPS_SKIP(e," \t");s=e;
 			DPS_SKIPN(e," \t");*e=0;
 			if(s && *s) {
-			  if(AddRobotRule(Indexer, robot, DPS_METHOD_VISITLATER, s, 1)) {
-				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
-					return(DPS_ERROR);
+			  char *norm = dps_robots_normalise(s);
+			  if((norm != NULL) && AddRobotRule(Indexer, robot, DPS_METHOD_VISITLATER, norm, 1)) {
+			    DPS_FREE(norm);
+			    DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
+			    return DPS_ERROR;
 			  }
+			  DPS_FREE(norm);
 			} else { /* Empty Disallow == Allow all */
 			  if(AddRobotRule(Indexer, robot, DPS_METHOD_GET, "/", 1)) {
 				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
@@ -839,10 +893,13 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			e=s+6;DPS_SKIP(e," \t");s=e;
 			DPS_SKIPN(e," \t");*e=0;
 			if(s && *s){
-			  if(AddRobotRule(Indexer, robot,DPS_METHOD_GET, s, 1)) {
-				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
-					return(DPS_ERROR);
+			  char *norm = dps_robots_normalise(s);
+			  if((norm != NULL) && AddRobotRule(Indexer, robot,DPS_METHOD_GET, norm, 1)) {
+			    DPS_FREE(norm);
+			    DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
+			    return DPS_ERROR;
 			  }
+			  DPS_FREE(norm);
 			}
 		  }else
 		  if((!(strncasecmp(s, "Host", 4))) && (rule)) {
