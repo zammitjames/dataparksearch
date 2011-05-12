@@ -888,6 +888,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	gain += diff;
       }
       
+      if (nitems > 0)
       for (i = 0; i < nitems - 1; i++) {
 	if ((long unsigned)si[i + 1].Item.offset > (long unsigned)SSize) {
 	  DpsLog(P->A, DPS_LOG_ERROR, "si[%ld] too long offset: %ld > %ld, removing", i , (long)si[i + 1].Item.offset, (long)SSize);
