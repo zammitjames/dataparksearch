@@ -1264,6 +1264,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	      DPS_SERVERCACHE tp = Indexer->ServerIdCache[i];
 	      Server->site_id = id = Indexer->ServerIdCache[i].Id;
 	      Server->weight = Indexer->ServerIdCache[i].Weight;
+	      Server->ndocs = Indexer->ServerIdCache[i].Ndocs;
 
 	      Indexer->ServerIdCache[i] = Indexer->ServerIdCache[Indexer->pServerIdCache];
 	      Indexer->ServerIdCache[Indexer->pServerIdCache] = tp;
@@ -1277,7 +1278,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	  int done = 1, have_data;
 	  float weight = 1.0;
 	
-	  dps_snprintf(buf, len, "SELECT rec_id, weight FROM server WHERE command='%c' AND url='%s'",
+	  dps_snprintf(buf, len, "SELECT rec_id, weight, pop_weight FROM server WHERE command='%c' AND url='%s'",
 		       Server->command,
 		       DPS_NULL2EMPTY(Server->Match.pattern)
 		 );
@@ -1285,11 +1286,13 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	  if ((res == DPS_OK) && DpsSQLNumRows(&SQLRes)) {
 	    id = Server->site_id = DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0));
 	    Server->weight = (float)DPS_ATOF(DpsSQLValue(&SQLRes, 0, 1));
+	    Server->ndocs = (size_t)DPS_ATOU(DpsSQLValue(&SQLRes, 0, 2));
 	    DPS_FREE(Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern);
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(Server->Match.pattern));
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].Command = Server->command;
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].Id = id;
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].Weight = Server->weight;
+	    Indexer->ServerIdCache[Indexer->pServerIdCache].Ndocs = Server->ndocs;
 	    Indexer->ServerIdCache[Indexer->pServerIdCache].OnErrored = 0;
 	    Indexer->pServerIdCache = (Indexer->pServerIdCache + 1) % DPS_SERVERID_CACHE_SIZE;
 	    DPS_FREE(buf); DPS_FREE(arg);
@@ -1320,7 +1323,7 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	    weight = (float)DPS_ATOF(DpsSQLValue(&SQLRes, 0, 4));
 
 	  dps_snprintf(buf, len, 
-"INSERT INTO server (rec_id, enabled, tag, category, command, parent, ordre, weight, url) VALUES (%s%d%s, %d, '%s', %s, '%c', %s%d%s, %d, %s, '%s')",
+"INSERT INTO server (rec_id, enabled, tag, category, command, parent, ordre, weight, url, pop_weight) VALUES (%s%d%s, %d, '%s', %s, '%c', %s%d%s, %d, %s, '%s', 1)",
 		       qu, rec_id, qu,
 		       (have_data) ? DPS_ATOI(DpsSQLValue(&SQLRes, 0, 0)) : 0,
 		       (have_data) ? DpsSQLValue(&SQLRes, 0, 1) : "",
@@ -1339,7 +1342,8 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 	  Indexer->ServerIdCache[Indexer->pServerIdCache].Match_Pattern = (char*)DpsStrdup(DPS_NULL2EMPTY(Server->Match.pattern));
 	  Indexer->ServerIdCache[Indexer->pServerIdCache].Command = Server->command;
 	  Indexer->ServerIdCache[Indexer->pServerIdCache].Id = id;
-	  Indexer->ServerIdCache[Indexer->pServerIdCache].Weight = weight;
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].Weight = Server->weight = weight;
+	  Indexer->ServerIdCache[Indexer->pServerIdCache].Ndocs = Server->ndocs = 1;
 	  Indexer->ServerIdCache[Indexer->pServerIdCache].OnErrored = 0;
 	  Indexer->pServerIdCache = (Indexer->pServerIdCache + 1) % DPS_SERVERID_CACHE_SIZE;
 	}
@@ -4650,22 +4654,6 @@ int DpsFindWordsSQL(DPS_AGENT * query, DPS_RESULT *Res, DPS_DB *db) {
 		    }
 		    if((db->DBMode==DPS_DBMODE_SINGLE_CRC)||(db->DBMode==DPS_DBMODE_MULTI_CRC)){
 		      dpshash32_t crc = Res->items[wordnum].crcword;
-#ifdef WITH_OLDHASH
-		      dpshash32_t crc2 = DpsStrOldHash32(Res->items[wordnum].word);
-		      if(where[0]){
-			dps_snprintf(qbuf,sizeof(qbuf)-1,"\
-SELECT %s.url_id,%s.intag \
-FROM %s, url%s \
-WHERE (%s.word_id=%d OR %s.word_id=%d) \
-AND url.rec_id=%s.url_id AND %s ORDER BY url_id,intag",
-				     tablename, tablename,
-				     tablename, db->from, tablename,crc, tablename, crc2,
-				     tablename, where);
-		      }else{
-			dps_snprintf(qbuf,sizeof(qbuf)-1,"SELECT url_id,intag FROM %s WHERE %s.word_id=%d OR %s.word_id=%d ORDER BY url_id,intag",
-				     tablename, tablename, crc, tablename, crc2);
-		      }
-#else
 		      if(where[0]){
 			dps_snprintf(qbuf,sizeof(qbuf)-1,"\
 SELECT %s.url_id,%s.intag \
@@ -4679,7 +4667,6 @@ AND url.rec_id=%s.url_id AND %s ORDER BY url_id,intag",
 			dps_snprintf(qbuf,sizeof(qbuf)-1,"SELECT url_id,intag FROM %s WHERE %s.word_id=%d ORDER BY url_id,intag",
 				     tablename,tablename,crc);
 		      }
-#endif
 		    }else{
 		      char cmparg[256];
 		      switch(word_match){	
