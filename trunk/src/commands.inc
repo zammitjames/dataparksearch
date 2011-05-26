@@ -117,6 +117,7 @@
 	{"MaxDepth",		1,1,	srv_rpl_num_var},
 	{"MaxDocSize",		1,1,	env_rpl_var},
 	{"MaxDocsPerServer",	1,1,	srv_rpl_num_var},
+	{"MaxDocsPerSite",	1,1,	srv_rpl_num_var},
 	{"MaxHops",		1,1,	srv_rpl_num_var},
 	{"MaxHrefsPerServer",	1,1,	srv_rpl_num_var},
 	{"MaxNetErrors",	1,1,	srv_rpl_num_var},
