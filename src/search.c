@@ -873,11 +873,11 @@ int main(int argc, char **argv, char **envp) {
 	DPS_FREE(storedstr);
 	
 freeres:
-	DpsResultFree(Res);
 	
 end:
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "bottom");
 	if (httpd) fflush(NULL); else fclose(stdout);
+	DpsResultFree(Res);
 
 #ifdef HAVE_ASPELL
 	if (Agent->Flags.use_aspellext && Agent->naspell > 0) {

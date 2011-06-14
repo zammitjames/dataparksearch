@@ -438,14 +438,13 @@ static int dpstoredoc_handler(request_rec *r) {
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&ap_rprintf, r, NULL, 0, &Agent->st_tmpl, "result");
 	
 fin:
+	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&ap_rprintf, r, NULL, 0, &Agent->st_tmpl, "bottom");
+
 	Res->Doc = NULL;
 	Res->num_rows = 0;
 	DpsResultFree(Res);
 	DpsDocFree(Doc);
 	
-	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&ap_rprintf, r, NULL, 0, &Agent->st_tmpl, "bottom");
-
-
 	DPS_FREE(HDoc);
 
 	DpsVarListFree(&query_vars);
@@ -1192,11 +1191,11 @@ static int dpsearch_handler(request_rec *r) {
 	DPS_FREE(storedstr);
 	
 freeres:
-	DpsResultFree(Res);
 	
 end:
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&ap_rprintf, r, NULL, 0, &Agent->tmpl, "bottom");
 	
+	DpsResultFree(Res);
 	DpsVarListDelLst(&Agent->Vars, &query_vars, NULL, "*");
 	DpsVarListFree(&query_vars);
 /*	DpsVarListFree(&Env_Vars);*/
