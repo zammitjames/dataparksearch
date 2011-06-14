@@ -2681,7 +2681,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
   DpsLog(query, DPS_LOG_DEBUG, "max_order: %d  max_order_inquery: %d", Res->max_order, Res->max_order_inquery);
 
 #ifdef WITH_REL_TRACK
-  Track = Res->CoordList.Track = (DPS_URLTRACK*)DpsRealloc(Res->CoordList.Track, Res->CoordList.ncoords * sizeof(*Res->CoordList.Track));
+  Track = Res->CoordList.Track = (DPS_URLTRACK*)DpsRealloc(Res->CoordList.Track, (Res->CoordList.ncoords + 1) * sizeof(*Res->CoordList.Track));
   if (Track == NULL) {TRACE_OUT(query); return; }
 #endif
 
@@ -2713,7 +2713,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
   }
 
 #ifdef WITH_REL_DISTANCE
-  R[DPS_N_DISTANCE] = DPS_AVG_DISTANCE; /*Res->WWList.nuniq;*/ /*(Res->WWList.nuniq == 1) ? 1 : 2;*/ /* Res->WWList.nuniq - 1;*/
+  R[DPS_N_DISTANCE] = DPS_AVG_DISTANCE;
 #endif
 #ifdef WITH_REL_POSITION
   R[DPS_N_POSITION] = DPS_AVG_POSITION;
@@ -2723,17 +2723,18 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
   R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT * (Res->max_order_inquery + 1);
 #endif
   R[DPS_N_COUNT] = 0;
+  R[DPS_N_ORIGIN] = DpsOriginIndex(DPS_WORD_ORIGIN_QUERY);
 
   wordnum = DPS_WRDNUM(Crd[0].coord);
   wordsec = DPS_WRDSEC_N(Crd[0].coord, nsections);
   prev_wordpos = wordpos = DPS_WRDPOS(Crd[0].coord);
   wordorder = Res->WWList.Word[wordnum].order_inquery;
 
-  Rbc =  1.0/*(double)(DpsOriginWeightUltra(DPS_WORD_ORIGIN_COMMON) | 0xF)*/;
+  Rbc =  1.0;
 
-  /*if (DPS_WORD_ORIGIN_QUERY & Res->WWList.Word[wordnum].origin)*/ D[DPS_N_ADD + wordsec]=1;
+  D[DPS_N_ADD + wordsec]=1;
   xy = (double)(wf[wordsec]);
-  xy_w = D[DPS_N_ADD + nsections + wordnum] = DpsOriginWeightUltra(Res->WWList.Word[wordnum].origin);
+  xy_w = D[DPS_N_ADD + nsections + wordorder] = DpsOriginWeightUltra(Res->WWList.Word[wordnum].origin);
 
 /**********************************************/
 
@@ -2747,7 +2748,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 #endif
   D[DPS_N_ADD + wordsec] = 1;
-  count[Res->WWList.Word[wordnum].order]++;
+  count[wordorder]++;
   phr_n = 1;
   j = 0;
 
@@ -2768,7 +2769,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
       /*if (DPS_WORD_ORIGIN_QUERY & Res->WWList.Word[wordnum].origin)*/ D[DPS_N_ADD + wordsec] = 1;
       xy += (double)(wf[wordsec]);
       xy_w |= DpsOriginWeightUltra(Res->WWList.Word[wordnum].origin);
-      D[DPS_N_ADD + nsections + wordnum] += DpsOriginWeightUltra(Res->WWList.Word[wordnum].origin);
+      D[DPS_N_ADD + nsections + wordorder] += DpsOriginWeightUltra(Res->WWList.Word[wordnum].origin);
 
       phr_n++;
 #ifdef WITH_REL_POSITION
@@ -2866,7 +2867,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
 /*	    count[Res->WWList.Word[wordnum].order]++;*/
       /*if (DPS_WORD_ORIGIN_QUERY & Res->WWList.Word[wordnum].origin)*/ D[DPS_N_ADD + wordsec] = 1;
       xy = (double)(wf[wordsec]);
-      xy_w = D[DPS_N_ADD + nsections + wordnum] = DpsOriginWeightUltra(Res->WWList.Word[wordnum].origin);
+      xy_w = D[DPS_N_ADD + nsections + wordorder] = DpsOriginWeightUltra(Res->WWList.Word[wordnum].origin);
     }
   }
 
