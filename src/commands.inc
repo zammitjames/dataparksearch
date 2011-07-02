@@ -191,6 +191,7 @@
 	{"ServerFile",            1,100,  add_srv_file},
 	{"ServerTable",		1,1,	add_srv_table},
 	{"ServerWeight",	1,1,	srv_rpl_num_var},
+	{"Sitemaps",		1,1,	srv_rpl_bool_var},
 	{"SkipHrefIn",          1,1,    env_rpl_var},
 	{"SkipUnreferred",      1,1,    env_rpl_var},
 	{"Socket",		1,1,	env_rpl_var},
