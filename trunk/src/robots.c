@@ -913,7 +913,7 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			  }
 			}
 		  }else
-		  if((!(strncasecmp(s, "Sitemap", 7))) && (rule)) {
+		  if((!(strncasecmp(s, "Sitemap", 7))) && (rule) && DpsVarListFindInt(&Srv->Vars, "Sitemaps", 1)) {
 			if((e=strchr(s+8,'#')))*e=0;
 			e=s+8;DPS_SKIP(e," \t");s=e;
 			DPS_SKIPN(e," \t");*e=0;
