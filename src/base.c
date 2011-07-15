@@ -643,7 +643,8 @@ __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len) {
       zstream.zfree = Z_NULL;
       zstream.opaque = Z_NULL;
       if (read(P->Sfd, CDoc, P->Item.size) != (ssize_t)P->Item.size) {
-	DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x -- %d",  P->subdir, P->basename, P->Item.size, P->rec_id, __LINE__);
+	DpsLog(P->A, DPS_LOG_ERROR, "[%s/%s] %d read error, rec_id: %x, deleting... -- %d",  P->subdir, P->basename, P->Item.size, P->rec_id, __LINE__);
+	DpsBaseDelete(P);
 	DPS_FREE(CDoc);
 	return NULL;
       }
