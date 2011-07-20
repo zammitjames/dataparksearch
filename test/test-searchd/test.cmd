@@ -22,8 +22,8 @@ fail !0 exec $(INDEXER) -Esqlmon $(DPS_TEST_DIR)/indexer.conf < $(DPS_TEST_DIR)/
 
 fail !0 exec $(SEARCHD) -v5 -w $(DPS_TEST_DIR)/var $(DPS_TEST_DIR)/searchd.conf >> $(DPS_TEST_LOG) 2>&1
 
-fail !0 exec $(SEARCH) body1 > $(DPS_TEST_DIR)/search.rej 2>&1
-fail !0 exec $(SEARCH) Wall > $(DPS_TEST_DIR)/search2.rej 2>&1
+fail !0 exec $(SEARCH) "body1&rm=2" > $(DPS_TEST_DIR)/search.rej 2>&1
+fail !0 exec $(SEARCH) "Wall&rm=2" > $(DPS_TEST_DIR)/search2.rej 2>&1
 
 fail !0 exec kill -9 `cat $(DPS_TEST_DIR)/var/searchd.pid` >> $(DPS_TEST_LOG) 2>&1
 

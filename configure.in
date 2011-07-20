@@ -1818,22 +1818,6 @@ AC_ARG_ENABLE(idn,
 ])
 
 
-hashcompatible=no
-AC_MSG_CHECKING(for compatibility with old hash)
-AC_ARG_ENABLE(hashcompatible,
-[  --enable-hashcompatible enable compatibility with old hash function.  
-			  You need this only if you're unable to reindex old database.],
-[
-	hashcompatible="$enableval"
-        AC_MSG_RESULT($hashcompatible)
-  	if test "$enableval" != "no"; then
-		AC_DEFINE(WITH_OLDHASH)
-  	fi
-],[
-  	AC_MSG_RESULT($hashcompatible)
-])
-
-
 
 
 dnl check building in FreeBSD ports

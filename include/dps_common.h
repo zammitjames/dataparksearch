@@ -137,6 +137,12 @@
 #define DPS_URLDIR      "url"
 
 
+/** Forward declaration of DPS_AGENT */
+struct dps_indexer_struct;
+/** Forward declaration of DPS_STACK_ITEM */
+struct dps_stack_item_struct;
+
+
 /************************ Statistics **********************/
 typedef struct stat_struct {
 	int	        status;
@@ -896,7 +902,21 @@ typedef struct {
 	DPS_CATITEM	*Category;
 } DPS_CATEGORY;
 
+
+#include "dps_db_int.h"
+#include "dps_base.h"
+
 typedef struct {
+  DPS_BASE_PARAM BASEP;
+  struct dps_stack_item_struct **pmerg;
+  DPS_LOGDEL *del_buf;
+  int *wf;
+  size_t del_count;
+  int flag_null_wf;
+} DPS_WRD_CFG;
+
+
+typedef struct dps_stack_item_struct {
         int		cmd, secno;
         int             origin, order_origin;
 /*	unsigned long	arg;          .order now */
@@ -915,6 +935,7 @@ typedef struct {
         dpsunicode_t    *uword;
 #ifdef HAVE_PTHREAD
         pthread_t       thread;
+        DPS_WRD_CFG WrdCfg;
 #endif
 } DPS_STACK_ITEM;
 
@@ -952,7 +973,6 @@ typedef struct {
 } DPS_RESULT;
 
 
-#include "dps_db_int.h"
 
 typedef struct {
 	size_t		nitems;
@@ -1035,9 +1055,6 @@ typedef struct {
    enum dps_prmethod    poprank_method;
    enum dps_indcmd      cmd;
 } DPS_FLAGS;
-
-/** Forward declaration of DPS_AGENT */
-struct dps_indexer_struct;
 
 /** Config file */
 typedef struct dps_config_struct {

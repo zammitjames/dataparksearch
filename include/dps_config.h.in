@@ -518,9 +518,6 @@
 /* libparanoia usage */
 #undef WITH_PARANOIA
 
-/* compatible with old hash function */
-#undef WITH_OLDHASH
-
 /* cache mode version of mod_dpsearch */
 #if defined(APACHE1) || defined(APACHE2)
 #undef APACHE_CACHEONLY

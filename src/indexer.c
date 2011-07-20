@@ -2430,7 +2430,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			    Doc->method = DPS_METHOD_VISITLATER;
 			  }
 			  DpsVarListReplaceInt(&Doc->Sections, "Site_id", DpsServerGetSiteId(Indexer, Server, Doc));
-			  if( (Server->MaxDocsPerSite != (dps_uint4)-1) && (DpsVarListFindInt(&Doc->Sections, "SiteNDocs", 1) > Server->MaxDocsPerSite) ) {
+			  if( (Server->MaxDocsPerSite > 0) && (DpsVarListFindInt(&Doc->Sections, "SiteNDocs", 1) > Server->MaxDocsPerSite) ) {
 			    DpsLog(Indexer, DPS_LOG_WARN, "Maximum of %u documents per site reached, skip it.", Server->MaxDocsPerSite);
 			    Doc->method = DPS_METHOD_VISITLATER;
 			  }

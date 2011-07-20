@@ -1729,7 +1729,6 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	char fname[PATH_MAX];
 
 	TRACE_IN(Agent, "DpsURLDataPreloadCache");
-	DpsLog(Agent, DPS_LOG_ERROR, " DpsURLDataPreloadCache");
 
 	if (Agent->Conf->URLDataFile == NULL) {
 	  size_t nitems = (Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems;
@@ -1777,7 +1776,6 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	      }
 	    }
 	}
-	    DpsLog(Agent, DPS_LOG_ERROR, " DpsURLDataPreloadCache %d", __LINE__);
 
 	DpsLog(Agent, DPS_LOG_INFO, "URL data preloaded. %u bytes of memory used", mem_used);
 	TRACE_OUT(Agent);
@@ -1814,7 +1812,51 @@ static int cmp_search_limit(const DPS_SEARCH_LIMIT *l1, const DPS_SEARCH_LIMIT *
 }
 
 
+
 /*#define MAXMERGE 256*/ /* <= one byte */
+
+static void dps_read_word(void *param) {
+  DPS_WRD_CFG *Cfg = (DPS_WRD_CFG*)param;
+  size_t num;
+  size_t orig_size;
+
+  /*  bzero(&BASEP, sizeof(BASEP));*/ /* must be zeroed already */
+  Cfg->BASEP.subdir = DPS_TREEDIR;
+  Cfg->BASEP.basename = "wrd";
+  Cfg->BASEP.indname = "wrd";
+  /*  BASEP.NFiles = (db->WrdFiles > 0) ? (int)db->WrdFiles : DpsVarListFindInt(&Indexer->Vars, "WrdFiles", 0x300);
+      BASEP.vardir = (db->vardir) ? db->vardir : DpsVarListFindStr(&Indexer->Vars, "VarDir", DPS_VAR_DIR);*/ /* must be set already */
+  /*Cfg->BASEP.A = Indexer;*/ /* must be set already */
+  Cfg->BASEP.mode = DPS_READ_LOCK;
+#ifdef HAVE_ZLIB
+  Cfg->BASEP.zlib_method = Z_DEFLATED;
+  Cfg->BASEP.zlib_level = 9;
+  Cfg->BASEP.zlib_windowBits = DPS_BASE_WRD_WINDOWBITS;
+  Cfg->BASEP.zlib_memLevel = 9;
+  Cfg->BASEP.zlib_strategy = DPS_BASE_WRD_STRATEGY;
+#endif
+
+  Cfg->BASEP.rec_id = Cfg->pmerg[0]->crcword;
+  Cfg->pmerg[0]->db_pcur = Cfg->pmerg[0]->db_pbegin = Cfg->pmerg[0]->db_pchecked = (DPS_URL_CRD*)DpsBaseARead(&Cfg->BASEP, &orig_size);
+
+  if (Cfg->pmerg[0]->db_pbegin != NULL) {
+    Cfg->pmerg[0]->count = num = RemoveOldCrds(Cfg->pmerg[0]->db_pcur, orig_size / sizeof(DPS_URL_CRD), Cfg->del_buf, Cfg->del_count);
+    Cfg->pmerg[0]->pcur = Cfg->pmerg[0]->pchecked = Cfg->pmerg[0]->pbegin = (DPS_URL_CRD_DB*)DpsMalloc(num * sizeof(DPS_URL_CRD_DB));
+    if (Cfg->pmerg[0]->pbegin != NULL) {
+
+      if (Cfg->flag_null_wf) {
+	Cfg->pmerg[0]->count = DpsRemoveNullSections(Cfg->pmerg[0]->db_pcur, num, Cfg->wf);
+	num = Cfg->pmerg[0]->count;
+      }
+
+      Cfg->pmerg[0]->plast = &Cfg->pmerg[0]->pcur[num];
+      Cfg->pmerg[0]->db_plast = &Cfg->pmerg[0]->db_pcur[num];
+    }
+  } else Cfg->pmerg[0]->count = 0;
+
+  DpsBaseClose(&Cfg->BASEP);
+
+}
 
 
 int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
@@ -2034,11 +2076,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	BASEP.zlib_strategy = DPS_BASE_WRD_STRATEGY;
 #endif
 
-	if ((pmerg = (DPS_STACK_ITEM**)DpsXmalloc((
-#ifdef WITH_OLDHASH
-						   2 *
-#endif
-						   nwords + 1) * sizeof(DPS_STACK_ITEM *))) == NULL) {
+	if ((pmerg = (DPS_STACK_ITEM**)DpsXmalloc((nwords + 1) * sizeof(DPS_STACK_ITEM *))) == NULL) {
 	  DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc %d bytes at %s:%d", (nwords + 1) * sizeof(DPS_STACK_ITEM *), __FILE__, __LINE__);
 	  TRACE_OUT(Indexer);
 	  return DPS_ERROR;
@@ -2053,36 +2091,12 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    if (pmerg[z]->crcword == Res->items[i].crcword && (pmerg[z]->secno == 0 || pmerg[z]->secno == Res->items[i].secno)) break;
 	  if (z < npmerge) continue;
 
-#ifdef WITH_OLDHASH
-	  { size_t a;
-	    for(a = 0,
-#endif
-	  
 	  BASEP.rec_id = Res->items[i].crcword;
-
-#ifdef WITH_OLDHASH
-		a < 2; a++, P.rec_id = DpsStrOldHash32(Res->items[i].word)) {
-#endif
-
-
-
-#ifdef DEBUG_SEARCH
-	      DpsLog(Indexer, DPS_LOG_DEBUG, "\t\t\tstack.word[%i]:%s %x", i, Res->items[i].word, BASEP.rec_id);
-	  seek_ticks = DpsStartTimer();
-#endif
 
 	  DpsBaseSeek(&BASEP, DPS_READ_LOCK);
 
-#ifdef DEBUG_SEARCH
-	  seek_ticks = DpsStartTimer() - seek_ticks;
-	  DpsLog(Indexer, DPS_LOG_EXTRA, "Seek time: %.4f)", (float)seek_ticks / 1000);
-#endif
-
 	  if (BASEP.rec_id == BASEP.Item.rec_id) {
 
-#ifdef DEBUG_SEARCH
-	    seek_ticks = DpsStartTimer();
-#endif
 	    pmerg[npmerge] = &Res->items[i];
 
 	    pmerg[npmerge]->db_pcur = pmerg[npmerge]->db_pbegin = pmerg[npmerge]->db_pchecked = (DPS_URL_CRD*)DpsBaseARead(&BASEP, &orig_size);
@@ -2102,25 +2116,9 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	      continue;
 	    }
 		
-#ifdef DEBUG_SEARCH
-	    seek_ticks = DpsStartTimer() - seek_ticks;
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "Read %d->%d time: %.4f)", BASEP.Item.size, BASEP.Item.orig_size, (float)seek_ticks / 1000);
-#endif
-
 	    if (flag_null_wf) {
-
-#ifdef DEBUG_SEARCH
-	      seek_ticks = DpsStartTimer();
-#endif
 	      pmerg[npmerge]->count = DpsRemoveNullSections(pmerg[npmerge]->db_pcur, num, wf);
-
-#ifdef DEBUG_SEARCH
-	      seek_ticks = DpsStartTimer() - seek_ticks;
-	      DpsLog(Indexer, DPS_LOG_EXTRA, "Remove null sections (%d->%d) time: %.4f", 
-		     num, pmerg[npmerge]->count, (float)seek_ticks / 1000);
-#endif
 	      num = pmerg[npmerge]->count;
-
 	    }
 
 	    pmerg[npmerge]->plast = &pmerg[npmerge]->pcur[num];
@@ -2128,16 +2126,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	    npmerge++;
 	    Res->CoordList.ncoords += num;
 
-#ifdef DEBUG_SEARCH
-	  } else {
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "!= P.rec_id:%x  P.Item.rec_id:%x", BASEP.rec_id, BASEP.Item.rec_id);
-#endif	    
 	  }
-
-#ifdef WITH_OLDHASH
-	    }
-	  }
-#endif
 
 	}
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2004-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2003 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,8 +19,6 @@
 #ifndef _DPS_BASE_H
 #define _DPS_BASE_H
 
-/*#include <stdio.h>
-#include "dps_common.h"*/
 
 #define DPS_BASE_BITS 16      /* bits of rec_id for file no. */
 #define DPS_BASE_MASK ((1UL << DPS_BASE_BITS) - 1)
@@ -62,7 +60,7 @@ typedef struct SortBaseItem {
 
 typedef struct {
   DPS_BASEITEM  Item;
-  DPS_AGENT *A;
+  struct dps_indexer_struct *A;
   dps_uint8 CurrentItemPos, PreviousItemPos;
   const char *subdir;
   const char *basename;
@@ -85,10 +83,10 @@ extern __C_LINK int __DPSCALL DpsBaseWrite(DPS_BASE_PARAM *P, void *data, size_t
 extern __C_LINK int __DPSCALL DpsBaseRead(DPS_BASE_PARAM *P, void *buf, size_t len);
 extern __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len);
 extern __C_LINK int __DPSCALL DpsBaseDelete(DPS_BASE_PARAM *P);
-extern __C_LINK int __DPSCALL DpsBaseCheckup(DPS_BASE_PARAM *P, int (*checkrec) (DPS_AGENT *A, const urlid_t rec_id));
+extern __C_LINK int __DPSCALL DpsBaseCheckup(DPS_BASE_PARAM *P, int (*checkrec) (struct dps_indexer_struct *A, const urlid_t rec_id));
 extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int base);
 extern __C_LINK int __DPSCALL DpsBaseFsync(DPS_BASE_PARAM *P);
-extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type);
+extern __C_LINK int __DPSCALL DpsBaseRelocate(struct dps_indexer_struct *Agent, int base_type);
 
 
 #endif
