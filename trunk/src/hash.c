@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -70,74 +70,6 @@ static dpshash32_t hash32(const void *key, size_t len, const dpshash32_t initval
 	return (dpshash32_t)h;
 }
 
-#ifdef WITH_OLDHASH
-
-#include <sys/types.h>
-#define hashsize32(n) ((dpshash32_t)1 << (n))
-#define hashmask32(n) (hashsize32(n) - 1)
-#define mix(a,b,c) \
-{ \
-  a -= b; a -= c; a ^= (c>>13); \
-  b -= c; b -= a; b ^= (a<<8); \
-  c -= a; c -= b; c ^= (b>>13); \
-  a -= b; a -= c; a ^= (c>>12);  \
-  b -= c; b -= a; b ^= (a<<16); \
-  c -= a; c -= b; c ^= (b>>5); \
-  a -= b; a -= c; a ^= (c>>3);  \
-  b -= c; b -= a; b ^= (a<<10); \
-  c -= a; c -= b; c ^= (b>>15); \
-}
-static dpshash32_t oldhash32(register const char *k, size_t length, const dpshash32_t initval) {
-   register dpshash32_t a, b, c;
-   register size_t len;
-
-   if (k == NULL || length == 0) return initval;
-
-   /* Set up the internal state */
-   len = length;
-   a = b = 0x9e3779b9;  /* the golden ratio; an arbitrary value */
-   c = initval;           /* the previous hash value */
-
-   /*---------------------------------------- handle most of the key */
-   while (len >= 12)
-   {
-      a += (k[0] +((dpshash32_t)k[1]<<8) +((dpshash32_t)k[2]<<16) +((dpshash32_t)k[3]<<24));
-      b += (k[4] +((dpshash32_t)k[5]<<8) +((dpshash32_t)k[6]<<16) +((dpshash32_t)k[7]<<24));
-      c += (k[8] +((dpshash32_t)k[9]<<8) +((dpshash32_t)k[10]<<16)+((dpshash32_t)k[11]<<24));
-      mix(a,b,c);
-      k += 12; len -= 12;
-   }
-
-   /*------------------------------------- handle the last 11 bytes */
-   c += length;
-   switch(len)              /* all the case statements fall through */
-   {
-   case 11: c+=((dpshash32_t)k[10]<<24);
-   case 10: c+=((dpshash32_t)k[9]<<16);
-   case 9 : c+=((dpshash32_t)k[8]<<8);
-      /* the first byte of c is reserved for the length */
-   case 8 : b+=((dpshash32_t)k[7]<<24);
-   case 7 : b+=((dpshash32_t)k[6]<<16);
-   case 6 : b+=((dpshash32_t)k[5]<<8);
-   case 5 : b+=k[4];
-   case 4 : a+=((dpshash32_t)k[3]<<24);
-   case 3 : a+=((dpshash32_t)k[2]<<16);
-   case 2 : a+=((dpshash32_t)k[1]<<8);
-   case 1 : a+=k[0];
-     /* case 0: nothing left to add */
-   }
-   mix(a,b,c);
-   /*-------------------------------------------- report the result */
-   return c;
-}
-
-dpshash32_t DpsOldHash32(const char * buf, size_t size) {
-  return oldhash32(buf, size, 0x0);
-}
-
-
-
-#endif
 
 
 

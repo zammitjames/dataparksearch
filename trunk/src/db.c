@@ -1477,6 +1477,7 @@ static float DpsTimeDiff(struct timeval *tm1, struct timeval *tm2) {
 DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	DPS_DB		*db;
 	DPS_RESULT	*Res;
+	DPS_EXCERPT_CFG Cfg;
 	int		res;
 	unsigned long	ticks=DpsStartTimer(), ticks_;
 	size_t i, dbfrom = 0, dbto =  (A->flags & DPS_FLAG_UNOCON) ? A->Conf->dbl.nitems : A->dbl.nitems, num;
@@ -1485,7 +1486,6 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	size_t          ExcerptSize = (size_t)DpsVarListFindInt(&A->Vars, "ExcerptSize", 256);
 	size_t          ExcerptPadding = (size_t)DpsVarListFindInt(&A->Vars, "ExcerptPadding", 40);
 	const char      *label = DpsVarListFindStr(&A->Vars, "label", NULL);
-	char            *Excerpt = NULL;
 	char		str[256];
 /*	struct timeval stime, etime;*/
 	
@@ -1635,6 +1635,11 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	ticks_=DpsStartTimer();
 	DpsLog(A, DPS_LOG_DEBUG, "Start Order, Last-Modified and Excerpts");
 
+	Cfg.query = A;
+	Cfg.Res = Res;
+	Cfg.size = ExcerptSize;
+	Cfg.padding = ExcerptPadding;
+
 	for(i = 0; i < num; i++) {
 	  DPS_DOCUMENT *D = &Res->Doc[i];
 	  DPS_MATCH    *Alias = NULL;
@@ -1669,14 +1674,13 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  DpsFree(alcopy);
 
 	  if (DpsVarListFindInt(&Res->Doc[i].Sections, "ST", -1) == -1) {
-	    if (A->Flags.do_excerpt) Excerpt = DpsExcerptDoc(A, Res, &Res->Doc[i], ExcerptSize, ExcerptPadding);
-	    if ((Excerpt != NULL) && (dps_strlen(Excerpt) > 6)) {
-	      DpsVarListReplaceStr(&Res->Doc[i].Sections, "body", Excerpt);
+	    if (A->Flags.do_excerpt) {
+	      Cfg.Doc = &Res->Doc[i];
+	      DpsExcerptDoc(&Cfg);
 	    }
 	    if (DpsVarListFindStr(&Res->Doc[i].Sections, "Z", NULL) != NULL) {
 	      DpsVarListReplaceInt(&Res->Doc[i].Sections, "ST", 0);
 	    }
-	    DPS_FREE(Excerpt);
 	  }
 	}
 

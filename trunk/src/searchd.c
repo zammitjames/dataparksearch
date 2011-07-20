@@ -720,10 +720,10 @@ static int do_RESTful(DPS_AGENT *Agent, int client, const DPS_SEARCHD_PACKET_HEA
   res = DPS_OK;
 
 freeres:
-  DpsResultFree(Res);
 	
 end:
   DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&DpsSockPrintf, &client, NULL, 0, &Agent->tmpl, "bottom");
+  DpsResultFree(Res);
   dps_closesocket(client); /* Too early closure ? */
 
 #ifdef HAVE_ASPELL
@@ -776,6 +776,13 @@ static int do_client(DPS_AGENT *Agent, int client){
 	int pre_server, server;
 	const char *bcharset;
 	size_t ExcerptSize, ExcerptPadding;
+#ifdef HAVE_PTHREAD
+	pthread_t *threads;
+	DPS_EXCERPT_CFG *Cfg;
+	pthread_attr_t attr;
+#else
+	DPS_EXCERPT_CFG Cfg;
+#endif
 #ifdef __irix__
 	int addrlen;
 #else
@@ -884,31 +891,65 @@ static int do_client(DPS_AGENT *Agent, int client){
 				DpsAgentStoredConnect(Agent);
 				ExcerptSize = (size_t)DpsVarListFindInt(&Agent->Vars, "ExcerptSize", 256);
 				ExcerptPadding = (size_t)DpsVarListFindInt(&Agent->Vars, "ExcerptPadding", 40);
+
+#ifdef HAVE_PTHREAD
+#ifdef HAVE_PTHREAD_SETCONCURRENCY_PROT
+				if (pthread_setconcurrency(Res->num_rows + 1) != 0) {
+				  DpsLog(A, DPS_LOG_ERROR, "Can't set %d concurrency threads", Res->num_rows + 1);
+				}
+#elif HAVE_THR_SETCONCURRENCY_PROT
+				if (thr_setconcurrency(Res->num_rows + 1) != NULL) {
+				  DpsLog(A, DPS_LOG_ERROR, "Can't set %d concurrency threads", Res->num_rows + 1);
+				}
+#endif
+               
+				threads = (pthread_t*)DpsMalloc((Res->num_rows + 1) * sizeof(pthread_t));
+				Cfg = (DPS_EXCERPT_CFG*)DpsMalloc((Res->num_rows + 1) * sizeof(DPS_EXCERPT_CFG));
+				if (threads != NULL && Cfg != NULL) {
+				  pthread_attr_init(&attr);
+				  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+				  for(i = 0; i < Res->num_rows; i++) {
+				    Cfg[i].query = Agent;
+				    Cfg[i].Res = Res;
+				    Cfg[i].size = ExcerptSize;
+				    Cfg[i].padding = ExcerptPadding;
+				    Cfg[i].Doc = &Res->Doc[i];
+				    if (pthread_create(&threads[i], &attr, &DpsExcerptDoc, Cfg + i) == 0) {
+				    }
+				  }
+				  pthread_attr_destroy(&attr);
+				}
+				
+#else /* HAVE_PTHREAD */
+				Cfg.query = Agent;
+				Cfg.Res = Res;
+				Cfg.size = ExcerptSize;
+				Cfg.padding = ExcerptPadding;
+#endif /* HAVE_PTHREAD */
 	
 				for(i=0;i<Res->num_rows;i++){
 					size_t		ulen;
 					size_t		olen;
-					char		*textbuf, *Excerpt = NULL, *al;
+					char		*textbuf;
 					size_t		nsec, r;
 					DPS_DOCUMENT	*D=&Res->Doc[i];
+#if defined(HAVE_PTHREAD)
+					if (pthread_join(threads[i], NULL) != 0) {
+					}
+#else
+					char		*al;
 					
 					al = DpsVarListFindStrTxt(&D->Sections, "URL", "");
 					DpsLog(Agent, DPS_LOG_DEBUG, "Start excerpts for %s [dbnum:%d]", al, D->dbnum);
 
-					if (Agent->Flags.do_excerpt) Excerpt = DpsExcerptDoc(Agent, Res, D, ExcerptSize, ExcerptPadding);
-
-					if ((Excerpt != NULL) && (dps_strlen(Excerpt) > 6)) {
-					  DpsVarListReplaceStr(&D->Sections, "body", Excerpt);
+					if (Agent->Flags.do_excerpt) {
+					  Cfg.Doc = D;
+					  DpsExcerptDoc(&Cfg);
 					}
+#endif
 					if (DpsVarListFindStr(&D->Sections, "Z", NULL) != NULL) {
 					  DpsVarListReplaceStr(&D->Sections, "ST", "0");
 					}
-					DPS_FREE(Excerpt);
-/*
-					for (r = 0; r < 256; r++)
-					for (nsec = 0; nsec < D->Sections.Root[r].nvars; nsec++)
-						D->Sections.Root[r].Var[nsec].section = 1;
-*/					
 					textbuf = DpsDocToTextBuf(D, 1, 0);
 					if (textbuf == NULL) break;
 /*					
@@ -927,6 +968,10 @@ static int do_client(DPS_AGENT *Agent, int client){
 					sprintf(dinfo+olen,"%s\r\n",textbuf);
 					DpsFree(textbuf);
 				}
+#ifdef HAVE_PTHREAD
+				DPS_FREE(Cfg);
+				DPS_FREE(threads);
+#endif				
 				
 #ifdef DEBUG_SEARCH
 				total_ticks = DpsStartTimer() - total_ticks;
@@ -1549,13 +1594,16 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		  dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qtrack (ip,qwords,qtime,found,wtime) VALUES ('%s','%s',%s,%s,%s)",
 			       IP, qwords, qtime, total_found, wtime );
  
+		  DpsLog(Agent, DPS_LOG_EXTRA, "%s", qbuf);
+
 		  res = DpsSQLAsyncQuery(tr_db, NULL, qbuf);
-		  if (res != DPS_OK) {to_delete = 0; continue; }
+		  if (res != DPS_OK) {to_delete = tr_db->connected; goto tr_loop_continue; }
 
 		  dps_snprintf(qbuf, sizeof(qbuf), "SELECT rec_id FROM qtrack WHERE ip='%s' AND qtime=%s", IP, qtime);
+		  DpsLog(Agent, DPS_LOG_EXTRA, "%s", qbuf);
 		  res = DpsSQLQuery(tr_db, &sqlRes, qbuf);
-		  if (res != DPS_OK) { to_delete = 0; continue; }
-		  if (DpsSQLNumRows(&sqlRes) == 0) { DpsSQLFree(&sqlRes); res = DPS_ERROR; continue; }
+		  if (res != DPS_OK) { to_delete = 0; DpsSQLFree(&sqlRes); goto tr_loop_continue; }
+		  if (DpsSQLNumRows(&sqlRes) == 0) { DpsSQLFree(&sqlRes); res = DPS_ERROR; goto tr_loop_continue; }
 		  rec_id = DPS_ATOI(DpsSQLValue(&sqlRes, 0, 0));
 		  DpsSQLFree(&sqlRes);
 
@@ -1565,6 +1613,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		      val = dps_strtok_r(NULL, "\2", &lt, NULL); 
 		      dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qinfo (q_id,name,value) VALUES (%s%i%s,'%s','%s')", 
 				   qu, rec_id, qu, var, val);
+		  DpsLog(Agent, DPS_LOG_EXTRA, "%s", qbuf);
 		      res = DpsSQLAsyncQuery(tr_db, NULL, qbuf);
 		      if (res != DPS_OK) continue;
 		    }
@@ -1572,7 +1621,7 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		}
 
 	      }
-
+	    tr_loop_continue:
 	      if (to_delete) unlink(fullname);
 
 	    }

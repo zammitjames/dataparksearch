@@ -342,14 +342,6 @@ __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, const 
     }
   }
 
-#ifdef WITH_OLDHASH
-  if (first) {
-    first = 0;
-    rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
-    goto unstore_oncemore;
-  }
-#endif
-
   if(origurl != NULL) {
     DpsVarListReplaceStr(&Doc->Sections, "URL", origurl);
 /*    DpsVarListReplaceInt(&Doc->Sections, "URL_ID", rec_id);*/
@@ -650,8 +642,12 @@ static char * DpsStrWWL(char **p, DPS_WIDEWORDLIST *wwl, char *c, size_t *len, s
 /** Make document excerpts on query words forms 
  */
 
-char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding) {
+void DpsExcerptDoc(void *param) {
   static const dpsunicode_t prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
+  DPS_EXCERPT_CFG *Cfg = (DPS_EXCERPT_CFG*)param;
+  DPS_AGENT *query = Cfg->query;
+  DPS_RESULT *Res = Cfg->Res;
+  DPS_DOCUMENT *Doc = Cfg->Doc;
   char *HDoc,*HEnd;
   const char *htok, *last = NULL;
   const char *lcharset;
@@ -664,8 +660,10 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   char *os;
   int s = -1, r = -1;
   size_t *wlen, i, len, maxwlen = 0, minwlen = query->WordParam.max_word_len, ulen, prevlen, osl, index_limit;
-  size_t gap_len = dps_max(1024, 16 * size);
   dpsunicode_t **wpos;
+  size_t size = Cfg->size;
+  size_t padding = Cfg->padding;
+  size_t gap_len = dps_max(1024, 16 * size);
   DPS_CONV dc_uni, uni_bc;
   const char *hello = "E\0";
   dpshash32_t rec_id;
@@ -673,11 +671,8 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   char *Source = NULL, *SourceToFree = NULL;
   int needFreeSource = 1;
   int NOprefixHL = 0;
-#ifdef WITH_OLDHASH
-  int first = 1;
-#endif
 
-  if (Res->WWList.nwords == 0) return NULL;
+  if (Res->WWList.nwords == 0) return;
   bzero(&ST, sizeof(ST));
   ST.section = 255;
   ST.name = "ST";
@@ -691,23 +686,22 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   bcs = DpsGetCharSet(lcharset);
   dcs = DpsGetCharSet(DpsVarListFindStr(&Doc->Sections,"Charset","iso-8859-1"));
   
-  if (!bcs || !dcs) return NULL;
-  if (!(sys_int=DpsGetCharSet("sys-int")))
-    return NULL;
+  if (!bcs || !dcs) return;
+  if (!(sys_int=DpsGetCharSet("sys-int"))) return;
   
   DpsConvInit(&uni_bc, sys_int, bcs, query->Conf->CharsToEscape, DPS_RECODE_HTML);
 
   c = (dpsunicode_t *) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t) + 1);
-  if (c == NULL) {  return NULL; }
+  if (c == NULL) {  return; }
   wlen = (size_t *) DpsMalloc(Res->WWList.nwords * sizeof(size_t) + 1);
   if (wlen == NULL) {
     DPS_FREE(c);
-    return NULL;
+    return;
   }
   wpos = (dpsunicode_t **) DpsMalloc(Res->WWList.nwords * sizeof(dpsunicode_t*) + 1);
   if (wpos == NULL) {
     DPS_FREE(c); DPS_FREE(wlen);
-    return NULL;
+    return;
   }
   for (i = 0; i < Res->WWList.nwords; i++) {
     wlen[i] = Res->WWList.Word[i].ulen - 1;
@@ -718,7 +712,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 
   if ((oi = (dpsunicode_t *)DpsMalloc(2 * (dps_max(size + 2 * query->WordParam.max_word_len, Res->WWList.maxulen + 4 * (query->WordParam.max_word_len + padding) + 8) + 1) * sizeof(dpsunicode_t))) == NULL) {
     DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos);
-    return NULL;
+    return;
   }
   oi[0]=0;
 
@@ -726,13 +720,13 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
 
   if ((DocSize == 0) ||  ((HEnd = HDoc = (char *)DpsMalloc(2 * DocSize + 4)) == NULL) ) {
     DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos);
-    return NULL;
+    return;
   }
   HDoc[0]='\0';
 
   if ( (uni = (dpsunicode_t *)DpsMalloc((DocSize + 10) * sizeof(dpsunicode_t)) ) == NULL) {
     DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc);
-    return NULL;
+    return;
   }
 
   DpsHTMLTOKInit(&tag);
@@ -761,13 +755,6 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     if ((query->Flags.do_store == 0) || (GetStore(query, Doc, rec_id, dbnum, "") != DPS_OK) || Doc->Buf.buf == NULL)
 #endif
       {
-#ifdef WITH_OLDHASH
-	if (first) {
-	  first = 0;
-	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
-	  goto oncemore;
-	}
-#endif
 /*    register int not_have_doc = (query->Flags.do_store == 0);
     if (not_have_doc) not_have_doc = (GetStore(query, Doc, rec_id, "") != DPS_OK);
     if (!not_have_doc) if (Doc->Buf.size == 0) not_have_doc = 1;
@@ -804,26 +791,19 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
     DpsRecvall(r, &ChunkSize, sizeof(ChunkSize), 360);
 
     if (ChunkSize == 0) {
-#ifdef WITH_OLDHASH
-	if (first) {
-	  first = 0;
-	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
-	  goto oncemore;
-	}
-#endif
 	DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
-      return NULL;
+      return;
     }
     DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
     DpsRecvall(r, &ChunkSize, sizeof(ChunkSize), 360);
     if (ChunkSize == 0) {
       DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
-      return NULL;
+      return;
     }
 
     if ((tag.Content = (char*)DpsMalloc(ChunkSize+10)) == NULL) {
       DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
-      return NULL;
+      return;
     }
     DpsRecvall(r, tag.Content, ChunkSize, 360);
     tag.Content[ChunkSize] = '\0';
@@ -874,7 +854,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
       if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
     }
     DPS_FREE(SourceToFree);
-    return NULL;
+    return;
   }
 
   add = DpsConv(&dc_uni, (char*)uni, sizeof(*uni)*(DocSize+10), HDoc, len + 1) / sizeof(*uni);
@@ -972,7 +952,7 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   if ((os = (char *)DpsMalloc(osl * 16)) == NULL) {
     DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc); DPS_FREE(uni);
     DPS_FREE(SourceToFree);
-    return NULL;
+    return;
   }
 
   
@@ -984,10 +964,15 @@ char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_
   }
   DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(oi); DPS_FREE(HDoc); DPS_FREE(uni);
   if (needFreeSource) { DPS_FREE(SourceToFree); } else { DPS_FREE(tag.Content); }
-  return os;
+  if (os != NULL && dps_strlen(os) > 6) {
+    DpsVarListReplaceStr(&Doc->Sections, "body", os);
+  }
+  DPS_FREE(os);
+  return;
 }
 
 
+#if 0
 
 struct ex_point {
   dps_uint2 h; /* =1, if heading */ 
@@ -1001,7 +986,6 @@ struct ex_point {
 };
 
 
-#if 0
 char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding) {
   static const dpsunicode_t prefix_dot[] = { 0x2e, 0x2e, 0x2e, 0x20, 0}, suffix_dot[] = {0x20, 0x2e, 0x2e, 0x2e, 0}, mark[] = {0x4, 0};
   char *HDoc,*HEnd;
@@ -1023,9 +1007,6 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
   char *Source = NULL, *SourceToFree = NULL;
   int needFreeSource = 1;
   int NOprefixHL = 0;
-#ifdef WITH_OLDHASH
-  int first = 1;
-#endif
 
   if (Res->WWList.nwords == 0) return NULL;
   bzero(&ST, sizeof(ST));
@@ -1106,13 +1087,6 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     if ((query->Flags.do_store == 0) || (GetStore(query, Doc, rec_id, dbnum, "") != DPS_OK) || Doc->Buf.buf == NULL)
 #endif
       {
-#ifdef WITH_OLDHASH
-	if (first) {
-	  first = 0;
-	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
-	  goto oncemore;
-	}
-#endif
 /*    register int not_have_doc = (query->Flags.do_store == 0);
     if (not_have_doc) not_have_doc = (GetStore(query, Doc, rec_id, "") != DPS_OK);
     if (!not_have_doc) if (Doc->Buf.size == 0) not_have_doc = 1;
@@ -1149,13 +1123,6 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     DpsRecvall(r, &ChunkSize, sizeof(ChunkSize), 360);
 
     if (ChunkSize == 0) {
-#ifdef WITH_OLDHASH
-	if (first) {
-	  first = 0;
-	  rec_id = DpsVarListFindInt(&Doc->Sections, "URL_ID_OLD", 0);
-	  goto oncemore;
-	}
-#endif
       DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(HDoc); DPS_FREE(uni);
       return NULL;
     }
@@ -1937,10 +1904,6 @@ urlid_t DpsURL_ID(DPS_DOCUMENT *Doc, const char *url) {
     if (accept_lang != NULL && *accept_lang == '\0') accept_lang = NULL;
 /*    if (accept_lang == NULL) accept_lang = DpsVarListFindStr(&Doc->RequestHeaders, "Accept-Language", NULL);*/
     dps_snprintf(str, str_len, "%s%s%s", (accept_lang == NULL) ? "" : accept_lang, (accept_lang == NULL) ? "" : ".", url);
-#ifdef WITH_OLDHASH
-    url_id = DpsStrOldHash32(str);
-    DpsVarListAddInt(&Doc->Sections, "URL_ID_OLD", url_id);
-#endif
     url_id = DpsStrHash32(str);
     DpsVarListAddInt(&Doc->Sections, "URL_ID", url_id);
     DPS_FREE(str);

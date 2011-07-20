@@ -90,8 +90,16 @@ extern __C_LINK int __DPSCALL DpsUnStoreDoc(DPS_AGENT *A, DPS_DOCUMENT *Doc, con
 extern __C_LINK int __DPSCALL DpsStoreDeleteDoc(DPS_AGENT *A, DPS_DOCUMENT *Doc);
 extern __C_LINK int __DPSCALL DpsStoreCheckUp(DPS_AGENT *Agent, int level);
 
+typedef struct {
+  DPS_AGENT *query;
+  DPS_RESULT *Res;
+  DPS_DOCUMENT *Doc;
+  size_t size;
+  size_t padding;
+} DPS_EXCERPT_CFG;
 
-extern char * DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding);
+/*extern void DpsExcerptDoc(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, size_t size, size_t padding);*/
+extern void DpsExcerptDoc(void *excerpt_cfg);
 extern char * DpsExcerptString(DPS_AGENT *query, DPS_RESULT *Res, const char *value, size_t size, size_t padding);
 extern int DpsStoreSave(DPS_AGENT *Agent, int ns, const char *Client);
 extern int DpsStoreGet(DPS_AGENT *Agent, int ns, int sd, const char *Client);

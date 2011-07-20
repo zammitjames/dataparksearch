@@ -455,7 +455,7 @@ __C_LINK int __DPSCALL DpsServerInit(DPS_SERVER * srv){
 	srv->MaxHops = DPS_DEFAULT_MAX_HOPS;   /* default MaxHops value */
 	srv->MaxDepth = DPS_DEFAULT_MAX_DEPTH; /* default MaxDepth value */
 	srv->MaxDocsPerServer = (dps_uint4)-1; /* default MaxDocsPerServer value */
-	srv->MaxDocsPerSite = (dps_uint4)-1;   /* default MaxDocsPerSite value */
+	srv->MaxDocsPerSite = 0;               /* default MaxDocsPerSite value */
 	srv->MaxHrefsPerServer = (dps_uint4)-1;/* default MaxHrefsPerServer value */
 	srv->ndocs = 0;                        /* no docs indexed */
 	srv->nhrefs = 0;                       /* no hrefs added */
