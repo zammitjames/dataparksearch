@@ -782,7 +782,7 @@ static char *dps_robots_normalise(const char *s) { /* robots.txt path normalisat
 	*d++ = *s++;
 	break;
       case '*': 
-	if (!prev_asterisk) *d++ = *s++;
+	if (!prev_asterisk) *d++ = *s++; else s++;
         prev_asterisk = !prev_slash;
 	prev_slash = 0;
 	prev_dollar = 0;
