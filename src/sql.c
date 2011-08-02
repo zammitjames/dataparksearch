@@ -175,7 +175,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			    sprintf(DPS_STREND(fromstr), ", urlinfo ic, categories c");
 			    serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 256);
 			    if (serverstr == NULL) continue;
-			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ic.url_id AND ic.sname='Category' AND c.rec_id=CAST(ic.sval AS %s)",
+			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ic.url_id AND LOWER(ic.sname)='category' AND c.rec_id=CAST(ic.sval AS %s)",
 				    (serverstr[0]) ? " AND " : "", (db->DBType == DPS_DB_MYSQL) ? "SIGNED" : "INTEGER");
 			  }
 			} else {
@@ -6146,7 +6146,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 	DPS_SQLRES	SQLres, CatRes;
 	int		rc = DPS_OK, u;
  	const char *cat_query = "SELECT c.rec_id, c.path, c.link, l.rec_id FROM categories c, categories l WHERE c.link=l.path ORDER BY c.rec_id";
-	const char *info_query = "SELECT u.rec_id,c.path FROM url u,urlinfo i,categories c WHERE u.rec_id=i.url_id AND i.sname='Category' AND u.status>0 AND";
+	const char *info_query = "SELECT u.rec_id,c.path FROM url u,urlinfo i,categories c WHERE u.rec_id=i.url_id AND LOWER(i.sname)='category' AND u.status>0 AND";
 	const char *srv_query = "SELECT u.rec_id,c.path FROM url u,server s,categories c WHERE u.status>0 AND u.server_id=s.rec_id AND s.category=c.rec_id AND";
 	urlid_t         rec_id = 0, start_id = 0;
 	const char      *val0, *val1, *oldlist, *valink;
