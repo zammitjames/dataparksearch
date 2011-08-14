@@ -145,7 +145,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag, int e_url_flag) {
 	for(i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR	*S = &Doc->Sections.Root[r].Var[i];
 
-		if(!S->name || !S->val || (!S->val[0] && strcmp(S->name, "Z")) ) continue;
+		if(!S->name || !S->val || (!S->val[0] && strcasecmp(S->name, "Z")) ) continue;
 /*		fprintf(stderr, "-Sec.name: %s  .section:%d  .maxlen: %d\n", S->name, S->section, S->maxlen);*/
 		if(!(((numsection_flag && S->section != 0) || S->maxlen) && u) && 
 		   strcasecmp(S->name, "DP_ID") &&
@@ -183,7 +183,7 @@ char *DpsDocToTextBuf(DPS_DOCUMENT * Doc, int numsection_flag, int e_url_flag) {
 	for(i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR	*S = &Doc->Sections.Root[r].Var[i];
 		
-		if(!S->name || !S->val || (!S->val[0] && strcmp(S->name, "Z")) ) continue;
+		if(!S->name || !S->val || (!S->val[0] && strcasecmp(S->name, "Z")) ) continue;
 /*		fprintf(stderr, "u:%d section: %d  name: %s  value: %s\n", u, S->section, S->name, S->val);*/
 		if(!(((numsection_flag && S->section != 0) || S->maxlen) && u) && 
 		   strcasecmp(S->name,"DP_ID") &&

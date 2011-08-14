@@ -32,6 +32,16 @@ __C_LINK int dps_tolower(int c) {
   return tolower(c);
 }
 
+inline char *dps_strtolower(char *str) {
+  register char *s = str;
+  if (s != NULL) {
+    while(*s) {
+      *s = (char*)dps_tolower((int)*s);
+      s++;
+    }
+  }
+  return str;
+}
 
 
 void dps_mstr(char *s, const char *src, size_t l1, size_t l2) {

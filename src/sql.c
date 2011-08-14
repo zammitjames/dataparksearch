@@ -175,7 +175,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			    sprintf(DPS_STREND(fromstr), ", urlinfo ic, categories c");
 			    serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 256);
 			    if (serverstr == NULL) continue;
-			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ic.url_id AND LOWER(ic.sname)='category' AND c.rec_id=CAST(ic.sval AS %s)",
+			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ic.url_id AND ic.sname='category' AND c.rec_id=CAST(ic.sval AS %s)",
 				    (serverstr[0]) ? " AND " : "", (db->DBType == DPS_DB_MYSQL) ? "SIGNED" : "INTEGER");
 			  }
 			} else {
@@ -257,7 +257,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			  sprintf(DPS_STREND(fromstr), ", urlinfo il");
 			  serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 64);
 			  if (serverstr == NULL) continue;
-			  sprintf(DPS_STREND(serverstr), "%sil.url_id=url.rec_id AND il.sname='Content-Language'",(serverstr[0]) ? " AND " : "");
+			  sprintf(DPS_STREND(serverstr), "%sil.url_id=url.rec_id AND il.sname='content-language'",(serverstr[0]) ? " AND " : "");
 			}
 		}
 		
@@ -286,7 +286,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			  sprintf(DPS_STREND(fromstr), ", urlinfo il");
 			  serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 64);
 			  if (serverstr == NULL) continue;
-			  sprintf(DPS_STREND(serverstr), "%sil.url_id=url.rec_id AND il.sname='Content-Language'",(serverstr[0])?" AND ":"");
+			  sprintf(DPS_STREND(serverstr), "%sil.url_id=url.rec_id AND il.sname='content-language'",(serverstr[0])?" AND ":"");
 			}
 		}
 		
@@ -355,7 +355,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			    sprintf(DPS_STREND(fromstr), ", urlinfo ia");
 			    serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 64);
 			    if (serverstr == NULL) continue;
-			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ia.url_id AND ia.sname='Tag'",(serverstr[0])?" AND ":"");
+			    sprintf(DPS_STREND(serverstr), "%surl.rec_id=ia.url_id AND ia.sname='tag'",(serverstr[0])?" AND ":"");
 			  }
 			} else {
 			  if (strchr(val, '%') || strchr(val, '_')) 
@@ -390,7 +390,7 @@ static const char *BuildWhere(DPS_AGENT *Agent, DPS_DB *db) {
 			  sprintf(DPS_STREND(fromstr), ", urlinfo it");
 			  serverstr = (char*)DpsRealloc(serverstr, dps_strlen(serverstr) + 64);
 			  if (serverstr == NULL) continue;
-			  sprintf(DPS_STREND(serverstr), "%sit.url_id=url.rec_id AND it.sname='Content-Type'",(serverstr[0])?" AND ":"");
+			  sprintf(DPS_STREND(serverstr), "%sit.url_id=url.rec_id AND it.sname='content-type'",(serverstr[0])?" AND ":"");
 			}
 		}
 
@@ -1220,10 +1220,10 @@ command, parent, ordre, weight, url, pop_weight \
 		    strcasecmp(Sec->name, "Tag")
 		    )
 		   ){
-		  (void)DpsDBEscStr(db, arg_insert, Sec->val, dps_strlen(Sec->val));
-			dps_snprintf(buf, len, "INSERT INTO srvinfo (srv_id,sname,sval) VALUES (%s%i%s,'%s','%s')",
-				qu, Server->site_id, qu, Sec->name, arg_insert);
-			if(DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, buf)))break;
+		      (void)DpsDBEscStr(db, arg_insert, Sec->val, dps_strlen(Sec->val));
+		      dps_snprintf(buf, len, "INSERT INTO srvinfo (srv_id,sname,sval) VALUES (%s%i%s,'%s','%s')",
+				   qu, Server->site_id, qu, dps_strtolower(Sec->name), arg_insert);
+		      if(DPS_OK != (res = DpsSQLAsyncQuery(db, NULL, buf)))break;
 		}
 	      }
 	    }
@@ -1499,7 +1499,7 @@ static int DpsFindMessage(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_DB *db){
 	(void)DpsDBEscStr(db, eid, message_id, len);
 	
 	dps_snprintf(qbuf, 4 * len + 128, 
-		 "SELECT rec_id FROM url u, urlinfo i WHERE u.rec_id=i.url_id AND i.sname='Message-ID' AND i.sval='%s'", eid);
+		 "SELECT rec_id FROM url u, urlinfo i WHERE u.rec_id=i.url_id AND i.sname='message-id' AND i.sval='%s'", eid);
 	rc = DpsSQLQuery(db,&SQLRes,qbuf);
 	DPS_FREE(qbuf);
 	DPS_FREE(eid);
@@ -3193,7 +3193,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
-		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
+		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcasecmp(Sec->name, "Z"))  ) continue;
 		if (
 		   !strcasecmp(Sec->name, "URL") ||
 		   !strcasecmp(Sec->name, "DP_ID") ||
@@ -3224,7 +3224,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		have_inserts++;
 
 		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
-		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, dps_strtolower(Sec->name), arg);
 		qe = qe + dps_strlen(qe);
 		if((qe - qbuf) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE) {
 		  if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
@@ -3244,7 +3244,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
-		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
+		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcasecmp(Sec->name, "Z"))  ) continue;
 		if( (Sec->maxlen == 0) || (
 		   strcasecmp(Sec->name, "Charset") &&
 		   strcasecmp(Sec->name, "Content-Type") &&
@@ -3268,7 +3268,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		have_inserts++;
 
 		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
-		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		sprintf(qe, "(%s%i%s,'%s','%s')", qu, url_id, qu, dps_strtolower(Sec->name), arg);
 		qe = qe + dps_strlen(qe);
 		if((qe - qbuf) + 128 >= DPS_MAX_MULTI_INSERT_QSIZE) {
 		  if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) {
@@ -3294,7 +3294,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
-		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
+		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcasecmp(Sec->name, "Z"))  ) continue;
 		if (
 		   !strcasecmp(Sec->name, "URL") ||
 		   !strcasecmp(Sec->name, "DP_ID") ||
@@ -3311,7 +3311,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		    ) continue;
 
 		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
-		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, dps_strtolower(Sec->name), arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
 	      }
 	  } else if (u == 0) {
@@ -3319,7 +3319,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 	      for (i = 0; i < Doc->Sections.Root[r].nvars; i++) {
 		DPS_VAR *Sec = &Doc->Sections.Root[r].Var[i];
 
-		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcmp(Sec->name, "Z"))  ) continue;
+		if(!Sec->name || !Sec->val || (!Sec->val[0] && strcasecmp(Sec->name, "Z"))  ) continue;
 		if( (Sec->maxlen == 0) || (
 		   strcasecmp(Sec->name, "Charset") &&
 		   strcasecmp(Sec->name, "Content-Type") &&
@@ -3329,7 +3329,7 @@ static int DpsLongUpdateURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 		   )) continue;
 
 		arg = DpsDBEscStr(db, arg, Sec->val, dps_strlen(Sec->val));
-		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, Sec->name, arg);
+		sprintf(qbuf, "INSERT INTO urlinfo(url_id,sname,sval)VALUES(%s%i%s,'%s','%s')", qu, url_id, qu, dps_strtolower(Sec->name), arg);
 		if (DPS_OK != (rc = DpsSQLAsyncQuery(db, NULL, qbuf))) break;
 	      }
 	  }
@@ -3662,7 +3662,7 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 		DpsVarListReplaceStr(&Doc->Sections, "Pop_Rank", DpsSQLValue(&SQLRes, i, 8));
 		if (Indexer->Flags.provide_referer) DpsVarListReplaceStr(&Doc->Sections, "Referrer-ID", DpsSQLValue(&SQLRes, i, 12));
 		if (Indexer->flags & DPS_FLAG_FROM_STORED) {
-		  dps_snprintf(buf, sizeof(buf), "SELECT sval FROM urlinfo WHERE url_id=%d AND sname='Content-Language'", rec_id);
+		  dps_snprintf(buf, sizeof(buf), "SELECT sval FROM urlinfo WHERE url_id=%d AND sname='content-language'", rec_id);
 		  if(DPS_OK != (rc = DpsSQLQuery(db, &sr, buf))) {
 		    DpsSQLFree(&SQLRes);
 		    DpsLog(Indexer, DPS_LOG_ERROR, "Error SQL execution at %s:%d", __FILE__, __LINE__);
@@ -5954,7 +5954,7 @@ static char *BuildLimitQuery(DPS_DB *db, const char * field) {
   } else if(strstr(":link:", smallbuf) != NULL) {
     dps_snprintf(qbuf, 2048, "SELECT l.ot,u.rec_id,u.status FROM links l, url u WHERE l.k=u.rec_id AND u.status>0 AND", field);
   } else {
-    dps_snprintf(qbuf, 2048, "SELECT i.sval,u.rec_id,u.status FROM url u,urlinfo i WHERE u.rec_id=i.url_id AND i.sname='%s' AND u.status>0 AND", field);
+    dps_snprintf(qbuf, 2048, "SELECT i.sval,u.rec_id,u.status FROM url u,urlinfo i WHERE u.rec_id=i.url_id AND i.sname=LOWER('%s') AND u.status>0 AND", field);
   }
   return (char*)DpsStrdup(qbuf);
 }
@@ -6042,7 +6042,7 @@ int DpsLimit8SQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L,const char *field, int type
 
 int DpsLimitTagSQL(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, DPS_DB *db) {
   char qbuf[512];
-  const char *info_query = "SELECT i.sval,u.rec_id FROM url u,urlinfo i WHERE u.rec_id=i.url_id AND i.sname='Tag' AND u.status>0 AND";
+  const char *info_query = "SELECT i.sval,u.rec_id FROM url u,urlinfo i WHERE u.rec_id=i.url_id AND i.sname='tag' AND u.status>0 AND";
   const char *srv_query  = "SELECT s.tag,u.rec_id FROM url u,server s WHERE s.rec_id=u.server_id AND u.status>0 AND";
   DPS_SQLRES Res;
   size_t  url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLDumpCacheSize", DPS_URL_DUMP_CACHE_SIZE);
@@ -6146,7 +6146,7 @@ int DpsLimitCategorySQL(DPS_AGENT *A, DPS_UINT8URLIDLIST *L, const char *field, 
 	DPS_SQLRES	SQLres, CatRes;
 	int		rc = DPS_OK, u;
  	const char *cat_query = "SELECT c.rec_id, c.path, c.link, l.rec_id FROM categories c, categories l WHERE c.link=l.path ORDER BY c.rec_id";
-	const char *info_query = "SELECT u.rec_id,c.path FROM url u,urlinfo i,categories c WHERE u.rec_id=i.url_id AND LOWER(i.sname)='category' AND u.status>0 AND";
+	const char *info_query = "SELECT u.rec_id,c.path FROM url u,urlinfo i,categories c WHERE u.rec_id=i.url_id AND i.sname='category' AND u.status>0 AND";
 	const char *srv_query = "SELECT u.rec_id,c.path FROM url u,server s,categories c WHERE u.status>0 AND u.server_id=s.rec_id AND s.category=c.rec_id AND";
 	urlid_t         rec_id = 0, start_id = 0;
 	const char      *val0, *val1, *oldlist, *valink;
