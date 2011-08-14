@@ -38,6 +38,7 @@ extern __C_LINK size_t dps_strlen(const char *src);
 */
 
 extern __C_LINK int dps_tolower(int c);
+extern inline char *dps_strtolower(char *s);
 extern __C_LINK void dps_mstr(char *s, const char *src, size_t l1, size_t l2);
 
 #ifndef DPS_NULL2EMPTY
