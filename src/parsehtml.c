@@ -1561,6 +1561,8 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	int		title_sec = TSec ? TSec->section : 0;
 	int		body_strict  = BSec ? BSec->strict : 0;
 	int		title_strict = TSec ? TSec->strict : 0;
+	int             status = DpsVarListFindInt(&Doc->Sections, "Status", 0);
+	int             skip = (status > 299 && status < 600 && status != 304);
 
 #ifdef WITH_PARANOIA
 	void *paran = DpsViolationEnter(paran);
@@ -1589,6 +1591,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	    break;
 
 	  case DPS_HTML_TXT:
+	    if (skip) break;
 
 	    for( tmpbeg=htok;   tmpbeg<last && strchr(" \r\n\t", tmpbeg[0]); tmpbeg++);
 	    for( tmpend=last-1; htok<tmpend && strchr(" \r\n\t", tmpend[0]); tmpend--);
