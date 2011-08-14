@@ -52,14 +52,14 @@
 
 int dps_closesocket(int socket) {
   char junk[2048];
-        fd_set fds;
-        struct timeval tv;
-	int rfd;
+  fd_set fds;
+  struct timeval tv;
+  int rfd, z;
 
-  (void)shutdown(socket, SHUT_WR);
+  (void)shutdown(socket, SHUT_RDWR);
   tv.tv_sec = (long)2;
   tv.tv_usec = 0;
-  for(;;) {
+  for(z = 0; z < 10; z++) {
     FD_ZERO(&fds);
     FD_SET(socket, &fds);
     rfd = select(socket+1, &fds, 0, 0, &tv);
