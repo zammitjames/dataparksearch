@@ -236,6 +236,15 @@ void DpsParseHTTPResponse(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	DpsDSTRFree(&header);
 	DPS_FREE(headers);
 	
+	{
+	  time_t now = Indexer->now, last_mod_time = DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", ""));
+	  if (last_mod_time > now + 3600 * 4) { /* we have a document with Last-Modified time in the future */
+	    DpsLog(Indexer, DPS_LOG_EXTRA, "Last-Modified date is deep in future (%d>%d), dropping it.", last_mod_time, now);
+	    last_mod_time = 0;
+	    DpsVarListDel(&Doc->Sections, "Last-Modified");
+	  }
+	}
+
 	/* Bad response, return */
 	if(!Doc->Buf.content) {
 	    return;
