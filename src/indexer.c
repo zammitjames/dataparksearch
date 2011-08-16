@@ -780,15 +780,8 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 	float           site_weight;
 	size_t          depth;
 	const char      *s;
-	time_t          now = Indexer->now, last_mod_time = DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", ""));
 	
 	TRACE_IN(Indexer, "DpsDocCheck");
-
-	if (last_mod_time > now + 3600 * 4) { /* we have a document with Last-Modified time in the future */
-	  DpsLog(Indexer, DPS_LOG_EXTRA, "Last-Modified date is deep in future (%d>%d), dropping it.", last_mod_time, now);
-	  last_mod_time = 0;
-	  DpsVarListDel(&Doc->Sections, "Last-Modified");
-	}
 
 	switch(CurSrv->Match.match_type){
 		case DPS_MATCH_WILD:
@@ -839,6 +832,7 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 
 	/* Check for older focs */
 	if (older > 0) {
+	  time_t now = Indexer->now, last_mod_time = DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", ""));
 
 	  if (last_mod_time > 0) {
 	    if ((int)(now - last_mod_time) > older) {
