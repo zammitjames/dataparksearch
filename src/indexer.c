@@ -1532,7 +1532,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	/* /Guesser stuff */	
 
 #ifdef HAVE_ZLIB
-	if ((Doc->method != DPS_METHOD_HEAD) && (strncmp(real_content_type, "text/", 5) == 0)) {
+	if ((Doc->method != DPS_METHOD_HEAD) && (DpsVarListFindInt(&Doc->Sections, "Content-Length", 0) != 0) && (strncmp(real_content_type, "text/", 5) == 0)) {
 	  char reason[PATH_MAX+1];
 	  int m;
 	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
