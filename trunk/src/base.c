@@ -772,7 +772,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
   OptimizeRatio = DpsVarListFindInt(&P->A->Vars, "OptimizeRatio", 5);
 
   P->mode = DPS_WRITE_LOCK;
-  if (sbase < 0) {
+  if (sbase == -1) {
     base_from = 0; base_to = (urlid_t)P->NFiles;
   } else {
     base_from = sbase; base_to = sbase + 1;
