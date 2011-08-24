@@ -171,7 +171,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
       }
     }
 
-    for (it = 0; it < 10 * Indexer->Flags.PopRankNeoIterations; it++)
+    for (it = 0; it < Indexer->Flags.PopRankNeoIterations; it++)
       for (l = 0; l < List.nitems; l++) {
 	w = 0.0;
 	for (i = 0; i < List.nitems; i++) { 
