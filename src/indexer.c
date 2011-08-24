@@ -1639,8 +1639,8 @@ static int DpsNextTarget(DPS_AGENT * Indexer, DPS_DOCUMENT *Result) {
 	int	result=DPS_NOTARGET;
 	int     u;
 
-	Indexer->now = time(NULL);
 	DPS_GETLOCK(Indexer, DPS_LOCK_THREAD);
+	Indexer->now = time(NULL);
 	u = (Indexer->Conf->url_number <= 0) || (Indexer->Conf->url_size < 0);
 
 	if (u) {
