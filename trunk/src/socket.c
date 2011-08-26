@@ -56,10 +56,10 @@ int dps_closesocket(int socket) {
   struct timeval tv;
   int rfd, z;
 
-  (void)shutdown(socket, SHUT_RDWR);
+  (void)shutdown(socket, SHUT_WR);
   tv.tv_sec = (long)2;
   tv.tv_usec = 0;
-  for(z = 0; z < 10; z++) {
+  for(z = 0; z < 90; z++) {
     FD_ZERO(&fds);
     FD_SET(socket, &fds);
     rfd = select(socket+1, &fds, 0, 0, &tv);
