@@ -242,9 +242,8 @@ static void DpsCAS_lock(DPS_AGENT *A, dps_mutex_t *mut) {
 #if defined(HAVE_PTHREAD) && defined(HAVE_PTHREAD_YIELD_PROTO)
     pthread_yield();
     if (CAS(mut, A, NULL)) break;
-    else 
 #endif
-    DPS_MSLEEP(100);
+    DPS_MSLEEP(50 + random() % 200);
   }
 }
 
