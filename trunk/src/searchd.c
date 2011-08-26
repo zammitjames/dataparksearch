@@ -1121,7 +1121,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 				}
 				nrecv=DpsRecvall(client, words, hdr.len, 360); /* FIXME: check */
 				words[nrecv]='\0';
-				DpsLog(Agent, DPS_LOG_INFO, "Received words len=%d words='%s'", nrecv, words);
+				DpsLog(Agent, verb, "Received words len=%d words='%s'", nrecv, words);
 				
 				DpsParseQueryString(Agent, &Agent->Vars, words);
 				bcharset = DpsVarListFindStr(&Agent->Vars, "BrowserCharset", "iso-8859-1");
@@ -1135,8 +1135,11 @@ static int do_client(DPS_AGENT *Agent, int client){
 					break;
 				}
 				
-				DpsLog(Agent, DPS_LOG_INFO, "Query: %s [Charset: %s]", 
-					DpsVarListFindStr(&Agent->Vars, "q", ""), bcharset);
+				DpsLog(Agent, DPS_LOG_INFO, "Query: [%s:%s:%s:%s] %s ", DpsVarListFindStr(&Agent->Vars, "IP", "localhost"),
+				       DpsVarListFindStr(&Agent->Vars, "tmplt", "search.htm"), 
+				       bcharset,
+				       DpsVarListFindStr(&Agent->Vars, "label", ""), 
+				       DpsVarListFindStr(&Agent->Vars, "q", ""));
 				
 				DpsPrepare(Agent, Res);		/* Prepare search query */
 				if(DPS_OK != DpsFindWords(Agent, Res)) {
