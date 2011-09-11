@@ -313,6 +313,9 @@ int DpsMatchApply(char *res, size_t size, const char *string, const char *rpl,
 		case DPS_MATCH_SUBSTR:
 			len = dps_snprintf(res, size - 1, "%s", rpl);
 			break;
+	        case DPS_MATCH_FULL:
+		        len = dps_snprintf(res, size-1, "%s", rpl);
+			break;
 		default:
 			*res='\0';
 			len=0;
