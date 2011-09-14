@@ -243,7 +243,7 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 				}
 
 				if((var=DpsVarListFind(vars,name))){
-				  
+
 				        switch(type) {
 					case '%':value = var->val; 
 					  if (vcs != NULL) {
@@ -1268,7 +1268,7 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	t->ExcerptMark = DpsStrdup(DpsVarListFindStrTxt(vars, "ExcerptMark", " "));
 	
 	unics = DpsGetCharSet("sys-int");
-	DpsConvInit(&Agent->uni_lc, unics, Env->lcs, Env->CharsToEscape, DPS_RECODE_HTML);
+	DpsConvInit(&Agent->uni_lc, unics, Env->lcs, Env->CharsToEscape, DPS_RECODE_TEXT);
 	DpsConvInit(&Agent->lc_uni, Env->lcs, unics, Env->CharsToEscape, DPS_RECODE_HTML);
 	DpsConvInit(&Agent->lc_uni_text, Env->lcs, unics, Env->CharsToEscape, DPS_RECODE_TEXT);
 #ifdef HAVE_ASPELL
