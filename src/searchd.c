@@ -2068,6 +2068,7 @@ int main(int argc, char **argv, char **envp) {
 		}
 		DpsAgentFree(Agent);
 		DpsEnvFree(Conf);
+		DpsAcceptMutexCleanup();
 	}
 		
 	for (i = 0; i < MaxClients; i++) {
