@@ -618,7 +618,7 @@ static struct flock unlock_it;
 static int lock_fd = -1;
 
 #define DpsAcceptMutexChildCleanup(x)
-#define DpsAcceptMutexCleanup(x)
+/*#define DpsAcceptMutexCleanup(x)*/
 #define DpsAcceptMutexChildInit(x)
 
 void DpsAcceptMutexInit(const char *var_dir, const char *app) {
@@ -643,6 +643,11 @@ void DpsAcceptMutexInit(const char *var_dir, const char *app) {
     }
     unlink(lock_fname);
 #endif
+}
+
+void DpsAcceptMutexCleanup(void) {
+  close(lock_fd);
+  lock_fd = -1;
 }
 
 void DpsAcceptMutexLock(DPS_AGENT *Agent) {
