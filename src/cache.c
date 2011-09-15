@@ -1749,7 +1749,6 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 	DF = Agent->Conf->URLDataFile[db->dbnum];
 
 	for (filenum = 0 ; filenum < NFiles; filenum++) {
-	    if (fd > 0) DpsClose(fd);
 	    dps_snprintf(fname, sizeof(fname), "%s%c%s%cdata%04x.dat", vardir, DPSSLASH, DPS_URLDIR, DPSSLASH, filenum);
 	    fd = DpsOpen2(fname, O_RDONLY | DPS_BINARY);
 	    nrec = 0;
@@ -1773,6 +1772,7 @@ int DpsURLDataPreloadCache(DPS_AGENT *Agent, DPS_DB *db) {
 		mem_used += nrec *  sizeof(DPS_URLDATA);
 		DpsSort(DF[filenum].URLData, DF[filenum].nrec, sizeof(DPS_URLDATA), (qsort_cmp) DpsCmpURLData);
 		DpsLog(Agent, DPS_LOG_DEBUG, "%d records readed", nrec);
+		DpsClose(fd);
 	      }
 	    }
 	}
