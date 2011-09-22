@@ -167,9 +167,67 @@ static int DpsCmpUrlid0(const void *v1, const void *v2) {
 	return 0;
 }
 
+static int (*DpsCmpPattern)(DPS_URLCRDLIST *, size_t , size_t , const char *);
 
+static int DpsCmpPattern_U(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
+  if (L->Coords[i].url_id > L->Coords[j].url_id) return -1;
+  if (L->Coords[i].url_id < L->Coords[j].url_id) return 1;
+  return 0;
+}
 
-static int DpsCmpPattern(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
+static int DpsCmpPattern_DRP(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
+  if (L->Data[i].last_mod_time > L->Data[j].last_mod_time) return -1;
+  if (L->Data[i].last_mod_time < L->Data[j].last_mod_time) return 1;
+  if (L->Coords[i].coord > L->Coords[j].coord) return -1;
+  if (L->Coords[i].coord < L->Coords[j].coord) return 1;
+  if (L->Data[i].pop_rank > L->Data[j].pop_rank) return -1;
+  if (L->Data[i].pop_rank < L->Data[j].pop_rank) return 1;
+  return 0;
+}
+
+static int DpsCmpPattern_PRD(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
+  if (L->Data[i].pop_rank > L->Data[j].pop_rank) return -1;
+  if (L->Data[i].pop_rank < L->Data[j].pop_rank) return 1;
+  if (L->Coords[i].coord > L->Coords[j].coord) return -1;
+  if (L->Coords[i].coord < L->Coords[j].coord) return 1;
+  if (L->Data[i].last_mod_time > L->Data[j].last_mod_time) return -1;
+  if (L->Data[i].last_mod_time < L->Data[j].last_mod_time) return 1;
+  return 0;
+}
+
+static int DpsCmpPattern_RP(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
+  if (L->Coords[i].coord > L->Coords[j].coord) return -1;
+  if (L->Coords[i].coord < L->Coords[j].coord) return 1;
+  if (L->Data[i].pop_rank > L->Data[j].pop_rank) return -1;
+  if (L->Data[i].pop_rank < L->Data[j].pop_rank) return 1;
+  return 0;
+}
+
+static int DpsCmpPattern_RPD(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
+  if (L->Coords[i].coord > L->Coords[j].coord) return -1;
+  if (L->Coords[i].coord < L->Coords[j].coord) return 1;
+  if (L->Data[i].pop_rank > L->Data[j].pop_rank) return -1;
+  if (L->Data[i].pop_rank < L->Data[j].pop_rank) return 1;
+  if (L->Data[i].last_mod_time > L->Data[j].last_mod_time) return -1;
+  if (L->Data[i].last_mod_time < L->Data[j].last_mod_time) return 1;
+  return 0;
+}
+
+static int DpsCmpPattern_IRPD(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
+  register double m1 = L->Data[i].pop_rank, m2 = L->Data[j].pop_rank;
+  m1 *= (double)L->Coords[i].coord; m2 *= (double)L->Coords[j].coord;
+  if (m1 > m2) return -1;
+  if (m1 < m2) return 1;
+  if (L->Coords[i].coord > L->Coords[j].coord) return -1;
+  if (L->Coords[i].coord < L->Coords[j].coord) return 1;
+  if (L->Data[i].pop_rank > L->Data[j].pop_rank) return -1;
+  if (L->Data[i].pop_rank < L->Data[j].pop_rank) return 1;
+  if (L->Data[i].last_mod_time > L->Data[j].last_mod_time) return -1;
+  if (L->Data[i].last_mod_time < L->Data[j].last_mod_time) return 1;
+  return 0;
+}
+
+static inline int DpsCmpPattern_full(DPS_URLCRDLIST *L, size_t i, size_t j, const char *pattern) {
   
   for(; *pattern != '\0'; pattern++) {
     switch(*pattern) {
@@ -430,6 +488,20 @@ void DpsSortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, co
     P.r = num - 1;
     P.pattern = pattern;
     P.merge = (Res->PerSite != NULL);
+    DpsCmpPattern = &DpsCmpPattern_full;
+    switch(*pattern) {
+    case 'D': if (pattern[1] == 'R' && pattern[2] == 'P' && pattern[3] == '\0') DpsCmpPattern = &DpsCmpPattern_DRP; break;
+    case 'I': if (pattern[1] == 'R' && pattern[2] == 'P' && pattern[3] == 'D' && pattern[4] == '\0') DpsCmpPattern = &DpsCmpPattern_IRPD; break;
+    case 'P': if (pattern[1] == 'R' && pattern[2] == 'D' && pattern[3] == '\0') DpsCmpPattern = &DpsCmpPattern_PRD; break;
+    case 'R': 
+      if (pattern[1] == 'P' ) {
+	if (pattern[2] == '\0') DpsCmpPattern = &DpsCmpPattern_RP; 
+	else if (pattern[2] == 'D' && pattern[3] == '\0') DpsCmpPattern = &DpsCmpPattern_RPD;
+      }
+      break;
+    case 'U': if (pattern[1] == '\0') DpsCmpPattern = &DpsCmpPattern_U; break;
+      
+    }
     DpsQsortSearchWordsBySite(&P);
   }
 
@@ -581,6 +653,20 @@ void DpsSortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num,
     P.r = num - 1;
     P.merge = 0;
     P.pattern = pattern;
+    DpsCmpPattern = &DpsCmpPattern_full;
+    switch(*pattern) {
+    case 'D': if (pattern[1] == 'R' && pattern[2] == 'P' && pattern[3] == '\0') DpsCmpPattern = &DpsCmpPattern_DRP; break;
+    case 'I': if (pattern[1] == 'R' && pattern[2] == 'P' && pattern[3] == 'D' && pattern[4] == '\0') DpsCmpPattern = &DpsCmpPattern_IRPD; break;
+    case 'P': if (pattern[1] == 'R' && pattern[2] == 'D' && pattern[3] == '\0') DpsCmpPattern = &DpsCmpPattern_PRD; break;
+    case 'R': 
+      if (pattern[1] == 'P' ) {
+	if (pattern[2] == '\0') DpsCmpPattern = &DpsCmpPattern_RP; 
+	else if (pattern[2] == 'D' && pattern[3] == '\0') DpsCmpPattern = &DpsCmpPattern_RPD;
+      }
+      break;
+    case 'U': if (pattern[1] == '\0') DpsCmpPattern = &DpsCmpPattern_U; break;
+      
+    }
     DpsQsortSearchWordsByPattern(&P);
   }
 
@@ -3329,6 +3415,7 @@ int DpsConvert(DPS_ENV *Conf, DPS_VARLIST *Env_Vars, DPS_RESULT *Res, DPS_CHARSE
 
 			newval = DpsHlConvert(&Res->WWList, Var->val, &lc_uni, &uni_bc, NOprefixHL);
 			newtxt = DpsHlConvert(&Res->WWList, Var->txt_val, &lc_uni_text, &uni_bc_text, NOprefixHL);
+
 			DPS_FREE(Var->val);
 			DPS_FREE(Var->txt_val);
 			Var->val = newval;
@@ -3350,6 +3437,7 @@ int DpsConvert(DPS_ENV *Conf, DPS_VARLIST *Env_Vars, DPS_RESULT *Res, DPS_CHARSE
 /*		else 
 		  DpsConv(&bc_bc, newval, len * 12 + 1, Var->val, len + 1);*/
 		DpsConv(&lc_bc_text, newtxt, len * 12 + 1, Var->txt_val, len + 1);
+
 		DPS_FREE(Var->val);
 		DPS_FREE(Var->txt_val);
 		Var->val = newval;
