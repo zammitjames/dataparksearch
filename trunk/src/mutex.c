@@ -95,6 +95,12 @@
 #endif
 
 
+/* libCRYPTO threads locking */
+static int dps_libcrypto_thread_setup(void);
+static int dps_libcrypto_thread_cleanup(void);
+/* /libCRYPTO threads locking */
+
+
 
 static volatile DPS_MUTEX *MuMu = NULL;
 
@@ -224,10 +230,12 @@ void DpsInitMutexes(void) {
 		MuMu[i].cnt = 0;
 	}
 	
+	dps_libcrypto_thread_setup();
 }
 
 void DpsDestroyMutexes(void) {
 	int i;
+	dps_libcrypto_thread_cleanup();
 	if (MuMu) {
 	  for(i=0;i<DPS_LOCK_MAX;i++){
 		DestroyMutex(&MuMu[i].mutex);
@@ -319,11 +327,12 @@ __C_LINK void __DPSCALL DpsInitMutexes(void) {
     exit(1);
   }
 
-	for(i = 0; i < DpsNsems; i++) {
-		MuMu[i].mutex = (dps_mutex_t) i;
-		MuMu[i].cnt = 0;
-	}
-
+  for(i = 0; i < DpsNsems; i++) {
+    MuMu[i].mutex = (dps_mutex_t) i;
+    MuMu[i].cnt = 0;
+  }
+  
+  dps_libcrypto_thread_setup();
 /*	atexit( DpsDestroyMutexes );*/
 
 }
@@ -334,6 +343,7 @@ __C_LINK  void __DPSCALL DpsDestroyMutexes(void) {
 /*  unlink(sem_name);*/
   semctl(semid, 0, IPC_RMID);
   DPS_FREE(MuMu);
+  dps_libcrypto_thread_cleanup();
 }
 
 
@@ -350,11 +360,12 @@ __C_LINK void __DPSCALL DpsInitMutexes(void) {
     fprintf(stderr, "DataparkSearch: Can't alloc for %d mutexes\n", DpsNsems);
     exit(1);
   }
-	for(i = 0; i < DpsNsems; i++) {
-	  dps_snprintf(sem_name, PATH_MAX,"%s%sSEM-P.%d", DPS_VAR_DIR, DPSSLASHSTR, i);
-	  MuMu[i].mutex = sem_open(sem_name, O_CREAT, (mode_t)0644, 1);
-	  MuMu[i].cnt = 0;
-	}
+  for(i = 0; i < DpsNsems; i++) {
+    dps_snprintf(sem_name, PATH_MAX,"%s%sSEM-P.%d", DPS_VAR_DIR, DPSSLASHSTR, i);
+    MuMu[i].mutex = sem_open(sem_name, O_CREAT, (mode_t)0644, 1);
+    MuMu[i].cnt = 0;
+  }
+  dps_libcrypto_thread_setup();
 /*	atexit( DpsDestroyMutexes );*/
 }
 
@@ -362,12 +373,13 @@ __C_LINK  void __DPSCALL DpsDestroyMutexes(void) {
   char sem_name[PATH_MAX];
   size_t i;
 
-	for(i = 0; i < DPS_LOCK_MAX; i++) {
-	  dps_snprintf(sem_name, PATH_MAX,"%s%sSEM-P.%d", DPS_VAR_DIR, DPSSLASHSTR, i);
-	  sem_close(MuMu[i].mutex);
-/*	  sem_unlink(sem_name);*/
-	}
-	DPS_FREE(MuMu);
+  for(i = 0; i < DPS_LOCK_MAX; i++) {
+    dps_snprintf(sem_name, PATH_MAX,"%s%sSEM-P.%d", DPS_VAR_DIR, DPSSLASHSTR, i);
+    sem_close(MuMu[i].mutex);
+    /*	  sem_unlink(sem_name);*/
+  }
+  DPS_FREE(MuMu);
+  dps_librypto_thread_cleanup();
 }
 
 #else
@@ -389,7 +401,8 @@ __C_LINK void __DPSCALL DpsInitMutexes(void) {
 		InitMutex(&MuMu[i].mutex);
 		MuMu[i].cnt = 0;
 	}
-	
+
+	dps_libcrypto_thread_setup();
 }
 
 __C_LINK  void __DPSCALL DpsDestroyMutexes(void) {
@@ -400,6 +413,7 @@ __C_LINK  void __DPSCALL DpsDestroyMutexes(void) {
 	  }
 	  DPS_FREE(MuMu);
 	}
+	dps_libcrypto_thread_cleanup();
 }
 
 #endif
@@ -683,3 +697,57 @@ void DpsAcceptMutexUnlock(DPS_AGENT *Agent) {
 
 
 #endif /* HAVE_PTHREAD */
+
+
+/* libCRYPTO threads locking */
+static int dps_libcrypto_thread_setup(void);
+static int dps_libcrypto_thread_cleanup(void);
+
+static dps_mutex_t *mutex_buf = NULL;
+
+static void handle_error(const char *file, int lineno, const char *msg) {
+  fprintf(stderr, "** %s:%d %s\n", file, lineno, msg);
+  ERR_print_errors_fp(stderr);
+}
+
+static unsigned long id_function(void) {
+  return ((unsigned long)DPS_THREAD_ID);
+}
+
+static void locking_function(int mode, int n, const char *file, int line) {
+#if defined HAVE_PTHREAD
+  if (mode & CRYPTO_LOCK)
+    DPS_MUTEX_LOCK(id_function(), &mutex_buf[n]);
+  else
+    DPS_MUTEX_UNLOCK(id_function(), &mutex_buf[n]);
+#endif
+}
+
+int dps_libcrypto_thread_setup(void) {
+  int i;
+ 
+  mutex_buf = malloc(CRYPTO_num_locks(  ) * sizeof(dps_mutex_t));
+  if (!mutex_buf)
+    return 0;
+  for (i = 0;  i < CRYPTO_num_locks(  );  i++)
+    InitMutex(&mutex_buf[i]);
+  CRYPTO_set_id_callback(id_function);
+  CRYPTO_set_locking_callback(locking_function);
+  return 1;
+}
+ 
+int dps_libcrypto_thread_cleanup(void) {
+  int i;
+ 
+  if (!mutex_buf)
+    return 0;
+  CRYPTO_set_id_callback(NULL);
+  CRYPTO_set_locking_callback(NULL);
+  for (i = 0;  i < CRYPTO_num_locks(  );  i++)
+    DestroyMutex(&mutex_buf[i]);
+  free(mutex_buf);
+  mutex_buf = NULL;
+  return 1;
+}
+
+/* /libCRYPTO threads locking */

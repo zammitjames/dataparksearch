@@ -29,6 +29,9 @@
 #include <unistd.h>
 #endif
 
+#ifdef WITH_HTTPS
+#include <openssl/err.h>
+#endif
 
 #if defined(__i386) || defined(__x86_64__) || defined(__amd64__) || defined(__ia64__)
 
@@ -43,6 +46,11 @@
 #define DestroyMutex(x)
 #define DPS_MUTEX_LOCK(A,x)       DpsCAS_lock(A,x)
 #define DPS_MUTEX_UNLOCK(A,x)     DpsCAS_unlock(A,x)
+#if defined HAVE_PTHREAD
+#define DPS_THREAD_ID           (pthread_self())
+#else
+#define DPS_THREAD_ID           ((unsigned long)1117)
+#endif
 
 #elif defined HAVE_PTHREAD
 #include <pthread.h>
@@ -51,6 +59,7 @@
 #define DestroyMutex(x)		pthread_mutex_destroy(x)
 #define DPS_MUTEX_LOCK(A,x)	pthread_mutex_lock(x)
 #define DPS_MUTEX_UNLOCK(A,x)	pthread_mutex_unlock(x)
+#define DPS_THREAD_ID           pthread_self()
 
 #elif defined HAVE_SYS_SEM_H
 #include <sys/ipc.h>
