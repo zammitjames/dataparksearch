@@ -102,7 +102,7 @@ static int dps_libcrypto_thread_cleanup(void);
 
 
 
-static volatile DPS_MUTEX *MuMu = NULL;
+static DPS_MUTEX *MuMu = NULL;
 
 size_t DpsNsems = DPS_LOCK_MAX;
 
@@ -202,7 +202,7 @@ void DpsGetSemLimit(void) {
 
 #if defined(CAS_MUTEX)
 
-static inline char CAS(volatile dps_mutex_t *target, dps_mutex_t exchange, dps_mutex_t compare) {
+static inline char CAS(dps_mutex_t *target, dps_mutex_t exchange, dps_mutex_t compare) {
   char ret;
   __asm__ __volatile__ (
 			"lock\n\t"
@@ -700,14 +700,14 @@ void DpsAcceptMutexUnlock(DPS_AGENT *Agent) {
 
 
 /* libCRYPTO threads locking */
-static int dps_libcrypto_thread_setup(void);
-static int dps_libcrypto_thread_cleanup(void);
 
 static dps_mutex_t *mutex_buf = NULL;
 
 static void handle_error(const char *file, int lineno, const char *msg) {
   fprintf(stderr, "** %s:%d %s\n", file, lineno, msg);
+#if defined WITH_HTTPS
   ERR_print_errors_fp(stderr);
+#endif
 }
 
 static unsigned long id_function(void) {
@@ -715,28 +715,31 @@ static unsigned long id_function(void) {
 }
 
 static void locking_function(int mode, int n, const char *file, int line) {
-#if defined HAVE_PTHREAD
+#if defined HAVE_PTHREAD && defined WITH_HTTPS
   if (mode & CRYPTO_LOCK)
-    DPS_MUTEX_LOCK(id_function(), &mutex_buf[n]);
+    DPS_MUTEX_LOCK((dps_mutex_t)id_function(), &mutex_buf[n]);
   else
-    DPS_MUTEX_UNLOCK(id_function(), &mutex_buf[n]);
+    DPS_MUTEX_UNLOCK((dps_mutex_t)id_function(), &mutex_buf[n]);
 #endif
 }
 
 int dps_libcrypto_thread_setup(void) {
+#if defined WITH_HTTPS
   int i;
  
-  mutex_buf = malloc(CRYPTO_num_locks(  ) * sizeof(dps_mutex_t));
+  mutex_buf = (dps_mutex_t *)malloc(CRYPTO_num_locks(  ) * sizeof(dps_mutex_t));
   if (!mutex_buf)
     return 0;
   for (i = 0;  i < CRYPTO_num_locks(  );  i++)
     InitMutex(&mutex_buf[i]);
   CRYPTO_set_id_callback(id_function);
   CRYPTO_set_locking_callback(locking_function);
+#endif
   return 1;
 }
  
 int dps_libcrypto_thread_cleanup(void) {
+#if defined WITH_HTTPS
   int i;
  
   if (!mutex_buf)
@@ -747,6 +750,7 @@ int dps_libcrypto_thread_cleanup(void) {
     DestroyMutex(&mutex_buf[i]);
   free(mutex_buf);
   mutex_buf = NULL;
+#endif
   return 1;
 }
 
