@@ -77,6 +77,7 @@
 #endif
 
 #define DEBUG_CACHE
+
 #define MULTITHREADED_SORT
 
 /*
@@ -325,16 +326,23 @@ void DpsSortSearchWordsByURL0(DPS_URL_CRD *wrd, size_t num){
 	return;
 }
 
-#define med3(func, a, b, c, L, pattern)  (func(L, a, b, pattern) < 0 ?	\
-					  (func(L, b, c, pattern) < 0 ? (b) : (func(L, a, c, pattern) < 0 ? (c) : (a))) \
-					  : (func(L, b, c, pattern) > 0 ? (b) : (func(L, a, c, pattern) < 0 ? (a) : (c))))
+#define med3a(func, a, b, c, L, pattern)  ((func(L, a, b, pattern) < 0) ? \
+					  ((func(L, b, c, pattern) < 0) ? (b) : ((func(L, a, c, pattern) < 0) ? (c) : (a))) \
+					  : ((func(L, b, c, pattern) > 0) ? (b) : ((func(L, a, c, pattern) <= 0) ? (a) : (c))))
+
+#define med3b(func, a, b, c, L, pattern)  ((func(L, a, b, pattern) < 0) ? \
+					  ((func(L, b, c, pattern) <= 0) ? (b) : ((func(L, a, c, pattern) < 0) ? (c) : (a))) \
+					  : ((func(L, b, c, pattern) >= 0) ? (b) : ((func(L, a, c, pattern) < 0) ? (a) : (c))))
+
+#define med3c(func, a, b, c, L, pattern)  ((func(L, a, b, pattern) < 0) ? \
+					  ((func(L, b, c, pattern) < 0) ? (b) : ((func(L, a, c, pattern) <= 0) ? (c) : (a))) \
+					  : ((func(L, b, c, pattern) > 0) ? (b) : ((func(L, a, c, pattern) < 0) ? (a) : (c))))
+
 #define MIN_SLICE 9
 #define MIDDLE_SLICE 40
 
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-#define SORT_THREADS 32
-#define THREAD_SLICE 128
-static int sort_threads = SORT_THREADS;
+#define THREAD_SLICE 102400 /* 128 */
 #endif
 
 typedef struct {
@@ -344,6 +352,45 @@ typedef struct {
   size_t l, r;
   int merge;
 } DPS_SORT_PARAM;
+
+
+#ifdef WITH_REL_TRACK
+
+#define SWAP_BY_SITE(i,j) if (i != j) {	\
+      Crd = L->Coords[j]; \
+      Dat = L->Data[j];   \
+      L->Coords[j] = L->Coords[i]; \
+      L->Data[j] = L->Data[i]; \
+      L->Coords[i] = Crd; \
+      L->Data[i] = Dat; \
+      Trk = L->Track[j]; \
+      L->Track[j] = L->Track[i]; \
+      L->Track[i] = Trk; \
+      if (merge) { \
+	PerS = Res->PerSite[j]; \
+	Res->PerSite[j] = Res->PerSite[i]; \
+	Res->PerSite[i] = PerS; \
+      } \
+   }
+
+#else
+#define SWAP_BY_SITE(i,j) if (i != j) { \
+      Crd = L->Coords[j]; \
+      Dat = L->Data[j];   \
+      L->Coords[j] = L->Coords[i]; \
+      L->Data[j] = L->Data[i]; \
+      L->Coords[i] = Crd; \
+      L->Data[i] = Dat; \
+      if (merge) { \
+	PerS = Res->PerSite[j]; \
+	Res->PerSite[j] = Res->PerSite[i]; \
+	Res->PerSite[i] = PerS; \
+      } \
+   }
+
+
+#endif
+
 
 static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t r, const char *pattern, int merge) {
   DPS_URL_CRD_DB Crd;
@@ -359,38 +406,37 @@ static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, 
   pn = r;
   if ( (d = (r - p)) > MIDDLE_SLICE) {
     d /= 8;
-    pl = med3(DpsCmpSiteid, pl, pl + d, pl + 2 * d, L, pattern);
-    pm = med3(DpsCmpSiteid, pm - d, pm, pm + d, L, pattern);
-    pn = med3(DpsCmpSiteid, pn - 2 * d, pn - d, pn, L, pattern);
-  }
-  m = med3(DpsCmpSiteid, pl, pm, pn, L, pattern);
+    pl = med3c(DpsCmpSiteid, pl, pl + d, pl + 2 * d, L, pattern);
+    pm = med3b(DpsCmpSiteid, pm - d, pm, pm + d, L, pattern);
+    pn = med3a(DpsCmpSiteid, pn - 2 * d, pn - d, pn, L, pattern);
+ }
+  m = med3b(DpsCmpSiteid, pl, pm, pn, L, pattern);
 
-  while (1) {
-    while ((DpsCmpSiteid(L, j, m, pattern) > 0) && (j > p)) j--;
-    while ((DpsCmpSiteid(L, i, m, pattern) < 0) && (i < r)) i++;
-    if (i < j) {
-      Crd = L->Coords[j];
-      Dat = L->Data[j];      
-      L->Coords[j] = L->Coords[i];
-      L->Data[j] = L->Data[i];
-      L->Coords[i] = Crd;
-      L->Data[i] = Dat;
-#ifdef WITH_REL_TRACK
-      Trk = L->Track[j];
-      L->Track[j] = L->Track[i];
-      L->Track[i] = Trk;
-#endif
-      if (merge) {
-	PerS = Res->PerSite[j];
-	Res->PerSite[j] = Res->PerSite[i];
-	Res->PerSite[i] = PerS;
-      }
-      if (i == m) m = j;
-      else if (j == m) m = i;
-      i++;
-      j--;
-    } else return j;
+#if 1
+  SWAP_BY_SITE(m,r);
+  j = p;
+  for (i = p; i < r; i++) {
+    register int rc = DpsCmpSiteid(L, i, r, pattern);
+    if ( rc < 0 || (rc == 0 && (j - p) < (r - j)) ) {
+      SWAP_BY_SITE(i,j);
+      j++;
+    }
   }
+  SWAP_BY_SITE(r,j);
+#else
+
+  for (i = p, j = r; i < j;) {
+    while ( (DpsCmpSiteid(L, i, m, pattern) <= 0) && (i < j) ) i++;
+    while ( (DpsCmpSiteid(L, j, m, pattern) >= 0) && (i < j) ) j--;
+    if (j <= i) return j;
+    SWAP_BY_SITE(i,j);
+    i++;
+    j--;
+  }
+
+#endif
+
+  return j;
 }
 
 
@@ -405,15 +451,14 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
   size_t l = P->l, r = P->r, q, d;
   size_t PerS;
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-  DPS_SORT_PARAM PAR[SORT_THREADS];
-  pthread_t tid[SORT_THREADS];
-  size_t ptid = 0;
+  DPS_SORT_PARAM PAR;
+  pthread_t tid = 0;
 #endif
 
  DpsQsortBySiteLoop:
   if (l >= r) {
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+    if (tid) pthread_join(tid, NULL);
 #endif
     return NULL;
   }
@@ -422,46 +467,53 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
     DPS_RESULT *Res = P->Res;
     DPS_URLCRDLIST *L = P->L;
 
+#if 0
     for (j = l + 1; j <= r; j++) {
       for (i = j; (i > l) && (DpsCmpSiteid(L, i - 1, i, P->pattern) > 0); i--) {
-	  Crd = L->Coords[i];
-	  Dat = L->Data[i];
-	  L->Coords[i] = L->Coords[i - 1];
-	  L->Data[i] = L->Data[i - 1];
-	  L->Coords[i - 1] = Crd;
-	  L->Data[i - 1] = Dat;
-#ifdef WITH_REL_TRACK
-	  Trk = L->Track[i];
-	  L->Track[i] = L->Track[i - 1];
-	  L->Track[i - 1] = Trk;
-#endif
-	  if (P->merge) {
-	    PerS = Res->PerSite[i];
-	    Res->PerSite[i] = Res->PerSite[i - 1];
-	    Res->PerSite[i - 1] = PerS;
-	  }
+	SWAP_BY_SITE(i,i-1);
+
       }
     }
+#else
+    register size_t iMin;
+    int merge = P->merge;
+
+    for (i = l; i < r; i++) {
+      iMin = i;
+      for (j = i + 1; j <= r; j++) {
+	if (DpsCmpSiteid(L, j, iMin, P->pattern) < 0) {
+	  iMin = j;
+	}
+      }
+      if (iMin != i) {
+	SWAP_BY_SITE(i, iMin);
+      }
+    }
+#endif
+
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+    if (tid) pthread_join(tid, NULL);
 #endif
     return NULL;
   }
   q = DpsPartitionSearchWordsBySite(P->Res, P->L, l, r, P->pattern, P->merge);
+  if (q == l) { 
+    l++; 
+    goto DpsQsortBySiteLoop; 
+  }
   if (q == r) { 
     r--; 
     goto DpsQsortBySiteLoop; 
   }
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-  if (d >= THREAD_SLICE && sort_threads > 0) {
-    PAR[ptid] = *P;
-    PAR[ptid].r = q;
-    if (pthread_create(&tid[ptid], NULL, &DpsQsortSearchWordsBySite, &PAR[ptid]) == 0) {
-      sort_threads--;
-      ptid++;
-    } else {
+  if (d >= THREAD_SLICE) {
+    PAR = *P;
+    PAR.r = q;
+    if (tid) pthread_join(tid, NULL);
+    tid = 0;
+    if (pthread_create(&tid, NULL, &DpsQsortSearchWordsBySite, &PAR) != 0) {
       DPS_SORT_PARAM PP = *P;
-      PP.r = q;
+      PP.r = q - 1;
       DpsQsortSearchWordsBySite(&PP);
     }
   } else 
@@ -508,6 +560,41 @@ void DpsSortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, co
 }
 
 
+#ifdef WITH_REL_TRACK
+
+#define SWAP_BY_PATTERN(i,j) if (i != j) { \
+      Crd = L->Coords[j]; \
+      Dat = L->Data[j]; \
+      L->Coords[j] = L->Coords[i]; \
+      L->Data[j] = L->Data[i];     \
+      L->Coords[i] = Crd;          \
+      L->Data[i] = Dat;                    \
+      Trk = L->Track[j];                   \
+      L->Track[j] = L->Track[i];           \
+      L->Track[i] = Trk;                   \
+      if (Res->PerSite) {                  \
+	Cnt = Res->PerSite[j];             \
+	Res->PerSite[j] = Res->PerSite[i]; \
+	Res->PerSite[i] = Cnt;             \
+      }                                    \
+  }
+
+#else
+
+#define SWAP_BY_PATTERN(i,j) if (i != j) { \
+      Crd = L->Coords[j]; \
+      Dat = L->Data[j]; \
+      L->Coords[j] = L->Coords[i]; \
+      L->Data[j] = L->Data[i];     \
+      L->Coords[i] = Crd;          \
+      L->Data[i] = Dat;                    \
+      if (Res->PerSite) {                  \
+	Cnt = Res->PerSite[j];             \
+	Res->PerSite[j] = Res->PerSite[i]; \
+	Res->PerSite[i] = Cnt;             \
+      }                                    \
+  }
+#endif
 
 static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t p, size_t r, const char *pattern) {
   size_t i = p, j = r, m, pl, pm, pn, d;
@@ -523,38 +610,37 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
   pn = r;
   if ( (d = (r - p)) > MIDDLE_SLICE) {
     d /= 8;
-    pl = med3(DpsCmpPattern, pl, pl + d, pl + 2 * d, L, pattern);
-    pm = med3(DpsCmpPattern, pm - d, pm, pm + d, L, pattern);
-    pn = med3(DpsCmpPattern, pn - 2 * d, pn - d, pn, L, pattern);
+    pl = med3c(DpsCmpPattern, pl, pl + d, pl + 2 * d, L, pattern);
+    pm = med3b(DpsCmpPattern, pm - d, pm, pm + d, L, pattern);
+    pn = med3a(DpsCmpPattern, pn - 2 * d, pn - d, pn, L, pattern);
   }
-  m = med3(DpsCmpPattern, pl, pm, pn, L, pattern);
+  m = med3b(DpsCmpPattern, pl, pm, pn, L, pattern);
 
-  while (1) {
-    while ((DpsCmpPattern(L, j, m, pattern) > 0) && (j > p)) j--;
-    while ((DpsCmpPattern(L, i, m, pattern) < 0) && (i < r)) i++;
-    if (i < j) {
-      Crd = L->Coords[j];
-      Dat = L->Data[j];
-      L->Coords[j] = L->Coords[i];
-      L->Data[j] = L->Data[i];
-      L->Coords[i] = Crd;
-      L->Data[i] = Dat;
-#ifdef WITH_REL_TRACK
-      Trk = L->Track[j];
-      L->Track[j] = L->Track[i];
-      L->Track[i] = Trk;
-#endif
-      if (Res->PerSite) {
-	Cnt = Res->PerSite[j];
-	Res->PerSite[j] = Res->PerSite[i];
-	Res->PerSite[i] = Cnt;
-      }
-      if (i == m) m = j;
-      else if (j == m) m = i;
-      i++;
-      j--;
-    } else return j;
+#if 0
+  SWAP_BY_PATTERN(m,r);
+  j = p;
+  for (i = p; i < r; i++) {
+    register int rc = DpsCmpPattern(L, i, r, pattern);
+    if ( rc < 0 || (rc == 0 && (j - p) < (r - j)) ) {
+      SWAP_BY_PATTERN(i,j);
+      j++;
+    }
   }
+  SWAP_BY_PATTERN(r,j);
+#else
+
+  for (i = p, j = r; i < j;) {
+    while ( (DpsCmpPattern(L, i, m, pattern) <= 0) && (i < j) ) i++;
+    while ( (DpsCmpPattern(L, j, m, pattern) >= 0) && (i < j) ) j--;
+    if (j <= i) return j;
+    SWAP_BY_PATTERN(i,j);
+    i++;
+    j--;
+  }
+
+#endif
+
+  return j;
 }
 
 
@@ -568,15 +654,14 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
   DPS_URLTRACK Trk;
 #endif
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-  DPS_SORT_PARAM PAR[SORT_THREADS];
-  pthread_t tid[SORT_THREADS];
-  size_t ptid = 0;
+  DPS_SORT_PARAM PAR;
+  pthread_t tid = 0;
 #endif
 
  DpsQsortByPatternLoop:
   if (l >= r) {
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+    if (tid) pthread_join(tid, NULL); 
 #endif
     return NULL;
   }
@@ -585,46 +670,49 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
     DPS_RESULT *Res = P->Res;
     DPS_URLCRDLIST *L = P->L;
 
+#if 0
     for (j = l + 1; j <= r; j++) {
+      for (i = j; (i > l) && (DpsCmpPattern(L, i - 1, i, P->pattern) > 0); i--) {
+	SWAP_BY_PATERN(i, i-1);
+      }
+    }
+#else
+    register size_t iMin;
 
-      for (i = j; i > l && (DpsCmpPattern(L, i - 1, i, P->pattern) > 0); i--) {
-	Crd = L->Coords[i];
-	Dat = L->Data[i];
-	L->Coords[i] = L->Coords[i - 1];
-	L->Data[i] = L->Data[i - 1];
-	L->Coords[i - 1] = Crd;
-	L->Data[i - 1] = Dat;
-#ifdef WITH_REL_TRACK
-	Trk = L->Track[i];
-	L->Track[i] = L->Track[i - 1];
-	L->Track[i - 1] = Trk;
-#endif
-	if (Res->PerSite) {
-	  Cnt = Res->PerSite[i];
-	  Res->PerSite[i] = Res->PerSite[i - 1];
-	  Res->PerSite[i - 1] = Cnt;
+    for (i = l; i < r; i++) {
+      iMin = i;
+      for (j = i + 1; j <= r; j++) {
+	if (DpsCmpPattern(L, j, iMin, P->pattern) < 0) {
+	  iMin = j;
 	}
       }
-
+      if (iMin != i) {
+	SWAP_BY_PATTERN(i, iMin);
+      }
     }
+#endif
+
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-    for (d = 0; d < ptid; d++) { pthread_join(tid[d], NULL); sort_threads++; }
+    if (tid) pthread_join(tid, NULL);
 #endif
     return NULL;
   }
   c = DpsPartitionSearchWordsByPattern(P->Res, P->L, l, r, P->pattern);
+  if (c == l) { 
+    l++; 
+    goto DpsQsortByPatternLoop; 
+  } 
   if (c == r) { 
     r--; 
     goto DpsQsortByPatternLoop; 
   } 
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-  if (d >= THREAD_SLICE && sort_threads > 0) {
-    PAR[ptid] = *P;
-    PAR[ptid].r = c;
-    if (pthread_create(&tid[ptid], NULL, &DpsQsortSearchWordsByPattern, &PAR[ptid]) == 0) {
-      sort_threads--;
-      ptid++;
-    } else {
+  if (d >= THREAD_SLICE) {
+    PAR = *P;
+    PAR.r = c - 1;
+    if (tid) pthread_join(tid, NULL);
+    tid = 0;
+    if (pthread_create(&tid, NULL, &DpsQsortSearchWordsByPattern, &PAR) != 0) {
       DPS_SORT_PARAM PP = *P;
       PP.r = c;
       DpsQsortSearchWordsBySite(&PP);
@@ -2268,7 +2356,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT  * n_order_inquery;
 #endif
   R[DPS_N_COUNT] = 0;
-  R[DPS_N_ORIGIN] = DpsOriginIndex(DPS_WORD_ORIGIN_QUERY);
+  R[DPS_N_ORIGIN] = 1; /* DpsOriginIndex(DPS_WORD_ORIGIN_QUERY); */
 
   wordnum = DPS_WRDNUM(Crd[0].coord);
   wordsec = DPS_WRDSEC_N(Crd[0].coord, nsections);
@@ -2809,7 +2897,7 @@ static void DpsGroupByURLUltra(DPS_AGENT *query, DPS_RESULT *Res) {
   R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT * (Res->max_order_inquery + 1);
 #endif
   R[DPS_N_COUNT] = 0;
-  R[DPS_N_ORIGIN] = DpsOriginIndex(DPS_WORD_ORIGIN_QUERY);
+  R[DPS_N_ORIGIN] = 1; /* DpsOriginIndex(DPS_WORD_ORIGIN_QUERY); */
 
   wordnum = DPS_WRDNUM(Crd[0].coord);
   wordsec = DPS_WRDSEC_N(Crd[0].coord, nsections);
