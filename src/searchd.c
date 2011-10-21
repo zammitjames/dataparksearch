@@ -1573,15 +1573,17 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 	      if (n > 0) {
 		query[n] = '\0';
 
-		DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: query[%d]: %s", dps_strlen(query + sizeof(long)), query + sizeof(long) );
-
 		to_delete = 1;
 
 		if (strncmp(item->d_name, "track.", 6)) {
+		  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: track[%d]: %s", dps_strlen(query + sizeof(long)), query + sizeof(long) );
+
 		  res = DpsSQLAsyncQuery(tr_db, NULL, query);
 		  if (res != DPS_OK) {to_delete = 0; continue; }
 		  trdone = 1;
 		} else {
+		  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: query[%d]: %s", dps_strlen(query), query);
+
 		  trdone = 1;
 		  IP = dps_strtok_r(query + sizeof(long), "\2", &lt, NULL);
 /*	  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: IP: %s", IP);*/
