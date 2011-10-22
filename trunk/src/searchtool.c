@@ -415,11 +415,15 @@ static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, 
 #if 1
   SWAP_BY_SITE(m,r);
   j = p;
-  for (i = p; i < r; i++) {
-    register int rc = DpsCmpSiteid(L, i, r, pattern);
-    if ( rc < 0 || (rc == 0 && (j - p) < (r - j)) ) {
-      SWAP_BY_SITE(i,j);
-      j++;
+  { 
+    register int u = ((j - p) < (r - j));
+    for (i = p; i < r; i++) {
+      register int rc = DpsCmpSiteid(L, i, r, pattern);
+      if ( rc < 0 || (rc == 0 && u) ) {
+	SWAP_BY_SITE(i,j);
+	j++;
+	u = ((j - p) < (r - j));
+      }
     }
   }
   SWAP_BY_SITE(r,j);
@@ -515,6 +519,7 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
       DPS_SORT_PARAM PP = *P;
       PP.r = q - 1;
       DpsQsortSearchWordsBySite(&PP);
+      tid = 0;
     }
   } else 
 #endif
@@ -619,11 +624,15 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
 #if 0
   SWAP_BY_PATTERN(m,r);
   j = p;
-  for (i = p; i < r; i++) {
-    register int rc = DpsCmpPattern(L, i, r, pattern);
-    if ( rc < 0 || (rc == 0 && (j - p) < (r - j)) ) {
-      SWAP_BY_PATTERN(i,j);
-      j++;
+  {
+    register int u = ((j - p) < (r - j));
+    for (i = p; i < r; i++) {
+      register int rc = DpsCmpPattern(L, i, r, pattern);
+      if ( rc < 0 || (rc == 0 && u) ) {
+	SWAP_BY_PATTERN(i,j);
+	j++;
+	u = ((j - p) < (r - j));
+      }
     }
   }
   SWAP_BY_PATTERN(r,j);
@@ -716,6 +725,7 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
       DPS_SORT_PARAM PP = *P;
       PP.r = c;
       DpsQsortSearchWordsBySite(&PP);
+      tid = 0;
     }
   } else 
 #endif
