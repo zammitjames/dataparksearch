@@ -39,6 +39,7 @@
 #include "dps_parsexml.h"
 #include "dps_doc.h"
 #include "dps_hrefs.h"
+#include "dps_host.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -907,9 +908,32 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			e=s+5;DPS_SKIP(e," \t");s=e;
 			DPS_SKIPN(e," \t");*e=0;
 			if(s && *s){
-			  if(AddRobotRule(Indexer, robot, DPS_METHOD_HOST, s, 1)) {
-				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
+			  DPS_URL *hostURL = DpsURLInit(NULL);
+			  char robohost[512];
+			  if (hostURL == NULL) {
+				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: can't init dps_url; no memory ?");
 					return(DPS_ERROR);
+			  }
+			  dps_snprintf(robohost, sizeof(robohost), "http://%s/", s);
+			  if (!DpsURLParse(hostURL, robohost)) {
+			    DPS_CONN roboconn;
+			    bzero(&roboconn, sizeof(roboconn));
+			    roboconn.hostname = (char*)DpsStrdup(s);
+			    roboconn.port = hostURL->port ? hostURL->port : hostURL->default_port;
+			    roboconn.timeout = DPS_DOC_TIMEOUT;
+			    if (DpsHostLookup(Indexer, &roboconn) != 0) {
+			      DpsLog(Indexer, DPS_LOG_EXTRA, "robots.txt: can't resolve hostname (%s) in Host: directive, skip it", s);
+			    } else if(AddRobotRule(Indexer, robot, DPS_METHOD_HOST, s, 1)) {
+				  DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
+				  DpsFree(roboconn.hostname);
+				  DpsURLFree(hostURL);
+					return(DPS_ERROR);
+			    }
+			    DpsURLFree(hostURL);
+			    DpsFree(roboconn.hostname);
+			  } else {
+			    DpsLog(Indexer, DPS_LOG_EXTRA, "robots.txt: incorrect hostname (%s) in Host: directive, skip it", s);
+			    DpsURLFree(hostURL);
 			  }
 			}
 		  }else
