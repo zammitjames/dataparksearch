@@ -114,6 +114,7 @@
 #define DPS_MAXDISCWORDSIZE			64
 #define DPS_DEFAULT_MAX_HOPS			256
 #define DPS_DEFAULT_MAX_DEPTH			16
+#define DPS_DEFAULT_MAX_URLENGTH                256
 #define DPS_DEFAULT_PS                          10
 #define DPS_DEFAULT_MAX_ASPELL                  16
 #define DPS_READ_TIMEOUT			30
@@ -487,6 +488,7 @@ typedef struct {
         dps_uint4       MaxDocsPerSite;/**< Maximum number of document from Server at one indexer run */
         dps_uint4       MaxHrefsPerServer;/**< Maximum number of href from Server at one indexer run */
         dps_uint4       MaxDepth;
+        dps_uint4       MaxURLength;
         time_t          crawl_delay;     /**< Delay between consecutive fetches from this server, in seconds */
         time_t          *last_crawled;
         int             need_free;      /**< =1, if need to free last_crawled */
