@@ -226,6 +226,7 @@ __C_LINK int __DPSCALL DpsServerAdd(DPS_AGENT *A, DPS_SERVER *srv){
 	  new->MinServerWeight = srv->MinServerWeight;
 	  new->MaxHops = srv->MaxHops;
 	  new->MaxDepth = srv->MaxDepth;
+	  new->MaxURLength = srv->MaxURLength;
 	  new->MaxDocsPerServer = srv->MaxDocsPerServer;
 	  new->MaxDocsPerSite = srv->MaxDocsPerSite;
 	  new->MaxHrefsPerServer = srv->MaxHrefsPerServer;
@@ -454,6 +455,7 @@ __C_LINK int __DPSCALL DpsServerInit(DPS_SERVER * srv){
 	srv->MinServerWeight = 0.0;            /* default Minimum Server weight to be indexed */
 	srv->MaxHops = DPS_DEFAULT_MAX_HOPS;   /* default MaxHops value */
 	srv->MaxDepth = DPS_DEFAULT_MAX_DEPTH; /* default MaxDepth value */
+	srv->MaxURLength = DPS_DEFAULT_MAX_URLENGTH; /* default MaxURLength value */
 	srv->MaxDocsPerServer = (dps_uint4)-1; /* default MaxDocsPerServer value */
 	srv->MaxDocsPerSite = 0;               /* default MaxDocsPerSite value */
 	srv->MaxHrefsPerServer = (dps_uint4)-1;/* default MaxHrefsPerServer value */
@@ -564,7 +566,7 @@ urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Do
   rc = DpsSrvAction(Indexer, &S, DPS_SRV_ACTION_ID);
 
   DpsVarListReplaceDouble(&Doc->Sections, "SiteWeight", (double)S.weight);
-  DpsVarListReplaceInt(&Doc->Sections, "SiteNdocs", (int)S.ndocs);
+  DpsVarListReplaceInt(&Doc->Sections, "SiteNdocs", (int)S.ndocs++);
 
   DPS_FREE(urlstr);
   return (rc == DPS_OK) ? S.site_id : 0;

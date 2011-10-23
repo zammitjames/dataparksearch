@@ -290,6 +290,13 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	
 	  DpsLog(Indexer, DPS_LOG_DEBUG, " Server: site_id: %d pattern: %s", Srv->site_id, Srv->Match.pattern);
 	  Href->server_id = Srv->site_id;
+
+	  if (dps_strlen(newhref) > Srv->MaxURLength) {
+	    DpsLog(Indexer, DPS_LOG_DEBUG, "too long URL (%d, max: %d), skip it", dps_strlen(newhref), Srv->MaxURLength);
+	    Href->method = DPS_METHOD_DISALLOW;
+	    goto check_ret;
+	  }
+
 	
 	  method = DpsVarListFindStr(&Srv->Vars, "Method", "Allow");
 	  if((Href->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {
@@ -799,6 +806,13 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 			break;
 	}
 	
+	if (dps_strlen(DpsVarListFindStr(&Doc->Sections,"URL","")) > CurSrv->MaxURLength) {
+	  DpsLog(Indexer, DPS_LOG_DEBUG, "too long URL (max: %d), skip it", CurSrv->MaxURLength);
+	  Doc->method = DPS_METHOD_DISALLOW;
+	  TRACE_OUT(Indexer);
+	  return DPS_OK;
+	}
+
 	if((Doc->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {  /* was: == DPS_METHOD_GET */
 	  /* Check Allow/Disallow/CheckOnly stuff */
 	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
@@ -1849,6 +1863,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 		Server = DpsServerFind(Indexer, (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0), newhref, Doc->charset_id, &alstr);
 		DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+
 		if ( !Server ) Server = Parent->Server;
 		if ( !Server ) {
 			DpsLog(Indexer,DPS_LOG_WARN,"No 'Server' command for url");
@@ -2379,6 +2394,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
 		Server = DpsServerFind(Indexer, (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0), url, Doc->charset_id, &alstr);
 		DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+
 		if ( !Server ) {
 			DpsLog(Indexer,DPS_LOG_WARN,"No 'Server' command for url");
 			Doc->method = DPS_METHOD_DISALLOW;

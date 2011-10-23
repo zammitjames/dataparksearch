@@ -824,6 +824,7 @@ FROM %s WHERE enabled=1 AND parent=%s0%s ORDER BY ordre", name, qu, qu);
 		Server->Match.nomatch	= DpsVarListFindInt(&Server->Vars, "nomatch", 0);
 		Server->MaxHops = DpsVarListFindUnsigned(&Server->Vars, "MaxHops", DPS_DEFAULT_MAX_HOPS);
 		Server->MaxDepth = DpsVarListFindUnsigned(&Server->Vars, "MaxDepth", DPS_DEFAULT_MAX_DEPTH);
+		Server->MaxURLength = DpsVarListFindUnsigned(&Server->Vars, "MaxURLength", DPS_DEFAULT_MAX_URLENGTH);
 		Server->MinSiteWeight = (float)DpsVarListFindDouble(&Server->Vars, "MinSiteWeight", 0.0);
 		Server->MinServerWeight = (float)DpsVarListFindDouble(&Server->Vars, "MinServerWeight", 0.0);
 		DPS_FREE(Server->Match.arg);

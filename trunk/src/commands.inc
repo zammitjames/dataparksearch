@@ -123,6 +123,7 @@
 	{"MaxNetErrors",	1,1,	srv_rpl_num_var},
 	{"MaxSiteLevel",        1,1,    env_rpl_num_var},
 	{"MaxSpareServers",     1,1,    env_rpl_var},
+	{"MaxURLength",		1,1,	srv_rpl_num_var},
 	{"MaxWordLength",	1,1,	env_rpl_num_var},
 /*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 	{"Mime",		2,3,	add_parser},

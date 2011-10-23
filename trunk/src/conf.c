@@ -1934,6 +1934,7 @@ static int srv_rpl_num_var(void *Cfg, size_t ac,char **av){
 	else if (strcasecmp(av[0], "MaxDocsPerSite") == 0) C->Srv->MaxDocsPerSite = (dps_uint4) res;
 	else if (strcasecmp(av[0], "MaxHrefsPerServer") == 0) C->Srv->MaxHrefsPerServer = (dps_uint4) res;
 	else if (strcasecmp(av[0], "MaxDepth") == 0) C->Srv->MaxDepth = (dps_uint4) res;
+	else if (strcasecmp(av[0], "MaxURLength") == 0) C->Srv->MaxURLength = (dps_uint4) res;
 	else if (strcasecmp(av[0], "MinServerWeight") == 0) C->Srv->MinServerWeight = val;
 	else if (strcasecmp(av[0], "MinSiteWeight") == 0) C->Srv->MinSiteWeight = val;
 	else if (strcasecmp(av[0], "ServerWeight") == 0) C->Srv->weight = val;
