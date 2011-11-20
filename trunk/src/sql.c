@@ -7046,10 +7046,10 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
 
   cur_div = fabs(di - Oi);
   if ((pdiv = fabs(PopRank - Oi)) > EPS) to_update++;
-  u_it = ( (cur_div > EPS || pdiv > EPS) && n_Oi > 0);
-
-/*  DpsLog(A, DPS_LOG_DEBUG, " -- di:%f  Oi:%f  cur_div:%f  pdiv:%f  nOi:%d", di, Oi, cur_div, pdiv, n_Oi);*/
-
+  u_it = (cur_div > EPS || pdiv > EPS);
+  /*
+  DpsLog(A, DPS_LOG_DEBUG, " -- di:%f  Oi:%f  cur_div:%f  pdiv:%f  nOi:%d", di, Oi, cur_div, pdiv, n_Oi);
+  */
   for (it = 0; u_it && (it < A->Flags.PopRankNeoIterations); it++) {
 
 /*    delta = pas * (di - Oi) * Oi * (1.0 - Oi);*/
