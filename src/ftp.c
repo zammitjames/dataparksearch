@@ -85,7 +85,7 @@ int Dps_ftp_read_line(DPS_CONN *connp){
 	return 0;
 }
 
-int Dps_ftp_connect(DPS_AGENT *Agent, DPS_CONN *connp, char *hostname, int port, char *user, char *passwd, int timeout) {
+int Dps_ftp_connect(DPS_AGENT *Agent, DPS_CONN *connp, const char *hostname, int port, const char *user, const char *passwd, int timeout) {
 	size_t len;
 	
 	if (!connp)
@@ -285,7 +285,7 @@ int Dps_ftp_send_data_cmd(DPS_CONN *c, DPS_CONN *d, char *cmd, size_t max_doc_si
 	return 0;		
 }
 
-int Dps_ftp_login(DPS_CONN *connp, char *user, char *passwd){
+int Dps_ftp_login(DPS_CONN *connp, const char *user, const char *passwd){
 	char *buf;
 	char user_tmp[32], passwd_tmp[64];
 	int code;
@@ -425,7 +425,7 @@ static int ftp_parse_list(DPS_CONN *connp, char *path){
 	return 0;
 }
 
-int Dps_ftp_list(DPS_CONN *c, DPS_CONN *d, char *path, char *filename, size_t max_doc_size){
+int Dps_ftp_list(DPS_CONN *c, DPS_CONN *d, const char *path, const char *filename, size_t max_doc_size){
 	char *cmd;
 	size_t len;
 	
@@ -553,7 +553,7 @@ int Dps_ftp_set_binary(DPS_CONN *c){
 	return 0;
 }
 
-int Dps_ftp_cwd(DPS_CONN *c, char *path){
+int Dps_ftp_cwd(DPS_CONN *c, const char *path){
 	char *cmd;
 	int code;
 	size_t len;

@@ -36,7 +36,7 @@
 /* This should be a configurable parameter but we'll use 4K now  */
 
 #define HSIZE		256	/* Length of buffer increment  TUNE */
-#define RESORT_HREFS	128	/* Max length of unsorted part TUNE */
+#define RESORT_HREFS	24	/* Max length of unsorted part TUNE */
 
 DPS_HREF *DpsHrefInit(DPS_HREF * H){
 	bzero((void*)H, sizeof(*H));

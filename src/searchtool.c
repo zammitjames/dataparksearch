@@ -446,6 +446,7 @@ static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, 
 
 
 static void * DpsQsortSearchWordsBySite(void *arg) {
+  DPS_SORT_PARAM PP;
   DPS_SORT_PARAM *P = (DPS_SORT_PARAM*)arg;
   DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
@@ -509,28 +510,31 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
     r--; 
     goto DpsQsortBySiteLoop; 
   }
+
+  PP = *P;
+  if ((q - l) > (r - q)) {
+    PP.l = q + 1;
+    P->r = r = q - 1;
+  } else {
+    PP.r = q - 1;
+    P->l = l = q + 1;
+  }
+
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
   if (d >= THREAD_SLICE) {
-    PAR = *P;
-    PAR.r = q;
     if (tid) pthread_join(tid, NULL);
     tid = 0;
+    PAR = PP;
     if (pthread_create(&tid, NULL, &DpsQsortSearchWordsBySite, &PAR) != 0) {
-      DPS_SORT_PARAM PP = *P;
-      PP.r = q - 1;
       DpsQsortSearchWordsBySite(&PP);
       tid = 0;
     }
   } else 
 #endif
   {
-    DPS_SORT_PARAM PP = *P;
-    PP.r = q;
     DpsQsortSearchWordsBySite(&PP);
   }
-  P->l = l = q + 1;
   goto DpsQsortBySiteLoop;
-  
 
 }
 
@@ -654,6 +658,7 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
 
 
 static void * DpsQsortSearchWordsByPattern(void *arg) {
+  DPS_SORT_PARAM PP;
   DPS_SORT_PARAM *P = (DPS_SORT_PARAM*)arg;
   size_t l = P->l, r = P->r, c, d;
   size_t Cnt = 1;
@@ -715,28 +720,31 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
     r--; 
     goto DpsQsortByPatternLoop; 
   } 
+
+  PP = *P;
+  if ((c - l) > (r - c)) {
+    PP.l = c + 1;
+    P->r = r = c - 1;
+  } else {
+    PP.r = c - 1;
+    P->l = l = c + 1;
+  }
+
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
   if (d >= THREAD_SLICE) {
-    PAR = *P;
-    PAR.r = c - 1;
     if (tid) pthread_join(tid, NULL);
     tid = 0;
+    PAR = PP;
     if (pthread_create(&tid, NULL, &DpsQsortSearchWordsByPattern, &PAR) != 0) {
-      DPS_SORT_PARAM PP = *P;
-      PP.r = c;
       DpsQsortSearchWordsBySite(&PP);
       tid = 0;
     }
   } else 
 #endif
   {
-    DPS_SORT_PARAM PP = *P;
-    PP.r = c;
     DpsQsortSearchWordsByPattern(&PP);
   }
-  P->l = l = c + 1;
   goto DpsQsortByPatternLoop;
-  
 
 }
 
@@ -2440,7 +2448,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 /*      if ((prev_wordorder != (wordorder + 1) % n_order_inquery) && (wordorder != (prev_wordorder + 1) % n_order_inquery)) D[DPS_N_DISTANCE] += DPS_ORDER_PENALTY;*/
 #endif
       count[wordorder]++;
-      count[Res->max_order_inquery + DpsOriginIndex(Res->WWList.Word[wordnum].origin)]++;
+      count[Res->max_order_inquery + DpsOriginIndex(w_origin)]++;
       if ((wordorder == cur_order + 1) && ((cur_order == (size_t)-1) || ((wordpos == prev_wordpos + 1) && (wordsec == cur_sec)))) {
 	cur_order++;
 	if (cur_order == 0) { cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY); }
@@ -2535,8 +2543,8 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 #endif
 #endif
       prev_wordpos = wordpos;
-      count[wordorder] = count[Res->max_order_inquery + DpsOriginIndex(Res->WWList.Word[wordnum].origin)] = 1;
       { register int w_origin = Res->WWList.Word[wordnum].origin;
+	count[wordorder] = count[Res->max_order_inquery + DpsOriginIndex(w_origin)] = 1;
 	if (wordorder == 0) {
 	  cur_order = 0; cur_sec = wordsec; cur_exact = (w_origin == DPS_WORD_ORIGIN_QUERY);
 	} else cur_order = (size_t)-1; 

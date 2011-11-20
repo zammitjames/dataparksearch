@@ -163,7 +163,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 /*	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0) ? ((MapStat.hits == 0) ? 0.0 : 1.0) :
 	  ((double)List.nitems / (double)(DPS_LM_TOPCNT * MapStat.miss + MapStat.hits));*/
 
-	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0) ? ((MapStat.hits == 0) ? 0.0 : 1.0) :
+	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0 || MapStat.hits == 0) ? 0.0 :
 	  (DPS_LM_TOPCNT - (double)MapStat.miss) / (DPS_LM_TOPCNT + (double)MapStat.hits/DPS_LM_TOPCNT) / (List.nitems + 1);
 #ifdef DEBUG
 	DpsLog(Indexer, DPS_LOG_INFO, "Link %u->%u: %f [hits:%d miss:%d]", i, j, links[i * List.nitems + j], MapStat.hits, MapStat.miss);

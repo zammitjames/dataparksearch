@@ -589,8 +589,6 @@ int DpsHostLookup(DPS_AGENT *Indexer, DPS_CONN *connp) {
 	/*	Set port	*/
 	connp->sin.sin_port = htons((uint16_t)connp->port);
 
-/*	fprintf(stderr, "Resolver: %s - > %s [Host.addr: %s]\n", connp->hostname, inet_ntoa(connp->sin.sin_addr),
-		inet_ntoa(connp->Host->addr));*/
 #if defined(WITH_TRACE) && defined(DEBUG)
 	fprintf(Indexer->TR, "Resolver: %s - > %s [Host.addr: %s]\n", connp->hostname, inet_ntoa(connp->sin.sin_addr),
 		inet_ntoa(connp->Host->addr));
