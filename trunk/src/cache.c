@@ -2250,8 +2250,26 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 
 	Res->grand_total = Res->CoordList.ncoords;
 
+
+#ifdef DEBUG_SEARCH
+	DpsLog(Indexer, DPS_LOG_EXTRA, "    Sort by relevancy,pop_rank... ");
+	ticks = DpsStartTimer();
+#endif
+
+	if (Res->CoordList.ncoords > 1)
+	  DpsSortSearchWordsByPattern(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&Indexer->Vars, "s", "RP"));
+
+#ifdef DEBUG_SEARCH
+	ticks=DpsStartTimer() - ticks;
+	DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
+#endif
+
+
+
 	if ((!strcasecmp(DpsVarListFindStr(&Indexer->Vars, "GroupBySite", "no"), "yes")) 
 	    && (DpsVarListFindInt(&Indexer->Vars, "site", 0) == 0)) {
+
+#if 0
 
 #ifdef DEBUG_SEARCH
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "    Sorting by site_id... ");
@@ -2264,6 +2282,8 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 #ifdef DEBUG_SEARCH
 	  ticks=DpsStartTimer() - ticks;
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
+#endif
+
 #endif
 
 
@@ -2279,21 +2299,9 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
 #endif
 
-	} /*else*/ {
-
-#ifdef DEBUG_SEARCH
-	DpsLog(Indexer, DPS_LOG_EXTRA, "    Sort by relevancy,pop_rank... ");
-	ticks = DpsStartTimer();
-#endif
-
-	if (Res->CoordList.ncoords > 1)
-	  DpsSortSearchWordsByPattern(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&Indexer->Vars, "s", "RP"));
-
-#ifdef DEBUG_SEARCH
-	ticks=DpsStartTimer() - ticks;
-	DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
-#endif
 	}
+
+
 	
 
 	Res->total_found = Res->CoordList.ncoords;

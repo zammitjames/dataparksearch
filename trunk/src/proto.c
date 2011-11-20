@@ -211,6 +211,7 @@ static int open_host(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	  }
 	}
 	dps_closesocket(net);
+	DpsLog(Agent, DPS_LOG_DEBUG, "Can't connect (%d addresses resolved)", Doc->connp.n_sinaddr);
 	return(DPS_NET_CANT_CONNECT);
 }
 
@@ -304,6 +305,7 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
     size_t buf_size = DPS_NET_BUF_SIZE;
     struct timeval tv;
 
+
     /* Connect to HTTP or PROXY server */
     if( (fd=open_host(Agent,Doc)) < 0 )
        return(fd);
@@ -363,7 +365,7 @@ static int DpsHTTPGet(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
 	     }
 	     break;
 	   } else {
-	     Doc->Buf.size += recv_size;
+	     Doc->Buf.size += (size_t)recv_size;
 	     if( Doc->Buf.size >= Doc->Buf.max_size ) {
 	       res = DPS_NET_FILE_TL;
 	       break;
@@ -398,9 +400,9 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
     int res = 0, status;
     SSL_CTX* ctx;
     SSL*     ssl=NULL;
-    SSL_METHOD *meth;
+    const SSL_METHOD *meth;
     time_t start_time;
-    int buf_size = DPS_NET_BUF_SIZE;
+    size_t buf_size = DPS_NET_BUF_SIZE;
     pid_t pid;
 
 #if OPENSSL_VERSION_NUMBER >= 0x00905100
@@ -470,7 +472,7 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
 		    break;
 		  }
 		}
-               status = SSL_read(ssl, Doc->Buf.buf + Doc->Buf.size, buf_size);
+		status = SSL_read(ssl, Doc->Buf.buf + Doc->Buf.size, (int)buf_size);
                if( status < 0 ){
                    res = status;
                    break;
@@ -478,7 +480,7 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
                if( status == 0 ){
                    break;
                }else{
-                   Doc->Buf.size += status;
+		 Doc->Buf.size += (size_t)status;
                    if(Doc->Spider.doc_timeout < (size_t)(time(NULL) - start_time)) {
                    	res=DPS_NET_TIMEOUT;
                    	break;

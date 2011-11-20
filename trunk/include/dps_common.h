@@ -440,12 +440,12 @@ typedef struct {
 
 /** Cross-word list unit */
 typedef struct {
-	short	weight;
 	size_t	pos;
 	char	*url;
 	urlid_t	referree_id;
 	dpsunicode_t	*uword;
         size_t          ulen;
+	short	weight;
 } DPS_CROSSWORD;
 
 typedef struct {

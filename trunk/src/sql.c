@@ -4527,25 +4527,26 @@ static int DpsSortAndGroupByURL(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db){
 
 	R->grand_total = R->CoordList.ncoords;
 
+	DpsLog(A,DPS_LOG_DEBUG,"Start SORT by PATTERN %d words", R->CoordList.ncoords);
+	ticks=DpsStartTimer();
+	DpsSortSearchWordsByPattern(R, &R->CoordList, R->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
+	ticks=DpsStartTimer()-ticks;
+	DpsLog(A,DPS_LOG_DEBUG,"Stop SORT by PATTERN:\t%.2f",(float)ticks/1000);
+
 	if (use_site_id) {
+ #if 0
 	  DpsLog(A,DPS_LOG_DEBUG,"Start sort by site_id %d words",R->CoordList.ncoords);
 	  if (R->CoordList.ncoords > 1) 
 	    DpsSortSearchWordsBySite(R, &R->CoordList, R->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
 	  ticks=DpsStartTimer()-ticks;
 	  DpsLog(A,DPS_LOG_DEBUG,"Stop sort by site_id:\t%.2f",(float)ticks/1000);
-	
+ #endif
 	  DpsLog(A,DPS_LOG_DEBUG,"Start group by site_id %d docs", R->CoordList.ncoords);
 	  ticks=DpsStartTimer();
 	  DpsGroupBySite(A, R);
 	  ticks=DpsStartTimer() - ticks;
 	  DpsLog(A,DPS_LOG_DEBUG,"Stop group by site_id:\t%.2f", (float)ticks/1000);
 	} 
-
-	DpsLog(A,DPS_LOG_DEBUG,"Start SORT by PATTERN %d words", R->CoordList.ncoords);
-	ticks=DpsStartTimer();
-	DpsSortSearchWordsByPattern(R, &R->CoordList, R->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
-	ticks=DpsStartTimer()-ticks;
-	DpsLog(A,DPS_LOG_DEBUG,"Stop SORT by PATTERN:\t%.2f",(float)ticks/1000);
 
 	R->total_found = R->CoordList.ncoords;
 	return DPS_OK;
@@ -6713,7 +6714,7 @@ __C_LINK int __DPSCALL DpsSQLLimit4(DPS_AGENT *A, DPS_UINT4URLIDLIST *L, const c
 #define HI_BORDER_EPS2 (1.0 - 0.000001)
 
 #define LINK_WEIGHT_HI 1.0
-#define LINK_WEIGHT_LO -1.0 /*LOW_BORDER_EPS*/
+#define LINK_WEIGHT_LO LOW_BORDER_EPS
 #define PAS_HI -0.01
 #define PAS_LO -9999999.99
 

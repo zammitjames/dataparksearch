@@ -1351,11 +1351,13 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	    }
 	    if (p + 1 < Res->CoordList.ncoords) Res->CoordList.ncoords = Res->total_found = p + 1;
 	    
+	    DpsSortSearchWordsByPattern(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
 	    if (use_site_id) {
+#if 0
 	      DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
+#endif
 	      DpsGroupBySite(A, Res);
 	    }
-	    DpsSortSearchWordsByPattern(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
 	    Res->total_found = Res->CoordList.ncoords;
 	  }
 
