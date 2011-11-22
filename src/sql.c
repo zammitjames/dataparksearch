@@ -89,6 +89,9 @@
 #endif
 
 /*
+#define NEO_USE_CLONES 1
+*/
+/*
 #define DEBUG
 */
 
@@ -6914,6 +6917,8 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
   }
   if (to_update) {
     double pr, nPR = (di + Oi) / 2;
+
+#ifdef NEO_USE_CLONES
     if (detect_clones) {
       dps_snprintf(qbuf, sizeof(qbuf), 
 "SELECT COUNT(*),MAX(u.pop_rank) FROM url u,url o WHERE o.rec_id=%s%s%s AND u.status>2000 AND u.crc32=o.crc32 AND u.site_id=o.site_id", 
@@ -6927,6 +6932,7 @@ static int DpsPopRankPasNeoSQL(DPS_AGENT *A, DPS_DB *db, const char *rec_id, con
       }
       DpsSQLFree(&SQLres);
     }
+#endif
     
     dps_snprintf(double_str, sizeof(double_str), "%.12f", nPR);
     dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
@@ -7098,6 +7104,7 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
       }    
   
       nPR = ((n_Oi == 1) && (OUT[0].rec_id == rec_id_num) ) ? di : (di + Oi)/2;
+#ifdef NEO_USE_CLONES
       if (detect_clones) {
 	dps_snprintf(qbuf, sizeof(qbuf), 
 "SELECT COUNT(*),MAX(u.pop_rank) FROM url u,url o WHERE o.rec_id=%s%s%s AND u.status>2000 AND u.crc32=o.crc32 AND o.site_id=u.site_id", 
@@ -7111,6 +7118,8 @@ static int DpsPopRankPasNeo(DPS_AGENT *A, DPS_DB *db, const char *rec_id, const 
 	}
 	DpsSQLFree(&SQLres);
       }
+#endif
+
       dps_snprintf(double_str, sizeof(double_str), "%.12f", nPR);
       dps_snprintf(qbuf, sizeof(qbuf), "UPDATE url SET pop_rank=%s WHERE rec_id=%s%s%s", DpsDBEscDoubleStr(double_str), qu, rec_id, qu );
       DpsSQLAsyncQuery(db, NULL, qbuf);
