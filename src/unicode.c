@@ -83,9 +83,9 @@ dpsunicode_t *DpsUniRDup(const dpsunicode_t *s) {
 
 int DpsUniStrCmp(register const dpsunicode_t * s1, register const dpsunicode_t * s2) {
   while (*s1 == *s2) {
-    if (*s1++ == 0)
+    if (*s1 == 0)
       return (0);
-    s2++;
+    s1++; s2++;
   }
   if (*s1 < *s2) return -1;
   return 1;

@@ -81,7 +81,7 @@ int DpsWordCmp(const void *p1, const void *p2) {
   if (w1->ulen < w2->ulen) return -1;
   if (w1->ulen > w2->ulen) return 1;
   
-  return DpsUniStrCaseCmp(w1->uword, w2->uword);
+  return DpsUniStrCmp(w1->uword, w2->uword); /* we assume all words are in lower case in the list here */
 }
 
 int DpsWordListSort(DPS_WORDLIST *List) {
