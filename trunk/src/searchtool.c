@@ -430,8 +430,8 @@ static size_t DpsPartitionSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, 
 #else
 
   for (i = p, j = r; i < j;) {
-    while ( (DpsCmpSiteid(L, i, m, pattern) <= 0) && (i < j) ) i++;
-    while ( (DpsCmpSiteid(L, j, m, pattern) >= 0) && (i < j) ) j--;
+    while ( (DpsCmpSiteid(L, i, m, pattern) < 0) && (i < j) ) i++;
+    while ( (DpsCmpSiteid(L, j, m, pattern) > 0) && (i < j) ) j--;
     if (j <= i) return j;
     SWAP_BY_SITE(i,j);
     i++;
@@ -625,7 +625,7 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
   }
   m = med3b(DpsCmpPattern, pl, pm, pn, L, pattern);
 
-#if 0
+#if 1
   SWAP_BY_PATTERN(m,r);
   j = p;
   {
@@ -643,8 +643,8 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
 #else
 
   for (i = p, j = r; i < j;) {
-    while ( (DpsCmpPattern(L, i, m, pattern) <= 0) && (i < j) ) i++;
-    while ( (DpsCmpPattern(L, j, m, pattern) >= 0) && (i < j) ) j--;
+    while ( (DpsCmpPattern(L, i, m, pattern) < 0) && (i < j) ) i++;
+    while ( (DpsCmpPattern(L, j, m, pattern) > 0) && (i < j) ) j--;
     if (j <= i) return j;
     SWAP_BY_PATTERN(i,j);
     i++;
@@ -2501,7 +2501,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 /*	xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
 	D[DPS_N_WRDCOUNT] = phr_n;
-	D[DPS_N_COUNT] = (dps_uint4)sum /* * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT]*/ /*n_order_inquery*/;
+	D[DPS_N_COUNT] = ((dps_uint4)sum << 4) / ++median;
       
 #ifdef WITH_REL_TRACK
 	Track[j].D_wrdcount = phr_n;
@@ -2589,7 +2589,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     /*    xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
     D[DPS_N_WRDCOUNT] = phr_n;
-    D[DPS_N_COUNT] = (dps_uint4)sum /* * DPS_BEST_WRD_CNT / D[DPS_N_WRDCOUNT]*/ /*n_order_inquery*/;
+    D[DPS_N_COUNT] = ((dps_uint4)sum << 4) / ++median;
   
 #ifdef WITH_REL_TRACK
     Track[j].D_wrdcount = phr_n;
