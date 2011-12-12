@@ -2764,10 +2764,10 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	    Item.url_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 0));
 	    Item.site_id = DPS_ATOI(DpsSQLValue(&SQLres, i, 1));
 	    if (use_showcnt) {
-	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.1 + DPS_ATOF(DpsSQLValue(&SQLres, i, 8))) / log(1.1 + max_shows) 
-		* log(1.1 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(1.1 + scale_weight);
+	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 8))) / log(2.8 + max_shows) 
+		* log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(2.8 + scale_weight);
 	    } else {
-	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(1.1 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(1.1 + scale_weight);
+	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(2.8 + scale_weight);
 	    }
 	    if ((Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 3))) == 0) {
 	      Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 4));
