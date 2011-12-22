@@ -7,9 +7,9 @@ documents into one group and then while doing search to select a group
 of documents to search through. </para>
 
 <indexterm><primary>Command</primary><secondary>Tag</secondary></indexterm>
-	<para>You can use <command>Tag</command> command of
-<filename>indexer.conf</filename> to give some tag value for a server
-or server subset. While doing search you can specify tag value to
+	<para>You should use <command>Tag</command> command of
+<filename>indexer.conf</filename> to assign some tag value for a server
+or server subset by putting it before corresponding <command>Server/Realm/Subnet</command> command. While doing search you can specify tag value to
 search through documents which tag matches given parameter with
 <parameter>t=xxx</parameter> parameter, which can be passed from HTML
 form. Take a look into <xref linkend="tag_cmd"/>, <filename>indexer.conf-dist</filename> and

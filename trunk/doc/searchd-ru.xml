@@ -37,8 +37,8 @@
 			</listitem>
 <listitem>
 <indexterm><primary>Команда</primary><secondary>PreloadURLData</secondary></indexterm>
-<para>Если вы ходите для ускорения поиска загрузить в память и информацию об url (примерно по 20 байт на url),
-Добавьте в <filename>searchd.conf</filename> следующую команду:
+<para>Если ускорения поиска вы хотите для загрузить в память и информацию об url (примерно по 20 байт на url),
+добавьте в <filename>searchd.conf</filename> следующую команду:
 				<programlisting>
 PreloadURLData yes
 </programlisting>

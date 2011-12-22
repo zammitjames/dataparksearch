@@ -84,7 +84,7 @@ NAME="REL"
 >8.5. Relevance</A
 ></H1
 ><A
-NAME="AEN5751"
+NAME="AEN5752"
 ></A
 ><DIV
 CLASS="SECT2"
@@ -137,7 +137,7 @@ CLASS="FILENAME"
 >indexer.conf</TT
 > file, use
 <A
-NAME="AEN5768"
+NAME="AEN5769"
 ></A
 > <B
 CLASS="COMMAND"
@@ -157,7 +157,7 @@ CLASS="COMMAND"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN5775"
+NAME="AEN5776"
 ></A
 ><P
 ><B
@@ -434,7 +434,7 @@ NAME="REL-FULL"
 >8.5.2.1. A full method of relevance calculation.</A
 ></H3
 ><A
-NAME="AEN5880"
+NAME="AEN5881"
 ></A
 ><P
 >Let <TT
@@ -470,7 +470,7 @@ NAME="REL-FAST"
 >8.5.2.2. A fast method of relevance calculation.</A
 ></H3
 ><A
-NAME="AEN5893"
+NAME="AEN5894"
 ></A
 ><P
 >Let <TT
@@ -501,18 +501,18 @@ NAME="POPRANK"
 >8.5.3. Popularity rank</A
 ></H2
 ><A
-NAME="AEN5904"
+NAME="AEN5905"
 ></A
 ><P
 ><A
-NAME="AEN5907"
+NAME="AEN5908"
 ></A
 >
 <SPAN
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > support two methods for popularity rank calculation. A method used in previous versions
-called &quot;Goo&quot;, and new method is called &quot;Neo&quot;. By default, the <TT
+called "Goo", and new method is called "Neo". By default, the <TT
 CLASS="LITERAL"
 >Goo</TT
 > method is used. To select
@@ -526,7 +526,7 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 ><A
-NAME="AEN5915"
+NAME="AEN5916"
 ></A
 >
 You need enable links collection by <B
@@ -552,7 +552,7 @@ If you place
 <B
 CLASS="COMMAND"
 ><A
-NAME="AEN5924"
+NAME="AEN5925"
 ></A
 >PopRankSkipSameSite no</B
 >
@@ -574,7 +574,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="GOO-POPRANK"
->8.5.3.1. &quot;Goo&quot; popularity rank calculation method</A
+>8.5.3.1. "Goo" popularity rank calculation method</A
 ></H3
 ><P
 >The popularity rank calculation is made in two stages. At first stage, the value of <CODE
@@ -585,7 +585,7 @@ for every server is divide by number of links from this server. Thus, the weight
 At second stage, for every page we find the sum of weights of all links pointed to this page. This sum is popularity rank for this page.</P
 ><P
 ><A
-NAME="AEN5936"
+NAME="AEN5937"
 ></A
 >
 By default, the value of <CODE
@@ -608,7 +608,7 @@ CLASS="LITERAL"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN5945"
+NAME="AEN5946"
 ></A
 >PopRankFeedBack yes</CODE
 >
@@ -629,7 +629,7 @@ great 1, the weight for site set to this sum, otherwise, site weight is set to 1
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN5953"
+NAME="AEN5954"
 ></A
 >PopRankUseTracking yes</CODE
 >
@@ -646,7 +646,7 @@ tracked queries with restriction on this site.</P
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN5960"
+NAME="AEN5961"
 ></A
 >PopRankUseShowCnt yes</CODE
 >
@@ -665,7 +665,7 @@ value specified by
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN5967"
+NAME="AEN5968"
 ></A
 >PopRankShowCntRatio</CODE
 >
@@ -687,7 +687,7 @@ CLASS="LITERAL"
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN5975"
+NAME="AEN5976"
 ></A
 >PopRankShowCntWeight</CODE
 >
@@ -699,7 +699,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="NEO-POPRANK"
->8.5.3.2. &quot;Neo&quot; popularity rank calculation method</A
+>8.5.3.2. "Neo" popularity rank calculation method</A
 ></H3
 ></DIV
 ><P
@@ -716,14 +716,14 @@ Popularity Rank for web pages</A
 <CODE
 CLASS="OPTION"
 ><A
-NAME="AEN5984"
+NAME="AEN5985"
 ></A
 >PopRankNeoIterations</CODE
 >
 command to specify the number of iterations of the Neo Popularity Rank calculation. Default value is 3.</P
 ><P
 ><A
-NAME="AEN5988"
+NAME="AEN5989"
 ></A
 >
 By default, the Neo Popularity Rank is caclulated along with indexing. To speed up indexing, 
@@ -750,14 +750,14 @@ NAME="REL-BOOL"
 >8.5.4. Boolean search</A
 ></H2
 ><A
-NAME="AEN5997"
+NAME="AEN5998"
 ></A
 ><P
 >Please note that in case of boolean searching for two or more
-words, you have to enter operators (&amp;, |, ~, AND, OR, NOT, NEAR, ALL, etc.). I.e. it is necessary
+words, you have to enter operators (&#38;, |, ~, AND, OR, NOT, NEAR, ALL, etc.). I.e. it is necessary
 to enter <KBD
 CLASS="USERINPUT"
->a &amp; book</KBD
+>a &#38; book</KBD
 > instead of <KBD
 CLASS="USERINPUT"
 >a book</KBD
@@ -776,14 +776,14 @@ NAME="REL-CWORDS"
 >8.5.5. Crosswords</A
 ></H2
 ><A
-NAME="AEN6006"
+NAME="AEN6007"
 ></A
 ><A
-NAME="AEN6008"
+NAME="AEN6009"
 ></A
 ><P
 >This feature allows to assign words between
-&lt;a href="xxx"&gt; and &lt;/a&gt; also to a document this link leads
+&#60;a href="xxx"&#62; and &#60;/a&#62; also to a document this link leads
 to.  To enable Crosswords, please use
 <B
 CLASS="COMMAND"
@@ -805,7 +805,7 @@ CLASS="FILENAME"
 > file.</P
 ><P
 ><A
-NAME="AEN6018"
+NAME="AEN6019"
 ></A
 >
 With the <B
@@ -834,16 +834,16 @@ NAME="SEA"
 >8.5.6. The Summary Extraction Algorithm (SEA)</A
 ></H2
 ><A
-NAME="AEN6026"
+NAME="AEN6027"
 ></A
 ><A
-NAME="AEN6029"
+NAME="AEN6030"
 ></A
 ><A
-NAME="AEN6032"
+NAME="AEN6033"
 ></A
 ><A
-NAME="AEN6035"
+NAME="AEN6036"
 ></A
 ><P
 ><TT
@@ -879,7 +879,7 @@ template to show the summary in result pages.</P
 >Related configuration directives:</P
 ><P
 ><A
-NAME="AEN6048"
+NAME="AEN6049"
 ></A
 >
 The <B
@@ -889,7 +889,7 @@ CLASS="COMMAND"
 using the SEA. Default value: 64.</P
 ><P
 ><A
-NAME="AEN6053"
+NAME="AEN6054"
 ></A
 >
 The <B
@@ -904,7 +904,7 @@ Since the summary construction using SEA is nonlinear expensive (affects only in
 you may adjust this value according to desired indexing performance.</P
 ><P
 ><A
-NAME="AEN6059"
+NAME="AEN6060"
 ></A
 >
 With <B

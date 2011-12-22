@@ -3,13 +3,13 @@
 <indexterm><primary>Тэги</primary></indexterm>
 </title>
 	<para>Тэг - специальный параметр, который присваивается группе документов.
-Основная задача тэгов заглючается в возможности группировать документы 
+Основная задача тэгов заключается в возможности группировать документы 
 для ограничения результатов поиска только этой группой документов.
  </para>
 
 	<para><indexterm><primary>Команда</primary><secondary>Tag</secondary></indexterm>
-Вы можете использовать команду <userinput>Tag</userinput> в
-<filename>indexer.conf</filename> для присвоения тэга серверу, или части сервера.
+Для присвоения тэга серверу, или части сервера, вы должны использовать команду <userinput>Tag</userinput> в
+<filename>indexer.conf</filename>, указав её перед соответсвующей командой <command>Server/Realm/Subnet</command>.
 При поиске, вы можете указать тэг задав CGI-параметр
 <parameter>t=xxx</parameter>, в HTML форме. Смотрите <filename>indexer.conf-dist</filename> и
 <filename>search.htm-dist</filename> в качестве примера.</para>

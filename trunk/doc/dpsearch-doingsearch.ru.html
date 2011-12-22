@@ -103,19 +103,19 @@ CLASS="LITERAL"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN5396"
+NAME="AEN5397"
 ></A
 >
 <A
-NAME="AEN5398"
+NAME="AEN5399"
 ></A
 >
 <A
-NAME="AEN5401"
+NAME="AEN5402"
 ></A
 >
 <A
-NAME="AEN5404"
+NAME="AEN5405"
 ></A
 ></A
 ></DT
@@ -124,7 +124,7 @@ NAME="AEN5404"
 HREF="dpsearch-templates.ru.html"
 >Как создавать шаблоны результатов поиска
 <A
-NAME="AEN5454"
+NAME="AEN5455"
 ></A
 ></A
 ></DT
@@ -138,7 +138,7 @@ HREF="dpsearch-html.ru.html"
 HREF="dpsearch-rel.ru.html"
 >Релевантность
 <A
-NAME="AEN6033"
+NAME="AEN6034"
 ></A
 ></A
 ></DT
@@ -147,7 +147,7 @@ NAME="AEN6033"
 HREF="dpsearch-track.ru.html"
 >Регистрация поисковых запросов
 <A
-NAME="AEN6282"
+NAME="AEN6283"
 ></A
 ></A
 ></DT
@@ -156,7 +156,7 @@ NAME="AEN6282"
 HREF="dpsearch-srcache.ru.html"
 >Кэш результатов поиска
 <A
-NAME="AEN6313"
+NAME="AEN6314"
 ></A
 ></A
 ></DT
@@ -210,7 +210,7 @@ CLASS="OPTION"
 >Чтобы найти фразу, просто заключите её в кавычки. Например:
 <KBD
 CLASS="USERINPUT"
->&quot;uncontrollable sphere&quot;</KBD
+>"uncontrollable sphere"</KBD
 >.</P
 ></DIV
 ><DIV
@@ -221,7 +221,7 @@ CLASS="SECT2"
 NAME="SEARCH_PARAMS"
 >8.1.2. Параметры поиска
 <A
-NAME="AEN5047"
+NAME="AEN5048"
 ></A
 ></A
 ></H2
@@ -410,11 +410,11 @@ CLASS="FILENAME"
 >search.cgi</TT
 > дообавит знаки % до и после значения этого параметра,
 если используется SQL база данных для хранения информации. Например, 
-&lt;OPTION VALUE="/manual/"&gt; а не VALUE="%/manual/%". Если указан полный URL (с указанием схемы)б <TT
+&#60;OPTION VALUE="/manual/"&#62; а не VALUE="%/manual/%". Если указан полный URL (с указанием схемы)б <TT
 CLASS="FILENAME"
 >search.cgi</TT
 >
-добавляет знак % только после значения этого параметра. Например, для  &lt;OPTION VALUE="http://localhost/"&gt;
+добавляет знак % только после значения этого параметра. Например, для  &#60;OPTION VALUE="http://localhost/"&#62;
  <TT
 CLASS="FILENAME"
 >search.cgi</TT
@@ -776,7 +776,7 @@ CLASS="FILENAME"
 >Например, если shtml страница содержит строку
 <TT
 CLASS="LITERAL"
->&lt;--#include virtual="search.cgi"&gt;</TT
+>&#60;--#include virtual="search.cgi"&#62;</TT
 >,
 переменная SCRIPT_NAME будет указывать на <TT
 CLASS="FILENAME"
@@ -990,8 +990,8 @@ NAME="SEARCH-OPERATORS"
 ><P
 >Оператор <B
 CLASS="COMMAND"
->allin&lt;section&gt;:</B
->, где &lt;section&gt; - имя любой секции, 
+>allin&#60;section&#62;:</B
+>, где &#60;section&#62; - имя любой секции, 
 определенной в файле конфигурации <TT
 CLASS="FILENAME"
 >sections.conf</TT
@@ -1015,7 +1015,7 @@ HREF="dpsearch-indexcmd.ru.html#SECTION_CMD"
 >&#62;), 
 позволяет ограничить область поиска указываемого слова в поисковом запросе только заданой секцией.</P
 ><P
->От ограничения поиска по секциям при помощи CGI-параметра &amp;wf= отличается тем, 
+>От ограничения поиска по секциям при помощи CGI-параметра &#38;wf= отличается тем, 
 что ограничение действует только на слова поискового запроса, указываемые после данного оператора.</P
 ><P
 >Например, если <TT
@@ -1055,7 +1055,7 @@ CLASS="SECT2"
 NAME="SEARCH-BOOL"
 >8.1.7. Булев поиск
 <A
-NAME="AEN5311"
+NAME="AEN5312"
 ></A
 ></A
 ></H2
@@ -1076,11 +1076,11 @@ CLASS="USERINPUT"
 >AND</KBD
 > или <KBD
 CLASS="USERINPUT"
->&amp;</KBD
+>&#38;</KBD
 > - логическое И. 
 Например, <TT
 CLASS="LITERAL"
->mysql &amp; odbc</TT
+>mysql &#38; odbc</TT
 >.
 <SPAN
 CLASS="APPLICATION"
@@ -1149,7 +1149,7 @@ CLASS="USERINPUT"
 > - логическое НЕ. 
 Например, <TT
 CLASS="LITERAL"
->mysql &amp; ~ odbc</TT
+>mysql &#38; ~ odbc</TT
 >.
 <SPAN
 CLASS="APPLICATION"
@@ -1163,7 +1163,7 @@ CLASS="USERINPUT"
 > - оператор группирования для создания более сложных запросов поиска. Например,
 <TT
 CLASS="LITERAL"
->(mysql | msql) &amp; ~ postgres</TT
+>(mysql | msql) &#38; ~ postgres</TT
 >.</P
 ><P
 ><KBD
@@ -1214,7 +1214,7 @@ CLASS="CALSTABLE"
 ><COL><COL><TBODY
 ><TR
 ><TD
->&lt;ACCRUE&gt;</TD
+>&#60;ACCRUE&#62;</TD
 ><TD
 >эквивалентен оператору <KBD
 CLASS="USERINPUT"
@@ -1223,7 +1223,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&lt;AND&gt;</TD
+>&#60;AND&#62;</TD
 ><TD
 >эквивалентен оператору <KBD
 CLASS="USERINPUT"
@@ -1232,7 +1232,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&lt;ANY&gt;</TD
+>&#60;ANY&#62;</TD
 ><TD
 >эквивалентен оператору <KBD
 CLASS="USERINPUT"
@@ -1241,7 +1241,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&lt;NEAR&gt;</TD
+>&#60;NEAR&#62;</TD
 ><TD
 >эквивалентен оператору <KBD
 CLASS="USERINPUT"
@@ -1250,7 +1250,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&lt;NOT&gt;</TD
+>&#60;NOT&#62;</TD
 ><TD
 >эквивалентен оператору <KBD
 CLASS="USERINPUT"
@@ -1259,7 +1259,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&lt;OR&gt;</TD
+>&#60;OR&#62;</TD
 ><TD
 >эквивалентен оператору <KBD
 CLASS="USERINPUT"
@@ -1268,13 +1268,13 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&lt;PHRASE&gt;</TD
+>&#60;PHRASE&#62;</TD
 ><TD
 >эквивалентен фразе в булевом запросе.</TD
 ></TR
 ><TR
 ><TD
->&lt;WORD&gt;</TD
+>&#60;WORD&#62;</TD
 ><TD
 >рассматривается как пустой оператор.</TD
 ></TR
@@ -1355,19 +1355,19 @@ CLASS="LITERAL"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN5396"
+NAME="AEN5397"
 ></A
 >
 <A
-NAME="AEN5398"
+NAME="AEN5399"
 ></A
 >
 <A
-NAME="AEN5401"
+NAME="AEN5402"
 ></A
 >
 <A
-NAME="AEN5404"
+NAME="AEN5405"
 ></A
 ></TD
 ></TR

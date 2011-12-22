@@ -90,19 +90,19 @@ CLASS="LITERAL"
 >mod_dpsearch</TT
 > для Apache httpd
 <A
-NAME="AEN5396"
+NAME="AEN5397"
 ></A
 >
 <A
-NAME="AEN5398"
+NAME="AEN5399"
 ></A
 >
 <A
-NAME="AEN5401"
+NAME="AEN5402"
 ></A
 >
 <A
-NAME="AEN5404"
+NAME="AEN5405"
 ></A
 ></A
 ></H1
@@ -207,17 +207,17 @@ CLASS="PROGRAMLISTING"
 >LoadModule dpsearch_module       libexec/mod_dpsearch.so
 AddModule mod_dpsearch.c
 
-&lt;Ifmodule mod_dpsearch.c&gt;
+&#60;Ifmodule mod_dpsearch.c&#62;
 DataparkSearchdConf /usr/local/dpsearch/etc/modsearchd.conf
-    &lt;Location /search&gt;
+    &#60;Location /search&#62;
         SetHandler dpsearch
         DataparkSearchTemplate /usr/local/dpsearch/etc/modsearch.htm
-    &lt;/Location&gt;
-    &lt;Location /storedoc&gt;
+    &#60;/Location&#62;
+    &#60;Location /storedoc&#62;
         SetHandler dpstoredoc
         DataparkStoredocTemplate /usr/local/dpsearch/etc/modstoredoc.htm
-    &lt;/Location&gt;
-&lt;/IfModule&gt;</PRE
+    &#60;/Location&#62;
+&#60;/IfModule&#62;</PRE
 ></P
 ><P
 >Этим модулем поддерживаются три директивы конфигурации: <CODE
@@ -332,7 +332,7 @@ ALIGN="right"
 VALIGN="top"
 >Как создавать шаблоны результатов поиска
 <A
-NAME="AEN5454"
+NAME="AEN5455"
 ></A
 ></TD
 ></TR

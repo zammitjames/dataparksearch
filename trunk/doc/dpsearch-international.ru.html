@@ -98,7 +98,7 @@ HREF="dpsearch-international.ru.html#CHARSET"
 HREF="dpsearch-multilang.ru.html"
 >Создание многоязычных страниц поиска
 <A
-NAME="AEN4760"
+NAME="AEN4761"
 ></A
 ></A
 ></DT
@@ -123,7 +123,7 @@ NAME="CHARSET"
 >7.1. Кодировки</A
 ></H1
 ><A
-NAME="AEN4225"
+NAME="AEN4226"
 ></A
 ><DIV
 CLASS="SECT2"
@@ -161,7 +161,7 @@ CLASS="FILENAME"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN4235"
+NAME="AEN4236"
 ></A
 ><P
 ><B
@@ -352,7 +352,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN4322"
+NAME="AEN4323"
 ></A
 ><P
 ><B
@@ -886,7 +886,7 @@ CLASS="LITERAL"
 > перекодирует все
 документы в кодировку, указанную в команде 
 <A
-NAME="AEN4582"
+NAME="AEN4583"
 ></A
 ><B
 CLASS="COMMAND"
@@ -907,7 +907,7 @@ CLASS="APPLICATION"
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > представит этот символ в базе данных
-в HTML-формате в виде &amp;#NNN; где NNN - код символа, закрепленного
+в HTML-формате в виде &#38;#NNN; где NNN - код символа, закрепленного
 за ним в Unicode. Таким образом, вне зависимости от выбора 
 <B
 CLASS="COMMAND"
@@ -1036,10 +1036,10 @@ TYPE="1"
 ></LI
 ><LI
 ><P
->&lt;META NAME="Content-Type" CONTENT="text/html; charset=xxx"&gt;</P
+>&#60;META NAME="Content-Type" CONTENT="text/html; charset=xxx"&#62;</P
 ><P
 ><A
-NAME="AEN4620"
+NAME="AEN4621"
 ></A
 >
 Выбор этого варианта можно выключить указав команду <B
@@ -1092,7 +1092,7 @@ CLASS="FILENAME"
 		Для активизации автоматического распознавания кодировки необходимо
 		загрузить языковые карты, используя команды 
 <A
-NAME="AEN4634"
+NAME="AEN4635"
 ></A
 ><B
 CLASS="COMMAND"
@@ -1111,7 +1111,7 @@ CLASS="COMMAND"
 ></A
 ></H3
 ><A
-NAME="AEN4641"
+NAME="AEN4642"
 ></A
 ><P
 >Загружает из указанного файла карту языка и кодировки для автоматического их определения.
@@ -1140,7 +1140,7 @@ NAME="DPGUESSER"
 ><P
 >Для создания собственных карт языков служит утилита
 <A
-NAME="AEN4651"
+NAME="AEN4652"
 ></A
 ><TT
 CLASS="LITERAL"
@@ -1150,7 +1150,7 @@ CLASS="LITERAL"
 карты языка используйте следующий формат команды:
 <PRE
 CLASS="PROGRAMLISTING"
->        dpguesser -p -c charset -l language &lt; FILENAME &gt; language.charset.lm</PRE
+>        dpguesser -p -c charset -l language &#60; FILENAME &#62; language.charset.lm</PRE
 ></P
 ><P
 >Утилиту <TT
@@ -1160,7 +1160,7 @@ CLASS="LITERAL"
 файла на основании уже созданных карт языков. Для этого используйте следующий формат команды:
 <PRE
 CLASS="PROGRAMLISTING"
->        dpguesser [-n maxhits] &lt; FILENAME</PRE
+>        dpguesser [-n maxhits] &#60; FILENAME</PRE
 ></P
 ><P
 >Для некоторых языков существует несколько используемых кодировок. Для преобразования
@@ -1169,7 +1169,7 @@ CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > кодировки, в другую
 предназначена утилита <A
-NAME="AEN4660"
+NAME="AEN4661"
 ></A
 ><TT
 CLASS="LITERAL"
@@ -1177,7 +1177,7 @@ CLASS="LITERAL"
 >.
 <PRE
 CLASS="PROGRAMLISTING"
->        dpconv [OPTIONS] -f charset_from -t charset_to [configfile] &lt; infile &gt; outfile</PRE
+>        dpconv [OPTIONS] -f charset_from -t charset_to [configfile] &#60; infile &#62; outfile</PRE
 ></P
 ><P
 >По умолчанию, утилиты <TT
@@ -1194,7 +1194,7 @@ CLASS="FILENAME"
 ></DIV
 ><P
 ><A
-NAME="AEN4669"
+NAME="AEN4670"
 ></A
 >
 Поддерживается автоматическое обновление карт языков и кодировок, если удалённый сервер
@@ -1209,7 +1209,7 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 ><A
-NAME="AEN4675"
+NAME="AEN4676"
 ></A
 >
 По умолчанию, <SPAN
@@ -1235,7 +1235,7 @@ NAME="DEFCHARSET"
 >7.1.7. Кодировка документов по-умолчанию</A
 ></H2
 ><A
-NAME="AEN4683"
+NAME="AEN4684"
 ></A
 ><P
 >Используйте команду <B
@@ -1285,7 +1285,7 @@ CLASS="FILENAME"
 		ограничения поиска только по документам на указанном языке.</P
 ><PRE
 CLASS="PROGRAMLISTING"
->DefaultLang &lt;string&gt;</PRE
+>DefaultLang &#60;string&#62;</PRE
 ><P
 >Задаёт язык документов по умолчанию.</P
 ><PRE
@@ -1331,7 +1331,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN4709"
+NAME="AEN4710"
 ></A
 ><P
 >Задаёт кодировку, которая будет использоваться для хранения информации в базе данных.
@@ -1369,15 +1369,15 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN4721"
+NAME="AEN4722"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->RemoteCharset &lt;charset&gt;</PRE
+>RemoteCharset &#60;charset&#62;</PRE
 ><P
 ><CODE
 CLASS="OPTION"
->&lt;сharset&gt;</CODE
+>&#60;сharset&#62;</CODE
 > - кодовая страница по умолчанию для последующих команд <B
 CLASS="COMMAND"
 >Server</B
@@ -1389,8 +1389,8 @@ CLASS="COMMAND"
 CLASS="COMMAND"
 >Subnet</B
 >.
-Используется при индексировании &quot;плохих&quot; серверов, не предоставляющих информации о кодировке в заголовках ответа сервера или в
-&lt;META NAME="Content" Content="text/html; charset="some_charset"&gt; на страницах.
+Используется при индексировании "плохих" серверов, не предоставляющих информации о кодировке в заголовках ответа сервера или в
+&#60;META NAME="Content" Content="text/html; charset="some_charset"&#62; на страницах.
 Команда действует до конца файла, или до следующей команды <B
 CLASS="COMMAND"
 >RemoteCharset</B
@@ -1413,15 +1413,15 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN4735"
+NAME="AEN4736"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->URLCharset &lt;charset&gt;</PRE
+>URLCharset &#60;charset&#62;</PRE
 ><P
 ><CODE
 CLASS="OPTION"
->&lt;charset&gt;</CODE
+>&#60;charset&#62;</CODE
 > - кодовая страница для аргументов последующих команд <B
 CLASS="COMMAND"
 >Server</B
@@ -1471,14 +1471,14 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN4753"
+NAME="AEN4754"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CharsToEscape &quot;\&quot;&amp;&lt;&gt;![]&quot;</PRE
+>CharsToEscape "\"&#38;&#60;&#62;![]"</PRE
 ><P
 >Используйте эту команду в вашем поисковом шаблоне для указания списка эскейп-символов для мета-переменных поискового шаблона 
-типа $&amp;(x).</P
+типа $&#38;(x).</P
 ></DIV
 ></DIV
 ></DIV
@@ -1528,7 +1528,7 @@ ALIGN="left"
 VALIGN="top"
 >Категории
 <A
-NAME="AEN4149"
+NAME="AEN4150"
 ></A
 ></TD
 ><TD
@@ -1542,7 +1542,7 @@ ALIGN="right"
 VALIGN="top"
 >Создание многоязычных страниц поиска
 <A
-NAME="AEN4760"
+NAME="AEN4761"
 ></A
 ></TD
 ></TR

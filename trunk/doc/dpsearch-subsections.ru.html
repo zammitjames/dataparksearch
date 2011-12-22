@@ -102,7 +102,7 @@ NAME="AEN4093"
 HREF="dpsearch-categories.ru.html"
 >Категории
 <A
-NAME="AEN4149"
+NAME="AEN4150"
 ></A
 ></A
 ></DT
@@ -122,7 +122,7 @@ NAME="AEN4093"
 ></H1
 ><P
 >Тэг - специальный параметр, который присваивается группе документов.
-Основная задача тэгов заглючается в возможности группировать документы 
+Основная задача тэгов заключается в возможности группировать документы 
 для ограничения результатов поиска только этой группой документов.
  </P
 ><P
@@ -130,14 +130,17 @@ NAME="AEN4093"
 NAME="AEN4097"
 ></A
 >
-Вы можете использовать команду <KBD
+Для присвоения тэга серверу, или части сервера, вы должны использовать команду <KBD
 CLASS="USERINPUT"
 >Tag</KBD
 > в
 <TT
 CLASS="FILENAME"
 >indexer.conf</TT
-> для присвоения тэга серверу, или части сервера.
+>, указав её перед соответсвующей командой <B
+CLASS="COMMAND"
+>Server/Realm/Subnet</B
+>.
 При поиске, вы можете указать тэг задав CGI-параметр
 <CODE
 CLASS="PARAMETER"
@@ -162,11 +165,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN4108"
+NAME="AEN4109"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Tag &lt;string&gt;</PRE
+>Tag &#60;string&#62;</PRE
 ><P
 >Используйте эту команду по своему усмотрению чтобы сгруппировать несколько сайтов,
 помечая их указаным тэгом. При индексировании или поиске, вы можете ограничиваться сайтами только указаного тэга.
@@ -195,13 +198,13 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN4119"
+NAME="AEN4120"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->TagIf &lt;tag&gt; [Match|NoMatch] [NoCase|Case] [String|Regex] [loose] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
+>TagIf &#60;tag&#62; [Match|NoMatch] [NoCase|Case] [String|Regex] [loose] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
 ><P
->Присвоить документу тэг &lt;tag&gt;, если значении секции <CODE
+>Присвоить документу тэг &#60;tag&#62;, если значении секции <CODE
 CLASS="OPTION"
 >section</CODE
 > подпадает под указаный
@@ -229,7 +232,7 @@ CLASS="PROGRAMLISTING"
 >TagIf Docs regex Title Manual</PRE
 ></P
 ><P
->В тэге &lt;tag&gt; можно использовать мета-переменные шаблона страницы выдачи (например, $(title), $(Last-Modified)). В примере
+>В тэге &#60;tag&#62; можно использовать мета-переменные шаблона страницы выдачи (например, $(title), $(Last-Modified)). В примере
 ниже для каждого документа в качестве тэга выставляется доменное имя из его URL:
 <PRE
 CLASS="PROGRAMLISTING"
@@ -362,7 +365,7 @@ ALIGN="right"
 VALIGN="top"
 >Категории
 <A
-NAME="AEN4149"
+NAME="AEN4150"
 ></A
 ></TD
 ></TR
