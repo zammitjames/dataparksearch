@@ -87,16 +87,16 @@ CLASS="LITERAL"
 > module for Apache httpd</A
 ></H1
 ><A
-NAME="AEN5126"
+NAME="AEN5127"
 ></A
 ><A
-NAME="AEN5128"
+NAME="AEN5129"
 ></A
 ><A
-NAME="AEN5131"
+NAME="AEN5132"
 ></A
 ><A
-NAME="AEN5134"
+NAME="AEN5135"
 ></A
 ><P
 >Since version 4.19 <SPAN
@@ -193,17 +193,17 @@ CLASS="PROGRAMLISTING"
 >LoadModule dpsearch_module       libexec/mod_dpsearch.so
 AddModule mod_dpsearch.c
 
-&lt;Ifmodule mod_dpsearch.c&gt;
+&#60;Ifmodule mod_dpsearch.c&#62;
 DataparkSearchdConf /usr/local/dpsearch/etc/modsearchd.conf
-    &lt;Location /search&gt;
+    &#60;Location /search&#62;
         SetHandler dpsearch
         DataparkSearchTemplate /usr/local/dpsearch/etc/modsearch.htm
-    &lt;/Location&gt;
-    &lt;Location /storedoc&gt;
+    &#60;/Location&#62;
+    &#60;Location /storedoc&#62;
         SetHandler dpstoredoc
         DataparkStoredocTemplate /usr/local/dpsearch/etc/modstoredoc.htm
-    &lt;/Location&gt;
-&lt;/IfModule&gt;</PRE
+    &#60;/Location&#62;
+&#60;/IfModule&#62;</PRE
 ></P
 ><P
 >There are three configuration directives supported by this module: <CODE

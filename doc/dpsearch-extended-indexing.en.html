@@ -244,13 +244,13 @@ NAME="AEN2699"
 >
 <B
 CLASS="COMMAND"
->HTDBText &lt;section&gt;</B
+>HTDBText &#60;section&#62;</B
 > is a query to get raw text data from database using PRIMARY key value 
 collected via <B
 CLASS="COMMAND"
 >HTDBList</B
 > command.
-The &lt;section&gt; parameter is specify the section name useing for storing this data. This query may return as many rows as required.
+The &#60;section&#62; parameter is specify the section name useing for storing this data. This query may return as many rows as required.
 You may specify several <B
 CLASS="COMMAND"
 >HTDBText</B
@@ -449,7 +449,7 @@ CLASS="PROGRAMLISTING"
 >HTTP/1.0 200 OK
 Content-Type: text/plain
 
-&lt;some text from 'message' field here&gt;</PRE
+&#60;some text from 'message' field here&#62;</PRE
 >
 		</P
 ><P
@@ -529,12 +529,12 @@ CLASS="PROGRAMLISTING"
 >For each primary key value HTDBDoc command generates text/html document with HTTP headers and content like this:
 		<PRE
 CLASS="PROGRAMLISTING"
->&lt;HTML&gt;
-&lt;HEAD&gt;
-&lt;TITLE&gt; ... subject field here .... &lt;/TITLE&gt;
-&lt;META NAME="Description" Content=" ... author here ..."&gt;
-&lt;/HEAD&gt;
-&lt;BODY&gt; ... message text here ... &lt;/BODY&gt;</PRE
+>&#60;HTML&#62;
+&#60;HEAD&#62;
+&#60;TITLE&#62; ... subject field here .... &#60;/TITLE&#62;
+&#60;META NAME="Description" Content=" ... author here ..."&#62;
+&#60;/HEAD&#62;
+&#60;BODY&#62; ... message text here ... &#60;/BODY&#62;</PRE
 ></P
 ><P
 >At the end of <TT
@@ -615,12 +615,12 @@ creates REQUEST_METHOD environment variable with "GET" value and
 QUERY_STRING variable according to HTTP standards. For example, if
 <TT
 CLASS="LITERAL"
->cgi:/usr/local/apache/cgi-bin/test-cgi?a=b&amp;d=e</TT
+>cgi:/usr/local/apache/cgi-bin/test-cgi?a=b&#38;d=e</TT
 >
 is being indexed, indexer creates QUERY_STRING with
 <TT
 CLASS="LITERAL"
->a=b&amp;d=e</TT
+>a=b&#38;d=e</TT
 > value.  cgi: virtual URL scheme allows
 indexing your site without having to invoke web servers even if you
 want to index CGI scripts. For example, you have a web site with
@@ -656,12 +656,12 @@ like in cgi: scheme. It creates a command line with argument given in
 URL after ? sign. For example, when indexing
 <TT
 CLASS="LITERAL"
->exec:/usr/local/bin/myprog?a=b&amp;d=e</TT
+>exec:/usr/local/bin/myprog?a=b&#38;d=e</TT
 >, this
 command will be executed:
 		<PRE
 CLASS="PROGRAMLISTING"
->/usr/local/bin/myprog "a=b&amp;d=e" </PRE
+>/usr/local/bin/myprog "a=b&#38;d=e" </PRE
 >
 		</P
 ></DIV
@@ -782,7 +782,7 @@ NAME="AEN2835"
 You may specify period during which earlier mirrored files will be used while indexing instead of real downloading.
 	<PRE
 CLASS="PROGRAMLISTING"
->MirrorPeriod &lt;time&gt;</PRE
+>MirrorPeriod &#60;time&#62;</PRE
 >
 	</P
 ><P
@@ -799,7 +799,7 @@ CLASS="LITERAL"
 >do not use mirrored files</TT
 >.</P
 ><P
->&lt;time&gt; is in the form
+>&#60;time&#62; is in the form
 <TT
 CLASS="LITERAL"
 >xxxA[yyyB[zzzC]]</TT
@@ -876,9 +876,9 @@ CLASS="COMMAND"
 > command is as follow:
 <PRE
 CLASS="PROGRAMLISTING"
->ActionSQL [add | update | delete] &lt;section&gt; &lt;pattern&gt; &lt;sql-template&gt; [&lt;dbaddr&gt;]</PRE
+>ActionSQL [add | update | delete] &#60;section&#62; &#60;pattern&#62; &#60;sql-template&#62; [&#60;dbaddr&#62;]</PRE
 >
-where &lt;section&gt; is the name of document section to check for regex pattern &gt;pattern&gt; match. If a match is found then the &lt;sql-template&gt; is filled with regex meta-variables $1-$9 as well with search template meta-variables (as for example, $(Title), $(Last-Modified), etc.) to form a sql-query, which is executed in the first DBAddr defined in indexer.conf file. If the optional &lt;dbaddr&gt; paramater of ActionSQL command is set, a new connection is set according this DBAddr and sql-query is executed in this connection.</P
+where &#60;section&#62; is the name of document section to check for regex pattern &#62;pattern&#62; match. If a match is found then the &#60;sql-template&#62; is filled with regex meta-variables $1-$9 as well with search template meta-variables (as for example, $(Title), $(Last-Modified), etc.) to form a sql-query, which is executed in the first DBAddr defined in indexer.conf file. If the optional &#60;dbaddr&#62; paramater of ActionSQL command is set, a new connection is set according this DBAddr and sql-query is executed in this connection.</P
 ><P
 >One of options <CODE
 CLASS="OPTION"

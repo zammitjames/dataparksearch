@@ -190,7 +190,7 @@ Add parsers</P
 >Add lines with parsers definitions. Lines have the following format with three arguments:
 				<PRE
 CLASS="PROGRAMLISTING"
->Mime &lt;from_mime&gt; &lt;to_mime&gt; [&lt;command line&gt;]</PRE
+>Mime &#60;from_mime&#62; &#60;to_mime&#62; [&#60;command line&#62;]</PRE
 >
 				</P
 ><P
@@ -231,10 +231,10 @@ CLASS="PROGRAMLISTING"
 from first temporary file and write result to second one. Both
 temporary files will be removed when parser exists. Note that result
 of usage of this parser will be absolutely  the same with the previous
-one, but they use different execution mode: file-&gt;stdout and
-file-&gt;file correspondingly.</P
+one, but they use different execution mode: file-&#62;stdout and
+file-&#62;file correspondingly.</P
 ><P
->If the &lt;command line&gt; parameter is omitted this means both MIME type are synonyms. 
+>If the &#60;command line&#62; parameter is omitted this means both MIME type are synonyms. 
 E.g. some sites can supply incorrect type for MP3 files as <KBD
 CLASS="USERINPUT"
 >application/mp3</KBD
@@ -368,9 +368,9 @@ HREF="mailto:lang@zid.tu-graz.ac.at"
 <PRE
 CLASS="PROGRAMLISTING"
 >#!/bin/bash
-/usr/bin/rpm -q --queryformat="&lt;html&gt;&lt;head&gt;&lt;title&gt;RPM: %{NAME} %{VERSION}-%{RELEASE}
-(%{GROUP})&lt;/title&gt;&lt;meta name=\"description\" content=\"%{SUMMARY}\"&gt;&lt;/head&gt;&lt;body&gt;
-%{DESCRIPTION}\n&lt;/body&gt;&lt;/html&gt;" -p $1</PRE
+/usr/bin/rpm -q --queryformat="&#60;html&#62;&#60;head&#62;&#60;title&#62;RPM: %{NAME} %{VERSION}-%{RELEASE}
+(%{GROUP})&#60;/title&#62;&#60;meta name=\"description\" content=\"%{SUMMARY}\"&#62;&#60;/head&#62;&#60;body&#62;
+%{DESCRIPTION}\n&#60;/body&#62;&#60;/html&#62;" -p $1</PRE
 ></P
 ><P
 >indexer.conf:

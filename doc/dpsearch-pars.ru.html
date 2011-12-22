@@ -224,7 +224,7 @@ NAME="AEN1525"
 >Добавление строк с определениями парсеров. Эти строки имеюют следующий формат с треми аргументами:
 				<PRE
 CLASS="PROGRAMLISTING"
->Mime &lt;from_mime&gt; &lt;to_mime&gt; [&lt;command line&gt;]</PRE
+>Mime &#60;from_mime&#62; &#60;to_mime&#62; [&#60;command line&#62;]</PRE
 >
 				</P
 ><P
@@ -301,12 +301,12 @@ CLASS="PROGRAMLISTING"
 >Парсер выше будет читать данные из первого временного файла и записывать результат во
 второй временный файл. Оба временных файла будут удалены по окончании  работы парсера. Заметим, что результат использования
 этого парсера будет абсолютно таким же, как и предыдущего, они отличаютя только сопсобом выполнения: 
-файл-&gt;<TT
+файл-&#62;<TT
 CLASS="LITERAL"
 >stdout</TT
-> и файл-&gt;файл соответственно.</P
+> и файл-&#62;файл соответственно.</P
 ><P
->Если параметр &lt;command line&gt; опущен, это означает, что два MIME-типа являются синонимами. 
+>Если параметр &#60;command line&#62; опущен, это означает, что два MIME-типа являются синонимами. 
 Например, некоторые сайты отдают MP3 файлы с неправильным MIME-типом <KBD
 CLASS="USERINPUT"
 >application/mp3</KBD
@@ -459,9 +459,9 @@ HREF="mailto:lang@zid.tu-graz.ac.at"
 <PRE
 CLASS="PROGRAMLISTING"
 >#!/bin/bash
-/usr/bin/rpm -q --queryformat="&lt;html&gt;&lt;head&gt;&lt;title&gt;RPM: %{NAME} %{VERSION}-%{RELEASE}
-(%{GROUP})&lt;/title&gt;&lt;meta name=\"description\" content=\"%{SUMMARY}\"&gt;&lt;/head&gt;&lt;body&gt;
-%{DESCRIPTION}\n&lt;/body&gt;&lt;/html&gt;" -p $1</PRE
+/usr/bin/rpm -q --queryformat="&#60;html&#62;&#60;head&#62;&#60;title&#62;RPM: %{NAME} %{VERSION}-%{RELEASE}
+(%{GROUP})&#60;/title&#62;&#60;meta name=\"description\" content=\"%{SUMMARY}\"&#62;&#60;/head&#62;&#60;body&#62;
+%{DESCRIPTION}\n&#60;/body&#62;&#60;/html&#62;" -p $1</PRE
 ></P
 ><P
 >indexer.conf:

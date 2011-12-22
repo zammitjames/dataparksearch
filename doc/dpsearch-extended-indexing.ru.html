@@ -273,7 +273,7 @@ CLASS="COMMAND"
 ><P
 ><B
 CLASS="COMMAND"
->HTDBText &lt;section&gt;
+>HTDBText &#60;section&#62;
 <A
 NAME="AEN2834"
 ></A
@@ -283,7 +283,7 @@ NAME="AEN2834"
 CLASS="COMMAND"
 >HTDBList</B
 >.
-Параметр &lt;section&gt; задаёт имя секции, под которой этот текст будет индексироваться. Такой запрос может возращать несколько
+Параметр &#60;section&#62; задаёт имя секции, под которой этот текст будет индексироваться. Такой запрос может возращать несколько
 строк с данными, если это необходимо.
 Вы можете указать несколько команд <B
 CLASS="COMMAND"
@@ -526,7 +526,7 @@ CLASS="PROGRAMLISTING"
 >HTTP/1.0 200 OK
 Content-Type: text/plain
 
-&lt;some text from 'message' field here&gt;</PRE
+&#60;some text from 'message' field here&#62;</PRE
 >
 		</P
 ><P
@@ -607,12 +607,12 @@ CLASS="LITERAL"
 HTTP заголовком примерно такого вида:
 		<PRE
 CLASS="PROGRAMLISTING"
->&lt;HTML&gt;
-&lt;HEAD&gt;
-&lt;TITLE&gt; ... subject field here .... &lt;/TITLE&gt;
-&lt;META NAME="Description" Content=" ... author here ..."&gt;
-&lt;/HEAD&gt;
-&lt;BODY&gt; ... message text here ... &lt;/BODY&gt;</PRE
+>&#60;HTML&#62;
+&#60;HEAD&#62;
+&#60;TITLE&#62; ... subject field here .... &#60;/TITLE&#62;
+&#60;META NAME="Description" Content=" ... author here ..."&#62;
+&#60;/HEAD&#62;
+&#60;BODY&#62; ... message text here ... &#60;/BODY&#62;</PRE
 ></P
 ><P
 >В конце <TT
@@ -735,7 +735,7 @@ CLASS="COMMAND"
 Например, при индексировании
 <TT
 CLASS="LITERAL"
->cgi:/usr/local/apache/cgi-bin/test-cgi?a=b&amp;d=e</TT
+>cgi:/usr/local/apache/cgi-bin/test-cgi?a=b&#38;d=e</TT
 >
 <B
 CLASS="COMMAND"
@@ -743,7 +743,7 @@ CLASS="COMMAND"
 > создаёт QUERY_STRING со значением
 <TT
 CLASS="LITERAL"
->a=b&amp;d=e</TT
+>a=b&#38;d=e</TT
 >. Виртуальная URL схема <TT
 CLASS="LITERAL"
 >cgi:</TT
@@ -788,11 +788,11 @@ CLASS="LITERAL"
 URL после занка ?. Например, при индексировании
 <TT
 CLASS="LITERAL"
->exec:/usr/local/bin/myprog?a=b&amp;d=e</TT
+>exec:/usr/local/bin/myprog?a=b&#38;d=e</TT
 >, будет выполнена слудующая команда с параметрами:
 		<PRE
 CLASS="PROGRAMLISTING"
->/usr/local/bin/myprog "a=b&amp;d=e" </PRE
+>/usr/local/bin/myprog "a=b&#38;d=e" </PRE
 >
 		</P
 ></DIV
@@ -937,7 +937,7 @@ NAME="AEN3014"
 Вы можете также указать период, в течении которого будут использоваться файлы из зеркала, вместо выкачивания оригинальных документов.
 	<PRE
 CLASS="PROGRAMLISTING"
->MirrorPeriod &lt;time&gt;</PRE
+>MirrorPeriod &#60;time&#62;</PRE
 >
 	</P
 ><P
@@ -962,7 +962,7 @@ CLASS="LITERAL"
 >не использовать зеркалированые файлы</TT
 >.</P
 ><P
->&lt;time&gt; указывается в форме
+>&#60;time&#62; указывается в форме
 <TT
 CLASS="LITERAL"
 >xxxA[yyyB[zzzC]]</TT
@@ -1055,12 +1055,12 @@ CLASS="COMMAND"
 > имеет следующий синтаксис:
 <PRE
 CLASS="PROGRAMLISTING"
->ActionSQL [add | update | delete] &lt;section&gt; &lt;pattern&gt; &lt;sql-template&gt; [&lt;dbaddr&gt;]</PRE
+>ActionSQL [add | update | delete] &#60;section&#62; &#60;pattern&#62; &#60;sql-template&#62; [&#60;dbaddr&#62;]</PRE
 >
-где &lt;section&gt; - имя секции, содержимое которой будет проверяться на соответствие шаблону регулярного выражения &lt;pattern&gt;, если соответствие будет найдено, то будет заполнен шаблон sql-запроса &lt;sql-template&gt;, в котором наряду с мета-переменными регулярного выражения $1-$9 можно использовать и мета-переменные шаблона страницы выдачи (например, $(title), $(Last-Modified)). Заполненый sql-запрос будет выполнен в первом <B
+где &#60;section&#62; - имя секции, содержимое которой будет проверяться на соответствие шаблону регулярного выражения &#60;pattern&#62;, если соответствие будет найдено, то будет заполнен шаблон sql-запроса &#60;sql-template&#62;, в котором наряду с мета-переменными регулярного выражения $1-$9 можно использовать и мета-переменные шаблона страницы выдачи (например, $(title), $(Last-Modified)). Заполненый sql-запрос будет выполнен в первом <B
 CLASS="COMMAND"
 >DBAddr</B
->, указанном в файле конфигурации, или в новом соединении с sql-базой, задаваемой необязательным параметром &lt;dbaddr&gt;.</P
+>, указанном в файле конфигурации, или в новом соединении с sql-базой, задаваемой необязательным параметром &#60;dbaddr&#62;.</P
 ><P
 >Одина из опций <CODE
 CLASS="OPTION"
