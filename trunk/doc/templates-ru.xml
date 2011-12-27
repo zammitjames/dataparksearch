@@ -713,8 +713,11 @@ TZ                Australia/Sydney
 <indexterm><primary>Команда</primary><secondary>DetectClones</secondary></indexterm>
 Используйте "<command>DetectClones</command> yes/no" для включения/выключения определения клонов. Выключено по умолчанию при поиске.</para>
 
-		<para><indexterm><primary>Команда</primary><secondary>GroupBySite</secondary></indexterm>
-Используйте "<command>GroupBySite</command> yes/no" для включения/выключения группировки результатов по url.site_id.</para>
+		<para id="GroupBySite"><indexterm><primary>Команда</primary><secondary>GroupBySite</secondary></indexterm>
+Используйте "<command>GroupBySite</command> yes/no/full" для включения/выключения группировки результатов по url.site_id.
+Если указана опция <option>yes</option>, группируются только результаты с того же самого сайта, идущие подряд.
+Если же указана опция <option>full</option>, в этом случае группируются все результаты с того же самого сайта.
+</para>
 <note>
 <para>Если используется <filename>searchd</filename>, вы должны указывать <command>GroupBySite</command> в вашем файле 
 <filename>searchd.conf</filename>, или передавать его как CGI параметр.
