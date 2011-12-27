@@ -784,8 +784,12 @@ not converted, it must be in BrowserCharset.</para>
 <indexterm><primary>Command</primary><secondary>DetectClones</secondary></indexterm>
 		<para>Use "<command>DetectClones</command> yes/no" to enable/disable clones detection. This is disable by default for search.</para>
 
-		<para><indexterm><primary>Command</primary><secondary>GroupBySite</secondary></indexterm>
-Use "<command>GroupBySite</command> yes/no" to enable/disable grouping results by url.site_id.</para>
+		<para id="GroupBySite"><indexterm><primary>Command</primary><secondary>GroupBySite</secondary></indexterm>
+Use "<command>GroupBySite</command> yes/no/full" to enable/disable grouping results by url.site_id.
+When <option>yes</option> option is used, the pages from the same site coming in a row are grouped.
+If <option>full</option> option is used, all pages from the same site are grouped.
+</para>
+
 <note>
 <para>If <filename>searchd</filename> is used you should place <command>GroupBySite</command> in your 
 <filename>searchd.conf</filename> file, or pass it as CGI parameter.
