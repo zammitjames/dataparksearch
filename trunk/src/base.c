@@ -769,7 +769,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
   DPS_BASEITEM *hTable;
   DPS_SORTBASEITEM *si = NULL;
 
-  OptimizeRatio = DpsVarListFindInt(&P->A->Vars, "OptimizeRatio", 5);
+  OptimizeRatio = DpsVarListFindInt(&P->A->Vars, "OptimizeRatio", 15);
 
   P->mode = DPS_WRITE_LOCK;
   if (sbase == -1) {

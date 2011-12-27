@@ -60,7 +60,7 @@ DPS_ENV *DpsEnvInit(DPS_ENV *Conf){
 		bzero((void*)Conf, sizeof(*Conf));
 	}
 	
-	Conf->Flags.OptimizeAtUpdate = 0;
+	Conf->Flags.OptimizeAtUpdate = 1;
 	Conf->Flags.do_excerpt = 1;
 	Conf->Flags.PopRankNeoIterations = 3;
 	Conf->Flags.GuesserBytes = 512;

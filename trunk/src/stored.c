@@ -404,7 +404,7 @@ int main(int argc, char **argv, char **envp) {
 
 	StoredFiles = DpsVarListFindInt(&Conf->Vars, "StoredFiles", 0x100);
 	OptimizeInterval = DpsVarListFindInt(&Conf->Vars, "OptimizeInterval", 600);
-	OptimizeRatio = DpsVarListFindInt(&Conf->Vars, "OptimizeRatio", 5);
+	OptimizeRatio = DpsVarListFindInt(&Conf->Vars, "OptimizeRatio", 15);
 
 	DpsOpenLog("stored", Conf, log2stderr);
 	Agent->flags = Conf->flags = DPS_FLAG_UNOCON;
