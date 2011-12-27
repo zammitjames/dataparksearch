@@ -1401,6 +1401,14 @@ enum {
   DPS_MODE_NEAR	  = 4
 };
 
+/* group by site modes */
+enum {
+  DPS_GROUP_NO = 0,
+  DPS_GROUP_YES = 1,
+  DPS_GROUP_FULL = 2
+};
+
+
 /* Flags for indexing */
 enum {
   DPS_FLAG_REINDEX	= 1,

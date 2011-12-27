@@ -41,6 +41,7 @@
 #include "dps_agent.h"
 #include "dps_match.h"
 #include "dps_template.h"
+#include "dps_conf.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1332,8 +1333,8 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 
 	  cnt_db = (A->flags & DPS_FLAG_UNOCON) ? A->Conf->dbl.cnt_db : A->dbl.cnt_db;
 	  if (cnt_db > 1 /*dbto - dbfrom > 1*/) {
-	    int		use_site_id = ((!strcasecmp(DpsVarListFindStr(&A->Vars, "GroupBySite", "no"), "yes"))
-				       && (DpsVarListFindInt(&A->Vars, "site", 0) == 0));
+	    int group_by_site =  DpsGroupBySiteMode(DpsVarListFindStr(&A->Vars, "GroupBySite", NULL));
+	    int	use_site_id = (group_by_site && (DpsVarListFindInt(&A->Vars, "site", 0) == 0));
 	    size_t n, p;
 	    
 	    /* Removing duplictes */
@@ -1353,9 +1354,9 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	    
 	    DpsSortSearchWordsByPattern(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
 	    if (use_site_id) {
-#if 0
-	      DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
-#endif
+	      if (group_by_site == DPS_GROUP_FULL) {
+		DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
+	      }
 	      DpsGroupBySite(A, Res);
 	    }
 	    Res->total_found = Res->CoordList.ncoords;

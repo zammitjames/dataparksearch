@@ -90,6 +90,15 @@ int DpsMatchMode(const char * mode){
 	return(DPS_MATCH_FULL);
 }
 
+
+int DpsGroupBySiteMode(const char *mode) {
+  if(!mode)return(DPS_GROUP_NO);
+  if (*mode == 'y' || *mode == 'Y') return DPS_GROUP_YES;
+  if (*mode == 'f' || *mode == 'F') return DPS_GROUP_FULL;
+  return DPS_GROUP_NO;
+}
+
+
 __C_LINK const char * __DPSCALL DpsFollowStr(int method) {
 	switch(method){
 		case DPS_FOLLOW_NO:		return "No";  /* was: "Page" */

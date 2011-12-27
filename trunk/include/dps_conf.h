@@ -27,6 +27,7 @@ extern __C_LINK int __DPSCALL DpsEnvAddLine(DPS_CFG *C, char *str);
 extern char *DpsParseEnvVar(DPS_ENV *Conf, const char *str);
 extern int  DpsSearchMode(const char * mode);
 extern int  DpsMatchMode(const char * mode);
+extern int  DpsGroupBySiteMode(const char *mode);
 extern int  DpsFollowType(const char * follow);
 extern int  DpsMethod(const char * method);
 extern enum dps_prmethod DpsPRMethod(const char *);

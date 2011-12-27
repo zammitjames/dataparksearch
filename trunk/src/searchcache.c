@@ -65,7 +65,7 @@ static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RE
 	const char *appname = DpsVarListFindStr(Conf_Vars, "appname", NULL);
 	int bytes;
 	
-	bytes = dps_snprintf(param, sizeof(param)-1, "%s.%s.%d.%s.%s.%s.%s.%s.%s.%s.%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s-%s-%s-%s-%d",
+	bytes = dps_snprintf(param, sizeof(param)-1, "%s.%s.%d.%s.%s.%s.%s.%s.%s.%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s-%s-%s-%s-%d",
 			     DpsVarListFindStr(Conf_Vars, "m", ""),
 			     DpsVarListFindStr(Conf_Vars, "wm", ""),
 			     DpsVarListFindInt(Conf_Vars, "o", 0),
@@ -74,7 +74,6 @@ static void cache_file_name(char *dst,size_t len, DPS_VARLIST *Conf_Vars, DPS_RE
 			     DpsVarListFindStr(Conf_Vars, "ul", ""),
 			     DpsVarListFindStr(Conf_Vars, "wf", ""),
 			     DpsVarListFindStr(Conf_Vars, "g", ""),
-			     DpsVarListFindStr(Conf_Vars, "tmplt", ""),
 			     DpsVarListFindStr(Conf_Vars, "GroupBySite", "no"),
 			     DpsVarListFindStr(Conf_Vars, "site", "0"),
 			     DpsVarListFindStr(Conf_Vars, "type", ""),
