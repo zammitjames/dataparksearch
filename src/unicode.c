@@ -28,11 +28,11 @@
 
 /* Calculates UNICODE string length */
 
-size_t __DPSCALL DpsUniLen(register const dpsunicode_t * u) {
+size_t __DPSCALL DpsUniLen(register const dpsunicode_t *u) {
 #if 1
   register const dpsunicode_t *s;
-  for(s = u; *s; s++);
-  return (s - u);
+  for(s = u; *s != (dpsunicode_t)0; s++);
+  return (size_t)(s - u);
 #else
 	register size_t ulen=0;
 	while(*u++)ulen++;
@@ -73,7 +73,9 @@ dpsunicode_t *DpsUniRDup(const dpsunicode_t *s) {
 	{
 	  register size_t z;
 	  size = len - 1;
-	  for (z = 0; z < len; z++) res[z] = s[size - z];
+	  for (z = 0; z < len; z++) {
+	    res[z] = s[size - z];
+	  }
 	  res[len] = 0;
 	}
 	return res;
@@ -81,7 +83,7 @@ dpsunicode_t *DpsUniRDup(const dpsunicode_t *s) {
 
 /* Compare unicode strings */
 
-int DpsUniStrCmp(register const dpsunicode_t * s1, register const dpsunicode_t * s2) {
+int DpsUniStrCmp(const dpsunicode_t * s1, const dpsunicode_t * s2) {
   while (*s1 == *s2) {
     if (*s1 == 0)
       return (0);
@@ -97,17 +99,20 @@ int DpsUniStrCaseCmp(const dpsunicode_t *s1, const dpsunicode_t * s2) {
   if (s1 == NULL) return -1;
   if (s2 == NULL) return 1;
   
-  while ((d1 = DpsUniToLower(*s1++)) == (d2 = DpsUniToLower(*s2++))) {
-    if (d1 == 0) return 0;
-  }
+  do {
+    d1 = DpsUniToLower(*s1++);
+    d2 = DpsUniToLower(*s2++);
+  } while ((d1 != (dpsunicode_t)0) && (d1 == d2));
   if (d1 < d2) return -1;
-  return 1;
-}
+  if (d1 > d2) return 1;
+  return 0;
+ }
 
 
 /* backward unicode string compaire */
 int DpsUniStrBCmp(const dpsunicode_t *s1, const dpsunicode_t *s2) { 
-  register ssize_t l1 = DpsUniLen(s1)-1, l2 = DpsUniLen(s2)-1;
+  register ssize_t l1 = (ssize_t)DpsUniLen(s1)-1, 
+                   l2 = (ssize_t)DpsUniLen(s2)-1;
   while (l1 >= 0 && l2 >= 0) {
     if (s1[l1] < s2[l2]) return -1;
     if (s1[l1] > s2[l2]) return 1;
@@ -122,7 +127,9 @@ int DpsUniStrBCmp(const dpsunicode_t *s1, const dpsunicode_t *s2) {
 }
 
 int DpsUniStrBNCmp(const dpsunicode_t *s1, const dpsunicode_t *s2, size_t count) { 
-  register ssize_t l1 = DpsUniLen(s1) - 1, l2 = DpsUniLen(s2) - 1, l = count;
+  register ssize_t l1 = (ssize_t)DpsUniLen(s1) - 1, 
+                   l2 = (ssize_t)DpsUniLen(s2) - 1, 
+                    l = (ssize_t)count;
   while (l1 >= 0 && l2 >= 0 && l > 0) {
     if (s1[l1] < s2[l2]) return -1;
     if (s1[l1] > s2[l2]) return 1;
@@ -149,7 +156,7 @@ dpsunicode_t *DpsUniStrCpy(dpsunicode_t *dst, const dpsunicode_t *src) {
   return dst;
 */
   register size_t n = DpsUniLen(src) + 1;
-  return dps_memmove(dst, src, n * sizeof(dpsunicode_t));
+  return dps_memmove(dst, src, n * sizeof(*src));
 }
 
 dpsunicode_t *DpsUniStrNCpy(dpsunicode_t *dst, const dpsunicode_t *src, size_t len) {
@@ -163,7 +170,7 @@ dpsunicode_t *DpsUniStrNCpy(dpsunicode_t *dst, const dpsunicode_t *src, size_t l
   return dst;
 */
   register size_t n = DpsUniLen(src) + 1;
-  return dps_memmove(dst, src, sizeof(dpsunicode_t) * ((n < len) ? n : len));
+  return dps_memmove(dst, src, sizeof(*src) * ((n < len) ? n : len));
 }
 
 dpsunicode_t *DpsUniStrRCpy(dpsunicode_t *dst, const dpsunicode_t *src) {
@@ -171,14 +178,16 @@ dpsunicode_t *DpsUniStrRCpy(dpsunicode_t *dst, const dpsunicode_t *src) {
   register size_t i; 
   dpsunicode_t *d = dst + l; 
   *d = 0; 
-  for (i = 0; i < l; i++) *--d = src[i];
+  for (i = 0; i < l; i++) {
+    *--d = src[i];
+  }
   return dst;
 }
 
 /* string append */
 dpsunicode_t *DpsUniStrCat(dpsunicode_t *s, const dpsunicode_t *append) {
   size_t len = DpsUniLen(s);
-  DpsUniStrCpy(&s[len], append);
+  (void)DpsUniStrCpy(&s[len], append);
   return s;
 }
 
@@ -227,7 +236,7 @@ dpsunicode_t *DpsUniAccentStrip(dpsunicode_t *str) {
   s = d = nfd = DpsUniNormalizeNFD(NULL, str);
   while (*s != 0) {
     switch(DpsUniCType(*s)) {
-    case DPS_UNI_MARK_N: break;
+    case DPS_UNI_MARK_N: /*@switchbreak@*/ break;
     default:
       if (s != d) *d = *s;
       d++;
@@ -241,31 +250,31 @@ dpsunicode_t *DpsUniAccentStrip(dpsunicode_t *str) {
 
 dpsunicode_t *DpsUniGermanReplace(dpsunicode_t *str) {
   size_t l = DpsUniLen(str);
-  dpsunicode_t *german = DpsMalloc((3 * l + 1) * sizeof(dpsunicode_t));
+  dpsunicode_t *german = DpsMalloc((3 * l + 1) * sizeof(*str));
   if (german !=NULL) {
     dpsunicode_t *s = str, *d = german;
-    while(*s) {
+    while(*s != 0) {
       switch(*s) {
       case 0x00DF: /* eszett, or scharfes s, small */
-	*d++ = 's'; *d++ = 's'; break;
+	*d++ = (dpsunicode_t)'s'; *d++ = (dpsunicode_t)'s'; break;
       case 0x1E9E: /* eszett, or scharfes s, big */
-	*d++ = 'S'; *d++ = 'S'; break;
-      case 0x00D6: *d++ = 'O'; *d++ = 'E'; break;
-      case 0x00F6: *d++ = 'o'; *d++ = 'e'; break;
+	*d++ = (dpsunicode_t)'S'; *d++ = (dpsunicode_t)'S'; break;
+      case 0x00D6: *d++ = (dpsunicode_t)'O'; *d++ = (dpsunicode_t)'E'; break;
+      case 0x00F6: *d++ = (dpsunicode_t)'o'; *d++ = (dpsunicode_t)'e'; break;
 
-      case 0x00DC: *d++ = 'U'; *d++ = 'E'; break;
-      case 0x00FC: *d++ = 'u'; *d++ = 'e'; break;
+      case 0x00DC: *d++ = (dpsunicode_t)'U'; *d++ = (dpsunicode_t)'E'; break;
+      case 0x00FC: *d++ = (dpsunicode_t)'u'; *d++ = (dpsunicode_t)'e'; break;
 
-      case 0x00C4: *d++ = 'A'; *d++ = 'E'; break;
-      case 0x00E4: *d++ = 'a'; *d++ = 'e'; break;
+      case 0x00C4: *d++ = (dpsunicode_t)'A'; *d++ = (dpsunicode_t)'E'; break;
+      case 0x00E4: *d++ = (dpsunicode_t)'a'; *d++ = (dpsunicode_t)'e'; break;
 
 /* AE */
 
-      case 0x00C6: *d++ = 'A'; *d++ = 'E'; break;
-      case 0x00E6: *d++ = 'a'; *d++ = 'e'; break;
+      case 0x00C6: *d++ = (dpsunicode_t)'A'; *d++ = (dpsunicode_t)'E'; break;
+      case 0x00E6: *d++ = (dpsunicode_t)'a'; *d++ = (dpsunicode_t)'e'; break;
 
 /* Long S */
-      case 0x017F: *d++ = 's'; break;
+      case 0x017F: *d++ = (dpsunicode_t)'s'; break;
 
 
 /* Unicode SpecialCasing.txt */
@@ -275,13 +284,13 @@ dpsunicode_t *DpsUniGermanReplace(dpsunicode_t *str) {
 
 	/*# Ligatures */
 
-      case 0xFB00: *d++ = 'f'; *d++ = 'f'; break; /* # LATIN SMALL LIGATURE FF */
-      case 0xFB01: *d++ = 'f'; *d++ = 'i'; break; /* # LATIN SMALL LIGATURE FI */
-      case 0xFB02: *d++ = 'f'; *d++ = 'l'; break; /* # LATIN SMALL LIGATURE FL */
-      case 0xFB03: *d++ = 'f'; *d++ = 'f'; *d++ = 'i'; break; /* # LATIN SMALL LIGATURE FFI */
-      case 0xFB04: *d++ = 'f'; *d++ = 'f'; *d++ = 'l'; break; /* # LATIN SMALL LIGATURE FFL */
-      case 0xFB05: *d++ = 's'; *d++ = 't'; break; /* # LATIN SMALL LIGATURE LONG S T */
-      case 0xFB06: *d++ = 's'; *d++ = 't'; break; /* # LATIN SMALL LIGATURE ST */
+      case 0xFB00: *d++ = (dpsunicode_t)'f'; *d++ = (dpsunicode_t)'f'; break; /* # LATIN SMALL LIGATURE FF */
+      case 0xFB01: *d++ = (dpsunicode_t)'f'; *d++ = (dpsunicode_t)'i'; break; /* # LATIN SMALL LIGATURE FI */
+      case 0xFB02: *d++ = (dpsunicode_t)'f'; *d++ = (dpsunicode_t)'l'; break; /* # LATIN SMALL LIGATURE FL */
+      case 0xFB03: *d++ = (dpsunicode_t)'f'; *d++ = (dpsunicode_t)'f'; *d++ = (dpsunicode_t)'i'; break; /* # LATIN SMALL LIGATURE FFI */
+      case 0xFB04: *d++ = (dpsunicode_t)'f'; *d++ = (dpsunicode_t)'f'; *d++ = (dpsunicode_t)'l'; break; /* # LATIN SMALL LIGATURE FFL */
+      case 0xFB05: *d++ = (dpsunicode_t)'s'; *d++ = (dpsunicode_t)'t'; break; /* # LATIN SMALL LIGATURE LONG S T */
+      case 0xFB06: *d++ = (dpsunicode_t)'s'; *d++ = (dpsunicode_t)'t'; break; /* # LATIN SMALL LIGATURE ST */
 
       case 0x0587: *d++ = 0x0565; *d++ = 0x0582; break; /* # ARMENIAN SMALL LIGATURE ECH YIWN */
       case 0xFB13: *d++ = 0x0574; *d++ = 0x0576; break; /* # ARMENIAN SMALL LIGATURE MEN NOW */
@@ -448,33 +457,34 @@ dpsunicode_t *DpsUniGermanReplace(dpsunicode_t *str) {
 }
 
 
-dpsunicode_t *DpsUniStrChr(const dpsunicode_t *p, dpsunicode_t ch) {
-
+dpsunicode_t *DpsUniStrChr(const dpsunicode_t *str, dpsunicode_t ch) {
+        register dpsunicode_t *p = (dpsunicode_t *)str;
         for (;; ++p) {
-                if (*p == ch)
-                        return ((dpsunicode_t *)p);
-                if (*p == '\0')
+                if (*p == 0)
                         return (NULL);
+                if (*p == ch)
+                        return (p);
         }
         /* NOTREACHED */
 }
 
 
-dpsunicode_t *DpsUniStrChrLower(const dpsunicode_t *p, dpsunicode_t ch) { /* ch must be in lower register */
+dpsunicode_t *DpsUniStrChrLower(const dpsunicode_t *str, dpsunicode_t ch) { /* ch must be in lower register */
+        register dpsunicode_t *p = (dpsunicode_t *)str;
 
         for (;; ++p) {
-  	        if (DpsUniToLower(*p) == ch)
-                        return ((dpsunicode_t *)p);
-                if (*p == '\0')
+                if (*p == 0)
                         return (NULL);
+  	        if (DpsUniToLower(*p) == ch)
+                        return (p);
         }
         /* NOTREACHED */
 }
 
 
 dpsunicode_t *DpsUniRTrim(dpsunicode_t *p, dpsunicode_t *delim) {
-  int len = (int)DpsUniLen(p);
-  while((len > 0) && DpsUniStrChr(delim, p[len - 1] )) {
+  ssize_t len = (ssize_t)DpsUniLen(p);
+  while((len > 0) && (DpsUniStrChr(delim, p[len - 1] ) != NULL)) {
     p[len - 1] = 0;
     len--;
   }
@@ -500,12 +510,20 @@ dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsun
     if (s == NULL && (s = *last) == NULL) return NULL;
 
 
-    while(dps_is_delim(delim, *s)) s++;
+    while(dps_is_delim(delim, *s) == 1) {
+      s++;
+    }
     if (*s == 0) return *last = NULL; /* no non-delimiter characters */
 
     tok = s;
-    while(*s && !dps_is_delim(delim, *s)) s++;
-    if (*s != 0) while(dps_is_delim(delim, *s)) s++;
+    while((*s != 0) && (dps_is_delim(delim, *s) == 0)) {
+      s++;
+    }
+    if (*s != 0) {
+      while (dps_is_delim(delim, *s) == 1) {
+	s++;
+      }
+    }
     *last = s;
     return tok;
 
