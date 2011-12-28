@@ -38,10 +38,10 @@ dpsunicode_t  *DpsUniStrCat(dpsunicode_t *s, const dpsunicode_t *append);
 dpsunicode_t  *DpsUniDup(const dpsunicode_t *s);
 dpsunicode_t  *DpsUniRDup(const dpsunicode_t *s);
 dpsunicode_t  *DpsUniNDup(const dpsunicode_t *s, size_t len);
-dpsunicode_t  *DpsUniAccentStrip(dpsunicode_t *s);
-dpsunicode_t  *DpsUniGermanReplace(dpsunicode_t *s);
-dpsunicode_t  *DpsUniStrChr(const dpsunicode_t *p, dpsunicode_t ch);
-dpsunicode_t  *DpsUniStrChrLower(const dpsunicode_t *p, dpsunicode_t ch);
+dpsunicode_t  *DpsUniAccentStrip(dpsunicode_t *str);
+dpsunicode_t  *DpsUniGermanReplace(dpsunicode_t *str);
+dpsunicode_t  *DpsUniStrChr(const dpsunicode_t *str, dpsunicode_t ch);
+dpsunicode_t  *DpsUniStrChrLower(const dpsunicode_t *str, dpsunicode_t ch);
 dpsunicode_t  *DpsUniRTrim(dpsunicode_t *p, dpsunicode_t *delim);
 
 dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsunicode_t **last);

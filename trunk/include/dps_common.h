@@ -345,6 +345,7 @@ typedef struct{
 	dps_uint4	coord;
 } DPS_URL_CRD;
 
+
 #ifdef WITH_MULTIDBADDR
 typedef struct{
 	urlid_t		url_id;
@@ -921,11 +922,13 @@ typedef struct {
 typedef struct dps_stack_item_struct {
         int		cmd, secno;
         int             origin, order_origin;
-/*	unsigned long	arg;          .order now */
-  DPS_URL_CRD_DB        *pbegin, *pcur, *plast, *pchecked;
-  char gap[8192];
+  /*	unsigned long	arg;          .order now */
+#ifndef S_SPLINT_S
+  DPS_URL_CRD_DB *pbegin, *pcur, *plast, *pchecked;
+#endif
+  /*  char gap[8192];*/
   DPS_URL_CRD           *db_pbegin;
-  char gap2[8192];
+  /*  char gap2[8192];*/
   DPS_URL_CRD *db_pcur, *db_plast, *db_pchecked;
         size_t          order, order_inquery;
         size_t          wordnum;
