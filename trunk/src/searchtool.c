@@ -77,9 +77,9 @@
 #endif
 
 #define DEBUG_CACHE
-
+/*
 #define MULTITHREADED_SORT
-
+*/
 /*
 #define DEBUG_PHRASES
 */
