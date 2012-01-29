@@ -1740,13 +1740,15 @@ static int srv_htdb(void *Cfg, size_t ac,char **av){
 	    if (strcasecmp(av[0], DPS_NULL2EMPTY(C->Srv->HTDBsec.Match[i].arg))) {
 	      if (i != j) {
 		DpsMatchFree(&C->Srv->HTDBsec.Match[j]);
+		DpsMatchInit(&C->Srv->HTDBsec.Match[j]);
 		C->Srv->HTDBsec.Match[j] = C->Srv->HTDBsec.Match[i];
+		DpsMatchInit(&C->Srv->HTDBsec.Match[i]);
 	      }
 	      j++;
 	    }
-	    if (j != C->Srv->HTDBsec.nmatches) {
-	      C->Srv->HTDBsec.nmatches = j;
-	    }
+	  }
+	  if (j != C->Srv->HTDBsec.nmatches) {
+	    C->Srv->HTDBsec.nmatches = j;
 	  }
 	} else if (ac == 2 && !strcasecmp(av[0], "HTDBText")) {
 	  for (i = j = 0; i < C->Srv->HTDBsec.nmatches; i++) {
@@ -1754,13 +1756,15 @@ static int srv_htdb(void *Cfg, size_t ac,char **av){
 		|| strcasecmp(av[1], DPS_NULL2EMPTY(C->Srv->HTDBsec.Match[i].section))) {
 	      if (i != j) {
 		DpsMatchFree(&C->Srv->HTDBsec.Match[j]);
+		DpsMatchInit(&C->Srv->HTDBsec.Match[j]);
 		C->Srv->HTDBsec.Match[j] = C->Srv->HTDBsec.Match[i];
+		DpsMatchInit(&C->Srv->HTDBsec.Match[i]);
 	      }
 	      j++;
 	    }
-	    if (j != C->Srv->HTDBsec.nmatches) {
-	      C->Srv->HTDBsec.nmatches = j;
-	    }
+	  }
+	  if (j != C->Srv->HTDBsec.nmatches) {
+	    C->Srv->HTDBsec.nmatches = j;
 	  }
 	} else {
 	  DPS_MATCH M;
