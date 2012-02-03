@@ -710,13 +710,17 @@ void DpsExcerptDoc(void *param) {
     if (wlen[i] < minwlen) minwlen = wlen[i];
   }
 
-  if ((oi = (dpsunicode_t *)DpsMalloc(2 * (dps_max(size + 2 * query->WordParam.max_word_len, Res->WWList.maxulen + 4 * (query->WordParam.max_word_len + padding) + 8) + 1) * sizeof(dpsunicode_t))) == NULL) {
+  i = 32 + 2 * (dps_max(size + 2 * query->WordParam.max_word_len, Res->WWList.maxulen + 4 * (query->WordParam.max_word_len + padding) + 8) + 1) * sizeof(dpsunicode_t);
+
+  if ((oi = (dpsunicode_t *)DpsMalloc(i)) == NULL) {
     DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos);
     return;
   }
   oi[0]=0;
 
-  DocSize = DpsVarListFindInt(&Doc->Sections, "Content-Length", DPS_MAXDOCSIZE) + 2 * DPS_DOCHUNKSIZE;
+  DocSize = DpsVarListFindInt(&Doc->Sections, "Content-Length", DPS_MAXDOCSIZE);
+  if (DocSize < gap_len) DocSize = gap_len;
+  DocSize += 2 * DPS_DOCHUNKSIZE;
 
   if ((DocSize == 0) ||  ((HEnd = HDoc = (char *)DpsMalloc(2 * DocSize + 4)) == NULL) ) {
     DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos);
@@ -724,7 +728,7 @@ void DpsExcerptDoc(void *param) {
   }
   HDoc[0]='\0';
 
-  if ( (uni = (dpsunicode_t *)DpsMalloc((DocSize + 10) * sizeof(dpsunicode_t)) ) == NULL) {
+  if ( (uni = (dpsunicode_t *)DpsMalloc((2 * DocSize + 10) * sizeof(dpsunicode_t)) ) == NULL) {
     DPS_FREE(oi); DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(HDoc);
     return;
   }
@@ -828,8 +832,11 @@ void DpsExcerptDoc(void *param) {
     switch(tag.type) {
     case DPS_HTML_TXT:
       if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0) && tag.visible[tag.level]) {
-	dps_memcpy(HEnd, htok, (size_t)(last - htok));
-	HEnd += (size_t)(last - htok);
+	{ register size_t _len = (size_t)(last - htok);
+	  if (_len > DocSize - len) _len = DocSize - len;
+	  dps_memcpy(HEnd, htok, _len);
+	  HEnd += _len;
+	}
 	HEnd[0] = ' ';
 	HEnd++;
 	HEnd[0] = '\0';
@@ -863,7 +870,10 @@ void DpsExcerptDoc(void *param) {
   if ((index_limit != 0) && (ulen > index_limit)) {
     ulen = index_limit;
     uni[ulen] = 0;
-  }
+  } else if (ulen > DocSize) {
+      ulen = DocSize;
+      uni[DocSize] = 0;
+    }
 
   for (i = 0; i < Res->WWList.nwords; i++) {
     if (Res->WWList.Word[i].origin & DPS_WORD_ORIGIN_STOP) wpos[i] = NULL;
@@ -873,7 +883,6 @@ void DpsExcerptDoc(void *param) {
   prevstart = NULL;
   for (p = prevend = uni; DpsUniLen(oi) < size; ) {
 
-
     while(((np  = DpsUniStrWWL(&p, &(Res->WWList), c, wlen, wpos, minwlen, NOprefixHL)) == NULL) 
 	  && (htok != NULL) && ((index_limit == 0) || (ulen < index_limit) )) {
 
@@ -881,8 +890,11 @@ void DpsExcerptDoc(void *param) {
 	switch(tag.type) {
 	case DPS_HTML_TXT:
 	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0) && tag.visible[tag.level]) {
-	    dps_memcpy(HEnd, htok, (size_t)(last-htok));
-	    HEnd += (size_t)(last - htok);
+	    { register size_t _len = (size_t)(last - htok);
+	      if (_len > DocSize - len) _len = DocSize - len;
+	      dps_memcpy(HEnd, htok, _len);
+	      HEnd += _len;
+	    }
 	    HEnd[0] = ' ';
 	    HEnd++;
 	    HEnd[0] = '\0';
@@ -902,6 +914,7 @@ void DpsExcerptDoc(void *param) {
 
       add = DpsConv(&dc_uni, (char*)(uni + ulen), sizeof(*uni)*(DocSize + 10 - ulen), HDoc + prevlen, len - prevlen + 2) / sizeof(*uni);
       prevlen = len;
+      uni[DocSize] = 0;
       ulen += DpsUniLen(uni+ulen);
     }
     if (np == NULL) break;
@@ -931,7 +944,9 @@ void DpsExcerptDoc(void *param) {
     prevlen = len;
     if (end == np) p++;
   }
-  if (oi[0] && (end != uni + ulen) && (*(end-1) != 0x2e) ) DpsUniStrCat(oi, suffix_dot);
+  if (oi[0] && (end != uni + ulen) && (*(end-1) != 0x2e) ) {
+    DpsUniStrCat(oi, suffix_dot);
+  }
 
   {
     register dpsunicode_t *cc;
@@ -962,7 +977,12 @@ void DpsExcerptDoc(void *param) {
     tag.chunks = 0;
     if (s >= 0) DpsSend(s, &tag.chunks, sizeof(tag.chunks), 0);
   }
-  DPS_FREE(c); DPS_FREE(wlen); DPS_FREE(wpos); DPS_FREE(oi); DPS_FREE(HDoc); DPS_FREE(uni);
+  DPS_FREE(c); 
+  DPS_FREE(wlen);
+  DPS_FREE(wpos);
+  DPS_FREE(oi);
+  DPS_FREE(HDoc);
+  DPS_FREE(uni);
   if (needFreeSource) { DPS_FREE(SourceToFree); } else { DPS_FREE(tag.Content); }
   if (os != NULL && dps_strlen(os) > 6) {
     DpsVarListReplaceStr(&Doc->Sections, "body", os);
@@ -1160,8 +1180,11 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     switch(tag.type) {
     case DPS_HTML_TXT:
       if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title== 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	dps_memcpy(HEnd, htok, (size_t)(last - htok));
-	HEnd += (size_t)(last - htok);
+	{ register size_t _len = (size_t)(last - htok);
+	  if (_len > DocSize - len) _len = DocSize - len;
+	  dps_memcpy(HEnd, htok, _len);
+	  HEnd += _len;
+	}
 	HEnd[0] = ' ';
 	HEnd++;
 	HEnd[0] = '\0';
@@ -1194,8 +1217,11 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
     switch(tag.type) {
     case DPS_HTML_TXT:
       if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title == 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	dps_memcpy(HEnd, htok, (size_t)(last - htok));
-	HEnd += (size_t)(last - htok);
+	{ register size_t _len = (size_t)(last - htok);
+	  if (_len > DocSize - len) _len = DocSize - len;
+	  dps_memcpy(HEnd, htok, _len);
+	  HEnd += _len;
+	}
 	HEnd[0] = ' ';
 	HEnd++;
 	HEnd[0] = '\0';
@@ -1239,8 +1265,11 @@ char * DpsExcerptDoc_New(DPS_AGENT *query, DPS_RESULT *Res, DPS_DOCUMENT *Doc, s
 	switch(tag.type) {
 	case DPS_HTML_TXT:
 	  if (tag.script == 0 && (tag.comment + tag.noindex == 0) && tag.title== 0 && tag.style == 0 && tag.select == 0 && (tag.body == 1 || tag.frameset > 0)) {
-	    dps_memcpy(HEnd, htok, (size_t)(last-htok));
-	    HEnd += (size_t)(last - htok);
+	    { register size_t _len = (size_t)(last - htok);
+	      if (_len > DocSize - len) _len = DocSize - len;
+	      dps_memcpy(HEnd, htok, _len);
+	      HEnd += _len;
+	    }
 	    HEnd[0] = ' ';
 	    HEnd++;
 	    HEnd[0] = '\0';
