@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -485,26 +485,19 @@ __C_LINK int __DPSCALL DpsSetLockProc(DPS_ENV * Conf,
    Accept global locking
 */ 
 
-#if 0 /* defined HAVE_PTHREAD */
+#if 1 /*defined(CAS_MUTEX)*/
 
-static pthread_mutex_t *accept_mutex = (void*)(caddr_t) -1;
+static dps_mutex_t *accept_mutex = (dps_mutex_t *) -1;
 static int have_accept_mutex;
 static sigset_t accept_block_mask;
 static sigset_t accept_previous_mask;
 
-void DpsAcceptMutexChildCleanup(void) {
-    if (accept_mutex != (void *)(caddr_t)-1
-	&& have_accept_mutex) {
-	pthread_mutex_unlock(accept_mutex);
-    }
-}
-
 void DpsAcceptMutexCleanup(void) {
-    if (accept_mutex != (void *)(caddr_t)-1
+    if (accept_mutex != (dps_mutex_t *)-1
 	&& munmap((caddr_t) accept_mutex, sizeof(*accept_mutex))) {
 	perror("munmap");
     }
-    accept_mutex = (void *)(caddr_t)-1;
+    accept_mutex = (dps_mutex_t *)-1;
 }
 
 static void dps_remove_sync_sigs(sigset_t *sig_mask) {
@@ -543,7 +536,6 @@ static void dps_remove_sync_sigs(sigset_t *sig_mask) {
 }
 
 void DpsAcceptMutexInit(const char *var_dir, const char *app) {
-    pthread_mutexattr_t mattr;
     int fd;
 
     fd = open("/dev/zero", O_RDWR);
@@ -551,72 +543,33 @@ void DpsAcceptMutexInit(const char *var_dir, const char *app) {
 	perror("open(/dev/zero)");
 	exit(DPS_ERROR);
     }
-    accept_mutex = (pthread_mutex_t *) mmap((caddr_t) 0, sizeof(*accept_mutex),
+    accept_mutex = (dps_mutex_t *) mmap((caddr_t) 0, sizeof(*accept_mutex),
 				 PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    if (accept_mutex == (void *) (caddr_t) - 1) {
+    if (accept_mutex == (dps_mutex_t *) -1) {
 	perror("mmap /dev/zero");
 	exit(DPS_ERROR);
     }
     close(fd);
-    if ((errno = pthread_mutexattr_init(&mattr))) {
-	perror("pthread_mutexattr_init");
-	exit(DPS_ERROR);
-    }
-#if defined(pthread_mutexattr_setpshared)
-    if ((errno = pthread_mutexattr_setpshared(&mattr, PTHREAD_PROCESS_SHARED))) {
-	perror("pthread_mutexattr_setpshared");
-	exit(DPS_ERROR);
-    }
-#endif
-    if ((errno = pthread_mutex_init(accept_mutex, &mattr))) {
-	perror("pthread_mutex_init");
-	exit(DPS_ERROR);
-    }
+    InitMutex(accept_mutex);
     sigfillset(&accept_block_mask);
     sigdelset(&accept_block_mask, SIGHUP);
     sigdelset(&accept_block_mask, SIGTERM);
     sigdelset(&accept_block_mask, SIGUSR1);
     dps_remove_sync_sigs(&accept_block_mask);
-/*    ap_register_cleanup(p, NULL, accept_mutex_cleanup_pthread, ap_null_cleanup);*/
-}
+} 
 
 void DpsAcceptMutexLock(DPS_AGENT *Agent) {
-    int err;
-
     if (sigprocmask(SIG_BLOCK, &accept_block_mask, &accept_previous_mask)) {
 	perror("sigprocmask(SIG_BLOCK)");
 	exit(DPS_ERROR);
     }
-    /* We need to block alarms here, since if we get killed *right* after 
-     * locking the mutex, have_accept_mutex will not be set, and our
-     * child cleanup will not work.
-     */
-/*    ap_block_alarms();*/
-    if ((err = pthread_mutex_lock(accept_mutex))) {
-	errno = err;
-	perror("pthread_mutex_lock");
-	exit(DPS_ERROR);
-    }
+    DPS_MUTEX_LOCK(Agent, accept_mutex);
     have_accept_mutex = 1;
-/*    ap_unblock_alarms();*/
 }
 
-
 void DpsAcceptMutexUnlock(DPS_AGENT *Agent) {
-    int err;
-
-    /* Have to block alarms here, or else we might have a double-unlock, which
-     * is possible with pthread mutexes, since they are designed to be fast,
-     * and hence not necessarily make checks for ownership or multiple unlocks.
-     */
-/*    ap_block_alarms(); */
-    if ((err = pthread_mutex_unlock(accept_mutex))) {
-	errno = err;
-	perror("pthread_mutex_unlock");
-	exit(DPS_ERROR);
-    }
+    DPS_MUTEX_UNLOCK(Agent, accept_mutex);
     have_accept_mutex = 0;
-/*    ap_unblock_alarms();*/
     if (sigprocmask(SIG_SETMASK, &accept_previous_mask, NULL)) {
 	perror("sigprocmask(SIG_SETMASK)");
 	exit(DPS_ERROR);
@@ -624,7 +577,7 @@ void DpsAcceptMutexUnlock(DPS_AGENT *Agent) {
 }
 
 
-#else /* HAVE_PTHREAD */
+#else /* 1 defined(CAS_MUTEX)*/
 
 static struct flock lock_it;
 static struct flock unlock_it;
