@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -77,9 +77,9 @@
 #endif
 
 #define DEBUG_CACHE
-/*
+
 #define MULTITHREADED_SORT
-*/
+
 /*
 #define DEBUG_PHRASES
 */
@@ -342,7 +342,7 @@ void DpsSortSearchWordsByURL0(DPS_URL_CRD *wrd, size_t num){
 #define MIDDLE_SLICE 40
 
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-#define THREAD_SLICE 102400 /* 128 */
+#define THREAD_SLICE 10240 /* 128 */
 #endif
 
 typedef struct {
@@ -351,6 +351,7 @@ typedef struct {
   const char *pattern;
   size_t l, r;
   int merge;
+  int level;
 } DPS_SORT_PARAM;
 
 
@@ -453,7 +454,7 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
 #ifdef WITH_REL_TRACK
   DPS_URLTRACK Trk;
 #endif
-  size_t l = P->l, r = P->r, q, d;
+  size_t l, r, q, d;
   size_t PerS;
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
   DPS_SORT_PARAM PAR;
@@ -461,13 +462,15 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
 #endif
 
  DpsQsortBySiteLoop:
+  l = P->l; r = P->r;
   if (l >= r) {
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
     if (tid) pthread_join(tid, NULL);
 #endif
     return NULL;
   }
-  if ((d = r - l) <= MIN_SLICE) {
+  d = r - l;
+  if (d <= MIN_SLICE) {
     register size_t i, j;
     DPS_RESULT *Res = P->Res;
     DPS_URLCRDLIST *L = P->L;
@@ -503,11 +506,11 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
   }
   q = DpsPartitionSearchWordsBySite(P->Res, P->L, l, r, P->pattern, P->merge);
   if (q == l) { 
-    l++; 
+    P->l++; 
     goto DpsQsortBySiteLoop; 
   }
   if (q == r) { 
-    r--; 
+    P->r--; 
     goto DpsQsortBySiteLoop; 
   }
 
@@ -521,9 +524,10 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
   }
 
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-  if (d >= THREAD_SLICE) {
+  if (d >= THREAD_SLICE && PP.level > 0) {
     if (tid) pthread_join(tid, NULL);
     tid = 0;
+    PP.level--;
     PAR = PP;
     if (pthread_create(&tid, NULL, &DpsQsortSearchWordsBySite, &PAR) != 0) {
       DpsQsortSearchWordsBySite(&PP);
@@ -549,6 +553,7 @@ void DpsSortSearchWordsBySite(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num, co
     P.r = num - 1;
     P.pattern = pattern;
     P.merge = (Res->PerSite != NULL);
+    P.level = 2;
     DpsCmpPattern = &DpsCmpPattern_full;
     switch(*pattern) {
     case 'D': if (pattern[1] == 'R' && pattern[2] == 'P' && pattern[3] == '\0') DpsCmpPattern = &DpsCmpPattern_DRP; break;
@@ -660,7 +665,7 @@ static size_t DpsPartitionSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *
 static void * DpsQsortSearchWordsByPattern(void *arg) {
   DPS_SORT_PARAM PP;
   DPS_SORT_PARAM *P = (DPS_SORT_PARAM*)arg;
-  size_t l = P->l, r = P->r, c, d;
+  size_t l, r, c, d;
   size_t Cnt = 1;
   DPS_URL_CRD_DB Crd;
   DPS_URLDATA Dat;
@@ -673,13 +678,15 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
 #endif
 
  DpsQsortByPatternLoop:
+  l = P->l; r = P->r;
   if (l >= r) {
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
     if (tid) pthread_join(tid, NULL); 
 #endif
     return NULL;
   }
-  if ((d = r - l) <= MIN_SLICE) {
+  d = r - l;
+  if (d <= MIN_SLICE) {
     register size_t i, j;
     DPS_RESULT *Res = P->Res;
     DPS_URLCRDLIST *L = P->L;
@@ -713,11 +720,11 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
   }
   c = DpsPartitionSearchWordsByPattern(P->Res, P->L, l, r, P->pattern);
   if (c == l) { 
-    l++; 
+    P->l++; 
     goto DpsQsortByPatternLoop; 
   } 
   if (c == r) { 
-    r--; 
+    P->r--; 
     goto DpsQsortByPatternLoop; 
   } 
 
@@ -731,9 +738,10 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
   }
 
 #if defined(HAVE_PTHREAD) && defined(MULTITHREADED_SORT)
-  if (d >= THREAD_SLICE) {
+  if (d >= THREAD_SLICE && PP.level > 0) {
     if (tid) pthread_join(tid, NULL);
     tid = 0;
+    PP.level--;
     PAR = PP;
     if (pthread_create(&tid, NULL, &DpsQsortSearchWordsByPattern, &PAR) != 0) {
       DpsQsortSearchWordsBySite(&PP);
@@ -758,6 +766,7 @@ void DpsSortSearchWordsByPattern(DPS_RESULT *Res, DPS_URLCRDLIST *L, size_t num,
     P.l = 0;
     P.r = num - 1;
     P.merge = 0;
+    P.level = 2;
     P.pattern = pattern;
     DpsCmpPattern = &DpsCmpPattern_full;
     switch(*pattern) {
