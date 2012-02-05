@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -776,7 +776,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 	int pre_server, server;
 	const char *bcharset;
 	size_t ExcerptSize, ExcerptPadding;
-#ifdef HAVE_PTHREAD
+#if defined HAVE_PTHREAD
 	pthread_t *threads;
 	DPS_EXCERPT_CFG *Cfg;
 	pthread_attr_t attr;
@@ -892,7 +892,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 				ExcerptSize = (size_t)DpsVarListFindInt(&Agent->Vars, "ExcerptSize", 256);
 				ExcerptPadding = (size_t)DpsVarListFindInt(&Agent->Vars, "ExcerptPadding", 40);
 
-#ifdef HAVE_PTHREAD
+#if defined HAVE_PTHREAD
 #ifdef HAVE_PTHREAD_SETCONCURRENCY_PROT
 				if (pthread_setconcurrency(Res->num_rows + 1) != 0) {
 				  DpsLog(A, DPS_LOG_ERROR, "Can't set %d concurrency threads", Res->num_rows + 1);
@@ -968,7 +968,7 @@ static int do_client(DPS_AGENT *Agent, int client){
 					sprintf(dinfo+olen,"%s\r\n",textbuf);
 					DpsFree(textbuf);
 				}
-#ifdef HAVE_PTHREAD
+#if defined HAVE_PTHREAD
 				DPS_FREE(Cfg);
 				DPS_FREE(threads);
 #endif				
@@ -1376,11 +1376,13 @@ static int client_main(DPS_ENV *Env, size_t handle) {
     DpsVarListDel(&Agent->Vars, "CP");
     *Env->errstr = '\0';
 */
+    tval.tv_sec = 2;
+    tval.tv_usec = 0;
+
     DpsAcceptMutexLock(Agent);
 
     msk = mask;
-    tval.tv_sec = 60;
-    tval.tv_usec = 0;
+
     sel = select(FD_SETSIZE, &msk, 0, 0, &tval);
 
     if(have_sighup){
