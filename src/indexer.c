@@ -817,7 +817,7 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 	if((Doc->method = num_method) != DPS_METHOD_DISALLOW) {  /* was: == DPS_METHOD_GET */
 	  /* Check Allow/Disallow/CheckOnly stuff */
 	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
-	  Doc->method=DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, DpsVarListFindStr(&Doc->Sections,"URL",""), reason,Doc->method);
+	  Doc->method = DpsFilterFind((Doc->method != DPS_METHOD_DISALLOW) ? DPS_LOG_DEBUG : DPS_LOG_EXTRA, &Indexer->Conf->Filters, DpsVarListFindStr(&Doc->Sections,"URL",""), reason,Doc->method);
 	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	  DpsLog(Indexer, (Doc->method != DPS_METHOD_DISALLOW) ? DPS_LOG_DEBUG : DPS_LOG_EXTRA, "%s", reason);
 	}
