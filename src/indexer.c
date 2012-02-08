@@ -784,6 +784,7 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 	int		hops=DpsVarListFindInt(&Doc->Sections,"Hops",0);
 	const char	*method=DpsVarListFindStr(&CurSrv->Vars,"Method","Allow");
 	const int       older = DpsVarListFindInt(&Doc->Sections, "DeleteOlder", 0);
+	int             num_method = DpsMethod(method);
 	float           site_weight;
 	size_t          depth;
 	const char      *s;
@@ -792,37 +793,36 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 
 	switch(CurSrv->Match.match_type){
 		case DPS_MATCH_WILD:
-			DpsLog(Indexer,DPS_LOG_DEBUG, "Realm %s wild '%s'", method, CurSrv->Match.pattern);
+		  DpsLog(Indexer,(num_method!=DPS_METHOD_DISALLOW)?DPS_LOG_DEBUG:DPS_LOG_EXTRA, "Realm %s wild '%s'", method, CurSrv->Match.pattern);
 			break;
 		case DPS_MATCH_REGEX:
-			DpsLog(Indexer,DPS_LOG_DEBUG, "Realm %s regex '%s'", method, CurSrv->Match.pattern);
+			DpsLog(Indexer,(num_method!=DPS_METHOD_DISALLOW)?DPS_LOG_DEBUG:DPS_LOG_EXTRA, "Realm %s regex '%s'", method, CurSrv->Match.pattern);
 			break;
 		case DPS_MATCH_SUBNET:
-			DpsLog(Indexer,DPS_LOG_DEBUG, "Subnet %s '%s'", method, CurSrv->Match.pattern);
+			DpsLog(Indexer,(num_method!=DPS_METHOD_DISALLOW)?DPS_LOG_DEBUG:DPS_LOG_EXTRA, "Subnet %s '%s'", method, CurSrv->Match.pattern);
 			break;
 		case DPS_MATCH_BEGIN:
 		default:
-			DpsLog(Indexer,DPS_LOG_DEBUG, "Server %s '%s'", method, CurSrv->Match.pattern);
+			DpsLog(Indexer,(num_method!=DPS_METHOD_DISALLOW)?DPS_LOG_DEBUG:DPS_LOG_EXTRA, "Server %s '%s'", method, CurSrv->Match.pattern);
 			break;
 	}
 	
 	if (dps_strlen(DpsVarListFindStr(&Doc->Sections,"URL","")) > CurSrv->MaxURLength) {
-	  DpsLog(Indexer, DPS_LOG_DEBUG, "too long URL (max: %d), skip it", CurSrv->MaxURLength);
+	  DpsLog(Indexer, DPS_LOG_EXTRA, "too long URL (max: %d)", CurSrv->MaxURLength);
 	  Doc->method = DPS_METHOD_DISALLOW;
 	  TRACE_OUT(Indexer);
 	  return DPS_OK;
 	}
 
-	if((Doc->method = DpsMethod(method)) != DPS_METHOD_DISALLOW) {  /* was: == DPS_METHOD_GET */
+	if((Doc->method = num_method) != DPS_METHOD_DISALLOW) {  /* was: == DPS_METHOD_GET */
 	  /* Check Allow/Disallow/CheckOnly stuff */
 	  DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 	  Doc->method=DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, DpsVarListFindStr(&Doc->Sections,"URL",""), reason,Doc->method);
 	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-	  DpsLog(Indexer, DPS_LOG_DEBUG,"%s", reason);
+	  DpsLog(Indexer, (Doc->method != DPS_METHOD_DISALLOW) ? DPS_LOG_DEBUG : DPS_LOG_EXTRA, "%s", reason);
 	}
 	
 	if(Doc->method==DPS_METHOD_DISALLOW) {
-	  DpsLog(Indexer, DPS_LOG_EXTRA, "%s", reason);
 	  TRACE_OUT(Indexer);
 	  return DPS_OK;
 	}
