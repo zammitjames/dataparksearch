@@ -118,20 +118,22 @@ static int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, c
 	void *paran = DpsViolationEnter(paran);
 #endif
 	if( (default_method != DPS_METHOD_DISALLOW) && (M = DpsMatchListFind(L, newhref, NS, P)) != NULL) {
-	  if (DpsNeedLog(log_level))
+	  res = DpsMethod(M->arg);
+	  if (DpsNeedLog(log_level) || DpsNeedLog((res!=DPS_METHOD_DISALLOW)?DPS_LOG_DEBUG:DPS_LOG_EXTRA)) {
 	    dps_snprintf(reason, PATH_MAX, "%s %s%s %s '%s'", DPS_NULL2EMPTY(M->arg),
 			 M->nomatch ? "nomatch " : "",
 			 DpsMatchTypeStr(M->match_type),
 			 M->case_sense ? "Sensitive" : "InSensitive", M->pattern);
-	  res = DpsMethod(M->arg);
+	  }
 	  switch(default_method) {
 	  case DPS_METHOD_HEAD: 
 	  case DPS_METHOD_HREFONLY: if (res == DPS_METHOD_GET) res = default_method; break;
 	  case DPS_METHOD_VISITLATER: if (res != DPS_METHOD_DISALLOW) res = default_method; break;
 	  }
 	}else{
-	  if (DpsNeedLog(log_level))
+	  if (DpsNeedLog(log_level) || DpsNeedLog((res!=DPS_METHOD_DISALLOW)?DPS_LOG_DEBUG:DPS_LOG_EXTRA)) {
 	    sprintf(reason, "%s by default", DpsMethodStr(default_method));
+	  }
 	}
 #ifdef WITH_PARANOIA
 	DpsViolationExit(-1, paran);
