@@ -822,6 +822,7 @@ static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc
 	}
 	
 	if(Doc->method==DPS_METHOD_DISALLOW) {
+	  DpsLog(Indexer, DPS_LOG_EXTRA, "%s", reason);
 	  TRACE_OUT(Indexer);
 	  return DPS_OK;
 	}
