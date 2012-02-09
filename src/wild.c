@@ -64,6 +64,8 @@ int DpsWildCmp(const char *str, const char *wexp) {
 	    return -1;
       case '?':
 	break;
+      case '\\':
+	y++; /* no break here by the design */
       default:
 	if (str[x] != wexp[y]) return 1;
 	break;
@@ -117,6 +119,8 @@ int DpsWildCaseCmp(const char *str, const char *wexp) {
 	    return -1;
       case '?':
 	break;
+      case '\\':
+	y++; /* no break here by the design */
       default:
 	if (dps_tolower(str[x]) != dps_tolower(wexp[y])) return 1;
 	break;
