@@ -1,9 +1,3 @@
-
-
-
-
-
-
 	{"A", -1, 3600}, 		/* 	Alpha Time Zone	Military	UTC + 1 hour*/
 	{"ACDT", -1, 10 * 3600 + 1800},	/*	Australian Central Daylight Time	Australia	UTC + 10:30 hours*/
 	{"ACST", -1, 9 *3600 + 1800}, 	/*	Australian Central Standard Time	Australia	UTC + 9:30 hours*/
@@ -190,6 +184,12 @@
 	{"ZW12", 1, 12 * 3600},
 	{"ZW2", 1, 2 * 3600},
 	{"ZW3", 1, 3 * 3600},
+
+
+
+
+
+
 /*	{"CDT", -1, 10 * 3600 + 1800}*/	/*	Central Daylight Time	Australia	UTC + 10:30 hours*/
 /*	{"CST", -1, 10 * 3600 + 1800},*/	/*	Central Summer Time	Australia	UTC + 10:30 hours*/
 /*	{"CST", -1, 9 * 3600 + 1800},*/		/*	Central Standard Time	Australia	UTC + 9:30 hours*/

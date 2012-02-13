@@ -113,7 +113,8 @@ commands.inc: commands.lst
 utils.c: timezones.inc
 
 timezones.inc: timezones.lst
-	cat timezones.lst | sort -fk 1 > timezones.inc
+	cat timezones.lst | perl -e '@l=<STDIN>;@s=sort(@l);foreach $$i (@s) { print $$i;}' > timezones.inc
+#	cat timezones.lst | sort -ifk 1 > timezones.inc
 
 
 if THREADSLESS
