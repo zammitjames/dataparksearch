@@ -1581,10 +1581,17 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	  char       *tmp=NULL;
 	  const char *tmpbeg;
 	  const char *tmpend;
+	  /*
+	  { char hbuf[33];
 
-/*	  fprintf(stderr, " -- tag.scr:%d .com:%d .noi:%d .tit:%d .bod:%d sty:%d fra:%d ind:%d sel:%d vis:%d -- htok: %s\n", 
-		  tag.script, tag.comment, tag.noindex, tag.title, tag.body, tag.style, tag.frameset, tag.index, tag.select, tag.visible[tag.level], htok);*/
+	    strncpy(hbuf, htok, 32);
+	    hbuf[32] = 0;
 
+	    fprintf(stderr, " -- tag.scr:%d .com:%d .noi:%d .tit:%d .bod:%d sty:%d fra:%d ind:%d sel:%d vis:%d -- htok: %32s\n", 
+		    tag.script, tag.comment, tag.noindex, tag.title, tag.body, tag.style, tag.frameset, tag.index, 
+		    tag.select, tag.visible[tag.level], hbuf);
+	  }
+	  */
 	  switch(tag.type){
 			
 	  case DPS_HTML_COM:
