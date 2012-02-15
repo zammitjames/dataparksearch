@@ -664,6 +664,11 @@ int main(int argc,char **argv, char **envp) {
 	init_client(&cl);
 
 	DpsInit(argc, argv, envp); /* Initialize library */
+
+#ifdef WITH_HTTPS
+	SSL_library_init();
+	SSL_load_error_strings(); 
+#endif
 	
 	DpsInitMutexes();
 	Conf = DpsEnvInit(NULL);

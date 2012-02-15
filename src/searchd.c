@@ -1673,6 +1673,12 @@ int main(int argc, char **argv, char **envp) {
 
 	log2stderr = 1;
 	DpsInit(argc, argv, envp); /* Initialize library */
+
+#ifdef WITH_HTTPS
+	SSL_library_init();
+	SSL_load_error_strings(); 
+#endif
+	
 	DpsInitMutexes();
 	parent_pid = getpid();
 

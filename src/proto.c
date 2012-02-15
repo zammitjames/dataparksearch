@@ -423,9 +423,7 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
     if( (fd=open_host(Indexer,Doc)) < 0 )
        return(fd);
 
-    SSLeay_add_ssl_algorithms();
     meth = SSLv23_client_method();
-    SSL_load_error_strings();
 
     if ((ctx = SSL_CTX_new (meth))==NULL){
       sslcleanup;
