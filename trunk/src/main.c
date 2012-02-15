@@ -1490,6 +1490,12 @@ int main(int argc, char **argv, char **envp) {
           DpsEnvFree(&Conf);
           exit(1);
      }
+
+#ifdef WITH_HTTPS
+     SSL_library_init();
+     SSL_load_error_strings(); 
+#endif
+	
      DpsInitMutexes();
 /*     Main.Flags.PopRankNeoIterations = Conf.Flags.PopRankNeoIterations;*/
      Main.Flags = Conf.Flags;
