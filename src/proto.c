@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -403,21 +403,6 @@ static int DpsHTTPSGet(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc)
     const SSL_METHOD *meth;
     time_t start_time;
     size_t buf_size = DPS_NET_BUF_SIZE;
-    pid_t pid;
-
-#if OPENSSL_VERSION_NUMBER >= 0x00905100
-    while (RAND_status() != 1) {
-#endif
-      /* seed in the current time and process id
-       * these are normally 4 bytes each, which should be enough
-       * for our necessary 128-bit minimum seed for the PRNG */
-      start_time = time(NULL);
-      RAND_seed((unsigned char *)&start_time, sizeof(time_t));
-      pid = getpid();
-      RAND_seed((unsigned char *)&pid, sizeof(pid_t));
-#if OPENSSL_VERSION_NUMBER >= 0x00905100
-    }
-#endif
 
     /* Connect to HTTPS server */
     if( (fd=open_host(Indexer,Doc)) < 0 )

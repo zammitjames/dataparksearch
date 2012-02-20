@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -56,6 +56,17 @@
 
 #ifdef CHASEN
 #include <chasen.h>
+#endif
+
+#ifdef WITH_HTTPS
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/x509.h>
+#include <openssl/x509v3.h>
+#include <openssl/pem.h>
+#include <openssl/crypto.h>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
 #endif
 
 #include "dps_common.h"
@@ -1253,6 +1264,27 @@ __C_LINK int __DPSCALL DpsInit(int argc, char **argv, char **envp) {
      ENVP = envp;
      DpsInitTZ();
      srandom((unsigned long)time(NULL));
+#ifdef WITH_HTTPS
+     {
+       time_t start_time;
+       pid_t pid;
+#if OPENSSL_VERSION_NUMBER >= 0x00905100
+       while (RAND_status() != 1) {
+#endif
+	 /* seed in the current time and process id
+	  * these are normally 4 bytes each, which should be enough
+	  * for our necessary 128-bit minimum seed for the PRNG */
+	 start_time = time(NULL);
+	 RAND_seed((unsigned char *)&start_time, sizeof(time_t));
+	 pid = getpid();
+	 RAND_seed((unsigned char *)&pid, sizeof(pid_t));
+#if OPENSSL_VERSION_NUMBER >= 0x00905100
+       }
+#endif
+       SSL_library_init();
+       SSL_load_error_strings(); 
+     }
+#endif
      return(0);
 }
 
