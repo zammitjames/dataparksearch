@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2004-2012 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1223,11 +1223,6 @@ static int dpsearch_mod_init( apr_pool_t *p, apr_pool_t *plog, apr_pool_t *ptemp
 				 MOD_DPSEARCH_VERSION_INFO_STRING);
 	DpsInit(0, NULL, NULL);        /* Initialize dpsearch library */
 
-#ifdef WITH_HTTPS
-	SSL_library_init();
-	SSL_load_error_strings(); 
-#endif
-	
 	DpsInitMutexes();
 #ifdef APACHE2
 	return OK;
