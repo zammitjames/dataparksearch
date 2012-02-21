@@ -12,7 +12,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA 
 */
 #include "php.h"
 #include "php_globals.h"
@@ -148,6 +148,12 @@ static void _dps_res_free(zend_rsrc_list_entry *rsrc TSRMLS_DC) {
 
 PHP_MINIT_FUNCTION(dpsearch) {
   DpsInit(0, NULL, NULL);
+
+#ifdef WITH_HTTPS
+  SSL_library_init();
+  SSL_load_error_strings(); 
+#endif
+	
   DpsInitMutexes();
 
   le_agent = zend_register_list_destructors_ex(_dps_agent_free, NULL, "DataparkSearch agent", module_number);
