@@ -2174,7 +2174,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			/*DpsWordListSort(&Doc->Words);*/
 			if (Doc->Words.nwords > 0) {
 			  DPS_WORD *p_word = Doc->Words.Word;
-			  size_t wlen = Doc->Words.Word[0].ulen;
+			  size_t wlen = p_word->ulen;
 			  int rc = (wlen > Indexer->WordParam.max_word_len ||
 				    wlen < Indexer->WordParam.min_word_len ||
 				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
@@ -2184,6 +2184,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			      if (rc) Doc->Words.Word[wordnum].coord = 0;
 			    } else {
 			      p_word = Doc->Words.Word + wordnum;
+			      wlen = p_word->ulen;
 			      rc = (wlen > Indexer->WordParam.max_word_len ||
 				    wlen < Indexer->WordParam.min_word_len ||
 				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
@@ -2195,7 +2196,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			/*DpsCrossListSort(&Doc->CrossWords);*/
 			if (Doc->CrossWords.ncrosswords > 0) {
 			  DPS_CROSSWORD *p_word = Doc->CrossWords.CrossWord;
-			  size_t wlen = Doc->CrossWords.CrossWord[0].ulen;
+			  size_t wlen = p_word->ulen;
 			  int rc = (wlen > Indexer->WordParam.max_word_len ||
 				    wlen < Indexer->WordParam.min_word_len ||
 				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
@@ -2205,6 +2206,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 			      if (rc) Doc->CrossWords.CrossWord[wordnum].weight = 0;
 			    } else {
 			      p_word = Doc->CrossWords.CrossWord + wordnum;
+			      wlen = p_word->ulen;
 			      rc = (wlen > Indexer->WordParam.max_word_len ||
 				    wlen < Indexer->WordParam.min_word_len ||
 				    DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? cont_lang : "" ) != NULL);
@@ -2705,7 +2707,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		  /*DpsWordListSort(&Doc->Words);*/
 		  if (Doc->Words.nwords > 0) {
 		    DPS_WORD *p_word = Doc->Words.Word;
-		    size_t wlen = Doc->Words.Word[0].ulen;
+		    size_t wlen = p_word->ulen;
 		    int rc = (wlen > Indexer->WordParam.max_word_len ||
 			      wlen < Indexer->WordParam.min_word_len ||
 			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
@@ -2715,6 +2717,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			if (rc) Doc->Words.Word[wordnum].coord = 0;
 		      } else {
 			p_word = Doc->Words.Word + wordnum;
+			wlen = p_word->ulen;
 			rc = (wlen > Indexer->WordParam.max_word_len ||
 			      wlen < Indexer->WordParam.min_word_len ||
 			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
@@ -2726,7 +2729,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 		  /*DpsCrossListSort(&Doc->CrossWords);*/
 		  if (Doc->CrossWords.ncrosswords > 0) {
 		    DPS_CROSSWORD *p_word = Doc->CrossWords.CrossWord;
-		    size_t wlen = Doc->CrossWords.CrossWord[0].ulen;
+		    size_t wlen = p_word->ulen;
 		    int rc = (wlen > Indexer->WordParam.max_word_len ||
 			      wlen < Indexer->WordParam.min_word_len ||
 			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
@@ -2736,6 +2739,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 			if (rc) Doc->CrossWords.CrossWord[wordnum].weight = 0;
 		      } else {
 			p_word = Doc->CrossWords.CrossWord + wordnum;
+			wlen = p_word->ulen;
 			rc = (wlen > Indexer->WordParam.max_word_len ||
 			      wlen < Indexer->WordParam.min_word_len ||
 			      DpsStopListFind(&Indexer->Conf->StopWords, p_word->uword, (Indexer->flags & DPS_FLAG_STOPWORDS_LOOSE) ? lang : "" ) != NULL);
