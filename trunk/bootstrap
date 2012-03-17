@@ -1,7 +1,14 @@
 #! /bin/sh
+echo "aclocal"
 aclocal \
+&& echo "libtoolize" \
 && libtoolize --copy --force \
+&& echo "automake" \
 && automake --foreign --force-missing --add-missing --copy Makefile \
+&& echo "automake 2nd" \
 && automake -a --copy \
-&& autoconf 
+&& echo "autoconf" \
+&& autoconf \
+&& echo "Done."
+
 

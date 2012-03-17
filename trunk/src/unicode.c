@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -83,7 +83,8 @@ dpsunicode_t *DpsUniRDup(const dpsunicode_t *s) {
 
 /* Compare unicode strings */
 
-int DpsUniStrCmp(const dpsunicode_t * s1, const dpsunicode_t * s2) {
+int DpsUniStrCmp(const dpsunicode_t * u1, const dpsunicode_t * u2) {
+  register dpsunicode_t *s1 = u1, *s2 = u2;
   while (*s1 == *s2) {
     if (*s1 == 0)
       return (0);
@@ -93,8 +94,8 @@ int DpsUniStrCmp(const dpsunicode_t * s1, const dpsunicode_t * s2) {
   return 1;
 }
 
-int DpsUniStrCaseCmp(const dpsunicode_t *s1, const dpsunicode_t * s2) {
-  register dpsunicode_t d1, d2;
+int DpsUniStrCaseCmp(const dpsunicode_t *u1, const dpsunicode_t * u2) {
+  register dpsunicode_t d1, d2, *s1 = u1, *s2 = u2;
   if (s1 == NULL && s2 == NULL) return 0;
   if (s1 == NULL) return -1;
   if (s2 == NULL) return 1;
