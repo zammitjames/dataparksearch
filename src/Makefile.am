@@ -6,8 +6,7 @@ dps_sharedir=$(pkgdatadir)
 else
 dps_sharedir=$(datadir)
 endif
-#AM_CFLAGS = -DDPS_CONF_DIR=\"@sysconfdir@\" -DDPS_VAR_DIR=\"@localstatedir@\" -DDPS_SHARE_DIR=\"$(dps_sharedir)\"
-CFLAGS = @CFLAGS@ -DDPS_CONF_DIR=\"@sysconfdir@\" -DDPS_VAR_DIR=\"@localstatedir@\" -DDPS_SHARE_DIR=\"$(dps_sharedir)\"
+AM_CFLAGS = -DDPS_CONF_DIR=\"@sysconfdir@\" -DDPS_VAR_DIR=\"@localstatedir@\" -DDPS_SHARE_DIR=\"$(dps_sharedir)\"
 
 
 if THREADSLESS
@@ -28,52 +27,52 @@ EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php
 splitter_SOURCES = splitter.c
 splitter_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 splitter_LDFLAGS = @PTHREAD_LFLAGS@
-splitter_CFLAGS = @PTHREAD_CFLAGS@
+splitter_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 searchd_SOURCES = searchd.c
 searchd_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 searchd_LDFLAGS = @PTHREAD_LFLAGS@
-searchd_CFLAGS = @PTHREAD_CFLAGS@
+searchd_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 stored_SOURCES = stored.c
 stored_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 stored_LDFLAGS = @PTHREAD_LFLAGS@
-stored_CFLAGS = @PTHREAD_CFLAGS@
+stored_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 indexer_SOURCES = main.c
 indexer_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 indexer_LDFLAGS = @PTHREAD_LFLAGS@
-indexer_CFLAGS = @PTHREAD_CFLAGS@
+indexer_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 search_cgi_SOURCES = search.c
 search_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 search_cgi_LDFLAGS = @PTHREAD_LFLAGS@
-search_cgi_CFLAGS = @PTHREAD_CFLAGS@
+search_cgi_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 storedoc_cgi_SOURCES = storedoc.c
 storedoc_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 storedoc_cgi_LDFLAGS = @PTHREAD_LFLAGS@
-storedoc_cgi_CFLAGS = @PTHREAD_CFLAGS@
+storedoc_cgi_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 filler_cgi_SOURCES = filler.c
 filler_cgi_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 filler_cgi_LDFLAGS = @PTHREAD_LFLAGS@
-filler_cgi_CFLAGS = @PTHREAD_CFLAGS@
+filler_cgi_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 dpguesser_SOURCES = dpguesser.c
 dpguesser_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 dpguesser_LDFLAGS = @PTHREAD_LFLAGS@  
-dpguesser_CFLAGS = @PTHREAD_CFLAGS@
+dpguesser_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 dpconv_SOURCES = dpconv.c
 dpconv_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 dpconv_LDFLAGS = @PTHREAD_LFLAGS@  
-dpconv_CFLAGS = @PTHREAD_CFLAGS@
+dpconv_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 cached_SOURCES = cached.c
 cached_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 cached_LDFLAGS = @PTHREAD_LFLAGS@  
-cached_CFLAGS = @PTHREAD_CFLAGS@
+cached_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 libdp_la_SOURCES = dp.c
 libdp_la_LDFLAGS = -release @DPS_BASE_VERSION@
@@ -103,7 +102,7 @@ libdpcharset_la_DEPENDENCIES = libdp.la
 sgml.c: sgml.inc
 
 sgml.inc: sgml.entities
-	cat sgml.entities | sort -k 2 > sgml.inc
+	cat sgml.entities | perl -e '@s=<STDIN>; @d = sort @s; print @d; ' > sgml.inc
 
 conf.c: commands.inc
 
@@ -114,7 +113,6 @@ utils.c: timezones.inc
 
 timezones.inc: timezones.lst
 	cat timezones.lst | perl -e '@l=<STDIN>;@s=sort(@l);foreach $$i (@s) { print $$i;}' > timezones.inc
-#	cat timezones.lst | sort -ifk 1 > timezones.inc
 
 
 if THREADSLESS
@@ -130,7 +128,7 @@ efence.c ef_page.c ef_print.c filence.c
 libdpsearch_mod_la_LIBADD = libdp.la @MODLIB@ 
 
 if APACHEMODULE
-libdpsearch_mod_la_CFLAGS = -DAPACHE@APACHE_VER@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS) $(APACHE_NOTEST_CPPFLAGS) $(APACHE_EXTRA_CPPFLAGS) $(APACHE_EXTRA_CFLAGS)
+libdpsearch_mod_la_CFLAGS = $(AM_CFLAGS) -DAPACHE@APACHE_VER@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS) $(APACHE_NOTEST_CPPFLAGS) $(APACHE_EXTRA_CPPFLAGS) $(APACHE_EXTRA_CFLAGS)
 endif
 
 libdpsearch_mod_la_LDFLAGS = -release @DPS_BASE_VERSION@
@@ -138,6 +136,8 @@ libdpsearch_mod_la_DEPENDENCIES = libdpcharset.la libdp.la
 
 endif
 
+
+# Rules specific for Apache module
 
 if APACHEMODULE
 
@@ -151,18 +151,14 @@ endif
 if THREADSLESS
 
 mod_dpsearch_so_LDADD = libdpsearch_mod.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la 
-libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@
+libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 else
 
 mod_dpsearch_so_LDADD = libdpsearch.la libdpcharset.la @APACHE_LIBS_SHLIB@ libdp.la 
-libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS)
+libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@ -I@APACHE_INCDIR@ $(APACHE_CFLAGS) $(AM_CFLAGS)
 
 endif
-
-
-# Rules specific for Apache module
-# $(LIBTOOL) --mode=link -c
 
 
 if APACHE2
@@ -172,14 +168,6 @@ mod_dpsearch.so$(EXEEXT): $(mod_dpsearch_so_SOURCES) $(mod_dpsearch_so_DEPENDENC
 	     -DDPS_CONF_DIR=\\\"@sysconfdir@\\\" -DDPS_VAR_DIR=\\\"$(localstatedir)\\\" \
 	     $(mod_dpsearch_so_SOURCES) $(mod_dpsearch_so_LDFLAGS) $(mod_dpsearch_so_LDADD); 
 
-#install-exec-local: mod_dpsearch.so$(EXEEXT)
-#	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR); 
-#	if test -f .libs/mod_dpsearch.so$(EXEEXT); then \
-#		$(APXS) -i -n dpsearch .libs/mod_dpsearch.so$(EXEEXT); \
-#	else \
-#		$(APXS) -i -n dpsearch mod_dpsearch.so$(EXEEXT); \
-#	fi
-
 else
 
 mod_dpsearch.so$(EXEEXT): $(mod_dpsearch_so_SOURCES) $(mod_dpsearch_so_DEPENDENCIES) 
@@ -187,48 +175,22 @@ mod_dpsearch.so$(EXEEXT): $(mod_dpsearch_so_SOURCES) $(mod_dpsearch_so_DEPENDENC
 	     -DDPS_CONF_DIR=\\\"@sysconfdir@\\\" -DDPS_VAR_DIR=\\\"$(localstatedir)\\\" \
 	     $(mod_dpsearch_so_SOURCES) $(mod_dpsearch_so_LDFLAGS) $(mod_dpsearch_so_LDADD); 
 
-#install-exec-local: mod_dpsearch.so$(EXEEXT)
-#	$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR);
-#	$(LIBTOOL) --mode=install $(INSTALL) mod_dpsearch.so $(DESTDIR)$(APACHE_MODDIR);
-
 endif
 
-#mod_dpsearch.so$(EXEEXT): $(mod_dpsearch_so_SOURCES) $(mod_dpsearch_so_DEPENDENCIES) 
-#	if test "x$(APACHE_MODULE)" != "x"; then \
-#	    $(LIBTOOL) --mode=link $(APXS) -c $(mod_dpsearch_so_SOURCES) -o $@ $(INCLUDES) \
-#	     $(CFLAGS) $(mod_dpsearch_so_CFLAGS) $(mod_dpsearch_so_LDFLAGS) $(mod_dpsearch_so_LDADD) ; \
-#	fi
-
-#APACHE_MODDIR = @APACHE_MODDIR@
-#	$(APXS) -i $(DESTDIR)$(sbindir)/mod_dpsearch.so$(EXEEXT)
-#	if test -d .libs/.libs; then \
-#		cp .libs/mod_* ./; \
-#		mv .libs/.libs/* ./libs; \
-#		rmdir .libs/.libs; \
-#	fi 
-#	if test -d .libs/.libs; then \
-#		$(LIBTOOL) --mode=install $(INSTALL) .libs/.libs/mod_dpsearch.so$(EXEEXT) $(DESTDIR)$(APACHE_MODDIR); \
-#	else \
-#		$(LIBTOOL) --mode=install $(INSTALL) mod_dpsearch.so$(EXEEXT) $(DESTDIR)$(APACHE_MODDIR); \
-#	fi 
-##	if test "x$(APACHE_MODULE)" != "x"; then \
-##		$(mkinstalldirs) $(DESTDIR)$(APACHE_MODDIR); \
-##		$(INSTALL) mod_dpsearch.so \
-##			$(DESTDIR)$(APACHE_MODDIR); \
-##	fi
 else
 
-libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@
+libdpsearch_la_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 #install-exec-local:
 
 endif
 
 
+# Rules specific for PHP module
 
 if PHPMODULE
 
 dpsearch_so_SOURCES=php.c
-dpsearch_so_CFLAGS=-fpic -DCOMPILE_DL=1 @PHP_INCLUDES@
+dpsearch_so_CFLAGS=-fpic -DCOMPILE_DL=1 @PHP_INCLUDES@ $(AM_CFLAGS)
 dpsearch_so_LDFLAGS=-shared -L/usr/local/lib -rdynamic
 dpsearch_so_LDADD=libdpsearch.la libdpcharset.la libdp.la 
 

@@ -245,11 +245,11 @@ fi
 
 dnl Check for libc performance
 AC_MSG_CHECKING(for libc functions performance, please be patient)
-AC_RUN_IFELSE([
+AC_RUN_IFELSE([AC_LANG_SOURCE([
 #include "confdefs.h"
 #define DPS_CONFIGURE
 #include "src/dp.c"
-], AC_MSG_RESULT(done), AC_MSG_FAILURE(unable to complete tests), AC_MSG_RESULT(cross-compiling?)
+])], AC_MSG_RESULT(done), AC_MSG_FAILURE(unable to complete tests), AC_MSG_RESULT(cross-compiling?)
 )
 
 dnl Check for libraries
@@ -1445,10 +1445,13 @@ AC_ARG_WITH(readline,
     AC_MSG_RESULT([no])
   fi
 
-AC_DIVERT_PUSH(0)
+#AC_DIVERT_PUSH(0)
+ifdef([AC_DIVERSION_NOTICE], [AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)],
+			      [AC_DIVERT_PUSH(NOTICE)])
 define(DCHARSETS_AVAILABLE,chinese japanese euc-kr gujarati tscii)
 CHARSETS_AVAILABLE="DCHARSETS_AVAILABLE"
-AC_DIVERT_POP
+#AC_DIVERT_POP
+AC_DIVERT_POP()dnl
 
 AC_ARG_WITH(extra-charsets,
   [  --with-extra-charsets=CHARSET[,CHARSET,...]
