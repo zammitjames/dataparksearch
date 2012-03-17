@@ -3530,11 +3530,6 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    notfirst = 1;
 	  }
 	  if (Indexer->flags & DPS_FLAG_SORT_SEED) {
-#ifdef HAVE_PTHREAD
-	    int dir = rand_r(&Indexer->seed) % 2;
-#else
-	    int dir = rand() % 2;
-#endif
 	    if(db->DBSQL_LIMIT){
 	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s LIMIT 10", db->from, 
 		       (Indexer->Flags.cmd == DPS_IND_POPRANK) ? "next_index_time>" : "next_index_time<=",
@@ -3550,13 +3545,11 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes, qbuf))) goto unlock;
 	    if ((nrows = DpsSQLNumRows(&SQLRes)) > 0) {
 	      if (Indexer->flags & DPS_FLAG_SORT_SEED2) {
-		dps_snprintf(smallbuf, sizeof(smallbuf), "AND seed%c=%s", (dir) ? '>' : '<', DpsSQLValue(&SQLRes, 
 #ifdef HAVE_PTHREAD
-													 rand_r(&Indexer->seed) % nrows,
+		int dir = rand_r(&Indexer->seed) % 2;
 #else
-													 rand() % nrows,
+		int dir = rand() % 2;
 #endif
-													 0));
 		sprintf(DPS_STREND(sortstr), "%s %s", (notfirst) ? ",seed" : "ORDER BY seed", (dir) ? "" : "DESC");
 		notfirst = 1;
 	      } else {
