@@ -1757,7 +1757,7 @@ int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
   z_stream zstream;
   DPS_BASE_PARAM P;
   DPS_DB *db;
-  int chunk, i; size_t OldOut;
+  int chunk, i, rc; size_t OldOut;
 
   if (DpsRecvall(ns, &rec_id, sizeof(rec_id), 360) < 0) {
     return DPS_ERROR;
@@ -1822,7 +1822,14 @@ int DpsStoreGetByChunks(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
       }
       if (chunk == 0) break;
       zstream.avail_out = DPS_DOCHUNKSIZE;
-      inflate(&zstream, Z_SYNC_FLUSH);
+      rc = inflate(&zstream, Z_SYNC_FLUSH);
+      if (Z_OK != rc) {
+	DocSize = 0;
+	DpsSend(sd, &DocSize, sizeof(DocSize), 0);
+	if (rc == Z_STREAM_END) break;
+	DpsLog(Agent, DPS_LOG_ERROR, "[%s] inflate error at %s:{%d}", Client, __FILE__, __LINE__);
+	ABORT(DPS_ERROR);
+      }
                     
       DocSize = zstream.total_out - OldOut;
       DpsSend(sd, &DocSize, sizeof(DocSize), 0);
