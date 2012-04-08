@@ -17050,8 +17050,7 @@ fi
 $as_echo "$aspell" >&6; }
 
     else
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: No aspell.h has been found." >&5
-$as_echo "No aspell.h has been found." >&6; }
+	as_fn_error $? "No aspell.h has been found." "$LINENO" 5
     fi
 
 
