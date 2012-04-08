@@ -3512,11 +3512,6 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	     || (Indexer->flags & DPS_FLAG_SORT_SEED)  ) {
 	  int notfirst = 0;
 
-	  if (DpsVarListFind(&Indexer->Vars, "status") == NULL) {
-	    sprintf(sortstr, "%s", "ORDER BY url.status");
-	    notfirst = 1;
-	  }
-
 	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
 	    notfirst = 1;
@@ -3568,6 +3563,11 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",s.pop_weight" : "ORDER BY s.pop_weight");
 	    notfirst = 1;
 	  }
+	  if (DpsVarListFind(&Indexer->Vars, "status") == NULL) {
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",url.status" : "ORDER BY url.status");
+	    notfirst = 1;
+	  }
+
 	} else { /* No sorting flag specified, order by status */
 	    sprintf(sortstr, "%s", "ORDER BY url.status");
 	}
