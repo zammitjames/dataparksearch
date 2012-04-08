@@ -1411,7 +1411,7 @@ elif test "$aspell" = "yes" ; then
 	AC_MSG_RESULT([$aspell])
 
     else
-	AC_MSG_RESULT([No aspell.h has been found.])
+	AC_MSG_ERROR([No aspell.h has been found.])
     fi
 
 
