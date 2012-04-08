@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2005-2012 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
   DPS_TEXTITEM Item;
   DPS_VAR	*Sec;
   dpsunicode_t *sentence, *lt, savec;
-  double *links, w;
+  double *links, *lang_cs, w;
   /*  double delta, pdiv, cur_div, dw;*/
   size_t l, sent_len;
   size_t min_len = 10000000, min_pos = 0;
@@ -139,20 +139,34 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
     TRACE_OUT(Indexer);
     return DPS_OK; 
   }
-  for (i = 0; i < List.nitems; i++)
-    DpsPrepareLangMap6(&List.Sent[i].LangMap);
 
   links = (double*)DpsMalloc(sizeof(double) * List.nitems * List.nitems);
+  lang_cs = (double*)DpsMalloc(sizeof(double) * List.nitems);
 /*
         k                 ot
   links[i * List.nitems + j] 
 */
 
-  if (links != NULL) {
+  if (links != NULL && lang_cs != NULL) {
+
+    for (i = 0; i < List.nitems; i++) {
+      DpsPrepareLangMap6(&List.Sent[i].LangMap);
+    }
+
     for (i = 0; i < List.nitems; i++) {
       List.Sent[i].Oi =  HI_BORDER_EPS / (List.nitems + 1);
       List.Sent[i].pas = -0.499999;
-      links[i * List.nitems + i] = 1.0 /* / List.nitems*/;
+      if (Doc->lang_cs_map == NULL) {
+	links[i * List.nitems + i] = 1.0 /* / List.nitems*/;
+      } else {
+	MapStat.map = &List.Sent[i].LangMap;
+	DpsCheckLangMap6(Doc->lang_cs_map, &List.Sent[i].LangMap, &MapStat, DPS_LM_TOPCNT * DPS_LM_TOPCNT, 2 * DPS_LM_TOPCNT);
+	links[i * List.nitems + i] = (MapStat.miss == 0 || MapStat.hits == 0) ? 0.0 :
+	  (DPS_LM_TOPCNT * DPS_LM_TOPCNT / 2 - (double)MapStat.miss) / (DPS_LM_TOPCNT * DPS_LM_TOPCNT / 2 + (double)MapStat.hits/DPS_LM_TOPCNT) / (List.nitems + 1);
+      }
+#ifdef DEBUG
+      DpsLog(Indexer, DPS_LOG_INFO, "Link %u->%u: %f [hits:%d miss:%d]", i, i, links[i * List.nitems + i], MapStat.hits, MapStat.miss);
+#endif
       for (j = i + 1/*0*/; j < List.nitems; j++) {
 /*	if (i == j) { links[i * List.nitems + j] = 1.0 / List.nitems; continue; }*/
 	MapStat.map = &List.Sent[j].LangMap;
@@ -164,7 +178,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	  ((double)List.nitems / (double)(DPS_LM_TOPCNT * MapStat.miss + MapStat.hits));*/
 
 	links[j * List.nitems + i] = links[i * List.nitems + j] = (MapStat.miss == 0 || MapStat.hits == 0) ? 0.0 :
-	  (DPS_LM_TOPCNT - (double)MapStat.miss) / (DPS_LM_TOPCNT + (double)MapStat.hits/DPS_LM_TOPCNT) / (List.nitems + 1);
+	  (DPS_LM_TOPCNT * DPS_LM_TOPCNT / 2 - (double)MapStat.miss) / (DPS_LM_TOPCNT * DPS_LM_TOPCNT / 2 + (double)MapStat.hits/DPS_LM_TOPCNT) / (List.nitems + 1);
 #ifdef DEBUG
 	DpsLog(Indexer, DPS_LOG_INFO, "Link %u->%u: %f [hits:%d miss:%d]", i, j, links[i * List.nitems + j], MapStat.hits, MapStat.miss);
 #endif
@@ -278,8 +292,9 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 		     );
       DPS_FREE(UStr);
     }
-    DPS_FREE(links);
   }
+  DPS_FREE(lang_cs);
+  DPS_FREE(links);
   for (i = 0; i < List.nitems; i++) DPS_FREE(List.Sent[i].sentence);
   DPS_FREE(List.Sent);
 

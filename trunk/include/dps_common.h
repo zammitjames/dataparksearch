@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2004-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -667,6 +667,7 @@ typedef struct {
 	DPS_CHARSET		*lcs;		/**< LocalCharser */
 	DPS_SPIDERPARAM		Spider;		/**< Spider prms  */
 	DPS_CONN		connp;		/**< For FTP      */
+        DPS_LANGMAP             *lang_cs_map;   /**< Language map for detected language and charset, used in SEA */
 	
         dps_uint2               dbnum;
 } DPS_DOCUMENT;
