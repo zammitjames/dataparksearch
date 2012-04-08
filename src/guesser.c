@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1395,7 +1395,7 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
 }
 #endif
 
-int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *List,DPS_LANGMAP *LangMap){
+int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *List, DPS_LANGMAP *LangMap) {
      DPS_CHARSET * cs;
      DPS_MAPSTAT * mapstat = NULL;
      DPS_LANGMAP *Cmap;
@@ -1611,36 +1611,37 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
        fprintf(stderr, "Guesser start0: lang: %s, charset: %s\n", DPS_NULL2EMPTY(lang), DPS_NULL2EMPTY(charset));
 #endif
 
-    u = Indexer->Flags.update_lm;
+     Doc->lang_cs_map = FindLangMap(&Indexer->Conf->LangMaps, lang, charset, NULL, 0);
+     u = Indexer->Flags.update_lm;
 
-    if (u) {
+     if (u) {
 
-      if (use_meta) {
-	u = (strcasecmp(server_lang, meta_lang) == 0);
-	if (u) u = (*server_lang != '\0');
-	if (u && DpsHaveLanguageCanonicalName(server_lang) != NULL) { /* A known language is specified */
-	  u = (forte_lang || strcasecmp(server_lang, DPS_NULL2EMPTY(lang0)) == 0);
-	}
-	if (u) u = (strcasecmp(server_charset, meta_charset) == 0);
-	if (u) u = (*server_charset != '\0');
-	if (u && DpsCharsetCanonicalName(server_charset) != NULL) { /* A known charset is specified */
-	  u = (forte_charset || strcasecmp(server_charset, DPS_NULL2EMPTY(charset0)) == 0);
-	}
-      } else {
-	u = (*server_lang != '\0');
-	if (u) u = (*server_charset != '\0');
-	if ( DpsHaveLanguageCanonicalName(server_lang) != NULL)
-	  u = (forte_lang || strcasecmp(server_lang, DPS_NULL2EMPTY(lang0)) == 0);
-	if (u && DpsCharsetCanonicalName(server_charset) != NULL) {
-	  u = (forte_lang || strcasecmp(server_charset, DPS_NULL2EMPTY(charset0)) == 0);
-	}
-      }
-    }
+       if (use_meta) {
+	 u = (strcasecmp(server_lang, meta_lang) == 0);
+	 if (u) u = (*server_lang != '\0');
+	 if (u && DpsHaveLanguageCanonicalName(server_lang) != NULL) { /* A known language is specified */
+	   u = (forte_lang || strcasecmp(server_lang, DPS_NULL2EMPTY(lang0)) == 0);
+	 }
+	 if (u) u = (strcasecmp(server_charset, meta_charset) == 0);
+	 if (u) u = (*server_charset != '\0');
+	 if (u && DpsCharsetCanonicalName(server_charset) != NULL) { /* A known charset is specified */
+	   u = (forte_charset || strcasecmp(server_charset, DPS_NULL2EMPTY(charset0)) == 0);
+	 }
+       } else {
+	 u = (*server_lang != '\0');
+	 if (u) u = (*server_charset != '\0');
+	 if ( DpsHaveLanguageCanonicalName(server_lang) != NULL)
+	   u = (forte_lang || strcasecmp(server_lang, DPS_NULL2EMPTY(lang0)) == 0);
+	 if (u && DpsCharsetCanonicalName(server_charset) != NULL) {
+	   u = (forte_lang || strcasecmp(server_charset, DPS_NULL2EMPTY(charset0)) == 0);
+	 }
+       }
+     }
 
-    if (u) {
+     if (u) {
 
-      Cmap = FindLangMap(&Indexer->Conf->LangMaps, (have_server_lang) ? server_lang : meta_lang, 
-			 (server_charset != NULL) ? server_charset : meta_charset, NULL, 1);
+       Cmap = FindLangMap(&Indexer->Conf->LangMaps, (have_server_lang) ? server_lang : meta_lang, 
+			  (server_charset != NULL) ? server_charset : meta_charset, NULL, 1);
        if (Cmap != NULL) {
 /*	 DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = Cmap->lang);*/
 
@@ -1662,11 +1663,11 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc,DPS_LANGMAPLIST *Lis
 #endif
 		"Lang map: %s.%s updated", Cmap->lang, Cmap->charset);
        }
-    }
-    DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-    cs = DpsGetCharSet(DpsVarListFindStr(&Doc->Sections, "Charset", "iso8859-1"));
-    if (cs) Doc->charset_id = cs->id;
-    DPS_FREE(server_lang); DPS_FREE(meta_lang); DPS_FREE(charset0); DPS_FREE(lang0);
-    DpsVarListDel(&Doc->Sections, "URL_ID"); /* since we've changed Content-Language */
-    return DPS_OK;
+     }
+     DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
+     cs = DpsGetCharSet(DpsVarListFindStr(&Doc->Sections, "Charset", "iso8859-1"));
+     if (cs) Doc->charset_id = cs->id;
+     DPS_FREE(server_lang); DPS_FREE(meta_lang); DPS_FREE(charset0); DPS_FREE(lang0);
+     DpsVarListDel(&Doc->Sections, "URL_ID"); /* since we've changed Content-Language */
+     return DPS_OK;
 }
