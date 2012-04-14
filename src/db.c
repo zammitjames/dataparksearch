@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1526,6 +1526,13 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	  }
 	}
 
+	if (res != DPS_OK) {
+	  DpsResultFree(Res);
+	  A->Res = NULL;
+	  TRACE_OUT(A);
+	  return NULL;
+	}
+
 	DpsFindWords(A, Res);
 
 	Res->first = page_number * page_size;	
@@ -1541,6 +1548,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 	if (Res->num_rows > 0) {
 	  Res->Doc = (DPS_DOCUMENT*)DpsMalloc(sizeof(DPS_DOCUMENT) * (Res->num_rows));
 	  if (Res->Doc == NULL) {
+	    DpsResultFree(Res);
 	    A->Res = NULL;
 	    TRACE_OUT(A);
 	    return NULL;
@@ -1615,6 +1623,7 @@ DPS_RESULT * __DPSCALL DpsFind(DPS_AGENT *A) {
 			if(Cl){
 				Res->Doc=(DPS_DOCUMENT*)DpsRealloc(Res->Doc,sizeof(DPS_DOCUMENT)*(Res->num_rows+Cl->num_rows+1));
 				if (Res->Doc == NULL) {
+				  DpsResultFree(Res);
 				  A->Res = NULL;
 				  TRACE_OUT(A);
 				  return NULL;
