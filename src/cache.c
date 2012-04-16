@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1871,7 +1871,7 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	DPS_SEARCH_LIMIT *lims = NULL;
 	size_t nlims = 0, num, nskipped, orig_size;
 	urlid_t cur_url_id;
-	int flag_null_wf, group_by_site;
+	int flag_null_wf, group_by_site, use_site_id;
 	int use_empty = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "empty", "yes"), "yes");
 	
 #ifdef DEBUG_SEARCH
@@ -2251,6 +2251,35 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	Res->grand_total = Res->CoordList.ncoords;
 
 
+	group_by_site = DpsGroupBySiteMode(DpsVarListFindStr(&Indexer->Vars, "GroupBySite", NULL));
+	use_site_id = group_by_site && (DpsVarListFindInt(&Indexer->Vars, "site", 0) == 0);
+
+	if (use_site_id && (group_by_site == DPS_GROUP_FULL)) {
+
+#ifdef DEBUG_SEARCH
+	  DpsLog(Indexer, DPS_LOG_EXTRA, "    Sorting by site_id... ");
+	  ticks = DpsStartTimer();
+#endif
+	  if (Res->CoordList.ncoords > 1) 
+	    DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&Indexer->Vars, "s", "RP"));
+
+#ifdef DEBUG_SEARCH
+	  ticks=DpsStartTimer() - ticks;
+	  DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
+#endif
+
+#ifdef DEBUG_SEARCH
+	  DpsLog(Indexer, DPS_LOG_EXTRA, "    Grouping by site_id... ");
+	  ticks = DpsStartTimer();
+#endif
+	  DpsGroupBySite(Indexer, Res);
+
+#ifdef DEBUG_SEARCH
+	  ticks=DpsStartTimer() - ticks;
+	  DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
+#endif
+	}
+
 #ifdef DEBUG_SEARCH
 	DpsLog(Indexer, DPS_LOG_EXTRA, "    Sort by relevancy,pop_rank... ");
 	ticks = DpsStartTimer();
@@ -2264,41 +2293,19 @@ int DpsFindWordsCache(DPS_AGENT * Indexer, DPS_RESULT *Res, DPS_DB *db) {
 	DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
 #endif
 
-	group_by_site = DpsGroupBySiteMode(DpsVarListFindStr(&Indexer->Vars, "GroupBySite", NULL));
-
-	if (group_by_site && (DpsVarListFindInt(&Indexer->Vars, "site", 0) == 0)) {
-
-	  if (group_by_site == DPS_GROUP_FULL) {
-
-#ifdef DEBUG_SEARCH
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "    Sorting by site_id... ");
-	    ticks = DpsStartTimer();
-#endif
-
-	    if (Res->CoordList.ncoords > 1) 
-	      DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&Indexer->Vars, "s", "RP"));
-
-#ifdef DEBUG_SEARCH
-	    ticks=DpsStartTimer() - ticks;
-	    DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
-#endif
-	  }
+	if (use_site_id && (group_by_site == DPS_GROUP_YES)) {
 
 #ifdef DEBUG_SEARCH
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "    Grouping by site_id... ");
 	  ticks = DpsStartTimer();
 #endif
-
 	  DpsGroupBySite(Indexer, Res);
 
 #ifdef DEBUG_SEARCH
 	  ticks=DpsStartTimer() - ticks;
 	  DpsLog(Indexer, DPS_LOG_EXTRA, "\t\tDone (%.2f)", (float)ticks / 1000);
 #endif
-
 	}
-
-
 	
 
 	Res->total_found = Res->CoordList.ncoords;
@@ -2707,7 +2714,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	if (FF == NULL) { TRACE_OUT(Indexer); return DPS_ERROR;}
 
 	if (db->DBType != DPS_DB_CACHE) {
-	  dps_snprintf(str, sizeof(str), "SELECT MIN(weight), MAX(weight) FROM server WHERE command='S' AND parent != 0");
+	  dps_snprintf(str, sizeof(str), "SELECT MIN(weight), MAX(weight) FROM server WHERE command='S'");
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
 	  rc = DpsSQLQuery(db, &SQLres, str);
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
@@ -2764,7 +2771,10 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 8))) / log(2.8 + max_shows) 
 		* log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(2.8 + scale_weight);
 	    } else {
+	      /*
 	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(2.8 + scale_weight);
+	      */
+	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2));
 	    }
 	    if ((Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 3))) == 0) {
 	      Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 4));

@@ -1352,11 +1352,12 @@ int DpsFindWords(DPS_AGENT *A, DPS_RESULT *Res) {
 	    }
 	    if (p + 1 < Res->CoordList.ncoords) Res->CoordList.ncoords = Res->total_found = p + 1;
 	    
+	    if (use_site_id && (group_by_site == DPS_GROUP_FULL)) {
+	      DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
+	      DpsGroupBySite(A, Res);
+	    }
 	    DpsSortSearchWordsByPattern(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
-	    if (use_site_id) {
-	      if (group_by_site == DPS_GROUP_FULL) {
-		DpsSortSearchWordsBySite(Res, &Res->CoordList, Res->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
-	      }
+	    if (use_site_id && (group_by_site == DPS_GROUP_YES)) {
 	      DpsGroupBySite(A, Res);
 	    }
 	    Res->total_found = Res->CoordList.ncoords;
