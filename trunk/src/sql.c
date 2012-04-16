@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -4501,13 +4501,6 @@ static int DpsSortAndGroupByURL(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db){
 	int group_by_site = DpsGroupBySiteMode(DpsVarListFindStr(&A->Vars, "GroupBySite", NULL));
 	int use_site_id = ( group_by_site && (DpsVarListFindInt(&A->Vars, "site", 0) == 0));
 /*****/
-#if 0
-	DpsLog(A,DPS_LOG_DEBUG,"Start sort by url_id %d words",R->CoordList.ncoords);
-	DpsSortSearchWordsByURL(R->CoordList.Coords, R->CoordList.ncoords);
-	ticks=DpsStartTimer()-ticks;
-	DpsLog(A,DPS_LOG_DEBUG,"Stop sort by url_id:\t%.2f",(float)ticks/1000);
-#endif
-
 	DpsLog(A,DPS_LOG_DEBUG,"Start group by url_id %d docs",R->CoordList.ncoords);
 	ticks=DpsStartTimer();
 	DpsGroupByURL(A, R);
@@ -4523,20 +4516,27 @@ static int DpsSortAndGroupByURL(DPS_AGENT *A, DPS_RESULT *R, DPS_DB *db){
 
 	R->grand_total = R->CoordList.ncoords;
 
+	if (use_site_id && (group_by_site == DPS_GROUP_FULL)) {
+	  DpsLog(A,DPS_LOG_DEBUG,"Start sort by site_id %d words",R->CoordList.ncoords);
+	  if (R->CoordList.ncoords > 1) 
+	    DpsSortSearchWordsBySite(R, &R->CoordList, R->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
+	  ticks=DpsStartTimer()-ticks;
+	  DpsLog(A,DPS_LOG_DEBUG,"Stop sort by site_id:\t%.2f",(float)ticks/1000);
+       
+	  DpsLog(A,DPS_LOG_DEBUG,"Start group by site_id %d docs", R->CoordList.ncoords);
+	  ticks=DpsStartTimer();
+	  DpsGroupBySite(A, R);
+	  ticks=DpsStartTimer() - ticks;
+	  DpsLog(A,DPS_LOG_DEBUG,"Stop group by site_id:\t%.2f", (float)ticks/1000);
+	}
+
 	DpsLog(A,DPS_LOG_DEBUG,"Start SORT by PATTERN %d words", R->CoordList.ncoords);
 	ticks=DpsStartTimer();
 	DpsSortSearchWordsByPattern(R, &R->CoordList, R->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
 	ticks=DpsStartTimer()-ticks;
 	DpsLog(A,DPS_LOG_DEBUG,"Stop SORT by PATTERN:\t%.2f",(float)ticks/1000);
 
-	if (use_site_id) {
-	  if (group_by_site == DPS_GROUP_FULL) {
-	    DpsLog(A,DPS_LOG_DEBUG,"Start sort by site_id %d words",R->CoordList.ncoords);
-	    if (R->CoordList.ncoords > 1) 
-	      DpsSortSearchWordsBySite(R, &R->CoordList, R->CoordList.ncoords, DpsVarListFindStr(&A->Vars, "s", "RP"));
-	    ticks=DpsStartTimer()-ticks;
-	    DpsLog(A,DPS_LOG_DEBUG,"Stop sort by site_id:\t%.2f",(float)ticks/1000);
-	  }
+	if (use_site_id && (group_by_site == DPS_GROUP_YES)) {
 	  DpsLog(A,DPS_LOG_DEBUG,"Start group by site_id %d docs", R->CoordList.ncoords);
 	  ticks=DpsStartTimer();
 	  DpsGroupBySite(A, R);
