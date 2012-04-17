@@ -2694,7 +2694,7 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	int *FF = NULL;
 	int upper_status = (Indexer->Flags.SubDocLevel > 0) ? 400 : 300;
 	int max_shows, use_showcnt = !strcasecmp(DpsVarListFindStr(&Indexer->Vars, "PopRankUseShowCnt", "no"), "yes");
-	int min_weight, scale_weight;
+	double min_weight, scale_weight;
 	const char	*vardir;
 	char fname[PATH_MAX];
 	char str[512];
@@ -2721,9 +2721,9 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	  if (rc != DPS_OK) {
 	    goto URLDataWrite_exit;
 	  }
-	  min_weight = DPS_ATOI(DpsSQLValue(&SQLres, 0, 0));
-	  scale_weight = DPS_ATOI(DpsSQLValue(&SQLres, 0, 1)) - min_weight + 1;
-	  min_weight--;
+	  min_weight = DPS_ATOF(DpsSQLValue(&SQLres, 0, 0));
+	  scale_weight = DPS_ATOF(DpsSQLValue(&SQLres, 0, 1)) - min_weight + 0.001;
+	  min_weight -= 0.001;
 	  DpsSQLFree(&SQLres);
 	
 
@@ -2771,10 +2771,11 @@ static int URLDataWrite(DPS_AGENT *Indexer, DPS_DB *db) {
 	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 8))) / log(2.8 + max_shows) 
 		* log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(2.8 + scale_weight);
 	    } else {
-	      /*
+	      
 	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2)) * log(2.8 + DPS_ATOF(DpsSQLValue(&SQLres, i, 7)) - min_weight) / log(2.8 + scale_weight);
-	      */
+	      /*
 	      Item.pop_rank = DPS_ATOF(DpsSQLValue(&SQLres, i, 2));
+	      */
 	    }
 	    if ((Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 3))) == 0) {
 	      Item.last_mod_time = DPS_ATOU(DpsSQLValue(&SQLres, i, 4));
