@@ -5145,6 +5145,175 @@ static int DpsSitemap(DPS_AGENT *A, DPS_DB *db) {
   return rc;
 }
 
+
+static int DpsFilter(DPS_AGENT *A, DPS_DB *db) {
+  char qbuf[1024];
+  DPS_SQLRES	SQLRes;
+  DPS_DOCUMENT	*Doc;
+  DPS_SERVER	*Server = NULL;
+  int u = 1, rc = DPS_OK;
+  urlid_t rec_id = 0;
+  size_t i, nrows, url_num = (size_t)DpsVarListFindUnsigned(&A->Vars, "URLSelectCacheSize", DPS_URL_SELECT_CACHE_SIZE);
+  const char *where;
+  int  prev_id = -1;
+  DPS_CHARSET	*doccs;
+  DPS_CHARSET	*loccs;
+  DPS_CONV        lc_dc;
+  long offset = 0L;
+
+  loccs = A->Conf->lcs;
+  if(!loccs) loccs = DpsGetCharSet("iso-8859-1");
+
+  where = BuildWhere(A, db);
+  if (where == NULL) return DPS_ERROR;
+
+  DpsSQLResInit(&SQLRes);
+
+  while (u) {
+
+    dps_snprintf(qbuf, sizeof(qbuf), "SELECT url.url,url.rec_id,docsize,status,hops,crc32,last_mod_time,since,pop_rank,charset_id,site_id,server_id FROM url%s WHERE %s %srec_id > %d ORDER BY rec_id LIMIT %d", 
+		 db->from, where[0] ? where : "", where[0] ? " AND ": "", rec_id, url_num);
+
+    if (A->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(A, DPS_LOCK_DB);
+    rc = DpsSQLQuery(db, &SQLRes, qbuf);
+    if (A->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(A, DPS_LOCK_DB);
+    if(DPS_OK != rc) {
+      return rc;
+    }
+    nrows = DpsSQLNumRows(&SQLRes);
+    for(i = 0; i < nrows; i++) {
+      char		buf[96]="";
+      time_t		last_mod_time, len;
+      const char *url, *alias = NULL;
+      char		*origurl = NULL, *aliasurl = NULL;
+      char *dc_url;
+
+      Doc = DpsDocInit(NULL);
+
+		DpsVarListReplaceLst(&Doc->Sections, &A->Conf->Sections, NULL, "*");
+		Doc->charset_id = DPS_ATOI(DpsSQLValue(&SQLRes, i, 9));
+		if (Doc->charset_id != prev_id) {
+		  doccs = DpsGetCharSetByID(prev_id = Doc->charset_id);
+		  if(!doccs) doccs = DpsGetCharSet("iso-8859-1");
+		  DpsConvInit(&lc_dc, loccs, doccs, A->Conf->CharsToEscape, DPS_RECODE_URL_FROM);
+		}	  
+		len = dps_strlen(url = DpsSQLValue(&SQLRes,i,0));
+		dc_url = (char*)DpsMalloc((size_t)(24 * len + 1));
+		if (dc_url == NULL) continue;
+		/* Convert URL from LocalCharset */
+		DpsConv(&lc_dc, dc_url, (size_t)24 * len,  url, (size_t)(len + 1));
+		DpsVarListReplaceStr(&Doc->Sections, "URL", dc_url);
+		DpsVarListReplaceStr(&Doc->Sections, "E_URL", url);
+
+		DpsVarListDel(&Doc->Sections, "URL_ID");
+
+		DpsVarListReplaceInt(&Doc->Sections, "DP_ID", rec_id = DPS_ATOI(DpsSQLValue(&SQLRes,i,1)));
+		DpsVarListReplaceInt(&Doc->Sections, "Content-Length", DPS_ATOI(DpsSQLValue(&SQLRes,i,2)));
+		DpsVarListReplaceInt(&Doc->Sections, "Status", DPS_ATOI(DpsSQLValue(&SQLRes,i,3)));
+		DpsVarListReplaceInt(&Doc->Sections, "PrevStatus", DPS_ATOI(DpsSQLValue(&SQLRes,i,3)));
+		DpsVarListReplaceInt(&Doc->Sections, "Hops", DPS_ATOI(DpsSQLValue(&SQLRes,i,4)));
+		DpsVarListReplaceInt(&Doc->Sections, "crc32", DPS_ATOI(DpsSQLValue(&SQLRes,i,5)));
+		DpsVarListReplaceInt(&Doc->Sections, "Site_id", DPS_ATOI(DpsSQLValue(&SQLRes, i, 10)));
+		DpsVarListReplaceInt(&Doc->Sections, "Server_id", 0 /*DPS_ATOI(DpsSQLValue(&SQLRes, i, 11))*/);
+		last_mod_time = (time_t) atol(DpsSQLValue(&SQLRes,i,6));
+		DpsTime_t2HttpStr(last_mod_time, buf);
+		if (last_mod_time != 0 && *buf != '\0') {
+		  DpsVarListReplaceStr(&Doc->Sections, "Last-Modified",buf);
+		}
+		DpsVarListReplaceStr(&Doc->Sections, "Since", DpsSQLValue(&SQLRes, i, 7));
+		DpsVarListReplaceStr(&Doc->Sections, "Pop_Rank", DpsSQLValue(&SQLRes, i, 8));
+
+	url = dc_url;
+	DpsVarListReplaceInt(&Doc->Sections, "crc32old", DpsVarListFindInt(&Doc->Sections, "crc32", 0));
+
+	/* Check that URL has valid syntax */
+	if(DpsURLParse(&Doc->CurURL, url)) {
+		DpsLog(A, DPS_LOG_WARN, "Invalid URL: %s", url);
+		Doc->method = DPS_METHOD_DISALLOW;
+	}else
+	if ((Doc->CurURL.filename != NULL) && (!strcmp(Doc->CurURL.filename, "robots.txt"))) {
+		Doc->method = DPS_METHOD_DISALLOW;
+	} else {
+		char		*alstr = NULL;
+
+		Doc->CurURL.charset_id = Doc->charset_id;
+		/* Find correspondent Server */
+		DPS_GETLOCK(A, DPS_LOCK_CONF);
+		Server = DpsServerFind(A, (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0), url, Doc->charset_id, &alstr);
+		DPS_RELEASELOCK(A, DPS_LOCK_CONF);
+
+		if ( !Server ) {
+			DpsLog(A, DPS_LOG_WARN, "No 'Server' command for url");
+			Doc->method = DPS_METHOD_DISALLOW;
+		}else{
+		        DPS_GETLOCK(A, DPS_LOCK_CONF);
+			Doc->lcs = A->Conf->lcs;
+			DpsVarList2Doc(Doc, Server);
+			Doc->Spider.ExpireAt = Server->ExpireAt;
+			Doc->Server = Server;
+			
+			DpsDocAddConfExtraHeaders(A->Conf, Doc);
+			DpsDocAddServExtraHeaders(Server, Doc);
+			DPS_RELEASELOCK(A, DPS_LOCK_CONF);
+
+			DpsVarListReplaceLst(&Doc->Sections, &Server->Vars,NULL,"*");
+			DpsVarListReplaceInt(&Doc->Sections, "Server_id", Server->site_id);
+			DpsVarListReplaceInt(&Doc->Sections, "MaxHops", Doc->Spider.maxhops);
+			
+			if(alstr != NULL) {
+				/* Server Primary alias found */
+				DpsVarListReplaceStr(&Doc->Sections, "Alias", alstr);
+			}else{
+				/* Apply non-primary alias */
+				rc = DpsDocAlias(A, Doc);
+			}
+
+			if((alias = DpsVarListFindStr(&Doc->Sections, "Alias", NULL))) {
+			  const char *u = DpsVarListFindStr(&Doc->Sections, "URL", NULL);
+			  origurl = (char*)DpsStrdup(u);
+			  aliasurl = (char*)DpsStrdup(alias);
+			  DpsLog(A, DPS_LOG_EXTRA, "Alias: '%s'", alias);
+			  DpsVarListReplaceStr(&Doc->Sections, "URL", alias);
+			  DpsVarListReplaceStr(&Doc->Sections, "ORIG_URL", origurl);
+			  DpsVarListDel(&Doc->Sections, "E_URL");
+			  DpsVarListDel(&Doc->Sections, "URL_ID");
+			  DpsURLParse(&Doc->CurURL, alias);
+			}
+
+			/* Check hops, network errors, filters */
+			rc = DpsDocCheck(A, Server, Doc);
+		}
+		DPS_FREE(alstr);
+	}
+	/*	DpsVarListReplaceInt(&Doc->Sections, "DomainLevel", Doc->CurURL.domain_level);*/
+	if (rc != DPS_OK) {
+	        DPS_FREE(aliasurl); DPS_FREE(origurl);
+		DpsDocFree(Doc);
+		DpsSQLFree(&SQLRes);
+		return rc;
+	}
+	if(Doc->method == DPS_METHOD_DISALLOW) {
+	        DpsLog(A, DPS_LOG_ERROR, "Deleting %s", dc_url);
+		DpsExecActions(A, Doc, 'd');
+		rc = DpsURLAction(A, Doc, DPS_URL_ACTION_DELETE);
+	}
+	DPS_FREE(origurl); DPS_FREE(aliasurl);
+
+		DPS_FREE(dc_url);
+		DpsDocFree(Doc);
+    }
+
+    if (nrows > 0) rec_id = (urlid_t)DPS_ATOI(DpsSQLValue(&SQLRes, nrows - 1, 1));
+    u = (nrows == url_num);
+    offset += nrows;
+    DpsLog(A, DPS_LOG_EXTRA, "%ld records processed at %d", offset, rec_id);
+    DpsSQLFree(&SQLRes);
+    if (u) DPSSLEEP(0);
+  }
+  return rc;
+}
+
+
 static int DpsDocInfoRefresh(DPS_AGENT *A, DPS_DB *db) {
   DPS_RESULT *Res;
   DPS_SQLRES	SQLres;
@@ -7478,6 +7647,9 @@ int DpsURLActionSQL(DPS_AGENT * A, DPS_DOCUMENT * D, int cmd,DPS_DB *db){
 			break;
 	        case DPS_URL_ACTION_SITEMAP:
 		        res = DpsSitemap(A, db);
+			break;
+	        case DPS_URL_ACTION_FILTER:
+		        res = DpsFilter(A, db);
 			break;
 	        case DPS_URL_ACTION_REFERER:
 		        res= DpsRefererGet(A, D, db);
