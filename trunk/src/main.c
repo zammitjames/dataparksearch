@@ -610,7 +610,10 @@ Misc. options:\n\
   -ZZ             optimize and check-up cached database at exit\n\
   -ZZZ            optimize, check-up and urls verify for cached database at exit\n\
   -Ecreate        create SQL table structure and exit\n\
+  -Edocinfo       recreate docinfo data in cached database from SQL tables\n\
   -Edrop          drop SQL table structure and exit\n\
+  -Efilter        check URLs against Server/Realm/Subnet and Allow/Disallow directives only\n\
+  -Esitemap       write sitemap file to stdout\n\
 "
 #endif
 "  -h,-?           print help page and exit\n\
@@ -673,6 +676,7 @@ static enum dps_indcmd DpsIndCmd(const char *cmd) {
   else if (!strncasecmp(cmd,"resort",6)) return DPS_IND_RESORT;
   else if (!strncasecmp(cmd,"sitemap",7)) return DPS_IND_SITEMAP;
   else if (!strncasecmp(cmd,"rehashstore",11)) return DPS_IND_REHASHSTORED;
+  else if (!strncasecmp(cmd,"filter",6)) return DPS_IND_FILTER;
    
   return DPS_IND_INDEX;
 }
@@ -712,13 +716,16 @@ static void DpsParseCmdLine(void) {
 	       }
                exit(0);
           }
-	  case 'O': cmd = DPS_IND_CONVERT; add_servers = 0; load_langmaps = 0; load_spells = 0; break;
-          case 'C': cmd = DPS_IND_DELETE;  add_servers=0;load_langmaps=0;load_spells=0;break;
-          case 'S': cmd = DPS_IND_STAT;    add_servers=0;load_langmaps=0;load_spells=0; extended_stats++; break;
-          case 'I': cmd = DPS_IND_REFERERS;add_servers=0;load_langmaps=0;load_spells=0;break;
-          case 'Q': cmd = DPS_IND_SQLMON;  add_servers=0;load_langmaps=0;load_spells=0;break;
-          case 'T': cmd = DPS_IND_CHECKCONF;  add_servers = 0; load_langmaps = 0; load_spells = 0; break;
-          case 'E': cmd = DpsIndCmd(optarg); if (cmd != DPS_IND_INDEX) {add_servers = 0; load_langmaps = 0; load_spells = 0; } break;
+	  case 'O': cmd = DPS_IND_CONVERT; add_servers = 0; load_langmaps = 0; load_spells = 0; add_server_urls = 0; break;
+          case 'C': cmd = DPS_IND_DELETE;  add_servers=0;load_langmaps=0;load_spells=0; add_server_urls = 0; break;
+          case 'S': cmd = DPS_IND_STAT;    add_servers=0;load_langmaps=0;load_spells=0; add_server_urls = 0; extended_stats++; break;
+          case 'I': cmd = DPS_IND_REFERERS;add_servers=0;load_langmaps=0;load_spells=0; add_server_urls = 0; break;
+          case 'Q': cmd = DPS_IND_SQLMON;  add_servers=0;load_langmaps=0;load_spells=0; add_server_urls = 0; break;
+          case 'T': cmd = DPS_IND_CHECKCONF;  add_servers = 0; load_langmaps = 0; load_spells = 0; add_server_urls = 0; break;
+          case 'E': cmd = DpsIndCmd(optarg); 
+	    if (cmd == DPS_IND_FILTER) { load_langmaps = 0; load_spells = 0; add_server_urls = 0;
+	    } else if (cmd != DPS_IND_INDEX) {add_servers = 0; load_langmaps = 0; load_spells = 0; add_server_urls = 0; } 
+	    break;
           case 'R': pop_rank++; break;
           case 'U': flags |= DPS_FLAG_UNOCON;break;
 	  case 'B': flags |= DPS_FLAG_FROM_STORED; break;
@@ -1427,14 +1434,14 @@ int main(int argc, char **argv, char **envp) {
      }
 
      DpsParseCmdLine();
-     
+     /*     
      if (cmd != DPS_IND_INDEX) {
        add_servers=0;
        load_langmaps=0;
        load_spells=0;
        add_server_urls = 0;
      }
-     
+     */
      flags |= add_servers | add_server_urls | load_langmaps | load_spells;
      Main.flags = Conf.flags = flags;
      Main.flags |= DPS_FLAG_UNOCON;
@@ -1657,6 +1664,14 @@ int main(int argc, char **argv, char **envp) {
 	    break;
           case DPS_IND_RESORT:
 	    if (DPS_OK != DpsURLAction(&Main, NULL, DPS_URL_ACTION_RESORT)) {
+                    DpsLog(&Main, DPS_LOG_ERROR, "Error: '%s'", DpsEnvErrMsg(Main.Conf));
+	    }
+	    break;
+          case DPS_IND_FILTER:
+	    /*	    Conf.Flags.cmd = Main.Flags.cmd = cmd;
+		    DpsSetLockProc(&Conf, DpsLockProc);*/
+	    DpsLog(&Main,DPS_LOG_INFO, "indexer from %s-%s-%s, URL filter started with '%s'", PACKAGE, VERSION, DPS_DBTYPE, cname);
+	    if (DPS_OK != DpsURLAction(&Main, NULL, DPS_URL_ACTION_FILTER)) {
                     DpsLog(&Main, DPS_LOG_ERROR, "Error: '%s'", DpsEnvErrMsg(Main.Conf));
 	    }
 	    break;

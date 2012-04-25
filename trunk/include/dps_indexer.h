@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -29,5 +29,7 @@ extern __C_LINK int __DPSCALL DpsStoreHrefs(DPS_AGENT *Indexer);
 extern int DpsDocStoreHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc);
 extern int DpsVarList2Doc(DPS_DOCUMENT *Doc, DPS_SERVER *Server);
 extern int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref);
+extern int DpsDocAlias(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc);
+extern int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc);
 
 #endif

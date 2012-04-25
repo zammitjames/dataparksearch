@@ -1004,7 +1004,8 @@ enum dps_indcmd {
   DPS_IND_POPRANK,
   DPS_IND_RESORT,
   DPS_IND_REHASHSTORED,
-  DPS_IND_SITEMAP
+  DPS_IND_SITEMAP,
+  DPS_IND_FILTER
 };
 
 enum dps_prmethod {

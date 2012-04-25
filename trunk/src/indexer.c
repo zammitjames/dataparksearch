@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -742,7 +742,7 @@ __C_LINK int __DPSCALL DpsURLFile(DPS_AGENT *Indexer, const char *fname,int acti
 /*******************************************************************/
 
 
-static int DpsDocAlias(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
+int DpsDocAlias(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 	DPS_MATCH	*Alias;
 	DPS_MATCH_PART	Parts[10];
 	size_t		alstrlen, nparts=10;
@@ -779,8 +779,7 @@ static int DpsDocAlias(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 
 
 
-
-static int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc) {
+int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc) {
 	char		reason[1024]="";
 	int		nerrors=-1;
 	int		hops=DpsVarListFindInt(&Doc->Sections,"Hops",0);
