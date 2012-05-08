@@ -869,7 +869,7 @@ int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc) {
 	}
 
 	/* Check for too many errors on this server */
-	DpsDocLookupConn(Indexer, Doc);
+	if (Indexer->Flags.cmd != DPS_IND_FILTER) DpsDocLookupConn(Indexer, Doc);
 	nerrors = (Doc->connp.Host != NULL) ?  Doc->connp.Host->net_errors : 0;
 	
 	if((nerrors>=Doc->Spider.max_net_errors)&&(Doc->Spider.max_net_errors)){
