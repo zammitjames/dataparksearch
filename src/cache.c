@@ -2549,8 +2549,18 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 /*	fprintf(stderr, "LogdInit. NWrdFiles:%d  CacheLogWords:%d  CacheLogDels:%d  shared: %d\n", 
 		NWrdFiles, CacheLogWords, CacheLogDels, shared);*/
 
+	if (DpsBuild(var_dir, 0755) != 0) {
+	  dps_strerror(A, DPS_LOG_ERROR, "Can't create VarDir %s", var_dir);
+	  return DPS_ERROR;
+	}
+
         dps_snprintf(db->log_dir, PATH_MAX, "%s%s%s%s", var_dir, DPSSLASHSTR, DPS_SPLDIR, DPSSLASHSTR);
 	db->errstr[0] = 0;
+
+	if (DpsBuild(db->log_dir, 0755) != 0) {
+	  dps_strerror(A, DPS_LOG_ERROR, "Can't create directory %s", var_dir);
+	  return DPS_ERROR;
+	}
 
 	if (shared) {
 	  
