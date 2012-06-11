@@ -86,6 +86,7 @@ void __DPSCALL DpsUniStrToLower(dpsunicode_t *unistr) {
 dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_bukva_forte, int loose) {
 	int ctype0 = DPS_UNI_UNDEF, ctype, plane, ctype_1, plane_1;
 	dpsunicode_t *beg = NULL;
+	dpsunicode_t *pattern_beg = NULL;
 
 	if(s == NULL && (s=*last) == NULL)
 		return NULL;
@@ -99,7 +100,14 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 			ctype=dps_uni_plane[plane].ctype;
 		}
 		/*fprintf(stderr,"TOK %04X %d\n",*s,ctype);*/
-		if (ctype > DPS_UNI_BUKVA) continue;
+		if (ctype > DPS_UNI_BUKVA) {
+		  if (dps_isPatternSyntax(*s)) {
+		    if (pattern_beg == NULL) pattern_beg = s;
+		  } else {
+		    pattern_beg = NULL;
+		  }
+		  continue;
+		}
 		ctype0 = ctype;
 		beg = s;
 		if (beg) break;
@@ -123,7 +131,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 		  if (dps_isApostropheBreak(*(s+1), (*(s+1)==0) ? 0 : *(s+2) )) {
 		    s++;
 		    *last = s;
-		    return beg;
+		    return (pattern_beg && !loose) ? pattern_beg : beg;
 		  }
 		  plane_1 = ((*(s+1)) >> 8) & 0xFF;
 		  if(dps_uni_plane[plane_1].table){
@@ -134,7 +142,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 /*		  fprintf(stderr," -- TOK %04X %d\n",*(s+1), ctype_1 > DPS_UNI_BUKVA);*/
 		  if (ctype_1 > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*(s+1)))) {
 		    *last = s;
-		    return beg;
+		    return (pattern_beg && !loose) ? pattern_beg : beg;
 		  }
 		  s++; continue;
 		}
@@ -142,7 +150,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 /*		fprintf(stderr," -- TOK %04X %d  loose:%d\n",*(s), ctype > DPS_UNI_BUKVA, loose);*/
 		if (ctype > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*s))) {
 		  *last = s;
-		  return beg;
+		  return (pattern_beg && !loose) ? pattern_beg : beg;
 		}
 		if (ctype > DPS_UNI_BUKVA_FORTE) {
 		  *have_bukva_forte = 0;
@@ -152,7 +160,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 
 	/* Done because of end-of-line */ 
 	*last=s;
-	return(beg);
+	return((pattern_beg && !loose) ? pattern_beg : beg);
 }
 
 
