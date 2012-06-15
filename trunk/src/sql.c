@@ -3512,18 +3512,30 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	     || (Indexer->flags & DPS_FLAG_SORT_SEED)  ) {
 	  int notfirst = 0;
 
-	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
+	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK_REV) {
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank ASC" : "ORDER BY pop_rank ASC");
+	    notfirst = 1;
+	  } else if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",pop_rank DESC" : "ORDER BY pop_rank DESC");
 	    notfirst = 1;
 	  }
-	  if (Indexer->flags & DPS_FLAG_SORT_HOPS) {
+
+	  if (Indexer->flags & DPS_FLAG_SORT_HOPS_REV) {
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",hops DESC" : "ORDER BY hops DESC");
+	    notfirst = 1;
+	  } else if (Indexer->flags & DPS_FLAG_SORT_HOPS) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",hops" : "ORDER BY hops");
 	    notfirst = 1;
 	  }
-	  if (Indexer->flags & DPS_FLAG_SORT_EXPIRED) {
+
+	  if (Indexer->flags & DPS_FLAG_SORT_EXPIRED_REV) {
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",next_index_time DESC" : "ORDER BY next_index_time DESC");
+	    notfirst = 1;
+	  } else if (Indexer->flags & DPS_FLAG_SORT_EXPIRED) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",next_index_time" : "ORDER BY next_index_time");
 	    notfirst = 1;
 	  }
+
 	  if (Indexer->flags & DPS_FLAG_SORT_SEED) {
 	    if(db->DBSQL_LIMIT){
 	      dps_snprintf(qbuf, qbuflen, "SELECT url.seed FROM url%s WHERE %s%lu %s %s LIMIT 10", db->from, 
@@ -3559,7 +3571,10 @@ int DpsTargetsSQL(DPS_AGENT *Indexer, DPS_DB *db){
 	    }
 	    DpsSQLFree(&SQLRes);
 	  }
-	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
+	  if (Indexer->flags & DPS_FLAG_SORT_POPRANK_REV) {
+	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",s.pop_weight DESC" : "ORDER BY s.pop_weight DESC");
+	    notfirst = 1;
+	  } else if (Indexer->flags & DPS_FLAG_SORT_POPRANK) {
 	    sprintf(DPS_STREND(sortstr), "%s", (notfirst) ? ",s.pop_weight" : "ORDER BY s.pop_weight");
 	    notfirst = 1;
 	  }
