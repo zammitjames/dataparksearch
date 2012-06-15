@@ -527,11 +527,15 @@ Indexing options:"
   -m              reindex expired documents even if not modified (may\n\
                   be limited using -t, -u, -c, -s, -y, -z and -f options)\n\
   -e              index 'most expired' (oldest) documents first\n\
+  -ee             index 'least expired' (newest) documents first\n\
   -o              index documents with less depth (hops value) first\n\
+  -oo             index documents with higher depth (hops value) first\n\
   -d              index most popular documents first\n\
+  -dd             index least popular documents first\n\
   -r              try to reduce remote servers load by randomising\n\
                   url fetch list before indexing (recommended for very \n\
                   big number of URLs)\n\
+  -rr             other way of randomisation\n\
   -n n            index only n documents and exit\n\
   -c n            index only n seconds and exit\n\
   -q              quick startup (do not add Server URLs)\n\
@@ -738,11 +742,23 @@ static void DpsParseCmdLine(void) {
           case 'l': log2stderr=0;break;
           case 'a': expire=1;break;
           case 'b': block++;break;
-	  case 'd': flags |= DPS_FLAG_SORT_POPRANK; break;
-          case 'e': flags |= DPS_FLAG_SORT_EXPIRED; break;
+	  case 'd': 
+	    if (flags |= DPS_FLAG_SORT_POPRANK) flags |= DPS_FLAG_SORT_POPRANK_REV; 
+	    else flags |= DPS_FLAG_SORT_POPRANK;
+	    break;
+          case 'e': 
+	    if (flags | DPS_FLAG_SORT_EXPIRED) flags |= DPS_FLAG_SORT_EXPIRED_REV; 
+	    else flags |= DPS_FLAG_SORT_EXPIRED;
+	    break;
           case 'z': DpsVarListAddStr(&Conf.Vars, "maxhop", optarg);break;
-	  case 'o': flags |= DPS_FLAG_SORT_HOPS; break;
-          case 'r': if (flags & DPS_FLAG_SORT_SEED) flags |= DPS_FLAG_SORT_SEED2; else flags |= DPS_FLAG_SORT_SEED; break;
+	  case 'o': 
+	    if (flags |= DPS_FLAG_SORT_HOPS) flags |= DPS_FLAG_SORT_HOPS_REV;
+	    else flags |= DPS_FLAG_SORT_HOPS; 
+	    break;
+          case 'r': 
+	    if (flags & DPS_FLAG_SORT_SEED) flags |= DPS_FLAG_SORT_SEED2; 
+	    else flags |= DPS_FLAG_SORT_SEED; 
+	    break;
           case 'm': flags |= DPS_FLAG_REINDEX; break;
           case 'n': cfg_url_number = Conf.url_number = atoi(optarg);break;
           case 'c': max_index_time = atoi(optarg);break;
