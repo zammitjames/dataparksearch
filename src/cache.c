@@ -350,13 +350,13 @@ void DpsRotateDelLog(DPS_AGENT *A) {
     NFiles = (db->WrdFiles > 0) ? (int)db->WrdFiles : DpsVarListFindInt(&A->Vars, "WrdFiles", 0x300);
     for(log_num = 0; log_num < NFiles; log_num++) {
 
-	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X-split.log", db->log_dir, log_num);
+      dps_snprintf(del_log_name, sizeof(del_log_name), "%s%s%03X-split.log", db->log_dir, DPSSLASHSTR, log_num);
 	if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
 	  dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s' for writing", del_log_name);
 	  return;
 	}
 
-	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%03X.log", db->log_dir, log_num);
+	dps_snprintf(del_log_name, sizeof(del_log_name), "%s%s%03X.log", db->log_dir, DPSSLASHSTR, log_num);
 	if((log_fd = DpsOpen3(del_log_name, O_RDWR | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 	  dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s' for writing", del_log_name);
 	  return;
@@ -376,7 +376,7 @@ void DpsRotateDelLog(DPS_AGENT *A) {
 	DpsClose(log_fd);
     }
 
-    dps_snprintf(del_log_name, sizeof(del_log_name), "%s%s", db->log_dir, "del-split.log");
+    dps_snprintf(del_log_name, sizeof(del_log_name), "%s%s%s", db->log_dir, DPSSLASHSTR, "del-split.log");
 
     if((split_fd = DpsOpen3(del_log_name, O_WRONLY | O_CREAT | O_APPEND | DPS_BINARY, DPS_IWRITE)) == -1) {
       dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s' for writing", del_log_name);
@@ -2375,7 +2375,7 @@ int DpsLogdSaveBuf(DPS_AGENT *Indexer, DPS_ENV * Env, size_t log_num) { /* Shoul
       size_t nbytes = logd->wrd_buf[log_num].nrec * sizeof(DPS_LOGWORD);
 
       if (nbytes > 0) {
-	dps_snprintf(fname, sizeof(fname), "%s%03X.log", db->log_dir, log_num);
+	dps_snprintf(fname, sizeof(fname), "%s%s%03X.log", db->log_dir, DPSSLASHSTR, log_num);
 	
 /*	DPS_GETLOCK(Indexer, DPS_LOCK_CACHED_N(log_num));*/
 	if((fd = DpsOpen3(fname, open_flags, open_perm)) != -1) {
@@ -2620,7 +2620,7 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 	if (Env->logs_only) {
 	    char	log_name[PATH_MAX];
 
-	    dps_snprintf(log_name, sizeof(log_name), "%s%s", db->log_dir, "del.log");
+	    dps_snprintf(log_name, sizeof(log_name), "%s%s%s", db->log_dir, DPSSLASHSTR, "del.log");
 	    if((db->del_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 	      dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 	      return DPS_ERROR;
@@ -2628,7 +2628,7 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 	    lseek(db->del_fd, (off_t)0, SEEK_END);
 
 	    if (Env->Flags.limits & DPS_LIMIT_CAT) {
-	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_CAT);
+	      dps_snprintf(log_name, sizeof(log_name),"%s%s%s.log", db->log_dir, DPSSLASHSTR, DPS_LIMFNAME_CAT);
 	      if((db->cat_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
@@ -2636,7 +2636,7 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 	      lseek(db->cat_fd, (off_t)0, SEEK_END);
 	    }
 	    if (Env->Flags.limits & DPS_LIMIT_TAG) {
-	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_TAG);
+	      dps_snprintf(log_name, sizeof(log_name),"%s%s%s.log", db->log_dir, DPSSLASHSTR, DPS_LIMFNAME_TAG);
 	      if((db->tag_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
@@ -2644,7 +2644,7 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 	      lseek(db->tag_fd, (off_t)0, SEEK_END);
 	    }
 	    if (Env->Flags.limits & DPS_LIMIT_TIME) {
-	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_TIME);
+	      dps_snprintf(log_name, sizeof(log_name),"%s%s%s.log", db->log_dir, DPSSLASHSTR, DPS_LIMFNAME_TIME);
 	      if((db->time_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
@@ -2652,7 +2652,7 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 	      lseek(db->time_fd, (off_t)0, SEEK_END);
 	    }
 	    if (Env->Flags.limits & DPS_LIMIT_LANG) {
-	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_LANG);
+	      dps_snprintf(log_name, sizeof(log_name),"%s%s%s.log", db->log_dir, DPSSLASHSTR, DPS_LIMFNAME_LANG);
 	      if((db->lang_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
@@ -2660,7 +2660,7 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 	      lseek(db->lang_fd, (off_t)0, SEEK_END);
 	    }
 	    if (Env->Flags.limits & DPS_LIMIT_CTYPE) {
-	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_CTYPE);
+	      dps_snprintf(log_name, sizeof(log_name),"%s%s%s.log", db->log_dir, DPSSLASHSTR, DPS_LIMFNAME_CTYPE);
 	      if((db->ctype_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
@@ -2668,7 +2668,7 @@ static int DpsLogdInit(DPS_AGENT *A, DPS_DB *db, const char* var_dir, size_t i, 
 	      lseek(db->ctype_fd, (off_t)0, SEEK_END);
 	    }
 	    if (Env->Flags.limits & DPS_LIMIT_SITE) {
-	      dps_snprintf(log_name, sizeof(log_name),"%s%s.log", db->log_dir, DPS_LIMFNAME_SITE);
+	      dps_snprintf(log_name, sizeof(log_name),"%s%s%s.log", db->log_dir, DPSSLASHSTR, DPS_LIMFNAME_SITE);
 	      if((db->site_fd = DpsOpen3(log_name, O_RDWR | O_APPEND | O_CREAT | DPS_BINARY, DPS_IWRITE)) == -1) {
 		dps_strerror(A, DPS_LOG_ERROR, "Can't open '%s'", log_name);
 		return DPS_ERROR;
