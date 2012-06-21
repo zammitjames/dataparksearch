@@ -92,14 +92,14 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="AEN2104"
+NAME="AEN2101"
 >3.10.1. Команда <B
 CLASS="COMMAND"
 >Include</B
 ></A
 ></H2
 ><A
-NAME="AEN2107"
+NAME="AEN2104"
 ></A
 ><P
 >Вы можете включить другой конфигурационный файл в любом месте файла <TT
@@ -108,12 +108,12 @@ CLASS="FILENAME"
 >
 при помощи команды <KBD
 CLASS="USERINPUT"
->Include &#60;filename&#62;</KBD
+>Include &lt;filename&gt;</KBD
 >.
-Путь считается абсолютным, если &#60;<TT
+Путь считается абсолютным, если &lt;<TT
 CLASS="FILENAME"
 >filename</TT
->&#62; начинается с "/":
+>&gt; начинается с "/":
 <PRE
 CLASS="PROGRAMLISTING"
 >Include /usr/local/dpsearch/etc/inc1.conf</PRE
@@ -138,7 +138,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2120"
+NAME="AEN2117"
 ></A
 ><P
 >Команда <B
@@ -158,7 +158,7 @@ CLASS="COMMAND"
 Формат команды:
 <PRE
 CLASS="PROGRAMLISTING"
->DBAddr &#60;DBType&#62;:[//[DBUser[:DBPass]@]DBHost[:DBPort]]/DBName/[?[dbmode=mode]{&#38;&#60;имя параметра&#62;=&#60;значение параметра&#62;}]</PRE
+>DBAddr &lt;DBType&gt;:[//[DBUser[:DBPass]@]DBHost[:DBPort]]/DBName/[?[dbmode=mode]{&amp;&lt;имя параметра&gt;=&lt;значение параметра&gt;}]</PRE
 ></P
 ><DIV
 CLASS="NOTE"
@@ -449,7 +449,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2209"
+NAME="AEN2206"
 ></A
 ><P
 >Вы можете задать альтернативную директорию для данных способа хранения <TT
@@ -477,7 +477,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2219"
+NAME="AEN2216"
 ></A
 ><P
 >Включает расширенную поддержку групп новостей. Значение по умолчанию <KBD
@@ -501,7 +501,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2228"
+NAME="AEN2225"
 ></A
 ><P
 > Может быть использована, если <SPAN
@@ -531,10 +531,10 @@ NAME="WORDLENGTHS_CMD"
 >3.10.6. Команды указания длины слова</A
 ></H2
 ><A
-NAME="AEN2238"
+NAME="AEN2235"
 ></A
 ><A
-NAME="AEN2241"
+NAME="AEN2238"
 ></A
 ><P
 >Вы можете указать диапазон длин слов, сохраняемых в базе. По умолчанию, сохраняются слова длиной от 1 до 32 символов.
@@ -556,7 +556,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2249"
+NAME="AEN2246"
 ></A
 ><P
 >Эта команда служит для указания максимального размера документа.
@@ -578,7 +578,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2257"
+NAME="AEN2254"
 ></A
 ><P
 >Данная команда включает режим только проверки наличия (CheckOnly) для документов размером менее указанного.
@@ -600,7 +600,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2265"
+NAME="AEN2262"
 ></A
 ><P
 >Используйте эту команду для задания максимального размера данных, записываемых в индекс для одного документа.
@@ -625,7 +625,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2274"
+NAME="AEN2271"
 ></A
 ><P
 >Задаёт число документов отбираемых для индексации за раз. Значение по умолчанию: 1024.
@@ -646,7 +646,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2282"
+NAME="AEN2279"
 ></A
 ><P
 >Задаёт число документов отбираемых за раз для записи индексов cache mode, загрузки данных в <B
@@ -672,7 +672,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2291"
+NAME="AEN2288"
 ></A
 ><P
 >Включает или выключает генерацию ID для URL используя алгоритм HASH32.
@@ -694,7 +694,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2299"
+NAME="AEN2296"
 ></A
 ><P
 >Вы можете добавить свои собсвенные заголовки в запрос HTTP на получение документов к индексации.
@@ -721,11 +721,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2307"
+NAME="AEN2304"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Allow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>Allow [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Данная команда разрешает к индексирования URL, подпадающие под указаный шаблон.
 Первые три необязательных параметра задают тип сравнения.
@@ -802,11 +802,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2329"
+NAME="AEN2326"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Disallow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>Disallow [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Данная команда запрещает к индексирования URL, подпадающие под указаный шаблон.
 Значение первых трёх необязательных параметров такое же как и у команды <B
@@ -844,11 +844,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2340"
+NAME="AEN2337"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CheckOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>CheckOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Значение первый трёх необязательных параметров такое же, как и у команды
 <B
@@ -887,11 +887,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2352"
+NAME="AEN2349"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->HrefOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>HrefOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Значение первый трёх необязательных параметров такое же, как и у команды
 <B
@@ -923,11 +923,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2362"
+NAME="AEN2359"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CheckMp3 [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]</PRE
+>CheckMp3 [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ...]</PRE
 ><P
 >Значение первый трёх необязательных параметров такое же, как и у команды
 <B
@@ -958,11 +958,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2373"
+NAME="AEN2370"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CheckMP3Only [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]</PRE
+>CheckMP3Only [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ...]</PRE
 ><P
 >Эта команда аналогична команде <B
 CLASS="COMMAND"
@@ -987,11 +987,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2383"
+NAME="AEN2380"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->IndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>IndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Эта команда служит для разрешения индексирования при совпадении шаблона <CODE
 CLASS="OPTION"
@@ -1029,11 +1029,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2397"
+NAME="AEN2394"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->NoIndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>NoIndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Эта команда служит для запрещения индексирования при совпадении шаблона <CODE
 CLASS="OPTION"
@@ -1071,11 +1071,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2411"
+NAME="AEN2408"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->HoldBadHrefs &#60;time&#62;</PRE
+>HoldBadHrefs &lt;time&gt;</PRE
 ><P
 >Задаёт сколько времени хранить документы с ошибочными кодами статуса перед удалением их из базы.
 Например, если какой-либо веб-сервер временно недоступен, <B
@@ -1084,7 +1084,7 @@ CLASS="COMMAND"
 > не удалит страницы этого
 сервера сразу. Однако, если этот сайт будет недоступен продолжительное время, страницы с этого сайта будут удалены по истечении
 указаного интервала времени.
-Формат для параметра &#60;time&#62; см. в описании команды <B
+Формат для параметра &lt;time&gt; см. в описании команды <B
 CLASS="COMMAND"
 >Period</B
 > в <A
@@ -1108,16 +1108,16 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2423"
+NAME="AEN2420"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->DeleteOlder &#60;time&#62;</PRE
+>DeleteOlder &lt;time&gt;</PRE
 ><P
 >Задаёт сколько времени хранить проиндексированные документы в базе.
 Например, при индексировании новостных сайтов, вы можете задать период, по истечении которого устаревшие
 страницы новостей будут удалены из базы, независимо от статуса этих документов.
-Формат для параметра &#60;time&#62; см. в описании команды <B
+Формат для параметра &lt;time&gt; см. в описании команды <B
 CLASS="COMMAND"
 >Period</B
 > в <A
@@ -1149,7 +1149,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2436"
+NAME="AEN2433"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1183,11 +1183,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2447"
+NAME="AEN2444"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->AddType [String|Regex] [Case|NoCase] &#60;mime type&#62; &#60;arg&#62; [&#60;arg&#62;...]</PRE
+>AddType [String|Regex] [Case|NoCase] &lt;mime type&gt; &lt;arg&gt; [&lt;arg&gt;...]</PRE
 ><P
 >Эта команда ассоциирует MIME тип с указаным расширением файла.
 Эти команды используются при индексировании ссылок со схемой file://.
@@ -1211,14 +1211,14 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2456"
+NAME="AEN2453"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Period &#60;time&#62;</PRE
+>Period &lt;time&gt;</PRE
 ><P
 >Задаёт период переиндексирования.
-&#60;time&#62; указывается в формате 'xxxA[yyyB[zzzC]]'                                   
+&lt;time&gt; указывается в формате 'xxxA[yyyB[zzzC]]'                                   
  (пробелы допустимы между xxx и A и yyy и т.д)                     
    здесь xxx, yyy, zzz - числа (возможно отризательные!)                         
          A, B, C могут быть одним из следующего:                                 
@@ -1266,14 +1266,14 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2469"
+NAME="AEN2466"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->PeriodByHops &#60;hops&#62; [ &#60;time&#62; ]</PRE
+>PeriodByHops &lt;hops&gt; [ &lt;time&gt; ]</PRE
 ><P
->Задаёт период переиндексирования для страниц зо значением глубины в "мышиных кликах" равным &#60;hops&#62;. 
-Формат для &#60;time&#62; такой же как и для команды <B
+>Задаёт период переиндексирования для страниц зо значением глубины в &quot;мышиных кликах&quot; равным &lt;hops&gt;. 
+Формат для &lt;time&gt; такой же как и для команды <B
 CLASS="COMMAND"
 >Period</B
 >.</P
@@ -1286,9 +1286,9 @@ CLASS="COMMAND"
 CLASS="COMMAND"
 >Server</B
 >. Если параметр
-&#60;time&#62; опущен, действие указаного ранее значения отменяется.</P
+&lt;time&gt; опущен, действие указаного ранее значения отменяется.</P
 ><P
->Если для конретного значения &#60;hops&#62; не задан период переиндексирования командой <B
+>Если для конретного значения &lt;hops&gt; не задан период переиндексирования командой <B
 CLASS="COMMAND"
 >PeriodByHops</B
 >,
@@ -1309,7 +1309,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2484"
+NAME="AEN2481"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1350,7 +1350,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2497"
+NAME="AEN2494"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1372,11 +1372,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2505"
+NAME="AEN2502"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxHops &#60;number&#62;</PRE
+>MaxHops &lt;number&gt;</PRE
 ><P
 >Максимальная глубина пути в "мышиных кликах" от начального URL.
 Значение по умолчанию: 256. Может быть задано несколько команд <B
@@ -1408,7 +1408,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2517"
+NAME="AEN2514"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1435,11 +1435,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2526"
+NAME="AEN2523"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxDepth &#60;number&#62;</PRE
+>MaxDepth &lt;number&gt;</PRE
 ><P
 >Максимальная глубина директории в url.
 Значение по умолчанию 16. Может быть задано несколько команд <B
@@ -1471,14 +1471,14 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2538"
+NAME="AEN2535"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxDocsPerServer &#60;number&#62;</PRE
+>MaxDocsPerServer &lt;number&gt;</PRE
 ><P
 >Ограничивает число документов, выкачиваемых с одного Server.
-Значение по умолчанию: -1, что обозначает "без ограничений".
+Значение по умолчанию: -1, что обозначает &quot;без ограничений&quot;.
 Если задано неотрицательное значение, за один запуск <B
 CLASS="COMMAND"
 >indexer</B
@@ -1520,14 +1520,14 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2553"
+NAME="AEN2550"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxHrefsPerServer &#60;number&#62;</PRE
+>MaxHrefsPerServer &lt;number&gt;</PRE
 ><P
 >Ограничивает число ссылок, собираемых с одного Server.
-Значение по умолчанию: -1, что обозначает "без ограничений".
+Значение по умолчанию: -1, что обозначает &quot;без ограничений&quot;.
 Если задано неотрицательное значение, за один запуск <B
 CLASS="COMMAND"
 >indexer</B
@@ -1569,11 +1569,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2568"
+NAME="AEN2565"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxNetErrors &#60;number&#62;</PRE
+>MaxNetErrors &lt;number&gt;</PRE
 ><P
 >Задаёт максимальное число сетевых ошибок для каждого сервера.
 Значение по умолчанию: 16. Используйте значение 0 для выключения проверки.
@@ -1603,16 +1603,16 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2579"
+NAME="AEN2576"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->ReadTimeOut &#60;time&#62;</PRE
+>ReadTimeOut &lt;time&gt;</PRE
 ><P
 >Таймаут ожидания соединения или продолжения получения данных.
 Формат <CODE
 CLASS="OPTION"
->&#60;time&#62;</CODE
+>&lt;time&gt;</CODE
 > см. <A
 HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
 >&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
@@ -1639,16 +1639,16 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2591"
+NAME="AEN2588"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->DocTimeOut &#60;time&#62;</PRE
+>DocTimeOut &lt;time&gt;</PRE
 ><P
 >Указывает максимальное время ожидания получения всего документа.
 Формат <CODE
 CLASS="OPTION"
->&#60;time&#62;</CODE
+>&lt;time&gt;</CODE
 > см. в <A
 HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
 >&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
@@ -1675,16 +1675,16 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2603"
+NAME="AEN2600"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->NetErrorDelayTime &#60;time&#62;</PRE
+>NetErrorDelayTime &lt;time&gt;</PRE
 ><P
 >Указывает период, на который будет отложена обработка документа при возникновении сетевых ошибок при его получении.
 Формат <CODE
 CLASS="OPTION"
->&#60;time&#62;</CODE
+>&lt;time&gt;</CODE
 > см. в <A
 HREF="dpsearch-indexcmd.ru.html#PERIOD_CMD"
 >&#1056;&#1072;&#1079;&#1076;. 3.10.26</A
@@ -1707,7 +1707,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2614"
+NAME="AEN2611"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1736,33 +1736,33 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2624"
+NAME="AEN2621"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [strict] [ &#60;pattern&#62; &#60;replacement&#62; ]</PRE
+>Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [strict] [ &lt;pattern&gt; &lt;replacement&gt; ]</PRE
 ><P
 >где <CODE
 CLASS="OPTION"
->&#60;string&#62;</CODE
+>&lt;string&gt;</CODE
 > - имя секции и <CODE
 CLASS="OPTION"
->&#60;number&#62;</CODE
+>&lt;number&gt;</CODE
 > - ID секции,
 от 0 до 255. Используйте 0 если вы не хотите индексировать какую-либо секцию.
 Лучше всего использовать различные ID для разных секций. В этом случае вы сможете во время поиска задавать различные веса
 конретным секциям, или же исключать их из результатов поиска.
 Параметр <CODE
 CLASS="OPTION"
->&#60;maxlen&#62;</CODE
+>&lt;maxlen&gt;</CODE
 >  задаёт максимальный размер секции, который будет сохранён в базе 
 (хотя сама секция будет проиндексирована целиком). Используйте 0, если вы не хотите сохранять в базе значение секции.
 <CODE
 CLASS="OPTION"
->&#60;pattern&#62;</CODE
+>&lt;pattern&gt;</CODE
 > и <CODE
 CLASS="OPTION"
->&#60;replacement&#62;</CODE
+>&lt;replacement&gt;</CODE
 > - шаблон и замена, аналогичная используемым в regex,
 для извления значения секции из тела документа.</P
 ><P
@@ -1788,7 +1788,7 @@ Section title			2	128
 # строгая токенизация для URL
 Section url                     3       0 strict
 # шаблон регулярного выражения для секции
-Section GoodName                3       128 "&#60;h1&#62;([^&#60;]*)&#60;/h1&#62;" "&#60;b&#62;GoodName:&#60;/b&#62; $1"</PRE
+Section GoodName                3       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"</PRE
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -1802,22 +1802,22 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2643"
+NAME="AEN2640"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->HrefSection &#60;string&#62; [ &#60;pattern&#62; &#60;replacement&#62; ]</PRE
+>HrefSection &lt;string&gt; [ &lt;pattern&gt; &lt;replacement&gt; ]</PRE
 ><P
 >где <CODE
 CLASS="OPTION"
->&#60;string&#62;</CODE
+>&lt;string&gt;</CODE
 > - имя секции,
 <CODE
 CLASS="OPTION"
->&#60;pattern&#62;</CODE
+>&lt;pattern&gt;</CODE
 > и <CODE
 CLASS="OPTION"
->&#60;replacement&#62;</CODE
+>&lt;replacement&gt;</CODE
 > - шаблон и замена, аналогичная используемым в regex,
 для извления значения секции из тела документа.
 Используйте эту команду для извлечения ссылок из тела документа.
@@ -1825,7 +1825,7 @@ CLASS="OPTION"
 CLASS="PROGRAMLISTING"
 ># Standard HTML sections: body, title
 HrefSection	link
-HrefSection     NewLink "&#60;newlink&#62;([^&#60;]*)&#60;/newlink&#62;" "$1"</PRE
+HrefSection     NewLink "&lt;newlink&gt;([^&lt;]*)&lt;/newlink&gt;" "$1"</PRE
 ></P
 ></DIV
 ><DIV
@@ -1840,7 +1840,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2655"
+NAME="AEN2652"
 ></A
 ><P
 >Команда "<B
@@ -1864,7 +1864,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2664"
+NAME="AEN2661"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1895,7 +1895,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2674"
+NAME="AEN2671"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1928,7 +1928,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2685"
+NAME="AEN2682"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1968,7 +1968,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2696"
+NAME="AEN2693"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2004,11 +2004,11 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2706"
+NAME="AEN2703"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->ServerWeight &#60;number&#62;</PRE
+>ServerWeight &lt;number&gt;</PRE
 ><P
 >Задаёт вес Server для расчёта Popularity Rank (см. <A
 HREF="dpsearch-rel.ru.html#POPRANK"
@@ -2032,7 +2032,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2716"
+NAME="AEN2713"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2061,7 +2061,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2726"
+NAME="AEN2723"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2085,7 +2085,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2735"
+NAME="AEN2732"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2105,7 +2105,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2743"
+NAME="AEN2740"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2128,7 +2128,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2752"
+NAME="AEN2749"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2148,7 +2148,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN2758"
+NAME="AEN2755"
 ></A
 ><P
 >При помощи команды <B
@@ -2207,7 +2207,7 @@ ALIGN="left"
 VALIGN="top"
 >Внешние парсеры
 <A
-NAME="AEN1478"
+NAME="AEN1475"
 ></A
 ></TD
 ><TD

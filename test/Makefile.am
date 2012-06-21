@@ -157,6 +157,7 @@ test-parsehtml/search.res \
 test-parsehtml/search-j.res \
 test-parsehtml/search2.res \
 test-parsehtml/search3.res \
+test-parsehtml/search4.res \
 test-parsehtml/query.tst \
 test-parsehtml/test.cmd \
 test-parsehtml/htdocs/accept.html \
@@ -165,6 +166,7 @@ test-parsehtml/htdocs/display.html \
 test-parsehtml/htdocs/html40-frameset.html \
 test-parsehtml/htdocs/html40-strict.html \
 test-parsehtml/htdocs/html40-transitional.html \
+test-parsehtml/htdocs/ispattern.html \
 test-parsehtml/htdocs/meta-ua.html \
 test-parsehtml/htdocs/no-newlines.html \
 test-parsehtml/htdocs/refresh.html \
@@ -213,6 +215,7 @@ test-boolean/htdocs/body-not-near.txt
 
 
 test_cache_FILES =\
+test-cache/htdocs/ispattern.html \
 test-cache/htdocs/test.html \
 test-cache/htdocs/testpage1.html \
 test-cache/htdocs/testpage2.html \
@@ -237,6 +240,7 @@ test-cache/search2.res
 
 
 test_cached_FILES =\
+test-cached/htdocs/ispattern.html \
 test-cached/htdocs/testpage1.html \
 test-cached/htdocs/testpage2.html \
 test-cached/htdocs/testpage3.html \

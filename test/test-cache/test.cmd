@@ -27,6 +27,7 @@ fail !0 exec $(SEARCH) "text+file&sp=1&rm=2" > $(DPS_TEST_DIR)/search3.rej 2>&1
 fail !0 exec $(SEARCH) "ruhrstadtmedia" > $(DPS_TEST_DIR)/search4.rej 2>&1
 fail !0 exec $(SEARCH) "bosch" > $(DPS_TEST_DIR)/search5.rej 2>&1
 fail !0 exec $(SEARCH) "роутер настройка" > $(DPS_TEST_DIR)/search6.rej 2>&1
+fail !0 exec $(SEARCH) "@twitter #trend l'orex" > $(DPS_TEST_DIR)/search7.rej 2>&1
 #fail !0 exec $(SEARCH) "Wall+%22Street+Journal%22&sp=1&ps=15&m=near" > $(DPS_TEST_DIR)/search5.rej 2>&1
 
 

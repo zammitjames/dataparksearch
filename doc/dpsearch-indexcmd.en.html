@@ -98,7 +98,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2006"
+NAME="AEN2003"
 ></A
 ><P
 >You may include another configuration file in any place of the <TT
@@ -107,12 +107,12 @@ CLASS="FILENAME"
 >
 using <KBD
 CLASS="USERINPUT"
->Include &#60;filename&#62;</KBD
+>Include &lt;filename&gt;</KBD
 > command.
-Absolute path if &#60;<TT
+Absolute path if &lt;<TT
 CLASS="FILENAME"
 >filename</TT
->&#62; starts with "/":
+>&gt; starts with "/":
 <PRE
 CLASS="PROGRAMLISTING"
 >Include /usr/local/dpsearch/etc/inc1.conf</PRE
@@ -137,7 +137,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2019"
+NAME="AEN2016"
 ></A
 ><P
 ><B
@@ -161,7 +161,7 @@ Command have global effect for whole config file.
 Format:
 <PRE
 CLASS="PROGRAMLISTING"
->DBAddr &#60;Type&#62;:[//[User[:Pass]@]Host[:Port]]/DBName/[?[dbmode=mode]{&#38;&#60;parameter name&#62;=&#60;parameter value&#62;}]</PRE
+>DBAddr &lt;Type&gt;:[//[User[:Pass]@]Host[:Port]]/DBName/[?[dbmode=mode]{&amp;&lt;parameter name&gt;=&lt;parameter value&gt;}]</PRE
 ></P
 ><DIV
 CLASS="NOTE"
@@ -430,7 +430,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2102"
+NAME="AEN2099"
 ></A
 ><P
 >You may choose alternative working directory for cache mode:
@@ -451,7 +451,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2110"
+NAME="AEN2107"
 ></A
 ><P
 >Whether to enable news extensions. Default value is no.
@@ -472,7 +472,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2118"
+NAME="AEN2115"
 ></A
 ><P
 > This is used if <SPAN
@@ -498,10 +498,10 @@ NAME="WORDLENGTHS_CMD"
 >3.10.6. Word length commands</A
 ></H2
 ><A
-NAME="AEN2127"
+NAME="AEN2124"
 ></A
 ><A
-NAME="AEN2130"
+NAME="AEN2127"
 ></A
 ><P
 >Word lengths. You may change default length range of words
@@ -525,7 +525,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2138"
+NAME="AEN2135"
 ></A
 ><P
 >This command is used for specify maximal document size.
@@ -547,7 +547,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2146"
+NAME="AEN2143"
 ></A
 ><P
 >This command is used to checkonly urls with content size less than value specified.
@@ -569,7 +569,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2154"
+NAME="AEN2151"
 ></A
 ><P
 >Use this command to specify the maximal amount of data stored in index per document.
@@ -594,7 +594,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2163"
+NAME="AEN2160"
 ></A
 ><P
 >Select number of targets to index at once. Default value is 1024.
@@ -615,7 +615,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2171"
+NAME="AEN2168"
 ></A
 ><P
 >Select at once this number of urls to write cache mode indexes, to preload url data or to calculate the Popularity Rank. 
@@ -637,7 +637,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2179"
+NAME="AEN2176"
 ></A
 ><P
 >Switch on or off the ID generation for URL using HASH32. 
@@ -661,7 +661,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2188"
+NAME="AEN2185"
 ></A
 ><P
 >You may add desired headers to indexer's HTTP request.
@@ -688,11 +688,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2196"
+NAME="AEN2193"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Allow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>Allow [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Use this command to allow URLs that match (doesn't match) given argument.
 First three optional parameters describe the type of comparison.
@@ -769,11 +769,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2217"
+NAME="AEN2214"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Disallow [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>Disallow [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Use this command to disallow URLs that match (doesn't match) given argument.
 The meaning of first three optional parameters is exactly the same 
@@ -812,11 +812,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2228"
+NAME="AEN2225"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CheckOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>CheckOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >The meaning of first three optional parameters is exactly the same 
 with <B
@@ -856,11 +856,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2239"
+NAME="AEN2236"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->HrefOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>HrefOnly [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >The meaning of first three optional parameters is exactly the same 
 with <B
@@ -892,11 +892,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2249"
+NAME="AEN2246"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CheckMp3 [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]</PRE
+>CheckMp3 [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ...]</PRE
 ><P
 >The meaning of first three optional parameters is exactly the same 
 with <B
@@ -927,11 +927,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2259"
+NAME="AEN2256"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CheckMP3Only [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;arg&#62; [&#60;arg&#62; ...]</PRE
+>CheckMP3Only [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;arg&gt; [&lt;arg&gt; ...]</PRE
 ><P
 >The meaning of first three optional parameters is exactly the same 
 with <B
@@ -962,11 +962,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2270"
+NAME="AEN2267"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->IndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>IndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Use this command to allow indexing, if the value of <CODE
 CLASS="OPTION"
@@ -1003,11 +1003,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2284"
+NAME="AEN2281"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->NoIndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &#60;section&#62; &#60;arg&#62; [&#60;arg&#62; ... ]</PRE
+>NoIndexIf [Match|NoMatch] [NoCase|Case] [String|Regex] &lt;section&gt; &lt;arg&gt; [&lt;arg&gt; ... ]</PRE
 ><P
 >Use this command to disallow indexing, if the value of <CODE
 CLASS="OPTION"
@@ -1044,18 +1044,18 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2298"
+NAME="AEN2295"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->HoldBadHrefs &#60;time&#62;</PRE
+>HoldBadHrefs &lt;time&gt;</PRE
 ><P
 >How much time to hold URLs with erroneous status before deleting them
 from the database. For example, if host is down, indexer will not delete
 pages from this site immediately and search will use previous content
 of these pages. However if site doesn't respond for a month, probably 
 it's time to remove these pages from the database.
-For &#60;time&#62; format see description of <B
+For &lt;time&gt; format see description of <B
 CLASS="COMMAND"
 >Period</B
 > command in <A
@@ -1079,15 +1079,15 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2309"
+NAME="AEN2306"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->DeleteOlder &#60;time&#62;</PRE
+>DeleteOlder &lt;time&gt;</PRE
 ><P
 >How much time to hold URLs before deleting them from the database. For example, 
 for news sites indexing, you may delete automatically old news articles after specified period.
-For &#60;time&#62; format see description of <B
+For &lt;time&gt; format see description of <B
 CLASS="COMMAND"
 >Period</B
 > command in <A
@@ -1119,7 +1119,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2322"
+NAME="AEN2319"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1147,11 +1147,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2331"
+NAME="AEN2328"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->AddType [String|Regex] [Case|NoCase] &#60;mime type&#62; &#60;arg&#62; [&#60;arg&#62;...]</PRE
+>AddType [String|Regex] [Case|NoCase] &lt;mime type&gt; &lt;arg&gt; [&lt;arg&gt;...]</PRE
 ><P
 >This command associates filename extensions (for services
 that don't automatically include them) with their mime types.
@@ -1176,14 +1176,14 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2340"
+NAME="AEN2337"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Period &#60;time&#62;</PRE
+>Period &lt;time&gt;</PRE
 ><P
 >Set reindex period.
-&#60;time&#62; is in the form 'xxxA[yyyB[zzzC]]'                                   
+&lt;time&gt; is in the form 'xxxA[yyyB[zzzC]]'                                   
  (Spaces are allowed between xxx and A and yyy and so on)                     
    there xxx, yyy, zzz are numbers (can be negative!)                         
          A, B, C can be one of the following:                                 
@@ -1232,13 +1232,13 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2353"
+NAME="AEN2350"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->PeriodByHops &#60;hops&#62; [ &#60;time&#62; ]</PRE
+>PeriodByHops &lt;hops&gt; [ &lt;time&gt; ]</PRE
 ><P
->Set reindex period per &#60;hops&#62; basis. The format for &#60;time&#62; is the same as for <B
+>Set reindex period per &lt;hops&gt; basis. The format for &lt;time&gt; is the same as for <B
 CLASS="COMMAND"
 >Period</B
 >.</P
@@ -1250,10 +1250,10 @@ CLASS="COMMAND"
 takes effect till the end of config file or till next <B
 CLASS="COMMAND"
 >PeriodByHops</B
-> command with same &#60;hops&#62; value.
-If  &#60;time&#62; parameter is omitted, this undefine the previous defined value.</P
+> command with same &lt;hops&gt; value.
+If  &lt;time&gt; parameter is omitted, this undefine the previous defined value.</P
 ><P
->If for given &#60;hops&#62; value the appropriate <B
+>If for given &lt;hops&gt; value the appropriate <B
 CLASS="COMMAND"
 >PeriodByHops</B
 > command is not specified, in this case the value
@@ -1274,7 +1274,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2368"
+NAME="AEN2365"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1314,7 +1314,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2381"
+NAME="AEN2378"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1335,11 +1335,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2389"
+NAME="AEN2386"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxHops &#60;number&#62;</PRE
+>MaxHops &lt;number&gt;</PRE
 ><P
 >Maximum way in "mouse clicks" from start url.
 Default value is 256.
@@ -1362,7 +1362,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2398"
+NAME="AEN2395"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1389,11 +1389,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2407"
+NAME="AEN2404"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxDepth &#60;number&#62;</PRE
+>MaxDepth &lt;number&gt;</PRE
 ><P
 >Maximum directory depth of url.
 Default value is 16.
@@ -1416,11 +1416,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2416"
+NAME="AEN2413"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxDocsPerServer &#60;number&#62;</PRE
+>MaxDocsPerServer &lt;number&gt;</PRE
 ><P
 >Limits the number of hrefs accepted from a Server.
 Default value is -1, that means no limits.
@@ -1451,11 +1451,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2427"
+NAME="AEN2424"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxHrefsPerServer &#60;number&#62;</PRE
+>MaxHrefsPerServer &lt;number&gt;</PRE
 ><P
 >Limits the number of documents retrieved from a Server.
 Default value is -1, that means no limits.
@@ -1485,11 +1485,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2438"
+NAME="AEN2435"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->MaxNetErrors &#60;number&#62;</PRE
+>MaxNetErrors &lt;number&gt;</PRE
 ><P
 >Maximum network errors for each server.
 Default value is 16. Use 0 for unlimited errors number.
@@ -1523,16 +1523,16 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2450"
+NAME="AEN2447"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->ReadTimeOut &#60;time&#62;</PRE
+>ReadTimeOut &lt;time&gt;</PRE
 ><P
 >Connect timeout and stalled connections timeout.
 For <CODE
 CLASS="OPTION"
->&#60;time&#62;</CODE
+>&lt;time&gt;</CODE
 > format see <A
 HREF="dpsearch-indexcmd.en.html#PERIOD_CMD"
 >Section 3.10.26</A
@@ -1563,16 +1563,16 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2463"
+NAME="AEN2460"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->DocTimeOut &#60;time&#62;</PRE
+>DocTimeOut &lt;time&gt;</PRE
 ><P
 >Maximum amount of time indexer spends for one document downloading.
 For <CODE
 CLASS="OPTION"
->&#60;time&#62;</CODE
+>&lt;time&gt;</CODE
 > format see <A
 HREF="dpsearch-indexcmd.en.html#PERIOD_CMD"
 >Section 3.10.26</A
@@ -1603,16 +1603,16 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2476"
+NAME="AEN2473"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->NetErrorDelayTime &#60;time&#62;</PRE
+>NetErrorDelayTime &lt;time&gt;</PRE
 ><P
 >Specify document processing delay time if network error has occurred.
 For <CODE
 CLASS="OPTION"
->&#60;time&#62;</CODE
+>&lt;time&gt;</CODE
 > format see <A
 HREF="dpsearch-indexcmd.en.html#PERIOD_CMD"
 >Section 3.10.26</A
@@ -1635,7 +1635,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2487"
+NAME="AEN2484"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1668,18 +1668,18 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2498"
+NAME="AEN2495"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->Section &#60;string&#62; &#60;number&#62; &#60;maxlen&#62; [strict] [ &#60;pattern&#62; &#60;replacement&#62; ]</PRE
+>Section &lt;string&gt; &lt;number&gt; &lt;maxlen&gt; [strict] [ &lt;pattern&gt; &lt;replacement&gt; ]</PRE
 ><P
 >where <CODE
 CLASS="OPTION"
->&#60;string&#62;</CODE
+>&lt;string&gt;</CODE
 > is a section name and <CODE
 CLASS="OPTION"
->&#60;number&#62;</CODE
+>&lt;number&gt;</CODE
 > is section ID
 between 0 and 255. Use 0 if you don't want to index some of 
 these sections. It is better to use different IDs
@@ -1688,18 +1688,18 @@ time you'll be able to give different weight to each section
 or even disallow some sections at a search time.
 <CODE
 CLASS="OPTION"
->&#60;maxlen&#62;</CODE
+>&lt;maxlen&gt;</CODE
 > argument contains a maximum length of section
 which will be stored in database. Use 0 for <CODE
 CLASS="OPTION"
->&#60;maxlen&#62;</CODE
+>&lt;maxlen&gt;</CODE
 >, if you don't want to store this section.
 <CODE
 CLASS="OPTION"
->&#60;pattern&#62;</CODE
+>&lt;pattern&gt;</CODE
 > and <CODE
 CLASS="OPTION"
->&#60;replacement&#62;</CODE
+>&lt;replacement&gt;</CODE
 > are a regex-like
 pattern and replacement to extract section value from document content.</P
 ><P
@@ -1726,7 +1726,7 @@ Section title			2	128
 # strict tokenization for URL
 Section url                     3       0 strict
 # regex-pattern for a section
-Section GoodName                4       128 "&#60;h1&#62;([^&#60;]*)&#60;/h1&#62;" "&#60;b&#62;GoodName:&#60;/b&#62; $1"</PRE
+Section GoodName                4       128 "&lt;h1&gt;([^&lt;]*)&lt;/h1&gt;" "&lt;b&gt;GoodName:&lt;/b&gt; $1"</PRE
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -1740,22 +1740,22 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2518"
+NAME="AEN2515"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->HrefSection &#60;string&#62; [ &#60;pattern&#62; &#60;replacement&#62; ]</PRE
+>HrefSection &lt;string&gt; [ &lt;pattern&gt; &lt;replacement&gt; ]</PRE
 ><P
 >where <CODE
 CLASS="OPTION"
->&#60;string&#62;</CODE
+>&lt;string&gt;</CODE
 > is a section name,
 <CODE
 CLASS="OPTION"
->&#60;pattern&#62;</CODE
+>&lt;pattern&gt;</CODE
 > and <CODE
 CLASS="OPTION"
->&#60;replacement&#62;</CODE
+>&lt;replacement&gt;</CODE
 > are a regex-like
 pattern and replacement to extract section value from document content.
 Use this command to extract links from document content.
@@ -1763,7 +1763,7 @@ Use this command to extract links from document content.
 CLASS="PROGRAMLISTING"
 ># Standard HTML sections: body, title
 HrefSection	link
-HrefSection     NewLink "&#60;newlink&#62;([^&#60;]*)&#60;/newlink&#62;" "$1"</PRE
+HrefSection     NewLink "&lt;newlink&gt;([^&lt;]*)&lt;/newlink&gt;" "$1"</PRE
 ></P
 ></DIV
 ><DIV
@@ -1778,7 +1778,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2530"
+NAME="AEN2527"
 ></A
 ><P
 >The "<B
@@ -1802,7 +1802,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2539"
+NAME="AEN2536"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1836,7 +1836,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2550"
+NAME="AEN2547"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1873,7 +1873,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2562"
+NAME="AEN2559"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1918,7 +1918,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2574"
+NAME="AEN2571"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1958,11 +1958,11 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2585"
+NAME="AEN2582"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->ServerWeight &#60;number&#62;</PRE
+>ServerWeight &lt;number&gt;</PRE
 ><P
 >Server weight for Popularity Rank calculation (see <A
 HREF="dpsearch-rel.en.html#POPRANK"
@@ -1985,7 +1985,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2595"
+NAME="AEN2592"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2013,7 +2013,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2605"
+NAME="AEN2602"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2038,7 +2038,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2614"
+NAME="AEN2611"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2058,7 +2058,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2622"
+NAME="AEN2619"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2081,7 +2081,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2631"
+NAME="AEN2628"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -2101,7 +2101,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN2637"
+NAME="AEN2634"
 ></A
 ><P
 >With <B

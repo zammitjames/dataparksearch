@@ -87,7 +87,7 @@ NAME="HTMLPARSER-BODYPATTERNS"
 >4.6. Body patterns</A
 ></H1
 ><A
-NAME="AEN3256"
+NAME="AEN3253"
 ></A
 ><P
 >If you need index not whole page, for example, to exclude navigation, ads, etc., you may use <B
@@ -97,7 +97,7 @@ CLASS="COMMAND"
 command to specify a pattern to extract content of a page for indexing. For example:
 <PRE
 CLASS="PROGRAMLISTING"
->BodyPattern "&#60;!--content--&#62;(.*)&#60;!--/content--&#62;" "$1"</PRE
+>BodyPattern "&lt;!--content--&gt;(.*)&lt;!--/content--&gt;" "$1"</PRE
 >
 this pattern will extract content between special comments and only that content will be indexed for this page.</P
 ><P
@@ -108,7 +108,7 @@ CLASS="COMMAND"
 These patterns are trying to apply to all pages indexed. Beware, huge number of such body patterns may hurt indexing speed.</P
 ><P
 ><A
-NAME="AEN3265"
+NAME="AEN3262"
 ></A
 >
 The <B
@@ -121,9 +121,9 @@ CLASS="COMMAND"
 of the body and ending of the body, e.g.
 <PRE
 CLASS="PROGRAMLISTING"
->BodyBrackets "&#60;!--B--&#62;" "&#60;!--E--&#62;"</PRE
+>BodyBrackets "&lt;!--B--&gt;" "&lt;!--E--&gt;"</PRE
 >
-Then fragment of the document enclosed between &#60;!--B--&#62; and &#60;!--E--&#62; is treated as document body.</P
+Then fragment of the document enclosed between &lt;!--B--&gt; and &lt;!--E--&gt; is treated as document body.</P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"

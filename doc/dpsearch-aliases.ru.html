@@ -102,7 +102,7 @@ CLASS="SECT2"
 NAME="ALIAS-CONF"
 >3.7.1. Команда Alias (из indexer.conf)
 <A
-NAME="AEN1314"
+NAME="AEN1311"
 ></A
 ></A
 ></H2
@@ -113,7 +113,7 @@ CLASS="FILENAME"
 >:
 		<PRE
 CLASS="PROGRAMLISTING"
->Alias &#60;главныйURL&#62; &#60;вторичныйURL&#62;</PRE
+>Alias &lt;главныйURL&gt; &lt;вторичныйURL&gt;</PRE
 ></P
 ><P
 >Например, для индексации
@@ -251,7 +251,7 @@ CLASS="FUNCTION"
 >Синтаксис Realm алиасов:
 		<PRE
 CLASS="PROGRAMLISTING"
->Realm regex &#60;URL_выражение&#62; &#60;алиас_выражение&#62;</PRE
+>Realm regex &lt;URL_выражение&gt; &lt;алиас_выражение&gt;</PRE
 >
 		</P
 ><P
@@ -317,7 +317,7 @@ CLASS="SECT2"
 NAME="ALIAS-PROG"
 >3.7.5. Команда AliasProg
 <A
-NAME="AEN1366"
+NAME="AEN1363"
 ></A
 ></A
 ></H2
@@ -369,7 +369,7 @@ CLASS="SECT2"
 NAME="ALIAS-REVERSE"
 >3.7.6. Команда ReverseAlias
 <A
-NAME="AEN1381"
+NAME="AEN1378"
 ></A
 ></A
 ></H2
@@ -409,38 +409,38 @@ CLASS="LITERAL"
 			если PHPSESSION - единственный параметр, будет выглядеть так (знак ? будет вырезан тоже):
 			<PRE
 CLASS="PROGRAMLISTING"
->ReverseAlias regex  (http://[^?]*)[?]PHPSESSION=[^&#38;]*$   $1</PRE
+>ReverseAlias regex  (http://[^?]*)[?]PHPSESSION=[^&amp;]*$   $1</PRE
 >
 		</P
 ><P
 >			Чтобы вырезать PHPSESSION, когда он является первым параметром, при условии, что
 			после него следуют другие параметры, т.е. <TT
 CLASS="LITERAL"
->http://www/a.php?PHPSESSION=xxx&#38;..</TT
+>http://www/a.php?PHPSESSION=xxx&amp;..</TT
 >, 
 			используйте эту команду:
 			<PRE
 CLASS="PROGRAMLISTING"
->ReverseAlias regex  (http://[^?]*[?])PHPSESSION=[^&#38;]*&#38;(.*)  $1$2</PRE
+>ReverseAlias regex  (http://[^?]*[?])PHPSESSION=[^&amp;]*&amp;(.*)  $1$2</PRE
 >
-			Знак '&#38;' после аргумента PHPSESSION будет вырезан, а знак вопроса не будет.
+			Знак '&amp;' после аргумента PHPSESSION будет вырезан, а знак вопроса не будет.
 		</P
 ><P
 >			Для вырезания из URL типа
 			<TT
 CLASS="LITERAL"
->http://www/a.php?a=b&#38;PHPSESSION=xxx</TT
+>http://www/a.php?a=b&amp;PHPSESSION=xxx</TT
 > или
 			<TT
 CLASS="LITERAL"
->http://www/a.php?a=b&#38;PHPSESSION=xxx&#38;c=d</TT
+>http://www/a.php?a=b&amp;PHPSESSION=xxx&amp;c=d</TT
 >,
 			где PHPSESSION не является первым параметром, используйте
 			<PRE
 CLASS="PROGRAMLISTING"
->ReverseAlias regex  (http://.*)&#38;PHPSESSION=[^&#38;]*(.*)   $1$2</PRE
+>ReverseAlias regex  (http://.*)&amp;PHPSESSION=[^&amp;]*(.*)   $1$2</PRE
 >
-			Знак '&#38;' перед PHPSESSION будет тоже вырезан.
+			Знак '&amp;' перед PHPSESSION будет тоже вырезан.
 
 		</P
 ></DIV
@@ -452,7 +452,7 @@ CLASS="SECT2"
 NAME="REVERSEALIAS-PROG"
 >3.7.7. Команда ReverseAliasProg
 <A
-NAME="AEN1403"
+NAME="AEN1400"
 ></A
 ></A
 ></H2
@@ -483,7 +483,7 @@ CLASS="SECT2"
 NAME="ALIAS-SEARCH"
 >3.7.8. Алиасы в search.htm 
 <A
-NAME="AEN1414"
+NAME="AEN1411"
 ></A
 ></A
 ></H2
@@ -512,7 +512,7 @@ CLASS="FILENAME"
 >:
 			<PRE
 CLASS="PROGRAMLISTING"
->Alias &#60;find-prefix&#62; &#60;replace-prefix&#62;</PRE
+>Alias &lt;find-prefix&gt; &lt;replace-prefix&gt;</PRE
 >
 		</P
 ><P
@@ -598,7 +598,7 @@ ALIGN="right"
 VALIGN="top"
 >ServerTable
 <A
-NAME="AEN1433"
+NAME="AEN1430"
 ></A
 ></TD
 ></TR

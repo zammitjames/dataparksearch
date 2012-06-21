@@ -1968,7 +1968,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "AND") == 0)) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_AND;
-	      state.cmd = add_cmd;
+	      state.add_cmd = add_cmd;
 	      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
 		DPS_PREPARE_RETURN(0);
 	      }
@@ -2169,6 +2169,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 		  DPS_ACRONYM *first, *last;
 		  dpsunicode_t *uwrddup = DpsUniDup(uwrd), *l_lt, *l_tok;
 		  int l_forte, loose_split;
+		  int notfirst_l_tok = 0;
 		  l_tok = DpsUniGetToken(uwrddup, &l_lt, &l_forte, 1);
 		  loose_split = (wlen != (size_t)(l_lt - l_tok));
 
@@ -2372,7 +2373,7 @@ ret:
 		    while(l_tok) {
 		      wlen = l_lt - l_tok;
 		      state.order++;
-		      if (l_tok != uwrddup) {
+		      if (notfirst_l_tok /* l_tok != uwrddup*/) {
 			state.cmd = DPS_STACK_AND;
 			state.add_cmd = add_cmd;
 			if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
@@ -2380,6 +2381,7 @@ ret:
 			  DPS_PREPARE_RETURN(0);
 			}
 		      }
+		      notfirst_l_tok = 1;
 		      state.cmd = DPS_STACK_LEFT;
 		      state.add_cmd = add_cmd;
 		      if (DpsAddStackItem(query, Res, &state, NULL, NULL) != DPS_OK) {
@@ -2991,7 +2993,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
 /*	xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
 	D[DPS_N_WRDCOUNT] = phr_n;
-	D[DPS_N_COUNT] = ((dps_uint4)sum << 4) / ++median;
+	D[DPS_N_COUNT] = (dps_uint4)((((long)sum) * DPS_BEST_WRD_CNT) / n_order_inquery / ++median);
       
 #ifdef WITH_REL_TRACK
 	Track[j].D_wrdcount = phr_n;
@@ -3077,7 +3079,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
     /*    xy /= Res->max_order_inquery + 1;*/
 #ifdef WITH_REL_WRDCOUNT
     D[DPS_N_WRDCOUNT] = phr_n;
-    D[DPS_N_COUNT] = ((dps_uint4)sum << 4) / ++median;
+    D[DPS_N_COUNT] = (dps_uint4)((((long)sum) * DPS_BEST_WRD_CNT) / n_order_inquery / ++median);
   
 #ifdef WITH_REL_TRACK
     Track[j].D_wrdcount = phr_n;
