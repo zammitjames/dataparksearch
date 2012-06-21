@@ -2,6 +2,8 @@
 ImportEnv DPS_TEST_DBADDR0
 DBAddr $(DPS_TEST_DBADDR0)?dbmode=single
 
+LogLevel 5
+
 # Uncomment this line to enable search result cache
 #Cache yes
 
@@ -65,6 +67,7 @@ DateFormat %s
 DetectClones yes
 AccentExtensions yes
 Section url.host 8 0 strict
+Section	body			1	256
 
 -->
 
@@ -72,7 +75,7 @@ Section url.host 8 0 strict
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=$(BrowserCharset)">
-<TITLE>mnoGoSearch: $(q)</TITLE>
+<TITLE>$(q)</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">

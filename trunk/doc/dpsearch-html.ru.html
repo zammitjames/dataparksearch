@@ -103,20 +103,20 @@ NAME="HTML-RESPAGE"
 CLASS="FILENAME"
 >etc/search.htm</TT
 > состоит из некоторого числа блоков,
-разделённых HTML комментариями, начинающимися с &#60;!--comment--&#62; и заканчивающимися &#60;!--/comment--&#62;.</P
+разделённых HTML комментариями, начинающимися с &lt;!--comment--&gt; и заканчивающимися &lt;!--/comment--&gt;.</P
 ><P
->Блок &#60;!--variables--&#62; только используется <TT
+>Блок &lt;!--variables--&gt; только используется <TT
 CLASS="FILENAME"
 >search.cgi</TT
 >
 Остальные блоки формируют части страницы результатов поиска в зависимости от ситуации. </P
 ><P
->Блоки &#60;!--top--&#62; и &#60;!--bottom--&#62; всегда показываются пользователям как верх и низ
+>Блоки &lt;!--top--&gt; и &lt;!--bottom--&gt; всегда показываются пользователям как верх и низ
 страницы результатов соответственно. </P
 ><P
->также существуют следующие блоки    &#60;!--restop--&#62;,
-&#60;!--res--&#62; and &#60;!--resbot--&#62; , блоки навигации и блоки  &#60;!--notfound--&#62;,
-&#60;!--noquery--&#62; and &#60;!--error--&#62;. Последние выдаются в зависимости от результата поиска.</P
+>также существуют следующие блоки    &lt;!--restop--&gt;,
+&lt;!--res--&gt; and &lt;!--resbot--&gt; , блоки навигации и блоки  &lt;!--notfound--&gt;,
+&lt;!--noquery--&gt; and &lt;!--error--&gt;. Последние выдаются в зависимости от результата поиска.</P
 ><P
 >Любой HTML-код, расположенный вне этих блоков, игнорируется. </P
 ><P
@@ -138,8 +138,8 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 >Навигационный блок строится таким же образом.
-Блоки &#60;!--navleft--&#62; и &#60;!--navright--&#62; отображаются на всех страницах и ссылаются на предыдущую и на
-следующую страницы с результатами поиска, тогда как &#60;!--navXXX_nop--&#62; используются, если нет больше страниц в
+Блоки &lt;!--navleft--&gt; и &lt;!--navright--&gt; отображаются на всех страницах и ссылаются на предыдущую и на
+следующую страницы с результатами поиска, тогда как &lt;!--navXXX_nop--&gt; используются, если нет больше страниц в
 том или другом направлении. </P
 ></DIV
 ><DIV
@@ -155,7 +155,7 @@ NAME="HTML-YOURHTML"
 CLASS="FILENAME"
 >etc/search.htm-dist</TT
 >.
-Рекомендуется начать работу именно с него, внеся только ваши настройки в блок &#60;!--variables--&#62;. </P
+Рекомендуется начать работу именно с него, внеся только ваши настройки в блок &lt;!--variables--&gt;. </P
 ><P
 >Если вы решили украсить ваш поиск, у вас есть два пути.
 Первый: оставить простой дизайн <TT
@@ -192,12 +192,12 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 >Если планируется поместить результаты поиска в основную таблицу, вы можете поместить в
-блок &#60;!--top--&#62; в <TT
+блок &lt;!--top--&gt; в <TT
 CLASS="FILENAME"
 >search.htm</TT
 > весь HTML-код вплоть до открытия основной таблицы
-(&#60;table&#62;&#60;tr&#62;&#60;td&#62;). Если вы также поместите код закрытия основной таблицы и остальные закрывающие тэги страницы в
-блок &#60;!--bottom--&#62; (&#60;/table&#62;&#60;/tr&#62;&#60;/td&#62;&#60;/body&#62;&#60;/html&#62;) и оставите остальные блоки без изменения,
+(&lt;table&gt;&lt;tr&gt;&lt;td&gt;). Если вы также поместите код закрытия основной таблицы и остальные закрывающие тэги страницы в
+блок &lt;!--bottom--&gt; (&lt;/table&gt;&lt;/tr&gt;&lt;/td&gt;&lt;/body&gt;&lt;/html&gt;) и оставите остальные блоки без изменения,
 вы получите желаемый табличный дизайн и результаты поиска будут в основной таблице.
  </P
 ><P
@@ -210,15 +210,15 @@ CLASS="FILENAME"
 блока. Т.е. ничто не мешает делать что-то вроде этого:
 			<PRE
 CLASS="PROGRAMLISTING"
->  &#60;!--error--&#62;
-    &#60;table&#62;
-    &#60;tr&#62;&#60;td bgcolor"red"&#62;
-      &#60;font color="#ffffff"&#62;  
+>  &lt;!--error--&gt;
+    &lt;table&gt;
+    &lt;tr&gt;&lt;td bgcolor"red"&gt;
+      &lt;font color="#ffffff"&gt;  
       [error variables]
-      &#60;/font&#62;
-    &#60;/tr&#62;&#60;td&#62;
-    &#60;/table&#62;
-  &#60;!--error--&#62;
+      &lt;/font&gt;
+    &lt;/tr&gt;&lt;td&gt;
+    &lt;/table&gt;
+  &lt;!--error--&gt;
 		</PRE
 >
 		</P
@@ -249,33 +249,33 @@ NAME="HTML-FORMS"
 >Например,
 			<PRE
 CLASS="PROGRAMLISTING"
->  &#60;table&#62;
-  &#60;tr&#62;&#60;td&#62;
-     &#60;form&#62;
-     &#60;input type="text" name="something"&#62;
-     &#60;input type="radio" name"button1"&#62;
-     &#60;input type="radio" name"button2"&#62;
-     &#60;/form&#62;
-  &#60;/tr&#62;&#60;/td&#62;
-  &#60;/table&#62;
+>  &lt;table&gt;
+  &lt;tr&gt;&lt;td&gt;
+     &lt;form&gt;
+     &lt;input type="text" name="something"&gt;
+     &lt;input type="radio" name"button1"&gt;
+     &lt;input type="radio" name"button2"&gt;
+     &lt;/form&gt;
+  &lt;/tr&gt;&lt;/td&gt;
+  &lt;/table&gt;
 			</PRE
 >
 		это допустимо, а
 			<PRE
 CLASS="PROGRAMLISTING"
->  &#60;table&#62;
-    &#60;tr&#62;&#60;td&#62;
-       &#60;form&#62;
-       &#60;input type="text" name="something"&#62;
-    &#60;/tr&#62;&#60;/td&#62;
-  &#60;/table&#62;
-  &#60;table&#62;
-    &#60;tr&#62;&#60;td&#62;
-       &#60;input type="radio" name"button1"&#62;
-       &#60;input type="radio" name"button2"&#62;
-       &#60;/form&#62;
-    &#60;/tr&#62;&#60;/td&#62;
-    &#60;/table&#62;
+>  &lt;table&gt;
+    &lt;tr&gt;&lt;td&gt;
+       &lt;form&gt;
+       &lt;input type="text" name="something"&gt;
+    &lt;/tr&gt;&lt;/td&gt;
+  &lt;/table&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;td&gt;
+       &lt;input type="radio" name"button1"&gt;
+       &lt;input type="radio" name"button2"&gt;
+       &lt;/form&gt;
+    &lt;/tr&gt;&lt;/td&gt;
+    &lt;/table&gt;
 			</PRE
 >
 		это <SPAN
@@ -295,29 +295,29 @@ CLASS="FILENAME"
 			<PRE
 CLASS="PROGRAMLISTING"
 >  Results per page:
-  &#60;SELECT NAME="ps"&#62;
-  &#60;OPTION VALUE="10" SELECTED="$ps"&#62;10
-  &#60;OPTION VALUE="20" SELECTED="$ps"&#62;20
-  &#60;OPTION VALUE="50" SELECTED="$ps"&#62;50
-  &#60;/SELECT&#62;
+  &lt;SELECT NAME="ps"&gt;
+  &lt;OPTION VALUE="10" SELECTED="$ps"&gt;10
+  &lt;OPTION VALUE="20" SELECTED="$ps"&gt;20
+  &lt;OPTION VALUE="50" SELECTED="$ps"&gt;50
+  &lt;/SELECT&gt;
 			</PRE
 >
 		вы можете заменить это на
 			<PRE
 CLASS="PROGRAMLISTING"
->  &#60;input type="radio" name="ps" value="10" checked="$(ps)"&#62;
-  &#60;input type="radio" name="ps" value="20" checked="$(ps)"&#62;
-  &#60;input type="radio" name="ps" value="50" checked="$(ps)"&#62;
+>  &lt;input type="radio" name="ps" value="10" checked="$(ps)"&gt;
+  &lt;input type="radio" name="ps" value="20" checked="$(ps)"&gt;
+  &lt;input type="radio" name="ps" value="50" checked="$(ps)"&gt;
 			</PRE
 >
 		в результате чего получим три кнопки-переключалки вместо выпадающего меню, с тем же значением "20" по умолчанию и
 с той же функциональностью. Единственное, что вы не можете делать, это давать возможность множественного
-выбора в меню типа &#60;type="checkbox"&#62; или &#60;select multiple&#62;. </P
+выбора в меню типа &lt;type="checkbox"&gt; или &lt;select multiple&gt;. </P
 ><P
 >Заметим, что вы можете также использовать формат
 			<PRE
 CLASS="PROGRAMLISTING"
->  &#60;input type="hidden" name="XX" value="YY"&#62;
+>  &lt;input type="hidden" name="XX" value="YY"&gt;
   			</PRE
 >
 		если вы хотите использовать другие значения вместо значений по умолчанию и/или не заботить пользователя выбором
@@ -363,7 +363,7 @@ CLASS="FILENAME"
 > на изображения в img/ должна быть
 <TT
 CLASS="LITERAL"
->&#60;img src="../img/image.gif"&#62;</TT
+>&lt;img src="../img/image.gif"&gt;</TT
 >, несмотря на несоответствие структуре файловой системы.</P
 ></DIV
 ><DIV
@@ -379,13 +379,13 @@ NAME="HTML-SEARCHFORM"
 этих страницах где сочтёте нужным:
 			<PRE
 CLASS="PROGRAMLISTING"
->&#60;FORM 
+>&lt;FORM 
 	METHOD=GET 
-	ACTION="http://path-to-search.cgi"&#62;
-      &#60;INPUT TYPE="text" NAME="q" VALUE=""&#62;
-      &#60;INPUT TYPE="submit" VALUE="Search!"&#62;
+	ACTION="http://path-to-search.cgi"&gt;
+      &lt;INPUT TYPE="text" NAME="q" VALUE=""&gt;
+      &lt;INPUT TYPE="submit" VALUE="Search!"&gt;
 
-&#60;/FORM&#62;</PRE
+&lt;/FORM&gt;</PRE
 >
 		</P
 ></DIV
@@ -436,7 +436,7 @@ ALIGN="left"
 VALIGN="top"
 >Как создавать шаблоны результатов поиска
 <A
-NAME="AEN5455"
+NAME="AEN5452"
 ></A
 ></TD
 ><TD
@@ -454,7 +454,7 @@ ALIGN="right"
 VALIGN="top"
 >Релевантность
 <A
-NAME="AEN6036"
+NAME="AEN6033"
 ></A
 ></TD
 ></TR

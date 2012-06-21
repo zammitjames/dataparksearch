@@ -63,9 +63,6 @@
 			<holder>Lavtech.com corp.</holder>
 		</copyright>
 	</bookinfo>
-<dedication><title></title>
-<para>Этот проект посвящается Ноеми.</para>
-</dedication>
 &intro;
 &install;
 <chapter id="indexing">

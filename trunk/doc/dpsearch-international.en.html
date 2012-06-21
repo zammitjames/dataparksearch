@@ -117,7 +117,7 @@ NAME="CHARSET"
 >7.1. Character sets</A
 ></H1
 ><A
-NAME="AEN4021"
+NAME="AEN4018"
 ></A
 ><DIV
 CLASS="SECT2"
@@ -154,7 +154,7 @@ MacCyrillic, MacGujarati.</P
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN4031"
+NAME="AEN4028"
 ></A
 ><P
 ><B
@@ -343,7 +343,7 @@ engine can understand:</P
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN4117"
+NAME="AEN4114"
 ></A
 ><P
 ><B
@@ -889,7 +889,7 @@ that if some recoding can't convert a character directly from one charset to ano
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > will use HTML numeric character references
-to escape this character (i.e. in form &#38;#NNN; where NNN - a character code in Unicode).
+to escape this character (i.e. in form &amp;#NNN; where NNN - a character code in Unicode).
 Thus, for any <B
 CLASS="COMMAND"
 >LocalCharset</B
@@ -908,7 +908,7 @@ NAME="CHARSET-SEARCHDEC"
 >7.1.4. Recoding at search time</A
 ></H2
 ><A
-NAME="AEN4384"
+NAME="AEN4381"
 ></A
 ><P
 >You may display search results in any charset supported by <SPAN
@@ -947,10 +947,10 @@ TYPE="1"
 ></LI
 ><LI
 ><P
->&#60;META NAME="Content-Type" CONTENT="text/html; charset=xxx"&#62;</P
+>&lt;META NAME="Content-Type" CONTENT="text/html; charset=xxx"&gt;</P
 ><P
 ><A
-NAME="AEN4401"
+NAME="AEN4398"
 ></A
 >
 Selection of this variant may be switch off by command: <B
@@ -1009,7 +1009,7 @@ CLASS="COMMAND"
 > command</A
 ></H3
 ><A
-NAME="AEN4417"
+NAME="AEN4414"
 ></A
 ><P
 >Load language map for charset and language guesser from the given file. 
@@ -1039,7 +1039,7 @@ NAME="DPGUESSER"
 ></H3
 ><P
 >To build your own language map use <A
-NAME="AEN4428"
+NAME="AEN4425"
 ></A
 ><TT
 CLASS="LITERAL"
@@ -1049,7 +1049,7 @@ utility. In addition, your need to collect file with language samples in charset
 use the following command:
 <PRE
 CLASS="PROGRAMLISTING"
->        dpguesser -p -c charset -l language &#60; FILENAME &#62; language.charset.lm</PRE
+>        dpguesser -p -c charset -l language &lt; FILENAME &gt; language.charset.lm</PRE
 ></P
 ><P
 >You can also use <TT
@@ -1059,7 +1059,7 @@ CLASS="LITERAL"
 language maps. To do this, use following command:
 <PRE
 CLASS="PROGRAMLISTING"
->        dpguesser [-n maxhits] &#60; FILENAME</PRE
+>        dpguesser [-n maxhits] &lt; FILENAME</PRE
 ></P
 ><P
 >For some languages, it may be used few different charset. To convert from one charset supported by 
@@ -1067,7 +1067,7 @@ CLASS="PROGRAMLISTING"
 CLASS="APPLICATION"
 >DataparkSearch</SPAN
 > to another, use <A
-NAME="AEN4437"
+NAME="AEN4434"
 ></A
 ><TT
 CLASS="LITERAL"
@@ -1076,7 +1076,7 @@ CLASS="LITERAL"
 utility.
 <PRE
 CLASS="PROGRAMLISTING"
->        dpconv [OPTIONS] -f charset_from -t charset_to [configfile] &#60; infile &#62; outfile</PRE
+>        dpconv [OPTIONS] -f charset_from -t charset_to [configfile] &lt; infile &gt; outfile</PRE
 >
 You may also specyfy -e switch for <TT
 CLASS="LITERAL"
@@ -1097,7 +1097,7 @@ CLASS="FILENAME"
 ></DIV
 ><P
 ><A
-NAME="AEN4447"
+NAME="AEN4444"
 ></A
 >
 <SPAN
@@ -1115,7 +1115,7 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 ><A
-NAME="AEN4454"
+NAME="AEN4451"
 ></A
 >
 By default, <SPAN
@@ -1140,7 +1140,7 @@ NAME="DEFCHARSET"
 >7.1.7. Default charset</A
 ></H2
 ><A
-NAME="AEN4462"
+NAME="AEN4459"
 ></A
 ><P
 >Use <B
@@ -1161,7 +1161,7 @@ NAME="DEFLANG"
 >7.1.8. Default Language</A
 ></H2
 ><A
-NAME="AEN4470"
+NAME="AEN4467"
 ></A
 ><P
 >You can set default language for Servers by using <CODE
@@ -1174,7 +1174,7 @@ CLASS="FILENAME"
 > variable. This is useful while restricting search by URL language.</P
 ><PRE
 CLASS="PROGRAMLISTING"
->DefaultLang &#60;string&#62;</PRE
+>DefaultLang &lt;string&gt;</PRE
 ><P
 >Default language for server. Can be used if you need language
 restriction while doing search.</P
@@ -1194,7 +1194,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN4482"
+NAME="AEN4479"
 ></A
 ><P
 >Defines the charset which will be used to store data in database.
@@ -1227,7 +1227,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN4492"
+NAME="AEN4489"
 ></A
 ><P
 >This option is useful for users which deals with Cyrillic content and broken
@@ -1255,15 +1255,15 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN4500"
+NAME="AEN4497"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->RemoteCharset &#60;charset&#62;</PRE
+>RemoteCharset &lt;charset&gt;</PRE
 ><P
 ><CODE
 CLASS="OPTION"
->&#60;charset&#62;</CODE
+>&lt;charset&gt;</CODE
 > is default character set for the server in next <B
 CLASS="COMMAND"
 >Server</B
@@ -1275,9 +1275,9 @@ CLASS="COMMAND"
 CLASS="COMMAND"
 >Subnet</B
 > command(s).
-This is required only for "bad" servers that do not send information
+This is required only for &quot;bad&quot; servers that do not send information
 about charset in header: "Content-type: text/html; charset=some_charset"
-and do not have &#60;META NAME="Content" Content="text/html; charset="some_charset"&#62;
+and do not have &lt;META NAME="Content" Content="text/html; charset="some_charset"&gt;
 Can be set before every <B
 CLASS="COMMAND"
 >Server</B
@@ -1310,15 +1310,15 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN4517"
+NAME="AEN4514"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->URLCharset &#60;charset&#62;</PRE
+>URLCharset &lt;charset&gt;</PRE
 ><P
 ><CODE
 CLASS="OPTION"
->&#60;charset&#62;</CODE
+>&lt;charset&gt;</CODE
 > is character set for the URL argument in next <B
 CLASS="COMMAND"
 >Server</B
@@ -1367,13 +1367,13 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN4535"
+NAME="AEN4532"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
->CharsToEscape "\"&#38;&#60;&#62;![]"</PRE
+>CharsToEscape &quot;\&quot;&amp;&lt;&gt;![]&quot;</PRE
 ><P
->Use this command in your search template to specify the list of characters to escape for $&#38;(x) search template meta-variables.</P
+>Use this command in your search template to specify the list of characters to escape for $&amp;(x) search template meta-variables.</P
 ></DIV
 ></DIV
 ></DIV

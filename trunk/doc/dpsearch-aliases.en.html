@@ -108,7 +108,7 @@ CLASS="FILENAME"
 > command</A
 ></H2
 ><A
-NAME="AEN1245"
+NAME="AEN1242"
 ></A
 ><P
 >Format of "Alias" <TT
@@ -117,7 +117,7 @@ CLASS="FILENAME"
 > command:
 		<PRE
 CLASS="PROGRAMLISTING"
->Alias &#60;masterURL&#62; &#60;mirrorURL&#62;</PRE
+>Alias &lt;masterURL&gt; &lt;mirrorURL&gt;</PRE
 ></P
 ><P
 >E.g. you wish to index
@@ -261,7 +261,7 @@ command work only if "regex" match type is used and does not work with
 >Use this syntax for Realm aliases:
 		<PRE
 CLASS="PROGRAMLISTING"
->Realm regex &#60;URL_pattern&#62; &#60;alias_pattern&#62;</PRE
+>Realm regex &lt;URL_pattern&gt; &lt;alias_pattern&gt;</PRE
 >
 		</P
 ><P
@@ -330,7 +330,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1300"
+NAME="AEN1297"
 ></A
 ><P
 >You may also specify <B
@@ -379,7 +379,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1314"
+NAME="AEN1311"
 ></A
 ><P
 >The ReverseAlias
@@ -414,40 +414,40 @@ the only parameter. The question sign is deleted as well:
 
 		<PRE
 CLASS="PROGRAMLISTING"
->ReverseAlias regex  (http://[^?]*)[?]PHPSESSION=[^&#38;]*$          $1$2</PRE
+>ReverseAlias regex  (http://[^?]*)[?]PHPSESSION=[^&amp;]*$          $1$2</PRE
 >
 		</P
 ><P
 >Cutting from URL like
 <TT
 CLASS="LITERAL"
->w/a.php?PHPSESSION=xxx&#38;..</TT
+>w/a.php?PHPSESSION=xxx&amp;..</TT
 >, i.e. when PHPSESSION
 is the first parameter, but there are other parameters following
-it. The '&#38;' sign after PHPSESSION is deleted as well. Question
+it. The '&amp;' sign after PHPSESSION is deleted as well. Question
 mark is not deleted:
 
 		<PRE
 CLASS="PROGRAMLISTING"
->ReverseAlias regex  (http://[^?]*[?])PHPSESSION=[^&#38;]*&#38;(.*)      $1$2</PRE
+>ReverseAlias regex  (http://[^?]*[?])PHPSESSION=[^&amp;]*&amp;(.*)      $1$2</PRE
 >
 		</P
 ><P
 >Cutting from URL like
 <TT
 CLASS="LITERAL"
->http://www/a.php?a=b&#38;PHPSESSION=xxx</TT
+>http://www/a.php?a=b&amp;PHPSESSION=xxx</TT
 > or
 <TT
 CLASS="LITERAL"
->http://www/a.php?a=b&#38;PHPSESSION=xxx&#38;c=d</TT
+>http://www/a.php?a=b&amp;PHPSESSION=xxx&amp;c=d</TT
 >,
-where PHPSESSION is not the first parameter. The '&#38;' sign before
+where PHPSESSION is not the first parameter. The '&amp;' sign before
 PHPSESSION is deleted:
 
 		<PRE
 CLASS="PROGRAMLISTING"
->ReverseAlias regex  (http://.*)&#38;PHPSESSION=[^&#38;]*(.*)         $1$2</PRE
+>ReverseAlias regex  (http://.*)&amp;PHPSESSION=[^&amp;]*(.*)         $1$2</PRE
 >
 		</P
 ></DIV
@@ -459,7 +459,7 @@ CLASS="SECT2"
 NAME="REVERSEALIAS-PROG"
 >3.7.7. ReverseAliasProg command
 <A
-NAME="AEN1335"
+NAME="AEN1332"
 ></A
 ></A
 ></H2
@@ -497,7 +497,7 @@ CLASS="FILENAME"
 > search template</A
 ></H2
 ><A
-NAME="AEN1348"
+NAME="AEN1345"
 ></A
 ><P
 >It is also possible to define aliases in search
@@ -527,7 +527,7 @@ CLASS="FILENAME"
 
 		<PRE
 CLASS="PROGRAMLISTING"
->Alias &#60;find-prefix&#62; &#60;replace-prefix&#62;</PRE
+>Alias &lt;find-prefix&gt; &lt;replace-prefix&gt;</PRE
 >
 		</P
 ><P

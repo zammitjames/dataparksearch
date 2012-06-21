@@ -175,7 +175,7 @@ weights will be displayed first.</P
 >To find a phrase, simple enclose it in quotas. For example: 
 <KBD
 CLASS="USERINPUT"
->"uncontrollable sphere"</KBD
+>&quot;uncontrollable sphere&quot;</KBD
 >.</P
 ></DIV
 ><DIV
@@ -187,7 +187,7 @@ NAME="SEARCH_PARAMS"
 >8.1.2. Search parameters</A
 ></H2
 ><A
-NAME="AEN4805"
+NAME="AEN4802"
 ></A
 ><P
 ><SPAN
@@ -345,14 +345,14 @@ CLASS="FILENAME"
 >search.cgi</TT
 > inserts % signs before and after "ul"
 value when compiled with SQL support. It allows to write URL substring
-in HTML from to limit search, for example	&#60;OPTION
-VALUE="/manual/"&#62; instead of VALUE="%/manual/%". When full URL with
+in HTML from to limit search, for example	&lt;OPTION
+VALUE="/manual/"&gt; instead of VALUE="%/manual/%". When full URL with
 schema is specified <TT
 CLASS="FILENAME"
 >search.cgi</TT
 > adds % sign only
-after this value. For example for &#60;OPTION
-VALUE="http://localhost/"&#62; <TT
+after this value. For example for &lt;OPTION
+VALUE="http://localhost/"&gt; <TT
 CLASS="FILENAME"
 >search.cgi</TT
 > will
@@ -742,7 +742,7 @@ CLASS="FILENAME"
 >For example, when a shtml page contains a line
 <TT
 CLASS="LITERAL"
->&#60;--#include virtual="search.cgi"&#62;</TT
+>&lt;--#include virtual="search.cgi"&gt;</TT
 >,
 SCRIPT_NAME variable will still point to
 <TT
@@ -924,9 +924,9 @@ NAME="SEARCH-OPERATORS"
 ><P
 >The operator <B
 CLASS="COMMAND"
->allin&#60;section&#62;:</B
+>allin&lt;section&gt;:</B
 >, 
-where &#60;section&#62; is the name of a section, defined in <TT
+where &lt;section&gt; is the name of a section, defined in <TT
 CLASS="FILENAME"
 >sections.conf</TT
 > file 
@@ -940,7 +940,7 @@ HREF="dpsearch-indexcmd.en.html#SECTION_CMD"
 >&#62;), 
 that operator allows to limit the search domain for a query word by the section specified.</P
 ><P
->This operator differ from limiting search domain using &#38;wf= CGI-variable in a way, 
+>This operator differ from limiting search domain using &amp;wf= CGI-variable in a way, 
 that such limit is imposing only on query words specified after this operator.</P
 ><P
 >For example, if you have the following commands in <TT
@@ -980,7 +980,7 @@ NAME="SEARCH-BOOL"
 >8.1.7. Advanced boolean search</A
 ></H2
 ><A
-NAME="AEN5045"
+NAME="AEN5042"
 ></A
 ><P
 >If you want more advanced results you may use
@@ -997,11 +997,11 @@ CLASS="USERINPUT"
 >AND</KBD
 > or <KBD
 CLASS="USERINPUT"
->&#38;</KBD
+>&amp;</KBD
 > - logical AND. For example, 
 "<KBD
 CLASS="USERINPUT"
->mysql &#38; odbc</KBD
+>mysql &amp; odbc</KBD
 >" or "<KBD
 CLASS="USERINPUT"
 >mysql AND odbc</KBD
@@ -1074,7 +1074,7 @@ CLASS="USERINPUT"
 > - logical NOT. For example,
 "<KBD
 CLASS="USERINPUT"
->mysql &#38; ~ odbc</KBD
+>mysql &amp; ~ odbc</KBD
 >"  or "<KBD
 CLASS="USERINPUT"
 >mysql AND NOT odbc</KBD
@@ -1090,7 +1090,7 @@ given word from results. Query "~ odbc" will find nothing!</P
 CLASS="USERINPUT"
 >()</KBD
 > - group command to compose more complex
-queries. For example "(mysql | msql) &#38; ~ postgres". Query language
+queries. For example "(mysql | msql) &amp; ~ postgres". Query language
 is simple and powerful at the same time. Just consider query as usual
 boolean expression.</P
 ></DIV
@@ -1130,7 +1130,7 @@ CLASS="CALSTABLE"
 ><COL><COL><TBODY
 ><TR
 ><TD
->&#60;ACCRUE&#62;</TD
+>&lt;ACCRUE&gt;</TD
 ><TD
 >equal to <KBD
 CLASS="USERINPUT"
@@ -1139,7 +1139,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&#60;AND&#62;</TD
+>&lt;AND&gt;</TD
 ><TD
 >equal to <KBD
 CLASS="USERINPUT"
@@ -1148,7 +1148,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&#60;ANY&#62;</TD
+>&lt;ANY&gt;</TD
 ><TD
 >equal to <KBD
 CLASS="USERINPUT"
@@ -1157,7 +1157,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&#60;NEAR&#62;</TD
+>&lt;NEAR&gt;</TD
 ><TD
 >equal to <KBD
 CLASS="USERINPUT"
@@ -1166,7 +1166,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&#60;NOT&#62;</TD
+>&lt;NOT&gt;</TD
 ><TD
 >equal to <KBD
 CLASS="USERINPUT"
@@ -1175,7 +1175,7 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&#60;OR&#62;</TD
+>&lt;OR&gt;</TD
 ><TD
 >equal to <KBD
 CLASS="USERINPUT"
@@ -1184,13 +1184,13 @@ CLASS="USERINPUT"
 ></TR
 ><TR
 ><TD
->&#60;PHRASE&#62;</TD
+>&lt;PHRASE&gt;</TD
 ><TD
 >equal to a phrase in boolean mode.</TD
 ></TR
 ><TR
 ><TD
->&#60;WORD&#62;</TD
+>&lt;WORD&gt;</TD
 ><TD
 >is considered as an empty operator.</TD
 ></TR

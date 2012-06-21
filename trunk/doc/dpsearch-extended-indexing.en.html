@@ -92,7 +92,7 @@ NAME="HTDB"
 >3.11.1. Indexing SQL database tables (htdb: virtual URL scheme)</A
 ></H2
 ><A
-NAME="AEN2649"
+NAME="AEN2646"
 ></A
 ><P
 ><SPAN
@@ -146,7 +146,7 @@ CLASS="COMMAND"
 >. </P
 ><P
 ><A
-NAME="AEN2667"
+NAME="AEN2664"
 ></A
 >
 			<B
@@ -159,7 +159,7 @@ CLASS="COMMAND"
 > command.</P
 ><P
 ><A
-NAME="AEN2673"
+NAME="AEN2670"
 ></A
 >
 			<B
@@ -179,7 +179,7 @@ HTDBList "SELECT id FROM messages"</PRE
 ></P
 ><P
 ><A
-NAME="AEN2680"
+NAME="AEN2677"
 ></A
 >
 <B
@@ -193,7 +193,7 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 ><A
-NAME="AEN2686"
+NAME="AEN2683"
 ></A
 >
 			<B
@@ -239,18 +239,18 @@ CLASS="FILENAME"
 commands.</P
 ><P
 ><A
-NAME="AEN2699"
+NAME="AEN2696"
 ></A
 >
 <B
 CLASS="COMMAND"
->HTDBText &#60;section&#62;</B
+>HTDBText &lt;section&gt;</B
 > is a query to get raw text data from database using PRIMARY key value 
 collected via <B
 CLASS="COMMAND"
 >HTDBList</B
 > command.
-The &#60;section&#62; parameter is specify the section name useing for storing this data. This query may return as many rows as required.
+The &lt;section&gt; parameter is specify the section name useing for storing this data. This query may return as many rows as required.
 You may specify several <B
 CLASS="COMMAND"
 >HTDBText</B
@@ -302,7 +302,7 @@ NAME="HTDB-VAR"
 >3.11.1.2. HTDB variables</A
 ></H3
 ><A
-NAME="AEN2716"
+NAME="AEN2713"
 ></A
 ><P
 >You may use PATH parts of URL as parameters of
@@ -449,7 +449,7 @@ CLASS="PROGRAMLISTING"
 >HTTP/1.0 200 OK
 Content-Type: text/plain
 
-&#60;some text from 'message' field here&#62;</PRE
+&lt;some text from 'message' field here&gt;</PRE
 >
 		</P
 ><P
@@ -529,12 +529,12 @@ CLASS="PROGRAMLISTING"
 >For each primary key value HTDBDoc command generates text/html document with HTTP headers and content like this:
 		<PRE
 CLASS="PROGRAMLISTING"
->&#60;HTML&#62;
-&#60;HEAD&#62;
-&#60;TITLE&#62; ... subject field here .... &#60;/TITLE&#62;
-&#60;META NAME="Description" Content=" ... author here ..."&#62;
-&#60;/HEAD&#62;
-&#60;BODY&#62; ... message text here ... &#60;/BODY&#62;</PRE
+>&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt; ... subject field here .... &lt;/TITLE&gt;
+&lt;META NAME="Description" Content=" ... author here ..."&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt; ... message text here ... &lt;/BODY&gt;</PRE
 ></P
 ><P
 >At the end of <TT
@@ -576,7 +576,7 @@ NAME="EXEC"
 >3.11.2. Indexing binaries output (exec: and cgi: virtual URL schemes)</A
 ></H2
 ><A
-NAME="AEN2779"
+NAME="AEN2776"
 ></A
 ><P
 ><SPAN
@@ -615,12 +615,12 @@ creates REQUEST_METHOD environment variable with "GET" value and
 QUERY_STRING variable according to HTTP standards. For example, if
 <TT
 CLASS="LITERAL"
->cgi:/usr/local/apache/cgi-bin/test-cgi?a=b&#38;d=e</TT
+>cgi:/usr/local/apache/cgi-bin/test-cgi?a=b&amp;d=e</TT
 >
 is being indexed, indexer creates QUERY_STRING with
 <TT
 CLASS="LITERAL"
->a=b&#38;d=e</TT
+>a=b&amp;d=e</TT
 > value.  cgi: virtual URL scheme allows
 indexing your site without having to invoke web servers even if you
 want to index CGI scripts. For example, you have a web site with
@@ -656,12 +656,12 @@ like in cgi: scheme. It creates a command line with argument given in
 URL after ? sign. For example, when indexing
 <TT
 CLASS="LITERAL"
->exec:/usr/local/bin/myprog?a=b&#38;d=e</TT
+>exec:/usr/local/bin/myprog?a=b&amp;d=e</TT
 >, this
 command will be executed:
 		<PRE
 CLASS="PROGRAMLISTING"
->/usr/local/bin/myprog "a=b&#38;d=e" </PRE
+>/usr/local/bin/myprog "a=b&amp;d=e" </PRE
 >
 		</P
 ></DIV
@@ -750,11 +750,11 @@ NAME="MIRROR"
 >3.11.3. Mirroring</A
 ></H2
 ><A
-NAME="AEN2822"
+NAME="AEN2819"
 ></A
 ><P
 ><A
-NAME="AEN2825"
+NAME="AEN2822"
 ></A
 >
 You may specify a path to root dir to enable sites mirroring
@@ -765,7 +765,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2830"
+NAME="AEN2827"
 ></A
 >
 You may specify as well root directory of mirrored document's headers indexer will store HTTP headers to local disk too.
@@ -776,13 +776,13 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2835"
+NAME="AEN2832"
 ></A
 >
 You may specify period during which earlier mirrored files will be used while indexing instead of real downloading.
 	<PRE
 CLASS="PROGRAMLISTING"
->MirrorPeriod &#60;time&#62;</PRE
+>MirrorPeriod &lt;time&gt;</PRE
 >
 	</P
 ><P
@@ -799,7 +799,7 @@ CLASS="LITERAL"
 >do not use mirrored files</TT
 >.</P
 ><P
->&#60;time&#62; is in the form
+>&lt;time&gt; is in the form
 <TT
 CLASS="LITERAL"
 >xxxA[yyyB[zzzC]]</TT
@@ -860,10 +860,10 @@ NAME="DATA-ACQ"
 >3.11.4. Data acquisition</A
 ></H2
 ><A
-NAME="AEN2855"
+NAME="AEN2852"
 ></A
 ><A
-NAME="AEN2857"
+NAME="AEN2854"
 ></A
 ><P
 >With <B
@@ -876,9 +876,9 @@ CLASS="COMMAND"
 > command is as follow:
 <PRE
 CLASS="PROGRAMLISTING"
->ActionSQL [add | update | delete] &#60;section&#62; &#60;pattern&#62; &#60;sql-template&#62; [&#60;dbaddr&#62;]</PRE
+>ActionSQL [add | update | delete] &lt;section&gt; &lt;pattern&gt; &lt;sql-template&gt; [&lt;dbaddr&gt;]</PRE
 >
-where &#60;section&#62; is the name of document section to check for regex pattern &#62;pattern&#62; match. If a match is found then the &#60;sql-template&#62; is filled with regex meta-variables $1-$9 as well with search template meta-variables (as for example, $(Title), $(Last-Modified), etc.) to form a sql-query, which is executed in the first DBAddr defined in indexer.conf file. If the optional &#60;dbaddr&#62; paramater of ActionSQL command is set, a new connection is set according this DBAddr and sql-query is executed in this connection.</P
+where &lt;section&gt; is the name of document section to check for regex pattern &gt;pattern&gt; match. If a match is found then the &lt;sql-template&gt; is filled with regex meta-variables $1-$9 as well with search template meta-variables (as for example, $(Title), $(Last-Modified), etc.) to form a sql-query, which is executed in the first DBAddr defined in indexer.conf file. If the optional &lt;dbaddr&gt; paramater of ActionSQL command is set, a new connection is set according this DBAddr and sql-query is executed in this connection.</P
 ><P
 >One of options <CODE
 CLASS="OPTION"
