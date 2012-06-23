@@ -1468,7 +1468,6 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		  first = strstr(second, Alias->pattern);
 		}
 		if (Doc->Buf.pattern) Doc->Buf.pattern[pattern_size] = '\0';
-		fprintf(stderr, " -- Buf.pattern:%s|\n", Doc->Buf.pattern);
 		DPS_FREE(buf);
 		break;
 	      }
