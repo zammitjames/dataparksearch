@@ -1452,17 +1452,25 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		break;
 	      } else if (Alias->match_type == DPS_MATCH_SUBSTR) {
 		char *second, *first = strstr(Doc->Buf.content, Alias->pattern);
-		size_t flen;
-		if (first != NULL) {
+		size_t flen, pattern_size = 0;
+		Doc->Buf.pattern = NULL;
+		while (first != NULL) {
 		  second = strstr(first, Alias->arg);
 		  if (second != NULL) {
 		    flen = dps_strlen(Alias->pattern);
-		    Doc->Buf.pattern = DpsStrndup(first + flen, (size_t)(second - first - flen));
-		    DPS_FREE(buf);
+		    Doc->Buf.pattern = DpsRealloc(Doc->Buf.pattern, pattern_size + (size_t)(second - first - flen) + 1);
+		    if (Doc->Buf.pattern == NULL) break;
+		    dps_strncpy(Doc->Buf.pattern + pattern_size, first + flen, (size_t)(second - first - flen));
+		    pattern_size += (size_t)(second - first - flen);
+		    /*Doc->Buf.pattern = DpsStrndup(first + flen, (size_t)(second - first - flen));*/
 		    DpsLog(Indexer, DPS_LOG_DEBUG, "%dth, BodyBrackets applied", i);
-		    break;
 		  }
+		  first = strstr(second, Alias->pattern);
 		}
+		if (Doc->Buf.pattern) Doc->Buf.pattern[pattern_size] = '\0';
+		fprintf(stderr, " -- Buf.pattern:%s|\n", Doc->Buf.pattern);
+		DPS_FREE(buf);
+		break;
 	      }
 	    }
 /*	    dps_memmove(Doc->Buf.content, buf, buf_len = dps_strlen(buf) + 1);
