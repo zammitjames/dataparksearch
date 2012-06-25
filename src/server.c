@@ -498,10 +498,10 @@ urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Do
       return 0;
     }
     dps_strcpy(urlstr, url);
+    if ((p = strstr(urlstr, ":/")) == NULL) {DPS_FREE(urlstr); return 0; }
     if (Indexer->Flags.MaxSiteLevel < 0) {
       if ((pp = strrchr(urlstr, '/')) == NULL) { DPS_FREE(urlstr); return 0; }
     } else {
-      if ((p = strstr(urlstr, ":/")) == NULL) {DPS_FREE(urlstr); return 0; }
       if ((pp = strchr(p + 3, '/')) == NULL) {DPS_FREE(urlstr); return 0; }
     }
     pp[1] = '\0';
