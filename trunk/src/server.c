@@ -519,7 +519,7 @@ urlid_t DpsServerGetSiteId(DPS_AGENT *Indexer, DPS_SERVER *srv, DPS_DOCUMENT *Do
     if ((pp = strchr(p + 3, '/')) == NULL) {DPS_FREE(urlstr); return 0; }
     for (p += 3; p < pp; p++) { *p = (char)dps_tolower((int)*p); }
     for ( ; level < 0; level++) {
-      if ((p = strchr(pp, '/')) == NULL) break;
+      if ((p = strchr(pp + 1, '/')) == NULL) break;
       pp = p;
     }
     pp[1] = '\0';
