@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -300,7 +300,10 @@ int DpsURLParse(DPS_URL *url, const char *str) {
 	}
 
 	/* Cat an anchor if exist */
-	if((anchor=strstr(url->path,"#")))*anchor=0;
+	if((anchor=strstr(url->path,"#"))) {
+	  url->anchor = (char*)DpsStrdup(anchor);
+	  *anchor=0;
+	}
 
 
 	/* If path is not full just copy it to filename    */
@@ -469,9 +472,10 @@ char * DpsURLNormalizePath(char * str){
 	const char	*path = (newURL->path && newURL->path[0]) ? newURL->path : curURL->path;
 	const char	*fname = ((newURL->filename && newURL->filename[0]) || (newURL->path && newURL->path[0])) ? 
 	  newURL->filename : curURL->filename;
-	const char     *query_string = newURL->query_string;
+	const char      *query_string = newURL->query_string;
+	char            *anchor = newURL->anchor;
 	char		*pathfile = (char*)DpsMalloc(dps_strlen(DPS_NULL2EMPTY(path)) + dps_strlen(DPS_NULL2EMPTY(fname)) +
-						     dps_strlen(DPS_NULL2EMPTY(query_string)) + 5);
+						     dps_strlen(DPS_NULL2EMPTY(query_string)) + +dps_strlen(DPS_NULL2EMPTY(anchor)) + 5);
 	int             cascade;
 	DPS_MATCH	*Alias;
 	char		*alias = NULL;
@@ -489,6 +493,9 @@ char * DpsURLNormalizePath(char * str){
 /*	sprintf(pathfile, "/%s%s%s",  DPS_NULL2EMPTY(path), DPS_NULL2EMPTY(fname), DPS_NULL2EMPTY(query_string));*/
 	pathfile[0] = '/'; 
 	dps_strcpy(pathfile + 1, DPS_NULL2EMPTY(path)); dps_strcat(pathfile, DPS_NULL2EMPTY(fname)); dps_strcat(pathfile, DPS_NULL2EMPTY(query_string));
+	if (anchor != NULL) {
+	  dps_strcat(pathfile, anchor);
+	}
 		
 	DpsURLNormalizePath(pathfile);
 
@@ -558,6 +565,9 @@ char * DpsURLNormalizePath(char * str){
 	  }
 	  DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
 	}
+
+	/* Cat an anchor if exist */
+	if((anchor=strstr(*str, "#"))) *anchor = 0;
 
 ret:	
 	DPS_FREE(alias);
