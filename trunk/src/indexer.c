@@ -1429,10 +1429,11 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    DPS_MATCH       *Alias;
 	    DPS_MATCH_PART  Parts[10];
 	    size_t nparts = 10;
-	    size_t buf_len;
+	    size_t buf_len, pattern_len = 0, new_buf_len;;
 
 	    buf = (char*)DpsMalloc(buf_len = (Doc->Buf.size + 1024));
 	    if (buf == NULL) return DPS_OK;
+	    DPS_FREE(Doc->Buf.pattern);
 
 	    for (i = 0; i < Indexer->Conf->BodyPatterns.nmatches; i++) {
 	      Alias = &Indexer->Conf->BodyPatterns.Match[i];
@@ -1446,36 +1447,36 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		}
 		DpsMatchApply(buf, buf_len - 1, Doc->Buf.content, Alias->arg, Alias, nparts, Parts);
 		DPS_RELEASELOCK(Indexer, DPS_LOCK_CONF);
-		DPS_FREE(Doc->Buf.pattern);
-		Doc->Buf.pattern = DpsRealloc(buf, dps_strlen(buf) + 1);
+		new_buf_len = dps_strlen(buf);
+		if ((Doc->Buf.pattern = DpsRealloc(Doc->Buf.pattern, pattern_len + new_buf_len + 1 )) == NULL) {
+		  DPS_FREE(buf);
+		  return DPS_OK;
+		}
+		dps_strncpy(Doc->Buf.pattern, buf, new_buf_len + 1);
+		pattern_len += new_buf_len;
 		DpsLog(Indexer, DPS_LOG_DEBUG, "%dth, BodyPattern applied", i);
-		break;
+		/*break;*/ /* We do not break anymore to apply all possible patterns and body brackets */
 	      } else if (Alias->match_type == DPS_MATCH_SUBSTR) {
 		char *second, *first = strstr(Doc->Buf.content, Alias->pattern);
-		size_t flen, pattern_size = 0;
-		Doc->Buf.pattern = NULL;
+		size_t flen;
 		while (first != NULL) {
 		  second = strstr(first, Alias->arg);
 		  if (second != NULL) {
 		    flen = dps_strlen(Alias->pattern);
-		    Doc->Buf.pattern = DpsRealloc(Doc->Buf.pattern, pattern_size + (size_t)(second - first - flen) + 1);
+		    Doc->Buf.pattern = DpsRealloc(Doc->Buf.pattern, pattern_len + (size_t)(second - first - flen) + 1);
 		    if (Doc->Buf.pattern == NULL) break;
-		    dps_strncpy(Doc->Buf.pattern + pattern_size, first + flen, (size_t)(second - first - flen));
-		    pattern_size += (size_t)(second - first - flen);
+		    dps_strncpy(Doc->Buf.pattern + pattern_len, first + flen, (size_t)(second - first - flen));
+		    pattern_len += (size_t)(second - first - flen);
 		    /*Doc->Buf.pattern = DpsStrndup(first + flen, (size_t)(second - first - flen));*/
 		    DpsLog(Indexer, DPS_LOG_DEBUG, "%dth, BodyBrackets applied", i);
 		  }
 		  first = strstr(second, Alias->pattern);
 		}
-		if (Doc->Buf.pattern) Doc->Buf.pattern[pattern_size] = '\0';
-		DPS_FREE(buf);
-		break;
+		if (Doc->Buf.pattern) Doc->Buf.pattern[pattern_len] = '\0';
+		/*break;*/ /* We do not break anymore to apply all passible pattern and body brackets */
 	      }
 	    }
-/*	    dps_memmove(Doc->Buf.content, buf, buf_len = dps_strlen(buf) + 1);
-	    Doc->Buf.size = buf_len + (Doc->Buf.content - Doc->Buf.buf);*/
-	    if (Doc->Buf.pattern == NULL) DPS_FREE(buf);
-
+	    DPS_FREE(buf);
 	  }
 
 	  for (r = 0; r < 256; r++) {
