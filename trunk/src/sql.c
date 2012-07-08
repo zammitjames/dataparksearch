@@ -1805,7 +1805,7 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 	}
 	
 	/* Delete old words */
-	if(db->DBMode==DPS_DBMODE_SINGLE){
+	if(db->DBMode==DPS_DBMODE_SINGLE || db->DBMode==DPS_DBMODE_CACHE){
 		sprintf(qbuf,"DELETE FROM dict WHERE url_id=%s%i%s", qu, url_id, qu);
 	}else
 	if(db->DBMode==DPS_DBMODE_SINGLE_CRC){
@@ -1829,7 +1829,7 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 			while(nstored<Doc->Words.nwords){
 			  size_t rstored = 0;
 
-				if(db->DBMode==DPS_DBMODE_SINGLE){
+				if(db->DBMode==DPS_DBMODE_SINGLE || db->DBMode==DPS_DBMODE_CACHE){
 					dps_strcpy(qb,"INSERT INTO dict (word,url_id,intag) VALUES ");
 				}else
 				if(db->DBMode==DPS_DBMODE_SINGLE_CRC){
@@ -1858,7 +1858,7 @@ static int StoreWordsSingle(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc,DPS_DB *db){
 					
 					if(i>nstored)*qe++=',';
 
-					if(db->DBMode==DPS_DBMODE_SINGLE){
+					if(db->DBMode==DPS_DBMODE_SINGLE || db->DBMode==DPS_DBMODE_CACHE){
 					  (void)DpsDBEscStr(db, word_escaped, lcsword, dps_strlen(lcsword));
 					  dps_snprintf(qe, mlen - (size_t)(qe - qb), "('%s',%d,%d)", word_escaped, url_id, Doc->Words.Word[i].coord);
 					  qe = DPS_STREND(qe);
@@ -1943,7 +1943,7 @@ unlock_StoreWordsSingle:
 
 static int DpsStoreWords(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
 	int	res;
-	
+
 	switch(db->DBMode){
 		case DPS_DBMODE_CACHE:
 			res=StoreWordsSingle(Indexer,Doc,db); /* For FillDictionary option enabled */
