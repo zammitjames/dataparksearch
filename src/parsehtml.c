@@ -1137,6 +1137,8 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 	char *metaname = NULL;
 	char *metacont = NULL;
 	char *href = NULL;
+	char *data_expanded_url = NULL;
+	char *data_ultimate_url = NULL;
 	char *base = NULL;
 	char *lang = NULL;
 	char *secname = NULL;
@@ -1245,6 +1247,20 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		  href = (char*)DpsStrdup(DpsTrim(y, " \t\r\n"));
 		  DPS_FREE(y);
 		}else
+		if(ISTAG(i,"data-expanded-url")){
+		  /* Twitter's A */
+		  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
+		  DPS_FREE(data_expanded_url);
+		  data_expanded_url = (char*)DpsStrdup(DpsTrim(y, " \t\r\n"));
+		  DPS_FREE(y);
+		}else
+		if(ISTAG(i,"data-ultimate-url")){
+		  /* Twitter's A */
+		  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
+		  DPS_FREE(data_ultimate_url);
+		  data_ultimate_url = (char*)DpsStrdup(DpsTrim(y, " \t\r\n"));
+		  DPS_FREE(y);
+		}else
 		if(ISTAG(i,"base")) {
 		  /* OBJECT, EMBED*/
 		  char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
@@ -1293,7 +1309,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		}else
 		if(ISTAG(i, "src")) {
 			/* IMG, FRAME, IFRAME, EMBED */
-		  if (href == NULL) {
+		  if (href == NULL && data_expanded_url == NULL && data_ultimate_url == NULL) {
 		    char *y = DpsStrndup(DPS_NULL2EMPTY(tag->toks[i].val), tag->toks[i].vlen);
 		    href = (char*)DpsStrdup(DpsTrim(y, " \t\r\n"));
 		    DPS_FREE(y);
@@ -1503,34 +1519,39 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 		DPS_FREE(href);
 	}
 
-	if((href) && visible && (tag->follow != DPS_FOLLOW_NO) && !(Indexer->Flags.SkipHrefIn & DpsHrefFrom(name)) ) {
+	if((href || data_expanded_url || data_ultimate_url) && visible && (tag->follow != DPS_FOLLOW_NO) && !(Indexer->Flags.SkipHrefIn & DpsHrefFrom(name)) ) {
 		DPS_HREF	Href;
-
+		char *url_pointer = data_ultimate_url;
 		
+		if (url_pointer == NULL) url_pointer = data_expanded_url;
+		if (url_pointer == NULL) url_pointer = href;
+
 		if ((Doc->subdoc < Indexer->Flags.SubDocLevel) && (Doc->sd_cnt < Indexer->Flags.SubDocCnt)
 		    && (!strcasecmp(name, "IFRAME") || !strcasecmp(name, "EMBED") || !strcasecmp(name, "FRAME") 
 					   || !strcasecmp(name, "META"))) {
-		  DpsSGMLUnescape(href);
-		  DpsIndexSubDoc(Indexer, Doc, base, NULL, href);
+		  DpsSGMLUnescape(url_pointer);
+		  DpsIndexSubDoc(Indexer, Doc, base, NULL, url_pointer);
 		} else {
 /*		DpsSGMLUnescape(href); why we need do this ? */
 		  DpsHrefInit(&Href);
 		  Href.referrer = DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 		  Href.hops = 1 + DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 		  Href.site_id = 0; /*DpsVarListFindInt(&Doc->Sections, "Site_id", 0);*/
-		  Href.url=href;
+		  Href.url = url_pointer;
 		  Href.method=DPS_METHOD_GET;
 		  Href.charset_id = Doc->charset_id;
 		  DpsHrefListAdd(Indexer, &Doc->Hrefs,&Href);
 		  
 		  /* For crosswords */
 		  DPS_FREE(tag->lasthref);
-		  tag->lasthref = (char*)DpsStrdup(href);
+		  tag->lasthref = (char*)DpsStrdup(url_pointer);
 		}
 	}
 	DPS_FREE(metaname);
 	DPS_FREE(metacont);
 	DPS_FREE(href);
+	DPS_FREE(data_expanded_url);
+	DPS_FREE(data_ultimate_url);
 	DPS_FREE(base);
 	DPS_FREE(lang);
 	DPS_FREE(secname);
