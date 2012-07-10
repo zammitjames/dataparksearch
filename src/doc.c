@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -530,16 +530,20 @@ int DpsDocProcessResponseHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {  /* Th
 	}
 
 	if ((var = DpsVarListFind(&Doc->Sections, "Location"))) {
+	  int short_url = 0;
+	  if ((Doc->CurURL.len < 32) && (strcmp(Doc->CurURL.path, "/") == 0) && (Doc->CurURL.hostname != NULL) && (Doc->CurURL.filename != NULL)) short_url = 1;
 	  if ((Doc->subdoc < Indexer->Flags.SubDocLevel) && (Doc->sd_cnt < Indexer->Flags.SubDocCnt) && 
 	      ((status == DPS_HTTP_STATUS_MOVED_TEMPORARILY) 
-	       || (status == DPS_HTTP_STATUS_MOVED_PARMANENTLY && Doc->subdoc > 1)
+	       || (status == DPS_HTTP_STATUS_MOVED_PARMANENTLY && (Doc->subdoc > 1 || short_url))
 	       || (status == DPS_HTTP_STATUS_SEE_OTHER) 
 	       || (status == DPS_HTTP_STATUS_TEMPORARY_REDIRECT) )) {
 	    DpsIndexSubDoc(Indexer, Doc, NULL, NULL, var->val);
 	  } else {
-	        DPS_URL *newURL = DpsURLInit(NULL);
+	        int parse_rc;
+		DPS_URL *newURL = DpsURLInit(NULL);
 		if (newURL == NULL) return DPS_ERROR;
-		switch(DpsURLParse(newURL, var->val)) {
+		parse_rc = DpsURLParse(newURL, var->val);
+		switch(parse_rc) {
 				case DPS_URL_OK:
 					if (DPS_NULL2EMPTY(newURL->schema) != NULL) {
 						DPS_HREF Href;
