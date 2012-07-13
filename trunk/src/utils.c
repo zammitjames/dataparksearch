@@ -1824,9 +1824,9 @@ int DpsBuild(char *path, int omode) {
 	struct stat sb;
 	mode_t numask, oumask;
 	int first, last, retval;
-	char *p;
+	char *p, *pp = DpsStrdup(path);
 
-	p = path;
+	p = pp;
 	oumask = 0;
 	retval = 0;
 	if (p[0] == DPSSLASH)		/* Skip leading slashes. */
@@ -1883,6 +1883,7 @@ int DpsBuild(char *path, int omode) {
 	}
 	if (!first && !last)
 		(void)umask(oumask);
+	DPS_FREE(pp);
 	return (retval);
 }
 
