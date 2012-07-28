@@ -1175,42 +1175,111 @@ void DpsLangMapListSave(DPS_LANGMAPLIST *List) {
 }
 
 
+static char *dps_next_char2map(register char *p, register char *end) {
+  for(; p < end; p++) {
+    if (*p >= 0 && *p <= 0x40) continue;
+    if (*p == '<') {
+      register int i = 0;
+      for (p++; i < 64 && p < end; i++, p++) {
+	if (*p == '>') break;
+      }
+    } else if (*p == '&') {
+    }
+    return p;
+  }
+  return p;
+}
+
 
 void DpsBuildLangMap(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
-  size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
-  /*  const char * end1 = text + maplen - DPS_LM_MAXGRAM1;*/
-  const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
+  const char * end2 = text + textlen;
   register const char *p;
-  register size_t ngl;
+  size_t ngl = 0;
+  char s1[2 * DPS_LM_MAXGRAM1];
+  char s2[2 * DPS_LM_MAXGRAM2];
+  size_t p1 = 0, p2 = 0, n1 = 0, n2 = 0;
 
-  for(p = text; p < end2; p++) {
-    register unsigned int hindex;
-    for (ngl = 1; ngl <= DPS_LM_MAXGRAM1; ngl++) {
-      hindex = DpsHash32(p, ngl) & DPS_LM_HASHMASK;
-      map->memb3[hindex].count++;
-    }
-    for (ngl = DPS_LM_MAXGRAM1 + 1; ngl <= DPS_LM_MAXGRAM2; ngl++) {
-      hindex = DpsHash32(p, ngl) & DPS_LM_HASHMASK;
-      map->memb6[hindex].count++;
+  for (p = dps_next_char2map(text, end2); p < end2; p = dps_next_char2map(++p, end2)) {
+    ngl++;
+    s1[n1] = s1[n1 + DPS_LM_MAXGRAM1] = *p; n1++;
+    s2[n2] = s2[n2 + DPS_LM_MAXGRAM2] = *p; n2++;
+    if (n1 == DPS_LM_MAXGRAM1 - 1) {
+      p++;
+      break;
     }
   }
-  map->nbytes += maplen;
+  for (; p < end2; p = dps_next_char2map(++p, end2)) {
+    register unsigned int hindex;
+    if (*p >= 0 && *p <= 0x40) continue;
+    ngl++;
+    s1[n1] = s1[n1 + DPS_LM_MAXGRAM1] = *p; 
+    n1 = (n1 + 1) % DPS_LM_MAXGRAM1;
+    hindex = DpsHash32(s1 + p1, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
+    p1 = (p1 + 1) % DPS_LM_MAXGRAM1;
+    map->memb3[hindex].count++;
+
+    s2[n2] = s2[n2 + DPS_LM_MAXGRAM2] = *p; n2++;
+    if (n2 == DPS_LM_MAXGRAM2 - 1) {
+      p++;
+      break;
+    }
+  }
+
+  for(; p < end2; p = dps_next_char2map(++p, end2)) {
+    register unsigned int hindex;
+    if (*p >= 0 && *p <= 0x40) continue;
+    ngl++;
+
+    s1[n1] = s1[n1 + DPS_LM_MAXGRAM1] = *p; 
+    n1 = (n1 + 1) % DPS_LM_MAXGRAM1;
+    hindex = DpsHash32(s1 + p1, DPS_LM_MAXGRAM1) & DPS_LM_HASHMASK;
+    p1 = (p1 + 1) % DPS_LM_MAXGRAM1;
+    map->memb3[hindex].count++;
+
+    s2[n2] = s2[n2 + DPS_LM_MAXGRAM1] = *p; 
+    n2 = (n2 + 1) % DPS_LM_MAXGRAM2;
+    hindex = DpsHash32(s2 + p2, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
+    p2 = (p2 + 1) % DPS_LM_MAXGRAM2;
+    map->memb6[hindex].count++;
+
+    if ((max_nbytes > 0) && (map->nbytes + ngl > max_nbytes)) break;
+
+  }
+  map->nbytes += ngl;
 }
 
 void DpsBuildLangMap6(DPS_LANGMAP * map, const char * text, size_t textlen, size_t max_nbytes, int StrFlag) {
-  size_t maplen = (max_nbytes > 0) ? dps_min((max_nbytes - map->nbytes), textlen) : textlen;
-  const char * end2 = text + maplen - DPS_LM_MAXGRAM2;
+  const char * end2 = text + textlen;
   register const char *p;
-  register size_t ngl;
-  
-  for(p = text; p < end2; p++) {
-    register unsigned int hindex;
-    for (ngl = DPS_LM_MAXGRAM1 + 1; ngl <= DPS_LM_MAXGRAM2; ngl++) {
-      hindex = DpsHash32(p, ngl) & DPS_LM_HASHMASK;
-      map->memb6[hindex].count++;
+  size_t ngl = 0;
+  char s2[2 * DPS_LM_MAXGRAM2];
+  size_t p2 = 0, n2 = 0;
+
+  for (p = dps_next_char2map(text, end2); p < end2; p = dps_next_char2map(++p, end2)) {
+    if (*p >= 0 && *p <= 0x40) continue;
+    ngl++;
+    s2[n2] = s2[n2 + DPS_LM_MAXGRAM2] = *p; n2++;
+    if (n2 == DPS_LM_MAXGRAM2 - 1) {
+      p++;
+      break;
     }
   }
-  map->nbytes += maplen;
+
+  for(; p < end2; p = dps_next_char2map(++p, end2)) {
+    register unsigned int hindex;
+    if (*p <= 0x40) continue;
+    ngl++;
+
+    s2[n2] = s2[n2 + DPS_LM_MAXGRAM1] = *p; 
+    n2 = (n2 + 1) % DPS_LM_MAXGRAM2;
+    hindex = DpsHash32(s2 + p2, DPS_LM_MAXGRAM2) & DPS_LM_HASHMASK;
+    p2 = (p2 + 1) % DPS_LM_MAXGRAM2;
+    map->memb6[hindex].count++;
+
+    if ((max_nbytes > 0) && (map->nbytes + ngl > max_nbytes)) break;
+
+  }
+  map->nbytes += ngl;
 }
 
 
