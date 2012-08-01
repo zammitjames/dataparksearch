@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -921,7 +921,7 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 		return NULL;
 
 	if(!*t->s) return NULL;
-	
+
 	if(!strncmp(t->s,"<!--",4)) t->type = DPS_HTML_COM;
 	else	
 	if(*t->s=='<' && t->s[1] != ' ' && t->s[1] != '<' && t->s[1] != '>') t->type = DPS_HTML_TAG;
@@ -1101,6 +1101,7 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 			*lt = t->e;
 			break;
 	}
+	
 	return t->s;
 }
 
@@ -1571,9 +1572,27 @@ typedef struct {
 } DPS_TAGSTACK;
 
 
+static DPS_TEXTITEM * putItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, DPS_TEXTITEM *Last) {
+  if (Last == NULL) {
+    return DpsTextListAdd(&Doc->TextList, Item);
+  } else if (Item->section == Last->section 
+	     && ((Item->href == NULL && Last->href == NULL) || strcmp(DPS_NULL2EMPTY(Item->href), DPS_NULL2EMPTY(Last->href)) == 0)
+	     ) {
+    if ((Last->str = (char*)DpsRealloc(Last->str, Last->len + Item->len + 1)) == NULL) return NULL;
+
+    dps_memcpy(Last->str + Last->len, Item->str, Item->len);
+    Last->len += Item->len;
+    Last->str[Last->len] = '\0';
+    return Last;
+  } else {
+    return DpsTextListAdd(&Doc->TextList, Item); /* temporary, need to be implemented when Items will be in unicode */
+  }
+}
+
+
 int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_name, const char *content) {
 	DPS_HTMLTOK	tag;
-	DPS_TEXTITEM	Item;
+	DPS_TEXTITEM	Item, *Last = NULL;
 	const char	*htok;
 	const char	*last;
 	DPS_VAR		*BSec = DpsVarListFind(&Doc->Sections, (section_name) ? section_name : "body");
@@ -1607,7 +1626,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 
 	    strncpy(hbuf, htok, 32);
 	    hbuf[32] = 0;
-
+	    
 	    fprintf(stderr, " -- tag.scr:%d .com:%d .noi:%d .tit:%d .bod:%d sty:%d fra:%d ind:%d sel:%d vis:%d -- htok: %32s\n", 
 		    tag.script, tag.comment, tag.noindex, tag.title, tag.body, tag.style, tag.frameset, tag.index, 
 		    tag.select, tag.visible[tag.level], hbuf);
@@ -1621,10 +1640,12 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	  case DPS_HTML_TXT:
 	    if (skip) break;
 
-	    for( tmpbeg=htok;   tmpbeg<last && strchr(" \r\n\t", tmpbeg[0]); tmpbeg++);
-	    for( tmpend=last-1; htok<tmpend && strchr(" \r\n\t", tmpend[0]); tmpend--);
-	    if(tmpbeg>=tmpend)break;
-				
+	    /*	    for( tmpbeg=htok;   tmpbeg<last && strchr(" \r\n\t", tmpbeg[0]); tmpbeg++);
+		    for( tmpend=last-1; htok<tmpend && strchr(" \r\n\t", tmpend[0]); tmpend--);*/
+	    tmpbeg = htok;
+	    tmpend = last-1;
+	    if(tmpbeg > tmpend)break;
+
 	    tmp = DpsStrndup(tmpbeg,(size_t)(tmpend-tmpbeg+1));
 
 	    if (BSec && (tag.comment + tag.noindex == 0) && !tag.title && (tag.body || tag.frameset) && !tag.script && !tag.style && tag.index && !tag.select 
@@ -1644,7 +1665,8 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 		Item.section_name = (section_name) ? section_name : "body";
 	      }
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
-	      DpsTextListAdd(&Doc->TextList,&Item);
+	      /*	      DpsTextListAdd(&Doc->TextList,&Item);*/
+	      Last = putItem(Indexer, Doc, &Item, Last);
 	    }
 	    if (TSec && (tag.comment != 1) && (tag.noindex != 1) && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
 	      bzero((void*)&Item, sizeof(Item));
@@ -1654,7 +1676,8 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      Item.strict = title_strict;
 	      Item.section_name = "title";
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
-	      DpsTextListAdd(&Doc->TextList,&Item);
+	      /*	      DpsTextListAdd(&Doc->TextList,&Item);*/
+	      Last = putItem(Indexer, Doc, &Item, Last);
 	    }
 	    DPS_FREE(tmp);
 	    break;

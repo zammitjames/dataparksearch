@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,6 +19,6 @@
 #ifndef _DPS_TEXTLIST_H
 #define _DPS_TEXTLIST_H
 
-extern __C_LINK void __DPSCALL DpsTextListAdd(DPS_TEXTLIST *tlist, const DPS_TEXTITEM *item);
+extern __C_LINK DPS_TEXTITEM * __DPSCALL DpsTextListAdd(DPS_TEXTLIST *tlist, const DPS_TEXTITEM *item);
 extern __C_LINK void __DPSCALL DpsTextListFree(DPS_TEXTLIST *tlist);
 #endif
