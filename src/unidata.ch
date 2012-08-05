@@ -31414,3 +31414,3250 @@ int dps_isPatternSyntax(dpsunicode_t ch) {
   if (ch <= 0xFE46) return 1;
   return 0;
 }
+
+
+int dps_isExtend(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x05BF:
+  case 0x05C7:
+  case 0x0670:
+  case 0x0711:
+  case 0x0903:
+  case 0x093A:
+  case 0x093B:
+  case 0x093C:
+  case 0x094D:
+  case 0x0981:
+  case 0x09BC:
+  case 0x09CD:
+  case 0x09D7:
+  case 0x0A03:
+  case 0x0A3C:
+  case 0x0A51:
+  case 0x0A75:
+  case 0x0A83:
+  case 0x0ABC:
+  case 0x0AC9:
+  case 0x0ACD:
+  case 0x0B01:
+  case 0x0B3C:
+  case 0x0B3E:
+  case 0x0B3F:
+  case 0x0B40:
+  case 0x0B4D:
+  case 0x0B56:
+  case 0x0B57:
+  case 0x0B82:
+  case 0x0BC0:
+  case 0x0BCD:
+  case 0x0BD7:
+  case 0x0CBC:
+  case 0x0CBE:
+  case 0x0CBF:
+  case 0x0CC6:
+  case 0x0D4D:
+  case 0x0D57:
+  case 0x0DCA:
+  case 0x0DD6:
+  case 0x0E31:
+  case 0x0EB1:
+  case 0x0F35:
+  case 0x0F37:
+  case 0x0F39:
+  case 0x0F7F:
+  case 0x0FC6:
+  case 0x1031:
+  case 0x1038:
+  case 0x1082:
+  case 0x108D:
+  case 0x108F:
+  case 0x109D:
+  case 0x17B6:
+  case 0x17C6:
+  case 0x17DD:
+  case 0x18A9:
+  case 0x1932:
+  case 0x1A55:
+  case 0x1A56:
+  case 0x1A57:
+  case 0x1A60:
+  case 0x1A61:
+  case 0x1A62:
+  case 0x1A7F:
+  case 0x1B04:
+  case 0x1B34:
+  case 0x1B35:
+  case 0x1B3B:
+  case 0x1B3C:
+  case 0x1B42:
+  case 0x1B82:
+  case 0x1BA1:
+  case 0x1BAA:
+  case 0x1BAB:
+  case 0x1BE6:
+  case 0x1BE7:
+  case 0x1BED:
+  case 0x1BEE:
+  case 0x1CE1:
+  case 0x1CED:
+  case 0x1CF4:
+  case 0x20E1:
+  case 0x2D7F:
+  case 0xA66F:
+  case 0xA69F:
+  case 0xA802:
+  case 0xA806:
+  case 0xA80B:
+  case 0xA827:
+  case 0xA8C4:
+  case 0xA983:
+  case 0xA9B3:
+  case 0xA9BC:
+  case 0xAA43:
+  case 0xAA4C:
+  case 0xAA4D:
+  case 0xAA7B:
+  case 0xAAB0:
+  case 0xAAC1:
+  case 0xAAEB:
+  case 0xAAF5:
+  case 0xAAF6:
+  case 0xABE5:
+  case 0xABE8:
+  case 0xABEC:
+  case 0xABED:
+  case 0xFB1E:
+  case 0x101FD:
+  case 0x10A3F:
+  case 0x11000:
+  case 0x11001:
+  case 0x11002:
+  case 0x11082:
+  case 0x1112C:
+  case 0x11182:
+  case 0x116AB:
+  case 0x116AC:
+  case 0x116AD:
+  case 0x116B6:
+  case 0x116B7:
+    return 1;
+  }
+  if (ch <  0x0300) return 0;
+  if (ch <= 0x036F) return 1;
+  if (ch <  0x0483) return 0;
+  if (ch <= 0x0487) return 1;
+  if (ch <  0x0488) return 0;
+  if (ch <= 0x0489) return 1;
+  if (ch <  0x0591) return 0;
+  if (ch <= 0x05BD) return 1;
+  if (ch <  0x05C1) return 0;
+  if (ch <= 0x05C2) return 1;
+  if (ch <  0x05C4) return 0;
+  if (ch <= 0x05C5) return 1;
+  if (ch <  0x0610) return 0;
+  if (ch <= 0x061A) return 1;
+  if (ch <  0x064B) return 0;
+  if (ch <= 0x065F) return 1;
+  if (ch <  0x06D6) return 0;
+  if (ch <= 0x06DC) return 1;
+  if (ch <  0x06DF) return 0;
+  if (ch <= 0x06E4) return 1;
+  if (ch <  0x06E7) return 0;
+  if (ch <= 0x06E8) return 1;
+  if (ch <  0x06EA) return 0;
+  if (ch <= 0x06ED) return 1;
+  if (ch <  0x0730) return 0;
+  if (ch <= 0x074A) return 1;
+  if (ch <  0x07A6) return 0;
+  if (ch <= 0x07B0) return 1;
+  if (ch <  0x07EB) return 0;
+  if (ch <= 0x07F3) return 1;
+  if (ch <  0x0816) return 0;
+  if (ch <= 0x0819) return 1;
+  if (ch <  0x081B) return 0;
+  if (ch <= 0x0823) return 1;
+  if (ch <  0x0825) return 0;
+  if (ch <= 0x0827) return 1;
+  if (ch <  0x0829) return 0;
+  if (ch <= 0x082D) return 1;
+  if (ch <  0x0859) return 0;
+  if (ch <= 0x085B) return 1;
+  if (ch <  0x08E4) return 0;
+  if (ch <= 0x08FE) return 1;
+  if (ch <  0x0900) return 0;
+  if (ch <= 0x0902) return 1;
+  if (ch <  0x093E) return 0;
+  if (ch <= 0x0940) return 1;
+  if (ch <  0x0941) return 0;
+  if (ch <= 0x0948) return 1;
+  if (ch <  0x0949) return 0;
+  if (ch <= 0x094C) return 1;
+  if (ch <  0x094E) return 0;
+  if (ch <= 0x094F) return 1;
+  if (ch <  0x0951) return 0;
+  if (ch <= 0x0957) return 1;
+  if (ch <  0x0962) return 0;
+  if (ch <= 0x0963) return 1;
+  if (ch <  0x0982) return 0;
+  if (ch <= 0x0983) return 1;
+  if (ch <  0x09BE) return 0;
+  if (ch <= 0x09C0) return 1;
+  if (ch <  0x09C1) return 0;
+  if (ch <= 0x09C4) return 1;
+  if (ch <  0x09C7) return 0;
+  if (ch <= 0x09C8) return 1;
+  if (ch <  0x09CB) return 0;
+  if (ch <= 0x09CC) return 1;
+  if (ch <  0x09E2) return 0;
+  if (ch <= 0x09E3) return 1;
+  if (ch <  0x0A01) return 0;
+  if (ch <= 0x0A02) return 1;
+  if (ch <  0x0A3E) return 0;
+  if (ch <= 0x0A40) return 1;
+  if (ch <  0x0A41) return 0;
+  if (ch <= 0x0A42) return 1;
+  if (ch <  0x0A47) return 0;
+  if (ch <= 0x0A48) return 1;
+  if (ch <  0x0A4B) return 0;
+  if (ch <= 0x0A4D) return 1;
+  if (ch <  0x0A70) return 0;
+  if (ch <= 0x0A71) return 1;
+  if (ch <  0x0A81) return 0;
+  if (ch <= 0x0A82) return 1;
+  if (ch <  0x0ABE) return 0;
+  if (ch <= 0x0AC0) return 1;
+  if (ch <  0x0AC1) return 0;
+  if (ch <= 0x0AC5) return 1;
+  if (ch <  0x0AC7) return 0;
+  if (ch <= 0x0AC8) return 1;
+  if (ch <  0x0ACB) return 0;
+  if (ch <= 0x0ACC) return 1;
+  if (ch <  0x0AE2) return 0;
+  if (ch <= 0x0AE3) return 1;
+  if (ch <  0x0B02) return 0;
+  if (ch <= 0x0B03) return 1;
+  if (ch <  0x0B41) return 0;
+  if (ch <= 0x0B44) return 1;
+  if (ch <  0x0B47) return 0;
+  if (ch <= 0x0B48) return 1;
+  if (ch <  0x0B4B) return 0;
+  if (ch <= 0x0B4C) return 1;
+  if (ch <  0x0B62) return 0;
+  if (ch <= 0x0B63) return 1;
+  if (ch <  0x0BBE) return 0;
+  if (ch <= 0x0BBF) return 1;
+  if (ch <  0x0BC1) return 0;
+  if (ch <= 0x0BC2) return 1;
+  if (ch <  0x0BC6) return 0;
+  if (ch <= 0x0BC8) return 1;
+  if (ch <  0x0BCA) return 0;
+  if (ch <= 0x0BCC) return 1;
+  if (ch <  0x0C01) return 0;
+  if (ch <= 0x0C03) return 1;
+  if (ch <  0x0C3E) return 0;
+  if (ch <= 0x0C40) return 1;
+  if (ch <  0x0C41) return 0;
+  if (ch <= 0x0C44) return 1;
+  if (ch <  0x0C46) return 0;
+  if (ch <= 0x0C48) return 1;
+  if (ch <  0x0C4A) return 0;
+  if (ch <= 0x0C4D) return 1;
+  if (ch <  0x0C55) return 0;
+  if (ch <= 0x0C56) return 1;
+  if (ch <  0x0C62) return 0;
+  if (ch <= 0x0C63) return 1;
+  if (ch <  0x0C82) return 0;
+  if (ch <= 0x0C83) return 1;
+  if (ch <  0x0CC0) return 0;
+  if (ch <= 0x0CC4) return 1;
+  if (ch <  0x0CC7) return 0;
+  if (ch <= 0x0CC8) return 1;
+  if (ch <  0x0CCA) return 0;
+  if (ch <= 0x0CCB) return 1;
+  if (ch <  0x0CCC) return 0;
+  if (ch <= 0x0CCD) return 1;
+  if (ch <  0x0CD5) return 0;
+  if (ch <= 0x0CD6) return 1;
+  if (ch <  0x0CE2) return 0;
+  if (ch <= 0x0CE3) return 1;
+  if (ch <  0x0D02) return 0;
+  if (ch <= 0x0D03) return 1;
+  if (ch <  0x0D3E) return 0;
+  if (ch <= 0x0D40) return 1;
+  if (ch <  0x0D41) return 0;
+  if (ch <= 0x0D44) return 1;
+  if (ch <  0x0D46) return 0;
+  if (ch <= 0x0D48) return 1;
+  if (ch <  0x0D4A) return 0;
+  if (ch <= 0x0D4C) return 1;
+  if (ch <  0x0D62) return 0;
+  if (ch <= 0x0D63) return 1;
+  if (ch <  0x0D82) return 0;
+  if (ch <= 0x0D83) return 1;
+  if (ch <  0x0DCF) return 0;
+  if (ch <= 0x0DD1) return 1;
+  if (ch <  0x0DD2) return 0;
+  if (ch <= 0x0DD4) return 1;
+  if (ch <  0x0DD8) return 0;
+  if (ch <= 0x0DDF) return 1;
+  if (ch <  0x0DF2) return 0;
+  if (ch <= 0x0DF3) return 1;
+  if (ch <  0x0E34) return 0;
+  if (ch <= 0x0E3A) return 1;
+  if (ch <  0x0E47) return 0;
+  if (ch <= 0x0E4E) return 1;
+  if (ch <  0x0EB4) return 0;
+  if (ch <= 0x0EB9) return 1;
+  if (ch <  0x0EBB) return 0;
+  if (ch <= 0x0EBC) return 1;
+  if (ch <  0x0EC8) return 0;
+  if (ch <= 0x0ECD) return 1;
+  if (ch <  0x0F18) return 0;
+  if (ch <= 0x0F19) return 1;
+  if (ch <  0x0F3E) return 0;
+  if (ch <= 0x0F3F) return 1;
+  if (ch <  0x0F71) return 0;
+  if (ch <= 0x0F7E) return 1;
+  if (ch <  0x0F80) return 0;
+  if (ch <= 0x0F84) return 1;
+  if (ch <  0x0F86) return 0;
+  if (ch <= 0x0F87) return 1;
+  if (ch <  0x0F8D) return 0;
+  if (ch <= 0x0F97) return 1;
+  if (ch <  0x0F99) return 0;
+  if (ch <= 0x0FBC) return 1;
+  if (ch <  0x102B) return 0;
+  if (ch <= 0x102C) return 1;
+  if (ch <  0x102D) return 0;
+  if (ch <= 0x1030) return 1;
+  if (ch <  0x1032) return 0;
+  if (ch <= 0x1037) return 1;
+  if (ch <  0x1039) return 0;
+  if (ch <= 0x103A) return 1;
+  if (ch <  0x103B) return 0;
+  if (ch <= 0x103C) return 1;
+  if (ch <  0x103D) return 0;
+  if (ch <= 0x103E) return 1;
+  if (ch <  0x1056) return 0;
+  if (ch <= 0x1057) return 1;
+  if (ch <  0x1058) return 0;
+  if (ch <= 0x1059) return 1;
+  if (ch <  0x105E) return 0;
+  if (ch <= 0x1060) return 1;
+  if (ch <  0x1062) return 0;
+  if (ch <= 0x1064) return 1;
+  if (ch <  0x1067) return 0;
+  if (ch <= 0x106D) return 1;
+  if (ch <  0x1071) return 0;
+  if (ch <= 0x1074) return 1;
+  if (ch <  0x1083) return 0;
+  if (ch <= 0x1084) return 1;
+  if (ch <  0x1085) return 0;
+  if (ch <= 0x1086) return 1;
+  if (ch <  0x1087) return 0;
+  if (ch <= 0x108C) return 1;
+  if (ch <  0x109A) return 0;
+  if (ch <= 0x109C) return 1;
+  if (ch <  0x135D) return 0;
+  if (ch <= 0x135F) return 1;
+  if (ch <  0x1712) return 0;
+  if (ch <= 0x1714) return 1;
+  if (ch <  0x1732) return 0;
+  if (ch <= 0x1734) return 1;
+  if (ch <  0x1752) return 0;
+  if (ch <= 0x1753) return 1;
+  if (ch <  0x1772) return 0;
+  if (ch <= 0x1773) return 1;
+  if (ch <  0x17B4) return 0;
+  if (ch <= 0x17B5) return 1;
+  if (ch <  0x17B7) return 0;
+  if (ch <= 0x17BD) return 1;
+  if (ch <  0x17BE) return 0;
+  if (ch <= 0x17C5) return 1;
+  if (ch <  0x17C7) return 0;
+  if (ch <= 0x17C8) return 1;
+  if (ch <  0x17C9) return 0;
+  if (ch <= 0x17D3) return 1;
+  if (ch <  0x180B) return 0;
+  if (ch <= 0x180D) return 1;
+  if (ch <  0x1920) return 0;
+  if (ch <= 0x1922) return 1;
+  if (ch <  0x1923) return 0;
+  if (ch <= 0x1926) return 1;
+  if (ch <  0x1927) return 0;
+  if (ch <= 0x1928) return 1;
+  if (ch <  0x1929) return 0;
+  if (ch <= 0x192B) return 1;
+  if (ch <  0x1930) return 0;
+  if (ch <= 0x1931) return 1;
+  if (ch <  0x1933) return 0;
+  if (ch <= 0x1938) return 1;
+  if (ch <  0x1939) return 0;
+  if (ch <= 0x193B) return 1;
+  if (ch <  0x19B0) return 0;
+  if (ch <= 0x19C0) return 1;
+  if (ch <  0x19C8) return 0;
+  if (ch <= 0x19C9) return 1;
+  if (ch <  0x1A17) return 0;
+  if (ch <= 0x1A18) return 1;
+  if (ch <  0x1A19) return 0;
+  if (ch <= 0x1A1B) return 1;
+  if (ch <  0x1A58) return 0;
+  if (ch <= 0x1A5E) return 1;
+  if (ch <  0x1A63) return 0;
+  if (ch <= 0x1A64) return 1;
+  if (ch <  0x1A65) return 0;
+  if (ch <= 0x1A6C) return 1;
+  if (ch <  0x1A6D) return 0;
+  if (ch <= 0x1A72) return 1;
+  if (ch <  0x1A73) return 0;
+  if (ch <= 0x1A7C) return 1;
+  if (ch <  0x1B00) return 0;
+  if (ch <= 0x1B03) return 1;
+  if (ch <  0x1B36) return 0;
+  if (ch <= 0x1B3A) return 1;
+  if (ch <  0x1B3D) return 0;
+  if (ch <= 0x1B41) return 1;
+  if (ch <  0x1B43) return 0;
+  if (ch <= 0x1B44) return 1;
+  if (ch <  0x1B6B) return 0;
+  if (ch <= 0x1B73) return 1;
+  if (ch <  0x1B80) return 0;
+  if (ch <= 0x1B81) return 1;
+  if (ch <  0x1BA2) return 0;
+  if (ch <= 0x1BA5) return 1;
+  if (ch <  0x1BA6) return 0;
+  if (ch <= 0x1BA7) return 1;
+  if (ch <  0x1BA8) return 0;
+  if (ch <= 0x1BA9) return 1;
+  if (ch <  0x1BAC) return 0;
+  if (ch <= 0x1BAD) return 1;
+  if (ch <  0x1BE8) return 0;
+  if (ch <= 0x1BE9) return 1;
+  if (ch <  0x1BEA) return 0;
+  if (ch <= 0x1BEC) return 1;
+  if (ch <  0x1BEF) return 0;
+  if (ch <= 0x1BF1) return 1;
+  if (ch <  0x1BF2) return 0;
+  if (ch <= 0x1BF3) return 1;
+  if (ch <  0x1C24) return 0;
+  if (ch <= 0x1C2B) return 1;
+  if (ch <  0x1C2C) return 0;
+  if (ch <= 0x1C33) return 1;
+  if (ch <  0x1C34) return 0;
+  if (ch <= 0x1C35) return 1;
+  if (ch <  0x1C36) return 0;
+  if (ch <= 0x1C37) return 1;
+  if (ch <  0x1CD0) return 0;
+  if (ch <= 0x1CD2) return 1;
+  if (ch <  0x1CD4) return 0;
+  if (ch <= 0x1CE0) return 1;
+  if (ch <  0x1CE2) return 0;
+  if (ch <= 0x1CE8) return 1;
+  if (ch <  0x1CF2) return 0;
+  if (ch <= 0x1CF3) return 1;
+  if (ch <  0x1DC0) return 0;
+  if (ch <= 0x1DE6) return 1;
+  if (ch <  0x1DFC) return 0;
+  if (ch <= 0x1DFF) return 1;
+  if (ch <  0x200C) return 0;
+  if (ch <= 0x200D) return 1;
+  if (ch <  0x20D0) return 0;
+  if (ch <= 0x20DC) return 1;
+  if (ch <  0x20DD) return 0;
+  if (ch <= 0x20E0) return 1;
+  if (ch <  0x20E2) return 0;
+  if (ch <= 0x20E4) return 1;
+  if (ch <  0x20E5) return 0;
+  if (ch <= 0x20F0) return 1;
+  if (ch <  0x2CEF) return 0;
+  if (ch <= 0x2CF1) return 1;
+  if (ch <  0x2DE0) return 0;
+  if (ch <= 0x2DFF) return 1;
+  if (ch <  0x302A) return 0;
+  if (ch <= 0x302D) return 1;
+  if (ch <  0x302E) return 0;
+  if (ch <= 0x302F) return 1;
+  if (ch <  0x3099) return 0;
+  if (ch <= 0x309A) return 1;
+  if (ch <  0xA670) return 0;
+  if (ch <= 0xA672) return 1;
+  if (ch <  0xA674) return 0;
+  if (ch <= 0xA67D) return 1;
+  if (ch <  0xA6F0) return 0;
+  if (ch <= 0xA6F1) return 1;
+  if (ch <  0xA823) return 0;
+  if (ch <= 0xA824) return 1;
+  if (ch <  0xA825) return 0;
+  if (ch <= 0xA826) return 1;
+  if (ch <  0xA880) return 0;
+  if (ch <= 0xA881) return 1;
+  if (ch <  0xA8B4) return 0;
+  if (ch <= 0xA8C3) return 1;
+  if (ch <  0xA8E0) return 0;
+  if (ch <= 0xA8F1) return 1;
+  if (ch <  0xA926) return 0;
+  if (ch <= 0xA92D) return 1;
+  if (ch <  0xA947) return 0;
+  if (ch <= 0xA951) return 1;
+  if (ch <  0xA952) return 0;
+  if (ch <= 0xA953) return 1;
+  if (ch <  0xA980) return 0;
+  if (ch <= 0xA982) return 1;
+  if (ch <  0xA9B4) return 0;
+  if (ch <= 0xA9B5) return 1;
+  if (ch <  0xA9B6) return 0;
+  if (ch <= 0xA9B9) return 1;
+  if (ch <  0xA9BA) return 0;
+  if (ch <= 0xA9BB) return 1;
+  if (ch <  0xA9BD) return 0;
+  if (ch <= 0xA9C0) return 1;
+  if (ch <  0xAA29) return 0;
+  if (ch <= 0xAA2E) return 1;
+  if (ch <  0xAA2F) return 0;
+  if (ch <= 0xAA30) return 1;
+  if (ch <  0xAA31) return 0;
+  if (ch <= 0xAA32) return 1;
+  if (ch <  0xAA33) return 0;
+  if (ch <= 0xAA34) return 1;
+  if (ch <  0xAA35) return 0;
+  if (ch <= 0xAA36) return 1;
+  if (ch <  0xAAB2) return 0;
+  if (ch <= 0xAAB4) return 1;
+  if (ch <  0xAAB7) return 0;
+  if (ch <= 0xAAB8) return 1;
+  if (ch <  0xAABE) return 0;
+  if (ch <= 0xAABF) return 1;
+  if (ch <  0xAAEC) return 0;
+  if (ch <= 0xAAED) return 1;
+  if (ch <  0xAAEE) return 0;
+  if (ch <= 0xAAEF) return 1;
+  if (ch <  0xABE3) return 0;
+  if (ch <= 0xABE4) return 1;
+  if (ch <  0xABE6) return 0;
+  if (ch <= 0xABE7) return 1;
+  if (ch <  0xABE9) return 0;
+  if (ch <= 0xABEA) return 1;
+  if (ch <  0xFE00) return 0;
+  if (ch <= 0xFE0F) return 1;
+  if (ch <  0xFE20) return 0;
+  if (ch <= 0xFE26) return 1;
+  if (ch <  0xFF9E) return 0;
+  if (ch <= 0xFF9F) return 1;
+  if (ch <  0x10A01) return 0;
+  if (ch <= 0x10A03) return 1;
+  if (ch <  0x10A05) return 0;
+  if (ch <= 0x10A06) return 1;
+  if (ch <  0x10A0C) return 0;
+  if (ch <= 0x10A0F) return 1;
+  if (ch <  0x10A38) return 0;
+  if (ch <= 0x10A3A) return 1;
+  if (ch <  0x11038) return 0;
+  if (ch <= 0x11046) return 1;
+  if (ch <  0x11080) return 0;
+  if (ch <= 0x11081) return 1;
+  if (ch <  0x110B0) return 0;
+  if (ch <= 0x110B2) return 1;
+  if (ch <  0x110B3) return 0;
+  if (ch <= 0x110B6) return 1;
+  if (ch <  0x110B7) return 0;
+  if (ch <= 0x110B8) return 1;
+  if (ch <  0x110B9) return 0;
+  if (ch <= 0x110BA) return 1;
+  if (ch <  0x11100) return 0;
+  if (ch <= 0x11102) return 1;
+  if (ch <  0x11127) return 0;
+  if (ch <= 0x1112B) return 1;
+  if (ch <  0x1112D) return 0;
+  if (ch <= 0x11134) return 1;
+  if (ch <  0x11180) return 0;
+  if (ch <= 0x11181) return 1;
+  if (ch <  0x111B3) return 0;
+  if (ch <= 0x111B5) return 1;
+  if (ch <  0x111B6) return 0;
+  if (ch <= 0x111BE) return 1;
+  if (ch <  0x111BF) return 0;
+  if (ch <= 0x111C0) return 1;
+  if (ch <  0x116AE) return 0;
+  if (ch <= 0x116AF) return 1;
+  if (ch <  0x116B0) return 0;
+  if (ch <= 0x116B5) return 1;
+  if (ch <  0x16F51) return 0;
+  if (ch <= 0x16F7E) return 1;
+  if (ch <  0x16F8F) return 0;
+  if (ch <= 0x16F92) return 1;
+  if (ch <  0x1D165) return 0;
+  if (ch <= 0x1D166) return 1;
+  if (ch <  0x1D167) return 0;
+  if (ch <= 0x1D169) return 1;
+  if (ch <  0x1D16D) return 0;
+  if (ch <= 0x1D172) return 1;
+  if (ch <  0x1D17B) return 0;
+  if (ch <= 0x1D182) return 1;
+  if (ch <  0x1D185) return 0;
+  if (ch <= 0x1D18B) return 1;
+  if (ch <  0x1D1AA) return 0;
+  if (ch <= 0x1D1AD) return 1;
+  if (ch <  0x1D242) return 0;
+  if (ch <= 0x1D244) return 1;
+  if (ch <  0xE0100) return 0;
+  if (ch <= 0xE01EF) return 1;
+  return 0;
+}
+
+
+int dps_isSep(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x0085:
+  case 0x2028:
+  case 0x2029:
+    return 1;
+  }
+  return 0;
+}
+
+
+int dps_isFormat(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x00AD:
+  case 0x06DD:
+  case 0x070F:
+  case 0x200B:
+  case 0xFEFF:
+  case 0x110BD:
+  case 0xE0001:
+    return 1;
+  }
+  if (ch <  0x0600) return 0;
+  if (ch <= 0x0604) return 1;
+  if (ch <  0x200E) return 0;
+  if (ch <= 0x200F) return 1;
+  if (ch <  0x202A) return 0;
+  if (ch <= 0x202E) return 1;
+  if (ch <  0x2060) return 0;
+  if (ch <= 0x2064) return 1;
+  if (ch <  0x206A) return 0;
+  if (ch <= 0x206F) return 1;
+  if (ch <  0xFFF9) return 0;
+  if (ch <= 0xFFFB) return 1;
+  if (ch <  0x1D173) return 0;
+  if (ch <= 0x1D17A) return 1;
+  if (ch <  0xE0020) return 0;
+  if (ch <= 0xE007F) return 1;
+  return 0;
+}
+
+
+int dps_isSp(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x0009:
+  case 0x0020:
+  case 0x00A0:
+  case 0x1680:
+  case 0x180E:
+  case 0x202F:
+  case 0x205F:
+  case 0x3000:
+    return 1;
+  }
+  if (ch <  0x000B) return 0;
+  if (ch <= 0x000C) return 1;
+  if (ch <  0x2000) return 0;
+  if (ch <= 0x200A) return 1;
+  return 0;
+}
+
+
+int dps_isLower(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x00AA:
+  case 0x00B5:
+  case 0x00BA:
+  case 0x0101:
+  case 0x0103:
+  case 0x0105:
+  case 0x0107:
+  case 0x0109:
+  case 0x010B:
+  case 0x010D:
+  case 0x010F:
+  case 0x0111:
+  case 0x0113:
+  case 0x0115:
+  case 0x0117:
+  case 0x0119:
+  case 0x011B:
+  case 0x011D:
+  case 0x011F:
+  case 0x0121:
+  case 0x0123:
+  case 0x0125:
+  case 0x0127:
+  case 0x0129:
+  case 0x012B:
+  case 0x012D:
+  case 0x012F:
+  case 0x0131:
+  case 0x0133:
+  case 0x0135:
+  case 0x013A:
+  case 0x013C:
+  case 0x013E:
+  case 0x0140:
+  case 0x0142:
+  case 0x0144:
+  case 0x0146:
+  case 0x014B:
+  case 0x014D:
+  case 0x014F:
+  case 0x0151:
+  case 0x0153:
+  case 0x0155:
+  case 0x0157:
+  case 0x0159:
+  case 0x015B:
+  case 0x015D:
+  case 0x015F:
+  case 0x0161:
+  case 0x0163:
+  case 0x0165:
+  case 0x0167:
+  case 0x0169:
+  case 0x016B:
+  case 0x016D:
+  case 0x016F:
+  case 0x0171:
+  case 0x0173:
+  case 0x0175:
+  case 0x0177:
+  case 0x017A:
+  case 0x017C:
+  case 0x0183:
+  case 0x0185:
+  case 0x0188:
+  case 0x0192:
+  case 0x0195:
+  case 0x019E:
+  case 0x01A1:
+  case 0x01A3:
+  case 0x01A5:
+  case 0x01A8:
+  case 0x01AD:
+  case 0x01B0:
+  case 0x01B4:
+  case 0x01B6:
+  case 0x01C6:
+  case 0x01C9:
+  case 0x01CC:
+  case 0x01CE:
+  case 0x01D0:
+  case 0x01D2:
+  case 0x01D4:
+  case 0x01D6:
+  case 0x01D8:
+  case 0x01DA:
+  case 0x01DF:
+  case 0x01E1:
+  case 0x01E3:
+  case 0x01E5:
+  case 0x01E7:
+  case 0x01E9:
+  case 0x01EB:
+  case 0x01ED:
+  case 0x01F3:
+  case 0x01F5:
+  case 0x01F9:
+  case 0x01FB:
+  case 0x01FD:
+  case 0x01FF:
+  case 0x0201:
+  case 0x0203:
+  case 0x0205:
+  case 0x0207:
+  case 0x0209:
+  case 0x020B:
+  case 0x020D:
+  case 0x020F:
+  case 0x0211:
+  case 0x0213:
+  case 0x0215:
+  case 0x0217:
+  case 0x0219:
+  case 0x021B:
+  case 0x021D:
+  case 0x021F:
+  case 0x0221:
+  case 0x0223:
+  case 0x0225:
+  case 0x0227:
+  case 0x0229:
+  case 0x022B:
+  case 0x022D:
+  case 0x022F:
+  case 0x0231:
+  case 0x023C:
+  case 0x0242:
+  case 0x0247:
+  case 0x0249:
+  case 0x024B:
+  case 0x024D:
+  case 0x0371:
+  case 0x0373:
+  case 0x0377:
+  case 0x037A:
+  case 0x0390:
+  case 0x03D9:
+  case 0x03DB:
+  case 0x03DD:
+  case 0x03DF:
+  case 0x03E1:
+  case 0x03E3:
+  case 0x03E5:
+  case 0x03E7:
+  case 0x03E9:
+  case 0x03EB:
+  case 0x03ED:
+  case 0x03F5:
+  case 0x03F8:
+  case 0x0461:
+  case 0x0463:
+  case 0x0465:
+  case 0x0467:
+  case 0x0469:
+  case 0x046B:
+  case 0x046D:
+  case 0x046F:
+  case 0x0471:
+  case 0x0473:
+  case 0x0475:
+  case 0x0477:
+  case 0x0479:
+  case 0x047B:
+  case 0x047D:
+  case 0x047F:
+  case 0x0481:
+  case 0x048B:
+  case 0x048D:
+  case 0x048F:
+  case 0x0491:
+  case 0x0493:
+  case 0x0495:
+  case 0x0497:
+  case 0x0499:
+  case 0x049B:
+  case 0x049D:
+  case 0x049F:
+  case 0x04A1:
+  case 0x04A3:
+  case 0x04A5:
+  case 0x04A7:
+  case 0x04A9:
+  case 0x04AB:
+  case 0x04AD:
+  case 0x04AF:
+  case 0x04B1:
+  case 0x04B3:
+  case 0x04B5:
+  case 0x04B7:
+  case 0x04B9:
+  case 0x04BB:
+  case 0x04BD:
+  case 0x04BF:
+  case 0x04C2:
+  case 0x04C4:
+  case 0x04C6:
+  case 0x04C8:
+  case 0x04CA:
+  case 0x04CC:
+  case 0x04D1:
+  case 0x04D3:
+  case 0x04D5:
+  case 0x04D7:
+  case 0x04D9:
+  case 0x04DB:
+  case 0x04DD:
+  case 0x04DF:
+  case 0x04E1:
+  case 0x04E3:
+  case 0x04E5:
+  case 0x04E7:
+  case 0x04E9:
+  case 0x04EB:
+  case 0x04ED:
+  case 0x04EF:
+  case 0x04F1:
+  case 0x04F3:
+  case 0x04F5:
+  case 0x04F7:
+  case 0x04F9:
+  case 0x04FB:
+  case 0x04FD:
+  case 0x04FF:
+  case 0x0501:
+  case 0x0503:
+  case 0x0505:
+  case 0x0507:
+  case 0x0509:
+  case 0x050B:
+  case 0x050D:
+  case 0x050F:
+  case 0x0511:
+  case 0x0513:
+  case 0x0515:
+  case 0x0517:
+  case 0x0519:
+  case 0x051B:
+  case 0x051D:
+  case 0x051F:
+  case 0x0521:
+  case 0x0523:
+  case 0x0525:
+  case 0x0527:
+  case 0x1D78:
+  case 0x1E01:
+  case 0x1E03:
+  case 0x1E05:
+  case 0x1E07:
+  case 0x1E09:
+  case 0x1E0B:
+  case 0x1E0D:
+  case 0x1E0F:
+  case 0x1E11:
+  case 0x1E13:
+  case 0x1E15:
+  case 0x1E17:
+  case 0x1E19:
+  case 0x1E1B:
+  case 0x1E1D:
+  case 0x1E1F:
+  case 0x1E21:
+  case 0x1E23:
+  case 0x1E25:
+  case 0x1E27:
+  case 0x1E29:
+  case 0x1E2B:
+  case 0x1E2D:
+  case 0x1E2F:
+  case 0x1E31:
+  case 0x1E33:
+  case 0x1E35:
+  case 0x1E37:
+  case 0x1E39:
+  case 0x1E3B:
+  case 0x1E3D:
+  case 0x1E3F:
+  case 0x1E41:
+  case 0x1E43:
+  case 0x1E45:
+  case 0x1E47:
+  case 0x1E49:
+  case 0x1E4B:
+  case 0x1E4D:
+  case 0x1E4F:
+  case 0x1E51:
+  case 0x1E53:
+  case 0x1E55:
+  case 0x1E57:
+  case 0x1E59:
+  case 0x1E5B:
+  case 0x1E5D:
+  case 0x1E5F:
+  case 0x1E61:
+  case 0x1E63:
+  case 0x1E65:
+  case 0x1E67:
+  case 0x1E69:
+  case 0x1E6B:
+  case 0x1E6D:
+  case 0x1E6F:
+  case 0x1E71:
+  case 0x1E73:
+  case 0x1E75:
+  case 0x1E77:
+  case 0x1E79:
+  case 0x1E7B:
+  case 0x1E7D:
+  case 0x1E7F:
+  case 0x1E81:
+  case 0x1E83:
+  case 0x1E85:
+  case 0x1E87:
+  case 0x1E89:
+  case 0x1E8B:
+  case 0x1E8D:
+  case 0x1E8F:
+  case 0x1E91:
+  case 0x1E93:
+  case 0x1E9F:
+  case 0x1EA1:
+  case 0x1EA3:
+  case 0x1EA5:
+  case 0x1EA7:
+  case 0x1EA9:
+  case 0x1EAB:
+  case 0x1EAD:
+  case 0x1EAF:
+  case 0x1EB1:
+  case 0x1EB3:
+  case 0x1EB5:
+  case 0x1EB7:
+  case 0x1EB9:
+  case 0x1EBB:
+  case 0x1EBD:
+  case 0x1EBF:
+  case 0x1EC1:
+  case 0x1EC3:
+  case 0x1EC5:
+  case 0x1EC7:
+  case 0x1EC9:
+  case 0x1ECB:
+  case 0x1ECD:
+  case 0x1ECF:
+  case 0x1ED1:
+  case 0x1ED3:
+  case 0x1ED5:
+  case 0x1ED7:
+  case 0x1ED9:
+  case 0x1EDB:
+  case 0x1EDD:
+  case 0x1EDF:
+  case 0x1EE1:
+  case 0x1EE3:
+  case 0x1EE5:
+  case 0x1EE7:
+  case 0x1EE9:
+  case 0x1EEB:
+  case 0x1EED:
+  case 0x1EEF:
+  case 0x1EF1:
+  case 0x1EF3:
+  case 0x1EF5:
+  case 0x1EF7:
+  case 0x1EF9:
+  case 0x1EFB:
+  case 0x1EFD:
+  case 0x1FBE:
+  case 0x2071:
+  case 0x207F:
+  case 0x210A:
+  case 0x2113:
+  case 0x212F:
+  case 0x2134:
+  case 0x2139:
+  case 0x214E:
+  case 0x2184:
+  case 0x2C61:
+  case 0x2C68:
+  case 0x2C6A:
+  case 0x2C6C:
+  case 0x2C71:
+  case 0x2C81:
+  case 0x2C83:
+  case 0x2C85:
+  case 0x2C87:
+  case 0x2C89:
+  case 0x2C8B:
+  case 0x2C8D:
+  case 0x2C8F:
+  case 0x2C91:
+  case 0x2C93:
+  case 0x2C95:
+  case 0x2C97:
+  case 0x2C99:
+  case 0x2C9B:
+  case 0x2C9D:
+  case 0x2C9F:
+  case 0x2CA1:
+  case 0x2CA3:
+  case 0x2CA5:
+  case 0x2CA7:
+  case 0x2CA9:
+  case 0x2CAB:
+  case 0x2CAD:
+  case 0x2CAF:
+  case 0x2CB1:
+  case 0x2CB3:
+  case 0x2CB5:
+  case 0x2CB7:
+  case 0x2CB9:
+  case 0x2CBB:
+  case 0x2CBD:
+  case 0x2CBF:
+  case 0x2CC1:
+  case 0x2CC3:
+  case 0x2CC5:
+  case 0x2CC7:
+  case 0x2CC9:
+  case 0x2CCB:
+  case 0x2CCD:
+  case 0x2CCF:
+  case 0x2CD1:
+  case 0x2CD3:
+  case 0x2CD5:
+  case 0x2CD7:
+  case 0x2CD9:
+  case 0x2CDB:
+  case 0x2CDD:
+  case 0x2CDF:
+  case 0x2CE1:
+  case 0x2CEC:
+  case 0x2CEE:
+  case 0x2CF3:
+  case 0x2D27:
+  case 0x2D2D:
+  case 0xA641:
+  case 0xA643:
+  case 0xA645:
+  case 0xA647:
+  case 0xA649:
+  case 0xA64B:
+  case 0xA64D:
+  case 0xA64F:
+  case 0xA651:
+  case 0xA653:
+  case 0xA655:
+  case 0xA657:
+  case 0xA659:
+  case 0xA65B:
+  case 0xA65D:
+  case 0xA65F:
+  case 0xA661:
+  case 0xA663:
+  case 0xA665:
+  case 0xA667:
+  case 0xA669:
+  case 0xA66B:
+  case 0xA66D:
+  case 0xA681:
+  case 0xA683:
+  case 0xA685:
+  case 0xA687:
+  case 0xA689:
+  case 0xA68B:
+  case 0xA68D:
+  case 0xA68F:
+  case 0xA691:
+  case 0xA693:
+  case 0xA695:
+  case 0xA697:
+  case 0xA723:
+  case 0xA725:
+  case 0xA727:
+  case 0xA729:
+  case 0xA72B:
+  case 0xA72D:
+  case 0xA733:
+  case 0xA735:
+  case 0xA737:
+  case 0xA739:
+  case 0xA73B:
+  case 0xA73D:
+  case 0xA73F:
+  case 0xA741:
+  case 0xA743:
+  case 0xA745:
+  case 0xA747:
+  case 0xA749:
+  case 0xA74B:
+  case 0xA74D:
+  case 0xA74F:
+  case 0xA751:
+  case 0xA753:
+  case 0xA755:
+  case 0xA757:
+  case 0xA759:
+  case 0xA75B:
+  case 0xA75D:
+  case 0xA75F:
+  case 0xA761:
+  case 0xA763:
+  case 0xA765:
+  case 0xA767:
+  case 0xA769:
+  case 0xA76B:
+  case 0xA76D:
+  case 0xA76F:
+  case 0xA770:
+  case 0xA77A:
+  case 0xA77C:
+  case 0xA77F:
+  case 0xA781:
+  case 0xA783:
+  case 0xA785:
+  case 0xA787:
+  case 0xA78C:
+  case 0xA78E:
+  case 0xA791:
+  case 0xA793:
+  case 0xA7A1:
+  case 0xA7A3:
+  case 0xA7A5:
+  case 0xA7A7:
+  case 0xA7A9:
+  case 0xA7FA:
+  case 0x1D4BB:
+  case 0x1D7CB:
+    return 1;
+  }
+  if (ch <  0x0061) return 0;
+  if (ch <= 0x007A) return 1;
+  if (ch <  0x00DF) return 0;
+  if (ch <= 0x00F6) return 1;
+  if (ch <  0x00F8) return 0;
+  if (ch <= 0x00FF) return 1;
+  if (ch <  0x0137) return 0;
+  if (ch <= 0x0138) return 1;
+  if (ch <  0x0148) return 0;
+  if (ch <= 0x0149) return 1;
+  if (ch <  0x017E) return 0;
+  if (ch <= 0x0180) return 1;
+  if (ch <  0x018C) return 0;
+  if (ch <= 0x018D) return 1;
+  if (ch <  0x0199) return 0;
+  if (ch <= 0x019B) return 1;
+  if (ch <  0x01AA) return 0;
+  if (ch <= 0x01AB) return 1;
+  if (ch <  0x01B9) return 0;
+  if (ch <= 0x01BA) return 1;
+  if (ch <  0x01BD) return 0;
+  if (ch <= 0x01BF) return 1;
+  if (ch <  0x01DC) return 0;
+  if (ch <= 0x01DD) return 1;
+  if (ch <  0x01EF) return 0;
+  if (ch <= 0x01F0) return 1;
+  if (ch <  0x0233) return 0;
+  if (ch <= 0x0239) return 1;
+  if (ch <  0x023F) return 0;
+  if (ch <= 0x0240) return 1;
+  if (ch <  0x024F) return 0;
+  if (ch <= 0x0293) return 1;
+  if (ch <  0x0295) return 0;
+  if (ch <= 0x02AF) return 1;
+  if (ch <  0x02B0) return 0;
+  if (ch <= 0x02B8) return 1;
+  if (ch <  0x02C0) return 0;
+  if (ch <= 0x02C1) return 1;
+  if (ch <  0x02E0) return 0;
+  if (ch <= 0x02E4) return 1;
+  if (ch <  0x037B) return 0;
+  if (ch <= 0x037D) return 1;
+  if (ch <  0x03AC) return 0;
+  if (ch <= 0x03CE) return 1;
+  if (ch <  0x03D0) return 0;
+  if (ch <= 0x03D1) return 1;
+  if (ch <  0x03D5) return 0;
+  if (ch <= 0x03D7) return 1;
+  if (ch <  0x03EF) return 0;
+  if (ch <= 0x03F3) return 1;
+  if (ch <  0x03FB) return 0;
+  if (ch <= 0x03FC) return 1;
+  if (ch <  0x0430) return 0;
+  if (ch <= 0x045F) return 1;
+  if (ch <  0x04CE) return 0;
+  if (ch <= 0x04CF) return 1;
+  if (ch <  0x0561) return 0;
+  if (ch <= 0x0587) return 1;
+  if (ch <  0x1D00) return 0;
+  if (ch <= 0x1D2B) return 1;
+  if (ch <  0x1D2C) return 0;
+  if (ch <= 0x1D6A) return 1;
+  if (ch <  0x1D6B) return 0;
+  if (ch <= 0x1D77) return 1;
+  if (ch <  0x1D79) return 0;
+  if (ch <= 0x1D9A) return 1;
+  if (ch <  0x1D9B) return 0;
+  if (ch <= 0x1DBF) return 1;
+  if (ch <  0x1E95) return 0;
+  if (ch <= 0x1E9D) return 1;
+  if (ch <  0x1EFF) return 0;
+  if (ch <= 0x1F07) return 1;
+  if (ch <  0x1F10) return 0;
+  if (ch <= 0x1F15) return 1;
+  if (ch <  0x1F20) return 0;
+  if (ch <= 0x1F27) return 1;
+  if (ch <  0x1F30) return 0;
+  if (ch <= 0x1F37) return 1;
+  if (ch <  0x1F40) return 0;
+  if (ch <= 0x1F45) return 1;
+  if (ch <  0x1F50) return 0;
+  if (ch <= 0x1F57) return 1;
+  if (ch <  0x1F60) return 0;
+  if (ch <= 0x1F67) return 1;
+  if (ch <  0x1F70) return 0;
+  if (ch <= 0x1F7D) return 1;
+  if (ch <  0x1F80) return 0;
+  if (ch <= 0x1F87) return 1;
+  if (ch <  0x1F90) return 0;
+  if (ch <= 0x1F97) return 1;
+  if (ch <  0x1FA0) return 0;
+  if (ch <= 0x1FA7) return 1;
+  if (ch <  0x1FB0) return 0;
+  if (ch <= 0x1FB4) return 1;
+  if (ch <  0x1FB6) return 0;
+  if (ch <= 0x1FB7) return 1;
+  if (ch <  0x1FC2) return 0;
+  if (ch <= 0x1FC4) return 1;
+  if (ch <  0x1FC6) return 0;
+  if (ch <= 0x1FC7) return 1;
+  if (ch <  0x1FD0) return 0;
+  if (ch <= 0x1FD3) return 1;
+  if (ch <  0x1FD6) return 0;
+  if (ch <= 0x1FD7) return 1;
+  if (ch <  0x1FE0) return 0;
+  if (ch <= 0x1FE7) return 1;
+  if (ch <  0x1FF2) return 0;
+  if (ch <= 0x1FF4) return 1;
+  if (ch <  0x1FF6) return 0;
+  if (ch <= 0x1FF7) return 1;
+  if (ch <  0x2090) return 0;
+  if (ch <= 0x209C) return 1;
+  if (ch <  0x210E) return 0;
+  if (ch <= 0x210F) return 1;
+  if (ch <  0x213C) return 0;
+  if (ch <= 0x213D) return 1;
+  if (ch <  0x2146) return 0;
+  if (ch <= 0x2149) return 1;
+  if (ch <  0x2170) return 0;
+  if (ch <= 0x217F) return 1;
+  if (ch <  0x24D0) return 0;
+  if (ch <= 0x24E9) return 1;
+  if (ch <  0x2C30) return 0;
+  if (ch <= 0x2C5E) return 1;
+  if (ch <  0x2C65) return 0;
+  if (ch <= 0x2C66) return 1;
+  if (ch <  0x2C73) return 0;
+  if (ch <= 0x2C74) return 1;
+  if (ch <  0x2C76) return 0;
+  if (ch <= 0x2C7B) return 1;
+  if (ch <  0x2C7C) return 0;
+  if (ch <= 0x2C7D) return 1;
+  if (ch <  0x2CE3) return 0;
+  if (ch <= 0x2CE4) return 1;
+  if (ch <  0x2D00) return 0;
+  if (ch <= 0x2D25) return 1;
+  if (ch <  0xA72F) return 0;
+  if (ch <= 0xA731) return 1;
+  if (ch <  0xA771) return 0;
+  if (ch <= 0xA778) return 1;
+  if (ch <  0xA7F8) return 0;
+  if (ch <= 0xA7F9) return 1;
+  if (ch <  0xFB00) return 0;
+  if (ch <= 0xFB06) return 1;
+  if (ch <  0xFB13) return 0;
+  if (ch <= 0xFB17) return 1;
+  if (ch <  0xFF41) return 0;
+  if (ch <= 0xFF5A) return 1;
+  if (ch <  0x10428) return 0;
+  if (ch <= 0x1044F) return 1;
+  if (ch <  0x1D41A) return 0;
+  if (ch <= 0x1D433) return 1;
+  if (ch <  0x1D44E) return 0;
+  if (ch <= 0x1D454) return 1;
+  if (ch <  0x1D456) return 0;
+  if (ch <= 0x1D467) return 1;
+  if (ch <  0x1D482) return 0;
+  if (ch <= 0x1D49B) return 1;
+  if (ch <  0x1D4B6) return 0;
+  if (ch <= 0x1D4B9) return 1;
+  if (ch <  0x1D4BD) return 0;
+  if (ch <= 0x1D4C3) return 1;
+  if (ch <  0x1D4C5) return 0;
+  if (ch <= 0x1D4CF) return 1;
+  if (ch <  0x1D4EA) return 0;
+  if (ch <= 0x1D503) return 1;
+  if (ch <  0x1D51E) return 0;
+  if (ch <= 0x1D537) return 1;
+  if (ch <  0x1D552) return 0;
+  if (ch <= 0x1D56B) return 1;
+  if (ch <  0x1D586) return 0;
+  if (ch <= 0x1D59F) return 1;
+  if (ch <  0x1D5BA) return 0;
+  if (ch <= 0x1D5D3) return 1;
+  if (ch <  0x1D5EE) return 0;
+  if (ch <= 0x1D607) return 1;
+  if (ch <  0x1D622) return 0;
+  if (ch <= 0x1D63B) return 1;
+  if (ch <  0x1D656) return 0;
+  if (ch <= 0x1D66F) return 1;
+  if (ch <  0x1D68A) return 0;
+  if (ch <= 0x1D6A5) return 1;
+  if (ch <  0x1D6C2) return 0;
+  if (ch <= 0x1D6DA) return 1;
+  if (ch <  0x1D6DC) return 0;
+  if (ch <= 0x1D6E1) return 1;
+  if (ch <  0x1D6FC) return 0;
+  if (ch <= 0x1D714) return 1;
+  if (ch <  0x1D716) return 0;
+  if (ch <= 0x1D71B) return 1;
+  if (ch <  0x1D736) return 0;
+  if (ch <= 0x1D74E) return 1;
+  if (ch <  0x1D750) return 0;
+  if (ch <= 0x1D755) return 1;
+  if (ch <  0x1D770) return 0;
+  if (ch <= 0x1D788) return 1;
+  if (ch <  0x1D78A) return 0;
+  if (ch <= 0x1D78F) return 1;
+  if (ch <  0x1D7AA) return 0;
+  if (ch <= 0x1D7C2) return 1;
+  if (ch <  0x1D7C4) return 0;
+  if (ch <= 0x1D7C9) return 1;
+  return 0;
+}
+
+
+int dps_isUpper(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x0100:
+  case 0x0102:
+  case 0x0104:
+  case 0x0106:
+  case 0x0108:
+  case 0x010A:
+  case 0x010C:
+  case 0x010E:
+  case 0x0110:
+  case 0x0112:
+  case 0x0114:
+  case 0x0116:
+  case 0x0118:
+  case 0x011A:
+  case 0x011C:
+  case 0x011E:
+  case 0x0120:
+  case 0x0122:
+  case 0x0124:
+  case 0x0126:
+  case 0x0128:
+  case 0x012A:
+  case 0x012C:
+  case 0x012E:
+  case 0x0130:
+  case 0x0132:
+  case 0x0134:
+  case 0x0136:
+  case 0x0139:
+  case 0x013B:
+  case 0x013D:
+  case 0x013F:
+  case 0x0141:
+  case 0x0143:
+  case 0x0145:
+  case 0x0147:
+  case 0x014A:
+  case 0x014C:
+  case 0x014E:
+  case 0x0150:
+  case 0x0152:
+  case 0x0154:
+  case 0x0156:
+  case 0x0158:
+  case 0x015A:
+  case 0x015C:
+  case 0x015E:
+  case 0x0160:
+  case 0x0162:
+  case 0x0164:
+  case 0x0166:
+  case 0x0168:
+  case 0x016A:
+  case 0x016C:
+  case 0x016E:
+  case 0x0170:
+  case 0x0172:
+  case 0x0174:
+  case 0x0176:
+  case 0x017B:
+  case 0x017D:
+  case 0x0184:
+  case 0x01A2:
+  case 0x01A4:
+  case 0x01A9:
+  case 0x01AC:
+  case 0x01B5:
+  case 0x01BC:
+  case 0x01CD:
+  case 0x01CF:
+  case 0x01D1:
+  case 0x01D3:
+  case 0x01D5:
+  case 0x01D7:
+  case 0x01D9:
+  case 0x01DB:
+  case 0x01DE:
+  case 0x01E0:
+  case 0x01E2:
+  case 0x01E4:
+  case 0x01E6:
+  case 0x01E8:
+  case 0x01EA:
+  case 0x01EC:
+  case 0x01EE:
+  case 0x01F4:
+  case 0x01FA:
+  case 0x01FC:
+  case 0x01FE:
+  case 0x0200:
+  case 0x0202:
+  case 0x0204:
+  case 0x0206:
+  case 0x0208:
+  case 0x020A:
+  case 0x020C:
+  case 0x020E:
+  case 0x0210:
+  case 0x0212:
+  case 0x0214:
+  case 0x0216:
+  case 0x0218:
+  case 0x021A:
+  case 0x021C:
+  case 0x021E:
+  case 0x0220:
+  case 0x0222:
+  case 0x0224:
+  case 0x0226:
+  case 0x0228:
+  case 0x022A:
+  case 0x022C:
+  case 0x022E:
+  case 0x0230:
+  case 0x0232:
+  case 0x0241:
+  case 0x0248:
+  case 0x024A:
+  case 0x024C:
+  case 0x024E:
+  case 0x0370:
+  case 0x0372:
+  case 0x0376:
+  case 0x0386:
+  case 0x038C:
+  case 0x03CF:
+  case 0x03D8:
+  case 0x03DA:
+  case 0x03DC:
+  case 0x03DE:
+  case 0x03E0:
+  case 0x03E2:
+  case 0x03E4:
+  case 0x03E6:
+  case 0x03E8:
+  case 0x03EA:
+  case 0x03EC:
+  case 0x03EE:
+  case 0x03F4:
+  case 0x03F7:
+  case 0x0460:
+  case 0x0462:
+  case 0x0464:
+  case 0x0466:
+  case 0x0468:
+  case 0x046A:
+  case 0x046C:
+  case 0x046E:
+  case 0x0470:
+  case 0x0472:
+  case 0x0474:
+  case 0x0476:
+  case 0x0478:
+  case 0x047A:
+  case 0x047C:
+  case 0x047E:
+  case 0x0480:
+  case 0x048A:
+  case 0x048C:
+  case 0x048E:
+  case 0x0490:
+  case 0x0492:
+  case 0x0494:
+  case 0x0496:
+  case 0x0498:
+  case 0x049A:
+  case 0x049C:
+  case 0x049E:
+  case 0x04A0:
+  case 0x04A2:
+  case 0x04A4:
+  case 0x04A6:
+  case 0x04A8:
+  case 0x04AA:
+  case 0x04AC:
+  case 0x04AE:
+  case 0x04B0:
+  case 0x04B2:
+  case 0x04B4:
+  case 0x04B6:
+  case 0x04B8:
+  case 0x04BA:
+  case 0x04BC:
+  case 0x04BE:
+  case 0x04C3:
+  case 0x04C5:
+  case 0x04C7:
+  case 0x04C9:
+  case 0x04CB:
+  case 0x04CD:
+  case 0x04D0:
+  case 0x04D2:
+  case 0x04D4:
+  case 0x04D6:
+  case 0x04D8:
+  case 0x04DA:
+  case 0x04DC:
+  case 0x04DE:
+  case 0x04E0:
+  case 0x04E2:
+  case 0x04E4:
+  case 0x04E6:
+  case 0x04E8:
+  case 0x04EA:
+  case 0x04EC:
+  case 0x04EE:
+  case 0x04F0:
+  case 0x04F2:
+  case 0x04F4:
+  case 0x04F6:
+  case 0x04F8:
+  case 0x04FA:
+  case 0x04FC:
+  case 0x04FE:
+  case 0x0500:
+  case 0x0502:
+  case 0x0504:
+  case 0x0506:
+  case 0x0508:
+  case 0x050A:
+  case 0x050C:
+  case 0x050E:
+  case 0x0510:
+  case 0x0512:
+  case 0x0514:
+  case 0x0516:
+  case 0x0518:
+  case 0x051A:
+  case 0x051C:
+  case 0x051E:
+  case 0x0520:
+  case 0x0522:
+  case 0x0524:
+  case 0x0526:
+  case 0x10C7:
+  case 0x10CD:
+  case 0x1E00:
+  case 0x1E02:
+  case 0x1E04:
+  case 0x1E06:
+  case 0x1E08:
+  case 0x1E0A:
+  case 0x1E0C:
+  case 0x1E0E:
+  case 0x1E10:
+  case 0x1E12:
+  case 0x1E14:
+  case 0x1E16:
+  case 0x1E18:
+  case 0x1E1A:
+  case 0x1E1C:
+  case 0x1E1E:
+  case 0x1E20:
+  case 0x1E22:
+  case 0x1E24:
+  case 0x1E26:
+  case 0x1E28:
+  case 0x1E2A:
+  case 0x1E2C:
+  case 0x1E2E:
+  case 0x1E30:
+  case 0x1E32:
+  case 0x1E34:
+  case 0x1E36:
+  case 0x1E38:
+  case 0x1E3A:
+  case 0x1E3C:
+  case 0x1E3E:
+  case 0x1E40:
+  case 0x1E42:
+  case 0x1E44:
+  case 0x1E46:
+  case 0x1E48:
+  case 0x1E4A:
+  case 0x1E4C:
+  case 0x1E4E:
+  case 0x1E50:
+  case 0x1E52:
+  case 0x1E54:
+  case 0x1E56:
+  case 0x1E58:
+  case 0x1E5A:
+  case 0x1E5C:
+  case 0x1E5E:
+  case 0x1E60:
+  case 0x1E62:
+  case 0x1E64:
+  case 0x1E66:
+  case 0x1E68:
+  case 0x1E6A:
+  case 0x1E6C:
+  case 0x1E6E:
+  case 0x1E70:
+  case 0x1E72:
+  case 0x1E74:
+  case 0x1E76:
+  case 0x1E78:
+  case 0x1E7A:
+  case 0x1E7C:
+  case 0x1E7E:
+  case 0x1E80:
+  case 0x1E82:
+  case 0x1E84:
+  case 0x1E86:
+  case 0x1E88:
+  case 0x1E8A:
+  case 0x1E8C:
+  case 0x1E8E:
+  case 0x1E90:
+  case 0x1E92:
+  case 0x1E94:
+  case 0x1E9E:
+  case 0x1EA0:
+  case 0x1EA2:
+  case 0x1EA4:
+  case 0x1EA6:
+  case 0x1EA8:
+  case 0x1EAA:
+  case 0x1EAC:
+  case 0x1EAE:
+  case 0x1EB0:
+  case 0x1EB2:
+  case 0x1EB4:
+  case 0x1EB6:
+  case 0x1EB8:
+  case 0x1EBA:
+  case 0x1EBC:
+  case 0x1EBE:
+  case 0x1EC0:
+  case 0x1EC2:
+  case 0x1EC4:
+  case 0x1EC6:
+  case 0x1EC8:
+  case 0x1ECA:
+  case 0x1ECC:
+  case 0x1ECE:
+  case 0x1ED0:
+  case 0x1ED2:
+  case 0x1ED4:
+  case 0x1ED6:
+  case 0x1ED8:
+  case 0x1EDA:
+  case 0x1EDC:
+  case 0x1EDE:
+  case 0x1EE0:
+  case 0x1EE2:
+  case 0x1EE4:
+  case 0x1EE6:
+  case 0x1EE8:
+  case 0x1EEA:
+  case 0x1EEC:
+  case 0x1EEE:
+  case 0x1EF0:
+  case 0x1EF2:
+  case 0x1EF4:
+  case 0x1EF6:
+  case 0x1EF8:
+  case 0x1EFA:
+  case 0x1EFC:
+  case 0x1EFE:
+  case 0x1F59:
+  case 0x1F5B:
+  case 0x1F5D:
+  case 0x1F5F:
+  case 0x2102:
+  case 0x2107:
+  case 0x2115:
+  case 0x2124:
+  case 0x2126:
+  case 0x2128:
+  case 0x2145:
+  case 0x2183:
+  case 0x2C60:
+  case 0x2C67:
+  case 0x2C69:
+  case 0x2C6B:
+  case 0x2C72:
+  case 0x2C75:
+  case 0x2C82:
+  case 0x2C84:
+  case 0x2C86:
+  case 0x2C88:
+  case 0x2C8A:
+  case 0x2C8C:
+  case 0x2C8E:
+  case 0x2C90:
+  case 0x2C92:
+  case 0x2C94:
+  case 0x2C96:
+  case 0x2C98:
+  case 0x2C9A:
+  case 0x2C9C:
+  case 0x2C9E:
+  case 0x2CA0:
+  case 0x2CA2:
+  case 0x2CA4:
+  case 0x2CA6:
+  case 0x2CA8:
+  case 0x2CAA:
+  case 0x2CAC:
+  case 0x2CAE:
+  case 0x2CB0:
+  case 0x2CB2:
+  case 0x2CB4:
+  case 0x2CB6:
+  case 0x2CB8:
+  case 0x2CBA:
+  case 0x2CBC:
+  case 0x2CBE:
+  case 0x2CC0:
+  case 0x2CC2:
+  case 0x2CC4:
+  case 0x2CC6:
+  case 0x2CC8:
+  case 0x2CCA:
+  case 0x2CCC:
+  case 0x2CCE:
+  case 0x2CD0:
+  case 0x2CD2:
+  case 0x2CD4:
+  case 0x2CD6:
+  case 0x2CD8:
+  case 0x2CDA:
+  case 0x2CDC:
+  case 0x2CDE:
+  case 0x2CE0:
+  case 0x2CE2:
+  case 0x2CEB:
+  case 0x2CED:
+  case 0x2CF2:
+  case 0xA640:
+  case 0xA642:
+  case 0xA644:
+  case 0xA646:
+  case 0xA648:
+  case 0xA64A:
+  case 0xA64C:
+  case 0xA64E:
+  case 0xA650:
+  case 0xA652:
+  case 0xA654:
+  case 0xA656:
+  case 0xA658:
+  case 0xA65A:
+  case 0xA65C:
+  case 0xA65E:
+  case 0xA660:
+  case 0xA662:
+  case 0xA664:
+  case 0xA666:
+  case 0xA668:
+  case 0xA66A:
+  case 0xA66C:
+  case 0xA680:
+  case 0xA682:
+  case 0xA684:
+  case 0xA686:
+  case 0xA688:
+  case 0xA68A:
+  case 0xA68C:
+  case 0xA68E:
+  case 0xA690:
+  case 0xA692:
+  case 0xA694:
+  case 0xA696:
+  case 0xA722:
+  case 0xA724:
+  case 0xA726:
+  case 0xA728:
+  case 0xA72A:
+  case 0xA72C:
+  case 0xA72E:
+  case 0xA732:
+  case 0xA734:
+  case 0xA736:
+  case 0xA738:
+  case 0xA73A:
+  case 0xA73C:
+  case 0xA73E:
+  case 0xA740:
+  case 0xA742:
+  case 0xA744:
+  case 0xA746:
+  case 0xA748:
+  case 0xA74A:
+  case 0xA74C:
+  case 0xA74E:
+  case 0xA750:
+  case 0xA752:
+  case 0xA754:
+  case 0xA756:
+  case 0xA758:
+  case 0xA75A:
+  case 0xA75C:
+  case 0xA75E:
+  case 0xA760:
+  case 0xA762:
+  case 0xA764:
+  case 0xA766:
+  case 0xA768:
+  case 0xA76A:
+  case 0xA76C:
+  case 0xA76E:
+  case 0xA779:
+  case 0xA77B:
+  case 0xA780:
+  case 0xA782:
+  case 0xA784:
+  case 0xA786:
+  case 0xA78B:
+  case 0xA78D:
+  case 0xA790:
+  case 0xA792:
+  case 0xA7A0:
+  case 0xA7A2:
+  case 0xA7A4:
+  case 0xA7A6:
+  case 0xA7A8:
+  case 0xA7AA:
+  case 0x1D49C:
+  case 0x1D4A2:
+  case 0x1D546:
+  case 0x1D7CA:
+    return 1;
+  }
+  if (ch <  0x0041) return 0;
+  if (ch <= 0x005A) return 1;
+  if (ch <  0x00C0) return 0;
+  if (ch <= 0x00D6) return 1;
+  if (ch <  0x00D8) return 0;
+  if (ch <= 0x00DE) return 1;
+  if (ch <  0x0178) return 0;
+  if (ch <= 0x0179) return 1;
+  if (ch <  0x0181) return 0;
+  if (ch <= 0x0182) return 1;
+  if (ch <  0x0186) return 0;
+  if (ch <= 0x0187) return 1;
+  if (ch <  0x0189) return 0;
+  if (ch <= 0x018B) return 1;
+  if (ch <  0x018E) return 0;
+  if (ch <= 0x0191) return 1;
+  if (ch <  0x0193) return 0;
+  if (ch <= 0x0194) return 1;
+  if (ch <  0x0196) return 0;
+  if (ch <= 0x0198) return 1;
+  if (ch <  0x019C) return 0;
+  if (ch <= 0x019D) return 1;
+  if (ch <  0x019F) return 0;
+  if (ch <= 0x01A0) return 1;
+  if (ch <  0x01A6) return 0;
+  if (ch <= 0x01A7) return 1;
+  if (ch <  0x01AE) return 0;
+  if (ch <= 0x01AF) return 1;
+  if (ch <  0x01B1) return 0;
+  if (ch <= 0x01B3) return 1;
+  if (ch <  0x01B7) return 0;
+  if (ch <= 0x01B8) return 1;
+  if (ch <  0x01C4) return 0;
+  if (ch <= 0x01C5) return 1;
+  if (ch <  0x01C7) return 0;
+  if (ch <= 0x01C8) return 1;
+  if (ch <  0x01CA) return 0;
+  if (ch <= 0x01CB) return 1;
+  if (ch <  0x01F1) return 0;
+  if (ch <= 0x01F2) return 1;
+  if (ch <  0x01F6) return 0;
+  if (ch <= 0x01F8) return 1;
+  if (ch <  0x023A) return 0;
+  if (ch <= 0x023B) return 1;
+  if (ch <  0x023D) return 0;
+  if (ch <= 0x023E) return 1;
+  if (ch <  0x0243) return 0;
+  if (ch <= 0x0246) return 1;
+  if (ch <  0x0388) return 0;
+  if (ch <= 0x038A) return 1;
+  if (ch <  0x038E) return 0;
+  if (ch <= 0x038F) return 1;
+  if (ch <  0x0391) return 0;
+  if (ch <= 0x03A1) return 1;
+  if (ch <  0x03A3) return 0;
+  if (ch <= 0x03AB) return 1;
+  if (ch <  0x03D2) return 0;
+  if (ch <= 0x03D4) return 1;
+  if (ch <  0x03F9) return 0;
+  if (ch <= 0x03FA) return 1;
+  if (ch <  0x03FD) return 0;
+  if (ch <= 0x042F) return 1;
+  if (ch <  0x04C0) return 0;
+  if (ch <= 0x04C1) return 1;
+  if (ch <  0x0531) return 0;
+  if (ch <= 0x0556) return 1;
+  if (ch <  0x10A0) return 0;
+  if (ch <= 0x10C5) return 1;
+  if (ch <  0x1F08) return 0;
+  if (ch <= 0x1F0F) return 1;
+  if (ch <  0x1F18) return 0;
+  if (ch <= 0x1F1D) return 1;
+  if (ch <  0x1F28) return 0;
+  if (ch <= 0x1F2F) return 1;
+  if (ch <  0x1F38) return 0;
+  if (ch <= 0x1F3F) return 1;
+  if (ch <  0x1F48) return 0;
+  if (ch <= 0x1F4D) return 1;
+  if (ch <  0x1F68) return 0;
+  if (ch <= 0x1F6F) return 1;
+  if (ch <  0x1F88) return 0;
+  if (ch <= 0x1F8F) return 1;
+  if (ch <  0x1F98) return 0;
+  if (ch <= 0x1F9F) return 1;
+  if (ch <  0x1FA8) return 0;
+  if (ch <= 0x1FAF) return 1;
+  if (ch <  0x1FB8) return 0;
+  if (ch <= 0x1FBC) return 1;
+  if (ch <  0x1FC8) return 0;
+  if (ch <= 0x1FCC) return 1;
+  if (ch <  0x1FD8) return 0;
+  if (ch <= 0x1FDB) return 1;
+  if (ch <  0x1FE8) return 0;
+  if (ch <= 0x1FEC) return 1;
+  if (ch <  0x1FF8) return 0;
+  if (ch <= 0x1FFC) return 1;
+  if (ch <  0x210B) return 0;
+  if (ch <= 0x210D) return 1;
+  if (ch <  0x2110) return 0;
+  if (ch <= 0x2112) return 1;
+  if (ch <  0x2119) return 0;
+  if (ch <= 0x211D) return 1;
+  if (ch <  0x212A) return 0;
+  if (ch <= 0x212D) return 1;
+  if (ch <  0x2130) return 0;
+  if (ch <= 0x2133) return 1;
+  if (ch <  0x213E) return 0;
+  if (ch <= 0x213F) return 1;
+  if (ch <  0x2160) return 0;
+  if (ch <= 0x216F) return 1;
+  if (ch <  0x24B6) return 0;
+  if (ch <= 0x24CF) return 1;
+  if (ch <  0x2C00) return 0;
+  if (ch <= 0x2C2E) return 1;
+  if (ch <  0x2C62) return 0;
+  if (ch <= 0x2C64) return 1;
+  if (ch <  0x2C6D) return 0;
+  if (ch <= 0x2C70) return 1;
+  if (ch <  0x2C7E) return 0;
+  if (ch <= 0x2C80) return 1;
+  if (ch <  0xA77D) return 0;
+  if (ch <= 0xA77E) return 1;
+  if (ch <  0xFF21) return 0;
+  if (ch <= 0xFF3A) return 1;
+  if (ch <  0x10400) return 0;
+  if (ch <= 0x10427) return 1;
+  if (ch <  0x1D400) return 0;
+  if (ch <= 0x1D419) return 1;
+  if (ch <  0x1D434) return 0;
+  if (ch <= 0x1D44D) return 1;
+  if (ch <  0x1D468) return 0;
+  if (ch <= 0x1D481) return 1;
+  if (ch <  0x1D49E) return 0;
+  if (ch <= 0x1D49F) return 1;
+  if (ch <  0x1D4A5) return 0;
+  if (ch <= 0x1D4A6) return 1;
+  if (ch <  0x1D4A9) return 0;
+  if (ch <= 0x1D4AC) return 1;
+  if (ch <  0x1D4AE) return 0;
+  if (ch <= 0x1D4B5) return 1;
+  if (ch <  0x1D4D0) return 0;
+  if (ch <= 0x1D4E9) return 1;
+  if (ch <  0x1D504) return 0;
+  if (ch <= 0x1D505) return 1;
+  if (ch <  0x1D507) return 0;
+  if (ch <= 0x1D50A) return 1;
+  if (ch <  0x1D50D) return 0;
+  if (ch <= 0x1D514) return 1;
+  if (ch <  0x1D516) return 0;
+  if (ch <= 0x1D51C) return 1;
+  if (ch <  0x1D538) return 0;
+  if (ch <= 0x1D539) return 1;
+  if (ch <  0x1D53B) return 0;
+  if (ch <= 0x1D53E) return 1;
+  if (ch <  0x1D540) return 0;
+  if (ch <= 0x1D544) return 1;
+  if (ch <  0x1D54A) return 0;
+  if (ch <= 0x1D550) return 1;
+  if (ch <  0x1D56C) return 0;
+  if (ch <= 0x1D585) return 1;
+  if (ch <  0x1D5A0) return 0;
+  if (ch <= 0x1D5B9) return 1;
+  if (ch <  0x1D5D4) return 0;
+  if (ch <= 0x1D5ED) return 1;
+  if (ch <  0x1D608) return 0;
+  if (ch <= 0x1D621) return 1;
+  if (ch <  0x1D63C) return 0;
+  if (ch <= 0x1D655) return 1;
+  if (ch <  0x1D670) return 0;
+  if (ch <= 0x1D689) return 1;
+  if (ch <  0x1D6A8) return 0;
+  if (ch <= 0x1D6C0) return 1;
+  if (ch <  0x1D6E2) return 0;
+  if (ch <= 0x1D6FA) return 1;
+  if (ch <  0x1D71C) return 0;
+  if (ch <= 0x1D734) return 1;
+  if (ch <  0x1D756) return 0;
+  if (ch <= 0x1D76E) return 1;
+  if (ch <  0x1D790) return 0;
+  if (ch <= 0x1D7A8) return 1;
+  return 0;
+}
+
+
+int dps_isOLetter(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x01BB:
+  case 0x0294:
+  case 0x02EC:
+  case 0x02EE:
+  case 0x0374:
+  case 0x0559:
+  case 0x05F3:
+  case 0x0640:
+  case 0x06D5:
+  case 0x06FF:
+  case 0x0710:
+  case 0x07B1:
+  case 0x07FA:
+  case 0x081A:
+  case 0x0824:
+  case 0x0828:
+  case 0x08A0:
+  case 0x093D:
+  case 0x0950:
+  case 0x0971:
+  case 0x09B2:
+  case 0x09BD:
+  case 0x09CE:
+  case 0x0A5E:
+  case 0x0ABD:
+  case 0x0AD0:
+  case 0x0B3D:
+  case 0x0B71:
+  case 0x0B83:
+  case 0x0B9C:
+  case 0x0BD0:
+  case 0x0C3D:
+  case 0x0CBD:
+  case 0x0CDE:
+  case 0x0D3D:
+  case 0x0D4E:
+  case 0x0DBD:
+  case 0x0E46:
+  case 0x0E84:
+  case 0x0E8A:
+  case 0x0E8D:
+  case 0x0EA5:
+  case 0x0EA7:
+  case 0x0EBD:
+  case 0x0EC6:
+  case 0x0F00:
+  case 0x103F:
+  case 0x1061:
+  case 0x108E:
+  case 0x10FC:
+  case 0x1258:
+  case 0x12C0:
+  case 0x17D7:
+  case 0x17DC:
+  case 0x1843:
+  case 0x18AA:
+  case 0x1AA7:
+  case 0x2D6F:
+  case 0x2E2F:
+  case 0x3005:
+  case 0x3006:
+  case 0x3007:
+  case 0x303B:
+  case 0x303C:
+  case 0x309F:
+  case 0x30FF:
+  case 0xA015:
+  case 0xA60C:
+  case 0xA66E:
+  case 0xA67F:
+  case 0xA788:
+  case 0xA8FB:
+  case 0xA9CF:
+  case 0xAA70:
+  case 0xAA7A:
+  case 0xAAB1:
+  case 0xAAC0:
+  case 0xAAC2:
+  case 0xAADD:
+  case 0xAAF2:
+  case 0xFB1D:
+  case 0xFB3E:
+  case 0xFF70:
+  case 0x10341:
+  case 0x1034A:
+  case 0x10808:
+  case 0x1083C:
+  case 0x10A00:
+  case 0x16F50:
+  case 0x1EE24:
+  case 0x1EE27:
+  case 0x1EE39:
+  case 0x1EE3B:
+  case 0x1EE42:
+  case 0x1EE47:
+  case 0x1EE49:
+  case 0x1EE4B:
+  case 0x1EE54:
+  case 0x1EE57:
+  case 0x1EE59:
+  case 0x1EE5B:
+  case 0x1EE5D:
+  case 0x1EE5F:
+  case 0x1EE64:
+  case 0x1EE7E:
+    return 1;
+  }
+  if (ch <  0x01C0) return 0;
+  if (ch <= 0x01C3) return 1;
+  if (ch <  0x02B9) return 0;
+  if (ch <= 0x02BF) return 1;
+  if (ch <  0x02C6) return 0;
+  if (ch <= 0x02D1) return 1;
+  if (ch <  0x05D0) return 0;
+  if (ch <= 0x05EA) return 1;
+  if (ch <  0x05F0) return 0;
+  if (ch <= 0x05F2) return 1;
+  if (ch <  0x0620) return 0;
+  if (ch <= 0x063F) return 1;
+  if (ch <  0x0641) return 0;
+  if (ch <= 0x064A) return 1;
+  if (ch <  0x066E) return 0;
+  if (ch <= 0x066F) return 1;
+  if (ch <  0x0671) return 0;
+  if (ch <= 0x06D3) return 1;
+  if (ch <  0x06E5) return 0;
+  if (ch <= 0x06E6) return 1;
+  if (ch <  0x06EE) return 0;
+  if (ch <= 0x06EF) return 1;
+  if (ch <  0x06FA) return 0;
+  if (ch <= 0x06FC) return 1;
+  if (ch <  0x0712) return 0;
+  if (ch <= 0x072F) return 1;
+  if (ch <  0x074D) return 0;
+  if (ch <= 0x07A5) return 1;
+  if (ch <  0x07CA) return 0;
+  if (ch <= 0x07EA) return 1;
+  if (ch <  0x07F4) return 0;
+  if (ch <= 0x07F5) return 1;
+  if (ch <  0x0800) return 0;
+  if (ch <= 0x0815) return 1;
+  if (ch <  0x0840) return 0;
+  if (ch <= 0x0858) return 1;
+  if (ch <  0x08A2) return 0;
+  if (ch <= 0x08AC) return 1;
+  if (ch <  0x0904) return 0;
+  if (ch <= 0x0939) return 1;
+  if (ch <  0x0958) return 0;
+  if (ch <= 0x0961) return 1;
+  if (ch <  0x0972) return 0;
+  if (ch <= 0x0977) return 1;
+  if (ch <  0x0979) return 0;
+  if (ch <= 0x097F) return 1;
+  if (ch <  0x0985) return 0;
+  if (ch <= 0x098C) return 1;
+  if (ch <  0x098F) return 0;
+  if (ch <= 0x0990) return 1;
+  if (ch <  0x0993) return 0;
+  if (ch <= 0x09A8) return 1;
+  if (ch <  0x09AA) return 0;
+  if (ch <= 0x09B0) return 1;
+  if (ch <  0x09B6) return 0;
+  if (ch <= 0x09B9) return 1;
+  if (ch <  0x09DC) return 0;
+  if (ch <= 0x09DD) return 1;
+  if (ch <  0x09DF) return 0;
+  if (ch <= 0x09E1) return 1;
+  if (ch <  0x09F0) return 0;
+  if (ch <= 0x09F1) return 1;
+  if (ch <  0x0A05) return 0;
+  if (ch <= 0x0A0A) return 1;
+  if (ch <  0x0A0F) return 0;
+  if (ch <= 0x0A10) return 1;
+  if (ch <  0x0A13) return 0;
+  if (ch <= 0x0A28) return 1;
+  if (ch <  0x0A2A) return 0;
+  if (ch <= 0x0A30) return 1;
+  if (ch <  0x0A32) return 0;
+  if (ch <= 0x0A33) return 1;
+  if (ch <  0x0A35) return 0;
+  if (ch <= 0x0A36) return 1;
+  if (ch <  0x0A38) return 0;
+  if (ch <= 0x0A39) return 1;
+  if (ch <  0x0A59) return 0;
+  if (ch <= 0x0A5C) return 1;
+  if (ch <  0x0A72) return 0;
+  if (ch <= 0x0A74) return 1;
+  if (ch <  0x0A85) return 0;
+  if (ch <= 0x0A8D) return 1;
+  if (ch <  0x0A8F) return 0;
+  if (ch <= 0x0A91) return 1;
+  if (ch <  0x0A93) return 0;
+  if (ch <= 0x0AA8) return 1;
+  if (ch <  0x0AAA) return 0;
+  if (ch <= 0x0AB0) return 1;
+  if (ch <  0x0AB2) return 0;
+  if (ch <= 0x0AB3) return 1;
+  if (ch <  0x0AB5) return 0;
+  if (ch <= 0x0AB9) return 1;
+  if (ch <  0x0AE0) return 0;
+  if (ch <= 0x0AE1) return 1;
+  if (ch <  0x0B05) return 0;
+  if (ch <= 0x0B0C) return 1;
+  if (ch <  0x0B0F) return 0;
+  if (ch <= 0x0B10) return 1;
+  if (ch <  0x0B13) return 0;
+  if (ch <= 0x0B28) return 1;
+  if (ch <  0x0B2A) return 0;
+  if (ch <= 0x0B30) return 1;
+  if (ch <  0x0B32) return 0;
+  if (ch <= 0x0B33) return 1;
+  if (ch <  0x0B35) return 0;
+  if (ch <= 0x0B39) return 1;
+  if (ch <  0x0B5C) return 0;
+  if (ch <= 0x0B5D) return 1;
+  if (ch <  0x0B5F) return 0;
+  if (ch <= 0x0B61) return 1;
+  if (ch <  0x0B85) return 0;
+  if (ch <= 0x0B8A) return 1;
+  if (ch <  0x0B8E) return 0;
+  if (ch <= 0x0B90) return 1;
+  if (ch <  0x0B92) return 0;
+  if (ch <= 0x0B95) return 1;
+  if (ch <  0x0B99) return 0;
+  if (ch <= 0x0B9A) return 1;
+  if (ch <  0x0B9E) return 0;
+  if (ch <= 0x0B9F) return 1;
+  if (ch <  0x0BA3) return 0;
+  if (ch <= 0x0BA4) return 1;
+  if (ch <  0x0BA8) return 0;
+  if (ch <= 0x0BAA) return 1;
+  if (ch <  0x0BAE) return 0;
+  if (ch <= 0x0BB9) return 1;
+  if (ch <  0x0C05) return 0;
+  if (ch <= 0x0C0C) return 1;
+  if (ch <  0x0C0E) return 0;
+  if (ch <= 0x0C10) return 1;
+  if (ch <  0x0C12) return 0;
+  if (ch <= 0x0C28) return 1;
+  if (ch <  0x0C2A) return 0;
+  if (ch <= 0x0C33) return 1;
+  if (ch <  0x0C35) return 0;
+  if (ch <= 0x0C39) return 1;
+  if (ch <  0x0C58) return 0;
+  if (ch <= 0x0C59) return 1;
+  if (ch <  0x0C60) return 0;
+  if (ch <= 0x0C61) return 1;
+  if (ch <  0x0C85) return 0;
+  if (ch <= 0x0C8C) return 1;
+  if (ch <  0x0C8E) return 0;
+  if (ch <= 0x0C90) return 1;
+  if (ch <  0x0C92) return 0;
+  if (ch <= 0x0CA8) return 1;
+  if (ch <  0x0CAA) return 0;
+  if (ch <= 0x0CB3) return 1;
+  if (ch <  0x0CB5) return 0;
+  if (ch <= 0x0CB9) return 1;
+  if (ch <  0x0CE0) return 0;
+  if (ch <= 0x0CE1) return 1;
+  if (ch <  0x0CF1) return 0;
+  if (ch <= 0x0CF2) return 1;
+  if (ch <  0x0D05) return 0;
+  if (ch <= 0x0D0C) return 1;
+  if (ch <  0x0D0E) return 0;
+  if (ch <= 0x0D10) return 1;
+  if (ch <  0x0D12) return 0;
+  if (ch <= 0x0D3A) return 1;
+  if (ch <  0x0D60) return 0;
+  if (ch <= 0x0D61) return 1;
+  if (ch <  0x0D7A) return 0;
+  if (ch <= 0x0D7F) return 1;
+  if (ch <  0x0D85) return 0;
+  if (ch <= 0x0D96) return 1;
+  if (ch <  0x0D9A) return 0;
+  if (ch <= 0x0DB1) return 1;
+  if (ch <  0x0DB3) return 0;
+  if (ch <= 0x0DBB) return 1;
+  if (ch <  0x0DC0) return 0;
+  if (ch <= 0x0DC6) return 1;
+  if (ch <  0x0E01) return 0;
+  if (ch <= 0x0E30) return 1;
+  if (ch <  0x0E32) return 0;
+  if (ch <= 0x0E33) return 1;
+  if (ch <  0x0E40) return 0;
+  if (ch <= 0x0E45) return 1;
+  if (ch <  0x0E81) return 0;
+  if (ch <= 0x0E82) return 1;
+  if (ch <  0x0E87) return 0;
+  if (ch <= 0x0E88) return 1;
+  if (ch <  0x0E94) return 0;
+  if (ch <= 0x0E97) return 1;
+  if (ch <  0x0E99) return 0;
+  if (ch <= 0x0E9F) return 1;
+  if (ch <  0x0EA1) return 0;
+  if (ch <= 0x0EA3) return 1;
+  if (ch <  0x0EAA) return 0;
+  if (ch <= 0x0EAB) return 1;
+  if (ch <  0x0EAD) return 0;
+  if (ch <= 0x0EB0) return 1;
+  if (ch <  0x0EB2) return 0;
+  if (ch <= 0x0EB3) return 1;
+  if (ch <  0x0EC0) return 0;
+  if (ch <= 0x0EC4) return 1;
+  if (ch <  0x0EDC) return 0;
+  if (ch <= 0x0EDF) return 1;
+  if (ch <  0x0F40) return 0;
+  if (ch <= 0x0F47) return 1;
+  if (ch <  0x0F49) return 0;
+  if (ch <= 0x0F6C) return 1;
+  if (ch <  0x0F88) return 0;
+  if (ch <= 0x0F8C) return 1;
+  if (ch <  0x1000) return 0;
+  if (ch <= 0x102A) return 1;
+  if (ch <  0x1050) return 0;
+  if (ch <= 0x1055) return 1;
+  if (ch <  0x105A) return 0;
+  if (ch <= 0x105D) return 1;
+  if (ch <  0x1065) return 0;
+  if (ch <= 0x1066) return 1;
+  if (ch <  0x106E) return 0;
+  if (ch <= 0x1070) return 1;
+  if (ch <  0x1075) return 0;
+  if (ch <= 0x1081) return 1;
+  if (ch <  0x10D0) return 0;
+  if (ch <= 0x10FA) return 1;
+  if (ch <  0x10FD) return 0;
+  if (ch <= 0x1248) return 1;
+  if (ch <  0x124A) return 0;
+  if (ch <= 0x124D) return 1;
+  if (ch <  0x1250) return 0;
+  if (ch <= 0x1256) return 1;
+  if (ch <  0x125A) return 0;
+  if (ch <= 0x125D) return 1;
+  if (ch <  0x1260) return 0;
+  if (ch <= 0x1288) return 1;
+  if (ch <  0x128A) return 0;
+  if (ch <= 0x128D) return 1;
+  if (ch <  0x1290) return 0;
+  if (ch <= 0x12B0) return 1;
+  if (ch <  0x12B2) return 0;
+  if (ch <= 0x12B5) return 1;
+  if (ch <  0x12B8) return 0;
+  if (ch <= 0x12BE) return 1;
+  if (ch <  0x12C2) return 0;
+  if (ch <= 0x12C5) return 1;
+  if (ch <  0x12C8) return 0;
+  if (ch <= 0x12D6) return 1;
+  if (ch <  0x12D8) return 0;
+  if (ch <= 0x1310) return 1;
+  if (ch <  0x1312) return 0;
+  if (ch <= 0x1315) return 1;
+  if (ch <  0x1318) return 0;
+  if (ch <= 0x135A) return 1;
+  if (ch <  0x1380) return 0;
+  if (ch <= 0x138F) return 1;
+  if (ch <  0x13A0) return 0;
+  if (ch <= 0x13F4) return 1;
+  if (ch <  0x1401) return 0;
+  if (ch <= 0x166C) return 1;
+  if (ch <  0x166F) return 0;
+  if (ch <= 0x167F) return 1;
+  if (ch <  0x1681) return 0;
+  if (ch <= 0x169A) return 1;
+  if (ch <  0x16A0) return 0;
+  if (ch <= 0x16EA) return 1;
+  if (ch <  0x16EE) return 0;
+  if (ch <= 0x16F0) return 1;
+  if (ch <  0x1700) return 0;
+  if (ch <= 0x170C) return 1;
+  if (ch <  0x170E) return 0;
+  if (ch <= 0x1711) return 1;
+  if (ch <  0x1720) return 0;
+  if (ch <= 0x1731) return 1;
+  if (ch <  0x1740) return 0;
+  if (ch <= 0x1751) return 1;
+  if (ch <  0x1760) return 0;
+  if (ch <= 0x176C) return 1;
+  if (ch <  0x176E) return 0;
+  if (ch <= 0x1770) return 1;
+  if (ch <  0x1780) return 0;
+  if (ch <= 0x17B3) return 1;
+  if (ch <  0x1820) return 0;
+  if (ch <= 0x1842) return 1;
+  if (ch <  0x1844) return 0;
+  if (ch <= 0x1877) return 1;
+  if (ch <  0x1880) return 0;
+  if (ch <= 0x18A8) return 1;
+  if (ch <  0x18B0) return 0;
+  if (ch <= 0x18F5) return 1;
+  if (ch <  0x1900) return 0;
+  if (ch <= 0x191C) return 1;
+  if (ch <  0x1950) return 0;
+  if (ch <= 0x196D) return 1;
+  if (ch <  0x1970) return 0;
+  if (ch <= 0x1974) return 1;
+  if (ch <  0x1980) return 0;
+  if (ch <= 0x19AB) return 1;
+  if (ch <  0x19C1) return 0;
+  if (ch <= 0x19C7) return 1;
+  if (ch <  0x1A00) return 0;
+  if (ch <= 0x1A16) return 1;
+  if (ch <  0x1A20) return 0;
+  if (ch <= 0x1A54) return 1;
+  if (ch <  0x1B05) return 0;
+  if (ch <= 0x1B33) return 1;
+  if (ch <  0x1B45) return 0;
+  if (ch <= 0x1B4B) return 1;
+  if (ch <  0x1B83) return 0;
+  if (ch <= 0x1BA0) return 1;
+  if (ch <  0x1BAE) return 0;
+  if (ch <= 0x1BAF) return 1;
+  if (ch <  0x1BBA) return 0;
+  if (ch <= 0x1BE5) return 1;
+  if (ch <  0x1C00) return 0;
+  if (ch <= 0x1C23) return 1;
+  if (ch <  0x1C4D) return 0;
+  if (ch <= 0x1C4F) return 1;
+  if (ch <  0x1C5A) return 0;
+  if (ch <= 0x1C77) return 1;
+  if (ch <  0x1C78) return 0;
+  if (ch <= 0x1C7D) return 1;
+  if (ch <  0x1CE9) return 0;
+  if (ch <= 0x1CEC) return 1;
+  if (ch <  0x1CEE) return 0;
+  if (ch <= 0x1CF1) return 1;
+  if (ch <  0x1CF5) return 0;
+  if (ch <= 0x1CF6) return 1;
+  if (ch <  0x2135) return 0;
+  if (ch <= 0x2138) return 1;
+  if (ch <  0x2180) return 0;
+  if (ch <= 0x2182) return 1;
+  if (ch <  0x2185) return 0;
+  if (ch <= 0x2188) return 1;
+  if (ch <  0x2D30) return 0;
+  if (ch <= 0x2D67) return 1;
+  if (ch <  0x2D80) return 0;
+  if (ch <= 0x2D96) return 1;
+  if (ch <  0x2DA0) return 0;
+  if (ch <= 0x2DA6) return 1;
+  if (ch <  0x2DA8) return 0;
+  if (ch <= 0x2DAE) return 1;
+  if (ch <  0x2DB0) return 0;
+  if (ch <= 0x2DB6) return 1;
+  if (ch <  0x2DB8) return 0;
+  if (ch <= 0x2DBE) return 1;
+  if (ch <  0x2DC0) return 0;
+  if (ch <= 0x2DC6) return 1;
+  if (ch <  0x2DC8) return 0;
+  if (ch <= 0x2DCE) return 1;
+  if (ch <  0x2DD0) return 0;
+  if (ch <= 0x2DD6) return 1;
+  if (ch <  0x2DD8) return 0;
+  if (ch <= 0x2DDE) return 1;
+  if (ch <  0x3021) return 0;
+  if (ch <= 0x3029) return 1;
+  if (ch <  0x3031) return 0;
+  if (ch <= 0x3035) return 1;
+  if (ch <  0x3038) return 0;
+  if (ch <= 0x303A) return 1;
+  if (ch <  0x3041) return 0;
+  if (ch <= 0x3096) return 1;
+  if (ch <  0x309D) return 0;
+  if (ch <= 0x309E) return 1;
+  if (ch <  0x30A1) return 0;
+  if (ch <= 0x30FA) return 1;
+  if (ch <  0x30FC) return 0;
+  if (ch <= 0x30FE) return 1;
+  if (ch <  0x3105) return 0;
+  if (ch <= 0x312D) return 1;
+  if (ch <  0x3131) return 0;
+  if (ch <= 0x318E) return 1;
+  if (ch <  0x31A0) return 0;
+  if (ch <= 0x31BA) return 1;
+  if (ch <  0x31F0) return 0;
+  if (ch <= 0x31FF) return 1;
+  if (ch <  0x3400) return 0;
+  if (ch <= 0x4DB5) return 1;
+  if (ch <  0x4E00) return 0;
+  if (ch <= 0x9FCC) return 1;
+  if (ch <  0xA000) return 0;
+  if (ch <= 0xA014) return 1;
+  if (ch <  0xA016) return 0;
+  if (ch <= 0xA48C) return 1;
+  if (ch <  0xA4D0) return 0;
+  if (ch <= 0xA4F7) return 1;
+  if (ch <  0xA4F8) return 0;
+  if (ch <= 0xA4FD) return 1;
+  if (ch <  0xA500) return 0;
+  if (ch <= 0xA60B) return 1;
+  if (ch <  0xA610) return 0;
+  if (ch <= 0xA61F) return 1;
+  if (ch <  0xA62A) return 0;
+  if (ch <= 0xA62B) return 1;
+  if (ch <  0xA6A0) return 0;
+  if (ch <= 0xA6E5) return 1;
+  if (ch <  0xA6E6) return 0;
+  if (ch <= 0xA6EF) return 1;
+  if (ch <  0xA717) return 0;
+  if (ch <= 0xA71F) return 1;
+  if (ch <  0xA7FB) return 0;
+  if (ch <= 0xA801) return 1;
+  if (ch <  0xA803) return 0;
+  if (ch <= 0xA805) return 1;
+  if (ch <  0xA807) return 0;
+  if (ch <= 0xA80A) return 1;
+  if (ch <  0xA80C) return 0;
+  if (ch <= 0xA822) return 1;
+  if (ch <  0xA840) return 0;
+  if (ch <= 0xA873) return 1;
+  if (ch <  0xA882) return 0;
+  if (ch <= 0xA8B3) return 1;
+  if (ch <  0xA8F2) return 0;
+  if (ch <= 0xA8F7) return 1;
+  if (ch <  0xA90A) return 0;
+  if (ch <= 0xA925) return 1;
+  if (ch <  0xA930) return 0;
+  if (ch <= 0xA946) return 1;
+  if (ch <  0xA960) return 0;
+  if (ch <= 0xA97C) return 1;
+  if (ch <  0xA984) return 0;
+  if (ch <= 0xA9B2) return 1;
+  if (ch <  0xAA00) return 0;
+  if (ch <= 0xAA28) return 1;
+  if (ch <  0xAA40) return 0;
+  if (ch <= 0xAA42) return 1;
+  if (ch <  0xAA44) return 0;
+  if (ch <= 0xAA4B) return 1;
+  if (ch <  0xAA60) return 0;
+  if (ch <= 0xAA6F) return 1;
+  if (ch <  0xAA71) return 0;
+  if (ch <= 0xAA76) return 1;
+  if (ch <  0xAA80) return 0;
+  if (ch <= 0xAAAF) return 1;
+  if (ch <  0xAAB5) return 0;
+  if (ch <= 0xAAB6) return 1;
+  if (ch <  0xAAB9) return 0;
+  if (ch <= 0xAABD) return 1;
+  if (ch <  0xAADB) return 0;
+  if (ch <= 0xAADC) return 1;
+  if (ch <  0xAAE0) return 0;
+  if (ch <= 0xAAEA) return 1;
+  if (ch <  0xAAF3) return 0;
+  if (ch <= 0xAAF4) return 1;
+  if (ch <  0xAB01) return 0;
+  if (ch <= 0xAB06) return 1;
+  if (ch <  0xAB09) return 0;
+  if (ch <= 0xAB0E) return 1;
+  if (ch <  0xAB11) return 0;
+  if (ch <= 0xAB16) return 1;
+  if (ch <  0xAB20) return 0;
+  if (ch <= 0xAB26) return 1;
+  if (ch <  0xAB28) return 0;
+  if (ch <= 0xAB2E) return 1;
+  if (ch <  0xABC0) return 0;
+  if (ch <= 0xABE2) return 1;
+  if (ch <  0xAC00) return 0;
+  if (ch <= 0xD7A3) return 1;
+  if (ch <  0xD7B0) return 0;
+  if (ch <= 0xD7C6) return 1;
+  if (ch <  0xD7CB) return 0;
+  if (ch <= 0xD7FB) return 1;
+  if (ch <  0xF900) return 0;
+  if (ch <= 0xFA6D) return 1;
+  if (ch <  0xFA70) return 0;
+  if (ch <= 0xFAD9) return 1;
+  if (ch <  0xFB1F) return 0;
+  if (ch <= 0xFB28) return 1;
+  if (ch <  0xFB2A) return 0;
+  if (ch <= 0xFB36) return 1;
+  if (ch <  0xFB38) return 0;
+  if (ch <= 0xFB3C) return 1;
+  if (ch <  0xFB40) return 0;
+  if (ch <= 0xFB41) return 1;
+  if (ch <  0xFB43) return 0;
+  if (ch <= 0xFB44) return 1;
+  if (ch <  0xFB46) return 0;
+  if (ch <= 0xFBB1) return 1;
+  if (ch <  0xFBD3) return 0;
+  if (ch <= 0xFD3D) return 1;
+  if (ch <  0xFD50) return 0;
+  if (ch <= 0xFD8F) return 1;
+  if (ch <  0xFD92) return 0;
+  if (ch <= 0xFDC7) return 1;
+  if (ch <  0xFDF0) return 0;
+  if (ch <= 0xFDFB) return 1;
+  if (ch <  0xFE70) return 0;
+  if (ch <= 0xFE74) return 1;
+  if (ch <  0xFE76) return 0;
+  if (ch <= 0xFEFC) return 1;
+  if (ch <  0xFF66) return 0;
+  if (ch <= 0xFF6F) return 1;
+  if (ch <  0xFF71) return 0;
+  if (ch <= 0xFF9D) return 1;
+  if (ch <  0xFFA0) return 0;
+  if (ch <= 0xFFBE) return 1;
+  if (ch <  0xFFC2) return 0;
+  if (ch <= 0xFFC7) return 1;
+  if (ch <  0xFFCA) return 0;
+  if (ch <= 0xFFCF) return 1;
+  if (ch <  0xFFD2) return 0;
+  if (ch <= 0xFFD7) return 1;
+  if (ch <  0xFFDA) return 0;
+  if (ch <= 0xFFDC) return 1;
+  if (ch <  0x10000) return 0;
+  if (ch <= 0x1000B) return 1;
+  if (ch <  0x1000D) return 0;
+  if (ch <= 0x10026) return 1;
+  if (ch <  0x10028) return 0;
+  if (ch <= 0x1003A) return 1;
+  if (ch <  0x1003C) return 0;
+  if (ch <= 0x1003D) return 1;
+  if (ch <  0x1003F) return 0;
+  if (ch <= 0x1004D) return 1;
+  if (ch <  0x10050) return 0;
+  if (ch <= 0x1005D) return 1;
+  if (ch <  0x10080) return 0;
+  if (ch <= 0x100FA) return 1;
+  if (ch <  0x10140) return 0;
+  if (ch <= 0x10174) return 1;
+  if (ch <  0x10280) return 0;
+  if (ch <= 0x1029C) return 1;
+  if (ch <  0x102A0) return 0;
+  if (ch <= 0x102D0) return 1;
+  if (ch <  0x10300) return 0;
+  if (ch <= 0x1031E) return 1;
+  if (ch <  0x10330) return 0;
+  if (ch <= 0x10340) return 1;
+  if (ch <  0x10342) return 0;
+  if (ch <= 0x10349) return 1;
+  if (ch <  0x10380) return 0;
+  if (ch <= 0x1039D) return 1;
+  if (ch <  0x103A0) return 0;
+  if (ch <= 0x103C3) return 1;
+  if (ch <  0x103C8) return 0;
+  if (ch <= 0x103CF) return 1;
+  if (ch <  0x103D1) return 0;
+  if (ch <= 0x103D5) return 1;
+  if (ch <  0x10450) return 0;
+  if (ch <= 0x1049D) return 1;
+  if (ch <  0x10800) return 0;
+  if (ch <= 0x10805) return 1;
+  if (ch <  0x1080A) return 0;
+  if (ch <= 0x10835) return 1;
+  if (ch <  0x10837) return 0;
+  if (ch <= 0x10838) return 1;
+  if (ch <  0x1083F) return 0;
+  if (ch <= 0x10855) return 1;
+  if (ch <  0x10900) return 0;
+  if (ch <= 0x10915) return 1;
+  if (ch <  0x10920) return 0;
+  if (ch <= 0x10939) return 1;
+  if (ch <  0x10980) return 0;
+  if (ch <= 0x109B7) return 1;
+  if (ch <  0x109BE) return 0;
+  if (ch <= 0x109BF) return 1;
+  if (ch <  0x10A10) return 0;
+  if (ch <= 0x10A13) return 1;
+  if (ch <  0x10A15) return 0;
+  if (ch <= 0x10A17) return 1;
+  if (ch <  0x10A19) return 0;
+  if (ch <= 0x10A33) return 1;
+  if (ch <  0x10A60) return 0;
+  if (ch <= 0x10A7C) return 1;
+  if (ch <  0x10B00) return 0;
+  if (ch <= 0x10B35) return 1;
+  if (ch <  0x10B40) return 0;
+  if (ch <= 0x10B55) return 1;
+  if (ch <  0x10B60) return 0;
+  if (ch <= 0x10B72) return 1;
+  if (ch <  0x10C00) return 0;
+  if (ch <= 0x10C48) return 1;
+  if (ch <  0x11003) return 0;
+  if (ch <= 0x11037) return 1;
+  if (ch <  0x11083) return 0;
+  if (ch <= 0x110AF) return 1;
+  if (ch <  0x110D0) return 0;
+  if (ch <= 0x110E8) return 1;
+  if (ch <  0x11103) return 0;
+  if (ch <= 0x11126) return 1;
+  if (ch <  0x11183) return 0;
+  if (ch <= 0x111B2) return 1;
+  if (ch <  0x111C1) return 0;
+  if (ch <= 0x111C4) return 1;
+  if (ch <  0x11680) return 0;
+  if (ch <= 0x116AA) return 1;
+  if (ch <  0x12000) return 0;
+  if (ch <= 0x1236E) return 1;
+  if (ch <  0x12400) return 0;
+  if (ch <= 0x12462) return 1;
+  if (ch <  0x13000) return 0;
+  if (ch <= 0x1342E) return 1;
+  if (ch <  0x16800) return 0;
+  if (ch <= 0x16A38) return 1;
+  if (ch <  0x16F00) return 0;
+  if (ch <= 0x16F44) return 1;
+  if (ch <  0x16F93) return 0;
+  if (ch <= 0x16F9F) return 1;
+  if (ch <  0x1B000) return 0;
+  if (ch <= 0x1B001) return 1;
+  if (ch <  0x1EE00) return 0;
+  if (ch <= 0x1EE03) return 1;
+  if (ch <  0x1EE05) return 0;
+  if (ch <= 0x1EE1F) return 1;
+  if (ch <  0x1EE21) return 0;
+  if (ch <= 0x1EE22) return 1;
+  if (ch <  0x1EE29) return 0;
+  if (ch <= 0x1EE32) return 1;
+  if (ch <  0x1EE34) return 0;
+  if (ch <= 0x1EE37) return 1;
+  if (ch <  0x1EE4D) return 0;
+  if (ch <= 0x1EE4F) return 1;
+  if (ch <  0x1EE51) return 0;
+  if (ch <= 0x1EE52) return 1;
+  if (ch <  0x1EE61) return 0;
+  if (ch <= 0x1EE62) return 1;
+  if (ch <  0x1EE67) return 0;
+  if (ch <= 0x1EE6A) return 1;
+  if (ch <  0x1EE6C) return 0;
+  if (ch <= 0x1EE72) return 1;
+  if (ch <  0x1EE74) return 0;
+  if (ch <= 0x1EE77) return 1;
+  if (ch <  0x1EE79) return 0;
+  if (ch <= 0x1EE7C) return 1;
+  if (ch <  0x1EE80) return 0;
+  if (ch <= 0x1EE89) return 1;
+  if (ch <  0x1EE8B) return 0;
+  if (ch <= 0x1EE9B) return 1;
+  if (ch <  0x1EEA1) return 0;
+  if (ch <= 0x1EEA3) return 1;
+  if (ch <  0x1EEA5) return 0;
+  if (ch <= 0x1EEA9) return 1;
+  if (ch <  0x1EEAB) return 0;
+  if (ch <= 0x1EEBB) return 1;
+  if (ch <  0x20000) return 0;
+  if (ch <= 0x2A6D6) return 1;
+  if (ch <  0x2A700) return 0;
+  if (ch <= 0x2B734) return 1;
+  if (ch <  0x2B740) return 0;
+  if (ch <= 0x2B81D) return 1;
+  if (ch <  0x2F800) return 0;
+  if (ch <= 0x2FA1D) return 1;
+  return 0;
+}
+
+
+int dps_isNumeric(dpsunicode_t ch) {
+  switch(ch) {
+    return 1;
+  }
+  if (ch <  0x0030) return 0;
+  if (ch <= 0x0039) return 1;
+  if (ch <  0x0660) return 0;
+  if (ch <= 0x0669) return 1;
+  if (ch <  0x066B) return 0;
+  if (ch <= 0x066C) return 1;
+  if (ch <  0x06F0) return 0;
+  if (ch <= 0x06F9) return 1;
+  if (ch <  0x07C0) return 0;
+  if (ch <= 0x07C9) return 1;
+  if (ch <  0x0966) return 0;
+  if (ch <= 0x096F) return 1;
+  if (ch <  0x09E6) return 0;
+  if (ch <= 0x09EF) return 1;
+  if (ch <  0x0A66) return 0;
+  if (ch <= 0x0A6F) return 1;
+  if (ch <  0x0AE6) return 0;
+  if (ch <= 0x0AEF) return 1;
+  if (ch <  0x0B66) return 0;
+  if (ch <= 0x0B6F) return 1;
+  if (ch <  0x0BE6) return 0;
+  if (ch <= 0x0BEF) return 1;
+  if (ch <  0x0C66) return 0;
+  if (ch <= 0x0C6F) return 1;
+  if (ch <  0x0CE6) return 0;
+  if (ch <= 0x0CEF) return 1;
+  if (ch <  0x0D66) return 0;
+  if (ch <= 0x0D6F) return 1;
+  if (ch <  0x0E50) return 0;
+  if (ch <= 0x0E59) return 1;
+  if (ch <  0x0ED0) return 0;
+  if (ch <= 0x0ED9) return 1;
+  if (ch <  0x0F20) return 0;
+  if (ch <= 0x0F29) return 1;
+  if (ch <  0x1040) return 0;
+  if (ch <= 0x1049) return 1;
+  if (ch <  0x1090) return 0;
+  if (ch <= 0x1099) return 1;
+  if (ch <  0x17E0) return 0;
+  if (ch <= 0x17E9) return 1;
+  if (ch <  0x1810) return 0;
+  if (ch <= 0x1819) return 1;
+  if (ch <  0x1946) return 0;
+  if (ch <= 0x194F) return 1;
+  if (ch <  0x19D0) return 0;
+  if (ch <= 0x19D9) return 1;
+  if (ch <  0x1A80) return 0;
+  if (ch <= 0x1A89) return 1;
+  if (ch <  0x1A90) return 0;
+  if (ch <= 0x1A99) return 1;
+  if (ch <  0x1B50) return 0;
+  if (ch <= 0x1B59) return 1;
+  if (ch <  0x1BB0) return 0;
+  if (ch <= 0x1BB9) return 1;
+  if (ch <  0x1C40) return 0;
+  if (ch <= 0x1C49) return 1;
+  if (ch <  0x1C50) return 0;
+  if (ch <= 0x1C59) return 1;
+  if (ch <  0xA620) return 0;
+  if (ch <= 0xA629) return 1;
+  if (ch <  0xA8D0) return 0;
+  if (ch <= 0xA8D9) return 1;
+  if (ch <  0xA900) return 0;
+  if (ch <= 0xA909) return 1;
+  if (ch <  0xA9D0) return 0;
+  if (ch <= 0xA9D9) return 1;
+  if (ch <  0xAA50) return 0;
+  if (ch <= 0xAA59) return 1;
+  if (ch <  0xABF0) return 0;
+  if (ch <= 0xABF9) return 1;
+  if (ch <  0x104A0) return 0;
+  if (ch <= 0x104A9) return 1;
+  if (ch <  0x11066) return 0;
+  if (ch <= 0x1106F) return 1;
+  if (ch <  0x110F0) return 0;
+  if (ch <= 0x110F9) return 1;
+  if (ch <  0x11136) return 0;
+  if (ch <= 0x1113F) return 1;
+  if (ch <  0x111D0) return 0;
+  if (ch <= 0x111D9) return 1;
+  if (ch <  0x116C0) return 0;
+  if (ch <= 0x116C9) return 1;
+  if (ch <  0x1D7CE) return 0;
+  if (ch <= 0x1D7FF) return 1;
+  return 0;
+}
+
+
+int dps_isATerm(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x002E:
+  case 0x2024:
+  case 0xFE52:
+  case 0xFF0E:
+    return 1;
+  }
+  return 0;
+}
+
+
+int dps_isSTerm(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x0021:
+  case 0x003F:
+  case 0x055C:
+  case 0x055E:
+  case 0x0589:
+  case 0x061F:
+  case 0x06D4:
+  case 0x07F9:
+  case 0x1362:
+  case 0x166E:
+  case 0x1803:
+  case 0x1809:
+  case 0x2E2E:
+  case 0x3002:
+  case 0xA4FF:
+  case 0xA6F3:
+  case 0xA6F7:
+  case 0xA92F:
+  case 0xABEB:
+  case 0xFF01:
+  case 0xFF1F:
+  case 0xFF61:
+    return 1;
+  }
+  if (ch <  0x0700) return 0;
+  if (ch <= 0x0702) return 1;
+  if (ch <  0x0964) return 0;
+  if (ch <= 0x0965) return 1;
+  if (ch <  0x104A) return 0;
+  if (ch <= 0x104B) return 1;
+  if (ch <  0x1367) return 0;
+  if (ch <= 0x1368) return 1;
+  if (ch <  0x1735) return 0;
+  if (ch <= 0x1736) return 1;
+  if (ch <  0x1944) return 0;
+  if (ch <= 0x1945) return 1;
+  if (ch <  0x1AA8) return 0;
+  if (ch <= 0x1AAB) return 1;
+  if (ch <  0x1B5A) return 0;
+  if (ch <= 0x1B5B) return 1;
+  if (ch <  0x1B5E) return 0;
+  if (ch <= 0x1B5F) return 1;
+  if (ch <  0x1C3B) return 0;
+  if (ch <= 0x1C3C) return 1;
+  if (ch <  0x1C7E) return 0;
+  if (ch <= 0x1C7F) return 1;
+  if (ch <  0x203C) return 0;
+  if (ch <= 0x203D) return 1;
+  if (ch <  0x2047) return 0;
+  if (ch <= 0x2049) return 1;
+  if (ch <  0xA60E) return 0;
+  if (ch <= 0xA60F) return 1;
+  if (ch <  0xA876) return 0;
+  if (ch <= 0xA877) return 1;
+  if (ch <  0xA8CE) return 0;
+  if (ch <= 0xA8CF) return 1;
+  if (ch <  0xA9C8) return 0;
+  if (ch <= 0xA9C9) return 1;
+  if (ch <  0xAA5D) return 0;
+  if (ch <= 0xAA5F) return 1;
+  if (ch <  0xAAF0) return 0;
+  if (ch <= 0xAAF1) return 1;
+  if (ch <  0xFE56) return 0;
+  if (ch <= 0xFE57) return 1;
+  if (ch <  0x10A56) return 0;
+  if (ch <= 0x10A57) return 1;
+  if (ch <  0x11047) return 0;
+  if (ch <= 0x11048) return 1;
+  if (ch <  0x110BE) return 0;
+  if (ch <= 0x110C1) return 1;
+  if (ch <  0x11141) return 0;
+  if (ch <= 0x11143) return 1;
+  if (ch <  0x111C5) return 0;
+  if (ch <= 0x111C6) return 1;
+  return 0;
+}
+
+
+int dps_isClose(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x0022:
+  case 0x0027:
+  case 0x0028:
+  case 0x0029:
+  case 0x005B:
+  case 0x005D:
+  case 0x007B:
+  case 0x007D:
+  case 0x00AB:
+  case 0x00BB:
+  case 0x0F3A:
+  case 0x0F3B:
+  case 0x0F3C:
+  case 0x0F3D:
+  case 0x169B:
+  case 0x169C:
+  case 0x2018:
+  case 0x2019:
+  case 0x201A:
+  case 0x201D:
+  case 0x201E:
+  case 0x201F:
+  case 0x2039:
+  case 0x203A:
+  case 0x2045:
+  case 0x2046:
+  case 0x207D:
+  case 0x207E:
+  case 0x208D:
+  case 0x208E:
+  case 0x2329:
+  case 0x232A:
+  case 0x2768:
+  case 0x2769:
+  case 0x276A:
+  case 0x276B:
+  case 0x276C:
+  case 0x276D:
+  case 0x276E:
+  case 0x276F:
+  case 0x2770:
+  case 0x2771:
+  case 0x2772:
+  case 0x2773:
+  case 0x2774:
+  case 0x2775:
+  case 0x27C5:
+  case 0x27C6:
+  case 0x27E6:
+  case 0x27E7:
+  case 0x27E8:
+  case 0x27E9:
+  case 0x27EA:
+  case 0x27EB:
+  case 0x27EC:
+  case 0x27ED:
+  case 0x27EE:
+  case 0x27EF:
+  case 0x2983:
+  case 0x2984:
+  case 0x2985:
+  case 0x2986:
+  case 0x2987:
+  case 0x2988:
+  case 0x2989:
+  case 0x298A:
+  case 0x298B:
+  case 0x298C:
+  case 0x298D:
+  case 0x298E:
+  case 0x298F:
+  case 0x2990:
+  case 0x2991:
+  case 0x2992:
+  case 0x2993:
+  case 0x2994:
+  case 0x2995:
+  case 0x2996:
+  case 0x2997:
+  case 0x2998:
+  case 0x29D8:
+  case 0x29D9:
+  case 0x29DA:
+  case 0x29DB:
+  case 0x29FC:
+  case 0x29FD:
+  case 0x2E02:
+  case 0x2E03:
+  case 0x2E04:
+  case 0x2E05:
+  case 0x2E09:
+  case 0x2E0A:
+  case 0x2E0B:
+  case 0x2E0C:
+  case 0x2E0D:
+  case 0x2E1C:
+  case 0x2E1D:
+  case 0x2E20:
+  case 0x2E21:
+  case 0x2E22:
+  case 0x2E23:
+  case 0x2E24:
+  case 0x2E25:
+  case 0x2E26:
+  case 0x2E27:
+  case 0x2E28:
+  case 0x2E29:
+  case 0x3008:
+  case 0x3009:
+  case 0x300A:
+  case 0x300B:
+  case 0x300C:
+  case 0x300D:
+  case 0x300E:
+  case 0x300F:
+  case 0x3010:
+  case 0x3011:
+  case 0x3014:
+  case 0x3015:
+  case 0x3016:
+  case 0x3017:
+  case 0x3018:
+  case 0x3019:
+  case 0x301A:
+  case 0x301B:
+  case 0x301D:
+  case 0xFD3E:
+  case 0xFD3F:
+  case 0xFE17:
+  case 0xFE18:
+  case 0xFE35:
+  case 0xFE36:
+  case 0xFE37:
+  case 0xFE38:
+  case 0xFE39:
+  case 0xFE3A:
+  case 0xFE3B:
+  case 0xFE3C:
+  case 0xFE3D:
+  case 0xFE3E:
+  case 0xFE3F:
+  case 0xFE40:
+  case 0xFE41:
+  case 0xFE42:
+  case 0xFE43:
+  case 0xFE44:
+  case 0xFE47:
+  case 0xFE48:
+  case 0xFE59:
+  case 0xFE5A:
+  case 0xFE5B:
+  case 0xFE5C:
+  case 0xFE5D:
+  case 0xFE5E:
+  case 0xFF08:
+  case 0xFF09:
+  case 0xFF3B:
+  case 0xFF3D:
+  case 0xFF5B:
+  case 0xFF5D:
+  case 0xFF5F:
+  case 0xFF60:
+  case 0xFF62:
+  case 0xFF63:
+    return 1;
+  }
+  if (ch <  0x201B) return 0;
+  if (ch <= 0x201C) return 1;
+  if (ch <  0x275B) return 0;
+  if (ch <= 0x275E) return 1;
+  if (ch <  0x2E00) return 0;
+  if (ch <= 0x2E01) return 1;
+  if (ch <  0x2E06) return 0;
+  if (ch <= 0x2E08) return 1;
+  if (ch <  0x301E) return 0;
+  if (ch <= 0x301F) return 1;
+  return 0;
+}
+
+
+int dps_isSContinue(dpsunicode_t ch) {
+  switch(ch) {
+  case 0x002C:
+  case 0x002D:
+  case 0x003A:
+  case 0x055D:
+  case 0x07F8:
+  case 0x1802:
+  case 0x1808:
+  case 0x3001:
+  case 0xFE13:
+  case 0xFE55:
+  case 0xFE58:
+  case 0xFE63:
+  case 0xFF0C:
+  case 0xFF0D:
+  case 0xFF1A:
+  case 0xFF64:
+    return 1;
+  }
+  if (ch <  0x060C) return 0;
+  if (ch <= 0x060D) return 1;
+  if (ch <  0x2013) return 0;
+  if (ch <= 0x2014) return 1;
+  if (ch <  0xFE10) return 0;
+  if (ch <= 0xFE11) return 1;
+  if (ch <  0xFE31) return 0;
+  if (ch <= 0xFE32) return 1;
+  if (ch <  0xFE50) return 0;
+  if (ch <= 0xFE51) return 1;
+  return 0;
+}
