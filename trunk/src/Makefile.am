@@ -109,6 +109,8 @@ conf.c: commands.inc
 commands.inc: commands.lst
 	cat commands.lst | sort -fk 1 > commands.inc
 
+unidata.c: unidata.ch
+
 utils.c: timezones.inc
 
 timezones.inc: timezones.lst

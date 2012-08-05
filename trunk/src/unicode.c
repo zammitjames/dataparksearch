@@ -505,6 +505,88 @@ static int dps_is_delim(const dpsunicode_t *delim, dpsunicode_t c) {
 }
 
 
+
+
+#if 1
+
+dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsunicode_t **last) {
+  dpsunicode_t *tok, prev = 0;
+
+    if (s == NULL && (s = *last) == NULL) return NULL;
+    if (*s == 0) return NULL;
+
+    while(*s && (*s == 0x09 || *s == 0x20 || *s == 0xA0)) s++; /* skip leading spaces */
+    tok = s;
+    while(*s) {
+      /*
+                  See Unicode UAX#29
+    0.2) sot ÷
+    0.3) ÷ eot
+    3.0) CR × LF
+    4.0) (Sep | CR | LF) ÷
+    5.0) × [Format Extend]
+    6.0) ATerm × Numeric
+    7.0) Upper ATerm × Upper
+    8.0) ATerm Close* Sp* × [^ OLetter Upper Lower Sep CR LF STerm ATerm]* Lower
+    8.1) (STerm | ATerm) Close* Sp* × (SContinue | STerm | ATerm)
+    9.0) ( STerm | ATerm ) Close* × ( Close | Sp | Sep | CR | LF )
+    10.0) ( STerm | ATerm ) Close* Sp* × ( Sp | Sep | CR | LF )
+    11.0) ( STerm | ATerm ) Close* Sp* (Sep | CR | LF)? ÷
+    12.0) × Any
+    999.0) ÷ Any
+
+      */
+
+      if (*s == 0x0A || dps_isSep(*s)) { /* 4.0), except we break only after 2nd, 3rd, etc. Sep or LF */
+	prev = *s++;
+	last = s;
+	while(*s && (*s == 0x0A || dps_isSep(*s))) prev = *s++;
+	if (s != last) break;
+      } else if (s[1] != '\0' && (dps_isFormat(s[1]) || dps_isExtend(s[1]))) { /* 5.0) */
+	prev = *s++;
+      } else if (dps_isATerm(*s)) {
+	if (dps_isNumeric(s[1])) { /* 6.0) */
+	  prev = *s++;
+	} else if (dps_isUpper(prev) && dps_isUpper(s[1])) { /* 7.0) */
+	  prev = *s++;
+	} else {
+          prev = *s++;
+	  while(dps_isClose(*s)) prev = *s++;
+	  while(dps_isSp(*s)) prev = *s++;
+	  {
+	    register dpsunicode_t *f = s; /* 8.0) */
+	    while(!(*f == 0x0A || *f == 0x0D || dps_isOLetter(*f) || dps_isSep(*f) || dps_isSTerm(*f) || dps_isATerm(*f) || dps_isUpper(*f) || dps_isLower(*f))) f++;
+	    if (dps_isLower(*f)) {
+	      prev = *s++; continue;
+	    }
+	  }
+	  if (dps_isSContinue(*s) || dps_isSTerm(*s) || dps_isATerm(*s)) { /* 8.1) */
+	    prev = *s++;
+	  } else {
+	    if (*s == 0x0A || *s == 0x0D || dps_isSep(*s)) s++; /* 11.0) */
+	    break;
+	  }
+	}
+      } else if (dps_isSTerm(*s)) {
+        prev = *s++;
+	while(dps_isClose(*s)) prev = *s++;
+	while(dps_isSp(*s)) prev = *s++;
+	if (dps_isSContinue(*s) || dps_isSTerm(*s) || dps_isATerm(*s)) { /* 8.1) */
+	  prev = *s++;
+	} else {
+	  if (*s == 0x0A || *s == 0x0D || dps_isSep(*s)) s++; /* 11.0) */
+	  break;
+	}
+      } else {
+	prev = *s++;
+      }
+    }
+    *last = s;
+    return tok;
+}
+
+#else
+
 dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsunicode_t **last) {
     dpsunicode_t *tok;
 
@@ -529,3 +611,4 @@ dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsun
     return tok;
 
 }
+#endif

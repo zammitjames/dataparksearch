@@ -82,4 +82,17 @@ extern dpsunicode_t *DpsUniNormalizeNFD(dpsunicode_t *buf, dpsunicode_t *str);
 extern int dps_isPatternSyntax(dpsunicode_t ch);
 extern int dps_isApostropheBreak(dpsunicode_t ch, dpsunicode_t next);
 
+extern int dps_isExtend(dpsunicode_t ch);
+extern int dps_isSep(dpsunicode_t ch);
+extern int dps_isFormat(dpsunicode_t ch);
+extern int dps_isSp(dpsunicode_t ch);
+extern int dps_isLower(dpsunicode_t ch);
+extern int dps_isUpper(dpsunicode_t ch);
+extern int dps_isOLetter(dpsunicode_t ch);
+extern int dps_isNumeric(dpsunicode_t ch);
+extern int dps_isATerm(dpsunicode_t ch);
+extern int dps_isSTerm(dpsunicode_t ch);
+extern int dps_isClose(dpsunicode_t ch);
+extern int dps_isSContinue(dpsunicode_t ch);
+
 #endif
