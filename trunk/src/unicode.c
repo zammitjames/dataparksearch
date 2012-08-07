@@ -555,7 +555,15 @@ dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsun
 	  while(dps_isSp(*s)) prev = *s++;
 	  {
 	    register dpsunicode_t *f = s; /* 8.0) */
-	    while(!(*f == 0x0A || *f == 0x0D || dps_isOLetter(*f) || dps_isSep(*f) || dps_isSTerm(*f) || dps_isATerm(*f) || dps_isUpper(*f) || dps_isLower(*f))) f++;
+	    while(*s && !(*f == 0x0A 
+		    || *f == 0x0D 
+		    || dps_isOLetter(*f) 
+		    || dps_isSep(*f) 
+		    || dps_isSTerm(*f) 
+		    || dps_isATerm(*f) 
+		    || dps_isUpper(*f) 
+		    || dps_isLower(*f))) 
+	      f++;
 	    if (dps_isLower(*f)) {
 	      prev = *s++; continue;
 	    }
