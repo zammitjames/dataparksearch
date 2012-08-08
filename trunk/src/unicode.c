@@ -539,9 +539,9 @@ dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsun
 
       if (*s == 0x0A || dps_isSep(*s)) { /* 4.0), except we break only after 2nd, 3rd, etc. Sep or LF */
 	prev = *s++;
-	last = s;
+	*last = s;
 	while(*s && (*s == 0x0A || dps_isSep(*s))) prev = *s++;
-	if (s != last) break;
+	if (s != *last) break;
       } else if (s[1] != '\0' && (dps_isFormat(s[1]) || dps_isExtend(s[1]))) { /* 5.0) */
 	prev = *s++;
       } else if (dps_isATerm(*s)) {
