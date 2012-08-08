@@ -108,7 +108,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	  sentence = DpsUniDup(sentence);
 	  DpsUniStrToLower(sentence);
 	  bzero(&List.Sent[List.nitems].LangMap, sizeof(DPS_LANGMAP));
-	  DpsBuildLangMap6(&List.Sent[List.nitems].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
+	  DpsBuildLangMap(&List.Sent[List.nitems].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
 	  if (sent_len < min_len) { min_len = sent_len; min_pos = List.nitems; }
 	  List.nitems++;
 	  DPS_FREE(sentence);
@@ -119,7 +119,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	  sentence = DpsUniDup(sentence);
 	  DpsUniStrToLower(sentence);
 	  bzero(&List.Sent[min_pos].LangMap, sizeof(DPS_LANGMAP));
-	  DpsBuildLangMap6(&List.Sent[min_pos].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
+	  DpsBuildLangMap(&List.Sent[min_pos].LangMap, (char*)sentence, sent_len * sizeof(dpsunicode_t), 0, 0);
 	  DPS_FREE(sentence);
 	  min_len = List.Sent[0].len; min_pos = 0;
 	  for(i = 1; i < List.nitems; i++) if (List.Sent[i].len < min_len) { min_len = List.Sent[i].len; min_pos = i; }
@@ -150,7 +150,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
   if (links != NULL && lang_cs != NULL) {
 
     for (i = 0; i < List.nitems; i++) {
-      DpsPrepareLangMap6(&List.Sent[i].LangMap);
+      DpsPrepareLangMap(&List.Sent[i].LangMap);
     }
 
     for (i = 0; i < List.nitems; i++) {
@@ -160,7 +160,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	links[i * List.nitems + i] = 1.0 /* / List.nitems*/;
       } else {
 	MapStat.map = &List.Sent[i].LangMap;
-	DpsCheckLangMap6(Doc->lang_cs_map, &List.Sent[i].LangMap, &MapStat, DPS_LM_TOPCNT * DPS_LM_TOPCNT, 2 * DPS_LM_TOPCNT);
+	DpsCheckLangMap(Doc->lang_cs_map, &List.Sent[i].LangMap, &MapStat, DPS_LM_TOPCNT * DPS_LM_TOPCNT, 2 * DPS_LM_TOPCNT);
 	links[i * List.nitems + i] = (MapStat.miss == 0 || MapStat.hits == 0) ? 0.0 :
 	  (DPS_LM_TOPCNT * DPS_LM_TOPCNT / 2 - (double)MapStat.miss) / (DPS_LM_TOPCNT * DPS_LM_TOPCNT / 2 + (double)MapStat.hits/DPS_LM_TOPCNT) / (List.nitems + 1);
       }
@@ -170,7 +170,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
       for (j = i + 1/*0*/; j < List.nitems; j++) {
 /*	if (i == j) { links[i * List.nitems + j] = 1.0 / List.nitems; continue; }*/
 	MapStat.map = &List.Sent[j].LangMap;
-	DpsCheckLangMap6(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, DPS_LM_TOPCNT * DPS_LM_TOPCNT, 2 * DPS_LM_TOPCNT);
+	DpsCheckLangMap(&List.Sent[j].LangMap, &List.Sent[i].LangMap, &MapStat, DPS_LM_TOPCNT * DPS_LM_TOPCNT, 2 * DPS_LM_TOPCNT);
 /*	links[i * List.nitems + j] =  (double)(DPS_LM_TOPCNT - MapStat.miss) / (double)(MapStat.hits + MapStat.miss + 1);*/
 /*	links[j * List.nitems + i] = links[i * List.nitems + j] = List.nitems / ((double)MapStat.hits + 1.0);*/
 
