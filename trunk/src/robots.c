@@ -834,6 +834,7 @@ static int DpsSitemapParse(DPS_AGENT *Indexer, const char *s) {
     DPS_FREE(ct);
   }
 
+  DpsDocFree(mDoc);
   return res;
 }
 
