@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ static int add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, char
                 Item.str=val;
                 Item.section_name = (char*)name;
 		Item.len = 0;
-                DpsTextListAdd(&Doc->TextList,&Item);
+                (void)DpsTextListAdd(&Doc->TextList,&Item);
 		DpsLog(Indexer, DPS_LOG_DEBUG, "Added: %s:%s", name, val); 
         } else {
 		DpsLog(Indexer, DPS_LOG_DEBUG, "Skipped: %s:%s", name, val); 
@@ -93,7 +93,7 @@ static int id3_add_var(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *name, 
 		Item.str = /*(charset == 3) ? val :*/ value;
 		Item.section_name = name;
 		Item.len = len; /*(charset == 3) ? len : to_utf.obytes;*/
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 		DpsLog(Indexer, DPS_LOG_DEBUG, "Added: %s:%s", name, value); 
 		if (charset != 3) DPS_FREE(value);
 	} else {

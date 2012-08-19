@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -106,29 +106,29 @@ static int Text (DPS_XML_PARSER *parser, const char *s, size_t len) {
     Item.strict = Sec->strict;
     Item.section_name = Sec->name;
     DpsVarListReplaceStr(&Doc->Sections, "geo.lat", Item.str);
-    DpsTextListAdd(&Doc->TextList, &Item);
+    (void)DpsTextListAdd(&Doc->TextList, &Item);
   } else if ((D->sec != NULL) && (!strcasecmp(D->sec, "icbm:longitude") || !strcasecmp(D->sec, "geo:lon"))
       && (Sec = DpsVarListFind(&Doc->Sections, "geo.lon"))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = Sec->name;
     DpsVarListReplaceStr(&Doc->Sections, "geo.lon", Item.str);
-    DpsTextListAdd(&Doc->TextList, &Item);
+    (void)DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Indexer->Conf->HrefSections, D->secpath))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = D->sec;
-    DpsTextListAdd(&Doc->TextList, &Item);
+    (void)DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Doc->Sections, D->secpath))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = D->sec;
-    DpsTextListAdd(&Doc->TextList, &Item);
+    (void)DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Indexer->Conf->HrefSections, D->sec))) {
     Item.section = Sec->section;
     Item.strict = Sec->strict;
     Item.section_name = D->sec;
-    DpsTextListAdd(&Doc->TextList, &Item);
+    (void)DpsTextListAdd(&Doc->TextList, &Item);
   } else if((D->sec != NULL) &&  (Sec = DpsVarListFind(&Doc->Sections, D->sec))) {
     DpsHTMLParseBuf(D->Indexer, D->Doc,  D->sec, Item.str);
   } else {

@@ -162,6 +162,9 @@ Page_Create(size_t size)
 static void
 mprotectFailed(void)
 {
+        char buf[128];
+	snprintf(buf, sizeof(buf), "cat /proc/%d/maps|wc -l", (int)getpid());
+	system(buf);
 	EF_Exit("mprotect() failed: %s", stringErrorReport());
 }
 

@@ -770,7 +770,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.proto"))) {
 		char sc[] = "url.proto\0";
@@ -779,7 +779,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	DpsVarListReplaceStr(&Doc->Sections, "url.proto", DPS_NULL2EMPTY(dcURL.schema));
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.host"))) {
@@ -789,7 +789,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	DpsVarListReplaceStr(&Doc->Sections, "url.host", DPS_NULL2EMPTY(dcURL.hostname));
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.path"))) {
@@ -799,7 +799,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	DpsVarListReplaceStr(&Doc->Sections, "url.path", DPS_NULL2EMPTY(dcURL.path));
 	if((Sec=DpsVarListFind(&Doc->Sections,"url.directory"))) {
@@ -809,7 +809,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = 0;
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	DpsVarListReplaceStr(&Doc->Sections, "url.directory", DPS_NULL2EMPTY(dcURL.directory));
 	{
@@ -825,7 +825,7 @@ int DpsParseURLText(DPS_AGENT *A, DPS_DOCUMENT *Doc) {
 		Item.strict = Sec->strict;
 		Item.section_name = sc;
 		Item.len = flen;
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 	    }
 	    DpsVarListReplaceStr(&Doc->Sections, "url.file", str);
 	    DPS_FREE(str);
@@ -852,7 +852,7 @@ int DpsParseHeaders(DPS_AGENT *Indexer,DPS_DOCUMENT *Doc){
 			Item.section = Sec->section;
 			Item.strict = Sec->strict;
 			Item.section_name=secname;
-			DpsTextListAdd(&Doc->TextList,&Item);
+			(void)DpsTextListAdd(&Doc->TextList,&Item);
 		}
 	}
 	return DPS_OK;
@@ -877,8 +877,8 @@ int DpsParseText(DPS_AGENT * Indexer,DPS_DOCUMENT * Doc){
 		Item.str = dps_strtok_r(buf_content, "\r\n", &lt, &savec);
 		Item.section_name = BSec->name; /*"body";*/
 		while(Item.str){
-		  Item.len = (lt!=NULL) ? (size_t)(lt-Item.str) : dps_strlen(Item.str);
-			DpsTextListAdd(&Doc->TextList, &Item);
+		        Item.len = (lt!=NULL) ? (size_t)(lt-Item.str) : dps_strlen(Item.str);
+			(void)DpsTextListAdd(&Doc->TextList, &Item);
 			Item.str = dps_strtok_r(NULL, "\r\n", &lt, &savec);
 		}
 	}
@@ -1346,7 +1346,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 			  Item.section_name = Sec->name;
 			  Item.href = NULL;
 			  Item.len = tag->toks[i].vlen;
-			  DpsTextListAdd(&Doc->TextList, &Item);
+			  (void)DpsTextListAdd(&Doc->TextList, &Item);
 			  DPS_FREE(y);
 			}
 		}
@@ -1383,7 +1383,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 			Item.section_name=secname;
 			Item.href = NULL;
 			Item.len = metacont_len;
-			DpsTextListAdd(&Doc->TextList,&Item);
+			(void)DpsTextListAdd(&Doc->TextList,&Item);
 		}
 		
 		if(!strcasecmp(metaname,"Content-Type")){
@@ -1572,27 +1572,32 @@ typedef struct {
 } DPS_TAGSTACK;
 
 
-static DPS_TEXTITEM * putItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, DPS_TEXTITEM *Last) {
-  if (Last == NULL) {
-    return DpsTextListAdd(&Doc->TextList, Item);
-  } else if (Item->section == Last->section 
-	     && ((Item->href == NULL && Last->href == NULL) || strcmp(DPS_NULL2EMPTY(Item->href), DPS_NULL2EMPTY(Last->href)) == 0)
-	     ) {
-    if ((Last->str = (char*)DpsRealloc(Last->str, Last->len + Item->len + 1)) == NULL) return NULL;
-
-    dps_memcpy(Last->str + Last->len, Item->str, Item->len);
-    Last->len += Item->len;
-    Last->str[Last->len] = '\0';
-    return Last;
+static void putItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item) {
+  DPS_TEXTITEM *Last;
+  if (Doc->TextList.nitems == 0) {
+    (void)DpsTextListAdd(&Doc->TextList, Item);
   } else {
-    return DpsTextListAdd(&Doc->TextList, Item); /* temporary, need to be implemented when Items will be in unicode */
+    Last = Doc->TextList.Items + Doc->TextList.nitems - 1;
+    if (Item->section == Last->section 
+	&& ((Item->href == NULL && Last->href == NULL) || strcmp(DPS_NULL2EMPTY(Item->href), DPS_NULL2EMPTY(Last->href)) == 0)
+	) {
+      if ((Last->str = (char*)DpsRealloc(Last->str, Last->len + Item->len + 1)) == NULL) return;
+
+      dps_memcpy(Last->str + Last->len, Item->str, Item->len);
+      Last->len += Item->len;
+      Last->str[Last->len] = '\0';
+      /*return;*/
+    } else {
+      DpsTextListAdd(&Doc->TextList, Item); /* temporary, need to be implemented when Items will be in unicode */
+    }
   }
+  return;
 }
 
 
 int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_name, const char *content) {
 	DPS_HTMLTOK	tag;
-	DPS_TEXTITEM	Item, *Last = NULL;
+	DPS_TEXTITEM	Item;
 	const char	*htok;
 	const char	*last;
 	DPS_VAR		*BSec = DpsVarListFind(&Doc->Sections, (section_name) ? section_name : "body");
@@ -1666,7 +1671,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      }
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      /*	      DpsTextListAdd(&Doc->TextList,&Item);*/
-	      Last = putItem(Indexer, Doc, &Item, Last);
+	      putItem(Indexer, Doc, &Item);
 	    }
 	    if (TSec && (tag.comment != 1) && (tag.noindex != 1) && tag.title && tag.index && !tag.select && tag.visible[tag.level]) {
 	      bzero((void*)&Item, sizeof(Item));
@@ -1677,7 +1682,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      Item.section_name = "title";
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      /*	      DpsTextListAdd(&Doc->TextList,&Item);*/
-	      Last = putItem(Indexer, Doc, &Item, Last);
+	      putItem(Indexer, Doc, &Item);
 	    }
 	    DPS_FREE(tmp);
 	    break;

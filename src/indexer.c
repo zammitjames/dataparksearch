@@ -979,7 +979,7 @@ static int DpsParseSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
     while(Item.str) {
       Item.len = (size_t)((lt != NULL) ? (lt - Item.str) : 0 /*dps_strlen(Item.str)*/);
 /*      fprintf(stderr, " -- Alias:%s/%s, [%d] %s\n", Sec->name, Alias->section, Item.len, Item.str);*/
-      DpsTextListAdd(&Doc->TextList, &Item);
+      (void)DpsTextListAdd(&Doc->TextList, &Item);
       Item.str = dps_strtok_r(NULL, "\r\n", &lt, &savec);
     }
   }
@@ -1061,7 +1061,7 @@ static int DpsSQLSections(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 	Item.strict = Sec->strict;
 	Item.section_name = Sec->name;
 	Item.len = 0;
-	DpsTextListAdd(&Doc->TextList, &Item);
+	(void)DpsTextListAdd(&Doc->TextList, &Item);
       }
       if (Alias->dbaddr != NULL) DpsDBListFree(&dbl);
       else if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
@@ -1247,7 +1247,7 @@ int Dps_MetaDataProcessor(void *cls, const char *plugin_name, enum EXTRACTOR_Met
     Item.str = data;
     Item.section_name = (Sec) ? Sec->name : BSec->name;
     Item.len = data_len;
-    DpsTextListAdd(&Doc->ExtractorList, &Item);
+    (void)DpsTextListAdd(&Doc->ExtractorList, &Item);
   }
 
   return DPS_OK;
@@ -1357,7 +1357,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		Item.str = pmd->keyword;
 		Item.section_name = (Sec) ? Sec->name : BSec->name;
 		Item.len = dps_strlen(Item.str);
-		DpsTextListAdd(&Doc->ExtractorList, &Item);
+		(void)DpsTextListAdd(&Doc->ExtractorList, &Item);
 	      }
 	     }
 
@@ -1492,7 +1492,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 			Item.str = Dsec->val;
 			Item.section_name = Sec->name;
 			Item.len = 0;
-			DpsTextListAdd(&Doc->TextList, &Item);
+			(void)DpsTextListAdd(&Doc->TextList, &Item);
 		  }
 		}
 	    }
@@ -2286,14 +2286,14 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 		    Item->str = dst;
 		    Item->len = dc_parent.obytes;
 /*	    fprintf(stderr, " -- Section: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
-		    DpsTextListAdd(&Parent->ExtractorList, Item);
+		    (void)DpsTextListAdd(&Parent->ExtractorList, Item);
 		    Item->str = src;
 		    Item->len = srclen;
 		  }
 		  DPS_FREE(dst);
 		  for(i = 0; i < extractor_tlist->nitems; i++) {
 		    DPS_TEXTITEM *Item = &extractor_tlist->Items[i];
-		    DpsTextListAdd(&Parent->ExtractorList, Item);
+		    (void)DpsTextListAdd(&Parent->ExtractorList, Item);
 /*	    fprintf(stderr, " -- ExtrSection: %s [%d] = %s\n", Item->section_name, Item->section, Item->str);*/
 		  }
 		} 

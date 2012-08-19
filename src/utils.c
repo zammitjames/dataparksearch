@@ -1837,7 +1837,7 @@ int DpsBuild(char *path, int omode) {
 		else if (p[0] != DPSSLASH)
 			continue;
 		*p = '\0';
-		if (p[1] == '\0')
+		if (last == 0 && p[1] == '\0')
 			last = 1;
 		if (first) {
 			/*
