@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Based on Electric Fence 2.2 by Bruce Perens
 
    This program is free software; you can redistribute it and/or modify
@@ -770,6 +770,9 @@ static void * _DpsMemalign(size_t alignment, size_t userSize, const char *filena
 	  printf("Error r:%d\n");
 	}*/
 
+/*
+	fprintf(stderr, " -- allocated: %p @ %s:%d\n", address, filename, fileline);
+*/
 	return address;
 }
 
@@ -873,9 +876,9 @@ extern C_LINKAGE void _DpsFree(void * address, const char *filename, size_t file
 
 	if ( address == 0 )
 		return;
-
-/*	fprintf(stderr, "DpsFree: %x at %s:%d\n", address, filename, fileline);*/
-
+	/*
+	fprintf(stderr, "DpsFree: %p at %s:%d\n", address, filename, fileline);
+	*/
 	if ( allocationList == 0 )
 	  EF_Abort("DpsFree() called before first DpsMalloc() at %s:%d.", filename, fileline);
 
@@ -891,17 +894,24 @@ extern C_LINKAGE void _DpsFree(void * address, const char *filename, size_t file
 	  EF_Print("DpsFree(%a): address not from DpsMalloc() at %s:%d.\n", address, filename, fileline);
 	  return;
 	}
+	/*
+	EF_Print("DpsFree(%a): slot=%a\n", address, slot);
+	*/
 
 	if ( slot->mode != ALLOCATED ) {
 		if ( internalUse && slot->mode == INTERNAL_USE )
 			/* Do nothing. */;
 		else {
+		  if (slot->mode == FREE) EF_Print("DpsFree(%a) FREE\n", address);
+		  if (slot->mode == PROTECTED) EF_Print("DpsFree(%a) PROTECTED\n", address);
+		  if (slot->mode == INTERNAL_USE) EF_Print("DpsFree(%a) INTERNAL_USE\n", address);
+		  if (slot->mode == NOT_IN_USE) EF_Print("DpsFree(%a) NOT_IN_USE\n", address);
 		  EF_Abort("DpsFree(%a): freeing free memory at %s:%d.", address, filename, fileline);
 		}
 	}
 
 	if ( EF_PROTECT_FREE )
-		slot->mode = NOT_IN_USE /*PROTECTED*/;
+	        slot->mode = PROTECTED;
 	else
 		slot->mode = FREE;
 
@@ -928,7 +938,7 @@ extern C_LINKAGE void _DpsFree(void * address, const char *filename, size_t file
 	nextSlot = slotForInternalAddress(
 	 ((char *)slot->internalAddress) + slot->internalSize);
 
-	if ( previousSlot && previousSlot->mode == slot->mode ) {
+	if ( previousSlot && (previousSlot->mode == slot->mode) ) {
 		/* Coalesce previous slot with this one. */
 		previousSlot->internalSize += slot->internalSize;
 		slot->internalAddress = slot->userAddress = 0;
@@ -937,7 +947,7 @@ extern C_LINKAGE void _DpsFree(void * address, const char *filename, size_t file
 		slot = previousSlot;
 		unUsedSlots++;
 	}
-	if ( nextSlot && nextSlot->mode == slot->mode ) {
+	if ( nextSlot && (nextSlot->mode == slot->mode) ) {
 		/* Coalesce next slot with this one. */
 		slot->internalSize += nextSlot->internalSize;
 		nextSlot->internalAddress = nextSlot->userAddress = 0;
@@ -945,9 +955,10 @@ extern C_LINKAGE void _DpsFree(void * address, const char *filename, size_t file
 		nextSlot->mode = NOT_IN_USE;
 		unUsedSlots++;
 	}
-
+	/*
 	slot->userAddress = slot->internalAddress;
 	slot->userSize = slot->internalSize;
+	*/
 
 	if ( !noAllocationListProtection )
 		Page_DenyAccess(allocationList, allocationListSize);
@@ -962,9 +973,9 @@ extern C_LINKAGE void * _DpsRealloc(void * oldBuffer, size_t newSize, const char
 
 	if ( allocationList == 0 )
 		initialize();	/* This sets EF_ALIGNMENT */
-
-/*	fprintf(stderr, "DpsRealloc: %x at %s:%d\n", oldBuffer, filename, fileline);*/
-
+	/*
+	fprintf(stderr, "DpsRealloc: %p at %s:%d\n", oldBuffer, filename, fileline);
+	*/
 	lock();
 
 	newBuffer = _DpsMalloc(newSize, filename, fileline);

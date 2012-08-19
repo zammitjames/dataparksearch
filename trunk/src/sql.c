@@ -5994,7 +5994,7 @@ int DpsHTDBGet(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, int flag_short) {
 		  Item.section_name = Sec->name;
 		  Item.len = dps_strlen(Item.str);
 		  Indexer->nbytes += Item.len;
-		  DpsTextListAdd(&Doc->TextList, &Item);
+		  (void)DpsTextListAdd(&Doc->TextList, &Item);
 		  have_words = 1;
 		}
 	      }

@@ -307,65 +307,67 @@ int DpsDocLookupConn(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
 
 int DpsDocAddDocExtraHeaders(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc) {
   int rc = DPS_OK;
-	/* Host Name for virtual hosts */
+  /* Host Name for virtual hosts */
 
   if((Doc->CurURL.hostname != NULL) && (Doc->CurURL.hostname[0] != '\0') ) {
-		char		arg[128]="";
-		char   *ascii = NULL;
+    char   arg[128] = "";
+    char   *ascii = NULL;
 #if (defined(WITH_IDN) || defined(WITH_IDNKIT)) && !defined(APACHE1) && !defined(APACHE2)
-		DPS_CHARSET *url_cs, *uni_cs;
-		DPS_CONV  url_uni;
-		char    *uni = NULL;
-		size_t len;
+    DPS_CHARSET *url_cs, *uni_cs;
+    DPS_CONV  url_uni;
+    char    *uni = NULL;
+    size_t len;
 
-		if (Doc->charset_id != DPS_CHARSET_US_ASCII) {
-		  uni_cs = DpsGetCharSet("UTF8");
-		  url_cs = DpsGetCharSetByID(Doc->charset_id);
-		  DpsConvInit(&url_uni, url_cs, uni_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
+    if (Doc->charset_id != DPS_CHARSET_US_ASCII) {
+      uni_cs = DpsGetCharSet("UTF8");
+      url_cs = DpsGetCharSetByID(Doc->charset_id);
+      DpsConvInit(&url_uni, url_cs, uni_cs, Indexer->Conf->CharsToEscape, DPS_RECODE_URL);
 
-		  uni = (char*)DpsMalloc(len = (48 * dps_strlen(Doc->CurURL.hostname + 1)));
-		  if (uni == NULL) {
-		    return DPS_ERROR;
-		  }
-		  DpsConv(&url_uni, (char*)uni, len, Doc->CurURL.hostname, len);
+      uni = (char*)DpsMalloc(len = (48 * dps_strlen(Doc->CurURL.hostname + 1)));
+      if (uni == NULL) {
+	return DPS_ERROR;
+      }
+      DpsConv(&url_uni, (char*)uni, len, Doc->CurURL.hostname, len);
 #ifdef WITH_IDN
-		  if (idna_to_ascii_8z((const char *)uni, &ascii, 0) != IDNA_SUCCESS) {
-		    DPS_FREE(uni); 
-		    return DPS_ERROR;
-		  }
+      if (idna_to_ascii_8z((const char *)uni, &ascii, 0) != IDNA_SUCCESS) {
+	DPS_FREE(uni); 
+	return DPS_ERROR;
+      }
 #else
-		  ascii = (char*)DpsMalloc(len);
-		  if (ascii == NULL) {
-		    DPS_FREE(uni); 
-		    return DPS_ERROR;
-		  }
-		  if (idn_encodename(IDN_IDNCONV, (const char *)uni, ascii, len) != idn_success) {
-		    DPS_FREE(ascii);
-		    DPS_FREE(uni); 
-		    return DPS_ERROR;
-		  }
+      ascii = (char*)DpsMalloc(len);
+      if (ascii == NULL) {
+	DPS_FREE(uni); 
+	return DPS_ERROR;
+      }
+      if (idn_encodename(IDN_IDNCONV, (const char *)uni, ascii, len) != idn_success) {
+	DPS_FREE(ascii);
+	DPS_FREE(uni); 
+	return DPS_ERROR;
+      }
 #endif
-		  DPS_FREE(uni); 
-		  DpsLog(Indexer, DPS_LOG_DEBUG, "IDN Robots Host: %s [%s] -> %s", Doc->CurURL.hostname, url_cs->name, ascii);
-		} else
+      DPS_FREE(uni); 
+      DpsLog(Indexer, DPS_LOG_DEBUG, "IDN Robots Host: %s [%s] -> %s", Doc->CurURL.hostname, url_cs->name, ascii);
+    } else
 #endif
-		  ascii = DpsStrdup(Doc->CurURL.hostname);
+      {
+	ascii = DpsStrdup(Doc->CurURL.hostname);
+      }
 
-		if(Doc->CurURL.port){
-			dps_snprintf(arg, 128, "%s:%d", ascii, Doc->CurURL.port);
-			DpsVarListReplaceStr(&Doc->RequestHeaders,"Host", arg);
-		}else{
-			DpsVarListReplaceStr(&Doc->RequestHeaders,"Host", ascii);
-		}
+    if(Doc->CurURL.port){
+      dps_snprintf(arg, 128, "%s:%d", ascii, Doc->CurURL.port);
+      DpsVarListReplaceStr(&Doc->RequestHeaders,"Host", arg);
+    }else{
+      DpsVarListReplaceStr(&Doc->RequestHeaders,"Host", ascii);
+    }
 
 /* Add Cookies if any */
-		if (Doc->Spider.use_cookies) DpsCookiesFind(Indexer, Doc, ascii);
-		if (Indexer->Flags.provide_referer && strncasecmp(Doc->CurURL.schema, "http", 4) == 0 ) 
-		  rc = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_REFERER);
-
-		DPS_FREE(ascii);
-	}
-	return rc;
+    if (Doc->Spider.use_cookies) DpsCookiesFind(Indexer, Doc, ascii);
+    if (Indexer->Flags.provide_referer && strncasecmp(Doc->CurURL.schema, "http", 4) == 0 ) 
+      rc = DpsURLAction(Indexer, Doc, DPS_URL_ACTION_REFERER);
+    
+    DPS_FREE(ascii);
+  }
+  return rc;
 }
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ static int add_var(DPS_DOCUMENT *Doc, char *name,char *val, size_t len) {
 		Item.str = val;
 		Item.section_name = name;
 		Item.len = len;
-		DpsTextListAdd(&Doc->TextList, &Item);
+		(void)DpsTextListAdd(&Doc->TextList, &Item);
 	}
 	return DPS_OK;
 }

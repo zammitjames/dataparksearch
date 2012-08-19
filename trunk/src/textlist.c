@@ -56,7 +56,11 @@ __C_LINK DPS_TEXTITEM * __DPSCALL DpsTextListAdd(DPS_TEXTLIST * tlist, const DPS
      
      if (tlist->nitems + 1 > tlist->mitems) {
        tlist->mitems += DPS_TEXTLIST_PAS;
-       tlist->Items = (DPS_TEXTITEM*)DpsRealloc(tlist->Items, (tlist->mitems) * sizeof(DPS_TEXTITEM) + 4096);
+       tlist->Items = (DPS_TEXTITEM*)DpsRealloc(tlist->Items, (tlist->mitems) * sizeof(DPS_TEXTITEM) 
+#ifdef DEBUG_MEM
+						+ 4096
+#endif
+						);
        if (tlist->Items == NULL) {
 	 tlist->nitems = tlist->mitems = 0;
 #ifdef WITH_PARANOIA

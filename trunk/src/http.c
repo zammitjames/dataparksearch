@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -151,7 +151,7 @@ static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *
     Item.section_name = secname;
     Item.strict = Sec->strict;
     Item.len = 0;
-    DpsTextListAdd(&Doc->TextList, &Item);
+    (void)DpsTextListAdd(&Doc->TextList, &Item);
   }
 }
 
