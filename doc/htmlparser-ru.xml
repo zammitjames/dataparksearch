@@ -93,6 +93,8 @@ NAME="Robots" Content="xxx"&gt;</literal>, где Content содержит
 		<itemizedlist>
 			<listitem>
 				<para>&lt;A HREF="xxx"&gt;</para>
+				<para>&lt;A HREF="xxx" DATA-EXPANDED-URL="yyy" DATA-ULTIMATE-URL="zzz"&gt;</para>
+				<para>Приоритет атрибутов при выборе ссылки: data-ultimate-url, data-expanded-url, href.</para>
 			</listitem>
 			<listitem>
 				<para>&lt;IMG SRC="xxx"&gt;</para>
