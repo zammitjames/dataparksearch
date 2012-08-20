@@ -8,6 +8,8 @@ skip !0 exec $(INDEXER) -Echeck  $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG)
 fail 20 exec $(INDEXER) -Edrop   $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 fail !0 exec $(INDEXER) -Ecreate $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 fail !0 exec $(INDEXER) -Eindex  -v 5 -n30 $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
+fail !0 exec $(INDEXER) -S $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
+fail !0 exec $(INDEXER) -qam $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 fail !0 exec $(INDEXER) -Esqlmon $(DPS_TEST_DIR)/indexer.conf < $(DPS_TEST_DIR)/query.tst > $(DPS_TEST_DIR)/query.rej 2>&1
 
 fail !0 exec $(SEARCH) %22пятерка%22 > $(DPS_TEST_DIR)/search.rej 2>&1

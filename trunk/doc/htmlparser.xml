@@ -87,6 +87,8 @@ value of <link linkend="poprank">PopularityRank</link> for the page.
 		<itemizedlist>
 			<listitem>
 				<para>&lt;A HREF="xxx"&gt;</para>
+				<para>&lt;A HREF="xxx" DATA-EXPANDED-URL="yyy" DATA-ULTIMATE-URL="zzz"&gt;</para>
+				<para>Attributes priority in link selection: data-ultimate-url, data-expanded-url, href.</para>
 			</listitem>
 			<listitem>
 				<para>&lt;IMG SRC="xxx"&gt;</para>

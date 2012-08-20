@@ -509,7 +509,7 @@ static int dps_is_delim(const dpsunicode_t *delim, dpsunicode_t c) {
 
 #if 1
 
-dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsunicode_t **last) {
+dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, dpsunicode_t **last) {
   dpsunicode_t *tok, prev = 0;
 
     if (s == NULL && (s = *last) == NULL) return NULL;
@@ -595,7 +595,10 @@ dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsun
 
 #else
 
-dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, const dpsunicode_t *delim, dpsunicode_t **last) {
+const dpsunicode_t SentDelim[] = { '.', '!', '?', 0 };
+
+
+dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, dpsunicode_t **last) {
     dpsunicode_t *tok;
 
     if (s == NULL && (s = *last) == NULL) return NULL;

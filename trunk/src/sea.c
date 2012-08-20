@@ -41,8 +41,6 @@
 #define PAS_LO -0.9
 
 
-const dpsunicode_t SentDelim[] = { '.', '!', '?', 0 };
-
 static int SentCmp(const DPS_SENTENCE *s1, const DPS_SENTENCE *s2) {
   register double r1 = (s1->di + s1->Oi), r2 = (s2->di + s2->Oi);
   if (r1 < r2) return 1;
@@ -82,7 +80,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
   }
   
   bzero(&List, sizeof(List));
-  sentence = DpsUniStrTok_SEA((dpsunicode_t*)excerpt->data, SentDelim, &lt);
+  sentence = DpsUniStrTok_SEA((dpsunicode_t*)excerpt->data, &lt);
   while(sentence) {
     if (lt != NULL) { savec = *lt; *lt = 0; }
 #ifdef DEBUG
@@ -130,7 +128,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
     fprintf(stderr, "Sent. len.:%d, Min.allowed: %d\n", sent_len, Indexer->Flags.SEASentenceMinLength);
 #endif
     if (lt != NULL) *lt = savec;
-    sentence = DpsUniStrTok_SEA(NULL, SentDelim, &lt);
+    sentence = DpsUniStrTok_SEA(NULL, &lt);
   }
   DpsLog(Indexer, DPS_LOG_DEBUG, "SEA sentences: %d", List.nitems);
   if (List.nitems < 4) {
@@ -191,14 +189,14 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	for (i = 0; i < List.nitems; i++) { 
 	  w += links[l * List.nitems + i] * List.Sent[i].Oi;
 	}
-	w = f(w);
+	w = (w + f(w)) / 2.0;
 	if (w < LOW_BORDER_EPS2) w = LOW_BORDER_EPS2;
 	else if (w > HI_BORDER_EPS2) w = HI_BORDER_EPS2;
 	List.Sent[l].di = w;
 
 	w = 0.0;
 	for (i = 0; i < List.nitems; i++) w += List.Sent[i].Oi * links[i * List.nitems + l];
-	w = f(w);
+	w = (w + f(w)) / 2.0;
 	if (w < LOW_BORDER_EPS) w = LOW_BORDER_EPS;
 	else if (w > HI_BORDER_EPS) w = HI_BORDER_EPS;
 	List.Sent[l].Oi = w;
