@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -844,6 +844,8 @@ void DpsTemplateFree(DPS_TEMPLATE *tmplt) {
   DPS_FREE(tmplt->HlEnd);
   DPS_FREE(tmplt->GrBeg);
   DPS_FREE(tmplt->GrEnd);
+  DPS_FREE(tmplt->SpBeg);
+  DPS_FREE(tmplt->SpEnd);
   DPS_FREE(tmplt->ExcerptMark);
 }
 
@@ -934,6 +936,14 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 			  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars,"GrEnd", DPS_NULL2EMPTY(lt));
 		}else
+		      if(!strncasecmp(str, "SpBeg", 5)) {
+			if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    DpsVarListReplaceStr(vars,"SpBeg", DPS_NULL2EMPTY(lt));
+		}else
+			if(!strncasecmp(str, "SpEnd", 5)) {
+			  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    DpsVarListReplaceStr(vars,"SpEnd", DPS_NULL2EMPTY(lt));
+		}else
 			  if(!strncasecmp(str, "DateFormat", 10)) {
 			    if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, "DateFormat", DPS_NULL2EMPTY(lt));
@@ -947,6 +957,10 @@ static int ParseVariable(DPS_AGENT *Agent, DPS_ENV *Env, DPS_VARLIST *vars, char
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
 		if(!strncasecmp(str, "StoredocURL", 11)) {
+		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
+		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
+		}else
+		if(!strncasecmp(str, "StoredocTmplt", 11)) {
 		  if((tok = dps_strtok_r(str, " \t\r\n", &lt, NULL)))
 		    DpsVarListReplaceStr(vars, tok, DPS_NULL2EMPTY(lt));
 		}else
@@ -1264,6 +1278,10 @@ int DpsTemplateLoad(DPS_AGENT *Agent, DPS_ENV * Env, DPS_TEMPLATE *t, const char
 	DPS_FREE(t->GrEnd);
 	t->GrBeg = DpsStrdup(DpsVarListFindStrTxt(vars, "GrBeg", ""));
 	t->GrEnd = DpsStrdup(DpsVarListFindStrTxt(vars, "GrEnd", ""));
+	DPS_FREE(t->SpBeg);
+	DPS_FREE(t->SpEnd);
+	t->SpBeg = DpsStrdup(DpsVarListFindStrTxt(vars, "SpBeg", ""));
+	t->SpEnd = DpsStrdup(DpsVarListFindStrTxt(vars, "SpEnd", ""));
 	DPS_FREE(t->ExcerptMark);
 	t->ExcerptMark = DpsStrdup(DpsVarListFindStrTxt(vars, "ExcerptMark", " "));
 	
