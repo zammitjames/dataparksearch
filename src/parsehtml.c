@@ -87,6 +87,9 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
   dpsunicode_t    *de_uword; /* Word in UNICODE with german replaces */
   size_t  uwlen;
   int res = DPS_OK;
+#ifdef HAVE_ASPELL
+  int spelling = 0;
+#endif
 
   TRACE_IN(Indexer, "DpsProcessFantoms");
 
@@ -174,6 +177,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 
 	res = DpsWordListAddFantom(Doc, &Word, Item->section);
 	if (res != DPS_OK) break;
+	spelling = 1;
 	if(Item->href != NULL && crossec != 0) {
 	  DPS_CROSSWORD cw;
 	  cw.url = Item->href;
@@ -268,6 +272,9 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
       }
     }
   }
+#ifdef HAVE_ASPELL
+  if (spelling) DpsVarListReplaceStr(&Doc->Sections, "spelling", "1");
+#endif
   TRACE_OUT(Indexer);
 }
 

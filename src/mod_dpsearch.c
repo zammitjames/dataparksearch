@@ -320,7 +320,7 @@ static int dpstoredoc_handler(request_rec *r) {
 				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
 	      } else if(!strcasecmp(ce,"deflate")){
 		if (status == 206) {
-		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't inflate it.");
+		  DpsLog(Agent, DPS_LOG_INFO, "Partial content, can't inflate it.");
 		  goto fin;
 		}
 		DpsInflate(Agent, Doc);
@@ -474,6 +474,7 @@ static int dpsearch_handler(request_rec *r) {
   char		*searchwords=NULL;
   char		*storedstr=NULL;
   const char      *ResultContentType;
+  const char      *StoredocURL, *StoredocTmplt;
   size_t        catcolumns = 0;
   ssize_t	page1,page2,npages,ppp=10;
   int		res, page_size, page_number, have_p = 1;
@@ -673,6 +674,8 @@ static int dpsearch_handler(request_rec *r) {
     ap_send_http_header(r);
 #endif
   }
+  StoredocURL = DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi");
+  StoredocTmplt = DpsVarListFindStr(&Agent->Vars, "StoredocTmplt", NULL);
 
   if (!Env->bcs) {
 
@@ -1080,8 +1083,11 @@ static int dpsearch_handler(request_rec *r) {
 		}
 		DpsEscapeURL(ctu, ct);
 
-		dps_snprintf(storedstr, storedlen, "%s?rec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
-			     DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi"),
+		dps_snprintf(storedstr, storedlen, "%s?%s%s%srec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
+			     StoredocURL,
+			     (StoredocTmplt) ? "tmplt=" : "",
+			     (StoredocTmplt) ? StoredocTmplt : "",
+			     (StoredocTmplt) ? "&amp;" : "",
 			     DpsURL_ID(Doc, NULL),
 			     DpsVarListFindStr(&Agent->Vars, "label", ""),
 			     edm, /* Last-Modified escaped */

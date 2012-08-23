@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -61,6 +61,7 @@ int main(int argc, char **argv, char **envp) {
 	char		*searchwords=NULL;
 	char		*storedstr=NULL;
 	const char      *ResultContentType;
+	const char      *StoredocURL, *StoredocTmplt;
 	int		res,httpd=0;
 	size_t          catcolumns = 0;
 	ssize_t		page1,page2,npages,ppp=10;
@@ -389,6 +390,8 @@ int main(int argc, char **argv, char **envp) {
 	ppp = DpsVarListFindInt(&Agent->Vars, "PagesPerScreen", 10);
 
 	ResultContentType = DpsVarListFindStr(&Agent->Vars, "ResultContentType", "text/html");
+	StoredocURL = DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi");
+	StoredocTmplt = DpsVarListFindStr(&Agent->Vars, "StoredocTmplt", NULL);
 	
 	if(httpd) {
 		if(!Env->bcs){
@@ -772,8 +775,11 @@ int main(int argc, char **argv, char **envp) {
 		}
 		DpsEscapeURL(ctu, ct);
 
-		dps_snprintf(storedstr, storedlen, "%s?rec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
-			     DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi"),
+		dps_snprintf(storedstr, storedlen, "%s?%s%s%srec_id=%d&amp;label=%s&amp;DM=%s&amp;DS=%d&amp;L=%s&amp;CS=%s&amp;DU=%s&amp;CT=%s&amp;q=%s",
+			     StoredocURL,
+			     (StoredocTmplt) ? "tmplt=" : "",
+			     (StoredocTmplt) ? StoredocTmplt : "",
+			     (StoredocTmplt) ? "&amp;" : "",
 			     DpsURL_ID(Doc, NULL), 
 			     DpsVarListFindStr(&Agent->Vars, "label", ""),
 			     edm, /* Last-Modified escaped */
