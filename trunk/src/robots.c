@@ -40,6 +40,7 @@
 #include "dps_doc.h"
 #include "dps_hrefs.h"
 #include "dps_host.h"
+#include "dps_sgml.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -690,7 +691,12 @@ static int DpsSitemapEndElement(DPS_XML_PARSER *parser, const char *name, size_t
     DPS_AGENT *Indexer = D->Indexer;
     DPS_DOCUMENT *Doc = D->Doc;
     p = DpsVarListFindStr(&Doc->Sections, "URL", NULL);
-    if (p != NULL) rc = DpsSitemapParse(Indexer, p);
+    if (p != NULL) {
+      p = DpsStrdup(p);
+      DpsSGMLUnescape(p);
+      rc = DpsSitemapParse(Indexer, p);
+      DpsFree(p);
+    }
     if (rc != DPS_OK) return(DPS_XML_ERROR);
   } else if (strcasestr(D->secpath, "url.") != NULL && !strcasecmp(D->sec, "loc")) {
     DPS_HREF Href;
@@ -1030,6 +1036,7 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			e=s+8;DPS_SKIP(e," \t");s=e;
 			DPS_SKIPN(e," \t");*e=0;
 			if(s && *s) {
+			  DpsSGMLUnescape(s);
 			  result = DpsSitemapParse(Indexer, s);
 			}
 		  }else
