@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2011 DataPark Ltd. All right reserved.
+/* Copyright (C) 2005-2012 DataPark Ltd. All right reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ void DpsAcronymListInit(DPS_ACRONYMLIST *List) {
 int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      DPS_MATCH	Alias;
      struct stat     sb;
-     char      *str, *data = NULL, *cur_n = NULL;
+     char      *str, *data = NULL, *cur_n = NULL, *sharp;
      char      lang[64]="";
      DPS_CHARSET    *cs=NULL;
      DPS_CHARSET    *sys_int=DpsGetCharSet("sys-int");
@@ -129,8 +129,16 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
 	    }
 	  }
           if(str[0]=='#'||str[0]==' '||str[0]==HT_CHAR||str[0]==CR_CHAR||str[0]==NL_CHAR) goto loop_continue;
-          
-          if(!strncmp(str,"Charset:",8)){
+	  sharp = strchr(str, (int)'#');
+	  while (sharp != NULL) 
+	    if (*(sharp - 1) != '\\') {
+	      *sharp = '\0';
+	      break;
+	    } else {
+	      sharp = strchr(sharp + 1, (int)'#');
+	    }
+
+         if(!strncmp(str,"Charset:",8)){
                char * lasttok;
                char * charset;
                if((charset = dps_strtok_r(str + 8, " \t\n\r", &lasttok, NULL))) {
@@ -169,9 +177,9 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
                if ((ww = (DPS_WIDEWORD*)DpsRealloc(ww, ac * sizeof(DPS_WIDEWORD))) == NULL) { DPS_FREE(data); return DPS_ERROR; }
 
                for (i = 0; i < ac; i++) {
-                 ww[i].word = av[i];
+		 ww[i].word = av[i];
                  ww[i].len = dps_strlen(av[i]);
-                 ww[i].uword = t = (dpsunicode_t*)DpsMalloc((5 * ww[i].len + 1) * sizeof(dpsunicode_t));
+		 ww[i].uword = t = (dpsunicode_t*)DpsMalloc((5 * ww[i].len + 1) * sizeof(dpsunicode_t));
 		 if (ww[i].uword == NULL) {DPS_FREE(data); return DPS_ERROR;}
                  ww[i].word = (char*)DpsMalloc((15 * ww[i].len + 1) * sizeof(char));
 		 if (ww[i].word == NULL) {DPS_FREE(data); return DPS_ERROR; }
