@@ -390,8 +390,6 @@ int main(int argc, char **argv, char **envp) {
 	ppp = DpsVarListFindInt(&Agent->Vars, "PagesPerScreen", 10);
 
 	ResultContentType = DpsVarListFindStr(&Agent->Vars, "ResultContentType", "text/html");
-	StoredocURL = DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi");
-	StoredocTmplt = DpsVarListFindStr(&Agent->Vars, "StoredocTmplt", NULL);
 	
 	if(httpd) {
 		if(!Env->bcs){
@@ -652,6 +650,8 @@ int main(int argc, char **argv, char **envp) {
 	}
 	
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&fprintf, stdout, NULL, 0, &Agent->tmpl, "restop");
+	StoredocURL = DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi");
+	StoredocTmplt = DpsVarListFindStr(&Agent->Vars, "StoredocTmplt", NULL);
 
 	for(i=0;i<Res->num_rows;i++){
 		DPS_DOCUMENT	*Doc=&Res->Doc[i];
