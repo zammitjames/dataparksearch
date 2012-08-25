@@ -674,8 +674,6 @@ static int dpsearch_handler(request_rec *r) {
     ap_send_http_header(r);
 #endif
   }
-  StoredocURL = DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi");
-  StoredocTmplt = DpsVarListFindStr(&Agent->Vars, "StoredocTmplt", NULL);
 
   if (!Env->bcs) {
 
@@ -932,6 +930,8 @@ static int dpsearch_handler(request_rec *r) {
 	}
 	
 	DpsTemplatePrint(Agent, (DPS_OUTPUTFUNCTION)&ap_rprintf, r, NULL, 0, &Agent->tmpl, "restop");
+	StoredocURL = DpsVarListFindStr(&Agent->Vars, "StoredocURL", "/cgi-bin/storedoc.cgi");
+	StoredocTmplt = DpsVarListFindStr(&Agent->Vars, "StoredocTmplt", NULL);
 	
 	for(i=0;i<Res->num_rows;i++){
 		DPS_DOCUMENT	*Doc=&Res->Doc[i];
