@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All right reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All right reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ void DpsSynonymListInit(DPS_SYNONYMLIST * List){
 
 __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
      struct stat     sb;
-     char      *str, *data = NULL, *cur_n = NULL;
+     char      *str, *data = NULL, *cur_n = NULL, *sharp;
      char      lang[64]="";
      DPS_CHARSET    *cs=NULL;
      DPS_CHARSET    *sys_int=DpsGetCharSet("sys-int");
@@ -83,6 +83,14 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
 
      while(str != NULL) {
           if(str[0]=='#'||str[0]==' '||str[0]==HT_CHAR||str[0]==CR_CHAR||str[0]==NL_CHAR) goto loop_continue;
+	  sharp = strchr(str, (int)'#');
+	  while (sharp != NULL) 
+	    if (*(sharp - 1) != '\\') {
+	      *sharp = '\0';
+	      break;
+	    } else {
+	      sharp = strchr(sharp + 1, (int)'#');
+	    }
           
           if(!strncasecmp(str,"Charset:",8)){
                char * lasttok;
@@ -134,7 +142,7 @@ __C_LINK int __DPSCALL DpsSynonymListLoad(DPS_ENV * Env,const char * filename){
                for (i = 0; i < ac; i++) {
                  ww[i].word = av[i];
                  ww[i].len = dps_strlen(av[i]);
-                 ww[i].uword = t = (dpsunicode_t*)DpsMalloc((3 * ww[i].len + 1) * sizeof(dpsunicode_t));
+		 ww[i].uword = t = (dpsunicode_t*)DpsMalloc((3 * ww[i].len + 1) * sizeof(dpsunicode_t));
 		 if (ww[i].uword == NULL) return DPS_ERROR;
                  DpsConv(&file_uni, (char*)ww[i].uword, sizeof(dpsunicode_t) * (3 * ww[i].len + 1), av[i], ww[i].len + 1);
                  DpsUniStrToLower(ww[i].uword);
