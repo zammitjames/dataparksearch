@@ -1584,6 +1584,8 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		  if (res != DPS_OK) {to_delete = 0; continue; }
 		  trdone = 1;
 		} else {
+		  char *cmd_escaped;
+		  char *text_escaped;
 		  DpsLog(Agent, DPS_LOG_EXTRA, "Query Track: query[%d]: %s", dps_strlen(query), query);
 
 		  trdone = 1;
@@ -1618,10 +1620,14 @@ static void SearchdTrack(DPS_AGENT *Agent) {
 		    var = dps_strtok_r(NULL, "\2", &lt, NULL);
 		    if (var != NULL) {
 		      val = dps_strtok_r(NULL, "\2", &lt, NULL); 
+		      cmd_escaped = DpsDBEscStr(db, NULL, var, dps_strlen(var)); /* Escape parameter name */
+		      text_escaped = DpsDBEscStr(db, NULL, val, dps_strlen(val)); /* Escape parameter value */
 		      dps_snprintf(qbuf, sizeof(qbuf), "INSERT INTO qinfo (q_id,name,value) VALUES (%s%i%s,'%s','%s')", 
-				   qu, rec_id, qu, var, val);
-		  DpsLog(Agent, DPS_LOG_EXTRA, "%s", qbuf);
+				   qu, rec_id, qu, cmd_escaped, text_escaped);
+		      DpsLog(Agent, DPS_LOG_EXTRA, "%s", qbuf);
 		      res = DpsSQLAsyncQuery(tr_db, NULL, qbuf);
+		      DPS_FREE(text_escaped);
+		      DPS_FREE(cmd_escaped);
 		      if (res != DPS_OK) continue;
 		    }
 		  } while (var != NULL);

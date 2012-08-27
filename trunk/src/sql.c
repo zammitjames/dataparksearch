@@ -4939,15 +4939,16 @@ int DpsTrackSQL(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *db) {
 	char		*text_escaped;
 	const char	*words = DpsVarListFindStr(&query->Vars, "q", ""); /* "q-lc" was here */
 	const char      *IP = DpsVarListFindStr(&query->Vars, "IP", "localhost");
-	size_t          i, r, escaped_len, qbuf_len;
+	size_t          i, r, escaped_len, qbuf_len, cmd_len;
 	int             res, qtime, rec_id;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
+	char            *cmd_escaped = NULL;
 	
 	if (*words == '\0') return DPS_OK; /* do not store empty queries */
 
 	DpsSQLResInit(&sqlRes);
 
-	escaped_len = 4 * dps_strlen(words) + 1;
+	escaped_len = dps_max(4 * dps_strlen(words), 256) + 1;
 	qbuf_len = escaped_len + 4096;
 
 	if ((qbuf = (char*)DpsMalloc(qbuf_len)) == NULL) return DPS_ERROR;
@@ -4976,9 +4977,14 @@ int DpsTrackSQL(DPS_AGENT *query, DPS_RESULT *Res, DPS_DB *db) {
 	  if (strncasecmp(Var->name, "query.",6)==0 && strcasecmp(Var->name, "query.q") && strcasecmp(Var->name, "query.BrowserCharset")
 	      && strcasecmp(Var->name, "query.g-lc") && strncasecmp(Var->name, "query.Excerpt", 13) 
 	      && strcasecmp(Var->name, "query.IP")  && strcasecmp(Var->name, "query.DateFormat") && Var->val != NULL && *Var->val != '\0') {
+
+	    cmd_escaped = DpsDBEscStr(db, NULL, &Var->name[6], dps_strlen(&Var->name[6])); /* Escape parameter name */
+	    (void)DpsDBEscStr(db, text_escaped, Var->val, Var->curlen); /* Escape parameter value */
+
 	    dps_snprintf(qbuf, qbuf_len, "INSERT INTO qinfo (q_id,name,value) VALUES (%s%i%s,'%s','%s')", 
-			 qu, rec_id, qu, &Var->name[6], Var->val);
+			 qu, rec_id, qu, cmd_escaped, text_escaped);
 	    res = DpsSQLAsyncQuery(db, NULL, qbuf);
+	    DPS_FREE(cmd_escaped);
 	    if (res != DPS_OK) goto DpsTrack_exit;
 	  }
 	}
