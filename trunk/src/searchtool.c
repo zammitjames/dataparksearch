@@ -2540,8 +2540,8 @@ static inline dps_uint4 DpsCalcCosineWeightFull(dps_uint4 *R, double x, double x
   register double y_distance;
 #endif
 
-  if (D[DPS_N_PHRASE] == 0) y_phrase = x; else y_phrase = xy / D[DPS_N_PHRASE];
-  if (D[DPS_N_EXACT] == 0) y_exact = x; else y_exact = xy / D[DPS_N_EXACT];
+  if (D[DPS_N_PHRASE] == 0) y_phrase = 10000; else y_phrase = 100 / D[DPS_N_PHRASE];
+  if (D[DPS_N_EXACT] == 0) y_exact = 10000; else y_exact = 100 / D[DPS_N_EXACT];
   y_origin = xy * (D[DPS_N_ORIGIN] - R[DPS_N_ORIGIN]);
 
 
@@ -2870,7 +2870,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT  * n_order_inquery;
 #endif
   R[DPS_N_COUNT] = 0;
-  R[DPS_N_ORIGIN] = 1; /* DpsOriginIndex(DPS_WORD_ORIGIN_QUERY); */
+  R[DPS_N_ORIGIN] = n_order_inquery; /*1;*/
 
   wordnum = DPS_WRDNUM(Crd[0].coord);
   wordsec = DPS_WRDSEC_N(Crd[0].coord, nsections);
