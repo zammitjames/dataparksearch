@@ -1496,12 +1496,34 @@ int main(int argc, char **argv, char **envp) {
        sprintf(pidname, "%s/%s", DPS_VAR_DIR, "indexer.pid");
        pid_fd = DpsOpen3(pidname, O_CREAT|O_EXCL|O_WRONLY, 0644);
        if(pid_fd < 0){
-	 dps_strerror(NULL, 0,"%s Can't create '%s'", time_pid_info(), pidname);
+	 dps_strerror(NULL, 0, "%s Can't create '%s'", time_pid_info(), pidname);
 	 if(errno == EEXIST){
-	   fprintf(stderr, "It seems that another indexer is already running!\n");
-	   fprintf(stderr, "Remove '%s' if it is not true.\n", pidname);
+	   int pid = 0;
+	   pid_fd = DpsOpen3(pidname, O_RDWR, 0644);
+	   if (pid_fd < 0) {
+	     dps_strerror(NULL, 0, "%s Can't open '%s'", time_pid_info(), pidname);
+	     goto ex;
+	   }
+	   (void)read(pid_fd, pidbuf, sizeof(pidbuf));
+	   if (1 > sscanf(pidbuf, "%d", &pid)) {
+	     dps_strerror(NULL, 0, "%s Can't read pid from '%s'", time_pid_info(), pidname);
+	     close(pid_fd);
+	     goto ex;
+	   }
+	   pid = kill((pid_t)pid, 0);
+	   if (pid == 0) {
+	     fprintf(stderr, "It seems that another indexer is already running!\n");
+	     fprintf(stderr, "Remove '%s' if it is not true.\n", pidname);
+	     close(pid_fd);
+	     goto ex;
+	   }
+	   if (errno == EPERM) {
+	     fprintf(stderr, "Can't check if another indexer is already running!\n");
+	     fprintf(stderr, "Remove '%s' if it is not true.\n", pidname);
+	     close(pid_fd);
+	     goto ex;
+	   }
 	 }
-	 goto ex;
        }
        DpsClose(pid_fd);
        unlink(pidname);
@@ -1718,15 +1740,40 @@ int main(int argc, char **argv, char **envp) {
                     sprintf(pidname,"%s/%s", DpsVarListFindStr(&Conf.Vars, "VarDir", DPS_VAR_DIR), "indexer.pid");
                     pid_fd = DpsOpen3(pidname, O_CREAT | O_EXCL | O_WRONLY, 0644);
                     if(pid_fd < 0){
-		         dps_strerror(NULL, 0, "%s Can't create '%s'", time_pid_info(), pidname);
-                         if(errno == EEXIST){
-                              fprintf(stderr,"It seems that another indexer is already running!\n");
-                              fprintf(stderr,"Remove '%s' if it is not true.\n",pidname);
-                         }
-                         goto ex;
+		      dps_strerror(NULL, 0, "%s Can't create '%s'", time_pid_info(), pidname);
+		      if(errno == EEXIST){
+			int pid = 0;
+			pid_fd = DpsOpen3(pidname, O_RDWR, 0644);
+			if (pid_fd < 0) {
+			  dps_strerror(NULL, 0, "%s Can't open '%s'", time_pid_info(), pidname);
+			  goto ex;
+			}
+			(void)read(pid_fd, pidbuf, sizeof(pidbuf));
+			if (1 > sscanf(pidbuf, "%d", &pid)) {
+			  dps_strerror(NULL, 0, "%s Can't read pid from '%s'", time_pid_info(), pidname);
+			  close(pid_fd);
+			  goto ex;
+			}
+			pid = kill((pid_t)pid, 0);
+			if (pid == 0) {
+			  fprintf(stderr, "It seems that another indexer is already running!\n");
+			  fprintf(stderr, "Remove '%s' if it is not true.\n", pidname);
+			  close(pid_fd);
+			  goto ex;
+			}
+			if (errno == EPERM) {
+			  fprintf(stderr, "Can't check if another indexer is already running!\n");
+			  fprintf(stderr, "Remove '%s' if it is not true.\n", pidname);
+			  close(pid_fd);
+			  goto ex;
+			}
+			dps_strerror(NULL, 0, "%s Process %s seems to be dead. Flushing '%s'", time_pid_info(), pidbuf, pidname);
+			lseek(pid_fd, 0L, SEEK_SET);
+			truncate(pid_fd, 0L);
+		      }
                     }
                     sprintf(pidbuf,"%d\n",(int)getpid());
-                    (void)write(pid_fd,&pidbuf,dps_strlen(pidbuf));
+                    (void)write(pid_fd, pidbuf, dps_strlen(pidbuf));
 		    DpsClose(pid_fd);
                     atexit(&exitproc);
                }
