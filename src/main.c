@@ -1769,7 +1769,7 @@ int main(int argc, char **argv, char **envp) {
 			}
 			dps_strerror(NULL, 0, "%s Process %s seems to be dead. Flushing '%s'", time_pid_info(), pidbuf, pidname);
 			lseek(pid_fd, 0L, SEEK_SET);
-			truncate(pid_fd, 0L);
+			ftruncate(pid_fd, 0L);
 		      }
                     }
                     sprintf(pidbuf,"%d\n",(int)getpid());
