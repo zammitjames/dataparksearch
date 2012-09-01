@@ -749,12 +749,38 @@ int main(int argc,char **argv, char **envp) {
 	dps_snprintf(dps_pid_name, PATH_MAX, "%s%s%s", var_dir, DPSSLASHSTR, "cached.pid");
 	pid_fd=open(dps_pid_name, O_CREAT|O_EXCL|O_WRONLY, 0644);
 	if(pid_fd<0){
-		dps_strerror(Agent, DPS_LOG_ERROR, "%s Can't create '%s'", Logd_time_pid_info(), dps_pid_name);
-		if(errno==EEXIST){
-			DpsLog(Agent, DPS_LOG_ERROR, 
-				       "It seems that another cached is already running!\nRemove '%s' if it is not true.", dps_pid_name);
-		}
-		goto err2;
+
+	  dps_strerror(NULL, 0, "Can't create '%s'", dps_pid_name);
+	  if(errno == EEXIST){
+	    int pid = 0;
+	    pid_fd = DpsOpen3(dps_pid_name, O_RDWR, 0644);
+	    if (pid_fd < 0) {
+	      dps_strerror(NULL, 0, "Can't open '%s'", dps_pid_name);
+	      goto err2;
+	    }
+	    (void)read(pid_fd, pidbuf, sizeof(pidbuf));
+	    if (1 > sscanf(pidbuf, "%d", &pid)) {
+	      dps_strerror(NULL, 0, "Can't read pid from '%s'", dps_pid_name);
+	      close(pid_fd);
+	      goto err2;
+	    }
+	    pid = kill((pid_t)pid, 0);
+	    if (pid == 0) {
+	      fprintf(stderr, "It seems that another indexer is already running!\n");
+	      fprintf(stderr, "Remove '%s' if it is not true.\n", dps_pid_name);
+	      close(pid_fd);
+	      goto err2;
+	    }
+	    if (errno == EPERM) {
+	      fprintf(stderr, "Can't check if another indexer is already running!\n");
+	      fprintf(stderr, "Remove '%s' if it is not true.\n", dps_pid_name);
+	      close(pid_fd);
+	      goto err2;
+	    }
+	    dps_strerror(NULL, 0, "Process %s seems to be dead. Flushing '%s'", pidbuf, dps_pid_name);
+	    lseek(pid_fd, 0L, SEEK_SET);
+	    ftruncate(pid_fd, 0L);
+	  }
 	}
 	sprintf(pidbuf,"%d\n",(int)getpid());
 	(void)write(pid_fd, &pidbuf, strlen(pidbuf));
