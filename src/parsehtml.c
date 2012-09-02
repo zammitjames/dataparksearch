@@ -79,7 +79,7 @@ static void DpsUniDesegment(dpsunicode_t *s) {
 static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, size_t min_word_len, int crossec, int have_bukva_forte, 
 			      dpsunicode_t *uword, int make_prefixes, int make_suffixes, int strict
 #ifdef HAVE_ASPELL
-		   , int have_speller, AspellSpeller *speller
+			      , int have_speller, AspellSpeller *speller, DPS_DSTR *suggest
 #endif
 			      ) {
   DPS_WORD Word;
@@ -141,7 +141,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
   }
 
 #ifdef HAVE_ASPELL
-  if (have_speller && have_bukva_forte && Indexer->Flags.use_aspellext && ((uwlen = DpsUniLen(uword)) > 2)
+  if (strict && have_speller && have_bukva_forte && Indexer->Flags.use_aspellext && ((uwlen = DpsUniLen(uword)) > 2)
       && (DpsUniStrChr(uword, (dpsunicode_t) '&') == NULL) /* aspell trap workaround */
       ) {
     register int ii;
@@ -150,6 +150,9 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
     const AspellWordList *suggestions;
     AspellStringEnumeration *elements;
     size_t tlen;
+    static dpsunicode_t COLON[] = { ':', ' ', 0};
+    static dpsunicode_t COMMA[] = { ',', ' ', 0};
+    static dpsunicode_t PERIOD[] = { '.', 0};
 
     TRACE_LINE(Indexer);
     if ((utf_str = (char*)DpsRealloc(utf_str, 16 * uwlen + 1)) == NULL) {
@@ -187,7 +190,17 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 	  cw.ulen = Word.ulen;
 	  DpsCrossListAddFantom(Doc, &cw);
 	}
+	if (suggest != NULL) {
+	  if (ii == 0) {
+	    DpsDSTRAppendUniWithSpace(suggest, uword);
+	    DpsDSTRAppendUniStr(suggest, COLON);
+	  } else {
+	    DpsDSTRAppendUniStr(suggest, COMMA);
+	  }
+	  DpsDSTRAppendUniStr(suggest, aword);
+	}
       }
+      if (ii > 0 && suggest != NULL) DpsDSTRAppendUniStr(suggest, PERIOD);
       delete_aspell_string_enumeration(elements);
     }
     DPS_FREE(utf_str); DPS_FREE(aword);
@@ -241,7 +254,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
 	  DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, dw_have_bukva_forte, nword, (n) ? Indexer->Flags.make_prefixes : 0, 
 			    (n) ? Indexer->Flags.make_suffixes : 0, !strict
 #ifdef HAVE_ASPELL
-			    , have_speller, speller
+			    , have_speller, speller, suggest
 #endif
 			    );
 	}
@@ -283,7 +296,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 		   const char *content_lang, size_t *indexed_size, size_t *indexed_limit, 
 		   size_t max_word_len, size_t min_word_len, int crossec
 #ifdef HAVE_ASPELL
-		   , int have_speller, AspellSpeller *speller
+		   , int have_speller, AspellSpeller *speller, DPS_DSTR *suggest
 #endif
 		   ) {
   dpsunicode_t	uspace[2] = {0x20, 0};
@@ -363,7 +376,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 
 	DpsProcessFantoms(Indexer, Doc, Item, min_word_len, crossec, have_bukva_forte, uword, Indexer->Flags.make_prefixes, Indexer->Flags.make_suffixes, Item->strict
 #ifdef HAVE_ASPELL
-			  , have_speller, speller
+			  , have_speller, speller, suggest
 #endif
 			  );
 			
@@ -455,6 +468,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   AspellCanHaveError *ret;
   AspellSpeller *speller;
   int have_speller = 0;
+  DPS_DSTR suggest;
 #endif
 #ifdef WITH_PARANOIA
   void *paran = DpsViolationEnter(paran);
@@ -517,6 +531,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       delete_aspell_can_have_error(ret);
     } else {
       speller = to_aspell_speller(ret);
+      DpsDSTRInit(&suggest, 1024);
       have_speller = 1;
     }
   }
@@ -554,6 +569,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #ifdef WITH_PARANOIA
       DpsViolationExit(Indexer->handle, paran);
 #endif
+#ifdef HAVE_ASPELL
+      if (have_speller) DpsDSTRFree(&suggest); 
+#endif
       return DPS_ERROR;
     }
 		
@@ -570,6 +588,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
       DpsViolationExit(Indexer->handle, paran);
+#endif
+#ifdef HAVE_ASPELL
+      if (have_speller) DpsDSTRFree(&suggest); 
 #endif
       return DPS_ERROR;
     }
@@ -604,7 +625,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
     if (DPS_OK != DpsPrepareItem(Indexer, Doc, Item, ustr, UStr, 
 				 content_lang, &indexed_size, &indexed_limit, max_word_len, min_word_len, crossec
 #ifdef HAVE_ASPELL
-				 , have_speller, speller
+				 , have_speller, speller, &suggest
 #endif
 				 )) {
       DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
@@ -612,6 +633,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
       DpsViolationExit(Indexer->handle, paran);
+#endif
+#ifdef HAVE_ASPELL
+      if (have_speller) DpsDSTRFree(&suggest); 
 #endif
       return DPS_ERROR;
     }
@@ -642,6 +666,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #ifdef WITH_PARANOIA
       DpsViolationExit(Indexer->handle, paran);
 #endif
+#ifdef HAVE_ASPELL
+      if (have_speller) DpsDSTRFree(&suggest); 
+#endif
       return DPS_ERROR;
     }
 		
@@ -657,6 +684,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
       DpsViolationExit(Indexer->handle, paran);
+#endif
+#ifdef HAVE_ASPELL
+      if (have_speller) DpsDSTRFree(&suggest); 
 #endif
       return DPS_ERROR;
     }
@@ -690,7 +720,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
     if (DPS_OK != DpsPrepareItem(Indexer, Doc, Item, ustr, UStr, 
 				 content_lang, &indexed_size, &indexed_limit, max_word_len, min_word_len, crossec
 #ifdef HAVE_ASPELL
-				 , have_speller, speller
+				 , have_speller, speller, &suggest
 #endif
 				 )) {
       DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
@@ -698,6 +728,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       TRACE_OUT(Indexer);
 #ifdef WITH_PARANOIA
       DpsViolationExit(Indexer->handle, paran);
+#endif
+#ifdef HAVE_ASPELL
+      if (have_speller) DpsDSTRFree(&suggest); 
 #endif
       return DPS_ERROR;
     }
@@ -723,7 +756,17 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 #ifdef HAVE_ASPELL
   if (have_speller && Indexer->Flags.use_aspellext) {
     delete_aspell_speller(speller);
+    if (suggest.data_size > 0) {
+      char *spelling = DpsMalloc(24 * (suggest.data_size + 2));
+      DpsDSTRAppendUni(&suggest, 0);
+      if (spelling != NULL) {
+	DpsConv(&Indexer->uni_lc, spelling, 24 * (suggest.data_size + 1), (char*)suggest.data, suggest.data_size * sizeof(dpsunicode_t));
+	DpsVarListReplaceStr(&Doc->Sections, "spelling", spelling);
+	DPS_FREE(spelling);
+      }
+    }
   }
+  if (have_speller) DpsDSTRFree(&suggest); 
 #endif
 	
   DPS_FREE(uword); DPS_FREE(lcsword); 

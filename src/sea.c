@@ -285,7 +285,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
       DpsPrepareItem(Indexer, Doc, &Item, List.Sent[i].sentence, UStr, content_lang, indexed_size, indexed_limit,
 		     max_word_len, min_word_len, crossec
 #ifdef HAVE_ASPELL
-		     , have_speller, speller
+		     , have_speller, speller, NULL
 #endif
 		     );
       DPS_FREE(UStr);
