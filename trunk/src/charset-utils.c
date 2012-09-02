@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2012 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ size_t DpsDSTRAppendStrWithSpace(DPS_DSTR *dstr, const char *data) {
 }
 
 size_t DpsDSTRAppendUniStr(DPS_DSTR *dstr, const dpsunicode_t *data) {
-  return DpsDSTRAppend(dstr, data, sizeof(dpsunicode_t) * DpsUniLen(data) );
+  return DpsDSTRAppend(dstr, data, sizeof(dpsunicode_t) * DpsUniLen(data));
 }
 
 size_t DpsDSTRAppendUni(DPS_DSTR *dstr, const dpsunicode_t data) {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2005 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -18,6 +18,8 @@
 
 #ifndef _DPS_PARSE_HTML_H
 #define _DPS_PARSE_HTML_H
+
+#include "dps_charsetutils.h"
 
 /* HTML parser states */
 #define DPS_HTML_TAG	1
@@ -42,7 +44,7 @@ extern int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *I
 			  const char *content_lang, size_t *indexed_size, size_t *indexed_limit, 
 			  size_t max_word_len, size_t min_word_len, int crossec
 #ifdef HAVE_ASPELL
-			  , int have_speller, AspellSpeller *speller
+			  , int have_speller, AspellSpeller *speller, DPS_DSTR *suggest
 #endif
 			  );
 
