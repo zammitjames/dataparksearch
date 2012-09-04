@@ -163,7 +163,9 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
       DPS_FREE(utf_str); TRACE_OUT(Indexer);
       return; 
     }
-    DpsConv(&Indexer->uni_utf, utf_str, 16 * uwlen, (char*)uword, (int)(sizeof(dpsunicode_t) * (uwlen + 1)));
+    DpsUniStrCpy(aword, uword);
+    DpsUniAspellSimplify(aword);
+    DpsConv(&Indexer->uni_utf, utf_str, 16 * uwlen, (char*)aword, (int)(sizeof(dpsunicode_t) * (uwlen + 1)));
     ii = aspell_speller_check(speller, (const char *)utf_str, (int)(tlen = dps_strlen(utf_str)));
     if ( ii == 0) {
       suggestions = aspell_speller_suggest(speller, (const char *)utf_str, (int)tlen);
