@@ -25,6 +25,7 @@
 #include "dps_conf.h"
 #include "dps_charsetutils.h"
 #include "dps_match.h"
+#include "dps_log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,8 +42,9 @@ void DpsAcronymListInit(DPS_ACRONYMLIST *List) {
      bzero((void*)List, sizeof(*List));
 }
 
-int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
+int __DPSCALL DpsAcronymListLoad(DPS_AGENT * query, const char * filename) {
      DPS_MATCH	Alias;
+     DPS_ENV *Env = query->Conf;
      struct stat     sb;
      char      *str, *data = NULL, *cur_n = NULL, *sharp;
      char      lang[64]="";
@@ -55,6 +57,20 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      char            *av[255];
      size_t          ac, i;
      dpsunicode_t    *t;
+#if defined HAVE_ASPELL
+     DPS_CHARSET *utf8 = DpsGetCharSet("UTF-8");
+     DPS_CONV toutf8;
+     AspellCanHaveError *ret;
+     AspellSpeller *speller = NULL;
+     int use_aspellext = Env->Flags.use_aspellext;
+     char lstr[2048];
+
+     if (utf8 == NULL) {
+       dps_strerror(NULL, 0, "%s: Unable to get UTF-8 charset!", __FUNCTION__, filename);
+       return DPS_ERROR;
+     }
+     DpsConvInit(&toutf8, sys_int, utf8, Env->CharsToEscape, 0);
+#endif
      
      if (stat(filename, &sb)) {
        dps_strerror(NULL, 0, "Unable to stat acronyms file '%s'", filename);
@@ -119,13 +135,23 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
 			
 			if(DPS_OK != DpsMatchListAdd(NULL, &Env->QAliases, &Alias, err, sizeof(err), 0)) {
 				dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "%s", err);
+#ifdef HAVE_ASPELL
+				if (use_aspellext && speller != NULL) {
+				  delete_aspell_speller(speller);
+				}
+#endif
 				return DPS_ERROR;
 			}
 		}
 	    }
 	    if(!Alias.arg){
 	      dps_snprintf(Env->errstr, sizeof(Env->errstr)-1, "too few arguments in file '%s'", filename);
-		return DPS_ERROR;
+#ifdef HAVE_ASPELL
+	      if (use_aspellext && speller != NULL) {
+		delete_aspell_speller(speller);
+	      }
+#endif
+	      return DPS_ERROR;
 	    }
 	  }
           if(str[0]=='#'||str[0]==' '||str[0]==HT_CHAR||str[0]==CR_CHAR||str[0]==NL_CHAR) goto loop_continue;
@@ -147,6 +173,11 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
                          dps_snprintf(Env->errstr, sizeof(Env->errstr), "Unknown charset '%s' in acronyms file '%s'",
                                    charset, filename);
                          DPS_FREE(data);
+#ifdef HAVE_ASPELL
+			 if (use_aspellext && speller != NULL) {
+			   delete_aspell_speller(speller);
+			 }
+#endif
                          return DPS_ERROR;
                     }
                     DpsConvInit(&file_uni, cs, sys_int, Env->CharsToEscape, DPS_RECODE_HTML);
@@ -158,31 +189,78 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
                if((l = dps_strtok_r(str + 9, " \t\n\r", &lasttok, NULL))) {
                     dps_strncpy(lang, l, sizeof(lang)-1);
                }
-          }else{
+#if defined HAVE_ASPELL
+	       if (use_aspellext) {
+		 aspell_config_replace(query->aspell_config, "lang", lang);
+		 ret = new_aspell_speller(query->aspell_config);
+		 if (aspell_error(ret) != 0) {
+		   DpsLog(query, DPS_LOG_ERROR, "%s: aspell error: %s", __FUNCTION__, aspell_error_message(ret));
+		   delete_aspell_can_have_error(ret);
+		   use_aspellext = 0;
+		 } else {
+		   speller = to_aspell_speller(ret);
+		 }
+	       }
+#endif
+         }else{
 
                if(!cs){
                     dps_snprintf(Env->errstr,sizeof(Env->errstr)-1,"No Charset command in acronyms file '%s'",filename);
                     DPS_FREE(data);
+#ifdef HAVE_ASPELL
+		    if (use_aspellext && speller != NULL) {
+		      delete_aspell_speller(speller);
+		    }
+#endif
                     return DPS_ERROR;
                }
                if(!lang[0]){
                     dps_snprintf(Env->errstr,sizeof(Env->errstr)-1,"No Language command in acronyms file '%s'",filename);
                     DPS_FREE(data);
+#ifdef HAVE_ASPELL
+		    if (use_aspellext && speller != NULL) {
+		      delete_aspell_speller(speller);
+		    }
+#endif
                     return DPS_ERROR;
                }
 
                ac = DpsGetArgs(str, av, 255);
                if (ac < 2) goto loop_continue;
 
-               if ((ww = (DPS_WIDEWORD*)DpsRealloc(ww, ac * sizeof(DPS_WIDEWORD))) == NULL) { DPS_FREE(data); return DPS_ERROR; }
+               if ((ww = (DPS_WIDEWORD*)DpsRealloc(ww, ac * sizeof(DPS_WIDEWORD))) == NULL) { 
+		 DPS_FREE(data); 
+#ifdef HAVE_ASPELL
+		 if (use_aspellext && speller != NULL) {
+		   delete_aspell_speller(speller);
+		 }
+#endif
+		 return DPS_ERROR;
+	       }
 
                for (i = 0; i < ac; i++) {
 		 ww[i].word = av[i];
                  ww[i].len = dps_strlen(av[i]);
 		 ww[i].uword = t = (dpsunicode_t*)DpsMalloc((5 * ww[i].len + 1) * sizeof(dpsunicode_t));
-		 if (ww[i].uword == NULL) {DPS_FREE(data); return DPS_ERROR;}
+		 if (ww[i].uword == NULL) {
+		   DPS_FREE(data); 
+#ifdef HAVE_ASPELL
+		   if (use_aspellext && speller != NULL) {
+		     delete_aspell_speller(speller);
+		   }
+#endif
+		   return DPS_ERROR;
+		 }
                  ww[i].word = (char*)DpsMalloc((15 * ww[i].len + 1) * sizeof(char));
-		 if (ww[i].word == NULL) {DPS_FREE(data); return DPS_ERROR; }
+		 if (ww[i].word == NULL) {
+		   DPS_FREE(data); 
+#ifdef HAVE_ASPELL
+		   if (use_aspellext && speller != NULL) {
+		     delete_aspell_speller(speller);
+		   }
+#endif
+		   return DPS_ERROR; 
+		 }
                  DpsConv(&file_uni, (char*)ww[i].uword, sizeof(dpsunicode_t) * (5 * ww[i].len + 1), av[i], ww[i].len + 1);
                  DpsUniStrToLower(ww[i].uword);
 		 ww[i].uword = DpsUniNormalizeNFC(NULL, ww[i].uword);
@@ -197,6 +275,11 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
 		 if (Env->Acronyms.Acronym == NULL) {
 		   Env->Acronyms.macronyms = Env->Acronyms.nacronyms = 0;
 		   DPS_FREE(data);
+#ifdef HAVE_ASPELL
+		   if (use_aspellext && speller != NULL) {
+		     delete_aspell_speller(speller);
+		   }
+#endif
 		   return DPS_ERROR;
 		 }
 	       }
@@ -212,6 +295,14 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
 
 	       Env->Acronyms.nacronyms++;
 	       Env->Acronyms.sorted = 0;
+
+#ifdef HAVE_ASPELL
+		if (use_aspellext) {
+		  DpsConv(&toutf8, lstr, sizeof(lstr), ((const char*)ww[0].uword),(size_t)ww[0].len * sizeof(ww[0].uword[0]));
+		  aspell_speller_add_to_personal(speller, lstr, -1);
+		}
+#endif
+
                
           }
      loop_continue:
@@ -228,6 +319,11 @@ int __DPSCALL DpsAcronymListLoad(DPS_ENV * Env, const char * filename) {
      }
      DPS_FREE(data);
      DPS_FREE(ww);
+#ifdef HAVE_ASPELL
+     if (use_aspellext && speller != NULL) {
+       delete_aspell_speller(speller);
+     }
+#endif
      return DPS_OK;
 }
 
