@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1055,7 +1055,7 @@ static int add_acronym(void *Cfg, size_t ac, char **av) {
 	if(C->flags & DPS_FLAG_SPELL) {
 		char	fname[PATH_MAX];
 		DpsRelEtcName(Conf, fname, sizeof(fname)-1, av[1]);
-		res = DpsAcronymListLoad(Conf, fname);
+		res = DpsAcronymListLoad(C->Indexer, fname);
 	}
 	return res;
 }
