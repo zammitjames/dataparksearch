@@ -410,7 +410,7 @@ void DpsUniAspellSimplify(dpsunicode_t *ustr) {
     case 0x02BC: /* modifier letter apostrophe */
     case 0x2019: /* right single quotation mark */
     case 0x275C: /* heavy single comma quotation mark */
-      *u = 0x27;
+      *u = (u[1] != 0) ? 0x27 : 0;
       break;
     default:
       break;
