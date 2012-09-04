@@ -560,7 +560,9 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, c
 #ifdef HAVE_ASPELL
 		if (use_aspellext) {
 			DpsConv(&toutf8, lstr, 2048, ((const char*)ustr),(size_t)res);
-			aspell_speller_add_to_personal(speller, lstr, -1);
+			if (aspell_speller_check(speller, lstr, -1) == 0) {
+			  aspell_speller_add_to_personal(speller, lstr, -1);
+			}
 		}
 #endif
 		res = DpsSpellAdd(&Conf->Spells,ustr,flag,lang);
