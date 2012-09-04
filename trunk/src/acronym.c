@@ -299,7 +299,9 @@ int __DPSCALL DpsAcronymListLoad(DPS_AGENT * query, const char * filename) {
 #ifdef HAVE_ASPELL
 		if (use_aspellext) {
 		  DpsConv(&toutf8, lstr, sizeof(lstr), ((const char*)ww[0].uword),(size_t)ww[0].len * sizeof(ww[0].uword[0]));
-		  aspell_speller_add_to_personal(speller, lstr, -1);
+		  if (0 == aspell_speller_check(speller, lstr, -1)) {
+		    aspell_speller_add_to_personal(speller, lstr, -1);
+		  }
 		}
 #endif
 
@@ -321,6 +323,7 @@ int __DPSCALL DpsAcronymListLoad(DPS_AGENT * query, const char * filename) {
      DPS_FREE(ww);
 #ifdef HAVE_ASPELL
      if (use_aspellext && speller != NULL) {
+       aspell_speller_save_all_word_lists(speller);
        delete_aspell_speller(speller);
      }
 #endif
