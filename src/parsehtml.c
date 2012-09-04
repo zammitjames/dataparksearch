@@ -526,6 +526,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
 #ifdef HAVE_ASPELL
   if (Indexer->Flags.use_aspellext) {
+    DPS_GETLOCK(Indexer, DPS_LOCK_ASPELL);
     aspell_config_replace(Indexer->aspell_config, "lang", (*content_lang != '\0') ? content_lang : "en");
     ret = new_aspell_speller(Indexer->aspell_config);
     if (aspell_error(ret) != 0) {
@@ -536,6 +537,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DpsDSTRInit(&suggest, 1024);
       have_speller = 1;
     }
+    DPS_RELEASELOCK(Indexer, DPS_LOCK_ASPELL);
   }
 #endif				
 	
