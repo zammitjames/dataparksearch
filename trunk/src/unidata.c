@@ -402,6 +402,25 @@ int DpsUniCType(dpsunicode_t uni) {
 	return dps_uni_plane[plane].ctype;
 }
 
+
+void DpsUniAspellSimplify(dpsunicode_t *ustr) {
+  register dpsunicode_t *u = ustr;
+  while (*u) {
+    switch(*u) {
+    case 0x02BC: /* modifier letter apostrophe */
+    case 0x2019: /* right single quotation mark */
+    case 0x275C: /* heavy single comma quotation mark */
+      *u = 0x27;
+      break;
+    default:
+      break;
+    }
+    u++;
+  }
+  return;
+}
+
+
 /* Normalizations based on: */
 /*
  * Uninorm - A free ANSI C Implementation of Unicode

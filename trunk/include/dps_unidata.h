@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2008 Datapark corp. All rights reserved.
+/* Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -75,6 +75,7 @@ extern int  DpsUniCType(dpsunicode_t u);
 extern dpsunicode_t  *DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_bukva_forte, int loose);
 extern __C_LINK dpsunicode_t  * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t ** last, int *ctype0, int *have_bukva_forte,
 							    int cmd_mode);
+void DpsUniAspellSimplify(dpsunicode_t *ustr);
 
 extern dpsunicode_t *DpsUniNormalizeNFC(dpsunicode_t *buf, dpsunicode_t *str);
 extern dpsunicode_t *DpsUniNormalizeNFD(dpsunicode_t *buf, dpsunicode_t *str);
