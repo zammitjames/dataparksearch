@@ -1319,7 +1319,7 @@ static int DpsIndex(DPS_AGENT *A) {
 	      pthread_attr_getstacksize(&attr, &oldstksize);
 	      stksize = oldstksize + 
 #ifdef HAVE_ASPELL
-		16
+		4 /*16*/
 #else
 		2
 #endif
