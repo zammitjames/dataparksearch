@@ -166,6 +166,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
     DpsUniStrCpy(aword, uword);
     DpsUniAspellSimplify(aword);
     DpsConv(&Indexer->uni_utf, utf_str, 16 * uwlen, (char*)aword, (int)(sizeof(dpsunicode_t) * (uwlen + 1)));
+    DPS_GETLOCK(Indexer, DPS_LOCK_ASPELL);
     ii = aspell_speller_check(speller, (const char *)utf_str, (int)(tlen = dps_strlen(utf_str)));
     if ( ii == 0) {
       suggestions = aspell_speller_suggest(speller, (const char *)utf_str, (int)tlen);
@@ -205,6 +206,7 @@ static void DpsProcessFantoms(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITE
       if (ii > 0 && suggest != NULL) DpsDSTRAppendUniStr(suggest, PERIOD);
       delete_aspell_string_enumeration(elements);
     }
+    DPS_RELEASELOCK(Indexer, DPS_LOCK_ASPELL);
     DPS_FREE(utf_str); DPS_FREE(aword);
   }
 #endif	
@@ -526,9 +528,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
 #ifdef HAVE_ASPELL
   if (Indexer->Flags.use_aspellext) {
+    AspellConfig * spell_config2;
     DPS_GETLOCK(Indexer, DPS_LOCK_ASPELL);
-    aspell_config_replace(Indexer->aspell_config, "lang", (*content_lang != '\0') ? content_lang : "en");
-    ret = new_aspell_speller(Indexer->aspell_config);
+    spell_config2 = aspell_config_clone(Indexer->aspell_config);
+    aspell_config_replace(spell_config2, "lang", (*content_lang != '\0') ? content_lang : "en");
+    ret = new_aspell_speller(spell_config2);
     if (aspell_error(ret) != 0) {
       DpsLog(Indexer, DPS_LOG_ERROR, " aspell error: %s", aspell_error_message(ret));
       delete_aspell_can_have_error(ret);
@@ -537,10 +541,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DpsDSTRInit(&suggest, 1024);
       have_speller = 1;
     }
+    delete_aspell_config(spell_config2);
     DPS_RELEASELOCK(Indexer, DPS_LOCK_ASPELL);
   }
 #endif				
-	
+
   if (Indexer->Flags.LongestTextItems > 0) {
     DPS_TEXTITEM **items = (DPS_TEXTITEM**)DpsMalloc((tlist->nitems + 1) * sizeof(DPS_TEXTITEM));
     if (items != NULL) {
@@ -750,6 +755,7 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
   DpsVarListReplaceInt(&Doc->Sections,"crc32", (int)crc32);
 
   if (makesea) {
+    DpsDSTRAppendUni(&exrpt, 0);
     DpsSEAMake(Indexer, Doc, &exrpt, content_lang, &indexed_size, &indexed_limit, max_word_len, min_word_len, crossec, seasec
 #ifdef HAVE_ASPELL
 	       , have_speller, speller
@@ -759,7 +765,9 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 #ifdef HAVE_ASPELL
   if (have_speller && Indexer->Flags.use_aspellext) {
+    DPS_GETLOCK(Indexer, DPS_LOCK_ASPELL);
     delete_aspell_speller(speller);
+    DPS_RELEASELOCK(Indexer, DPS_LOCK_ASPELL);
     if (suggest.data_size > 0) {
       char *spelling = DpsMalloc(24 * (suggest.data_size + 2));
       DpsDSTRAppendUni(&suggest, 0);
