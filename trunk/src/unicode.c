@@ -551,11 +551,11 @@ dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, dpsunicode_t **last) {
 	  prev = *s++;
 	} else {
           prev = *s++;
-	  while(dps_isClose(*s)) prev = *s++;
-	  while(dps_isSp(*s)) prev = *s++;
+	  while(*s && dps_isClose(*s)) prev = *s++;
+	  while(*s && dps_isSp(*s)) prev = *s++;
 	  {
 	    register dpsunicode_t *f = s; /* 8.0) */
-	    while(*s && !(*f == 0x0A 
+	    while(*f && !(*f == 0x0A 
 		    || *f == 0x0D 
 		    || dps_isOLetter(*f) 
 		    || dps_isSep(*f) 
@@ -577,8 +577,8 @@ dpsunicode_t *DpsUniStrTok_SEA(dpsunicode_t *s, dpsunicode_t **last) {
 	}
       } else if (dps_isSTerm(*s)) {
         prev = *s++;
-	while(dps_isClose(*s)) prev = *s++;
-	while(dps_isSp(*s)) prev = *s++;
+	while(*s && dps_isClose(*s)) prev = *s++;
+	while(*s && dps_isSp(*s)) prev = *s++;
 	if (dps_isSContinue(*s) || dps_isSTerm(*s) || dps_isATerm(*s)) { /* 8.1) */
 	  prev = *s++;
 	} else {
