@@ -2870,7 +2870,7 @@ static void DpsGroupByURLFull(DPS_AGENT *query, DPS_RESULT *Res) {
   R[DPS_N_WRDCOUNT] = DPS_BEST_WRD_CNT  * n_order_inquery;
 #endif
   R[DPS_N_COUNT] = 0;
-  R[DPS_N_ORIGIN] = n_order_inquery; /*1;*/
+  R[DPS_N_ORIGIN] = 1;
 
   wordnum = DPS_WRDNUM(Crd[0].coord);
   wordsec = DPS_WRDSEC_N(Crd[0].coord, nsections);
