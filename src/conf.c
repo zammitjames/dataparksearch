@@ -1973,7 +1973,7 @@ static int srv_rpl_time_var(void *Cfg, size_t ac,char **av){
 	    DpsVarListReplaceUnsigned(&C->Srv->Vars, av[0], (unsigned)res);
 	  }
 	  
-	} else {
+	} else { /* PeriodByHops command */
 	  char str[64];
 	  int hops = 0;
 	  sscanf(av[1], "%d", &hops);
