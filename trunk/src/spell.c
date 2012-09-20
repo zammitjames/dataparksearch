@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -66,6 +66,8 @@
 /*
 #define DEBUG_UNIREG
 */
+
+static void DpsAllFormsWord (DPS_AGENT *Indexer, DPS_SPELL *word, DPS_WIDEWORDLIST *result, size_t order, size_t order_inquery);
 
 
 /* Unicode regex lite BEGIN */
@@ -395,6 +397,8 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, c
 	AspellCanHaveError *ret;
 	AspellSpeller *speller = NULL;
 	int use_aspellext = Conf->Flags.use_aspellext;
+	size_t naffixes = query->Conf->Affixes.naffixes;
+	DPS_AFFIX *Affix = (DPS_AFFIX *)query->Conf->Affixes.Affix;
 
 	if (use_aspellext) {
 	  aspell_config_replace(query->aspell_config, "lang", lang);
@@ -559,10 +563,29 @@ __C_LINK int __DPSCALL DpsImportDictionary(DPS_AGENT *query, const char *lang, c
 		}
 #ifdef HAVE_ASPELL
 		if (use_aspellext) {
-			DpsConv(&toutf8, lstr, 2048, ((const char*)ustr),(size_t)res);
-			if (aspell_speller_check(speller, lstr, -1) == 0) {
-			  aspell_speller_add_to_personal(speller, lstr, -1);
-			}
+		  DPS_SPELL word;
+		  DPS_WIDEWORDLIST forms;
+		  DPS_WIDEWORD ww;
+		  size_t frm;
+		  word.word = DpsUniRDup(ustr);
+		  dps_strncpy(word.lang, lang, sizeof(word.lang));
+		  dps_strncpy(word.flag, flag, sizeof(word.flag));
+		  bzero(&forms, sizeof(forms));
+		  bzero(&ww, sizeof(ww));
+
+		  ww.uword = ustr;
+		  DpsWideWordListAdd(&forms, &ww, DPS_WWL_LOOSE);
+		  DpsAllFormsWord(query, &word, &forms, 0, 0);
+		  DpsFree(word.word);
+		  for (frm = 0; frm < forms.nwords; frm++) {
+		  
+		    DpsConv(&toutf8, lstr, 2048, ((const char*)forms.Word[frm].uword),2048);
+		    fprintf(stderr, " -- frm:%d - %s\n", frm, forms.Word[frm].word);
+		    if (aspell_speller_check(speller, lstr, -1) == 0) {
+		      aspell_speller_add_to_personal(speller, lstr, -1);
+		    }
+		  }
+		  DpsWideWordListFree(&forms);
 		}
 #endif
 		res = DpsSpellAdd(&Conf->Spells,ustr,flag,lang);
@@ -1046,7 +1069,10 @@ __C_LINK int __DPSCALL DpsImportAffixes(DPS_ENV * Conf,const char *lang, const c
     }
   }
   DPS_FREE(data);
-	    
+  /*	
+  if (Conf->Affixes.naffixes > 1)
+    DpsSort((void*)Conf->Affixes.Affix,Conf->Affixes.naffixes,sizeof(DPS_AFFIX),cmpaffix);
+  */
 #ifdef WITH_PARANOIA
   DpsViolationExit(-1, paran);
 #endif
