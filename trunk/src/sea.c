@@ -30,6 +30,7 @@
 #include <strings.h>
 #include <math.h>
 
+#define TOP_SENTENCES 3
 #define f(x) (1.0 / (1.0 + exp(-1.0 * (x))))
 #define f2(x) (1.0 / (1.0 + exp(-1.15 * (x))))
 #define EPS 0.00001
@@ -48,6 +49,12 @@ static int SentCmp(const DPS_SENTENCE *s1, const DPS_SENTENCE *s2) {
   return 0;
 }
 
+static int SentOrderCmp(const DPS_SENTENCE *s1, const DPS_SENTENCE *s2) {
+  if (s1->order < s2->order) return -1;
+  if (s1->order > s2->order) return 1;
+  return 0;
+}
+
 int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,  
 	       const char *content_lang, size_t *indexed_size, size_t *indexed_limit, 
 	       size_t max_word_len, size_t min_word_len, int crossec, int seasec
@@ -62,7 +69,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
   dpsunicode_t *sentence, *lt, savec;
   double *links, *lang_cs, w;
   /*  double delta, pdiv, cur_div, dw;*/
-  size_t l, sent_len;
+  size_t l, sent_len, order;
   size_t min_len = 10000000, min_pos = 0;
   int  it;
   register size_t i, j;
@@ -80,6 +87,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
   }
   
   bzero(&List, sizeof(List));
+  order = 0;
   sentence = DpsUniStrTok_SEA((dpsunicode_t*)excerpt->data, &lt);
   while(sentence) {
     if (lt != NULL) { savec = *lt; *lt = 0; }
@@ -103,6 +111,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	  }
 	  List.Sent[List.nitems].sentence = DpsUniDup(sentence);
 	  List.Sent[List.nitems].len = sent_len;
+	  List.Sent[List.nitems].order = order++;
 	  sentence = DpsUniDup(sentence);
 	  DpsUniStrToLower(sentence);
 	  bzero(&List.Sent[List.nitems].LangMap, sizeof(DPS_LANGMAP));
@@ -114,6 +123,7 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
 	  DPS_FREE(List.Sent[min_pos].sentence);
 	  List.Sent[min_pos].sentence = DpsUniDup(sentence);
 	  List.Sent[min_pos].len = sent_len;
+	  List.Sent[min_pos].order = order++;
 	  sentence = DpsUniDup(sentence);
 	  DpsUniStrToLower(sentence);
 	  bzero(&List.Sent[min_pos].LangMap, sizeof(DPS_LANGMAP));
@@ -276,11 +286,13 @@ int DpsSEAMake(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *excerpt,
     DpsConv(&Indexer->uni_lc, lcstr, sizeof(lcstr), (char*)List.Sent[4].sentence, sizeof(dpsunicode_t) * (DpsUniLen(List.Sent[4].sentence) + 1));
     fprintf(stderr, "Sent.4: %f %f -- %s\n", List.Sent[4].di, List.Sent[4].Oi, lcstr);
 #endif
+    DpsSort(List.Sent, TOP_SENTENCES, sizeof(DPS_SENTENCE), (qsort_cmp)SentOrderCmp);
+
     bzero(&Item, sizeof(Item));
     Item.section = seasec;
     Item.href = NULL;
     Item.section_name = "sea";
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < TOP_SENTENCES; i++) {
       dpsunicode_t *UStr = DpsUniDup(List.Sent[i].sentence);
       DpsPrepareItem(Indexer, Doc, &Item, List.Sent[i].sentence, UStr, content_lang, indexed_size, indexed_limit,
 		     max_word_len, min_word_len, crossec
