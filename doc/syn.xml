@@ -49,6 +49,9 @@ charset supported by <application>DataparkSearch</application> (see <xref linken
 		</listitem>
 	</itemizedlist>
 
+<para>You can use '\' character to escape '#' character in your acronyms or its extensions which usually it's considered as beginning of a comment.
+</para>
+
 <para>Optionaly you may specify following command in the list:
 	<programlisting>
 Thesaurus: yes

@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Datapark corp. All rights reserved.
+/* Copyright (C) 2005-2012 Datapark corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ typedef struct {
   double       Oi;
   double       di;
   size_t       len;
+  size_t       order; /* original order of the sentence in the document */
 } DPS_SENTENCE;
 
 typedef struct {

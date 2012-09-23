@@ -21,13 +21,13 @@
 
 <indexentry>
   <primaryie>Accent insensitive search,
-    <ulink url="dpsearch-fuzzy.en.html#ACCENT" role="AEN6267">Accent insensitive search</ulink>
+    <ulink url="dpsearch-fuzzy.en.html#ACCENT" role="AEN6268">Accent insensitive search</ulink>
   </primaryie>
 </indexentry>
 
 <indexentry>
   <primaryie>Acronyms and abbreviations,
-    <ulink url="dpsearch-fuzzy.en.html#ACRONYM" role="AEN6287">Acronyms and abbreviations</ulink>
+    <ulink url="dpsearch-fuzzy.en.html#ACRONYM" role="AEN6288">Acronyms and abbreviations</ulink>
   </primaryie>
 </indexentry>
 
@@ -58,7 +58,7 @@
   <primaryie>Bugs
   </primaryie>
   <secondaryie>reporting,
-    <ulink url="dpsearch-misc.en.html#BUGS" role="AEN6328">Reporting bugs</ulink>
+    <ulink url="dpsearch-misc.en.html#BUGS" role="AEN6330">Reporting bugs</ulink>
   </secondaryie>
 </indexentry>
 
@@ -96,10 +96,10 @@
   <primaryie>Command
   </primaryie>
   <secondaryie>AccentExtensions,
-    <ulink url="dpsearch-fuzzy.en.html#ACCENT" role="AEN6269">Accent insensitive search</ulink>
+    <ulink url="dpsearch-fuzzy.en.html#ACCENT" role="AEN6270">Accent insensitive search</ulink>
   </secondaryie>
   <secondaryie>Acronym,
-    <ulink url="dpsearch-fuzzy.en.html#ACRONYM" role="AEN6295">Acronyms and abbreviations</ulink>
+    <ulink url="dpsearch-fuzzy.en.html#ACRONYM" role="AEN6296">Acronyms and abbreviations</ulink>
   </secondaryie>
   <secondaryie>ActionSQL,
     <ulink url="dpsearch-extended-indexing.en.html#DATA-ACQ" role="AEN2854">Data acquisition</ulink>
@@ -717,7 +717,7 @@
 
 <indexentry>
   <primaryie>Database schema,
-    <ulink url="dpsearch-dbschema.en.html" role="AEN6400">Database schema</ulink>
+    <ulink url="dpsearch-dbschema.en.html" role="AEN6402">Database schema</ulink>
   </primaryie>
 </indexentry>
 
@@ -752,7 +752,7 @@
 
 <indexentry>
   <primaryie>Donations,
-    <ulink url="dpsearch-donations.en.html" role="AEN6588">Donations</ulink>
+    <ulink url="dpsearch-donations.en.html" role="AEN6590">Donations</ulink>
   </primaryie>
 </indexentry>
 
@@ -831,7 +831,7 @@
 
 <indexentry>
   <primaryie>libdpsearch,
-    <ulink url="dpsearch-lib.en.html" role="AEN6360">Using libdpsearch library</ulink>
+    <ulink url="dpsearch-lib.en.html" role="AEN6362">Using libdpsearch library</ulink>
   </primaryie>
 </indexentry>
 
