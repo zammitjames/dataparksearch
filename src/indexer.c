@@ -64,6 +64,7 @@
 #ifdef HAVE_ZLIB
 #include "dps_store.h"
 #endif
+#include "dps_filter.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,7 +110,7 @@
 #define MAXHSIZE	8192 /*4096*/	/* TUNE */
 
 #define NS 10
-static int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, char *reason, int default_method) {
+int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, char *reason, int default_method) {
 	DPS_MATCH_PART	P[NS];
 	DPS_MATCH	*M = NULL;
 	int		res = default_method;

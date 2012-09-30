@@ -41,6 +41,7 @@
 #include "dps_hrefs.h"
 #include "dps_host.h"
 #include "dps_sgml.h"
+#include "dps_filter.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -731,6 +732,7 @@ static int DpsSitemapEndElement(DPS_XML_PARSER *parser, const char *name, size_t
 
 
 static int DpsSitemapParse(DPS_AGENT *Indexer, const char *s) {
+  char reason[1024]="";
   XML_PARSER_DATA Data;
   DPS_XML_PARSER parser;
   DPS_DOCUMENT Doc;
@@ -738,10 +740,15 @@ static int DpsSitemapParse(DPS_AGENT *Indexer, const char *s) {
   const char *content;
   DPS_SERVER	*mServer;
   DPS_DOCUMENT	*mDoc;
-  int status, result;
+  int status, result, method;
 
   DpsLog(Indexer, DPS_LOG_INFO, "Sitemap: %s", s);
   DpsLog(Indexer, DPS_LOG_DEBUG, "Executing Sitemap parser");
+
+  method = DpsFilterFind(DPS_LOG_DEBUG, &Indexer->Conf->Filters, s, reason, DPS_METHOD_GET);
+  if (method == DPS_METHOD_DISALLOW || DPS_METHOD_VISITLATER) {
+    return res;
+  }
 
   mDoc = DpsDocInit(NULL);
   DpsSpiderParamInit(&mDoc->Spider);
@@ -763,6 +770,11 @@ static int DpsSitemapParse(DPS_AGENT *Indexer, const char *s) {
   DpsDocAddConfExtraHeaders(Indexer->Conf, mDoc);
 
   if (mServer != NULL) {
+    method = DpsMethod(DpsVarListFindStr(&mServer->Vars, "Method", "Allow"));
+    if (method == DPS_METHOD_DISALLOW || DPS_METHOD_VISITLATER) {
+      DpsDocFree(mDoc);
+      return res;
+    }
     DpsVarListReplaceLst(&mDoc->Sections, &mServer->Vars, NULL, "*");
     DpsDocAddServExtraHeaders(mServer, mDoc);
     DpsVarList2Doc(mDoc, mServer);
