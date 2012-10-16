@@ -1036,7 +1036,8 @@ const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t){
 				  else if(!strncasecmp(t->b, "noindex", 7)) t->noindex = 1;
 				  else if(!strncasecmp(t->b, "/noindex", 8)) t->noindex = 0;
 				  else if(!strncasecmp(t->b, "frameset", 8)) t->frameset++;
-				  else if(!strncasecmp(t->b, "/frameset", 9)) if (t->frameset) t->frameset--;
+				  else if(!strncasecmp(t->b, "/frameset", 9)) { if (t->frameset) t->frameset--; }
+				  else if(!strncasecmp(t->b, "br", 2)) { t->br++; }
 				}
 
 				if(*t->e=='>'){
@@ -1694,9 +1695,9 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	    strncpy(hbuf, htok, 32);
 	    hbuf[32] = 0;
 	    
-	    fprintf(stderr, " -- tag.scr:%d .com:%d .noi:%d .tit:%d .bod:%d sty:%d fra:%d ind:%d sel:%d vis:%d -- htok: %32s\n", 
+	    fprintf(stderr, " -- tag.scr:%d .com:%d .noi:%d .tit:%d .bod:%d sty:%d fra:%d ind:%d sel:%d vis:%d br:%d-- htok: %32s\n", 
 		    tag.script, tag.comment, tag.noindex, tag.title, tag.body, tag.style, tag.frameset, tag.index, 
-		    tag.select, tag.visible[tag.level], hbuf);
+		    tag.select, tag.visible[tag.level], tag.br, hbuf);
 	  }
 	  */
 	  switch(tag.type){
@@ -1721,7 +1722,6 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	      for(z = tag.level - 1; z >= 0 && tag.section[z] == 0; z--);
 	      bzero((void*)&Item, sizeof(Item));
 	      Item.href=tag.lasthref;
-	      Item.str=tmp;
 	      if (z >= 0) {
 		Item.section = tag.section[z];
 		Item.strict = tag.strict[z];
@@ -1731,6 +1731,13 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 		Item.strict = body_strict;
 		Item.section_name = (section_name) ? section_name : "body";
 	      }
+	      while (tag.br) {
+		Item.str = "\n";
+		Item.len = 1;
+		putItem(Indexer, Doc, &Item);
+		tag.br--;
+	      }
+	      Item.str=tmp;
 	      Item.len = (size_t)(tmpend-tmpbeg+1);
 	      /*	      DpsTextListAdd(&Doc->TextList,&Item);*/
 	      putItem(Indexer, Doc, &Item);

@@ -1319,6 +1319,7 @@ typedef struct {
 	int	noindex;
         int     select;
         int     frameset;
+        int     br;
 	char	*lasthref;
         void    (*next_b)(void *t);
         void    (*next_e)(void *t);
