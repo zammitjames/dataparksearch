@@ -80,9 +80,9 @@
 
 #define MULTITHREADED_SORT
 
-/*
+
 #define DEBUG_PHRASES
-*/
+
 
 /********************* SIG Handlers ****************/
 static void SpellSighandler(int sign);
@@ -1856,7 +1856,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 
 	ustr = nfc;
 
-	lex = (ustr != NULL) ? DpsUniGetSepToken(ustr, &lt , &ctype, &have_bukva_forte, 1) : NULL;
+	lex = (ustr != NULL) ? DpsUniGetSepToken(ustr, &lt , &ctype, &have_bukva_forte, 1, state.nphrasecmd & 1) : NULL;
 	while(lex) {
 	  wlen = lt - lex;
 	  dps_memcpy(uwrd, lex, (dps_min(wlen, query->WordParam.max_word_len)) * sizeof(dpsunicode_t)); /* was: dps_memmove */
@@ -1864,7 +1864,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	  DpsConv(&query->uni_lc, wrd, query->WordParam.max_word_len * 12,(char*)uwrd, sizeof(uwrd[0])*(wlen+1));
 	  clex = DpsTrim(wrd, " \t\r\n");
 
-	  DpsLog(query, DPS_LOG_DEBUG, "\t\t\twrd {%d}: %s", wlen, wrd);
+	  DpsLog(query, DPS_LOG_DEBUG, "\t\t\twrd {len:%d,class:%d,forte:%d}: %s", wlen, DPS_UNI_CTYPECLASS(ctype), have_bukva_forte, wrd);
 			
 	  if (DPS_UNI_CTYPECLASS(ctype) != DPS_UNI_BUKVA) {
 	    size_t ULen = DpsUniLen(uwrd);
@@ -2041,7 +2041,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 
 	      seg_ustr = (dps_need2segment(uwrd)) ? DpsUniSegment(query, uwrd, lang) : DpsUniDup(uwrd);
 
-	      seg_lex = (seg_ustr != NULL) ? DpsUniGetSepToken(seg_ustr, &seg_lt , &seg_ctype, &seg_have_bukva_forte, 0) : NULL;
+	      seg_lex = (seg_ustr != NULL) ? DpsUniGetSepToken(seg_ustr, &seg_lt , &seg_ctype, &seg_have_bukva_forte, 0, state.nphrasecmd & 1) : NULL;
 
 	      while (seg_lex) {
 		if (DPS_UNI_CTYPECLASS(seg_ctype) != DPS_UNI_BUKVA) goto seg_next;
@@ -2443,13 +2443,13 @@ ret:
 		  DPS_PREPARE_RETURN(0);
 		}
 	      seg_next:
-		seg_lex = DpsUniGetSepToken(NULL, &seg_lt, &seg_ctype, &seg_have_bukva_forte, 0);
+		seg_lex = DpsUniGetSepToken(NULL, &seg_lt, &seg_ctype, &seg_have_bukva_forte, 0, state.nphrasecmd & 1);
 	      }
 	      DPS_FREE(seg_ustr);
 	    }
 	  }
 	token_next:
-	  lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 1);
+	  lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 1, state.nphrasecmd & 1);
 	}
 	if (state.nphrasecmd & 1) {
 	  if ((Res->nitems > 0) && (Res->items[Res->nitems-1].cmd == DPS_STACK_PHRASE_LEFT)) {
@@ -3901,7 +3901,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 */
 
 	/* Parse unicode string */
-	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte, 0);
+	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte, 0, 0);
 	while(tok){
 		int found=0;
 		size_t slen,flen;
@@ -3939,7 +3939,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 		if (found) { *zend = '\3'; zend++; /*dps_strcat(htxt,"\3");*/ }
 		tok[flen]=euchar;
 
-		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 0);
+		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 0, 0);
 	}
 	*zend = '\0';
 	DPS_FREE(hpart);

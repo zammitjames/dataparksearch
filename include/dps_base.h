@@ -25,8 +25,8 @@
 
 #define DPS_HASH_PRIME 4093
 /*#define DPS_HASH(x)    (((size_t)x) % DPS_HASH_PRIME)*/
-#define DPS_HASH(x)    ((((size_t)x & DPS_BASE_MASK)) % DPS_HASH_PRIME)
-#define DPS_FILENO(x, NFILES)  (((((unsigned int)(x)) >> DPS_BASE_BITS) & DPS_BASE_MASK) % NFILES)
+#define DPS_HASH(x)    ((unsigned int)(((x) & DPS_BASE_MASK) % DPS_HASH_PRIME))
+#define DPS_FILENO(x, NFILES)  ((unsigned int)((((x) >> DPS_BASE_BITS) & DPS_BASE_MASK) % NFILES))
 
 #define DPS_READ_LOCK  0
 #define DPS_WRITE_LOCK 1

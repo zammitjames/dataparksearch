@@ -1013,7 +1013,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	pos = lseek(P->Ifd, (off_t)0, SEEK_END);
 	gain += ((dps_uint8)posold - (dps_uint8)pos);
 
-	DpsLog(P->A, DPS_LOG_DEBUG, "Optimize: %s/%s base 0x%X cleaned, %ld bytes fried", P->subdir, P->basename, base, gain);
+	DpsLog(P->A, DPS_LOG_DEBUG, "Optimize: %s/%s base 0x%X cleaned, %ld bytes freed", P->subdir, P->basename, base, gain);
       }
 
       DPS_FREE(si);

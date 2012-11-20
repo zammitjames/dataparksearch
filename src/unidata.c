@@ -101,7 +101,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 		}
 		/*fprintf(stderr,"TOK %04X %d\n",*s,ctype);*/
 		if (ctype > DPS_UNI_BUKVA) {
-		  if (dps_isPatternSyntax(*s)) {
+		  if (dps_isPattern_Syntax(*s)) {
 		    if (pattern_beg == NULL) pattern_beg = s;
 		  } else {
 		    pattern_beg = NULL;
@@ -140,7 +140,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 		    ctype_1 = dps_uni_plane[plane_1].ctype;
 		  }
 /*		  fprintf(stderr," -- TOK %04X %d\n",*(s+1), ctype_1 > DPS_UNI_BUKVA);*/
-		  if (ctype_1 > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*(s+1)))) {
+		  if (ctype_1 > DPS_UNI_BUKVA && (loose || !dps_isPattern_Syntax(*(s+1)))) {
 		    *last = s + 1;
 		    return (pattern_beg && !loose) ? pattern_beg : beg;
 		  }
@@ -148,7 +148,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 		}
 		
 /*		fprintf(stderr," -- TOK %04X %d  loose:%d\n",*(s), ctype > DPS_UNI_BUKVA, loose);*/
-		if (ctype > DPS_UNI_BUKVA && (loose || !dps_isPatternSyntax(*s))) {
+		if (ctype > DPS_UNI_BUKVA && (loose || !dps_isPattern_Syntax(*s))) {
 		  *last = s;
 		  return (pattern_beg && !loose) ? pattern_beg : beg;
 		}
@@ -169,7 +169,7 @@ dpsunicode_t * DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_b
 
 #if 1
 
-dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last, int *ctype0, int *have_bukva_forte, int cmd_mode) {
+dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last, int *ctype0, int *have_bukva_forte, int cmd_mode, int inphrase) {
   dpsunicode_t *beg;
   dpsunicode_t *pattern_beg = NULL;
   int pattern_prefix;
@@ -178,17 +178,23 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
   if (s == NULL && (s = *last) == NULL) {
     return NULL;
   }
-
+  /*
   cmd_mode = 1;
-
+  */
   beg = s;
   if (!(*beg)) {
     return NULL;
   }
 
   plane = ((*s) >> 8) & 0xFF;
-  pattern_prefix = dps_isPatternSyntax(*s);
-  if (pattern_prefix) pattern_beg = s;
+  pattern_prefix = dps_isPattern_Syntax(*s) ;
+  if (pattern_prefix) {
+    if (!inphrase && dps_isQuotation_Mark(*s)) {
+      *last = s + 1;
+      return beg;
+    }
+    pattern_beg = s;
+  }
   if(dps_uni_plane[plane].table){
     *ctype0 = DPS_UNI_CTYPECLASS(dps_uni_plane[plane].table[(*s)&0xFF].ctype);
     *have_bukva_forte = (dps_uni_plane[plane].table[(*s)&0xFF].ctype <= DPS_UNI_BUKVA_FORTE);
@@ -205,8 +211,8 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
       ctype = DPS_UNI_CTYPECLASS(dps_uni_plane[plane].ctype);
     }
     if (ctype > DPS_UNI_BUKVA) {
-      if (dps_isPatternSyntax(*s)) {
-	if (pattern_beg == NULL) pattern_beg = s;
+      if (dps_isPattern_Syntax(*s)) {
+	if (pattern_beg == NULL || inphrase || !dps_isQuotation_Mark(*s)) pattern_beg = s;
       } else {
 	pattern_beg = NULL;
       }
@@ -230,9 +236,13 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
     return ((s > beg) ? beg : NULL);
   }
 
-  *ctype0 = DPS_UNI_BUKVA; /* force it for case of isPetternSyntax */
+  if (!cmd_mode) *ctype0 = DPS_UNI_BUKVA; /* force it for case of isPattern_Syntax */
 
   for(; *s; s++) {
+    if (inphrase && dps_isQuotation_Mark(*s)) {
+      *last = s;
+      return (pattern_beg && cmd_mode) ? pattern_beg : beg;
+    }
     plane = ((*s) >> 8) & 0xFF;
     if(dps_uni_plane[plane].table){
       ctype = DPS_UNI_CTYPECLASS(dps_uni_plane[plane].table[(*s)&0xFF].ctype);
@@ -254,7 +264,7 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 	ctype_1 = dps_uni_plane[plane_1].ctype;
       }
 /*  fprintf(stderr," -- TOK %04X %d\n",*(s+1), ctype_1 > DPS_UNI_BUKVA);*/
-      if (ctype_1 > DPS_UNI_BUKVA && (!cmd_mode || !dps_isPatternSyntax(*(s+1)))) {
+      if (ctype_1 > DPS_UNI_BUKVA && (!cmd_mode || !dps_isPattern_Syntax(*(s+1)))) {
 	*last = s + 1;
 	return (pattern_beg && cmd_mode) ? pattern_beg : beg;
       }
@@ -263,7 +273,7 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 		
 /*
   fprintf(stderr," -- TOK %04X %d  loose:%d\n",*(s), ctype > DPS_UNI_BUKVA, loose);*/
-    if (ctype > DPS_UNI_BUKVA && (!cmd_mode || !dps_isPatternSyntax(*s))) {
+    if (ctype > DPS_UNI_BUKVA && (!cmd_mode || !dps_isPattern_Syntax(*s))) {
       *last = s;
       return (pattern_beg && cmd_mode) ? pattern_beg : beg;
     }
@@ -273,6 +283,7 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
   *last = s;
   return ((pattern_beg && cmd_mode) ? pattern_beg : beg);
 }
+
 #else
 
 dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last, int *ctype0, int *have_bukva_forte, int cmd_mode) {
@@ -288,7 +299,7 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 	if(!(*beg))return NULL;
 
 	plane = ((*s) >> 8) & 0xFF;
-	pattern_prefix = dps_isPatternSyntax(*s);
+	pattern_prefix = dps_isPattern_Syntax(*s);
 	if(dps_uni_plane[plane].table){
 		*ctype0 = DPS_UNI_CTYPECLASS(dps_uni_plane[plane].table[(*s)&0xFF].ctype);
 		*have_bukva_forte = (dps_uni_plane[plane].table[(*s)&0xFF].ctype <= DPS_UNI_BUKVA_FORTE);
@@ -346,24 +357,24 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 
 			
 		fprintf(stderr, " -- ct0:%02d ct:%02d *s:'%c'%02x(%03d)%d - ct1:%02d *(s+1):'%c'%02x(%03d) ct1>:%d  cmd:%d  pp:%d\n", 
-			*ctype0, ctype, (char)*s, *s, *s, dps_isPatternSyntax(*s), ctype_1, (char)*(s+1), *(s+1), *(s+1), (ctype_1 > DPS_UNI_BUKVA), cmd_mode, pattern_prefix);
+			*ctype0, ctype, (char)*s, *s, *s, dps_isPattern_Syntax(*s), ctype_1, (char)*(s+1), *(s+1), *(s+1), (ctype_1 > DPS_UNI_BUKVA), cmd_mode, pattern_prefix);
 		
 		
 		fprintf(stderr, " -- cbb   %d ((%d %d) || %d \n --       %d %d %d\n --      %d %d %d %d\n", 
-			(*ctype0 > DPS_UNI_BUKVA), (ctype_1 <= DPS_UNI_BUKVA), (!pattern_prefix), dps_isPatternSyntax(*(s+1)),
-			(*ctype0 <= DPS_UNI_BUKVA), (ctype_1 > DPS_UNI_BUKVA), (!dps_isPatternSyntax(*s)),
+			(*ctype0 > DPS_UNI_BUKVA), (ctype_1 <= DPS_UNI_BUKVA), (!pattern_prefix), dps_isPattern_Syntax(*(s+1)),
+			(*ctype0 <= DPS_UNI_BUKVA), (ctype_1 > DPS_UNI_BUKVA), (!dps_isPattern_Syntax(*s)),
 			(!cmd_mode), (*s == 0), (*(s+1) == 0), ( (ctype_1 > DPS_UNI_BUKVA))
 			);
 		
-		if ((*ctype0 > DPS_UNI_BUKVA && ((ctype_1 <= DPS_UNI_BUKVA && !pattern_prefix) || dps_isPatternSyntax(*(s+1)))) 
-		    || (*ctype0 <= DPS_UNI_BUKVA && ctype_1 > DPS_UNI_BUKVA && !dps_isPatternSyntax(*s))) {
+		if ((*ctype0 > DPS_UNI_BUKVA && ((ctype_1 <= DPS_UNI_BUKVA && !pattern_prefix) || dps_isPattern_Syntax(*(s+1)))) 
+		    || (*ctype0 <= DPS_UNI_BUKVA && ctype_1 > DPS_UNI_BUKVA && !dps_isPattern_Syntax(*s))) {
 #if 0
 		  if (!cmd_mode || *(s+1) == 0 || /* *s == 0 ||*/ ( /*((*s != 0x2d) && (*s != 0x2e) && (*s != 0x5f))|| */ (ctype_1 > DPS_UNI_BUKVA)) ) {
 #endif
 		       
 		    fprintf(stderr, " -- break %d ((%d %d) || %d\n --       %d %d %d\n --      %d %d %d %d\n", 
-			    (*ctype0 > DPS_UNI_BUKVA), (ctype_1 <= DPS_UNI_BUKVA), (!pattern_prefix),dps_isPatternSyntax(*(s+1)),
-			    (*ctype0 <= DPS_UNI_BUKVA), (ctype_1 > DPS_UNI_BUKVA), (!dps_isPatternSyntax(*s)),
+			    (*ctype0 > DPS_UNI_BUKVA), (ctype_1 <= DPS_UNI_BUKVA), (!pattern_prefix),dps_isPattern_Syntax(*(s+1)),
+			    (*ctype0 <= DPS_UNI_BUKVA), (ctype_1 > DPS_UNI_BUKVA), (!dps_isPattern_Syntax(*s)),
 			    (!cmd_mode), (*s == 0), (*(s+1) == 0), ( (ctype_1 > DPS_UNI_BUKVA))
 			    );
 		    
@@ -375,7 +386,7 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
 		}
 
 		if (pattern_prefix) {
-		  pattern_prefix = dps_isPatternSyntax(*s);
+		  pattern_prefix = dps_isPattern_Syntax(*s);
 		  if (!pattern_prefix && (ctype <= DPS_UNI_BUKVA)) *ctype0 = DPS_UNI_BUKVA;
 		}
 

@@ -1066,7 +1066,7 @@ extern C_LINKAGE void DpsEfenceCheckLeaks(void) {
 
 	for ( ; count > 0; count-- ) {
 	  if ( slot->mode == ALLOCATED ) {
-	    fprintf(stderr, "Unfried memory at 0x%x size:%d at %s:%d\n", slot->userAddress, slot->userSize, slot->filename, slot->fileline);
+	    fprintf(stderr, "Non-freed memory at 0x%x size:%d at %s:%d\n", slot->userAddress, slot->userSize, slot->filename, slot->fileline);
 	  }
 	  slot++;
 	}

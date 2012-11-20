@@ -74,13 +74,14 @@ extern int  DpsUniCType(dpsunicode_t u);
 
 extern dpsunicode_t  *DpsUniGetToken(dpsunicode_t *s, dpsunicode_t ** last, int *have_bukva_forte, int loose);
 extern __C_LINK dpsunicode_t  * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t ** last, int *ctype0, int *have_bukva_forte,
-							    int cmd_mode);
+							    int cmd_mode, int inphrase);
 void DpsUniAspellSimplify(dpsunicode_t *ustr);
 
 extern dpsunicode_t *DpsUniNormalizeNFC(dpsunicode_t *buf, dpsunicode_t *str);
 extern dpsunicode_t *DpsUniNormalizeNFD(dpsunicode_t *buf, dpsunicode_t *str);
 
-extern int dps_isPatternSyntax(dpsunicode_t ch);
+extern int dps_isPattern_Syntax(dpsunicode_t ch);
+extern int dps_isQuotation_Mark(dpsunicode_t ch);
 extern int dps_isApostropheBreak(dpsunicode_t ch, dpsunicode_t next);
 
 extern int dps_isExtend(dpsunicode_t ch);
