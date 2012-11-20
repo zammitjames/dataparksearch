@@ -639,10 +639,9 @@ Default value: no.
 <programlisting>
 MaxHops &lt;number&gt;
 </programlisting>
-<para>Maximum way in "mouse clicks" from start url.
+<para>It limits the length of a way from a seeding URL to the indexing one in "mouse clicks".
 Default value is 256.
-Can be set multiple times before "Server" command and
-takes effect till the end of config file or till next MaxHops command.
+Can be set multiple times before "Server" command and it takes effect till the end of config file or till next MaxHops command.
 <programlisting>
 MaxHops 256
 </programlisting>
@@ -673,7 +672,7 @@ TrackHops yes
 <programlisting>
 MaxDepth &lt;number&gt;
 </programlisting>
-<para>Maximum directory depth of url.
+<para>It limits the directory depth of an URL indexed.
 Default value is 16.
 Can be set multiple times before "Server" command and
 takes effect till the end of config file or till next MaxDepth command.

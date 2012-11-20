@@ -423,6 +423,7 @@ test-parsehtml/search.res \
 test-parsehtml/search-j.res \
 test-parsehtml/search2.res \
 test-parsehtml/search3.res \
+test-parsehtml/search4.res \
 test-parsehtml/query.tst \
 test-parsehtml/test.cmd \
 test-parsehtml/htdocs/accept.html \
@@ -479,6 +480,7 @@ test-boolean/htdocs/body20.txt \
 test-boolean/htdocs/body-not-near.txt
 
 test_cache_FILES = \
+test-cache/htdocs/ispattern.html \
 test-cache/htdocs/test.html \
 test-cache/htdocs/testpage1.html \
 test-cache/htdocs/testpage2.html \
@@ -502,6 +504,7 @@ test-cache/search.res \
 test-cache/search2.res 
 
 test_cached_FILES = \
+test-cached/htdocs/ispattern.html \
 test-cached/htdocs/testpage1.html \
 test-cached/htdocs/testpage2.html \
 test-cached/htdocs/testpage3.html \

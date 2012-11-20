@@ -69,6 +69,7 @@ size_t dps_strlen(const char *src);
 #else /* DPS_CONFIGURE */
 
 #include "dps_config.h"
+#include <stdlib.h>
 #include <string.h>
 #include "dp.inc"
 

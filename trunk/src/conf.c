@@ -344,7 +344,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 				    PunyURL->hostname = ascii;
 				    RelLink(Indexer, SrvURL, PunyURL, &C->Srv->Match.idn_pattern, 0);
 				  }
-/*				  DPS_FREE(ascii);  will be fried later with DpsURLFree(PunyURL) */
+/*				  DPS_FREE(ascii);  will be freed later with DpsURLFree(PunyURL) */
 				  DPS_FREE(uni); 
 				  DpsURLFree(SrvURL); DpsURLFree(PunyURL);
 				}
