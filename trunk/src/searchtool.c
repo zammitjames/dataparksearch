@@ -3901,7 +3901,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 */
 
 	/* Parse unicode string */
-	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte, 0, 0);
+	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte, 1, 0);
 	while(tok){
 		int found=0;
 		size_t slen,flen;
@@ -3930,7 +3930,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 			}
 		  }
 		}
-/*		fprintf(stderr, "tok: %s| flen: %d, found:%d\n", hpart, flen, found);*/
+		/*fprintf(stderr, "tok: %s| flen: %d, found:%d\n", hpart, flen, found);*/
 		
 		if (found) { *zend = '\2'; zend++; /*dps_strcat(htxt,"\2");*/ }
 		/*dps_strcat(htxt,hpart);*/
@@ -3939,7 +3939,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 		if (found) { *zend = '\3'; zend++; /*dps_strcat(htxt,"\3");*/ }
 		tok[flen]=euchar;
 
-		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 0, 0);
+		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 1, 0);
 	}
 	*zend = '\0';
 	DPS_FREE(hpart);
