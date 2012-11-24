@@ -188,14 +188,6 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
     return NULL;
   }
 
-  pattern_prefix0 = dps_isPattern_Syntax(*s) ;
-  if (pattern_prefix0) {
-    if (!inphrase && dps_isQuotation_Mark(*s)) {
-      *last = s + 1;
-      return beg;
-    }
-    pattern_beg = s;
-  }
   plane = ((*s) >> 8) & 0xFF;
   if(dps_uni_plane[plane].table){
     *ctype0 = DPS_UNI_CTYPECLASS(dps_uni_plane[plane].table[(*s)&0xFF].ctype);
@@ -203,6 +195,14 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
   }else{
     *ctype0 = DPS_UNI_CTYPECLASS(dps_uni_plane[plane].ctype);
     *have_bukva_forte = (dps_uni_plane[plane].ctype <= DPS_UNI_BUKVA_FORTE);
+  }
+  pattern_prefix0 = dps_isPattern_Syntax(*s) ;
+  if (pattern_prefix0) {
+    if (!inphrase && dps_isQuotation_Mark(*s)) {
+      *last = s + 1;
+      return beg;
+    }
+    pattern_beg = s;
   }
 
   s++;
