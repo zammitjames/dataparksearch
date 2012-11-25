@@ -2041,7 +2041,7 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 
 	      seg_ustr = (dps_need2segment(uwrd)) ? DpsUniSegment(query, uwrd, lang) : DpsUniDup(uwrd);
 
-	      seg_lex = (seg_ustr != NULL) ? DpsUniGetSepToken(seg_ustr, &seg_lt , &seg_ctype, &seg_have_bukva_forte, 0, state.nphrasecmd & 1) : NULL;
+	      seg_lex = (seg_ustr != NULL) ? DpsUniGetSepToken(seg_ustr, &seg_lt , &seg_ctype, &seg_have_bukva_forte, 1, state.nphrasecmd & 1) : NULL;
 
 	      while (seg_lex) {
 		if (DPS_UNI_CTYPECLASS(seg_ctype) != DPS_UNI_BUKVA) goto seg_next;
@@ -2443,7 +2443,7 @@ ret:
 		  DPS_PREPARE_RETURN(0);
 		}
 	      seg_next:
-		seg_lex = DpsUniGetSepToken(NULL, &seg_lt, &seg_ctype, &seg_have_bukva_forte, 0, state.nphrasecmd & 1);
+		seg_lex = DpsUniGetSepToken(NULL, &seg_lt, &seg_ctype, &seg_have_bukva_forte, 1, state.nphrasecmd & 1);
 	      }
 	      DPS_FREE(seg_ustr);
 	    }
@@ -3901,7 +3901,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 */
 
 	/* Parse unicode string */
-	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte, 1, 0);
+	tok = DpsUniGetSepToken(uni, &lt, &ctype, &have_bukva_forte, 0, 0);
 	while(tok){
 		int found=0;
 		size_t slen,flen;
@@ -3939,7 +3939,7 @@ char * DpsHlConvert(DPS_WIDEWORDLIST *List, const char * src, DPS_CONV *lc_uni, 
 		if (found) { *zend = '\3'; zend++; /*dps_strcat(htxt,"\3");*/ }
 		tok[flen]=euchar;
 
-		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 1, 0);
+		tok = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 0, 0);
 	}
 	*zend = '\0';
 	DPS_FREE(hpart);
