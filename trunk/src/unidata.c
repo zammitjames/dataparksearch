@@ -278,6 +278,7 @@ dpsunicode_t * __DPSCALL DpsUniGetSepToken(dpsunicode_t *s, dpsunicode_t **last,
      *last = s;
       return beg;
     }
+    if (!cmd_mode && (*s != 0x2d /*'-'*/) && (*s != 0x2e /*'.'*/) && (*s != 0x5f/*'_'*/)) break;
     if ((*ctype0 <= DPS_UNI_BUKVA) && pattern_prefix) continue;
     if (pattern_prefix0 || *ctype0 <= DPS_UNI_BUKVA) {
       if (ctype <= DPS_UNI_BUKVA) {
