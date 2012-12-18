@@ -2019,31 +2019,26 @@ static int DpsDeleteAllFromDict(DPS_AGENT *Indexer,DPS_DB *db){
 static int DpsDeleteAllFromCrossDict(DPS_AGENT * Indexer,DPS_DB *db){
 	char	qbuf[1024];
 	char	table[64]="ncrossdict";
-	int	crcmode=1;
 	
 	if((db->DBMode==DPS_DBMODE_SINGLE)||(db->DBMode==DPS_DBMODE_MULTI)/*||(db->DBMode==DPS_DBMODE_CACHE)*/) {
 		dps_strcpy(table,"crossdict");
-		crcmode=0;
 	}
 	sprintf(qbuf,"DELETE FROM %s",table);
 	return DpsSQLAsyncQuery(db,NULL,qbuf);
 }
 
 
-static int DpsDeleteCrossWordFromURL(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
-	char	qbuf[1024];
-	char	table[64]="ncrossdict";
-	int	crcmode=1;
+
+static int DpsDeleteCrossWordsToURL(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
+	char	qbuf[128];
+	char	table[16]="ncrossdict";
 	urlid_t	url_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
-	urlid_t	referrer_id  =DpsVarListFindInt(&Doc->Sections, "Referrer-ID", 0);
 	int	rc=DPS_OK;
 	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
 	
 	if((db->DBMode==DPS_DBMODE_SINGLE)||(db->DBMode==DPS_DBMODE_MULTI)/*||(db->DBMode==DPS_DBMODE_CACHE)*/) {
 		dps_strcpy(table,"crossdict");
-		crcmode=0;
 	}
-	if (url_id || referrer_id) DpsSQLBegin(db);
 	if(url_id){
 		sprintf(qbuf,"DELETE FROM %s WHERE url_id=%s%i%s", table, qu, url_id, qu);
 		if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf))) {
@@ -2051,11 +2046,26 @@ static int DpsDeleteCrossWordFromURL(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_D
 			return rc;
 		}
 	}
-	if(referrer_id){
-		sprintf(qbuf,"DELETE FROM %s WHERE ref_id=%s%i%s", table, qu, referrer_id, qu);
-		rc=DpsSQLAsyncQuery(db,NULL,qbuf);
+	return rc;
+}
+
+
+static int DpsDeleteCrossWordsFromURL(DPS_AGENT * Indexer,DPS_DOCUMENT *Doc,DPS_DB *db){
+	char	qbuf[128];
+	char	table[16]="ncrossdict";
+	urlid_t	url_id = DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
+	int	rc=DPS_OK;
+	const char      *qu = (db->DBType == DPS_DB_PGSQL) ? "'" : "";
+	
+	if((db->DBMode==DPS_DBMODE_SINGLE)||(db->DBMode==DPS_DBMODE_MULTI)/*||(db->DBMode==DPS_DBMODE_CACHE)*/) {
+		dps_strcpy(table,"crossdict");
 	}
-	if (url_id || referrer_id) DpsSQLEnd(db);
+	if(url_id){
+		sprintf(qbuf,"DELETE FROM %s WHERE ref_id=%s%i%s", table, qu, url_id, qu);
+		if(DPS_OK!=(rc=DpsSQLAsyncQuery(db,NULL,qbuf))) {
+			return rc;
+		}
+	}
 	return rc;
 }
 
@@ -2085,8 +2095,7 @@ static int DpsStoreCrossWords(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db)
 	
 	DpsDocInit(&U);
 	bzero((void*)&Href, sizeof(Href));
-	DpsVarListReplaceInt(&Doc->Sections, "Referrer-ID", referrer);
-	if(DPS_OK!=(rc=DpsDeleteCrossWordFromURL(Indexer,&U,db))){
+	if(DPS_OK!=(rc=DpsDeleteCrossWordsFromURL(Indexer,&U,db))){
 		DpsDocFree(&U);
 		DpsFree(word_escaped); DpsFree(lcsword);
 		return rc;
@@ -2774,8 +2783,10 @@ static int DpsDeleteURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db) {
 
 	if (DPS_OK != (rc = DpsExecActions(Indexer, Doc, 'd'))) return rc;
 
-	if(use_crosswords /*&& db->DBMode!=DPS_DBMODE_CACHE*/)
-		if(DPS_OK!=(rc=DpsDeleteCrossWordFromURL(Indexer,Doc,db)))return(rc);
+	if(use_crosswords /*&& db->DBMode!=DPS_DBMODE_CACHE*/) {
+		if(DPS_OK!=(rc=DpsDeleteCrossWordsFromURL(Indexer,Doc,db)))return(rc);
+		if(DPS_OK!=(rc=DpsDeleteCrossWordsToURL(Indexer,Doc,db)))return(rc);
+	}
 	
 	if (db->DBMode != DPS_DBMODE_CACHE) /* for DBMode cache it's already deleted early */
 	  if (DPS_OK != (rc = DpsDeleteWordFromURL(Indexer, Doc, db))) return rc;
@@ -7609,7 +7620,7 @@ int DpsURLActionSQL(DPS_AGENT * A, DPS_DOCUMENT * D, int cmd,DPS_DB *db){
 			break;
 			
 		case DPS_URL_ACTION_DELCWORDS:
-			res=DpsDeleteCrossWordFromURL(A,D,db);
+			res=DpsDeleteCrossWordsFromURL(A,D,db);
 			break;
 			
 		case DPS_URL_ACTION_UPDCLONE:
