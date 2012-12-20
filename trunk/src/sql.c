@@ -2095,7 +2095,7 @@ static int DpsStoreCrossWords(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db)
 	
 	DpsDocInit(&U);
 	bzero((void*)&Href, sizeof(Href));
-	if(DPS_OK!=(rc=DpsDeleteCrossWordsFromURL(Indexer,&U,db))){
+	if(DPS_OK != (rc = DpsDeleteCrossWordsFromURL(Indexer, Doc, db))) {
 		DpsDocFree(&U);
 		DpsFree(word_escaped); DpsFree(lcsword);
 		return rc;
