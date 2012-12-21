@@ -1360,6 +1360,8 @@ static int DpsServerTableGetId(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DB *d
 static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 	DPS_SQLRES	SQLRes;
 	const char	*url=DpsVarListFindStr(&Doc->Sections,"URL","");
+	const char      *o;
+	char            *qbuf = NULL;
 	dpshash32_t	id = 0, site_id = 0;
 	int             hops = DpsVarListFindInt(&Doc->Sections, "Hops", 0);
 	int		rc = DPS_OK;
@@ -1400,75 +1402,68 @@ static int DpsFindURL(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DB *db){
 
 	DpsSQLResInit(&SQLRes);
 
-	if (Indexer->Flags.use_crc32_url_id) {
-		/* Auto generation of rec_id */
-		/* using CRC32 algorythm     */
-		id = DpsStrHash32(e_url);
-	}else{
-		const char *o;
-		char *qbuf = NULL;
 		
-		if ((qbuf = (char*)DpsMalloc( l + 100 )) == NULL){
-		  DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory");
-		  if(need_free_e_url) {
-		    DPS_FREE(lc_url);
-		    DPS_FREE(e_url);
-		  }
-		  return DPS_ERROR;
-		}
+	if ((qbuf = (char*)DpsMalloc( l + 100 )) == NULL){
+	    DpsLog(Indexer, DPS_LOG_ERROR, "Out of memory");
+	    if(need_free_e_url) {
+		DPS_FREE(lc_url);
+		DPS_FREE(e_url);
+	    }
+	    return DPS_ERROR;
+	}
 		
-		for(i = 0; i < DPS_FINDURL_CACHE_SIZE; i++) {
-		  if (Indexer->DpsFindURLCache[i])
-		    if (!strcmp(e_url, Indexer->DpsFindURLCache[i])) {
-		      char *tp = Indexer->DpsFindURLCache[i];
-		      hops = Indexer->DpsFindURLCacheHops[i];
-		      id = Indexer->DpsFindURLCacheId[i];
-		      site_id = Indexer->DpsFindURLCacheSiteId[i];
-		      Indexer->DpsFindURLCache[i] = Indexer->DpsFindURLCache[Indexer->pURLCache]; 
-		      Indexer->DpsFindURLCacheId[i] = Indexer->DpsFindURLCacheId[Indexer->pURLCache];
-		      Indexer->DpsFindURLCacheSiteId[i] = Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache];
-		      Indexer->DpsFindURLCacheHops[i] = Indexer->DpsFindURLCacheHops[Indexer->pURLCache];
-		      Indexer->DpsFindURLCache[Indexer->pURLCache] = tp;
-		      Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
-		      Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache] = site_id;
-		      Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
-		      Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
-		      break;
-		    }
+	for(i = 0; i < DPS_FINDURL_CACHE_SIZE; i++) {
+	    if (Indexer->DpsFindURLCache[i])
+		if (!strcmp(e_url, Indexer->DpsFindURLCache[i])) {
+		    char *tp = Indexer->DpsFindURLCache[i];
+		    hops = Indexer->DpsFindURLCacheHops[i];
+		    id = Indexer->DpsFindURLCacheId[i];
+		    site_id = Indexer->DpsFindURLCacheSiteId[i];
+		    Indexer->DpsFindURLCache[i] = Indexer->DpsFindURLCache[Indexer->pURLCache]; 
+		    Indexer->DpsFindURLCacheId[i] = Indexer->DpsFindURLCacheId[Indexer->pURLCache];
+		    Indexer->DpsFindURLCacheSiteId[i] = Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache];
+		    Indexer->DpsFindURLCacheHops[i] = Indexer->DpsFindURLCacheHops[Indexer->pURLCache];
+		    Indexer->DpsFindURLCache[Indexer->pURLCache] = tp;
+		    Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
+		    Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache] = site_id;
+		    Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
+		    Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
+		    break;
 		}
+	}
 
-		if (i == DPS_FINDURL_CACHE_SIZE) {
-		  dps_snprintf(qbuf, l + 100, "SELECT rec_id,hops,site_id FROM url WHERE url='%s'",e_url);
-		  if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes,qbuf))){
-		    if (need_free_e_url) { 
-		      DPS_FREE(e_url);
-		      DPS_FREE(lc_url);
-		    }
-		    DPS_FREE(qbuf);
-		    return rc;
-		  }
-		  for(i=0;i<DpsSQLNumRows(&SQLRes);i++){
-			if((o = DpsSQLValue(&SQLRes, i, 0))) {
-				id = DPS_ATOI(o);
-			}
-			if((o = DpsSQLValue(&SQLRes, i, 1))) {
-				hops = DPS_ATOI(o);
-			}
-			if((o = DpsSQLValue(&SQLRes, i, 2))) {
-				site_id = DPS_ATOI(o);
-				break;
-			}
-		  }
-		  DpsSQLFree(&SQLRes);
-		  DPS_FREE(Indexer->DpsFindURLCache[Indexer->pURLCache]);
-		  Indexer->DpsFindURLCache[Indexer->pURLCache] = (char*)DpsStrdup(e_url);
-		  Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
-		  Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache] = site_id;
-		  Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
-		  Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
+	if (i == DPS_FINDURL_CACHE_SIZE) {
+	    dps_snprintf(qbuf, l + 100, "SELECT rec_id,hops,site_id FROM url WHERE url='%s'",e_url);
+	    if(DPS_OK!=(rc=DpsSQLQuery(db,&SQLRes,qbuf))){
+		if (need_free_e_url) { 
+		    DPS_FREE(e_url);
+		    DPS_FREE(lc_url);
 		}
 		DPS_FREE(qbuf);
+		return rc;
+	    }
+	    for(i=0;i<DpsSQLNumRows(&SQLRes);i++){
+		if((o = DpsSQLValue(&SQLRes, i, 0))) {
+		    id = DPS_ATOI(o);
+		}
+		if((o = DpsSQLValue(&SQLRes, i, 1))) {
+		    hops = DPS_ATOI(o);
+		}
+		if((o = DpsSQLValue(&SQLRes, i, 2))) {
+		    site_id = DPS_ATOI(o);
+		    break;
+		}
+	    }
+	    DpsSQLFree(&SQLRes);
+	    DPS_FREE(Indexer->DpsFindURLCache[Indexer->pURLCache]);
+	    Indexer->DpsFindURLCache[Indexer->pURLCache] = (char*)DpsStrdup(e_url);
+	    Indexer->DpsFindURLCacheId[Indexer->pURLCache] = id;
+	    Indexer->DpsFindURLCacheSiteId[Indexer->pURLCache] = site_id;
+	    Indexer->DpsFindURLCacheHops[Indexer->pURLCache] = hops;
+	    Indexer->pURLCache = (Indexer->pURLCache + 1) % DPS_FINDURL_CACHE_SIZE;
 	}
+	DPS_FREE(qbuf);
+
 	if(need_free_e_url) {
 	  DPS_FREE(lc_url);
 	  DPS_FREE(e_url);
