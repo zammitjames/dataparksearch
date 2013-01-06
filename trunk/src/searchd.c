@@ -1718,7 +1718,7 @@ int main(int argc, char **argv, char **envp) {
 
 	  dps_strerror(NULL, 0, "Can't create '%s'", dps_pid_name);
 	  if(errno == EEXIST){
-	    int pid = 0;
+	      int pid = 0, kill_rc;
 	    pid_fd = DpsOpen3(dps_pid_name, O_RDWR, 0644);
 	    if (pid_fd < 0) {
 	      dps_strerror(NULL, 0, "Can't open '%s'", dps_pid_name);
@@ -1730,8 +1730,8 @@ int main(int argc, char **argv, char **envp) {
 	      close(pid_fd);
 	      return DPS_ERROR;
 	    }
-	    pid = kill((pid_t)pid, 0);
-	    if (pid == 0) {
+	    kill_rc = kill((pid_t)pid, 0);
+	    if (kill_rc == 0) {
 	      fprintf(stderr, "It seems that another indexer is already running!\n");
 	      fprintf(stderr, "Remove '%s' if it is not true.\n", dps_pid_name);
 	      close(pid_fd);
@@ -1743,7 +1743,7 @@ int main(int argc, char **argv, char **envp) {
 	      close(pid_fd);
 	      return DPS_ERROR;
 	    }
-	    dps_strerror(NULL, 0, "Process %s seems to be dead. Flushing '%s'", pidbuf, dps_pid_name);
+	    dps_strerror(NULL, 0, "Process %d seems to be dead. Flushing '%s'", pid, dps_pid_name);
 	    lseek(pid_fd, 0L, SEEK_SET);
 	    ftruncate(pid_fd, 0L);
 	  }
