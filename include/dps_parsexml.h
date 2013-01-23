@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2010 Datapark corp. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -56,16 +57,17 @@ typedef struct xml_attr_st {
 } DPS_XML_ATTR;
 
 typedef struct xml_stack_st {
-  char errstr[512];
-  char attr[4096];
-  char *attrend;
-  const char *beg;
-  const char *cur;
-  const char *end;
-  void *user_data;
-  int (*enter)(struct xml_stack_st *st, const char *val, size_t len);
-  int (*value)(struct xml_stack_st *st, const char *val, size_t len);
-  int (*leave_xml)(struct xml_stack_st *st, const char *val, size_t len);
+    char errstr[512];
+    char attr[4096];
+    int hops;
+    char *attrend;
+    const char *beg;
+    const char *cur;
+    const char *end;
+    void *user_data;
+    int (*enter)(struct xml_stack_st *st, const char *val, size_t len);
+    int (*value)(struct xml_stack_st *st, const char *val, size_t len);
+    int (*leave_xml)(struct xml_stack_st *st, const char *val, size_t len);
 } DPS_XML_PARSER;
 
 

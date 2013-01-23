@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2005 Datapark corp. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,7 +23,7 @@
 extern DPS_ROBOT* DpsRobotFind(DPS_ROBOTS *Robots, const char *hostinfo);
 extern DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOCUMENT *Doc, DPS_URL * URL, int make_pause, int aliased);
 extern int DpsRobotListFree(DPS_ROBOTS *Robots);
-extern int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, const char *hostinfo);
+extern int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, const char *hostinfo, int hops);
 extern void DpsRobotClean(DPS_AGENT *Indexer);
 
 #endif
