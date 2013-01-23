@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -52,7 +53,7 @@
 
 #define DPS_THREADINFO(A,s,m)	if(A->Conf->ThreadInfo)A->Conf->ThreadInfo(A,s,m)
 
-static int DpsSitemapParse(DPS_AGENT *Indexer, const char *s);
+static int DpsSitemapParse(DPS_AGENT *Indexer, int hops, const char *s);
 
 
 static int DpsRobotCmp(DPS_ROBOT *r1, DPS_ROBOT *r2) {
@@ -373,7 +374,8 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 /*	          DpsVarListReplaceInt(&rDoc->Sections, "Status", status = DPS_HTTP_STATUS_UNSUPPORTED_MEDIA_TYPE);*/
 	      }
 	      if (status == DPS_HTTP_STATUS_OK) 
-		result = DpsRobotParse(Indexer, rServer, rDoc->Buf.content, (char*)DPS_NULL2EMPTY(rDoc->CurURL.hostinfo));
+		  result = DpsRobotParse(Indexer, rServer, rDoc->Buf.content, (char*)DPS_NULL2EMPTY(rDoc->CurURL.hostinfo), 
+					 DpsVarListFindInt(&Doc->Sections, "Hops", 0) + 1);
 	      else {
 		DpsRobotAddEmpty(&Indexer->Conf->Robots, DPS_NULL2EMPTY(rDoc->CurURL.hostinfo), NULL);
 		if ((robot = DpsRobotFind(Robots, DPS_NULL2EMPTY(URL->hostinfo))) != NULL) {
@@ -695,7 +697,7 @@ static int DpsSitemapEndElement(DPS_XML_PARSER *parser, const char *name, size_t
     if (p != NULL) {
       p = DpsStrdup(p);
       DpsSGMLUnescape(p);
-      rc = DpsSitemapParse(Indexer, p);
+      rc = DpsSitemapParse(Indexer, parser->hops + 1, p);
       DpsFree(p);
     }
     if (rc != DPS_OK) return(DPS_XML_ERROR);
@@ -731,7 +733,7 @@ static int DpsSitemapEndElement(DPS_XML_PARSER *parser, const char *name, size_t
 
 
 
-static int DpsSitemapParse(DPS_AGENT *Indexer, const char *s) {
+static int DpsSitemapParse(DPS_AGENT *Indexer, int hops, const char *s) {
   char reason[1024]="";
   XML_PARSER_DATA Data;
   DPS_XML_PARSER parser;
@@ -822,6 +824,7 @@ static int DpsSitemapParse(DPS_AGENT *Indexer, const char *s) {
     DpsDocInit(&Doc);
 
     DpsXMLParserCreate(&parser);
+    parser.hops = hops;
     bzero(&Data, sizeof(Data));
     Data.Indexer = Indexer;
     Data.Doc = &Doc;
@@ -908,7 +911,7 @@ static char *dps_robots_normalise(const char *s) { /* robots.txt path normalisat
 }
 
 
-int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, const char *hostinfo) {
+int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, const char *hostinfo, int hops) {
         DPS_ENV *Conf = Indexer->Conf;
         DPS_ROBOTS *Robots = &Conf->Robots;
 	DPS_ROBOT *robot;
@@ -1049,7 +1052,7 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			DPS_SKIPN(e," \t");*e=0;
 			if(s && *s) {
 			  DpsSGMLUnescape(s);
-			  result = DpsSitemapParse(Indexer, s);
+			  result = DpsSitemapParse(Indexer, hops, s);
 			}
 		  }else
 		  if((!(strncasecmp(s, "Crawl-delay", 11))) && (rule)) {

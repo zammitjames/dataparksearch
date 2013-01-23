@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1756,6 +1757,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	char		*origurl = NULL, *aliasurl = NULL;
 	DPS_SERVER	*Server = NULL;
 	int		result = DPS_OK, status = 0, parse_res;
+	int             hops = DpsVarListFindInt(&Parent->Sections, "Hops", 0);
 	size_t          i;
 #ifdef WITH_PARANOIA
 	void * paran = DpsViolationEnter(paran);
@@ -1953,7 +1955,7 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	    if(!Doc->Spider.use_robots){
 	      DpsLog(Indexer,DPS_LOG_DEBUG, "robots.txt support is disallowed for '%s'", DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
 	      DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
-	      result = DpsRobotParse(Indexer, NULL, NULL, DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
+	      result = DpsRobotParse(Indexer, NULL, NULL, DPS_NULL2EMPTY(Doc->CurURL.hostinfo), hops + 1);
 	      DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 	    }else{
 	      DPS_ROBOT_RULE	*rule;
@@ -2490,7 +2492,7 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	    if(!Doc->Spider.use_robots){
 	      DpsLog(Indexer,DPS_LOG_DEBUG, "robots.txt support is disallowed for '%s'", DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
 	      DPS_GETLOCK(Indexer,DPS_LOCK_CONF);
-	      result = DpsRobotParse(Indexer, NULL, NULL, DPS_NULL2EMPTY(Doc->CurURL.hostinfo));
+	      result = DpsRobotParse(Indexer, NULL, NULL, DPS_NULL2EMPTY(Doc->CurURL.hostinfo), DpsVarListFindInt(&Doc->Sections, "Hops", 0) + 1);
 	      DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
 	    }else{
 	      DPS_ROBOT_RULE	*rule;
