@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -461,15 +462,17 @@ char * DpsGetStrToken(char * s, char ** last) {
 char * DpsUnescapeCGIQuery(char *d, const char *s) {
   int hi, lo = 0;
   char *dd;
-	if((d==NULL)||(s==NULL))return(0);
+	if((d==NULL)||(s==NULL))return(NULL);
 	dd=d;
 	while(*s){
 		if(*s=='%'){
-			if(strchr("0123456789",*(++s))) hi=*s-'0';
-			else hi = dps_tolower((int)*s) - 'a' + 10;
-			if(strchr("0123456789",*(++s))) lo=*s-'0';
-			else lo = dps_tolower((int)*s) -'a' + 10;
-			*d = (char)(hi * 16 + lo);
+		    if (*(++s) == '\0') break;
+		    if (strchr("0123456789",*s) != NULL) hi = *s - '0';
+		    else hi = (dps_tolower((int)*s) - 'a' + 10) & 15;
+		    if (*(++s) == '\0') break;
+		    if (strchr("0123456789",*s) != NULL) lo = *s - '0';
+		    else lo = (dps_tolower((int)*s) -'a' + 10) & 15;
+		    *d = (char)(hi * 16 + lo);
 		}else
 		if(*s=='+'){
 			*d=' ';
