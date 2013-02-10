@@ -2553,7 +2553,7 @@ int dps_heapsort(void *base, size_t nmemb, size_t size, int (*compar)(const void
 /* NOTE: gcc optimization should be switched off */
 
 #if defined(NO_FRAME_POINTER)
-#error requires the binary to be compiled with frame pointers
+#error --enable-paranoia requires the binary to be compiled with frame pointers
 #endif
 
 #define NSAVE 20
@@ -2561,27 +2561,7 @@ int dps_heapsort(void *base, size_t nmemb, size_t size, int (*compar)(const void
 
 #ifdef WITH_SYSLOG
 extern char * __progname;
-#endif
 
-typedef struct {
-  unsigned long save[NSAVE];
-  unsigned long saveip[NSAVE];
-  unsigned invflag;
-
-#ifdef PARANOIDAL_ROOT
-  int paranoidal_check;
-#endif
-
-} DPS_PARANOIA_PARAM;
-/*
-static unsigned 
-getbp()
-{ 
-	__asm__("movl %ebp,%eax");
-	__asm__("movl (%eax),%eax");
-}
-*/
-#ifdef WITH_SYSLOG
 #define SUICIDE(h,i,X, file, line)						\
 /*	openlog(__progname,LOG_NDELAY|LOG_PERROR|LOG_PID|LOG_CONS,LOG_USER);*/ \
   syslog(LOG_ERR,"{%d} Stack violation %d:%s - exiting [%s:%d]", h, i, X, file, line); \
@@ -2594,17 +2574,45 @@ getbp()
         exit(1) ;
 #endif
 
+typedef struct {
+  void * save[NSAVE];
+  void * saveip[NSAVE];
+  unsigned invflag;
 
+#ifdef PARANOIDAL_ROOT
+  int paranoidal_check;
+#endif
+
+} DPS_PARANOIA_PARAM;
+
+
+static void **DpsStackFrameNext(void **old_bp) {
+    void **new_bp = (void**) *old_bp;
+    /* check for bogus new frame pointer */
+    if (new_bp <= old_bp) return NULL;
+    if ((uintptr_t)new_bp & (sizeof(void*) - 1)) return NULL;
+#ifdef __i386__
+    if ((uintptr_t)new_bp >= 0xffffe000) return NULL;
+#endif
+    if ((uintptr_t)new_bp - (uintptr_t)old_bp > 100000) return NULL;
+    return new_bp;
+}
 
 
 void * DpsViolationEnter(void *param) { 
-/*	unsigned obp = getbp();*/
-        unsigned bp = &param - 2;
-	int i = 0;
-	DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)DpsMalloc(sizeof(DPS_PARANOIA_PARAM));
+    void **bp;
+    int i = 0;
+    DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)DpsMalloc(sizeof(DPS_PARANOIA_PARAM));
+#ifdef __i386__
+    bp = (void**)&param - 2;
+#elif defined __x86_64__
+    bp = (void**) __builtin_frame_address (0);
+#else
+#error Frame pointer detection is not defined for your architecture
+#endif
 
 #if defined(PRINTF_DEBUGINFO)
-	printf("\nEnter p: %lx  bp:%x  obp:%x\n", p, bp/*, obp*/);
+	printf("\nEnter p: %p  bp:%p  param:%p\n", p, bp, &param);
 #endif
 	if (p == NULL) exit(2);
 
@@ -2623,38 +2631,45 @@ void * DpsViolationEnter(void *param) {
 	if(p->invflag > 1) return (void*)p;
 	bzero(p->save, sizeof(p->save));
 	bzero(p->saveip, sizeof(p->saveip));
-	bp = *((unsigned*)bp);
-	for(i = 0; i < NSAVE; i++) { 
+	bp = DpsStackFrameNext(bp);
+	for(i = 0; i < NSAVE && bp != NULL; i++) { 
 #if defined(PRINTF_DEBUGINFO)
-		printf("saving %lx (%i,%d)\n", bp, p->invflag, i);
+		printf("saving %p (%i,%d)\n", bp, p->invflag, i);
 #endif
 		p->save[i] = bp;
 		if(!bp) break;
 		/* this is bogus, but... Sometimes we got stack entries
 		 * points to low addresses. 0x20000000 - is a shared 
 		 * library maping start */ 
-		if(bp<0x20000000) {
+		if(bp < (void**)0x20000000) {
 			p->save[i] = 0;
 			break;
 		};
-		p->saveip[i] = *((long unsigned*)bp + 1);
+		p->saveip[i] = *(bp + 1);
 #if defined(PRINTF_DEBUGINFO)
-		printf("storing   ip %lx : %x \n", p->saveip[i], *((unsigned*)bp + 1));
+		printf("storing   ip %p : %p \n", p->saveip[i], *(bp + 1));
 #endif
-		bp = *(long unsigned*)bp;
+		bp = DpsStackFrameNext(bp);
 	}
 	return (void *)p;
-};
+}
 
 
 void _DpsViolationExit(void *v, const char *filename, int line, int handle) { 
-/*	unsigned bp = getbp();*/
-        unsigned bp = &v - 2;
-	int i = 2;
-	DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)v;
+    void **bp;
+    int i = 2;
+    DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)v;
+
+#ifdef __i386__
+    bp = (void**)&v - 2;
+#elif defined __x86_64__
+    bp = (void**) __builtin_frame_address (0);
+#else
+#error Frame pointer detection is not defined for your architecture
+#endif
 
 #if defined(PRINTF_DEBUGINFO)
-	printf("Exit p: %lx\n", p);
+	printf("Exit p: %p\n", p);
 #endif
 #ifdef PARANOIDAL_ROOT
 	/* at exit_violation we always have paranoidal_check set to 0 or 1 */
@@ -2668,10 +2683,10 @@ void _DpsViolationExit(void *v, const char *filename, int line, int handle) {
 		p->invflag--;
 		return;
 	};
-	bp = *((unsigned*)bp);
-	for(i = 0; i < NSAVE; i++) { 
+	bp = DpsStackFrameNext(bp);
+	for(i = 0; i < NSAVE && bp != NULL; i++) { 
 #if defined(PRINTF_DEBUGINFO)
-		printf("processing %lx (%i, %d)\n", bp, p->invflag, i);
+		printf("processing %p (%i, %d)\n", bp, p->invflag, i);
 #endif
 		if(!p->save[i]) break;
 		if(bp != p->save[i]) { 
@@ -2679,27 +2694,33 @@ void _DpsViolationExit(void *v, const char *filename, int line, int handle) {
 		};
 		if(!bp) break;
 #if defined(PRINTF_DEBUGINFO)
-		printf("restoring ip %lx : %x \n", p->saveip[i], *((unsigned*)bp + 1));
+		printf("restoring ip %p : %x \n", p->saveip[i], *(bp + 1));
 #endif
-		if(p->saveip[i] != *((unsigned*)bp+1)) { 
+		if(p->saveip[i] != *(bp + 1)) { 
 		  SUICIDE(handle, i, "ip", filename, line);
 		};
-		bp = *(unsigned*)bp;
+		bp = DpsStackFrameNext(bp);
 	};
 	p->invflag--;
 	if (p->invflag == 0) DPS_FREE(p);
 	return;
-};
+}
 
 
 void _DpsViolationCheck(void *v, const char *filename, int line, int handle) { 
-/*	unsigned bp = getbp();*/
-        unsigned bp = &v - 2;
-	int i = 2;
-	DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)v;
+    void **bp;
+    int i = 2;
+    DPS_PARANOIA_PARAM *p = (DPS_PARANOIA_PARAM*)v;
+#ifdef __i386__
+    bp = (void**)&v - 2;
+#elif defined __x86_64__
+    bp = (void**) __builtin_frame_address (0);
+#else
+#error Frame pointer detection is not defined for your architecture
+#endif
 
 #if defined(PRINTF_DEBUGINFO)
-	printf("Check p: %lx\n", p);
+	printf("Check p: %p\n", p);
 #endif
 #ifdef PARANOIDAL_ROOT
 	/* at exit_violation we always have paranoidal_check set to 0 or 1 */
@@ -2709,10 +2730,10 @@ void _DpsViolationCheck(void *v, const char *filename, int line, int handle) {
 	}
 #endif
 
-	bp = *((unsigned*)bp);
+	bp = DpsStackFrameNext(bp);
 	for(i = 0; i < NSAVE; i++) { 
 #if defined(PRINTF_DEBUGINFO)
-		printf("processing %lx (%i, %d)\n", bp, p->invflag, i);
+		printf("processing %p (%i, %d)\n", bp, p->invflag, i);
 #endif
 		if(!p->save[i]) break;
 		if(bp != p->save[i]) { 
@@ -2720,15 +2741,16 @@ void _DpsViolationCheck(void *v, const char *filename, int line, int handle) {
 		};
 		if(!bp) break;
 #if defined(PRINTF_DEBUGINFO)
-		printf("restoring ip %lx : %x \n", p->saveip[i], *((unsigned*)bp + 1));
+		printf("restoring ip %p : %p \n", p->saveip[i], *(bp + 1));
 #endif
-		if(p->saveip[i] != *((unsigned*)bp+1)) { 
+		if(p->saveip[i] != *(bp + 1)) { 
 		  SUICIDE(handle, i, "ip", filename, line);
 		};
-		bp = *(unsigned*)bp;
+		bp = DpsStackFrameNext(bp);
 	};
 	return;
-};
+}
+
 
 
 #endif /* WITH_PARANOIA */
