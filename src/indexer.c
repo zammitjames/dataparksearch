@@ -81,8 +81,12 @@
 #include <sys/time.h>
 #endif
 
+#ifdef HAVE_BSD_LIBUTIL_H
+#include <bsd/libutil.h>
+#else
 #ifdef HAVE_LIBUTIL_H
 #include <libutil.h>
+#endif
 #endif
 
 #ifdef HAVE_GETOPT_H
@@ -348,7 +352,7 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	    }
 	  }
 
-	  Href->delay = Srv->crawl_delay / 1000;
+	  Href->delay = (int)(Srv->crawl_delay / 1000);
 #if 0
 	  if (Srv->use_robots) {
 	    DPS_ROBOT_RULE	*rule;
