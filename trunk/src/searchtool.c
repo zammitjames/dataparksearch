@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -776,7 +777,7 @@ static void * DpsQsortSearchWordsBySite(void *arg) {
 }
 
 
-static void * DpsHeapSortSearchWordsBySite(void *arg) {
+static void DpsHeapSortSearchWordsBySite(void *arg) {
   DPS_URLDATA Dat;
   DPS_SORT_PARAM *P = (DPS_SORT_PARAM*)arg;
   DPS_URLCRDLIST *L = P->L;
@@ -1117,7 +1118,7 @@ static void * DpsQsortSearchWordsByPattern(void *arg) {
 }
 
 
-static void * DpsHeapSortSearchWordsByPattern(void *arg) {
+static void DpsHeapSortSearchWordsByPattern(void *arg) {
   DPS_URLDATA Dat;
   DPS_SORT_PARAM *P = (DPS_SORT_PARAM*)arg;
   DPS_URLCRDLIST *L = P->L;
