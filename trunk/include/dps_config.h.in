@@ -388,6 +388,12 @@
 /* Define if you have the <libutil.h> header file.  */
 #undef HAVE_LIBUTIL_H
 
+/* Define if you have the <libutil.h> header file.  */
+#undef HAVE_LIBUTIL_H
+
+/* Define if you have the <bsd/libutil.h> header file.  */
+#undef HAVE_BSD_LIBUTIL_H
+
 /* Define if you have the <netdb.h> header file.  */
 #undef HAVE_NETDB_H
 
