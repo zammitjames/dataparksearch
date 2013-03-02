@@ -344,11 +344,11 @@ size_t dps_strlen(const char *src) {
 #ifdef DPS_CONFIGURE
 
 
-#define STARTLEN 1
+#define STARTLEN 5
 #define NOTALIGN 1
 #define DPS_MIN(x,y) ((x)<(y)?(x):(y))
 
-#define N 20000 /* array size */
+#define N 2000 /* array size */
 char a0[N + 8];
 
 int main() {
