@@ -174,9 +174,9 @@ for every server is divide by number of links from this server. Thus, the weight
 At second stage, for every page we find the sum of weights of all links pointed to this page. This sum is popularity rank for this page.
 </para>
 
-<para id="weight-cmd"><indexterm><primary>Command</primary><secondary>Weight</secondary></indexterm>
+<para id="weight-cmd"><indexterm><primary>Command</primary><secondary>ServerWeight</secondary></indexterm>
 By default, the value of <option>Weight</option> parameter is equal to 1 for all servers indexed.
-You may change this value by <command>Weight</command> command in <filename>indexer.conf</filename> file or
+You may change this value by <command>ServerWeight</command> command in <filename>indexer.conf</filename> file or
 directly in <literal>server</literal> table, if you load servers configuration from this table.
 </para>
 

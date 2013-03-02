@@ -124,9 +124,9 @@ PopRankMethod Neo
 Эта сумма и является индексом популярности страницы.
 </para>
 
-<para><indexterm><primary>Команда</primary><secondary>Weight</secondary></indexterm>
+<para><indexterm><primary>Команда</primary><secondary>ServerWeight</secondary></indexterm>
 По умолчанию значение параметра <option>Weight</option> для каждого сервера равно 1. Изменить это значение вы можете непосредственно
-в SQL-таблице <literal>server</literal> или при помощи команды <command>Weight</command> в файле конфигурации
+в SQL-таблице <literal>server</literal> или при помощи команды <command>ServerWeight</command> в файле конфигурации
 <filename>indexer.conf</filename>.
 </para>
 
