@@ -595,7 +595,8 @@
     <ulink url="dpsearch-srvtable.ru.html" role="AEN1430">ServerTable </ulink>
   </secondaryie>
   <secondaryie>ServerWeight,
-    <ulink url="dpsearch-indexcmd.ru.html#SERVERWEIGHT_CMD" role="AEN2703">Команда ServerWeight</ulink>
+    <ulink url="dpsearch-indexcmd.ru.html#SERVERWEIGHT_CMD" role="AEN2703">Команда ServerWeight</ulink>,
+    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6160">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>SkipHrefIn,
     <ulink url="dpsearch-htmlparser-links.ru.html" role="AEN3417">Ссылки</ulink>
@@ -699,9 +700,6 @@
   </secondaryie>
   <secondaryie>VaryLang,
     <ulink url="dpsearch-vary.ru.html" role="AEN5021">Поддержка мультиязычных веб серверов</ulink>
-  </secondaryie>
-  <secondaryie>Weight,
-    <ulink url="dpsearch-rel.ru.html#GOO-POPRANK" role="AEN6160">Метод расчёта популярности Goo</ulink>
   </secondaryie>
   <secondaryie>WrdFiles,
     <ulink url="dpsearch-cachemode.ru.html#CACHEMODE-STR" role="AEN3550">Структура индексов слов при способе хранения Cache</ulink>

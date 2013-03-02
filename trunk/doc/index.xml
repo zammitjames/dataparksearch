@@ -572,7 +572,8 @@
     <ulink url="dpsearch-srvtable.en.html" role="AEN1367">Servers Table</ulink>
   </secondaryie>
   <secondaryie>ServerWeight,
-    <ulink url="dpsearch-indexcmd.en.html#SERVERWEIGHT_CMD" role="AEN2582">ServerWeight command</ulink>
+    <ulink url="dpsearch-indexcmd.en.html#SERVERWEIGHT_CMD" role="AEN2582">ServerWeight command</ulink>,
+    <ulink url="dpsearch-rel.en.html#GOO-POPRANK" role="AEN5938">"Goo" popularity rank calculation method</ulink>
   </secondaryie>
   <secondaryie>SkipHrefIn,
     <ulink url="dpsearch-htmlparser-links.en.html" role="AEN3227">Links</ulink>
@@ -676,9 +677,6 @@
   </secondaryie>
   <secondaryie>VaryLang,
     <ulink url="dpsearch-vary.en.html" role="AEN4777">Multilingual servers support</ulink>
-  </secondaryie>
-  <secondaryie>Weight,
-    <ulink url="dpsearch-rel.en.html#GOO-POPRANK" role="AEN5938">"Goo" popularity rank calculation method</ulink>
   </secondaryie>
   <secondaryie>WrdFiles,
     <ulink url="dpsearch-cachemode.en.html#CACHEMODE-STR" role="AEN3353">Cache mode word indexes structure</ulink>
