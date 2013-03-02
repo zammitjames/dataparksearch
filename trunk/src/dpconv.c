@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -179,8 +180,8 @@ int main(int argc, char **argv) {
 	  exit(1);
 	}
 	if ((uni_buf = (char*)DpsMalloc(4 * DPCONV_BUF_SIZE * sizeof(int))) == NULL) {
-	  if (verbose) fprintf(stderr, "Can't alloc memory, %d bytes", (int)4 * DPCONV_BUF_SIZE * sizeof(int));
-	  exit(1);
+	    if (verbose) fprintf(stderr, "Can't alloc memory, %d bytes", (int)(4 * DPCONV_BUF_SIZE * sizeof(int)));
+	    exit(1);
 	}
  
 	while((fgets(from_buf, DPCONV_BUF_SIZE, stdin)) != NULL) {
