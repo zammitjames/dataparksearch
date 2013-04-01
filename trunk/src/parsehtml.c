@@ -1719,7 +1719,7 @@ int DpsHTMLParseBuf(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, const char *section_n
 	    if (BSec && (tag.comment + tag.noindex == 0) && !tag.title && (tag.body || tag.frameset) && !tag.script && !tag.style && tag.index && !tag.select 
 		&& tag.visible[tag.level]) {
 	      int z;
-	      for(z = tag.level - 1; z >= 0 && tag.section[z] == 0; z--);
+	      for(z = (int)tag.level - 1; z >= 0 && tag.section[z] == 0; z--);
 	      bzero((void*)&Item, sizeof(Item));
 	      Item.href=tag.lasthref;
 	      if (z >= 0) {

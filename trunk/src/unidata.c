@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -623,9 +624,9 @@ static dpsunicode_t *DpsUniCanonicalComposition(dpsunicode_t *str) {
       initial = str[ipos] = ((initial - LBase) * VCount + str[cpos] - VBase) * TCount + SBase;
       cpos++;
     } else if (0 <= (SIndex = initial - SBase) && SIndex < SCount && SIndex % TCount == 0) {
-      int TIndex = str[cpos] - TBase;
+	int TIndex = (int)((long)str[cpos] - TBase);
       if (0 <= TIndex && TIndex < TCount) {
-	str[ipos] = initial + str[cpos++] - TBase;
+	str[ipos] = str[cpos++] - TBase + initial;
       } else {
 	str[opos++] = str[cpos++];
       }

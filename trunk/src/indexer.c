@@ -545,9 +545,9 @@ int DpsConvertHref(DPS_AGENT *Indexer, DPS_URL *CurURL, DPS_HREF *Href){
 
 static int DpsDocConvertHrefs(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc){
 	size_t		i;
-	size_t		hops = (size_t)DpsVarListFindInt(&Doc->Sections, "Hops", 0);
+	dps_uint4	hops = DpsVarListFindUnsigned(&Doc->Sections, "Hops", 0);
 	urlid_t		url_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "DP_ID", 0);
-	dps_uint4           maxhops = DpsVarListFindUnsigned(&Doc->Sections, "MaxHops", 255);
+	dps_uint4       maxhops = DpsVarListFindUnsigned(&Doc->Sections, "MaxHops", 255);
 	urlid_t         server_id = (urlid_t)DpsVarListFindInt(&Doc->Sections, "Server_id", 0);
 
 	for(i=0;i<Doc->Hrefs.nhrefs;i++){
@@ -1424,7 +1424,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 
 	  /* CRC32 without headers */
 	  if (Doc->Buf.content != NULL) {
-	    size_t crclen = (size_t)(Doc->Buf.size - (Doc->Buf.content-Doc->Buf.buf));
+	      size_t crclen = Doc->Buf.size - (size_t)(Doc->Buf.content-Doc->Buf.buf);
 	    DpsVarListReplaceInt(&Doc->Sections, "crc32", (int)DpsHash32(Doc->Buf.content, crclen));
 	  } else {
 	    DpsVarListDel(&Doc->Sections, "crc32");
@@ -1469,7 +1469,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 		  second = strstr(first, Alias->arg);
 		  if (second != NULL) {
 		    flen = dps_strlen(Alias->pattern);
-		    Doc->Buf.pattern = DpsRealloc(Doc->Buf.pattern, pattern_len + (size_t)(second - first - flen) + 1);
+		    Doc->Buf.pattern = DpsRealloc(Doc->Buf.pattern, pattern_len + (size_t)(second - first) - flen + 1);
 		    if (Doc->Buf.pattern == NULL) break;
 		    dps_strncpy(Doc->Buf.pattern + pattern_len, first + flen, (size_t)(second - first - flen));
 		    pattern_len += (size_t)(second - first - flen);
