@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -78,7 +79,7 @@ __C_LINK int __DPSCALL DpsHrefListAdd(DPS_AGENT *A, DPS_HREFLIST * HrefList,DPS_
 	}
 
 	/* Find current URL in sorted part of list */
-	l=0;r=HrefList->shrefs-1;
+	l = 0; r = (int)HrefList->shrefs - 1;
 	while(l<=r){
 		c=(l+r)/2;
 		if(!(res=strcmp(HrefList->Href[c].url,ehref))){

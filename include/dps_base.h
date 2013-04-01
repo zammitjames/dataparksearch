@@ -69,7 +69,7 @@ typedef struct {
   char *Ifilename;
   char *Sfilename;
   urlid_t rec_id;
-  unsigned int NFiles, FileNo;
+  size_t NFiles, FileNo;
   int Ifd, Sfd;
   int  mode, mishash, opened, locked;
   int zlib_level, zlib_method, zlib_windowBits, zlib_memLevel, zlib_strategy;

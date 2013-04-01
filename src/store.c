@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -93,8 +94,8 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
             if (deflateInit2(&zstream, 9, Z_DEFLATED, 15, 9, Z_DEFAULT_STRATEGY) == Z_OK) {
           
 	      zstream.next_in = Doc;
-              zstream.avail_in = DocSize;
-              zstream.avail_out = 2 * DocSize + 128 /*sizeof(gz_header) */;
+              zstream.avail_in = (uInt)DocSize;
+              zstream.avail_out = (uInt)(2 * DocSize + 128 /*sizeof(gz_header) */);
               CDoc = zstream.next_out = (Byte *) DpsMalloc(2 * DocSize + 128 /*sizeof(gz_header) + 1*/);
               if (zstream.next_out == NULL) {
 		deflateEnd(&zstream);
@@ -163,8 +164,8 @@ static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t 
 		DpsBaseClose(&P);
 		return DPS_ERROR;
               }
-              if ((zstream.avail_in = Doc->Buf.size = P.Item.size) != 0) {
-		zstream.avail_out = 1 + ((P.Item.orig_size != 0) ? P.Item.orig_size : DPS_MAXDOCSIZE);
+              if ((zstream.avail_in = (uInt)(Doc->Buf.size = P.Item.size)) != 0) {
+		  zstream.avail_out = (uInt)(1 + ((P.Item.orig_size != 0) ? P.Item.orig_size : DPS_MAXDOCSIZE));
 		CDoc = zstream.next_in = (Byte *) DpsMalloc(Doc->Buf.size + 1);
 		Doc->Buf.buf = (char *) DpsRealloc(Doc->Buf.buf, zstream.avail_out + 1);
 		zstream.next_out = (Byte *) Doc->Buf.buf;
@@ -214,7 +215,7 @@ static int GetStore(DPS_AGENT *Agent, DPS_DOCUMENT *Doc, urlid_t rec_id, size_t 
 	    return DPS_OK;
 }
 
-static int DpsStoreDeleteRec(DPS_AGENT *Agent, int sd, urlid_t rec_id, const char *Client) {
+static int DpsStoreDeleteRec(DPS_AGENT *Agent, int sd, urlid_t rec_id) {
   size_t DocSize = 0, dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
   DPS_BASE_PARAM P;
   DPS_DB *db = (Agent->flags & DPS_FLAG_UNOCON) ? &Agent->Conf->dbl.db[dbnum] : &Agent->dbl.db[dbnum];
@@ -394,7 +395,7 @@ __C_LINK int __DPSCALL DpsStoreDeleteDoc(DPS_AGENT *Agent, DPS_DOCUMENT *Doc) {
   size_t dbnum = ((size_t)rec_id) % ((Agent->flags & DPS_FLAG_UNOCON) ? Agent->Conf->dbl.nitems : Agent->dbl.nitems);
 
   if ( (Agent->Demons.nitems == 0) || ((s = Agent->Demons.Demon[dbnum].stored_sd) <= 0)) {
-    return (Agent->Flags.do_store) ? DpsStoreDeleteRec(Agent, 0, rec_id, "") : DPS_OK;
+    return (Agent->Flags.do_store) ? DpsStoreDeleteRec(Agent, 0, rec_id) : DPS_OK;
   }
   
   DpsSend(s, hello, 1, 0);
@@ -1490,7 +1491,7 @@ int DpsStoreDelete(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
     return DPS_ERROR;
   }
 #ifdef HAVE_ZLIB
-  return DpsStoreDeleteRec(Agent, sd, rec_id, Client);
+  return DpsStoreDeleteRec(Agent, sd, rec_id);
 #else
   return DPS_ERROR;
 #endif
@@ -1680,7 +1681,7 @@ int DpsStoredCheck(DPS_AGENT *Agent, int ns, int sd, const char *Client) {
     DpsBaseClose(&P);
     for (z = 0; z < ndel; z++) {
         DpsLog(Agent, DPS_LOG_DEBUG, "Store %03X: deleting url_id: %X", i, todel[z]);
-     if ((res = DpsStoreDeleteRec(Agent, -1, todel[z], "Stored Check-up")) != DPS_OK) {
+     if ((res = DpsStoreDeleteRec(Agent, -1, todel[z])) != DPS_OK) {
        return res;
      }
     }

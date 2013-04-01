@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All right reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All right reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All right reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -242,7 +243,7 @@ static void Optimize(DPS_ENV *C) {
 			P.indname = "doc";
 			P.rec_id = current_base;
 			P.mode = DPS_WRITE_LOCK;
-			P.NFiles = (size_t)DpsVarListFindInt(&C->Vars, "StoredFiles", 0x100);
+			P.NFiles = (size_t)DpsVarListFindUnsigned(&C->Vars, "StoredFiles", 0x100);
 			P.vardir = DpsVarListFindStr(&C->Vars, "VarDir", DPS_VAR_DIR);
 			P.A = Agent;
 
@@ -328,14 +329,14 @@ int main(int argc, char **argv, char **envp) {
 
 	DpsARGC = argc;
 
-	DpsARGV = (char**)DpsXmalloc((argc + 1) * sizeof(char*));
+	DpsARGV = (char**)DpsXmalloc((size_t)(argc + 1) * sizeof(char*));
 	if (DpsARGV == NULL) {
 	  fprintf(stderr, "Can't allocate DpsARGV\n");
 	  exit(-1);
 	}
 	{
 	  size_t i;
-	  for (i = 0; i < argc; i++) {
+	  for (i = 0; i < (size_t)argc; i++) {
 	    if ((DpsARGV[i] = DpsStrdup(argv[i])) == NULL) {
 	      fprintf(stderr, "Can't duplicate DpsARGV[%d]\n", (int)i);
 	      exit(-1);
@@ -371,20 +372,20 @@ int main(int argc, char **argv, char **envp) {
 
 	  dps_strerror(NULL, 0, "Can't create '%s'", dps_pid_name);
 	  if(errno == EEXIST){
-	    int pid = 0;
+	    int other_pid = 0;
 	    pid_fd = DpsOpen3(dps_pid_name, O_RDWR, 0644);
 	    if (pid_fd < 0) {
 	      dps_strerror(NULL, 0, "Can't open '%s'", dps_pid_name);
 	      exit(1);
 	    }
 	    (void)read(pid_fd, pidbuf, sizeof(pidbuf));
-	    if (1 > sscanf(pidbuf, "%d", &pid)) {
+	    if (1 > sscanf(pidbuf, "%d", &other_pid)) {
 	      dps_strerror(NULL, 0, "Can't read pid from '%s'", dps_pid_name);
 	      close(pid_fd);
 	      exit(1);
 	    }
-	    pid = kill((pid_t)pid, 0);
-	    if (pid == 0) {
+	    other_pid = kill((pid_t)other_pid, 0);
+	    if (other_pid == 0) {
 	      fprintf(stderr, "It seems that another indexer is already running!\n");
 	      fprintf(stderr, "Remove '%s' if it is not true.\n", dps_pid_name);
 	      close(pid_fd);
@@ -777,7 +778,7 @@ int main(int argc, char **argv, char **envp) {
 
 	{
 	  size_t i;
-	  for (i = 0; i < DpsARGC; i++) {
+	  for (i = 0; i < (size_t)DpsARGC; i++) {
 	    DPS_FREE(DpsARGV[i]);
 	  }
 	  DPS_FREE(DpsARGV);
