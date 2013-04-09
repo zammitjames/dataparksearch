@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2003 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -82,8 +83,8 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
     TRACE_OUT(P->A);
     return DPS_ERROR;
   }
-  sprintf(P->Sfilename, "%s/%s/%s%04x.s", P->vardir, P->subdir, P->basename, P->FileNo);
-  sprintf(P->Ifilename, "%s/%s/%s%04x.i", P->vardir, P->subdir, P->indname, P->FileNo);
+  sprintf(P->Sfilename, "%s/%s/%s%04zx.s", P->vardir, P->subdir, P->basename, P->FileNo);
+  sprintf(P->Ifilename, "%s/%s/%s%04zx.i", P->vardir, P->subdir, P->indname, P->FileNo);
 
   if ((P->Ifd = DpsOpen2(P->Ifilename, ((mode == DPS_READ_LOCK) ? O_RDONLY : O_RDWR) | DPS_BINARY)) < 0) {
     if ((mode == DPS_READ_LOCK) || ((P->Ifd = DpsOpen3(P->Ifilename, O_RDWR | O_CREAT | DPS_BINARY
@@ -189,13 +190,13 @@ __C_LINK int __DPSCALL DpsBaseOpen(DPS_BASE_PARAM *P, int mode) {
 
     for (z = 0; z < 3; z++) {
 
-      /* search rec_id */
-      if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)hash * sizeof(DPS_BASEITEM), SEEK_SET)) == (dps_uint8)-1) {
-	DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s", P->Ifilename);
-	DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
-	TRACE_OUT(P->A);
-	return DPS_ERROR;
-      }
+	/* search rec_id */
+	if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)(hash * sizeof(DPS_BASEITEM)), SEEK_SET)) == (dps_uint8)-1) {
+	    DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s", P->Ifilename);
+	    DPS_FREE(P->Ifilename);    DPS_FREE(P->Sfilename);
+	    TRACE_OUT(P->A);
+	    return DPS_ERROR;
+	}
       if (read(P->Ifd, &P->Item, sizeof(DPS_BASEITEM)) != sizeof(DPS_BASEITEM)) {
 	DpsLog(P->A, DPS_LOG_ERROR, "{%s:%d} Can't read index for file %s seek:%ld hash: %u (%d)", 
 	       __FILE__, __LINE__, P->Ifilename, P->CurrentItemPos, hash, hash);
@@ -340,7 +341,7 @@ __C_LINK int __DPSCALL DpsBaseSeek(DPS_BASE_PARAM *P, int mode) {
   
   /* search rec_id */
 
-  if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)hash * sizeof(DPS_BASEITEM), SEEK_SET)) == (dps_uint8)-1) {
+  if ( (P->CurrentItemPos = (dps_uint8)lseek(P->Ifd, (off_t)(hash * sizeof(DPS_BASEITEM)), SEEK_SET)) == (dps_uint8)-1) {
     DpsLog(P->A, DPS_LOG_ERROR, "Can't seeek for file %s", P->Ifilename);
     TRACE_OUT(P->A);
     return DPS_ERROR;
@@ -449,8 +450,8 @@ __C_LINK int __DPSCALL DpsBaseWrite(DPS_BASE_PARAM *P, void *buffer, size_t len)
   if ( (P->zlib_method == Z_DEFLATED) 
        && (deflateInit2(&zstream, P->zlib_level, Z_DEFLATED, P->zlib_windowBits, P->zlib_memLevel, P->zlib_strategy) == Z_OK) ) {
     
-    zstream.avail_in = len;
-    zstream.avail_out = /*sizeof(gz_header) +*/ 4096 + 2 * len;
+      zstream.avail_in = (uInt)len;
+      zstream.avail_out = (uInt)(/*sizeof(gz_header) +*/ 4096 + 2 * len);
     CData = zstream.next_out = (Byte *) DpsMalloc(zstream.avail_out);
     if (zstream.next_out == NULL) {
       return DPS_ERROR;
@@ -564,8 +565,8 @@ __C_LINK int __DPSCALL DpsBaseRead(DPS_BASE_PARAM *P, void *buf, size_t len) {
     bzero(&zstream, sizeof(zstream));
 
     if ((P->zlib_method == Z_DEFLATED) && (P->Item.orig_size != 0)) {
-      zstream.avail_in = P->Item.size;
-      zstream.avail_out = len;
+	zstream.avail_in = (uInt)P->Item.size;
+	zstream.avail_out = (uInt)len;
       zstream.next_out = (Byte *) buf;
       CDoc = zstream.next_in = (Byte *) DpsMalloc(P->Item.size + 1);
       if (CDoc == NULL) {
@@ -625,8 +626,8 @@ __C_LINK void * __DPSCALL DpsBaseARead(DPS_BASE_PARAM *P, size_t *len) {
     bzero(&zstream, sizeof(zstream));
 
     if ((P->zlib_method == Z_DEFLATED) && (P->Item.orig_size != 0)) {
-      zstream.avail_in = P->Item.size;
-      *len = zstream.avail_out = (2 * P->Item.size + P->Item.orig_size);
+	zstream.avail_in = (uInt)P->Item.size;
+	*len = zstream.avail_out = (uInt)(2 * P->Item.size + P->Item.orig_size);
       CDoc = zstream.next_in = (Byte *) DpsMalloc(P->Item.size + 1);
       if (CDoc == NULL) {
 	*len = 0;
@@ -814,8 +815,8 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 	OriginalSize += (long unsigned)(P->Item.orig_size ? P->Item.orig_size : P->Item.size);
       }
     }
-    if (ftruncate(P->Ifd, (off_t)nitems * sizeof(DPS_BASEITEM)) != 0) {
-      dps_strerror(P->A, DPS_LOG_EXTRA, "ftruncate error (pos:%ld) [%s:%d]", (off_t)nitems * sizeof(DPS_BASEITEM), __FILE__, __LINE__);
+    if (ftruncate(P->Ifd, (off_t)(nitems * sizeof(DPS_BASEITEM))) != 0) {
+	dps_strerror(P->A, DPS_LOG_EXTRA, "ftruncate error (pos:%ld) [%s:%d]", (off_t)(nitems * sizeof(DPS_BASEITEM)), __FILE__, __LINE__);
     }
 
     dr = (nitems) ? fabs(100.0 * ((long unsigned)SSize - ActualSize) / ((double)SSize + 1.0)) : 0.0;
@@ -1043,14 +1044,14 @@ extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type) {
     Old->basename = "doc";
     Old->indname = "doc";
     Old->mode = DPS_WRITE_LOCK;
-    Old->NFiles = DpsVarListFindInt(&Agent->Vars, "OldStoredFiles", 0x100);
+    Old->NFiles = (size_t)DpsVarListFindInt(&Agent->Vars, "OldStoredFiles", 0x100);
     Old->vardir = DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
     Old->A = Agent;
     New->subdir = "store";
     New->basename = "doc";
     New->indname = "doc";
     New->mode = DPS_WRITE_LOCK;
-    New->NFiles = DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
+    New->NFiles = (size_t)DpsVarListFindInt(&Agent->Vars, "StoredFiles", 0x100);
     New->vardir = DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
     New->A = Agent;
     DpsLog(Agent, DPS_LOG_INFO, "Relocating stored database");
@@ -1060,7 +1061,7 @@ extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type) {
     Old->basename = "info";
     Old->indname = "info";
     Old->mode = DPS_WRITE_LOCK;
-    Old->NFiles = DpsVarListFindInt(&Agent->Vars, "OldURLDataFiles", 0x300);
+    Old->NFiles = (size_t)DpsVarListFindInt(&Agent->Vars, "OldURLDataFiles", 0x300);
     Old->vardir = DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
     Old->A = Agent;
 #ifdef HAVE_ZLIB
@@ -1074,7 +1075,7 @@ extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type) {
     New->basename = "info";
     New->indname = "info";
     New->mode = DPS_WRITE_LOCK;
-    New->NFiles = DpsVarListFindInt(&Agent->Vars, "URLDataFiles", 0x300);
+    New->NFiles = (size_t)DpsVarListFindInt(&Agent->Vars, "URLDataFiles", 0x300);
     New->vardir = DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
     New->A = Agent;
 #ifdef HAVE_ZLIB
@@ -1092,7 +1093,7 @@ extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type) {
     Old->basename = "wrd";
     Old->indname = "wrd";
     Old->mode = DPS_WRITE_LOCK;
-    Old->NFiles = DpsVarListFindInt(&Agent->Vars, "OldWrdFiles", 0x300);
+    Old->NFiles = (size_t)DpsVarListFindInt(&Agent->Vars, "OldWrdFiles", 0x300);
     Old->vardir = DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
     Old->A = Agent;
 #ifdef HAVE_ZLIB
@@ -1106,7 +1107,7 @@ extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type) {
     New->basename = "wrd";
     New->indname = "wrd";
     New->mode = DPS_WRITE_LOCK;
-    New->NFiles = DpsVarListFindInt(&Agent->Vars, "WrdFiles", 0x300);
+    New->NFiles = (size_t)DpsVarListFindInt(&Agent->Vars, "WrdFiles", 0x300);
     New->vardir = DpsVarListFindStr(&Agent->Vars, "VarDir", DPS_VAR_DIR);
     New->A = Agent;
 #ifdef HAVE_ZLIB
@@ -1134,7 +1135,7 @@ extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type) {
       return DPS_OK;
     }
 
-    Old->rec_id = base << DPS_BASE_BITS;
+    Old->rec_id = (urlid_t)(base << DPS_BASE_BITS);
     if (DpsBaseOpen(Old, DPS_READ_LOCK) != DPS_OK) {
       DpsBaseClose(Old);
       DpsBaseClose(New);
@@ -1179,7 +1180,7 @@ extern __C_LINK int __DPSCALL DpsBaseRelocate(DPS_AGENT *Agent, int base_type) {
   }
   DPS_FREE(todel);
   for (base = N.NFiles; base < O.NFiles; base++) {
-    Old->rec_id = base << DPS_BASE_BITS;
+      Old->rec_id = (urlid_t)(base << DPS_BASE_BITS);
     if (DpsBaseOpen(Old, DPS_READ_LOCK) != DPS_OK) {
       DpsBaseClose(Old);
       continue;
