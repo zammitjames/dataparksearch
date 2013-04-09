@@ -1,4 +1,5 @@
-/* Copyright (C) 2004-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2004-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2003 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -23,10 +24,10 @@
 #define DPS_BASE_BITS 16      /* bits of rec_id for file no. */
 #define DPS_BASE_MASK ((1UL << DPS_BASE_BITS) - 1)
 
-#define DPS_HASH_PRIME 4093
+#define DPS_HASH_PRIME 4093UL
 /*#define DPS_HASH(x)    (((size_t)x) % DPS_HASH_PRIME)*/
-#define DPS_HASH(x)    ((unsigned int)(((x) & DPS_BASE_MASK) % DPS_HASH_PRIME))
-#define DPS_FILENO(x, NFILES)  ((unsigned int)((((x) >> DPS_BASE_BITS) & DPS_BASE_MASK) % NFILES))
+#define DPS_HASH(x)    ((((unsigned long)(x)) & DPS_BASE_MASK) % DPS_HASH_PRIME)
+#define DPS_FILENO(x, NFILES)  (((((unsigned long)(x)) >> DPS_BASE_BITS) & DPS_BASE_MASK) % ((unsigned long)(NFILES)))
 
 #define DPS_READ_LOCK  0
 #define DPS_WRITE_LOCK 1
