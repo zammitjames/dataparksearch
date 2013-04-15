@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1796,6 +1797,7 @@ int main(int argc, char **argv, char **envp) {
 		   goto ex;
 		 }
 	       }
+	       DpsAgentStoredConnect(&Main);
                DpsIndex(&Main);
 
 	       time(&now);
