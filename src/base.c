@@ -783,7 +783,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
 
     error_cnt = 0;
     gain = (dps_uint8)0;
-    P->rec_id = base << DPS_BASE_BITS;
+    P->rec_id = ((base & DPS_BASE_MASK) << DPS_BASE_BITS);
     if (DpsBaseOpen(P, DPS_WRITE_LOCK) != DPS_OK) {
       DpsLog(P->A, DPS_LOG_ERROR, "Can't open base %s/%s {%s:%d}", P->subdir, P->basename, __FILE__, __LINE__);
       DpsBaseClose(P);
@@ -823,7 +823,7 @@ extern __C_LINK int __DPSCALL DpsBaseOptimize(DPS_BASE_PARAM *P, int sbase) {
     cr = (nitems) ? fabs(100.0 * ActualSize / (OriginalSize + 1)) : 0.0;
 
     DpsLog(P->A, DPS_LOG_EXTRA, "Optimize: %s/%s base 0x%X, %ld recs defrag: %.2f%% Ratio: %.2f%% Data: %ld File: %ld", 
-	   P->subdir, P->basename, base, nitems, dr, cr,  ActualSize, (long)SSize);
+	   P->subdir, P->basename, P->FileNo, nitems, dr, cr,  ActualSize, (long)SSize);
 
     if ((dr >= (double)OptimizeRatio) || (ActualSize == 0 && SSize != 0)) {
 
