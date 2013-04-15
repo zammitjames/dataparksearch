@@ -630,7 +630,7 @@ typedef unsigned long long dps_uint8;
 
 
 
-typedef dps_int4 urlid_t;
+typedef dps_uint4 urlid_t;
 typedef dps_uint4 dpscrc32_t;
 typedef dps_uint4 dpsunicode_t;
 typedef unsigned int dps_word;
