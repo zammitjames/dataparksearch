@@ -353,7 +353,7 @@ int DpsHrefCheck(DPS_AGENT *Indexer, DPS_HREF *Href, const char *newhref) {
 	  }
 
 	  Href->delay = (int)(Srv->crawl_delay / 1000);
-#if 0
+#if 1
 	  if (Srv->use_robots) {
 	    DPS_ROBOT_RULE	*rule;
 	    rule = DpsRobotRuleFind(Indexer, Srv, NULL, newURL, 0, 0);

@@ -985,7 +985,7 @@ int DpsRobotParse(DPS_AGENT *Indexer, DPS_SERVER *Srv, const char *content, cons
 			DPS_SKIPN(e," \t");*e=0;
 			if(s && *s) {
 			  char *norm = dps_robots_normalise(s);
-			  if((norm != NULL) && AddRobotRule(Indexer, robot, DPS_METHOD_VISITLATER, norm, 1)) {
+			  if((norm != NULL) && AddRobotRule(Indexer, robot, DPS_METHOD_DISALLOW, norm, 1)) {
 			    DPS_FREE(norm);
 			    DpsLog(Indexer, DPS_LOG_ERROR, "AddRobotRule error: no memory ?");
 			    return DPS_ERROR;
