@@ -241,8 +241,9 @@ int DpsRobotListFree(DPS_ROBOTS *Robots){
 
 static DPS_ROBOT_RULE DpsRobotErrRule = {DPS_METHOD_VISITLATER, "", 0};
 
-static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERVER *Server, 
+static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_SERVER *Server, 
 				DPS_DOCUMENT *Doc, DPS_URL *URL, char *rurl, size_t rurlen) {
+    DPS_ROBOTS *Robots;
 	DPS_ROBOT *robot, *rI = NULL;
 #ifdef HAVE_SQL
 	DPS_SERVER	*rServer;
@@ -254,6 +255,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 	TRACE_IN(Indexer, "DpsRobotClone");
 
 	DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
+	Robots = &Indexer->Conf->Robots;
 	if (Robots->nrobots == 3 * DPS_SERVERID_CACHE_SIZE) {
 	  robot = NULL;
 	  Robots->serial++;
@@ -375,7 +377,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_ROBOTS *Robots, DPS_SERV
 	      }
 	      if (status == DPS_HTTP_STATUS_OK) 
 		  result = DpsRobotParse(Indexer, rServer, rDoc->Buf.content, (char*)DPS_NULL2EMPTY(rDoc->CurURL.hostinfo), 
-					 DpsVarListFindInt(&Doc->Sections, "Hops", 0) + 1);
+					 (Doc) ? DpsVarListFindInt(&Doc->Sections, "Hops", 0) + 1 : 0);
 	      else {
 		DpsRobotAddEmpty(&Indexer->Conf->Robots, DPS_NULL2EMPTY(rDoc->CurURL.hostinfo), NULL);
 		if ((robot = DpsRobotFind(Robots, DPS_NULL2EMPTY(URL->hostinfo))) != NULL) {
@@ -434,7 +436,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
         DPS_ROBOT_RULE *r;
 	DPS_ROBOT *robot;
 	DPS_URL *URL;
-	DPS_ROBOTS *Robots = &Indexer->Conf->Robots; 
+/*	DPS_ROBOTS *Robots = &Indexer->Conf->Robots; */
 	const char *hostname;
 	char		*rurl = l_rurl;
 	size_t        rurlen, j;
@@ -472,18 +474,18 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	hostname = DPS_NULL2EMPTY(URL->hostinfo);
 
 	DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
-	u = ((Indexer->Robots.nrobots == DPS_SERVERID_CACHE_SIZE) || (Indexer->Robots.serial != Robots->serial));
+	u = ((Indexer->Robots.nrobots == DPS_SERVERID_CACHE_SIZE) || (Indexer->Robots.serial != Indexer->Conf->Robots.serial));
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
 	if (u) {
 	  robot = NULL;
 	  DpsRobotListFree(&Indexer->Robots);
-	  Indexer->Robots.serial = Robots->serial;
+	  Indexer->Robots.serial = Indexer->Conf->Robots.serial;
 	} else {
 	  robot = DpsRobotFind(&Indexer->Robots, hostname);
 	}
 	if (robot == NULL) {
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
-	  robot = DpsRobotClone(Indexer, Robots, Server, Doc, URL, rurl, rurlen);
+	  robot = DpsRobotClone(Indexer, Server, Doc, URL, rurl, rurlen);
 	  if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
 	}
 
@@ -529,11 +531,11 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 
 	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 
-	      if (Indexer->Robots.serial != Robots->serial) {
+	      if (Indexer->Robots.serial != Indexer->Conf->Robots.serial) {
 		DpsRobotListFree(&Indexer->Robots);
-		Indexer->Robots.serial = Robots->serial;
+		Indexer->Robots.serial = Indexer->Conf->Robots.serial;
 		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
-		robot = DpsRobotClone(Indexer, Robots, Server, Doc, URL, rurl, rurlen);
+		robot = DpsRobotClone(Indexer, Server, Doc, URL, rurl, rurlen);
 		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
 	      }
 
