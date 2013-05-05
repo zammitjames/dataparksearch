@@ -1602,8 +1602,8 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *Li
 
      Doc->lang_cs_map = FindLangMap(&Indexer->Conf->LangMaps, lang, charset, NULL, 0);
 
-     u = (u && (forte_lang || ((server_lang != '\0' || meta_lang != '\0') && (0 == strcasecmp( DpsLanguageCanonicalName(lang), DPS_NULL2EMPTY(lang0)) ))) );
-     u = (u && (forte_charset || ((server_charset != '\0' || meta_charset != '\0') && (0 == strcasecmp( DpsCharsetCanonicalName(charset), DPS_NULL2EMPTY(charset0)) ))) );
+     u = (u && (forte_lang || ((*server_lang != '\0' || *meta_lang != '\0') && (0 == strcasecmp( DpsLanguageCanonicalName(lang), DPS_NULL2EMPTY(lang0)) ))) );
+     u = (u && (forte_charset || ((*server_charset != '\0' || *meta_charset != '\0') && (0 == strcasecmp( DpsCharsetCanonicalName(charset), DPS_NULL2EMPTY(charset0)) ))) );
 
      if (u) {
 
