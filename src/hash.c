@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -17,6 +18,7 @@
 */
 
 #include "dps_common.h"
+#include "dps_charsetutils.h"
 #include "dps_hash.h"
 /*
 #define USE_OLD_DPS_HASH
@@ -31,7 +33,12 @@
 
 #include <netinet/in.h>
 
-#define mmix(h,k) { k *= m; k ^= k >> r; k *= m; h *= m; h ^= k; }
+#define MH_BITS (8 * sizeof(unsigned int))
+#define MH_MASK ((1UL << MH_BITS) - 1)
+
+#define MUL(k, m) { unsigned long _K = (unsigned long)(k); _K *= (m); _K &= MH_MASK; k = (unsigned int)_K; }
+
+#define mmix(h,k) { MUL(k, m); k ^= k >> r; MUL(k, m); MUL(h, m); h ^= k; }
 
 static dpshash32_t hash32(const void *key, size_t len, const dpshash32_t initval)
 {
@@ -43,10 +50,13 @@ static dpshash32_t hash32(const void *key, size_t len, const dpshash32_t initval
 
 	unsigned int h = initval;
 	unsigned int t = 0;
+	unsigned int _d;
+	unsigned int k;
 
 	while(len >= 4)
 	{
-	  unsigned int k = (unsigned int)htonl(*(unsigned int*)data);
+	        dps_memcpy(&_d, data, sizeof(unsigned int));
+	        k = (unsigned int)htonl(_d);
 
 		mmix(h,k);
 
@@ -64,7 +74,7 @@ static dpshash32_t hash32(const void *key, size_t len, const dpshash32_t initval
 	mmix(h,l);
 
 	h ^= h >> 13;
-	h *= m;
+	MUL(h, m);
 	h ^= h >> 15;
 
 	return (dpshash32_t)h;
