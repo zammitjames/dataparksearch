@@ -85,6 +85,7 @@ LangMapFile langmap/ru.cyrillic.lm
 LangMapFile langmap/ru.koi8-r.lm
 LangMapFile langmap/ru.maccyr.lm
 LangMapFile langmap/ru.utf8.lm
+LangMapFile langmap/ru.windows-1252.lm
 LangMapFile langmap/sk.ascii.lm
 LangMapFile langmap/sk.cp1250.lm
 LangMapFile langmap/sk.latin2.lm
