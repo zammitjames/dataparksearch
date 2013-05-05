@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -277,7 +278,7 @@ extern void  DpsCheckLangMap6(DPS_LANGMAP * map, DPS_LANGMAP * text, DPS_MAPSTAT
 extern void  DpsLangMapListFree(DPS_LANGMAPLIST *);
 extern void DpsLangMapListSave(DPS_LANGMAPLIST *List);
 #ifdef _DPS_COMMON_H
-extern  int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * D, DPS_LANGMAPLIST *L, DPS_LANGMAP *M);
+extern  int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * D, DPS_LANGMAPLIST *L);
 #endif
 extern const char *DpsLanguageCanonicalName(const char *name);
 

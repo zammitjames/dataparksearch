@@ -1554,7 +1554,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	DpsMirrorPUT(Indexer, Doc, &Doc->CurURL, "after");
 
 	/* Guesser stuff */	
-	DpsGuessCharSet(Indexer, Doc, &Indexer->Conf->LangMaps, Indexer->LangMap);
+	DpsGuessCharSet(Indexer, Doc, &Indexer->Conf->LangMaps);
 				
 	DpsLog(Indexer, DPS_LOG_EXTRA, "Guesser bytes: %d, Lang: %s, Charset: %s", Indexer->Flags.GuesserBytes,
 	       DpsVarListFindStr(&Doc->Sections,"Content-Language",""),

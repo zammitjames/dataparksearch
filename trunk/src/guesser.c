@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -818,36 +819,6 @@ const char *DpsLanguageCanonicalName(const char *name) {
   return name;
 }
 
-static const char *DpsHaveLanguageCanonicalName(const char *name) {
-  int l,m,r,s;
-
-  if (name != NULL) {
-    l = 0;
-    s = r = sizeof(dps_lang_alias)/sizeof(DPS_LANG_ALIAS) - 1;
-    while(l < r) {
-      m = (l + r) / 2;
-      if(strcasecmp(dps_lang_alias[m].name, name) < 0) l = m + 1;
-      else  r = m;
-    }
-    if (s == r) return name;
-    if (!strcasecmp(dps_lang_alias[r].name, name))
-      return dps_language[dps_lang_alias[r].id].name;
-  }
-  return NULL;
-}
-
-#if 0
-static void DpsCheckLangList(void) {
-  int i;
-  fprintf(stderr, "DpsCheckLangList\n");
-  for (i = 1; i < sizeof(dps_lang_alias)/sizeof(DPS_LANG_ALIAS) - 1; i++) {
-    if (strcasecmp(dps_lang_alias[i-1].name, dps_lang_alias[i].name) > 0) {
-      fprintf(stderr, "%s > %s !\n", dps_lang_alias[i-1].name, dps_lang_alias[i].name);
-    }
-  }
-}
-#endif
-
 
 static int LangMapCmp(const DPS_LANGMAP *m1, const DPS_LANGMAP *m2) {
   register int r = strcasecmp(m1->lang, m2->lang);
@@ -1396,7 +1367,6 @@ void DpsCheckLangMap(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, 
      }
 }
 
-#if 1
 
 void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, size_t InfMiss, size_t InfHits) {
      register int i;
@@ -1404,12 +1374,6 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
 
      Stat->hits = Stat->miss = Stat->diff = 0;
      for (i = 0; i < DPS_LM_TOPCNT; i++) {
-/*       if ( (HIT = dps_bsearch(&map1->memb3[i], map0->memb3, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
-	 Stat->miss++;
-       } else {
-	 register int p = (HIT - map0->memb3);
-	 Stat->hits += (i >= p) ? (i - p) : (p - i);
-       }*/
        if ( (HIT = dps_bsearch(&map0->memb6[i], map1->memb6, DPS_LM_TOPCNT, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex)) == NULL) {
 	 Stat->miss += (DPS_LM_TOPCNT - i);
        } else {
@@ -1421,50 +1385,8 @@ void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat,
      }
 }
 
-#else
 
-void DpsCheckLangMap6(DPS_LANGMAP * map0, DPS_LANGMAP * map1, DPS_MAPSTAT *Stat, size_t InfMiss, size_t InfHits) {
-     register int i;
-
-     Stat->hits = Stat->miss = 0;
-     for (i = 0; i <= DPS_LM_HASHMASK; ) {
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-       Stat->hits +=(map0->memb6[i].count > map1->memb6[i].count) ? 
-	 (map0->memb6[i].count - map1->memb6[i].count) : (map1->memb6[i].count - map0->memb6[i].count); i++;
-     }
-}
-#endif
-
-int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *List, DPS_LANGMAP *LangMap) {
+int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *List) {
      DPS_CHARSET * cs;
      DPS_MAPSTAT * mapstat = NULL;
      DPS_LANGMAP *Cmap;
@@ -1486,9 +1408,6 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *Li
 #endif
      
      use_meta = Indexer->Flags.use_meta;
-#if 0
-     DpsCheckLangList();
-#endif
 			
      if (use_meta) {
        if (*meta_charset != '\0' && *server_charset != '\0' && !strcasecmp(meta_charset, server_charset)) {
@@ -1528,133 +1447,134 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *Li
           Choose charset in the same way.
      */
 
+     u = Indexer->Flags.update_lm;
+     if (u || forte_lang == 0 || forte_charset == 0) {
+	 if(Indexer->Flags.nmaps && Doc->method != DPS_METHOD_DISALLOW) {
+	     bzero((void*)Indexer->LangMap, sizeof(DPS_LANGMAP));
+	     for (i = 0; i <= DPS_LM_HASHMASK; i++) Indexer->LangMap->memb3[i].index = Indexer->LangMap->memb6[i].index = i;
+	     for(i = 0; i < Doc->TextList.nitems; i++) {
+		 DPS_TEXTITEM *Item = &Doc->TextList.Items[i];
+		 DpsBuildLangMap(Indexer->LangMap, Item->str, dps_strlen(Item->str), Indexer->Flags.GuesserBytes, Indexer->Flags.update_lm);
+		 if (Indexer->Flags.GuesserBytes > 0 && Indexer->LangMap->nbytes >= Indexer->Flags.GuesserBytes) break;
+	     }
+	 }
+	 /* Prepare document langmap */
+	 DpsPrepareLangMap(Indexer->LangMap);
+     }
+
      DPS_GETLOCK(Indexer, DPS_LOCK_CONF);
 
      if (forte_lang == 0 || forte_charset == 0 /*1*/ /**charset == '\0' || *lang == '\0'*/) {
 
-       if(Indexer->Flags.nmaps && Doc->method != DPS_METHOD_DISALLOW) {
-
-	 bzero((void*)Indexer->LangMap, sizeof(DPS_LANGMAP));
-	 for (i = 0; i <= DPS_LM_HASHMASK; i++) Indexer->LangMap->memb3[i].index = Indexer->LangMap->memb6[i].index = i;
-	 for(i = 0; i < Doc->TextList.nitems; i++) {
-	   DPS_TEXTITEM *Item = &Doc->TextList.Items[i];
-	   DpsBuildLangMap(Indexer->LangMap, Item->str, dps_strlen(Item->str), Indexer->Flags.GuesserBytes, Indexer->Flags.update_lm);
-	   if (Indexer->Flags.GuesserBytes > 0 && Indexer->LangMap->nbytes >= Indexer->Flags.GuesserBytes) break;
+	 /* Allocate memory for comparison statistics */
+	 if ((mapstat=(DPS_MAPSTAT *)DpsXmalloc((List->nmaps + 1) * sizeof(DPS_MAPSTAT))) == NULL) {
+	     DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
+	     DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc momory for DpsGuessCharSet (%d bytes)", List->nmaps*sizeof(DPS_MAPSTAT));
+	     DPS_FREE(server_lang); DPS_FREE(meta_lang);
+	     DpsVarListDel(&Doc->Sections, "URL_ID"); /* since we've changed Content-Language */
+	     return DPS_ERROR;
 	 }
-       }
-			
-       /* Prepare document langmap */
-       DpsPrepareLangMap(LangMap);
-
-       /* Allocate memory for comparison statistics */
-       if ((mapstat=(DPS_MAPSTAT *)DpsXmalloc((List->nmaps + 1) * sizeof(DPS_MAPSTAT))) == NULL) {
-	 DPS_RELEASELOCK(Indexer,DPS_LOCK_CONF);
-	 DpsLog(Indexer, DPS_LOG_ERROR, "Can't alloc momory for DpsGuessCharSet (%d bytes)", List->nmaps*sizeof(DPS_MAPSTAT));
-	 DPS_FREE(server_lang); DPS_FREE(meta_lang);
-	 DpsVarListDel(&Doc->Sections, "URL_ID"); /* since we've changed Content-Language */
-	 return DPS_ERROR;
-       }
      
 #ifdef DEBUG_GUESSER
-     if (DpsNeedLog(DPS_LOG_EXTRA))
-       fprintf(stderr, "Guesser start: lang: %s, charset: %s\n", DPS_NULL2EMPTY(lang), DPS_NULL2EMPTY(charset));
+	 if (DpsNeedLog(DPS_LOG_EXTRA))
+	     fprintf(stderr, "Guesser start: lang: %s, charset: %s\n", DPS_NULL2EMPTY(lang), DPS_NULL2EMPTY(charset));
 #endif
 
-       for(i=0;i<List->nmaps;i++){
-          mapstat[i].map = &List->Map[i];
-	  if (forte_charset && strcasecmp(charset, mapstat[i].map->charset)) {
-	    mapstat[i].diff = InfMiss + 100; continue;
-	  }
-	  if (forte_lang && strncasecmp(lang, mapstat[i].map->lang, mapstat[i].map->lang_len)) {
-	    mapstat[i].diff = InfMiss + 100; continue;
-	  }
-          if ((*charset == '\0') && (*lang == '\0')) {
-            DpsCheckLangMap(&List->Map[i], LangMap, &mapstat[i], InfMiss, InfHits);
-          } else if ((*charset != '\0') && 
-	     (!strcasecmp(mapstat[i].map->charset, charset) || !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(meta_charset))) ) {
-            DpsCheckLangMap(&List->Map[i], LangMap, &mapstat[i], InfMiss, InfHits);
-          } else if ((*lang != '\0') && !strncasecmp(mapstat[i].map->lang, lang, mapstat[i].map->lang_len )) {
-            DpsCheckLangMap(&List->Map[i], LangMap, &mapstat[i], InfMiss, InfHits);
-          } else {
-            mapstat[i].hits = 2 * DPS_LM_TOPCNT;
-	    mapstat[i].miss = 20 * DPS_LM_TOPCNT + 4;
-	    mapstat[i].diff = DPS_LM_TOPCNT * DPS_LM_TOPCNT;
-          }
-          if (mapstat[i].diff < InfMiss) { InfMiss = mapstat[i].diff; InfHits = mapstat[i].hits; }
-       }
+	 for(i=0;i<List->nmaps;i++){
+	     mapstat[i].map = &List->Map[i];
+	     if (forte_charset && strcasecmp(charset, mapstat[i].map->charset)) {
+		 mapstat[i].diff = InfMiss + 100; continue;
+	     }
+	     if (forte_lang && strncasecmp(lang, mapstat[i].map->lang, mapstat[i].map->lang_len)) {
+		 mapstat[i].diff = InfMiss + 100; continue;
+	     }
+	     if ((*charset == '\0') && (*lang == '\0')) {
+		 DpsCheckLangMap(&List->Map[i], Indexer->LangMap, &mapstat[i], InfMiss, InfHits);
+	     } else if ((*charset != '\0') && 
+			(!strcasecmp(mapstat[i].map->charset, charset) || !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(meta_charset))) ) {
+		 DpsCheckLangMap(&List->Map[i], Indexer->LangMap, &mapstat[i], InfMiss, InfHits);
+	     } else if ((*lang != '\0') && !strncasecmp(mapstat[i].map->lang, lang, mapstat[i].map->lang_len )) {
+		 DpsCheckLangMap(&List->Map[i], Indexer->LangMap, &mapstat[i], InfMiss, InfHits);
+	     } else {
+		 mapstat[i].hits = 2 * DPS_LM_TOPCNT;
+		 mapstat[i].miss = 20 * DPS_LM_TOPCNT + 4;
+		 mapstat[i].diff = DPS_LM_TOPCNT * DPS_LM_TOPCNT;
+	     }
+	     if (mapstat[i].diff < InfMiss) { InfMiss = mapstat[i].diff; InfHits = mapstat[i].hits; }
+	 }
 
-       /* Sort statistics in quality order */
-       if (List->nmaps > 1) DpsPreSort(mapstat, List->nmaps, sizeof(DPS_MAPSTAT), &DpsLMstatcmp);
+	 /* Sort statistics in quality order */
+	 if (List->nmaps > 1) DpsPreSort(mapstat, List->nmaps, sizeof(DPS_MAPSTAT), &DpsLMstatcmp);
 
-       lang0 = DpsStrdup(List->nmaps ? mapstat[0].map->lang : "");
-       charset0 = DpsStrdup(List->nmaps ? mapstat[0].map->charset : "");
+	 lang0 = DpsStrdup(List->nmaps ? mapstat[0].map->lang : "");
+	 charset0 = DpsStrdup(List->nmaps ? mapstat[0].map->charset : "");
 
 #ifdef DEBUG_GUESSER
-       /* Display results, best is shown first */
+	 /* Display results, best is shown first */
 
-       for (i = 0; i < 15; i++) {
-	 if (i >= List->nmaps) break;
-	 if (DpsNeedLog(DPS_LOG_EXTRA))
-	   fprintf(stderr, "Guesser: %dh:%dm:%dd %s-%s\n", mapstat[i].hits, mapstat[i].miss, mapstat[i].diff, mapstat[i].map->lang, mapstat[i].map->charset);
-       }
+	 for (i = 0; i < 15; i++) {
+	     if (i >= List->nmaps) break;
+	     if (DpsNeedLog(DPS_LOG_EXTRA))
+		 fprintf(stderr, "Guesser: %dh:%dm:%dd %s-%s\n", mapstat[i].hits, mapstat[i].miss, mapstat[i].diff, mapstat[i].map->lang, mapstat[i].map->charset);
+	 }
 #endif
 
-       if (*server_charset != '\0' || *meta_charset != '\0')
+	 if (*server_charset != '\0' || *meta_charset != '\0')
+	     for(i=0;i<List->nmaps;i++){
+
+#ifdef DEBUG_GUESSER
+		 if (DpsNeedLog(DPS_LOG_EXTRA))
+		     fprintf(stderr, "Guesser @ charset: %dh:%dm %s-%s\n", 
+			     mapstat[i].hits, mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);
+#endif
+
+		 if (mapstat[i].map->lang && (*lang != '\0') && (!strncasecmp(mapstat[i].map->lang, lang, mapstat[i].map->lang_len ))) {
+		     if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(server_charset))) {
+			 DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
+			 DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
+		     } else if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(meta_charset))) {
+			 DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
+			 DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
+		     }
+		 } else {
+		     if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(server_charset))) {
+			 DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
+			 DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
+		     } else if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(meta_charset))) {
+			 DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
+			 DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
+		     }
+		 }
+		 if (*charset != '\0') break;
+		 if ((i > 50) && (mapstat[i].miss > mapstat[0].miss + mapstat[0].miss/10)) break;
+	     }
+          
 	 for(i=0;i<List->nmaps;i++){
 
+	     if ((*lang != '\0') && (*charset != '\0')) break;
 #ifdef DEBUG_GUESSER
-	   if (DpsNeedLog(DPS_LOG_EXTRA))
-	     fprintf(stderr, "Guesser @ charset: %dh:%dm %s-%s\n", 
-		     mapstat[i].hits, mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);
+	     if (DpsNeedLog(DPS_LOG_EXTRA))
+		 fprintf(stderr, "Guesser @ first: %dh:%dm %s.%s\n", 
+			 mapstat[i].hits, mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);
 #endif
 
-	   if (mapstat[i].map->lang && (*lang != '\0') && (!strncasecmp(mapstat[i].map->lang, lang, mapstat[i].map->lang_len ))) {
-	     if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(server_charset))) {
-	       DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
-               DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
-	     } else if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(meta_charset))) {
-	       DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
-               DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
+	     if(mapstat[i].map->lang && *lang == '\0'/* && (*charset == '\0' || (!strcasecmp(mapstat[i].map->charset, charset)))*/ ){
+		 DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
 	     }
-	   } else {
-	     if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(server_charset))) {
-	       DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
-               DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
-	     } else if(mapstat[i].map->charset && !strcasecmp(mapstat[i].map->charset, DPS_NULL2EMPTY(meta_charset))) {
-	       DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
-               DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
+	     if (mapstat[i].map->charset && *charset == '\0' && (!strcmp(lang, mapstat[i].map->lang)) ) {
+		 DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
 	     }
-	   }
-	   if (*charset != '\0') break;
-	   if ((i > 50) && (mapstat[i].miss > mapstat[0].miss + mapstat[0].miss/10)) break;
-	 }
-          
-       for(i=0;i<List->nmaps;i++){
-
-	 if ((*lang != '\0') && (*charset != '\0')) break;
-#ifdef DEBUG_GUESSER
-	 if (DpsNeedLog(DPS_LOG_EXTRA))
-	   fprintf(stderr, "Guesser @ first: %dh:%dm %s.%s\n", 
-		   mapstat[i].hits, mapstat[i].miss, mapstat[i].map->lang, mapstat[i].map->charset);
-#endif
-
-	 if(mapstat[i].map->lang && *lang == '\0'/* && (*charset == '\0' || (!strcasecmp(mapstat[i].map->charset, charset)))*/ ){
-               DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[i].map->lang);
-	 }
-	 if (mapstat[i].map->charset && *charset == '\0' && (!strcmp(lang, mapstat[i].map->lang)) ) {
-               DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[i].map->charset);
-	 }
           
 /*          fprintf(stderr, "Guesser: %dh:%dm %s-%s\n",mapstat[i].hits, mapstat[i].miss,mapstat[i].map->lang,mapstat[i].map->charset);*/
-          
-       }
-       if (List->nmaps > 0 && mapstat[0].map->charset && (*charset == '\0') ) {
+	     
+	 }
+	 if (List->nmaps > 0 && mapstat[0].map->charset && (*charset == '\0') ) {
 	     DpsVarListReplaceStr(&Doc->Sections, "Charset", charset = mapstat[0].map->charset);
-       }
-       if (List->nmaps > 0 && mapstat[0].map->lang && (*lang == '\0') ) {
+	 }
+	 if (List->nmaps > 0 && mapstat[0].map->lang && (*lang == '\0') ) {
              DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = mapstat[0].map->lang);
-       }
-       DPS_FREE(mapstat);
+	 }
+	 DPS_FREE(mapstat);
      }
 
      if (*DPS_NULL2EMPTY(charset) == '\0') {
@@ -1681,46 +1601,23 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *Li
 #endif
 
      Doc->lang_cs_map = FindLangMap(&Indexer->Conf->LangMaps, lang, charset, NULL, 0);
-     u = Indexer->Flags.update_lm;
+
+     u = (u && (forte_lang || 0 == strcasecmp( DpsLanguageCanonicalName(lang),   DPS_NULL2EMPTY(lang0))) );
+     u = (u && (forte_charset || 0 == strcasecmp( DpsCharsetCanonicalName(charset), DPS_NULL2EMPTY(charset0))) );
 
      if (u) {
 
-       if (use_meta) {
-	 u = (strcasecmp(server_lang, meta_lang) == 0);
-	 if (u) u = (*server_lang != '\0');
-	 if (u && DpsHaveLanguageCanonicalName(server_lang) != NULL) { /* A known language is specified */
-	   u = (forte_lang || strcasecmp(server_lang, DPS_NULL2EMPTY(lang0)) == 0);
-	 }
-	 if (u) u = (strcasecmp(server_charset, meta_charset) == 0);
-	 if (u) u = (*server_charset != '\0');
-	 if (u && DpsCharsetCanonicalName(server_charset) != NULL) { /* A known charset is specified */
-	   u = (forte_charset || strcasecmp(server_charset, DPS_NULL2EMPTY(charset0)) == 0);
-	 }
-       } else {
-	 u = (*server_lang != '\0');
-	 if (u) u = (*server_charset != '\0');
-	 if ( DpsHaveLanguageCanonicalName(server_lang) != NULL)
-	   u = (forte_lang || strcasecmp(server_lang, DPS_NULL2EMPTY(lang0)) == 0);
-	 if (u && DpsCharsetCanonicalName(server_charset) != NULL) {
-	   u = (forte_lang || strcasecmp(server_charset, DPS_NULL2EMPTY(charset0)) == 0);
-	 }
-       }
-     }
-
-     if (u) {
-
-       Cmap = FindLangMap(&Indexer->Conf->LangMaps, (have_server_lang) ? server_lang : meta_lang, 
-			  (server_charset != NULL) ? server_charset : meta_charset, NULL, 1);
+       Cmap = FindLangMap(&Indexer->Conf->LangMaps, lang, charset, NULL, 1);
        if (Cmap != NULL) {
 /*	 DpsVarListReplaceStr(&Doc->Sections, "Content-Language", lang = Cmap->lang);*/
 
 	 DpsPreSort(Cmap->memb3, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
-	 DpsPreSort(LangMap->memb3, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
+	 DpsPreSort(Indexer->LangMap->memb3, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
 	 DpsPreSort(Cmap->memb6, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
-	 DpsPreSort(LangMap->memb6, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
+	 DpsPreSort(Indexer->LangMap->memb6, DPS_LM_HASHMASK + 1, sizeof(DPS_LANGITEM), (qsort_cmp)DpsLMcmpIndex);
 	 for (i = 0; i < DPS_LM_HASHMASK+1; i++) {
-	   Cmap->memb3[i].count += LangMap->memb3[i].count;
-	   Cmap->memb6[i].count += LangMap->memb6[i].count;
+	   Cmap->memb3[i].count += Indexer->LangMap->memb3[i].count;
+	   Cmap->memb6[i].count += Indexer->LangMap->memb6[i].count;
 	 }
 	 DpsPrepareLangMap(Cmap);
 	 Cmap->needsave = 1;
