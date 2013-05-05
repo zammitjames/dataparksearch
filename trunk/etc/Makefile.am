@@ -172,6 +172,7 @@ langmap/ru.maccyr.lm \
 langmap/ru.utf8.lm \
 langmap/ru.utf-16be.lm \
 langmap/ru.utf-16le.lm \
+langmap/ru.windows-1252.lm \
 langmap/sk.ascii.lm \
 langmap/sk.cp1250.lm \
 langmap/sk.latin2.lm \
