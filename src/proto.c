@@ -1651,6 +1651,7 @@ int DpsGetURL(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc, const char *origurl) {
 		res = DpsFTPGet(Indexer,Doc);
 	  }
 #endif
+	  DpsVarListReplaceStr(&Doc->Sections, "IP", inet_ntoa(Doc->connp.sin.sin_addr));
 	}
 #ifdef HAVE_SQL
 	if(strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "htdb")) {/* Get HTDBText sections for non htdb: documents if they're defined */
