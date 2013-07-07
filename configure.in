@@ -1859,7 +1859,7 @@ What DBMS support do you want (you may select several):
 			fi
 	    	done
 
-		if test $MYSQL_CONFIG != ""; then
+		if test "$MYSQL_CONFIG" != ""; then
 			MYSQL_INCLUDE=`$MYSQL_CONFIG --include`
 			MYSQL_LFLAGS=`$MYSQL_CONFIG --libs`
 		elif test -f /usr/local/mysql/include/mysql/mysql.h; then
@@ -2689,7 +2689,7 @@ AC_SUBST(ORACLE8_LFLAGS)
 AC_SUBST(ORACLE8_INCLUDE)
 
 
-oracle-instantclient=no
+oracle_instantclient=no
 AC_MSG_CHECKING(for Oracle Instant Client support)
 AC_ARG_WITH(oracle-instantclient,
 [  --with-oracle-instantclient[=DIR]   Include Oracle Instant Client support.  DIR is the Oracle

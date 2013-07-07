@@ -128,7 +128,7 @@ static int DoStore(DPS_AGENT *Agent, urlid_t rec_id, Byte *Doc, size_t DocSize, 
 				       rec_id, DocSize, 100.0 * zstream.total_out / DocSize);
 
 	      if (Agent->Flags.OptimizeAtUpdate) {
-		DpsBaseOptimize(&P, ((int)rec_id) >> DPS_BASE_BITS);
+		  DpsBaseOptimize(&P, (((int)rec_id) >> DPS_BASE_BITS) & DPS_BASE_MASK);
 	      }
 
 	      return rc;
