@@ -1,6 +1,6 @@
 SUBDIRS = .
 
-CFLAGS = @CFLAGS@ -DDPS_CONF_DIR=\"@sysconfdir@\" -DDPS_VAR_DIR=\"@localstatedir@\"
+AM_CFLAGS = @CFLAGS@ -DDPS_CONF_DIR=\"@sysconfdir@\" -DDPS_VAR_DIR=\"@localstatedir@\"
 
 lib_LTLIBRARIES = libdp.la
 libdp_la_SOURCES = dp.c
