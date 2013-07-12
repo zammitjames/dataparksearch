@@ -6,6 +6,7 @@ dnl AM_INIT_AUTOMAKE(libdp, 4.54)
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(include/dps_config.h)
 AC_PROG_MAKE_SET
+AC_CONFIG_MACRO_DIR([m4])
 
 # Set all version vars based on $VERSION. How do we do this more elegant ?
 # Remember that regexps needs to quote [ and ] since this is run through m4
@@ -93,11 +94,11 @@ dnl AC_CHECK_SIZEOF(off_t)
 
 dnl Check for libc performance
 AC_MSG_CHECKING(for libc functions performance, please be patient)
-AC_RUN_IFELSE([
+AC_RUN_IFELSE([AC_LANG_SOURCE([
 #include "confdefs.h"
 #define DPS_CONFIGURE
 #include "src/dp.c"
-], AC_MSG_RESULT(done), AC_MSG_FAILURE(unable to complete tests), AC_MSG_RESULT(cross-compiling?)
+])], AC_MSG_RESULT(done), AC_MSG_FAILURE(unable to complete tests), AC_MSG_RESULT(cross-compiling?)
 )
 
 
