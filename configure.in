@@ -6,7 +6,7 @@ dnl AM_INIT_AUTOMAKE(dpsearch, 4.53)
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(include/dps_config.h)
 AC_PROG_MAKE_SET
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([build/m4])
 
 # Set all version vars based on $VERSION. How do we do this more elegant ?
 # Remember that regexps needs to quote [ and ] since this is run through m4
@@ -2790,7 +2790,7 @@ AC_DEFINE_UNQUOTED(DPS_DBTYPE,"$DBTYPE")
 AC_SUBST(DBTYPE)
 CDIR=`pwd`
 AC_SUBST(CDIR)
-AC_OUTPUT(Makefile include/Makefile src/Makefile doc/Makefile etc/Makefile dnl
+AC_OUTPUT(Makefile build/Makefile include/Makefile src/Makefile doc/Makefile etc/Makefile dnl
   misc/Makefile scripts/Makefile create/Makefile dnl
   dnl create/db2/Makefile 
   create/ibase/Makefile 
@@ -2802,6 +2802,7 @@ AC_OUTPUT(Makefile include/Makefile src/Makefile doc/Makefile etc/Makefile dnl
   create/sqlite/Makefile dnl
   create/mimer/Makefile dnl
   scripts/dps-config scripts/run-splitter dnl
+dnl  build/dpsearch.spec
   perl/Makefile.PL test/Makefile)dnl php/Makefile)
 
 

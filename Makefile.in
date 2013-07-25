@@ -59,8 +59,9 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	install-sh ltconfig ltmain.sh missing mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/docbook.m4 $(top_srcdir)/net.m4 \
-	$(top_srcdir)/threads.m4 $(top_srcdir)/configure.in
+	$(top_srcdir)/build/m4/docbook.m4 \
+	$(top_srcdir)/build/m4/net.m4 \
+	$(top_srcdir)/build/m4/threads.m4 $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -330,14 +331,18 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I build/m4
 AUTOMAKE_OPTIONS = foreign no-installinfo dist-bzip2 no-dist-gzip
-SUBDIRS = include src doc etc create misc scripts test #php @BINDINGS@
-EXTRA_DIST = net.m4 threads.m4 install.pl bootstrap acinclude.m4 docbook.m4 README.XML BUGS \
+SUBDIRS = build include src doc etc create misc scripts test #php @BINDINGS@
+EXTRA_DIST = install.pl bootstrap acinclude.m4 README.XML BUGS \
 	perl/Makefile.PL.in perl/BUGS perl/README perl/INSTALL perl/test.pl perl/Dataparksearch.pm perl/Dataparksearch.xs \
 	perl/cat_ed/*.pl perl/cat_ed/*.gif perl/examples/* charset-Makefile.am charset-configure.in \
 	dp-Makefile.am dp-configure.in
 
+
+#dist-hook:
+#	cp -rf $(srcdir)/debian $(distdir)
+#	cp -rf $(srcdir)/m4 $(distdir)
 CHARSETDISTFILES = src/uconv.c src/unidata.c src/sgml.c src/unicode.c src/dpconv.c \
 src/uconv-8bit.c src/uconv-alias.c src/uconv-big5.c src/uconv-big5hkscs.c src/uconv-eucjp.c src/uconv-euckr.c \
 src/uconv-gb2312.c src/uconv-gbk.c src/uconv-sjis.c src/uconv-sys.c src/uconv-utf8.c src/uconv-gujarati.c \
@@ -349,6 +354,10 @@ COPYING
 charsetdistdir = libdpcharset-$(VERSION)
 DPDISTFILES = src/dp.c src/dps_memcpy.inc include/dps_config.h.in COPYING
 dpdistdir = libdp-$(VERSION)
+
+# Create a deb package
+TMPDIR := $(shell mktemp -dtu)
+PKGDATE := $(shell date -R)
 all: all-recursive
 
 .SUFFIXES:
@@ -590,9 +599,6 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
-	$(MAKE) $(AM_MAKEFLAGS) \
-	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
-	  dist-hook
 	-test -n "$(am__skip_mode_fix)" \
 	|| find "$(distdir)" -type d ! -perm -755 \
 		-exec chmod u+rwx,go+rx {} \; -o \
@@ -833,8 +839,8 @@ uninstall-am: uninstall-local
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
 	all all-am am--refresh check check-am clean clean-generic \
 	clean-libtool ctags ctags-recursive dist dist-all dist-bzip2 \
-	dist-gzip dist-hook dist-lzip dist-lzma dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-generic \
+	dist-gzip dist-lzip dist-lzma dist-shar dist-tarZ dist-xz \
+	dist-zip distcheck distclean distclean-generic \
 	distclean-libtool distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
@@ -887,10 +893,6 @@ bin-dist:
 
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
-
-dist-hook:
-	cp -rf $(srcdir)/debian $(distdir)
-	cp -rf $(srcdir)/m4 $(distdir)
 
 charsetdistdir: $(CHARSETDISTFILES)
 	-chmod -R a+w $(charsetdistdir) >/dev/null 2>&1; rm -rf $(charsetdistdir)
@@ -957,6 +959,45 @@ dpdistdir: $(DPDISTFILES)
 dp-dist: dpdistdir
 	$(AMTAR) chof - $(dpdistdir) | GZIP=$(GZIP_ENV) gzip -c >$(dpdistdir).tar.gz
 	-chmod -R a+w $(dpdistdir) >/dev/null 2>&1; rm -rf $(dpdistdir)
+pkg-deb: dist
+	- rm -r $(TMPDIR)
+	mkdir -p $(TMPDIR)
+	cp $(PACKAGE)-$(VERSION).tar.bz2 $(TMPDIR)/
+	tar --directory $(TMPDIR)/ \
+		-xjf $(TMPDIR)/$(PACKAGE)-$(VERSION).tar.bz2
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION)/; \
+		echo | dh_make --single --copyright gpl -e myemailaddress \
+			--native -f ../$(PACKAGE)-$(VERSION).tar.bz2
+	cp build/debian/* $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/
+	echo "$(PACKAGE) ($(VERSION)-1) UNRELEASED; urgency=low" > $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo "" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo "  * Updating to $(VERSION)" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo "" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo " -- Maxim Zakharov <dp.maxime@gmail.com>  $(PKGDATE)" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION)/; \
+		rm debian/README* debian/*.ex debian/*.EX; \
+		./configure; \
+		dpkg-buildpackage -rfakeroot; \
+                mv ../*.deb $(PWD)
+	rm -r $(TMPDIR)
+
+# Create an RPM package
+#pkg-rpm: dist
+#	mkdir -p $(HOME)/.rpm/RPMS/i386
+#	mkdir -p $(HOME)/.rpm/SRPMS
+#	mkdir -p $(HOME)/.rpm/BUILD
+#	mkdir -p $(HOME)/.rpm/SOURCES
+#	mkdir -p $(HOME)/.rpm/tmp
+#	- rm -r $(HOME)/.rpm/BUILD/$(PACKAGE)-root
+#	- rm -r $(HOME)/.rpm/RPMS/$(PACKAGE)-*
+#	- rm -r $(HOME)/.rpm/SRPMS/$(PACKAGE)-*
+#	- rm -r $(HOME)/.rpm/SOURCES/$(PACKAGE)-*
+#	cp $(PACKAGE)-$(VERSION).tar.bz2 $(HOME)/.rpm/SOURCES/
+#	rpmbuild --quiet --nodeps --define="_topdir $(HOME)/.rpm" \
+#		-ba build/dpsearch.spec
+#	mv $(HOME)/.rpm/RPMS/i386/$(PACKAGE)-$(VERSION)-*.i386.rpm ./
+
+pkg-dist: pkg-deb #pkg-rpm
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
