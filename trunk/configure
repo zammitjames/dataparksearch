@@ -19504,7 +19504,7 @@ _ACEOF
 
 CDIR=`pwd`
 
-ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile doc/Makefile etc/Makefile misc/Makefile scripts/Makefile create/Makefile create/ibase/Makefile create/mssql/Makefile create/mysql/Makefile create/oracle/Makefile create/pgsql/Makefile create/sqlite/Makefile create/mimer/Makefile scripts/dps-config scripts/run-splitter perl/Makefile.PL test/Makefile"
+ac_config_files="$ac_config_files Makefile build/Makefile include/Makefile src/Makefile doc/Makefile etc/Makefile misc/Makefile scripts/Makefile create/Makefile create/ibase/Makefile create/mssql/Makefile create/mysql/Makefile create/oracle/Makefile create/pgsql/Makefile create/sqlite/Makefile create/mimer/Makefile scripts/dps-config scripts/run-splitter perl/Makefile.PL test/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -20533,6 +20533,7 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "build/Makefile") CONFIG_FILES="$CONFIG_FILES build/Makefile" ;;
     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;

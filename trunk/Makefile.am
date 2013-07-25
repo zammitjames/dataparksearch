@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I build/m4
 AUTOMAKE_OPTIONS = foreign no-installinfo dist-bzip2 no-dist-gzip
-SUBDIRS = include src doc etc create misc scripts test #php @BINDINGS@
+SUBDIRS = build include src doc etc create misc scripts test #php @BINDINGS@
 #DIST_SUBDIRS = php java perl
 
 install-data-local:
@@ -40,7 +40,7 @@ bin-dist:
 	mv $(CDIR)/$(PACKAGE)-$(VERSION)$(prefix)/*.tar.bz2 $(CDIR)
 	rm -r $(CDIR)/$(PACKAGE)-$(VERSION)
 
-EXTRA_DIST = net.m4 threads.m4 install.pl bootstrap acinclude.m4 docbook.m4 README.XML BUGS \
+EXTRA_DIST = install.pl bootstrap acinclude.m4 README.XML BUGS \
 	perl/Makefile.PL.in perl/BUGS perl/README perl/INSTALL perl/test.pl perl/Dataparksearch.pm perl/Dataparksearch.xs \
 	perl/cat_ed/*.pl perl/cat_ed/*.gif perl/examples/* charset-Makefile.am charset-configure.in \
 	dp-Makefile.am dp-configure.in
@@ -49,9 +49,9 @@ EXTRA_DIST = net.m4 threads.m4 install.pl bootstrap acinclude.m4 docbook.m4 READ
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
-dist-hook:
-	cp -rf $(srcdir)/debian $(distdir)
-	cp -rf $(srcdir)/m4 $(distdir)
+#dist-hook:
+#	cp -rf $(srcdir)/debian $(distdir)
+#	cp -rf $(srcdir)/m4 $(distdir)
 
 ## libdpcharset distribution
 
@@ -141,3 +141,45 @@ dp-dist: dpdistdir
 	-chmod -R a+w $(dpdistdir) >/dev/null 2>&1; rm -rf $(dpdistdir)
 
 
+# Create a deb package
+TMPDIR := $(shell mktemp -dtu)
+PKGDATE := $(shell date -R)
+pkg-deb: dist
+	- rm -r $(TMPDIR)
+	mkdir -p $(TMPDIR)
+	cp $(PACKAGE)-$(VERSION).tar.bz2 $(TMPDIR)/
+	tar --directory $(TMPDIR)/ \
+		-xjf $(TMPDIR)/$(PACKAGE)-$(VERSION).tar.bz2
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION)/; \
+		echo | dh_make --single --copyright gpl -e myemailaddress \
+			--native -f ../$(PACKAGE)-$(VERSION).tar.bz2
+	cp build/debian/* $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/
+	echo "$(PACKAGE) ($(VERSION)-1) UNRELEASED; urgency=low" > $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo "" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo "  * Updating to $(VERSION)" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo "" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	echo " -- Maxim Zakharov <dp.maxime@gmail.com>  $(PKGDATE)" >> $(TMPDIR)/$(PACKAGE)-$(VERSION)/debian/changelog
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION)/; \
+		rm debian/README* debian/*.ex debian/*.EX; \
+		./configure; \
+		dpkg-buildpackage -rfakeroot; \
+                mv ../*.deb $(PWD)
+	rm -r $(TMPDIR)
+
+# Create an RPM package
+#pkg-rpm: dist
+#	mkdir -p $(HOME)/.rpm/RPMS/i386
+#	mkdir -p $(HOME)/.rpm/SRPMS
+#	mkdir -p $(HOME)/.rpm/BUILD
+#	mkdir -p $(HOME)/.rpm/SOURCES
+#	mkdir -p $(HOME)/.rpm/tmp
+#	- rm -r $(HOME)/.rpm/BUILD/$(PACKAGE)-root
+#	- rm -r $(HOME)/.rpm/RPMS/$(PACKAGE)-*
+#	- rm -r $(HOME)/.rpm/SRPMS/$(PACKAGE)-*
+#	- rm -r $(HOME)/.rpm/SOURCES/$(PACKAGE)-*
+#	cp $(PACKAGE)-$(VERSION).tar.bz2 $(HOME)/.rpm/SOURCES/
+#	rpmbuild --quiet --nodeps --define="_topdir $(HOME)/.rpm" \
+#		-ba build/dpsearch.spec
+#	mv $(HOME)/.rpm/RPMS/i386/$(PACKAGE)-$(VERSION)-*.i386.rpm ./
+
+pkg-dist: pkg-deb #pkg-rpm
