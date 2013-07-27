@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1096,7 +1097,7 @@ static int add_url(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_AGENT *Indexer = C->Indexer;
 	
-	if(C->flags&DPS_FLAG_ADD_SERV){
+	if (C->flags & DPS_FLAG_ADD_SERVURL) {
 		char		*al = NULL;
 		DPS_SERVER	*Srv;
 		DPS_HREF	Href;
@@ -1141,8 +1142,9 @@ static int add_srv_db(void *Cfg, size_t ac, char **av) {
 		return DPS_OK;
 	
 	if(!strcasecmp(av[0], "URLDB")) {
-	  cmd = DPS_SRV_ACTION_URLDB;
-	  dbaddr = av[1];
+	    if(!(C->flags & DPS_FLAG_ADD_SERVURL)) return DPS_OK;
+	    cmd = DPS_SRV_ACTION_URLDB;
+	    dbaddr = av[1];
 	} else {
 
 	  C->Srv->command = 'S';
