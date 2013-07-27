@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -1453,7 +1454,12 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 			char *p;
 			if((p = strcasestr(metacont, "charset="))) {
 				const char *cs = DpsCharsetCanonicalName(DpsTrim(p + 8, " \t;\"'"));
-				DpsVarListReplaceStr(&Doc->Sections, "Meta-Charset", cs ? cs : p + 8);
+				const char *prev_cs = DpsVarListFindStr(&Doc->Sections, "Meta-Charset", NULL);
+				if (prev_cs == NULL) {
+				    DpsVarListReplaceStr(&Doc->Sections, "Meta-Charset", cs ? cs : p + 8);
+				} else if (strcasecmp(prev_cs, cs ? cs : p + 8) != 0) {
+				    DpsVarListReplaceStr(&Doc->Sections, "Meta-Charset", ""); /* nil it to let Guesser to decide */
+				}
 			}
 		}else
 		if(!strcasecmp(metaname, "Content-Language") || !strcasecmp(metaname, "DC.Language")) {
