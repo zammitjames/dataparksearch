@@ -96,7 +96,7 @@ int __DPSCALL DpsConv(DPS_CONV *c, char *d, size_t dlen, const char *s, size_t s
   const char	*s_o=s;
 
 #ifdef DEBUG_CONV
-  fprintf(stderr, "conv. @ %s:%d from %s (size:%d) to %s (size:%d)::%s\n", filename, line, c->from->name, slen, c->to->name, dlen, s); 
+  fprintf(stderr, "conv. @ %s:%d from %s (size:%d:json:%d) to %s (size:%d:json:%d)::%s\n", filename, line, c->from->name, slen, c->flags & DPS_RECODE_JSON_FROM, c->to->name, dlen, c->flags & DPS_RECODE_JSON_TO, s); 
 #endif
   
   c->istate = 0; /* set default state */
