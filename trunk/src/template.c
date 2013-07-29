@@ -57,7 +57,7 @@ static size_t out_string(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void *stream,
     if (json) {
       len = dps_strlen(src);
       if ((json_value = (char*)DpsMalloc(48 * len + 1)) != NULL) {
-	DpsConvInit(&mybc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_JSON_TO);
+	DpsConvInit(&mybc, A->Conf->bcs, A->Conf->bcs, A->Conf->CharsToEscape, DPS_RECODE_HTML_FROM | DPS_RECODE_JSON_TO);
 	DpsConv(&mybc, json_value, 48 * len, src, len);
       } else return 0;
     }
@@ -199,13 +199,15 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					  if ((sem3 = strchr(sem2 + 1, ':'))) {
 					    *sem3 = '\0';
 					    if (isalpha(sem3[1])) {
-					      cs_name = DpsCharsetCanonicalName(sem3 + 1);
-					      if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
-					      else if (!strcasecmp(sem3 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
+					      if (!strcasecmp(sem3 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
 					      else if (!strcasecmp(sem3 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					      else if (!strcasecmp(sem3 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					      else if (!strcasecmp(sem3 + 1, "cite")) cite = DPS_VAR_CITE_DO;
 					      else if (!strcasecmp(sem3 + 1, "json")) json = DPS_VAR_JSON;
+					      else {
+						  cs_name = DpsCharsetCanonicalName(sem3 + 1);
+						  if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
+					      }
 					    } else {
 					      maxlen = DPS_ATOI(sem3 + 1);
 					    }
@@ -213,25 +215,29 @@ size_t DpsPrintTextTemplate(DPS_AGENT *A, DPS_OUTPUTFUNCTION dps_out, void * str
 					  
 
 					  if (isalpha(sem2[1])) {
-					    cs_name = DpsCharsetCanonicalName(sem2 + 1);
-					    if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
-					    else if (!strcasecmp(sem2 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
+					    if (!strcasecmp(sem2 + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
 					    else if (!strcasecmp(sem2 + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					    else if (!strcasecmp(sem2 + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					    else if (!strcasecmp(sem2 + 1, "cite")) cite = DPS_VAR_CITE_DO;
 					    else if (!strcasecmp(sem2 + 1, "json")) json = DPS_VAR_JSON;
+					    else {
+						cs_name = DpsCharsetCanonicalName(sem2 + 1);
+						if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
+					    }
 					  } else {
 					    maxlen = DPS_ATOI(sem2 + 1);
 					  }
 					}
 					if (isalpha(sem[1])) {
-					  cs_name = DpsCharsetCanonicalName(sem + 1);
-					  if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
-					  else if (!strcasecmp(sem + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
+					  if (!strcasecmp(sem + 1, "right")) align = DPS_VAR_ALIGN_RIGHT;
 					  else if (!strcasecmp(sem + 1, "idnd")) idn = DPS_VAR_IDN_DECODE;
 					  else if (!strcasecmp(sem + 1, "idne")) idn = DPS_VAR_IDN_ENCODE;
 					  else if (!strcasecmp(sem + 1, "cite")) cite = DPS_VAR_CITE_DO;
 					  else if (!strcasecmp(sem + 1, "json")) json = DPS_VAR_JSON;
+					  else {
+					      cs_name = DpsCharsetCanonicalName(sem + 1);
+					      if (cs_name != NULL) vcs = DpsGetCharSet(cs_name);
+					  }
 					} else {
 					  maxlen = DPS_ATOI(sem + 1);
 					}
