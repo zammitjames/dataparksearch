@@ -354,22 +354,22 @@ int char_cmp (const void *v1, const void*v2) {
 void * dps_bsearch(const void *key, const void *base0, size_t nmemb, size_t size, 
 		   int (*compar)(const void *, const void*))
 {
-	const char *base = base0;
-	size_t lim;
-	int cmp;
-	const void *p;
+    const char *base = base0;
+    size_t lim;
+    int cmp;
+    const void *p;
 
-	for (lim = nmemb; lim != 0;  ) {
-	        lim >>= 1;
-		p = base + lim * size;
-		cmp = (*compar)(key, p);
-		if (cmp == 0)
-			return ((void *)p);
-		if (cmp > 0) {	/* key > p: move right */
-			base = (char *)p + size;
-		}		/* else move left */
-	}
-	return (NULL);
+    for (lim = nmemb; lim != 0; lim >>= 1 ) {
+	p = base + (lim >> 1) * size;
+	cmp = (*compar)(key, p);
+	if (cmp == 0)
+	    return (void *)p;
+	if (cmp > 0) {	/* key > p: move right */
+	    base = (char *)p + size;
+	    lim--;
+	}		/* else move left */
+    }
+    return NULL;
 }
 
 #endif /* DPS_USE_BSEARCH */
@@ -481,7 +481,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tmemcpy unaligned: %s (%g vs%g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
+    printf("\tmemcpy unaligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
     /* ###################################### */
 
