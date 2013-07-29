@@ -1,4 +1,5 @@
-/* Copyright (C) 2010-2011 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2012-2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2010-2011 DataPark Ltd. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -80,6 +81,7 @@ size_t dps_strlen(const char *src);
 #define dps_strcat  strcat
 #define dps_strncat strncat
 #define dps_strlen  strlen
+#define dps_bsearch bsearch
 
 #endif /* DPS_CONFIGURE */
 
@@ -337,7 +339,78 @@ size_t dps_strlen(const char *src) {
 #endif /* DPS_USE_STRLEN_ALIGNED */
 
 
+#if defined DPS_USE_BSEARCH || defined DPS_CONFIGURE
 
+#ifdef DPS_CONFIGURE
+int char_cmp (const void *v1, const void*v2) {
+    const char *c1 = (const char *)v1;
+    const char *c2 = (const char *)v2;
+    if (*c1 < *c2) return -1;
+    if (*c1 > *c2) return 1;
+    return 0;
+}
+#endif
+
+void * dps_bsearch(const void *key, const void *base0, size_t nmemb, size_t size, 
+		   int (*compar)(const void *, const void*))
+{
+	const char *base = base0;
+	size_t lim;
+	int cmp;
+	const void *p;
+
+	for (lim = nmemb; lim != 0;  ) {
+	        lim >>= 1;
+		p = base + lim * size;
+		cmp = (*compar)(key, p);
+		if (cmp == 0)
+			return ((void *)p);
+		if (cmp > 0) {	/* key > p: move right */
+			base = (char *)p + size;
+		}		/* else move left */
+	}
+	return (NULL);
+}
+
+#endif /* DPS_USE_BSEARCH */
+
+
+
+
+
+#if defined DPS_USE_STRPBRK_UNALIGNED || defined DPS_CONFIGURE
+
+#define UC(a) ((unsigned int)(unsigned char)(a))
+#define ADD_NEW_TO_SET(i) (set[inv[i] = idx++] = (i))
+#define IS_IN_SET(i) (inv[i] < idx && set[inv[i]] == (i))
+#define ADD_TO_SET(i) (void)(IS_IN_SET(i) || ADD_NEW_TO_SET(i))
+
+#if defined DPS_CONFIGURE
+char *dps_strpbrk1( const char *s, const char *accept)
+#else
+char *dps_strpbrk( const char *s, const char *accept)
+#endif
+{
+    unsigned int set[256], inv[256], idx = 0;
+
+    if (s == NULL || accept == NULL) return NULL;
+    if (accept[0] == '\0') return NULL;
+    if (accept[1] == '\0') return strchr(s, accept[0]);
+
+    for (; *accept != '\0'; accept++) {
+	if (IS_IN_SET(UC(*accept))) continue;
+	if (ADD_NEW_TO_SET(UC(*accept)) == UC(*s))
+	    return ((char *)(void *)(unsigned long)(const void *)(s));
+    }
+
+    for (s++; *s != '\0'; s++)
+	if (IS_IN_SET(UC(*s)))
+	    return ((char *)(void *)(unsigned long)(const void *)(s));
+    return NULL;
+
+}
+
+#endif
 
 
 
@@ -348,7 +421,7 @@ size_t dps_strlen(const char *src) {
 #define NOTALIGN 1
 #define DPS_MIN(x,y) ((x)<(y)?(x):(y))
 
-#define N 2000 /* array size */
+#define N 4000 /* array size */
 char a0[N + 8];
 
 int main() {
@@ -384,7 +457,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\n\tdps:%g lib:%g, memcpy aligned\n", t_dps, t_lib);
+    printf("\n\tmemcpy aligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
     /***************/
 
@@ -408,7 +481,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, memcpy unaligned\n", t_dps, t_lib);
+    printf("\tmemcpy unaligned: %s (%g vs%g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
     /* ###################################### */
 
@@ -430,7 +503,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, memmove aligned\n", t_dps, t_lib);
+    printf("\tmemmove aligned: %s (%g vs %g)\n",  (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
     /***************/
 
@@ -454,7 +527,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, memmove unaligned\n", t_dps, t_lib);
+    printf("\tmemmove unaligned: %s (%g vs %g)\n",  (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
 
 
@@ -497,7 +570,9 @@ int main() {
 	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "/*" : "", (t_dps < t_dps2) ? 1 : 2,
 	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
-    printf("\tdps1:%g dps2:%g lib:%g, strcpy aligned\n", t_dps, t_dps2, t_lib);
+    printf("\tstrcpy aligned: %s (%g vs %g vs %g)\n", 
+	   t_lib < DPS_MIN(t_dps,t_dps2) ? "lib" : ((t_dps < t_dps2) ? "dps1" : "dps2"), 
+	   t_dps, t_dps2, t_lib);
 
     /***************/
 
@@ -533,7 +608,9 @@ int main() {
 	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
 
-    printf("\tdps1:%g dps2:%g lib:%g, strcpy unaligned\n", t_dps, t_dps2, t_lib);
+    printf("\tstrcpy unaligned: %s (%g vs %g vs %g)\n", 
+	   t_lib < DPS_MIN(t_dps,t_dps2) ? "lib" : ((t_dps < t_dps2) ? "dps1" : "dps2"), 
+	   t_dps, t_dps2, t_lib);
 
     /* ###################################### */
 
@@ -565,7 +642,9 @@ int main() {
 	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "/*" : "", (t_dps < t_dps2) ? 1 : 2,
 	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
-    printf("\tdps1:%g dps2:%g lib:%g, strncpy aligned\n", t_dps, t_dps2, t_lib);
+    printf("\tstrncpy aligned: %s (%g vs %g vs %g)\n", 
+	   t_lib < DPS_MIN(t_dps,t_dps2) ? "lib" : ((t_dps < t_dps2) ? "dps1" : "dps2"), 
+	   t_dps, t_dps2, t_lib);
 
     /***************/
 
@@ -600,7 +679,9 @@ int main() {
 	    (t_lib < DPS_MIN(t_dps2,t_dps)) ? "/*" : "", (t_dps < t_dps2) ? 1 : 2,
 	    (t_lib < DPS_MIN(t_dps,t_dps2)) ? "*/" : ""
 	    );
-    printf("\tdps1:%g dps2:%g lib:%g, strncpy unaligned\n", t_dps, t_dps2, t_lib);
+    printf("\tstrncpy unaligned: %s (%g vs %g vs %g)\n", 
+	   t_lib < DPS_MIN(t_dps,t_dps2) ? "lib" : ((t_dps < t_dps2) ? "dps1" : "dps2"), 
+	   t_dps, t_dps2, t_lib);
 
 
 
@@ -635,7 +716,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, strcat aligned\n", t_dps, t_lib);
+    printf("\tstrcat aligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
     /***************/
 
@@ -665,7 +746,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, strcat unaligned\n", t_dps, t_lib);
+    printf("\tstrcat unaligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
 
 
@@ -696,7 +777,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, strncat aligned\n", t_dps, t_lib);
+    printf("\tstrncat aligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
     /***************/
 
@@ -726,7 +807,7 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, strncat unaligned\n", t_dps, t_lib);
+    printf("\tstrncat unaligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
 
 
@@ -739,7 +820,7 @@ int main() {
     /*    for (z =0; z < N/8; z++)*/
     for (i = N-1; i > STARTLEN; i--) {
       dps_strlen(a+i);
-      dps_strlen(d+i);
+      /*dps_strlen(d+i);*/
     }
     t_dps = TimerEnd();
 
@@ -748,7 +829,7 @@ int main() {
     /*for (z =0; z < N/8; z++)*/
     for (i = N-1; i > STARTLEN; i--) {
       strlen(a+i);
-      strlen(d+i);
+      /*strlen(d+i);*/
     }
     t_lib = TimerEnd();
 
@@ -756,7 +837,65 @@ int main() {
 	    (t_lib < t_dps) ? "/*" : "",
 	    (t_lib < t_dps) ? "*/" : ""
 	    );
-    printf("\tdps:%g lib:%g, strlen aligned\n", t_dps, t_lib);
+    printf("\tstrlen aligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
+
+
+    /* ###################################### */
+
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    char set[4] = { 13, 14, 15, 0}, *res;
+    TimerStart();
+    /*    for (z =0; z < N/8; z++)*/
+    for (i = N-1; i > STARTLEN; i--) {
+	res = dps_strpbrk1(a+i, set);
+ 	res = dps_strpbrk1(set, a+i);
+   }
+    t_dps = TimerEnd();
+
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    TimerStart();
+    /*for (z =0; z < N/8; z++)*/
+    for (i = N-1; i > STARTLEN; i--) {
+	res = strpbrk(a+i, set);
+ 	res = strpbrk(set, a+i);
+   }
+    t_lib = TimerEnd();
+
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_STRPBRK_UNALIGNED%s\n\n", t_dps, t_lib,
+	    (t_lib < t_dps) ? "/*" : "",
+	    (t_lib < t_dps) ? "*/" : ""
+	    );
+    printf("\tstrbprk aligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
+
+
+    /* ###################################### */
+
+    free(d); free(a);
+    char w[5] = { 1, 2, 3, 4, 5};
+    qsort(a0, N, sizeof(*a0), char_cmp);
+    d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    TimerStart();
+    /*    for (z =0; z < N/8; z++)*/
+    for (i = N-1; i > STARTLEN; i--) {
+	dps_bsearch(a+i, a, N, sizeof(*a), char_cmp);
+    }
+    t_dps = TimerEnd();
+    if (dps_bsearch(w+4, w, 5, sizeof(*w), char_cmp) != w+4 || dps_bsearch(w+3, w, 4, sizeof(*w), char_cmp) != w+3) printf("dps_bsearch() is not correct!\n");
+
+    free(d); free(a); d = zeroarr(N + 8); a = copyarr(a0, N + 1);
+    TimerStart();
+    /*for (z =0; z < N/8; z++)*/
+    for (i = N-1; i > STARTLEN; i--) {
+	bsearch(a+i, a, N, sizeof(*a), char_cmp);
+    }
+    t_lib = TimerEnd();
+    if (bsearch(w+4, w, 5, sizeof(*w), char_cmp) != w+4 || bsearch(w+3, w, 4, sizeof(*w), char_cmp) != w+3) printf("bsearch() is not correct!\n");
+
+    fprintf(cfg, "/* dps:%g vs. lib:%g */\n%s#define DPS_USE_BSEARCH%s\n\n", t_dps, t_lib,
+	    (t_lib < t_dps) ? "/*" : "",
+	    (t_lib < t_dps) ? "*/" : ""
+	    );
+    printf("\tbsearch aligned: %s (%g vs %g)\n", (t_dps < t_lib) ? "dps" : "lib", t_dps, t_lib);
 
 
 
@@ -771,3 +910,6 @@ int main() {
 }
 
 #endif
+
+
+
