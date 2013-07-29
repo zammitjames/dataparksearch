@@ -940,7 +940,7 @@ DPS_CHARSET_ALIAS dps_cs_alias[]={
 	{"csisolatincyrillic",	DPS_CHARSET_8859_5},
 	{"csisolatingreek",	DPS_CHARSET_8859_7},
 	{"csisolatinhebrew",	DPS_CHARSET_8859_8},
-	{"cskoi8Ó",		DPS_CHARSET_KOI8_C},
+	{"cskoi8c",		DPS_CHARSET_KOI8_C},
 	{"cskoi8r",		DPS_CHARSET_KOI8_R},
 	{"cskoi8t",		DPS_CHARSET_KOI8_T},
 	{"cskoi8u",		DPS_CHARSET_KOI8_U},
@@ -1215,6 +1215,7 @@ __C_LINK DPS_CHARSET * __DPSCALL DpsGetCharSetByID(int id) {
 }
 
 #if 0
+#include <stdio.h>
 static void DpsCheckCharsetList(void) {
   int i;
   fprintf(stderr, "DpsCheckCharsetList\n");
