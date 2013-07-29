@@ -741,7 +741,8 @@ static int DpsServerDB(DPS_AGENT *Indexer, DPS_SERVER *Srv, DPS_DB *db) {
       DpsSQLFree(&SQLRes);
       return DPS_ERROR;
     }
-    if((Srv->Match.match_type == DPS_MATCH_BEGIN) && (Srv->Match.pattern[0])) {
+    if((Indexer->flags & DPS_FLAG_ADD_SERVURL) 
+       && (Srv->Match.match_type == DPS_MATCH_BEGIN) && (Srv->Match.pattern[0])) {
 
       bzero((void*)&Href, sizeof(Href));
       Href.url = Srv->Match.pattern;
