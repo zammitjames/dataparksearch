@@ -5310,6 +5310,34 @@ static int DpsFilter(DPS_AGENT *A, DPS_DB *db) {
 
 			/* Check hops, network errors, filters */
 			rc = DpsDocCheck(A, Server, Doc);
+
+			if(rc == DPS_OK && !strncmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "http", 4)) {
+			    if(!Doc->Spider.use_robots){
+				DPS_GETLOCK(A, DPS_LOCK_CONF);
+				rc = DpsRobotParse(A, NULL, NULL, DPS_NULL2EMPTY(Doc->CurURL.hostinfo), DpsVarListFindInt(&Doc->Sections, "Hops", 0) + 1);
+				DPS_RELEASELOCK(A, DPS_LOCK_CONF);
+			    }else{
+				DPS_ROBOT_RULE	*rule;
+
+				/* Check whether URL is disallowed by robots.txt */
+				rule = DpsRobotRuleFind(A, Server, Doc, &Doc->CurURL, 1, (alias) ? 1 : 0);
+				if(rule) {
+				    char *w;
+				    switch(rule->cmd) {
+				    case DPS_METHOD_DISALLOW:
+				    case DPS_METHOD_VISITLATER:
+					w = "Disallow"; break;
+				    case DPS_METHOD_CRAWLDELAY:
+					w = "Postpone"; break;
+				    default:
+					w = "Allow";
+				    }
+				    DpsLog(A, (rule->cmd==DPS_METHOD_DISALLOW||rule->cmd==DPS_METHOD_VISITLATER) ? DPS_LOG_INFO : DPS_LOG_EXTRA, "Doc.robots.txt: '%s %s'", w, rule->path);
+				    if((rule->cmd == DPS_METHOD_DISALLOW) || (rule->cmd == DPS_METHOD_VISITLATER) || (rule->cmd == DPS_METHOD_CRAWLDELAY) )
+					Doc->method = rule->cmd;
+				}
+			    }
+			}
 		}
 		DPS_FREE(alstr);
 	}
