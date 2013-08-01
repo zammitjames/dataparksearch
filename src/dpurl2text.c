@@ -546,13 +546,6 @@ int main(int argc, char **argv, char **envp) {
     url = argv[0];
     Doc = DpsDocInit(NULL);
 
-    Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Indexer->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
-    DpsVarList2Doc(Doc, &Conf.Cfg_Srv);
-    DpsVarListReplaceLst(&Doc->Sections, &Conf.Sections, NULL, "*");
-    DpsVarListReplaceStr(&Doc->Sections, "URL", url);
-    DpsDocAddConfExtraHeaders(Main.Conf, Doc);
-    DpsDocAddDocExtraHeaders(&Main, Doc);
-
     name_width = 0;
     { size_t i, r, nlen;
 	for (r = 0; r < 256; r++)
@@ -569,6 +562,13 @@ int main(int argc, char **argv, char **envp) {
     } else {
 	int	start, state, result;
 	int	mp3type = DPS_MP3_UNKNOWN;
+
+	Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Indexer->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
+	DpsVarList2Doc(Doc, &Conf.Cfg_Srv);
+	DpsVarListReplaceLst(&Doc->Sections, &Conf.Sections, NULL, "*");
+	DpsVarListReplaceStr(&Doc->Sections, "URL", url);
+	DpsDocAddConfExtraHeaders(Main.Conf, Doc);
+	DpsDocAddDocExtraHeaders(&Main, Doc);
 
 	/* Check filters */
 	result = DpsDocCheck(&Main, Main.Conf->Cfg_Srv, Doc);
