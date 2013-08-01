@@ -2776,9 +2776,9 @@ AC_SUBST(COLLATEINDEX)
 
 dnl Check if one of databases was selected
 if test "$have_db" != "yes"; then
-   db_PROGS="dpguesser$ac_exeext dpconv$ac_exeext"
+   db_PROGS="dpguesser$ac_exeext dpconv$ac_exeext dpurl2text$ac_exeext"
 else	
-   db_PROGS="indexer$ac_exeext searchd$ac_exeext splitter$ac_exeext stored$ac_exeext cached$ac_exeext dpguesser$ac_exeext dpconv$ac_exeext"
+   db_PROGS="indexer$ac_exeext searchd$ac_exeext splitter$ac_exeext stored$ac_exeext cached$ac_exeext dpguesser$ac_exeext dpconv$ac_exeext dpurl2text$ac_exeext"
 fi
 
 AC_SUBST(CFLAGS)

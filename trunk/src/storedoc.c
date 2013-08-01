@@ -317,7 +317,7 @@ int main(int argc, char **argv, char **envp) {
 #ifdef HAVE_ZLIB
 	      if((!strcasecmp(ce, "gzip")) || (!strcasecmp(ce, "x-gzip"))) {
 		if (status == 206) {
-		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't ungzip it.");
+		  DpsLog(Agent, DPS_LOG_INFO, "Partial content, can't ungzip it.");
 		  goto fin;
 		}
 		DpsUnGzip(Agent, Doc);
@@ -325,7 +325,7 @@ int main(int argc, char **argv, char **envp) {
 				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
 	      } else if(!strcasecmp(ce,"deflate")){
 		if (status == 206) {
-		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't inflate it.");
+		  DpsLog(Agent, DPS_LOG_INFO, "Partial content, can't inflate it.");
 		  goto fin;
 		}
 		DpsInflate(Agent, Doc);
@@ -333,7 +333,7 @@ int main(int argc, char **argv, char **envp) {
 				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
 	      } else if((!strcasecmp(ce, "compress")) || (!strcasecmp(ce, "x-compress"))) {
 		if (status == 206) {
-		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't uncomress it.");
+		  DpsLog(Agent, DPS_LOG_INFO, "Partial content, can't uncomress it.");
 		  goto fin;
 		}
 		DpsUncompress(Agent, Doc);

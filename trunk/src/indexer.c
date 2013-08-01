@@ -147,7 +147,7 @@ int DpsFilterFind(int log_level, DPS_MATCHLIST *L, const char *newhref, char *re
 	return res;
 }
 
-static int DpsSectionFilterFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc, char *reason){
+int DpsSectionFilterFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc, char *reason) {
 	DPS_MATCH_PART	P[NS];
 	DPS_MATCH	*M;
 	int		res = DPS_METHOD_UNKNOWN;
@@ -195,7 +195,8 @@ static int DpsStoreFilterFind(int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc
 	return res;
 }
 
-static int DpsSubSectionMatchFind(DPS_AGENT *Indexer, int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc, char *reason, char **subsection) {
+
+int DpsSubSectionMatchFind(DPS_AGENT *Indexer, int log_level, DPS_MATCHLIST *L, DPS_DOCUMENT *Doc, char *reason, char **subsection) {
 	DPS_MATCH_PART	P[NS];
 	DPS_MATCH	*M;
 	int		res = DPS_METHOD_UNKNOWN;
@@ -852,7 +853,7 @@ int DpsDocCheck(DPS_AGENT *Indexer, DPS_SERVER *CurSrv, DPS_DOCUMENT *Doc) {
 	  return DPS_OK;
 	}
 
-	/* Check for older focs */
+	/* Check for older docs */
 	if (older > 0) {
 	  time_t now = Indexer->now, last_mod_time = DpsHttpDate2Time_t(DpsVarListFindStr(&Doc->Sections, "Last-Modified", ""));
 
@@ -1263,7 +1264,7 @@ int Dps_MetaDataProcessor(void *cls, const char *plugin_name, enum EXTRACTOR_Met
 
 #endif /* HAVE_LIBEXTRACTOR */
 
-static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
+int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	
 #ifdef WITH_PARSER
 	DPS_PARSER	*Parser;
@@ -1285,7 +1286,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  if(!strcasecmp(te, "chunked")) {
 		DPS_THREADINFO(Indexer, "Unchunk", url);
 		if (status == 206) {
-		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't unchunk it.");
+		  DpsLog(Indexer, DPS_LOG_INFO, "Partial content, can't unchunk it.");
 		  return result;
 		}
 		DpsUnchunk(Indexer, Doc, ce);
@@ -1296,7 +1297,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  if((!strcasecmp(ce, "gzip")) || (!strcasecmp(ce, "x-gzip"))) {
 		DPS_THREADINFO(Indexer,"UnGzip",url);
 		if (status == 206) {
-		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't ungzip it.");
+		  DpsLog(Indexer, DPS_LOG_INFO, "Partial content, can't ungzip it.");
 		  return result;
 		}
 		DpsUnGzip(Indexer, Doc);
@@ -1306,7 +1307,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	  if(!strcasecmp(ce,"deflate")){
 		DPS_THREADINFO(Indexer,"Inflate",url);
 		if (status == 206) {
-		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't inflate it.");
+		  DpsLog(Indexer, DPS_LOG_INFO, "Partial content, can't inflate it.");
 		  return result;
 		}
 		DpsInflate(Indexer, Doc);
@@ -1316,7 +1317,7 @@ static int DpsDocParseContent(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
 	    if((!strcasecmp(ce, "compress")) || (!strcasecmp(ce, "x-compress"))) {
 		DPS_THREADINFO(Indexer,"Uncompress",url);
 		if (status == 206) {
-		  DpsLog(Indexer, DPS_LOG_INFO, "Parial content, can't uncomress it.");
+		  DpsLog(Indexer, DPS_LOG_INFO, "Partial content, can't uncomress it.");
 		  return result;
 		}
 		DpsUncompress(Indexer, Doc);
@@ -2825,4 +2826,39 @@ __C_LINK int __DPSCALL DpsIndexNextURL(DPS_AGENT *Indexer){
 	DpsViolationExit(Indexer->handle, paran);
 #endif
 	return result;
+}
+
+
+/*
+  Load indexer.conf and check if any DBAddr were given
+*/
+int DpsIndexerEnvLoad(DPS_AGENT *Indexer, const char *fname, dps_uint8 lflags) {
+     int rc;
+     if (DPS_OK == (rc = DpsEnvLoad(Indexer, fname, lflags))){
+          if ((NULL == DpsAgentDBLSet(Indexer, Indexer->Conf))) {
+	    sprintf(Indexer->Conf->errstr, "Can't set DBList at %s:%d", __FILE__, __LINE__);
+	    return DPS_ERROR;
+	  }
+          rc = (Indexer->flags & DPS_FLAG_UNOCON) ? (Indexer->Conf->dbl.nitems == 0) : (Indexer->dbl.nitems == 0);
+          if (rc) {
+               sprintf(Indexer->Conf->errstr, "Error: '%s': No DBAddr command was specified", fname);
+               rc= DPS_ERROR;
+          } else {
+	    size_t i, tix, cpnt;
+	    DPS_SERVERLIST *List;	
+	    rc = DPS_OK;
+	    if (Indexer->Conf->total_srv_cnt) DPS_FREE(Indexer->Conf->SrvPnt)  else  Indexer->Conf->SrvPnt = NULL;
+	    Indexer->Conf->total_srv_cnt = 0; cpnt = 0;
+	    for (tix = DPS_MATCH_min; tix < DPS_MATCH_max; tix++) {
+	      List = &Indexer->Conf->Servers[tix];
+	      Indexer->Conf->total_srv_cnt += List->nservers;
+	      Indexer->Conf->SrvPnt =(DPS_SERVER**)DpsRealloc(Indexer->Conf->SrvPnt, Indexer->Conf->total_srv_cnt * sizeof(DPS_SERVER*)+1);
+	      for (i = 0; i < List->nservers; i++) {
+		Indexer->Conf->SrvPnt[cpnt++] = &List->Server[i];
+	      }
+	    }
+	    if (Indexer->Conf->total_srv_cnt > 1) DpsSort(Indexer->Conf->SrvPnt, cpnt, sizeof(DPS_SERVER*), cmpsrvpnt);
+	  }
+     }
+     return rc;
 }

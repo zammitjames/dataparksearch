@@ -105,6 +105,7 @@ int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigne
 	struct timeval tv;
 #ifdef DEBUG
 	struct sockaddr_in *inet = (struct sockaddr_in *)name;
+	struct sockaddr_in6 *inet6 = (struct sockaddr_in6 *)name;
 #endif
 
 
@@ -117,15 +118,15 @@ int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigne
 #else
 	  char abuf[INET6_ADDRSTRLEN];
 #endif
-	  if (name->type.sa.sa_family == AF_INET) {
+	  if (name->sa_family == AF_INET) {
 	    if (inet_ntop(AF_INET, &inet->sin_addr, abuf, sizeof(abuf)) == NULL) {
-	      dps_snprintf(abuf, sizeof(anet), "<unknow>");
+	      dps_snprintf(abuf, sizeof(abuf), "<unknow>");
 	    }
-	  } else if (name->type.sa.sa_family == AF_INET6) {
-	    if (inet_ntop(AF_INET6, &name->type.sin6.sin6_addr, abuf, sizeof(abuf)) == NULL) {
-	      dps_snprintf(abuf, sizeof(anet), "<unknow>");
+	  } else if (name->sa_family == AF_INET6) {
+	    if (inet_ntop(AF_INET6, &inet6->sin6_addr, abuf, sizeof(abuf)) == NULL) {
+	      dps_snprintf(abuf, sizeof(abuf), "<unknow>");
 	    }
-	  } else dps_snprintf(abuf, sizeof(anet), "<unknow>");
+	  } else dps_snprintf(abuf, sizeof(abuf), "<unknow>");
 	  fprintf(stderr, "Trying connect to: %s with timeout %d\n", abuf, to);
 	}
 #endif
@@ -146,7 +147,12 @@ int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigne
 #endif
 	  return(-1);		/* Unknown error, not timeout */
 	}
-	if(!res)return(0);		/* Quickly connected */
+	if(!res) {
+#ifdef DEBUG
+	    fprintf(stderr, "connected, exit at %s[%d]\n", __FILE__, __LINE__);
+#endif
+	    return(0);		/* Quickly connected */
+	}
 
 	FD_ZERO(&sfds);
 	FD_SET(s,&sfds);
@@ -167,13 +173,23 @@ int connect_tm(int s, const struct sockaddr *name, unsigned int namelen, unsigne
 	}
 
 	s_err=0;
-	if (getsockopt(s, SOL_SOCKET, SO_ERROR, (char*) &s_err, &s_err_size) != 0)
+	if (getsockopt(s, SOL_SOCKET, SO_ERROR, (char*) &s_err, &s_err_size) != 0) {
+#ifdef DEBUG
+	    fprintf(stderr, "not connected, exit at %s[%d]\n", __FILE__, __LINE__);
+#endif
 		return(-1);		/* Can't get sock options */
+	}
 
 	if (s_err){
 		errno = s_err;
+#ifdef DEBUG
+		fprintf(stderr, "not connected, exit at %s[%d]\n", __FILE__, __LINE__);
+#endif
 		return(-1);
 	}
+#ifdef DEBUG
+	fprintf(stderr, "connected, exit at %s[%d]\n", __FILE__, __LINE__);
+#endif
 	return(0);			/* We have a connection! */
 }
 
