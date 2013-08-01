@@ -312,7 +312,7 @@ static int dpstoredoc_handler(request_rec *r) {
 #ifdef HAVE_ZLIB
 	      if((!strcasecmp(ce, "gzip")) || (!strcasecmp(ce, "x-gzip"))) {
 		if (status == 206) {
-		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't ungzip it.");
+		  DpsLog(Agent, DPS_LOG_INFO, "Partial content, can't ungzip it.");
 		  goto fin;
 		}
 		DpsUnGzip(Agent, Doc);
@@ -328,7 +328,7 @@ static int dpstoredoc_handler(request_rec *r) {
 				     Doc->Buf.buf - Doc->Buf.content + (int)Doc->Buf.size + DpsVarListFindInt(&Doc->Sections, "Content-Length", 0));
 	      } else if((!strcasecmp(ce, "compress")) || (!strcasecmp(ce, "x-compress"))) {
 		if (status == 206) {
-		  DpsLog(Agent, DPS_LOG_INFO, "Parial content, can't uncomress it.");
+		  DpsLog(Agent, DPS_LOG_INFO, "Partial content, can't uncomress it.");
 		  goto fin;
 		}
 		DpsUncompress(Agent, Doc);

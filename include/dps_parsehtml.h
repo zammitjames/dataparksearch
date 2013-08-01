@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2012 Datapark corp. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -52,5 +53,6 @@ extern const char * DpsHTMLToken(const char * s, const char ** lt,DPS_HTMLTOK *t
 extern int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc);
 extern void DpsHTMLTOKInit(DPS_HTMLTOK *t);
 extern void DpsHTMLTOKFree(DPS_HTMLTOK *t);
+extern int dps_itemptr_cmp(DPS_TEXTITEM **p1, DPS_TEXTITEM **p2);
 
 #endif

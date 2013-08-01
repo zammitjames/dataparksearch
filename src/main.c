@@ -633,39 +633,6 @@ Misc. options:\n\
 
 
 
-/*
-  Load indexer.conf and check if any DBAddr were given
-*/
-static int DpsIndexerEnvLoad(DPS_AGENT *Indexer, const char *fname, dps_uint8 lflags) {
-     int rc;
-     if (DPS_OK == (rc = DpsEnvLoad(Indexer, fname, lflags))){
-          if ((NULL == DpsAgentDBLSet(Indexer, Indexer->Conf))) {
-	    sprintf(Indexer->Conf->errstr, "Can't set DBList at %s:%d", __FILE__, __LINE__);
-	    return DPS_ERROR;
-	  }
-          rc = (Indexer->flags & DPS_FLAG_UNOCON) ? (Indexer->Conf->dbl.nitems == 0) : (Indexer->dbl.nitems == 0);
-          if (rc) {
-               sprintf(Indexer->Conf->errstr, "Error: '%s': No DBAddr command was specified", fname);
-               rc= DPS_ERROR;
-          } else {
-	    size_t i, tix, cpnt;
-	    DPS_SERVERLIST *List;	
-	    rc = DPS_OK;
-	    if (Indexer->Conf->total_srv_cnt) DPS_FREE(Indexer->Conf->SrvPnt)  else  Indexer->Conf->SrvPnt = NULL;
-	    Indexer->Conf->total_srv_cnt = 0; cpnt = 0;
-	    for (tix = DPS_MATCH_min; tix < DPS_MATCH_max; tix++) {
-	      List = &Indexer->Conf->Servers[tix];
-	      Indexer->Conf->total_srv_cnt += List->nservers;
-	      Indexer->Conf->SrvPnt =(DPS_SERVER**)DpsRealloc(Indexer->Conf->SrvPnt, Indexer->Conf->total_srv_cnt * sizeof(DPS_SERVER*)+1);
-	      for (i = 0; i < List->nservers; i++) {
-		Indexer->Conf->SrvPnt[cpnt++] = &List->Server[i];
-	      }
-	    }
-	    if (Indexer->Conf->total_srv_cnt > 1) DpsSort(Indexer->Conf->SrvPnt, cpnt, sizeof(DPS_SERVER*), cmpsrvpnt);
-	  }
-     }
-     return rc;
-}
 
 static enum dps_indcmd DpsIndCmd(const char *cmd) {
   if (!cmd)return DPS_IND_INDEX;
@@ -728,8 +695,8 @@ static void DpsParseCmdLine(void) {
           case 'Q': cmd = DPS_IND_SQLMON;  add_servers=0;load_langmaps=0;load_spells=0; add_server_urls = 0; break;
           case 'T': cmd = DPS_IND_CHECKCONF;  add_servers = 0; load_langmaps = 0; load_spells = 0; add_server_urls = 0; break;
           case 'E': cmd = DpsIndCmd(optarg); 
-	    if (cmd == DPS_IND_FILTER) { load_langmaps = 0; load_spells = 0; add_server_urls = 0;
-	    } else if (cmd != DPS_IND_INDEX) {add_servers = 0; load_langmaps = 0; load_spells = 0; add_server_urls = 0; } 
+	    if (cmd == DPS_IND_FILTER) { load_langmaps = load_spells = add_server_urls = 0;
+	    } else if (cmd != DPS_IND_INDEX) {add_servers = load_langmaps = load_spells = add_server_urls = 0; } 
 	    break;
           case 'R': pop_rank++; break;
           case 'U': flags |= DPS_FLAG_UNOCON;break;
@@ -1533,6 +1500,7 @@ int main(int argc, char **argv, char **envp) {
      DpsOpenLog("indexer.cfg", &Conf, log2stderr);
      if(DPS_OK != (cfg_res = DpsIndexerEnvLoad(&Main, cname, flags))) {
           fprintf(stderr,"%s\n",DpsEnvErrMsg(&Conf));
+	  DpsAgentFree(&Main);
           DpsEnvFree(&Conf);
           exit(1);
      }

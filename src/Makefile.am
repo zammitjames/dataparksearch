@@ -20,7 +20,7 @@ noinst_HEADERS = uconv-8bit.h
 bin_PROGRAMS = search.cgi storedoc.cgi filler.cgi
 sbin_PROGRAMS = @db_PROGS@
 noinst_PROGRAMS = @APACHE_MODULE@ @PHP_MODULE@
-EXTRA_PROGRAMS= indexer searchd splitter stored dpguesser cached dpconv mod_dpsearch.so dpsearch.so
+EXTRA_PROGRAMS= indexer searchd splitter stored dpguesser cached dpconv dpurl2text mod_dpsearch.so dpsearch.so
 EXTRA_DIST = mod_dpsearch.c sgml.entities sgml.inc uconv-8bit.inc unidata.ch php.c commands.lst commands.inc \
 	timezones.lst timezones.inc charset-Makefile.am dp-Makefile.am dp.c dps_memcpy.inc
 
@@ -68,6 +68,11 @@ dpconv_SOURCES = dpconv.c
 dpconv_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 dpconv_LDFLAGS = @PTHREAD_LFLAGS@  
 dpconv_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
+
+dpurl2text_SOURCES = dpurl2text.c
+dpurl2text_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
+dpurl2text_LDFLAGS = @PTHREAD_LFLAGS@  
+dpurl2text_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 
 cached_SOURCES = cached.c
 cached_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 

@@ -164,7 +164,7 @@ pkg-deb: dist
 		./configure; \
 		dpkg-buildpackage -rfakeroot; \
                 mv ../*.deb $(PWD)
-	rm -r $(TMPDIR)
+	rm -rf $(TMPDIR)
 
 # Create an RPM package
 #pkg-rpm: dist

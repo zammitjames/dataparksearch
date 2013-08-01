@@ -441,7 +441,7 @@ int DpsPrepareItem(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_TEXTITEM *Item, dp
 }
 
 
-static int dps_itemptr_cmp(DPS_TEXTITEM **p1, DPS_TEXTITEM **p2) {
+int dps_itemptr_cmp(DPS_TEXTITEM **p1, DPS_TEXTITEM **p2) {
   if ((*p1)->len > (*p2)->len) return -1;
   if ((*p1)->len < (*p2)->len) return 1;
   return 0;
@@ -576,11 +576,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_FREE(uword); DPS_FREE(lcsword); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
-#ifdef WITH_PARANOIA
-      DpsViolationExit(Indexer->handle, paran);
-#endif
 #ifdef HAVE_ASPELL
       if (have_speller) DpsDSTRFree(&suggest); 
+#endif
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }
@@ -596,11 +596,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
-#ifdef WITH_PARANOIA
-      DpsViolationExit(Indexer->handle, paran);
-#endif
 #ifdef HAVE_ASPELL
       if (have_speller) DpsDSTRFree(&suggest); 
+#endif
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }
@@ -641,11 +641,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
-#ifdef WITH_PARANOIA
-      DpsViolationExit(Indexer->handle, paran);
-#endif
 #ifdef HAVE_ASPELL
       if (have_speller) DpsDSTRFree(&suggest); 
+#endif
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }
@@ -673,11 +673,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_FREE(uword); DPS_FREE(lcsword); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
-#ifdef WITH_PARANOIA
-      DpsViolationExit(Indexer->handle, paran);
-#endif
 #ifdef HAVE_ASPELL
       if (have_speller) DpsDSTRFree(&suggest); 
+#endif
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }
@@ -692,11 +692,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
-#ifdef WITH_PARANOIA
-      DpsViolationExit(Indexer->handle, paran);
-#endif
 #ifdef HAVE_ASPELL
       if (have_speller) DpsDSTRFree(&suggest); 
+#endif
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }
@@ -736,11 +736,11 @@ int DpsPrepareWords(DPS_AGENT * Indexer, DPS_DOCUMENT * Doc) {
       DPS_FREE(uword); DPS_FREE(lcsword); DPS_FREE(ustr); DPS_FREE(UStr); 
       DpsDSTRFree(&exrpt);
       TRACE_OUT(Indexer);
-#ifdef WITH_PARANOIA
-      DpsViolationExit(Indexer->handle, paran);
-#endif
 #ifdef HAVE_ASPELL
       if (have_speller) DpsDSTRFree(&suggest); 
+#endif
+#ifdef WITH_PARANOIA
+      DpsViolationExit(Indexer->handle, paran);
 #endif
       return DPS_ERROR;
     }

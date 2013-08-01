@@ -58,7 +58,8 @@ bin_PROGRAMS = search.cgi$(EXEEXT) storedoc.cgi$(EXEEXT) \
 	filler.cgi$(EXEEXT)
 EXTRA_PROGRAMS = indexer$(EXEEXT) searchd$(EXEEXT) splitter$(EXEEXT) \
 	stored$(EXEEXT) dpguesser$(EXEEXT) cached$(EXEEXT) \
-	dpconv$(EXEEXT) mod_dpsearch.so$(EXEEXT) dpsearch.so$(EXEEXT)
+	dpconv$(EXEEXT) dpurl2text$(EXEEXT) mod_dpsearch.so$(EXEEXT) \
+	dpsearch.so$(EXEEXT)
 subdir = src
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -261,6 +262,12 @@ dpsearch_so_OBJECTS = $(am_dpsearch_so_OBJECTS)
 dpsearch_so_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(dpsearch_so_CFLAGS) \
 	$(CFLAGS) $(dpsearch_so_LDFLAGS) $(LDFLAGS) -o $@
+am_dpurl2text_OBJECTS = dpurl2text-dpurl2text.$(OBJEXT)
+dpurl2text_OBJECTS = $(am_dpurl2text_OBJECTS)
+dpurl2text_DEPENDENCIES = libdpsearch.la libdpcharset.la libdp.la
+dpurl2text_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(dpurl2text_CFLAGS) \
+	$(CFLAGS) $(dpurl2text_LDFLAGS) $(LDFLAGS) -o $@
 am_filler_cgi_OBJECTS = filler_cgi-filler.$(OBJEXT)
 filler_cgi_OBJECTS = $(am_filler_cgi_OBJECTS)
 filler_cgi_DEPENDENCIES = libdpsearch.la libdpcharset.la libdp.la
@@ -332,18 +339,20 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 SOURCES = $(libdp_la_SOURCES) $(libdpcharset_la_SOURCES) \
 	$(libdpsearch_la_SOURCES) $(libdpsearch_mod_la_SOURCES) \
 	$(cached_SOURCES) $(dpconv_SOURCES) $(dpguesser_SOURCES) \
-	$(dpsearch_so_SOURCES) $(filler_cgi_SOURCES) \
-	$(indexer_SOURCES) $(mod_dpsearch_so_SOURCES) \
-	$(search_cgi_SOURCES) $(searchd_SOURCES) $(splitter_SOURCES) \
-	$(stored_SOURCES) $(storedoc_cgi_SOURCES)
+	$(dpsearch_so_SOURCES) $(dpurl2text_SOURCES) \
+	$(filler_cgi_SOURCES) $(indexer_SOURCES) \
+	$(mod_dpsearch_so_SOURCES) $(search_cgi_SOURCES) \
+	$(searchd_SOURCES) $(splitter_SOURCES) $(stored_SOURCES) \
+	$(storedoc_cgi_SOURCES)
 DIST_SOURCES = $(libdp_la_SOURCES) $(libdpcharset_la_SOURCES) \
 	$(libdpsearch_la_SOURCES) \
 	$(am__libdpsearch_mod_la_SOURCES_DIST) $(cached_SOURCES) \
 	$(dpconv_SOURCES) $(dpguesser_SOURCES) \
-	$(am__dpsearch_so_SOURCES_DIST) $(filler_cgi_SOURCES) \
-	$(indexer_SOURCES) $(am__mod_dpsearch_so_SOURCES_DIST) \
-	$(search_cgi_SOURCES) $(searchd_SOURCES) $(splitter_SOURCES) \
-	$(stored_SOURCES) $(storedoc_cgi_SOURCES)
+	$(am__dpsearch_so_SOURCES_DIST) $(dpurl2text_SOURCES) \
+	$(filler_cgi_SOURCES) $(indexer_SOURCES) \
+	$(am__mod_dpsearch_so_SOURCES_DIST) $(search_cgi_SOURCES) \
+	$(searchd_SOURCES) $(splitter_SOURCES) $(stored_SOURCES) \
+	$(storedoc_cgi_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -681,6 +690,10 @@ dpconv_SOURCES = dpconv.c
 dpconv_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 dpconv_LDFLAGS = @PTHREAD_LFLAGS@  
 dpconv_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
+dpurl2text_SOURCES = dpurl2text.c
+dpurl2text_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
+dpurl2text_LDFLAGS = @PTHREAD_LFLAGS@  
+dpurl2text_CFLAGS = @PTHREAD_CFLAGS@ $(AM_CFLAGS)
 cached_SOURCES = cached.c
 cached_LDADD = libdpsearch.la libdpcharset.la @PTHREAD_LDADD@ libdp.la 
 cached_LDFLAGS = @PTHREAD_LFLAGS@  
@@ -929,6 +942,9 @@ dpguesser$(EXEEXT): $(dpguesser_OBJECTS) $(dpguesser_DEPENDENCIES) $(EXTRA_dpgue
 dpsearch.so$(EXEEXT): $(dpsearch_so_OBJECTS) $(dpsearch_so_DEPENDENCIES) $(EXTRA_dpsearch_so_DEPENDENCIES) 
 	@rm -f dpsearch.so$(EXEEXT)
 	$(dpsearch_so_LINK) $(dpsearch_so_OBJECTS) $(dpsearch_so_LDADD) $(LIBS)
+dpurl2text$(EXEEXT): $(dpurl2text_OBJECTS) $(dpurl2text_DEPENDENCIES) $(EXTRA_dpurl2text_DEPENDENCIES) 
+	@rm -f dpurl2text$(EXEEXT)
+	$(dpurl2text_LINK) $(dpurl2text_OBJECTS) $(dpurl2text_LDADD) $(LIBS)
 filler.cgi$(EXEEXT): $(filler_cgi_OBJECTS) $(filler_cgi_DEPENDENCIES) $(EXTRA_filler_cgi_DEPENDENCIES) 
 	@rm -f filler.cgi$(EXEEXT)
 	$(filler_cgi_LINK) $(filler_cgi_OBJECTS) $(filler_cgi_LDADD) $(LIBS)
@@ -966,6 +982,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dpconv-dpconv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dpguesser-dpguesser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dpsearch_so-php.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dpurl2text-dpurl2text.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filler_cgi-filler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indexer-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdpsearch_la-acronym.Plo@am__quote@
@@ -2053,6 +2070,20 @@ dpsearch_so-php.obj: php.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='php.c' object='dpsearch_so-php.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dpsearch_so_CFLAGS) $(CFLAGS) -c -o dpsearch_so-php.obj `if test -f 'php.c'; then $(CYGPATH_W) 'php.c'; else $(CYGPATH_W) '$(srcdir)/php.c'; fi`
+
+dpurl2text-dpurl2text.o: dpurl2text.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dpurl2text_CFLAGS) $(CFLAGS) -MT dpurl2text-dpurl2text.o -MD -MP -MF $(DEPDIR)/dpurl2text-dpurl2text.Tpo -c -o dpurl2text-dpurl2text.o `test -f 'dpurl2text.c' || echo '$(srcdir)/'`dpurl2text.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/dpurl2text-dpurl2text.Tpo $(DEPDIR)/dpurl2text-dpurl2text.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='dpurl2text.c' object='dpurl2text-dpurl2text.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dpurl2text_CFLAGS) $(CFLAGS) -c -o dpurl2text-dpurl2text.o `test -f 'dpurl2text.c' || echo '$(srcdir)/'`dpurl2text.c
+
+dpurl2text-dpurl2text.obj: dpurl2text.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dpurl2text_CFLAGS) $(CFLAGS) -MT dpurl2text-dpurl2text.obj -MD -MP -MF $(DEPDIR)/dpurl2text-dpurl2text.Tpo -c -o dpurl2text-dpurl2text.obj `if test -f 'dpurl2text.c'; then $(CYGPATH_W) 'dpurl2text.c'; else $(CYGPATH_W) '$(srcdir)/dpurl2text.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/dpurl2text-dpurl2text.Tpo $(DEPDIR)/dpurl2text-dpurl2text.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='dpurl2text.c' object='dpurl2text-dpurl2text.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dpurl2text_CFLAGS) $(CFLAGS) -c -o dpurl2text-dpurl2text.obj `if test -f 'dpurl2text.c'; then $(CYGPATH_W) 'dpurl2text.c'; else $(CYGPATH_W) '$(srcdir)/dpurl2text.c'; fi`
 
 filler_cgi-filler.o: filler.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(filler_cgi_CFLAGS) $(CFLAGS) -MT filler_cgi-filler.o -MD -MP -MF $(DEPDIR)/filler_cgi-filler.Tpo -c -o filler_cgi-filler.o `test -f 'filler.c' || echo '$(srcdir)/'`filler.c
