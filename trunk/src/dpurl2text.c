@@ -122,8 +122,8 @@ Converting options:\n\
   -v n          verbose level, 0-5\n\
   -e            use HTML escape entities for input\n\
   -E            use HTML escape entities for output\n\
-  -C            use Unicode Normalization NFC\n\
-  -D            use Unicode Normalization NFD\n\
+  -f charset    set RemoteCharset to charset\n\
+  -t charset    set LocalCharset to charset\n\
 "
 "  -h,-?         print help page and exit\n\
   -hh,-??       print more help and exit\n\
@@ -440,28 +440,21 @@ int main(int argc, char **argv, char **envp) {
     DPS_AGENT Main, *Indexer = &Main;
     DPS_ENV Conf;
     char *charset_from = NULL, *charset_to = NULL;
-    char *url = NULL, *env;
-    DPS_CHARSET *CH_F, *CH_T, *sys_int;
-    DPS_CONV fc_uni, uni_tc;
     int html_from = 0, html_to = 0;
-    char *from_buf, *uni_buf, *to_buf;
-    int ch, help = 0, verbose = 0, NFC = 0, NFD = 0;
+    char *url = NULL, *env;
+    int ch, help = 0;
     dps_uint8 flags    = DPS_FLAG_LOAD_LANGMAP; /* we load langmaps always */
-    const char *CharsToEscape = "\"&<>";
     DPS_DOCUMENT	*Doc;
     int status = 0;
 
-    while ((ch = getopt(argc, argv, "CDEUBeh?t:f:v:")) != -1){
+    while ((ch = getopt(argc, argv, "EUeh?t:f:v:")) != -1){
 	switch (ch) {
-	case 'E': html_to = 1; break;
-	case 'e': html_from = 1; break;
-	case 'v': verbose = 1; DpsSetLogLevel(NULL, atoi(optarg)); break;
+	case 'E': html_to = DPS_RECODE_HTML_TO; break;
+	case 'e': html_from = DPS_RECODE_HTML_FROM; break;
+	case 'v': DpsSetLogLevel(NULL, atoi(optarg)); break;
 	case 't': charset_to =  optarg; break;
 	case 'f': charset_from = optarg; break;
-	case 'C': NFC = 1; NFD = 0; break;
-	case 'D': if (NFC == 0) NFD = 1; break;
 	case 'U': flags |= DPS_FLAG_UNOCON;break;
-	case 'B': flags |= DPS_FLAG_FROM_STORED; break;
 	case '?':
 	case 'h':
 	default:
@@ -473,7 +466,23 @@ int main(int argc, char **argv, char **envp) {
 
     if ((argc > 2) || (argc < 1) || (help)) {
 	usage(help);
-	return(1);
+	return 1;
+    }
+
+    if (charset_from != NULL) {
+	if (!DpsGetCharSet(charset_from)) {
+	    fprintf(stderr, "Charset: %s not found or not supported", charset_from);
+	    display_charsets();
+	    return 1;
+	}
+    }
+
+    if (charset_to != NULL) {
+	if (!DpsGetCharSet(charset_to)) {
+	    fprintf(stderr, "Charset: %s not found or not supported", charset_to);
+	    display_charsets();
+	    return 1;
+	}
     }
 
     bzero(&Conf, sizeof(Conf));
@@ -522,11 +531,14 @@ int main(int argc, char **argv, char **envp) {
 #ifdef HAVE_ASPELL
 	DPS_CHARSET *utfcs;
 #endif
-	loccs = Conf.lcs;
+	if (charset_to != NULL) {
+	    loccs = Conf.lcs = DpsGetCharSet(charset_to);
+	    DpsVarListReplaceStr(&Conf.Vars, "LocalCharset", charset_to);
+	} else loccs = Conf.lcs;
 	if (!loccs) loccs = DpsGetCharSet(DpsVarListFindStr(&Conf.Vars, "LocalCharset", "iso-8859-1"));
 	unics = DpsGetCharSet("sys-int");
-	DpsConvInit(&Main.uni_lc, unics, loccs, Conf.CharsToEscape, DPS_RECODE_HTML);
-	DpsConvInit(&Main.lc_uni, loccs, unics, Conf.CharsToEscape, DPS_RECODE_HTML);
+	DpsConvInit(&Main.uni_lc, unics, loccs, Conf.CharsToEscape, DPS_RECODE_HTML_FROM | html_to);
+	DpsConvInit(&Main.lc_uni, loccs, unics, Conf.CharsToEscape, DPS_RECODE_HTML_TO | html_from);
 	DpsConvInit(&Main.lc_uni_text, loccs, unics, Conf.CharsToEscape, DPS_RECODE_TEXT);
 #ifdef HAVE_ASPELL
 	utfcs = DpsGetCharSet("UTF-8");
@@ -551,7 +563,7 @@ int main(int argc, char **argv, char **envp) {
 	for (r = 0; r < 256; r++)
 	    for (i = 0; i < Conf.Sections.Root[r].nvars; i++) {
 		nlen = dps_strlen(Conf.Sections.Root[r].Var[i].name);
-		if (nlen > name_width) name_width = nlen;
+		if (nlen > (size_t)name_width) name_width = (int)nlen;
 	    }
     }
 
@@ -564,11 +576,14 @@ int main(int argc, char **argv, char **envp) {
 	int	mp3type = DPS_MP3_UNKNOWN;
 
 	Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Indexer->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
-	DpsVarList2Doc(Doc, &Conf.Cfg_Srv);
+	DpsVarList2Doc(Doc, Conf.Cfg_Srv);
 	DpsVarListReplaceLst(&Doc->Sections, &Conf.Sections, NULL, "*");
 	DpsVarListReplaceStr(&Doc->Sections, "URL", url);
 	DpsDocAddConfExtraHeaders(Main.Conf, Doc);
 	DpsDocAddDocExtraHeaders(&Main, Doc);
+	if (charset_from != NULL) {
+	    DpsVarListReplaceStr(&Doc->Sections, "RemoteCharset", charset_from);
+	}
 
 	/* Check filters */
 	result = DpsDocCheck(&Main, Main.Conf->Cfg_Srv, Doc);
