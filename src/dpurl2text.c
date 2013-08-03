@@ -445,6 +445,7 @@ int main(int argc, char **argv, char **envp) {
     int ch, help = 0;
     dps_uint8 flags    = DPS_FLAG_LOAD_LANGMAP; /* we load langmaps always */
     DPS_DOCUMENT	*Doc;
+    DPS_SERVER Srv;
     int status = 0;
 
     while ((ch = getopt(argc, argv, "EUeh?t:f:v:")) != -1){
@@ -557,6 +558,7 @@ int main(int argc, char **argv, char **envp) {
 
     url = argv[0];
     Doc = DpsDocInit(NULL);
+    DpsServerInit(&Srv);
 
     name_width = 0;
     { size_t i, r, nlen;
@@ -576,7 +578,7 @@ int main(int argc, char **argv, char **envp) {
 	int	mp3type = DPS_MP3_UNKNOWN;
 
 	Doc->Buf.max_size = (size_t)DpsVarListFindInt(&Indexer->Vars, "MaxDocSize", DPS_MAXDOCSIZE);
-	DpsVarList2Doc(Doc, Conf.Cfg_Srv);
+	DpsVarList2Doc(Doc, &Srv);
 	DpsVarListReplaceLst(&Doc->Sections, &Conf.Sections, NULL, "*");
 	DpsVarListReplaceStr(&Doc->Sections, "URL", url);
 	DpsDocAddConfExtraHeaders(Main.Conf, Doc);
@@ -586,7 +588,7 @@ int main(int argc, char **argv, char **envp) {
 	}
 
 	/* Check filters */
-	result = DpsDocCheck(&Main, Main.Conf->Cfg_Srv, Doc);
+	result = DpsDocCheck(&Main, &Srv, Doc);
 
 	DpsLog(&Main, DPS_LOG_EXTRA, "Getting %s", url);
 	start = (Doc->method==DPS_METHOD_CHECKMP3 || Doc->method==DPS_METHOD_CHECKMP3ONLY) ? 1 : 0;
@@ -691,6 +693,7 @@ int main(int argc, char **argv, char **envp) {
 
 
     fflush(NULL);
+    DpsServerFree(&Srv);
     DpsDocFree(Doc);
     DpsAgentFree(&Main);
     DpsEnvFree(&Conf);
