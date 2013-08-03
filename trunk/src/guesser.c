@@ -1393,9 +1393,9 @@ int  DpsGuessCharSet(DPS_AGENT *Indexer, DPS_DOCUMENT * Doc, DPS_LANGMAPLIST *Li
      const char *server_lang = DpsStrdup(DpsLanguageCanonicalName(DpsVarListFindStr(&Doc->Sections, "Content-Language", "")));
      const char *lang = "";
      const char *meta_lang = DpsStrdup(DpsLanguageCanonicalName(DpsVarListFindStr(&Doc->Sections, "Meta-Language", "")));
-     const char *server_charset =  DPS_NULL2EMPTY(DpsCharsetCanonicalName(DpsVarListFindStr(&Doc->Sections, "Server-Charset", "")));
-     const char *meta_charset =  DPS_NULL2EMPTY(DpsCharsetCanonicalName(DpsVarListFindStr(&Doc->Sections, "Meta-Charset", "")));
-     const char *charset =  DPS_NULL2EMPTY(DpsCharsetCanonicalName(DpsVarListFindStr(&Doc->Sections, "RemoteCharset", "")));
+     const char *server_charset =  DPS_NULL2EMPTY(DpsCharsetCanonicalName(DpsVarListFindStr(&Doc->Sections, "Server-Charset", DpsVarListFindStr(&Doc->Sections, "RemoteCharset", ""))));
+     const char *meta_charset =  DPS_NULL2EMPTY(DpsCharsetCanonicalName(DpsVarListFindStr(&Doc->Sections, "Meta-Charset", DpsVarListFindStr(&Doc->Sections, "RemoteCharset", ""))));
+     const char *charset =  "";
      const char *lang0 = NULL, *charset0 = NULL;
      size_t InfMiss = 2 * DPS_LM_TOPCNT * DPS_LM_TOPCNT;
      size_t InfHits = 2 * DPS_LM_TOPCNT;
