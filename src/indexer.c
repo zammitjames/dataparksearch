@@ -1831,6 +1831,10 @@ __C_LINK int __DPSCALL DpsIndexSubDoc(DPS_AGENT *Indexer, DPS_DOCUMENT *Parent, 
 	DpsVarListDel(&Doc->Sections, "URL_ID");
 	DpsVarListDel(&Doc->Sections, "DP_ID");
 	DpsVarListDel(&Doc->Sections, "Content-Language");
+	DpsVarListDel(&Doc->Sections, "Meta-Language");
+	DpsVarListDel(&Doc->Sections, "Charset");
+	DpsVarListDel(&Doc->Sections, "Meta-Charset");
+	DpsVarListDel(&Doc->Sections, "Server-Charset");
 
 	DpsVarListReplaceStr(&Doc->Sections, "URL", newhref);
 	if (base) DpsVarListReplaceStr(&Doc->Sections, "base.href", base);
