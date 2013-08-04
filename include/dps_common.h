@@ -1,4 +1,5 @@
-/* Copyright (C) 2004-2012 DataPark Ltd. All rights reserved.
+/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+   Copyright (C) 2004-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
@@ -124,6 +125,7 @@
 #define DPS_DEFAULT_BAD_SINCE_TIME              15*24*60*60     /**< 15 days */
 #define DPS_FINDURL_CACHE_SIZE                  1024
 #define DPS_SERVERID_CACHE_SIZE                 256
+#define DPS_ROBOTS_CACHE_SIZE                   64
 #define	DPS_NET_BUF_SIZE		        65536
 #define DPS_MAX_HOST_ADDR                       16
 #define DPS_POPRANKSKIPSAMESITE                 "yes"
@@ -777,7 +779,6 @@ typedef struct{
 
 typedef struct{
 	size_t		nrobots;
-        size_t          serial;
 	DPS_ROBOT	*Robot;
 } DPS_ROBOTS;
 
