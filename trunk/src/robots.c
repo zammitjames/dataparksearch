@@ -256,9 +256,8 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_SERVER *Server,
 
 	DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
 	Robots = &Indexer->Conf->Robots;
-	if (Robots->nrobots == 3 * DPS_SERVERID_CACHE_SIZE) {
+	if (Robots->nrobots == DPS_ROBOTS_CACHE_SIZE) {
 	  robot = NULL;
-	  Robots->serial++;
 	  DpsRobotListFree(Robots);
 	} else {
 	  robot = DpsRobotFind(Robots, DPS_NULL2EMPTY(URL->hostinfo));
@@ -474,12 +473,11 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	hostname = DPS_NULL2EMPTY(URL->hostinfo);
 
 	DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
-	u = ((Indexer->Robots.nrobots == DPS_SERVERID_CACHE_SIZE) || (Indexer->Robots.serial != Indexer->Conf->Robots.serial));
+	u = (Indexer->Robots.nrobots == DPS_ROBOTS_CACHE_SIZE);
 	DPS_RELEASELOCK(Indexer, DPS_LOCK_ROBOTS);
 	if (u) {
 	  robot = NULL;
 	  DpsRobotListFree(&Indexer->Robots);
-	  Indexer->Robots.serial = Indexer->Conf->Robots.serial;
 	} else {
 	  robot = DpsRobotFind(&Indexer->Robots, hostname);
 	}
@@ -530,15 +528,6 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 	      time_t now;
 
 	      DPS_GETLOCK(Indexer, DPS_LOCK_ROBOTS);
-
-	      if (Indexer->Robots.serial != Indexer->Conf->Robots.serial) {
-		DpsRobotListFree(&Indexer->Robots);
-		Indexer->Robots.serial = Indexer->Conf->Robots.serial;
-		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_GETLOCK(Indexer, DPS_LOCK_DB);
-		robot = DpsRobotClone(Indexer, Server, Doc, URL, rurl, rurlen);
-		if (Indexer->flags & DPS_FLAG_UNOCON) DPS_RELEASELOCK(Indexer, DPS_LOCK_DB);
-	      }
-
 	      now = time(NULL);
 	      diff = (size_t) (now - *(robot->last_crawled));
 	      while ((time_t)(1000 * diff) < robot->crawl_delay) {
