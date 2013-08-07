@@ -37,6 +37,7 @@
 #include "dps_parsehtml.h"
 #include "dps_proto.h"
 #include "dps_sea.h"
+#include "dps_server.h"
 #include "dps_signals.h"
 #include "dps_uniconv.h"
 #include "dps_unidata.h"
