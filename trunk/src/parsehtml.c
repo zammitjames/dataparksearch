@@ -1516,7 +1516,7 @@ int DpsHTMLParseTag(DPS_AGENT *Indexer, DPS_HTMLTOK * tag, DPS_DOCUMENT * Doc) {
 				}else if(!strcasecmp(rtok,"NOINDEX")) {
 					tag->index=0;
 					Doc->Spider.index = 0;
-/*					Doc->method = DPS_METHOD_DISALLOW;*/
+					Doc->method = DPS_METHOD_DISALLOW;
 					if (DpsNeedLog(DPS_LOG_DEBUG)) DpsVarListReplaceInt(&Doc->Sections, "Index", 0);
 				}else if(!strcasecmp(rtok,"NOFOLLOW")) {
 					tag->follow=DPS_FOLLOW_NO;

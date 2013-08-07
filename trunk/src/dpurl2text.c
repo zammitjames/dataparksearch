@@ -443,7 +443,7 @@ int main(int argc, char **argv, char **envp) {
     int html_from = 0, html_to = 0;
     char *url = NULL, *env;
     int ch, help = 0;
-    dps_uint8 flags    = DPS_FLAG_LOAD_LANGMAP; /* we load langmaps always */
+    dps_uint8 flags    = DPS_FLAG_ADD_SERV | DPS_FLAG_LOAD_LANGMAP; /* we load langmaps always */
     DPS_DOCUMENT	*Doc;
     DPS_SERVER Srv;
     int status = 0;
