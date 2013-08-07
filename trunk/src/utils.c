@@ -1189,7 +1189,7 @@ void DpsTime_t2HttpStr(time_t t, char *str) {
     register int dig2 = tim->tm_min - (dig * 10);
     s[0] = (char)(0x30 + dig);
     s[1] = (char)(0x30 + dig2);
-    s[3] = ':'; s += 3;
+    s[2] = ':'; s += 3;
   } else {
     dps_strcpy(s, "??:"); s += 3;
   }
