@@ -5,6 +5,8 @@ DBAddr $(DPS_TEST_DBADDR0)?dbmode=single
 LocalCharset   utf-8
 BrowserCharset utf-8
 
+LogLevel 0
+
 DetectClones	no
 MinWordLength 1
 MaxWordLength 64
@@ -24,7 +26,6 @@ ResultContentType text/xml
 <!--restop-->
 "query":"$(q:json)",
 "found":"$(total:json)","first":"$(first:json)","last":"$(last:json)",
-"time":"$(SearchTime:json)",
 "stat":"$(W:json)",
 "stat_extended":"$(WE:json)",
 "stat_all":"$(WA:json)",
@@ -33,7 +34,7 @@ ResultContentType text/xml
 <!--/restop-->
 
 <!--res-->
-{"title":"$(title:json)","url":"$(url:json)","date":"$(Last-Modified)","content":"$(body:json)"}
+{"title":"$(title:json)","url":"$(url:json)","content":"$(body:json)"}
 <!--/res-->
 
 <!--resbot-->

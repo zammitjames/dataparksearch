@@ -12,6 +12,7 @@ fail !0 exec mkdir $(DPS_TEST_DIR)/var/store
 fail !0 exec mkdir $(DPS_TEST_DIR)/var/tree
 fail !0 exec mkdir $(DPS_TEST_DIR)/var/url
 fail !0 exec $(CACHED) -fv5 $(DPS_TEST_DIR)/cached.conf >> $(DPS_TEST_LOG) 2>&1 &
+fail !0 exec sleep 5
 #fail !0 exec $(CACHED) -fv4 $(DPS_TEST_DIR)/cached.conf &
 skip !0 exec $(INDEXER) -Echeck  $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 
@@ -40,7 +41,7 @@ fail !0 exec rm -f $(DPS_TEST_DIR)/search2.rej
 fail !0 exec  $(INDEXER) -Edrop $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 
 #fail !0 exec kill -9 `cat $(DPS_TEST_DIR)/var/cached.pid` >> $(DPS_TEST_LOG) 2>&1
-fail !0 exec skill -9 cached || skill -9 lt-cached >> >> $(DPS_TEST_LOG) 2>&1
+fail !0 exec pkill -9 cached >> $(DPS_TEST_LOG) 2>&1
 
 
 pass 0 exec rm -rf $(DPS_TEST_DIR)/var/

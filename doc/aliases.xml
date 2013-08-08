@@ -18,20 +18,20 @@ Alias &lt;masterURL&gt; &lt;mirrorURL&gt;
 </para>
 		
 		<para>E.g. you wish to index
-<literal>http://search.mnogo.ru/</literal> using nearest German mirror
-<literal>http://www.gstammw.de/mirrors/mnoGoSearch/</literal>. Add
+<literal>http://search.site.ru/</literal> using nearest German mirror
+<literal>http://www.other.com/mirrors/Search/</literal>. Add
 these lines in your indexer.conf:
 
 		<programlisting>
-Server http://search.mnogo.ru/
-Alias  http://search.mnogo.ru/  http://www.gstammw.de/mirrors/mnoGoSearch/
+Server http://search.site.ru/
+Alias  http://search.site.ru/  http://www.other.com/mirrors/Search/
 </programlisting>
 		</para>
 		<para>
 			<filename>search.cgi</filename> will display
-URLs from master site <literal>http://search.mnogo.ru/</literal> but
+URLs from master site <literal>http://search.site.ru/</literal> but
 indexer will take corresponding page from mirror site
-<literal>http://www.gstammw.de/mirrors/mnoGoSearch/</literal>.</para>
+<literal>http://www.other.com/mirrors/Search/</literal>.</para>
 
 		<para>Another example. If you want to index everything
 in udm.net domain and one of servers, for example

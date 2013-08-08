@@ -31,7 +31,7 @@ DBAddr mysql://foo:bar@localhost/search/?dbmode=cache
 
 
 # Load synonyms. File names are either absolute or 
-# relative to /etc directory of mnoGoSearch installation.
+# relative to /etc directory of DataparkSearch installation.
 #
 #Synonym synonym/english.syn
 #Synonym synonym/russian.syn
@@ -39,7 +39,7 @@ DBAddr mysql://foo:bar@localhost/search/?dbmode=cache
 
 
 # Ispell files. File names are either absolute or 
-# relative to /etc directory of mnoGoSearch installation.
+# relative to /etc directory of DataparkSearch installation.
 #
 #Spell en us-ascii ispell/british.xlg
 #Affix en us-ascii ispell/english.aff

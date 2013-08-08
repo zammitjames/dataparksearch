@@ -5,6 +5,9 @@ dps_test_SOURCES = dps_test.c
 
 CLEANFILES = dps_test dps_test.log sqlnet.log
 
+clean-local:
+	rm -rf test-cached/var/ test-cache/var/ test-searchd/var/
+
 test_follow_FILES = \
 test-follow/indexer.conf \
 test-follow/query.res \
@@ -48,7 +51,17 @@ test-notfound/query.tst \
 test-notfound/test.cmd \
 test-notfound/htdocs/test1.html \
 test-notfound/htdocs/test2.html \
-test-notfound/htdocs/test.txt
+test-notfound/htdocs/test1.txt
+
+test_notmodified_FILES = \
+test-notmodified/indexer.conf \
+test-notmodified/query.res \
+test-notmodified/query.tst \
+test-notmodified/test.cmd \
+test-notmodified/htdocs/test1.html \
+test-notmodified/htdocs/test2.html \
+test-notmodified/htdocs/test3.html \
+test-notmodified/htdocs/test4.html
 
 test_quotes_FILES = \
 test-quotes/indexer.conf \
@@ -91,6 +104,20 @@ test-multi/htdocs/test3.html \
 test-multi/htdocs/test4.html \
 test-multi/htdocs/test1.txt
 
+test_crc_multi_FILES = \
+test-crc-multi/indexer.conf \
+test-crc-multi/query.res \
+test-crc-multi/query.tst \
+test-crc-multi/test.cmd \
+test-crc-multi/search.res \
+test-crc-multi/search2.res \
+test-crc-multi/search.htm \
+test-crc-multi/htdocs/test1.html \
+test-crc-multi/htdocs/test2.html \
+test-crc-multi/htdocs/test3.html \
+test-crc-multi/htdocs/test4.html \
+test-crc-multi/htdocs/test1.txt
+
 test_complexbody_FILES = \
 test-complexbody/indexer.conf \
 test-complexbody/query.res \
@@ -124,6 +151,8 @@ test-sections/search2.res \
 test-sections/search3.res \
 test-sections/search4.res \
 test-sections/search5.res \
+test-sections/search6.res \
+test-sections/search7.res \
 test-sections/htdocs/test1.html \
 test-sections/htdocs/test2.html \
 test-sections/htdocs/test.pdf \
@@ -139,6 +168,7 @@ test-sample/query.tst \
 test-sample/test.cmd \
 test-sample/search.htm \
 test-sample/search.res \
+test-sample/search2.res \
 test-sample/htdocs/test1.html \
 test-sample/htdocs/test2.html \
 test-sample/htdocs/test3.html \
@@ -157,7 +187,6 @@ test-parsehtml/search.res \
 test-parsehtml/search-j.res \
 test-parsehtml/search2.res \
 test-parsehtml/search3.res \
-test-parsehtml/search4.res \
 test-parsehtml/query.tst \
 test-parsehtml/test.cmd \
 test-parsehtml/htdocs/accept.html \
@@ -189,6 +218,8 @@ test-boolean/search3.res \
 test-boolean/search4.res \
 test-boolean/search5.res \
 test-boolean/search6.res \
+test-boolean/search7.res \
+test-boolean/search8.res \
 test-boolean/acr.conf \
 test-boolean/htdocs/anyword.txt \
 test-boolean/htdocs/body1.txt \
@@ -236,7 +267,11 @@ test-cache/query.tst \
 test-cache/test.cmd \
 test-cache/search.htm \
 test-cache/search.res \
-test-cache/search2.res 
+test-cache/search2.res \
+test-cache/search3.res \
+test-cache/search4.res \
+test-cache/search5.res \
+test-cache/search6.res 
 
 
 test_cached_FILES =\
@@ -285,7 +320,8 @@ test-searchd/query.tst \
 test-searchd/test.cmd \
 test-searchd/search.htm \
 test-searchd/search.res \
-test-searchd/search2.res
+test-searchd/search2.res \
+test-searchd/search3.res
 
 
 
@@ -294,10 +330,13 @@ EXTRA_DIST = dps_test-run \
  ${test_hrefonly_FILES} \
  ${test_include_FILES}  \
  ${test_mailto_FILES}   \
+ ${test_notfound_FILES}   \
+ ${test_notmodified_FILES}   \
  ${test_quotes_FILES}   \
  ${test_revalias_FILES} \
  ${test_revalias1_FILES} \
  ${test_multi_FILES} \
+ ${test_crc_multi_FILES} \
  ${test_complexbody_FILES} \
  ${test_charset_FILES} \
  ${test_sections_FILES} \

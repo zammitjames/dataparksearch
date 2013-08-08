@@ -119,18 +119,18 @@ CLASS="PROGRAMLISTING"
 >Например, для индексации
 <TT
 CLASS="LITERAL"
->http://search.mnogo.ru/</TT
+>http://www.site.ru/</TT
 > с использованием ближайшего зеркала
 <TT
 CLASS="LITERAL"
->http://www.gstammw.de/mirrors/mnoGoSearch/</TT
+>http://www.other.com/mirrors/site.ru/</TT
 > нужно добавить
 следующие строки в indexer.conf:
 
 		<PRE
 CLASS="PROGRAMLISTING"
->Server http://search.mnogo.ru/
-Alias  http://search.mnogo.ru/  http://www.gstammw.de/mirrors/mnoGoSearch/</PRE
+>Server http://www.site.ru/
+Alias  http://www.site.ru/  http://www.other.com/mirrors/site.ru/</PRE
 >
 		</P
 ><P
@@ -140,12 +140,12 @@ CLASS="FILENAME"
 > будет указывать
 ссылки с главного сайта <TT
 CLASS="LITERAL"
->http://search.mnogo.ru/</TT
+>http://www.site.ru/</TT
 >, но
 индексатор будет брать данные с зеркала
 <TT
 CLASS="LITERAL"
->http://www.gstammw.de/mirrors/mnoGoSearch/</TT
+>http://www.other.com/mirrors/site.ru/</TT
 >.</P
 ><P
 >Другой пример. Допустим, вы хотите индексировать весь домен
@@ -522,7 +522,7 @@ CLASS="FILENAME"
 > есть такая команда:
 			<PRE
 CLASS="PROGRAMLISTING"
->Alias http://localhost/ http://www.mnogo.ru/</PRE
+>Alias http://localhost/ http://www.site.ru/</PRE
 >
 		</P
 ><P
@@ -533,7 +533,7 @@ CLASS="LITERAL"
 			В результате, появится переменная $(Alias), которую значение которой будет равным
 			<TT
 CLASS="LITERAL"
->http://www.mnogo.ru/news/article10.html</TT
+>http://www.site.ru/news/article10.html</TT
 >
 		</P
 ></DIV

@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
-<TITLE>mnoGoSearch: ford mot co</TITLE>
+<TITLE>DataparkSearch: ford mot co</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -42,7 +42,7 @@
   <DT>1.
   <a href="http://site/test1.txt" TARGET="_blank">
     http://site/test1.txt  </a>
-  <small>[<b>0.112%</b> Popularity: <b>0.07143</b>]</small>
+  <small>[<b>0.206%</b> Popularity: <b>0.07143</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -84,14 +84,5 @@
   <tr><td>&nbsp;</td></tr>
 </table>
 
-<table width=100% bgcolor=#FFFFFF>
-<tr>
-  <td align=left>
-    <a href="http://www.mnogosearch.org/"><IMG BORDER=0 SRC="http://www.mnogosearch.org/img/udm.gif"></A>
-    <FONT SIZE=1><A HREF="http://www.mnogosearch.org/">Powered by mnoGoSearch - free web search engine software</A></FONT><BR>
-  </td>
-</tr>
-</table>
-<P>
 </BODY>
 </HTML>

@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
-<TITLE>mnoGoSearch: allindp_id: 1</TITLE>
+<TITLE>DataparkSearch: allinmeta.te_st: 1</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -13,7 +13,7 @@
   <tr>
     <td>
       <BR> Search for:
-      <INPUT TYPE="text" NAME="q" SIZE="50" value="allindp_id: 1" >
+      <INPUT TYPE="text" NAME="q" SIZE="50" value="allinmeta.te_st: 1" >
       <INPUT TYPE="submit" NAME="cmd" value="Search!" >
       <small><a href="?form=extended">Extended</a></small>
       <BR><BR>
@@ -23,27 +23,65 @@
 </form>
 </center>
 
-<table bgcolor=#EEEEEE width=100%>
+<table bgcolor=#EEEEEE width=100% border=0>
   <tr>
     <td>
-      <small>Search for <b>allindp_id: 1</b>.</small>
-      <small>Search results: <b>1: 0 / 0</b></small>
+      <small>Search for <b>allinmeta.te_st: 1</b>.</small>
+      <small>Search results: <b>1: 1 / 1</b>.</small>
+    </td>
+    <td>
+      <small>Results <b>1-1</b> of <B>1</B>.</small>
+      <small>Search took <b></b> seconds</small>
     </td>
   </tr>
-</table>
+  <tr><td colspan="2">
+      Sort by:
+            <b>relevancy</b>&nbsp;|&nbsp;<a href="?m=bool&amp;np=0&amp;q=allinmeta.te_st%3A+1&s=DRP">last modified date</a>
+        </td></tr>
+</table><DL>
+  <DT>1.<!-- DP_ID: -1457856117-->
+  <a href="http://site/directory/test.html" TARGET="_blank">
+    Test Subdirectory  </a>
+  <small>[<b>0.045%</b> Popularity: <b>0.12500</b>]</small>
+  <DD>
+  <table width=60%>
+    <tr>
+      <td>
+        <small>   Subdir insurance press...</small>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <UL>
+         <li>
+           <small>
+             <A HREF="http://site/directory/test.html" TARGET="_blank">http://site/directory/test.html</A>
+             <font color="#008800">
+              - 248 bytes [text/html]
+              - 
+	      	      <DD><small>[<a href="/cgi-bin/storedoc.cgi?rec_id=-1413435903&amp;label=&amp;DM=Tue%2C+08+Sep+1970%2C+16%3A29%3A24+EST&amp;DS=248&amp;L=en&amp;CS=ISO-8859-1&amp;DU=http%3A%2F%2Fsite%2Fdirectory%2Ftest.html&amp;CT=text%2Fhtml&amp;q=1">Cached copy</a>]</small></DD>
+	      	      	      <DD><small>[<a href="?m=bool&amp;np=0&amp;q=allinmeta.te_st%3A+1&amp;site=614987914">More result from this site
+		    	        </a>]</small></DD>
+	                   </font>
+           </small>
+           <BR>
+           
+        </UL>
+        
 
-<p>
-Sorry, your search for <b>allindp_id: 1</b> did not find any results.<br>
-No documents were found containing <b>"allindp_id: 1"</b>.<br>
+      </td>
+    </tr>
+  </table>
 
-<p>
-Suggestions:
-<UL>
-  <LI> Make sure all words are spelled correctly.
-  <LI> Try different keywords.
-  <LI> Try more general keywords.
-  Also, you can try <a href="?form=extended">extended search mode</a>.
-</UL><table bgcolor=#EEEEEE width=100%>
+</DL><table width=100% bgcolor=#FFFFFF>
+  <tr>
+    <td align=center>
+      <TABLE BORDER=0>
+        <TR><TD><small>Result pages: <TD>&nbsp;</TD></TD><TD><small><FONT COLOR=gray>&lt;&lt; Prev</FONT></TD><TD><small>1</TD><TD><small><FONT COLOR=gray>Next &gt;&gt;</FONT></TD></TD></TR>
+      </TABLE>
+    </td>
+  </tr>
+</table><table bgcolor=#EEEEEE width=100%>
   <tr><td>&nbsp;</td></tr>
 </table>
 <P>

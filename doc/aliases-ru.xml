@@ -18,20 +18,20 @@ Alias &lt;главныйURL&gt; &lt;вторичныйURL&gt;
 </para>
 		
 		<para>Например, для индексации
-<literal>http://search.mnogo.ru/</literal> с использованием ближайшего зеркала
-<literal>http://www.gstammw.de/mirrors/mnoGoSearch/</literal> нужно добавить
+<literal>http://www.site.ru/</literal> с использованием ближайшего зеркала
+<literal>http://www.other.com/mirrors/site.ru/</literal> нужно добавить
 следующие строки в indexer.conf:
 
 		<programlisting>
-Server http://search.mnogo.ru/
-Alias  http://search.mnogo.ru/  http://www.gstammw.de/mirrors/mnoGoSearch/
+Server http://www.site.ru/
+Alias  http://www.site.ru/  http://www.other.com/mirrors/site.ru/
 </programlisting>
 		</para>
 		<para>
 			<filename>search.cgi</filename> будет указывать
-ссылки с главного сайта <literal>http://search.mnogo.ru/</literal>, но
+ссылки с главного сайта <literal>http://www.site.ru/</literal>, но
 индексатор будет брать данные с зеркала
-<literal>http://www.gstammw.de/mirrors/mnoGoSearch/</literal>.</para>
+<literal>http://www.other.com/mirrors/site.ru/</literal>.</para>
 
 		<para>Другой пример. Допустим, вы хотите индексировать весь домен
 udm.net. И один из серверов этого домена,
@@ -229,13 +229,13 @@ Server       http://name2.yourname.com/
 
 		<para>
 			Например, пусть в <filename>search.htm</filename> есть такая команда:
-			<programlisting>Alias http://localhost/ http://www.mnogo.ru/</programlisting>
+			<programlisting>Alias http://localhost/ http://www.site.ru/</programlisting>
 		</para>
 
 		<para>
 			Пусть поиск вернул страницу с адресом <literal>http://localhost/news/article10.html</literal>
 			В результате, появится переменная $(Alias), которую значение которой будет равным
-			<literal>http://www.mnogo.ru/news/article10.html</literal>
+			<literal>http://www.site.ru/news/article10.html</literal>
 		</para>
 	</sect2>
 </sect1>
