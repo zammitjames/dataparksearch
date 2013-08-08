@@ -1962,10 +1962,9 @@ int DpsPrepare(DPS_AGENT *query, DPS_RESULT *Res) {
 	    }
 
 	    if (!(state.nphrasecmd & 1) && (strncasecmp(clex, "allin", 5) == 0)) {
-	      DPS_VAR *var = DpsVarListFind(&query->Conf->Sections, &clex[5]);
-	      state.secno[state.p_secno] = (var) ? var->section : 0;
-/*	      lex = DpsUniGetSepToken(NULL, &lt, &ctype, &have_bukva_forte, 1);*/
-	      goto token_next;
+		DPS_VAR *var = DpsVarListFind(&query->Conf->Sections, DpsRTrim(&clex[5], ":"));
+		state.secno[state.p_secno] = (var) ? var->section : 0;
+		goto token_next;
 	    } else if (!(state.nphrasecmd & 1) && (strcasecmp(clex, "AND") == 0)) {
 	      notfirstword = 0;
 	      state.cmd = DPS_STACK_AND;
