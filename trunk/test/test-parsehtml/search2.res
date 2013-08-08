@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=utf-8">
-<TITLE>mnoGoSearch: body</TITLE>
+<TITLE>body OR &#34;six seven&#34;</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -13,7 +13,7 @@
   <tr>
     <td>
       <BR> Search for:
-      <INPUT TYPE="text" NAME="q" SIZE="50" value="body" >
+      <INPUT TYPE="text" NAME="q" SIZE="50" value="body OR &#34;six seven&#34;" >
       <INPUT TYPE="submit" NAME="cmd" value="Search!" >
       <small><a href="?form=extended">Extended</a></small>
       <BR><BR>
@@ -26,8 +26,8 @@
 <table bgcolor=#EEEEEE width=100% border=0>
   <tr>
     <td>
-      <small>Search for <b>body</b>.</small>
-      <small>Search results: <b>body: 1 / 1</b>.</small>
+      <small>Search for <b>body OR &#34;six seven&#34;</b>.</small>
+      <small>Search results: <b>body: 1 / 1, six: 1 / 1, seven: 0 / 0</b>.</small>
     </td>
     <td>
       <small>Results <b>1-1</b> of <B>1</B>.</small>
@@ -36,13 +36,13 @@
   </tr>
   <tr><td colspan="2">
       Sort by:
-            <b>relevancy</b>&nbsp;|&nbsp;<a href="?np=0&amp;q=body&s=DRP">last modified date</a>
+            <b>relevancy</b>&nbsp;|&nbsp;<a href="?m=bool&amp;np=0&amp;q=body+OR+%22six+seven%22&s=DRP">last modified date</a>
         </td></tr>
 </table><DL>
   <DT>1.
   <a href="http://site/meta-ua.html" TARGET="_blank">
     : : &#60; : . 1  </a>
-  <small>[<b>0.064%</b> Popularity: <b>0.02941</b>]</small>
+  <small>[<b>0.042%</b> Popularity: <b>0.02778</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -59,7 +59,7 @@
              <font color="#008800">
               - 1294 bytes [text/html]
               - 
-	      	      	      <DD><small>[<a href="?np=0&amp;q=body&amp;site=614987914">More result from this site
+	      	      	      <DD><small>[<a href="?m=bool&amp;np=0&amp;q=body+OR+%22six+seven%22&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

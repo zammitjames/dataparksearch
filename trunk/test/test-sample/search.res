@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=utf-8">
-<TITLE>mnoGoSearch: this</TITLE>
+<TITLE>DataparkSearch: this</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -40,17 +40,17 @@
         </td></tr>
 </table><DL>
   <DT>1.
-  <a href="http://site/test1.html" TARGET="_blank">
-    Test 1 title  </a>
+  <a href="http://site/test4.html" TARGET="_blank">
+    Test 4 title  </a>
   [site]
   [site]
-  [http://site/test1.html]
-  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
+  [http://site/test4.html]
+  <small>[<b>0.045%</b> Popularity: <b>0.17000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small><b>This</b> is the first test page. &#38; Here is the second ...</small>
+        <small>... is in the end of the body. The word is <b>THIS.</b> </small>
       </td>
     </tr>
     <tr>
@@ -58,9 +58,9 @@
         <UL>
          <li>
            <small>
-             <A HREF="http://site/test1.html" TARGET="_blank">http://site/test1.html</A>
+             <A HREF="http://site/test4.html" TARGET="_blank">http://site/test4.html</A>
              <font color="#008800">
-              - 168 bytes [text/html]
+              - 225 bytes [text/html]
               - 
 	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
@@ -77,17 +77,17 @@
 
 </DL><DL>
   <DT>2.
-  <a href="http://site/test2.html" TARGET="_blank">
+  <a href="http://site/z-clone2.html" TARGET="_blank">
     Test 2 title  </a>
   [site]
   [site]
-  [http://site/test2.html]
-  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
+  [http://site/z-clone2.html]
+  <small>[<b>0.045%</b> Popularity: <b>0.05000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small><b>This</b> is the second test page. Here is the third ...</small>
+        <small><b>This</b> is the second test page. Here is the third one.  </small>
       </td>
     </tr>
     <tr>
@@ -95,7 +95,7 @@
         <UL>
          <li>
            <small>
-             <A HREF="http://site/test2.html" TARGET="_blank">http://site/test2.html</A>
+             <A HREF="http://site/z-clone2.html" TARGET="_blank">http://site/z-clone2.html</A>
              <font color="#008800">
               - 158 bytes [text/html]
               - 
@@ -119,12 +119,12 @@
   [site]
   [site]
   [http://site/test3.html]
-  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
+  <small>[<b>0.045%</b> Popularity: <b>0.05000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small><b>This</b> is the third test. No more tests available.</small>
+        <small><b>This</b> is the third test. No more tests available. </small>
       </td>
     </tr>
     <tr>
@@ -156,7 +156,7 @@
   [site]
   [site]
   [http://site/test1.txt]
-  <small>[<b>0.064%</b> Popularity: <b>0.05000</b>]</small>
+  <small>[<b>0.045%</b> Popularity: <b>0.05000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
@@ -188,17 +188,17 @@
 
 </DL><DL>
   <DT>5.
-  <a href="http://site/test4.html" TARGET="_blank">
-    Test 4 title  </a>
+  <a href="http://site/test1.html" TARGET="_blank">
+    Test 1 title  </a>
   [site]
   [site]
-  [http://site/test4.html]
-  <small>[<b>0.063%</b> Popularity: <b>0.17000</b>]</small>
+  [http://site/test1.html]
+  <small>[<b>0.045%</b> Popularity: <b>0.05000</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>... is in the end of the body. The word is <b>THIS</b>. </small>
+        <small><b>This</b> is the first test page. &#38; Here is the second one.  </small>
       </td>
     </tr>
     <tr>
@@ -206,9 +206,9 @@
         <UL>
          <li>
            <small>
-             <A HREF="http://site/test4.html" TARGET="_blank">http://site/test4.html</A>
+             <A HREF="http://site/test1.html" TARGET="_blank">http://site/test1.html</A>
              <font color="#008800">
-              - 225 bytes [text/html]
+              - 175 bytes [text/html]
               - 
 	      	      	      <DD><small>[<a href="?np=0&amp;q=this&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
@@ -235,14 +235,5 @@
   <tr><td>&nbsp;</td></tr>
 </table>
 
-<table width=100% bgcolor=#FFFFFF>
-<tr>
-  <td align=left>
-    <a href="http://www.mnogosearch.org/"><IMG BORDER=0 SRC="http://www.mnogosearch.org/img/udm.gif"></A>
-    <FONT SIZE=1><A HREF="http://www.mnogosearch.org/">Powered by mnoGoSearch - free web search engine software</A></FONT><BR>
-  </td>
-</tr>
-</table>
-<P>
 </BODY>
 </HTML>

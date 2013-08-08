@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
-<TITLE>mnoGoSearch: insurance AND (allinmeta.source: &#34;associated press&#34;)</TITLE>
+<TITLE>DataparkSearch: insurance AND ( allinmeta.source: &#34; associated press &#34; )</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -13,7 +13,7 @@
   <tr>
     <td>
       <BR> Search for:
-      <INPUT TYPE="text" NAME="q" SIZE="50" value="insurance AND (allinmeta.source: &#34;associated press&#34;)" >
+      <INPUT TYPE="text" NAME="q" SIZE="50" value="insurance AND ( allinmeta.source: &#34; associated press &#34; )" >
       <INPUT TYPE="submit" NAME="cmd" value="Search!" >
       <small><a href="?form=extended">Extended</a></small>
       <BR><BR>
@@ -26,7 +26,7 @@
 <table bgcolor=#EEEEEE width=100% border=0>
   <tr>
     <td>
-      <small>Search for <b>insurance AND (allinmeta.source: &#34;associated press&#34;)</b>.</small>
+      <small>Search for <b>insurance AND ( allinmeta.source: &#34; associated press &#34; )</b>.</small>
       <small>Search results: <b>insurance: 2 / 2, associated: 1 / 1, press: 1 / 1</b>.</small>
     </td>
     <td>
@@ -36,18 +36,18 @@
   </tr>
   <tr><td colspan="2">
       Sort by:
-            <b>relevancy</b>&nbsp;|&nbsp;<a href="?m=bool&amp;np=0&amp;q=insurance+AND+%28allinmeta.source%3A+%22associated+press%22%29&s=DRP">last modified date</a>
+            <b>relevancy</b>&nbsp;|&nbsp;<a href="?m=bool&amp;np=0&amp;q=insurance+AND+%28+allinmeta.source%3A+%22+associated+press+%22+%29&s=DRP">last modified date</a>
         </td></tr>
 </table><DL>
   <DT>1.<!-- DP_ID: 596362935-->
   <a href="http://site/directory/test-tz.html" TARGET="_blank">
     Test Timezone  </a>
-  <small>[<b>0.152%</b> Popularity: <b>0.12500</b>]</small>
+  <small>[<b>0.304%</b> Popularity: <b>0.12500</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>... TZ   <b>insurance</b>  ...</small>
+        <small>TZ   <b>insurance</b>  ...</small>
       </td>
     </tr>
     <tr>
@@ -60,7 +60,7 @@
               - 214 bytes [text/html]
               - 
 	      	      <DD><small>[<a href="/cgi-bin/storedoc.cgi?rec_id=-562063921&amp;label=&amp;DM=Tue%2C+08+Sep+1970%2C+13%3A29%3A24+EST&amp;DS=214&amp;L=en&amp;CS=ISO-8859-1&amp;DU=http%3A%2F%2Fsite%2Fdirectory%2Ftest-tz.html&amp;CT=text%2Fhtml&amp;q=insurance+associated+press">Cached copy</a>]</small></DD>
-	      	      	      <DD><small>[<a href="?m=bool&amp;np=0&amp;q=insurance+AND+%28allinmeta.source%3A+%22associated+press%22%29&amp;site=614987914">More result from this site
+	      	      	      <DD><small>[<a href="?m=bool&amp;np=0&amp;q=insurance+AND+%28+allinmeta.source%3A+%22+associated+press+%22+%29&amp;site=614987914">More result from this site
 		    	        </a>]</small></DD>
 	                   </font>
            </small>

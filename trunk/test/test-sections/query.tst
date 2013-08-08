@@ -1,5 +1,5 @@
 FIELDS=OFF;
-SELECT dict.word,dict.intag,url.crc32,last_mod_time,url.url FROM dict, url WHERE url.rec_id=dict.url_id ORDER BY url.crc32,dict.intag;
+SELECT dict.word,dict.intag,url.crc32,last_mod_time,url.url FROM dict, url WHERE url.rec_id=dict.url_id ORDER BY url.crc32,dict.intag,dict.word;
 SELECT * FROM crossdict ORDER BY url_id,intag;
 SELECT dict.word,dict.intag,url.crc32,url.url,ref.url FROM crossdict dict, url, url ref WHERE url.rec_id=dict.url_id AND ref.rec_id=dict.ref_id ORDER BY url.crc32,dict.intag;
 

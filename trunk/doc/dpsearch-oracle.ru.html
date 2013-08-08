@@ -126,7 +126,7 @@ providing many advantages Oracle has some disadvantages. For example
 great tenability requires more experienced DBA, redo logs support
 provide great reliability against instance and media failures but
 requires more efficient disk system. I think you should select Oracle
-as a database for mnoGoSearch if you want to search through hundreds
+as a database for DataparkSearch if you want to search through hundreds
 of megabytes or several gigabytes of information, reliability is one
 of the primary concerns, need high availability of the database, and
 you are ready to pay higher sums for hardware and Oracle DBA to
@@ -138,10 +138,10 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="ORACLE-REQ"
->5.5.1.2. mnoGoSearch+Oracle8 Installation Requirements</A
+>5.5.1.2. DataparkSearch+Oracle8 Installation Requirements</A
 ></H3
 ><P
->In order to install mnoGoSearch with Oracle RDBMS support you must ensure the following requirements:</P
+>In order to install DataparkSearch with Oracle RDBMS support you must ensure the following requirements:</P
 ><P
 ></P
 ><UL
@@ -149,14 +149,14 @@ NAME="ORACLE-REQ"
 ><P
 >Oracle8 Server must be
 properly installed on any computer accessible from the site where
-mnoGoSearch are to be installed. See the documentation provided with
+DataparkSearch are to be installed. See the documentation provided with
 your Oracle server. </P
 ></LI
 ><LI
 ><P
 >Oracle client software
 and libraries must be installed on the site where you plan to install
-mnoGoSearch. I strongly recommend to install utilities also, it help
+DataparkSearch. I strongly recommend to install utilities also, it help
 you to test the client and server accessibility. </P
 ></LI
 ><LI
@@ -196,7 +196,7 @@ NAME="ORACLE-PLATFORMS"
 ><P
 >Oracle Server may be ran on any platform
 supporting tcp/ip connections. I see no difficulties to port
-mnoGoSearch Oracle driver to any commercial and freeware unix systems,
+DataparkSearch Oracle driver to any commercial and freeware unix systems,
 any contribution is appreciated. </P
 ></DIV
 ></DIV
@@ -256,10 +256,10 @@ CLASS="EMPHASIS"
 >
 			</P
 ><P
->First, try mnoGoSearch service is accessible
+>First, try DataparkSearch service is accessible
 			<PRE
 CLASS="PROGRAMLISTING"
->&#13; [oracle@ant oracle]$ tnsping mnoGoSearch 3
+>&#13; [oracle@ant oracle]$ tnsping DataparkSearch 3
 
 TNS Ping Utility for Linux: Version 8.0.5.0.0 - Production on 29-FEB-00 09:46:12
 (c) Copyright 1997 Oracle Corporation.  All rights reserved.
@@ -271,10 +271,10 @@ OK (10 msec)&#13;</PRE
 >
 			</P
 ><P
->Second, try to connect to Oracle Server with svrmgrl and check whether mnoGoSearch tables were created
+>Second, try to connect to Oracle Server with svrmgrl and check whether DataparkSearch tables were created
 			<PRE
 CLASS="PROGRAMLISTING"
->[oracle@ant oracle]$ svrmgrl command='connect scott/tiger@mnoGoSearch'
+>[oracle@ant oracle]$ svrmgrl command='connect scott/tiger@DataparkSearch'
 
 Oracle Server Manager Release 3.0.5.0.0 - Production
 
@@ -335,7 +335,7 @@ CLASS="PROGRAMLISTING"
 <TT
 CLASS="LITERAL"
 >oracle_home_path/lib</TT
-> to ensure mnoGoSearch will be
+> to ensure DataparkSearch will be
 able to open libclntsh.so, the shared Oracle Client library</P
 ><P
 >				<SPAN
@@ -373,7 +373,7 @@ CLASS="OPTION"
 <CODE
 CLASS="OPTION"
 >DBPass</CODE
-> in order that mnoGoSearch can connect to
+> in order that DataparkSearch can connect to
 Oracle Server. DBName is the service name, it should have the same
 name that was written to <TT
 CLASS="FILENAME"
@@ -394,7 +394,7 @@ CLASS="EMPHASIS"
 >Copy the file
 <TT
 CLASS="FILENAME"
->/usr/local/mnoGoSearch/bin/search.cgi</TT
+>/usr/local/dataparksearch/bin/search.cgi</TT
 > to
 <TT
 CLASS="FILENAME"

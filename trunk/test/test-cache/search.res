@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=utf-8">
-<TITLE>mnoGoSearch: body1</TITLE>
+<TITLE>DataparkSearch: body1</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -42,12 +42,12 @@
   <DT>1.
   <a href="http://site/testpage1.html" TARGET="_blank">
     TestPage1  </a>
-  <small>[<b>0.064%</b> Popularity: <b>0.04765</b>]</small>
+  <small>[<b>0.045%</b> Popularity: <b>0.02941</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>... Thu, 25 May 2006 23:06:00 EDT            <b>BODY1</b> BODY2 BODY3 BODY4 BODY5 BODY6 BODY7 BODY8 ......</small>
+        <small>... Thu, 25 May 2006 23:06:00 EDT            <b>BODY1</b> BODY2 BODY3 BODY4 BODY5 BODY6 BODY7 ......</small>
       </td>
     </tr>
     <tr>
@@ -77,12 +77,12 @@
   <DT>2.
   <a href="http://site/testpage2.html" TARGET="_blank">
     TestPage2 Odd Number of BODY's until 30  </a>
-  <small>[<b>0.064%</b> Popularity: <b>0.04765</b>]</small>
+  <small>[<b>0.045%</b> Popularity: <b>0.02941</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>... Thu, 25 May 2006 23:06:00 EDT            <b>BODY1</b> BODY3 BODY5 BODY7 BODY9 BODY11 BODY13 BODY15 ......</small>
+        <small>... Thu, 25 May 2006 23:06:00 EDT            <b>BODY1</b> BODY3 BODY5 BODY7 BODY9 BODY11 BODY13 ......</small>
       </td>
     </tr>
     <tr>

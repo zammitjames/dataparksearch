@@ -26,7 +26,7 @@ fail !0 exec $(SEARCH) "body1&rm=2" > $(DPS_TEST_DIR)/search.rej 2>&1
 fail !0 exec $(SEARCH) "Wall&rm=2" > $(DPS_TEST_DIR)/search2.rej 2>&1
 fail !0 exec $(SEARCH) "@twitter #trend l'orex" > $(DPS_TEST_DIR)/search3.rej 2>&1
 
-fail !0 exec kill -9 `cat $(DPS_TEST_DIR)/var/searchd.pid` >> $(DPS_TEST_LOG) 2>&1
+fail !0 exec pkill -9 searchd >> $(DPS_TEST_LOG) 2>&1
 
 fail !0 mdiff $(DPS_TEST_DIR)/query.rej $(DPS_TEST_DIR)/query.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/query.rej
@@ -36,6 +36,9 @@ fail !0 exec rm -f $(DPS_TEST_DIR)/search.rej
 
 fail !0 mdiff $(DPS_TEST_DIR)/search2.rej $(DPS_TEST_DIR)/search2.res
 fail !0 exec rm -f $(DPS_TEST_DIR)/search2.rej
+
+fail !0 mdiff $(DPS_TEST_DIR)/search3.rej $(DPS_TEST_DIR)/search3.res
+fail !0 exec rm -f $(DPS_TEST_DIR)/search3.rej
 
 fail !0 exec  $(INDEXER) -Edrop $(DPS_TEST_DIR)/indexer.conf >> $(DPS_TEST_LOG) 2>&1
 

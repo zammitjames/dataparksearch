@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META NAME="Content-Type" Content="text/html; charset=iso-8859-1">
-<TITLE>mnoGoSearch: second</TITLE>
+<TITLE>DataparkSearch: second</TITLE>
 </HEAD>
 
 <body BGCOLOR="#FFFFFF" LINK="#0000CC" VLINK="#0000CC" ALINK="#0000CC">
@@ -27,7 +27,7 @@
   <tr>
     <td>
       <small>Search for <b>second</b>.</small>
-      <small>Search results: <b>second: 2 / 2</b>.</small>
+      <small>Search results: <b>second: 1 / 1</b>.</small>
     </td>
     <td>
       <small>Results <b>1-1</b> of <B>1</B>.</small>
@@ -42,12 +42,12 @@
   <DT>1.<!-- DP_ID: -1880075661-->
   <a href="http://site/test2.html" TARGET="_blank">
     Test2  </a>
-  <small>[<b>1.509%</b> Popularity: <b>0.07143</b>]</small>
+  <small>[<b>0.058%</b> Popularity: <b>0.07143</b>]</small>
   <DD>
   <table width=60%>
     <tr>
       <td>
-        <small>Phone: (8622) 62-12-12 $##a $$#b...</small>
+        <small>  2 Phone: (8622) 62-12-12 $##a $$#b...</small>
       </td>
     </tr>
     <tr>
