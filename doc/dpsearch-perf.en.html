@@ -87,7 +87,7 @@ CLASS="APPLICATION"
 > performance issues</A
 ></H1
 ><A
-NAME="AEN3601"
+NAME="AEN3639"
 ></A
 ><P
 >The cache mode is the fastest <SPAN
@@ -97,7 +97,7 @@ CLASS="APPLICATION"
 you need maximal search speed.</P
 ><P
 ><A
-NAME="AEN3608"
+NAME="AEN3646"
 ></A
 >
 If your <TT
@@ -168,7 +168,7 @@ NAME="SEARCH-CACHE"
 >5.3.2. Search results caching</A
 ></H2
 ><A
-NAME="AEN3630"
+NAME="AEN3668"
 ></A
 ><P
 ></P
@@ -238,7 +238,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN3653"
+NAME="AEN3691"
 ></A
 ><P
 >For dbmode cache, you may use <B
@@ -259,7 +259,7 @@ CLASS="COMMAND"
 >command</A
 ></H2
 ><A
-NAME="AEN3661"
+NAME="AEN3699"
 ></A
 ><P
 >With the <B
@@ -286,7 +286,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN3671"
+NAME="AEN3709"
 ></A
 ><P
 >By default, <SPAN
@@ -315,7 +315,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN3681"
+NAME="AEN3719"
 ></A
 ><P
 >By default, <SPAN
@@ -387,70 +387,8 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="PERF-OPTIMIZATION"
->5.3.9. Post-indexing optimization</A
-></H2
-><P
->This article was supplied by Randy Winch <CODE
-CLASS="EMAIL"
->&#60;<A
-HREF="mailto:gumby@cafes.net"
->gumby@cafes.net</A
->&#62;</CODE
->
-		</P
-><P
->I have some performance numbers that some of you
-might find interesting. I'm using RH 6.2 with the 2.2.14-6.1.1 kernel
-update (allows files larger than 2 gig) and mysql 2.23.18-alpha.  I
-have just indexed most of our site using mnoGoSearch 3.0.18:
-		<PRE
-CLASS="PROGRAMLISTING"
->&#13;          mnoGoSearch statistics
-
-    Status    Expired      Total
-   -----------------------------
-       200     821178    2052579 OK
-       301        797      29891 Moved Permanently
-       302          3          3 Moved Temporarily
-       304          0          7 Not Modified
-       400          0         99 Bad Request
-       403          0          7 Forbidden
-       404      30690     100115 Not found
-       500          0          1 Internal Server Error
-       503          0          1 Service Unavailable
-   -----------------------------
-     Total     852668    2182703&#13;</PRE
-></P
-><P
->I optimize the data by dumping it into a file
-using <CODE
-CLASS="OPTION"
->SELECT * INTO OUTFILE</CODE
->, sort it using the system
-sort routine into word (CRC) order and then reloading it into the
-database using the procedure described in the 
-<A
-HREF="http://www.mysql.com/documentation/mysql/commented/manual.php?section=Insert_speed"
-TARGET="_top"
->mysql online manual</A
->.</P
-><P
->The performance is wonderful. My favorite test
-is searching for "John Smith". The optimized database version takes
-about 13 seconds. The raw version takes about 73 seconds.</P
-><PRE
-CLASS="PROGRAMLISTING"
->Search results: john : 620241 smith : 177096
-Displaying documents 1-20 of total 128656 found</PRE
-></DIV
-><DIV
-CLASS="SECT2"
-><H2
-CLASS="SECT2"
-><A
 NAME="ARES"
->5.3.10. Asynchronous resolver library</A
+>5.3.9. Asynchronous resolver library</A
 ></H2
 ><P
 >Using <A

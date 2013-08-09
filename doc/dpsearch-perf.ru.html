@@ -89,7 +89,7 @@ CLASS="APPLICATION"
 ></A
 ></H1
 ><A
-NAME="AEN3805"
+NAME="AEN3842"
 ></A
 ><P
 >Способ хранения cache - самый быстрый в <SPAN
@@ -99,7 +99,7 @@ CLASS="APPLICATION"
 Используйте его, если хотите получить максимальную скорость поиска.</P
 ><P
 ><A
-NAME="AEN3812"
+NAME="AEN3849"
 ></A
 >
 Если после окончания индексирования содержимое вашей директории <TT
@@ -163,7 +163,7 @@ NAME="SEARCH-CACHE"
 >5.3.2. Кэширование результатов поиска</A
 ></H2
 ><A
-NAME="AEN3831"
+NAME="AEN3868"
 ></A
 ><P
 ></P
@@ -232,7 +232,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN3854"
+NAME="AEN3891"
 ></A
 ><P
 >Для способа хранения cache вы можете использовать команду <B
@@ -253,7 +253,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN3862"
+NAME="AEN3899"
 ></A
 ><P
 >При помощи команды <B
@@ -280,7 +280,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN3872"
+NAME="AEN3909"
 ></A
 ><P
 >По умолчанию, <SPAN
@@ -310,7 +310,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN3882"
+NAME="AEN3919"
 ></A
 ><P
 >По умолчанию, <SPAN
@@ -393,82 +393,8 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="PERF-OPTIMIZATION"
->5.3.9. Оптимизация после индексирования</A
-></H2
-><P
->Этот раздел был добавлен Randy Winch <CODE
-CLASS="EMAIL"
->&#60;<A
-HREF="mailto:gumby@cafes.net"
->gumby@cafes.net</A
->&#62;</CODE
->
-		</P
-><P
->У меня есть мысля о производителности, которая может заинтересовать некоторых из вас.
-Я использую <TT
-CLASS="LITERAL"
->RH 6.2</TT
-> с обновлением ядра <TT
-CLASS="LITERAL"
->2.2.14-6.1.1</TT
-> (поддерживает файлы свыше 2 гигабайт)
-и <TT
-CLASS="LITERAL"
->mysql 2.23.18-alpha</TT
->. Я проиндексировал весь наш сайт используя <SPAN
-CLASS="APPLICATION"
->mnoGoSearch 3.0.18</SPAN
->:
-		<PRE
-CLASS="PROGRAMLISTING"
->&#13;          mnoGoSearch statistics
-
-    Status    Expired      Total
-   -----------------------------
-       200     821178    2052579 OK
-       301        797      29891 Moved Permanently
-       302          3          3 Moved Temporarily
-       304          0          7 Not Modified
-       400          0         99 Bad Request
-       403          0          7 Forbidden
-       404      30690     100115 Not found
-       500          0          1 Internal Server Error
-       503          0          1 Service Unavailable
-   -----------------------------
-     Total     852668    2182703&#13;</PRE
-></P
-><P
->Я оптимизировал данные, выгрузив их в файл используя <CODE
-CLASS="OPTION"
->SELECT * INTO OUTFILE</CODE
->,
-отсортировал их при помощи системной процедуры сортировки по полю <TT
-CLASS="LITERAL"
->word (CRC)</TT
->
-и затем загрузил их обратно в базу данных, используя процедуру, описанную в 
-<A
-HREF="http://www.mysql.com/documentation/mysql/commented/manual.php?section=Insert_speed"
-TARGET="_top"
->mysql online manual</A
->.</P
-><P
->Производительность великолепна. Мой любимый тест - поиск "John Smith".
-Оптимизированная база показала результат в 13 секунд. База до оптимизации показывала примерно 73 секунды.</P
-><PRE
-CLASS="PROGRAMLISTING"
->Search results: john : 620241 smith : 177096
-Displaying documents 1-20 of total 128656 found</PRE
-></DIV
-><DIV
-CLASS="SECT2"
-><H2
-CLASS="SECT2"
-><A
 NAME="ARES"
->5.3.10. Библиотека асинхронного резолвера</A
+>5.3.9. Библиотека асинхронного резолвера</A
 ></H2
 ><P
 >Использование <A
@@ -525,7 +451,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-NAME="AEN3534"
+NAME="AEN3571"
 ></A
 >
 Способ хранения Cache</TD
@@ -544,7 +470,7 @@ ALIGN="right"
 VALIGN="top"
 >Поддержка SearchD
 <A
-NAME="AEN3928"
+NAME="AEN3949"
 ></A
 ></TD
 ></TR

@@ -237,15 +237,10 @@ server. </para>
 server is to build full text index in usual order. The only thing is
 that search must produce real URLs instead of URLs in 'htdb:/...'
 form. This can be achieved using <application>DataparkSearch</application> aliasing tools.</para>
-		<!--para>Take a look at sample
-<filename>indexer.conf</filename> in
-<filename>doc/samples/htdb.conf</filename> It is an
-<filename>indexer.conf</filename> used to index <ulink
-						       url="http://mnogosearch.org/">our webboad</ulink>.
-</para-->
+
 		<para>HTDBList command generates URLs in the form:
 		<programlisting>
-http://search.mnogo.ru/board/message.php?id=XXX
+http://search.site.ext/board/message.php?id=XXX
 </programlisting>
 		</para>
 		<para>where XXX is a "messages" table primary key values.</para>
@@ -262,18 +257,18 @@ http://search.mnogo.ru/board/message.php?id=XXX
 		<para>At the end of <filename>doc/samples/htdb.conf</filename> we wrote three commands:
 		<programlisting>
 Server htdb:/
-Realm  http://search.mnogo.ru/board/message.php?id=*
-Alias  http://search.mnogo.ru/board/message.php?id=  htdb:/
+Realm  http://search.site.ext/board/message.php?id=*
+Alias  http://search.site.ext/board/message.php?id=  htdb:/
 </programlisting>
 		</para>
 		<para>First command says indexer to execute HTDBList query which will generate a list of messages in the form:
 		<programlisting>
-http://search.mnogo.ru/board/message.php?id=XXX
+http://search.site.ext/board/message.php?id=XXX
 </programlisting>
 		</para>
 		<para>Second command allow indexer to accept such message URLs using string match with '*' wildcard at the end.</para>
 		<para>Third command replaces
-"http://search.mnogo.ru/board/message.php?id=" substring in URL with
+"http://search.site.ext/board/message.php?id=" substring in URL with
 "htdb:/" when indexer retrieve documents with messages. It means that
 "http://mysearch.udm.net/board/message.php?id=xxx" URLs will be shown
 in search result, but "htdb:/xxx" URL will be indexed instead, where

@@ -250,13 +250,10 @@ ORDER BY c DESC;
 давать реальные URL вместо URL в виде 'htdb:/...'. 
 Это достигается при помощи механизма алиасов <application>DataparkSearch</application>.
 </para>
-		<!--para>Смотрите пример <filename>indexer.conf</filename> в <filename>doc/samples/htdb.conf</filename>.
-Этоn <filename>indexer.conf</filename>, используемый для индексирования <ulink url="http://mnogosearch.org/">
-нашей доски объявлений</ulink>.</para-->
 
 		<para>Команда <literal>HTDBList</literal> создаёт URL в форме:
 		<programlisting>
-http://search.mnogo.ru/board/message.php?id=XXX
+http://search.site.ext/board/message.php?id=XXX
 </programlisting>
 		</para>
 
@@ -277,22 +274,22 @@ HTTP заголовком примерно такого вида:
 		<para>В конце <filename>doc/samples/htdb.conf</filename> даны три команды:
 		<programlisting>
 Server htdb:/
-Realm  http://search.mnogo.ru/board/message.php?id=*
-Alias  http://search.mnogo.ru/board/message.php?id=  htdb:/
+Realm  http://search.site.ext/board/message.php?id=*
+Alias  http://search.site.ext/board/message.php?id=  htdb:/
 </programlisting>
 		</para>
 
 		<para>Первая команда указывает <command>indexer</command> выполнить запрос <literal>HTDBList</literal>,
 который сгенерирует список сообщений в виде:
 		<programlisting>
-http://search.mnogo.ru/board/message.php?id=XXX
+http://search.site.ext/board/message.php?id=XXX
 </programlisting>
 		</para>
 
 		<para>Вторая команда позволяет <command>indexer</command> принимать такие URL сообщений.</para>
 
 		<para>Третья команда заменяет в URL подстроку "htdb:/" на подстроку
-"http://search.mnogo.ru/board/message.php?id=" при получении документа с сообщением.
+"http://search.site.ext/board/message.php?id=" при получении документа с сообщением.
 Что обозначает, что URL в виде <literal>"http://mysearch.udm.net/board/message.php?id=xxx"</literal>
 будет показан в результате поиска, хотя при индексировании будет использован URL <literal>"htdb:/xxx"</literal>,
 где xxx - значение первичного ключа, ID записи в таблице "messages".

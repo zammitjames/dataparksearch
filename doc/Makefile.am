@@ -7,7 +7,6 @@ bugs.xml \
 cache.xml \
 cachemode.xml \
 categories.xml \
-changelog.xml \
 charset.xml \
 content-enc.xml \
 cs-aliases.xml \
@@ -60,7 +59,6 @@ bugs-ru.xml \
 cache-ru.xml \
 cachemode-ru.xml \
 categories-ru.xml \
-changelog-ru.xml \
 charset-ru.xml \
 content-enc-ru.xml \
 db2-ru.xml \

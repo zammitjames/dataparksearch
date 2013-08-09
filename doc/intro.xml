@@ -9,14 +9,11 @@ parts. The first part is an indexing mechanism (the <command>indexer</command>).
 over hypertext references and stores found words and new references into the database. 
 The second part is a CGI front-end to
 provide the search service using the data collected by the indexer.
-<!-- There are also PHP3
-and Perl front-ends available from our site <ulink
-						   url="http://www.mnogosearch.org/">www.mnogosearch.org</ulink>.-->
 </para>
 
 <para>
 <application>DataparkSearch</application> was cloned from the 3.2.16 CVS version of <application>mnoGoSearch</application>
-at 27 November 2003 as <application>DataparkSearch 4.16</application>.
+on 27 November 2003 as <application>DataparkSearch 4.16</application>.
 The <application>mnoGoSearch's</application> first release
 took place in November 1998. The search engine had the name of
 UDMSearch until October 2000 when the project was acquired by
@@ -193,10 +190,6 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 	<author><firstname>Maxim</firstname><surname>Zakharov</surname></author>
 				<email>maxime@maxime.net.ru</email>, <ulink url="http://www.maxime.net.ru/">homepage</ulink>
 </para>
-		<!--para>We welcome anyone to take part in
-<application>mnoGoSearch</application> development. If you want to
-join, please <ulink url="mailto:devel@mnogosearch.org">let us
-know</ulink>.</para-->
 
 		<sect2 id="contriblist">
 			<title>Contributors</title>
@@ -222,10 +215,6 @@ some ideas to improve the scalability for several PC and using several DBAddr.
 <email>devel@mnogosearch.org</email>:
 Development and contributions for <application>mnoGoSearch</application> versions up to 3.2.15.
 </para>
-
-			<!--para>Many other people have contributed
-ideas/bug reports/fixes etc. Thank you! If we lost your contribution
-in this list, please fill free to contact us!</para-->
 
 		</sect2>
 	</sect1>

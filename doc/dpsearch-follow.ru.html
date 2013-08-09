@@ -499,7 +499,7 @@ CLASS="COMMAND"
 >Allow</B
 >
 <A
-NAME="AEN1013"
+NAME="AEN1023"
 ></A
 >
 				</P
@@ -524,7 +524,7 @@ CLASS="COMMAND"
 >Disallow</B
 >
 <A
-NAME="AEN1023"
+NAME="AEN1033"
 ></A
 >
 				</P
@@ -545,7 +545,7 @@ CLASS="COMMAND"
 >HrefOnly</B
 >
 <A
-NAME="AEN1032"
+NAME="AEN1042"
 ></A
 >
 				</P
@@ -555,16 +555,14 @@ CLASS="LITERAL"
 >HrefOnly</TT
 > означает, что документы, соответствующие его
 					команде, не будут индексироваться, а будут только просканированы на наличие новых ссылок.
-					Это, например, полезно при индексировании архивов почтовых рассылок. Используйте ее для
+					Это, например, полезно при просмотре RSS-фидов для обнаружения новых документов сайта. 
+Используйте этот параметр для
 					описания страниц, содержащих не сами сообщения,
-					а списки сообщений со ссылками на них. Например, этот набор команд позволяет 
-					просканировать список сообщений почтового архива
-					на наличие ссылок на сами сообщения, но при этом не индексировать саму страницу
-каталога сообщений, а индексировать только сами сообщения:
+					а списки сообщений со ссылками на них. Например:
 <PRE
 CLASS="PROGRAMLISTING"
->Server HrefOnly Page http://www.mail-archive.com/general%40mnogosearch.org/
-Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/</PRE
+>Server HrefOnly Page http://www.site.ext/feed.xml
+Server Allow    Path http://www.site.ext/</PRE
 >
 				</P
 ></LI
@@ -575,7 +573,7 @@ CLASS="COMMAND"
 >CheckOnly</B
 >
 <A
-NAME="AEN1042"
+NAME="AEN1052"
 ></A
 >
 				</P
@@ -593,7 +591,7 @@ CLASS="LITERAL"
 					Это позволяет, например, организовать проверку своего сайта на правильность ссылок:
 <PRE
 CLASS="PROGRAMLISTING"
->Server HrefOnly  http://www.mnogosearch.org/
+>Server HrefOnly  http://www.dataparksearch.org/
 Realm  CheckOnly *</PRE
 ></P
 ><P
@@ -603,11 +601,11 @@ CLASS="COMMAND"
 > сканировать все документы
 					сайта <TT
 CLASS="LITERAL"
->www.mnogosearch.org</TT
+>www.dataparksearch.org</TT
 > и собирать ссылки, находящиеся на них.
 					Те же документы, которые находятся вне сайта <TT
 CLASS="LITERAL"
->www.mnogosearch.org</TT
+>www.dataparksearch.org</TT
 >
 					будут проверены методом HEAD. Команда <B
 CLASS="COMMAND"
@@ -623,7 +621,7 @@ CLASS="COMMAND"
 >Skip</B
 >
 <A
-NAME="AEN1058"
+NAME="AEN1068"
 ></A
 >
 				</P
@@ -650,7 +648,7 @@ CLASS="COMMAND"
 >CheckMP3</B
 >
 <A
-NAME="AEN1068"
+NAME="AEN1078"
 ></A
 >
 				</P
@@ -692,7 +690,7 @@ CLASS="COMMAND"
 >CheckMP3Only</B
 >
 <A
-NAME="AEN1083"
+NAME="AEN1093"
 ></A
 >
 				</P
@@ -725,7 +723,7 @@ CLASS="COMMAND"
 >Server</B
 >
 			<A
-NAME="AEN1094"
+NAME="AEN1104"
 ></A
 ></A
 ></H2
@@ -813,7 +811,7 @@ CLASS="COMMAND"
 >Realm</B
 >
 			<A
-NAME="AEN1118"
+NAME="AEN1128"
 ></A
 ></A
 ></H2
@@ -856,7 +854,7 @@ CLASS="COMMAND"
 >Subnet</B
 >
 			<A
-NAME="AEN1132"
+NAME="AEN1142"
 ></A
 ></A
 ></H2
@@ -1001,7 +999,7 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN1169"
+NAME="AEN1179"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1022,16 +1020,16 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN1177"
+NAME="AEN1187"
 ></A
 ><A
-NAME="AEN1180"
+NAME="AEN1190"
 ></A
 ><A
-NAME="AEN1183"
+NAME="AEN1193"
 ></A
 ><A
-NAME="AEN1186"
+NAME="AEN1196"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1075,16 +1073,16 @@ CLASS="COMMAND"
 ></A
 ></H2
 ><A
-NAME="AEN1201"
+NAME="AEN1211"
 ></A
 ><A
-NAME="AEN1204"
+NAME="AEN1214"
 ></A
 ><A
-NAME="AEN1207"
+NAME="AEN1217"
 ></A
 ><A
-NAME="AEN1210"
+NAME="AEN1220"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1123,10 +1121,10 @@ NAME="ROBOTS_TXT"
 >3.6.9. Стандарт исключений для роботов</A
 ></H2
 ><A
-NAME="AEN1223"
+NAME="AEN1233"
 ></A
 ><A
-NAME="AEN1225"
+NAME="AEN1235"
 ></A
 ><P
 ><SPAN
@@ -1148,7 +1146,7 @@ CLASS="FILENAME"
 вы не хотите индексировать.</P
 ><P
 ><A
-NAME="AEN1233"
+NAME="AEN1243"
 ></A
 >
 <SPAN
@@ -1170,11 +1168,11 @@ CLASS="OPTION"
 >.</P
 ><P
 ><A
-NAME="AEN1242"
+NAME="AEN1252"
 ></A
 >
 <A
-NAME="AEN1245"
+NAME="AEN1255"
 ></A
 >
 <SPAN
@@ -1215,7 +1213,7 @@ CLASS="COMMAND"
 ></A
 ></H3
 ><A
-NAME="AEN1259"
+NAME="AEN1269"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1256,7 +1254,7 @@ CLASS="COMMAND"
 ></H3
 ><P
 ><A
-NAME="AEN1273"
+NAME="AEN1283"
 ></A
 >
 По умолчанию, данные из robots.txt хранятся в SQL-базе одну неделю. Вы можете изменить этот период используя команду
@@ -1293,7 +1291,7 @@ CLASS="COMMAND"
 ></H3
 ><P
 ><A
-NAME="AEN1285"
+NAME="AEN1295"
 ></A
 >
 Используйте эту команду для задания периода в секундах между последовательными запросами к одному и тому же серверу. 
@@ -1334,7 +1332,7 @@ CLASS="COMMAND"
 ></H3
 ><P
 ><A
-NAME="AEN1298"
+NAME="AEN1308"
 ></A
 >
 Когда <SPAN

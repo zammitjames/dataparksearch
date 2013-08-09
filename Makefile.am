@@ -167,6 +167,8 @@ pkg-deb: dist
 	rm -rf $(TMPDIR)
 
 # Create an RPM package
+pkg-rpm: pkg-deb
+	alien --to-rpm --scripts *.deb
 #pkg-rpm: dist
 #	mkdir -p $(HOME)/.rpm/RPMS/i386
 #	mkdir -p $(HOME)/.rpm/SRPMS
