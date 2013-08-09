@@ -8,8 +8,6 @@
 (<command>indexer</command>). <command>Indexer</command> пробегает по ссылкам и сохраняет в базе данных
 все найденные слова и новые ссылки.
 Вторая часть состоит из CGI-программы, предоставляющей возможность поиска в данных, собраенных <command>indexer</command>ом.
-<!--Так же существуют <application>PHP</application> и <application>Perl</application> интерфейсы, доступные с нашего сайта
-по адресу <ulink url="http://www.mnogosearch.org/">www.mnogosearch.org</ulink>.-->
 </para>
 
 	<para>
@@ -176,9 +174,6 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 	<author><firstname>Maxim</firstname><surname>Zakharov</surname></author>
 				<email>maxime@maxime.net.ru</email>, <ulink url="http://www.maxime.net.ru/">домашняя страница</ulink>
 </para>
-		<!--para>Мы приглашаем принять участие в разработке
-<application>mnoGoSearch</application>. Если вы хотите присоединиться, пожалуйста,
-<ulink url="mailto:devel@mnogosearch.org">дайте нам знать</ulink>.</para-->
 
 		<sect2 id="contriblist">
 <indexterm><primary>Помощники</primary></indexterm>
@@ -204,8 +199,6 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 <email>devel@mnogosearch.org</email>: Разработка и помощь в разработке <application>mnoGoSearch</application> до версии 3.2.15.
 </para>
 
-			<!--para>Много других людей помогали с идеями, сообщениями об ошибках и т.д.
-Спасибо! Если мы кого-то упустиои в этом списке, пожалуйста, дайте нам знать.</para-->
 		</sect2>
 	</sect1>
 

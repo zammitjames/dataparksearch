@@ -239,7 +239,7 @@ Alias &lt;find-prefix&gt; &lt;replace-prefix&gt;
 		</para>
 		<para>For example, there is the following command in <filename>search.htm</filename>:
 		<programlisting>
-Alias http://localhost/ http://www.mnogo.ru/
+Alias http://localhost/ http://www.site.ext/
 </programlisting>
 		</para>
 		<para>Search returned a page with the following URL:
@@ -254,7 +254,7 @@ http://localhost/news/article10.html
 		</para>
 		<para>but with the following URL (that results in processing with Alias):
 		<programlisting>
-http://www.mnogo.ru/news/article10.html
+http://www.site.ext/news/article10.html
 </programlisting>
 		</para>
 	</sect2>

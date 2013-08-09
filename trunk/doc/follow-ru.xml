@@ -186,15 +186,13 @@ Server path http://localhost/path/to/index?q=bla
 				<para>
 					Параметр <literal>HrefOnly</literal> означает, что документы, соответствующие его
 					команде, не будут индексироваться, а будут только просканированы на наличие новых ссылок.
-					Это, например, полезно при индексировании архивов почтовых рассылок. Используйте ее для
+					Это, например, полезно при просмотре RSS-фидов для обнаружения новых документов сайта. 
+Используйте этот параметр для
 					описания страниц, содержащих не сами сообщения,
-					а списки сообщений со ссылками на них. Например, этот набор команд позволяет 
-					просканировать список сообщений почтового архива
-					на наличие ссылок на сами сообщения, но при этом не индексировать саму страницу
-каталога сообщений, а индексировать только сами сообщения:
+					а списки сообщений со ссылками на них. Например:
 <programlisting>
-Server HrefOnly Page http://www.mail-archive.com/general%40mnogosearch.org/
-Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/
+Server HrefOnly Page http://www.site.ext/feed.xml
+Server Allow    Path http://www.site.ext/
 </programlisting>
 				</para>
 			</listitem>
@@ -210,14 +208,14 @@ Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/
 					информация о нем: размер, дата модификации, <literal>Content-Type</literal>.
 					Это позволяет, например, организовать проверку своего сайта на правильность ссылок:
 <programlisting>
-Server HrefOnly  http://www.mnogosearch.org/
+Server HrefOnly  http://www.dataparksearch.org/
 Realm  CheckOnly *
 </programlisting>
 </para>
 <para>
 					Эта комбинация команд заставляет <command>indexer</command> сканировать все документы
-					сайта <literal>www.mnogosearch.org</literal> и собирать ссылки, находящиеся на них.
-					Те же документы, которые находятся вне сайта <literal>www.mnogosearch.org</literal>
+					сайта <literal>www.dataparksearch.org</literal> и собирать ссылки, находящиеся на них.
+					Те же документы, которые находятся вне сайта <literal>www.dataparksearch.org</literal>
 					будут проверены методом HEAD. Команда <command>indexer -S</command> затем поможет
 					увидеть все ли внутренние и внешние ссылки верны.
 				</para>

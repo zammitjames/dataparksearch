@@ -55,6 +55,10 @@
 		<title>DataparkSearch Engine 4.54</title>
 		<subtitle>Справочное руководство</subtitle>
 		<copyright>
+			<year>2013</year>
+			<holder>Максим Захаров</holder>
+		</copyright>
+		<copyright>
 			<year>2003-2012</year>
 			<holder>ООО "ДатаПарк" (DataPark Ltd.)</holder>
 		</copyright>
@@ -79,7 +83,7 @@
 &indexcmd;
 		<sect1 id="extended-indexing">
 			<title>Расширенные возможности индексирования</title>
-<!--&news;-->
+&news;
 <!--&mp3;-->
 &htdb;
 &exec;

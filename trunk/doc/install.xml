@@ -428,17 +428,15 @@ try to add the following commmand into <filename>httpd.conf</filename> file befo
 
 	</sect1>
 
-	<!--sect1 id="binarydistrib">
+	<sect1 id="binarydistrib">
 		<title>Creating binary distribution</title>
-		<para>You can create a binary distribution for you
-platform and share it with us. We'll put binaries for various
-platforms to our site to make them available to other users. To create
-a binary do please type "make bin-dist", then put newely created
-tar.gz somewhere on the net and post a letter to <email>general@mnogosearch.org</email>
-(please post in English only) or to
-<email>ru@mnogosearch.org</email> (please post in Russian only).</para>
+		<para>You can create a binary distribution (tar.bz2 archive, Debian or RPM package) for your platform. 
+To create a binary do please the command <command>make bin-dist</command> for tar.bz2 archive; <command>make pkg-deb</command> for Debian package; 
+<command>make pkg-rpm</command> for RPM package.
+Please note, if you select the later option a Debian package will be created and then converted into RPM package with <application>alien</application> utility.
+</para>
 
-	</sect1-->
+	</sect1>
 
 <sect1 id="quick-usage">
 <title>Quick usage tour</title>

@@ -117,52 +117,6 @@ can always be generated from the data, you should not lose anything by
 using <option>DELAY_KEY_WRITE</option>. So, use this option for your
 own risk.</para>
 	</sect2>
-	<sect2 id="perf-optimization">
-		<title>Post-indexing optimization</title>
-		<para>This article was supplied by Randy Winch <email>gumby@cafes.net</email>
-		</para>
-		<para>I have some performance numbers that some of you
-might find interesting. I'm using RH 6.2 with the 2.2.14-6.1.1 kernel
-update (allows files larger than 2 gig) and mysql 2.23.18-alpha.  I
-have just indexed most of our site using mnoGoSearch 3.0.18:
-		<programlisting>
-
-          mnoGoSearch statistics
-
-    Status    Expired      Total
-   -----------------------------
-       200     821178    2052579 OK
-       301        797      29891 Moved Permanently
-       302          3          3 Moved Temporarily
-       304          0          7 Not Modified
-       400          0         99 Bad Request
-       403          0          7 Forbidden
-       404      30690     100115 Not found
-       500          0          1 Internal Server Error
-       503          0          1 Service Unavailable
-   -----------------------------
-     Total     852668    2182703
-
-</programlisting>
-</para>
-
-		<para>I optimize the data by dumping it into a file
-using <option>SELECT * INTO OUTFILE</option>, sort it using the system
-sort routine into word (CRC) order and then reloading it into the
-database using the procedure described in the 
-<ulink url="http://www.mysql.com/documentation/mysql/commented/manual.php?section=Insert_speed">mysql online manual</ulink>.</para>
-		<para>The performance is wonderful. My favorite test
-is searching for "John Smith". The optimized database version takes
-about 13 seconds. The raw version takes about 73 seconds.</para>
-
-		<programlisting>
-Search results: john : 620241 smith : 177096
-Displaying documents 1-20 of total 128656 found
-</programlisting>
-
-		<!--para>You may also take <ulink
-					       url="http://mnogosearch.org/download.html">optimize.sh</ulink> script from our site. It was written by Joe Frost <email>joe_frost@omnis-software.com</email> and implements Randy's idea.</para-->
-	</sect2>
 
 <sect2 id="ares">
 <title>Asynchronous resolver library</title>

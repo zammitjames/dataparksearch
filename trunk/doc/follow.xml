@@ -52,11 +52,11 @@ deleted from database, if its was placed into before.
 				</para>
 				<para>
 					Value <literal>HrefOnly</literal> specify that all corresponding documents will be only
-scanned for new links (not indexed). This is useful, for example, for mail archives indexing, when index pages is only scanned to
+scanned for new links (not indexed). This is useful, for example, for getting new documents from a feed, when the feed page is only scanned to
 detect new messages for indexing. 
 <programlisting>
-Server HrefOnly Page http://www.mail-archive.com/general%40mnogosearch.org/
-Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/
+Server HrefOnly Page http://www.site.ext/feed.xml
+Server Allow    Path http://www.site.ext/
 </programlisting>
 				</para>
 			</listitem>
@@ -70,12 +70,12 @@ Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/
 requested by HTTP HEAD request, not HTTP GET, i.e. inly brief info about documents (size, last modified, content type) will be
  fetched. This allow, for example, check links on your site:
 <programlisting>
-Server HrefOnly  http://www.mnogosearch.org/
+Server HrefOnly  http://www.dataparksearch.org/
 Realm  CheckOnly *
 </programlisting>
 </para>
 <para>
-These commands instruct <command>indexer</command> to scan all documents on <literal>www.mnogosearch.org</literal> site and
+These commands instruct <command>indexer</command> to scan all documents on <literal>www.dataparksearch.org</literal> site and
 collect all links. Brief info about every document found will be requested by HEAD method.
 After indexing done, <command>indexer -S</command> command will show status for all documents from this site.
 				</para>

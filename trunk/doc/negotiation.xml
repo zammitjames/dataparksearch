@@ -10,20 +10,6 @@ Barkov <email>bar@mnogosearch.org</email>.</para>
 which means different search.htm files depending on what language
 users have set in their browser. </para>
 
-	<!-- para>Please note that configuration issues given bellow are
-absolutely the same for both <filename>search.php</filename> and
-<filename>search.cgi</filename> front-ends.</para>
-	<note>
-		<para>
-			<emphasis>PHP specific issues:</emphasis> the
-only thing to be done in <filename>search.php</filename> is a hack in
-<filename>config.inc</filename> to change the template file:
-		<programlisting>
-$template_file= ereg_replace(".php", ".htm", basename(getenv("SCRIPT_FILENAME")));
-$template_file = "/etc/somewhere" . $template_file;
-</programlisting>
-</para>
-	</note-->
 	<para>Further installation should be done in three steps.</para>
 	<orderedlist numeration="arabic">
 		<listitem>

@@ -111,53 +111,6 @@
 </para>
 
 	</sect2>
-	<sect2 id="perf-optimization">
-		<title>Оптимизация после индексирования</title>
-
-		<para>Этот раздел был добавлен Randy Winch <email>gumby@cafes.net</email>
-		</para>
-
-		<para>У меня есть мысля о производителности, которая может заинтересовать некоторых из вас.
-Я использую <literal>RH 6.2</literal> с обновлением ядра <literal>2.2.14-6.1.1</literal> (поддерживает файлы свыше 2 гигабайт)
-и <literal>mysql 2.23.18-alpha</literal>. Я проиндексировал весь наш сайт используя <application>mnoGoSearch 3.0.18</application>:
-		<programlisting>
-
-          mnoGoSearch statistics
-
-    Status    Expired      Total
-   -----------------------------
-       200     821178    2052579 OK
-       301        797      29891 Moved Permanently
-       302          3          3 Moved Temporarily
-       304          0          7 Not Modified
-       400          0         99 Bad Request
-       403          0          7 Forbidden
-       404      30690     100115 Not found
-       500          0          1 Internal Server Error
-       503          0          1 Service Unavailable
-   -----------------------------
-     Total     852668    2182703
-
-</programlisting>
-</para>
-
-		<para>Я оптимизировал данные, выгрузив их в файл используя <option>SELECT * INTO OUTFILE</option>,
-отсортировал их при помощи системной процедуры сортировки по полю <literal>word (CRC)</literal>
-и затем загрузил их обратно в базу данных, используя процедуру, описанную в 
-<ulink url="http://www.mysql.com/documentation/mysql/commented/manual.php?section=Insert_speed">mysql online manual</ulink>.</para>
-
-		<para>Производительность великолепна. Мой любимый тест - поиск "John Smith".
-Оптимизированная база показала результат в 13 секунд. База до оптимизации показывала примерно 73 секунды.</para>
-
-		<programlisting>
-Search results: john : 620241 smith : 177096
-Displaying documents 1-20 of total 128656 found
-</programlisting>
-
-		<!--para>Вы можете скачать скрипт <ulink url="http://mnogosearch.org/download.html">optimize.sh</ulink>
-с нашего сервера. Он написан Joe Frost <email>joe_frost@omnis-software.com</email> и реализует идею Randy.</para-->
-
-	</sect2>
 
 <sect2 id="ares">
 <title>Библиотека асинхронного резолвера</title>

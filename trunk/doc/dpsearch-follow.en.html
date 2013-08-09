@@ -171,7 +171,7 @@ CLASS="COMMAND"
 >Allow</B
 >
 <A
-NAME="AEN887"
+NAME="AEN897"
 ></A
 >
 				</P
@@ -193,7 +193,7 @@ CLASS="COMMAND"
 >Disallow</B
 >
 <A
-NAME="AEN897"
+NAME="AEN907"
 ></A
 >
 				</P
@@ -212,7 +212,7 @@ CLASS="COMMAND"
 >HrefOnly</B
 >
 <A
-NAME="AEN906"
+NAME="AEN916"
 ></A
 >
 				</P
@@ -221,12 +221,12 @@ NAME="AEN906"
 CLASS="LITERAL"
 >HrefOnly</TT
 > specify that all corresponding documents will be only
-scanned for new links (not indexed). This is useful, for example, for mail archives indexing, when index pages is only scanned to
+scanned for new links (not indexed). This is useful, for example, for getting new documents from a feed, when the feed page is only scanned to
 detect new messages for indexing. 
 <PRE
 CLASS="PROGRAMLISTING"
->Server HrefOnly Page http://www.mail-archive.com/general%40mnogosearch.org/
-Server Allow    Path http://www.mail-archive.com/general%40mnogosearch.org/</PRE
+>Server HrefOnly Page http://www.site.ext/feed.xml
+Server Allow    Path http://www.site.ext/</PRE
 >
 				</P
 ></LI
@@ -237,7 +237,7 @@ CLASS="COMMAND"
 >CheckOnly</B
 >
 <A
-NAME="AEN916"
+NAME="AEN926"
 ></A
 >
 				</P
@@ -250,7 +250,7 @@ requested by HTTP HEAD request, not HTTP GET, i.e. inly brief info about documen
  fetched. This allow, for example, check links on your site:
 <PRE
 CLASS="PROGRAMLISTING"
->Server HrefOnly  http://www.mnogosearch.org/
+>Server HrefOnly  http://www.dataparksearch.org/
 Realm  CheckOnly *</PRE
 ></P
 ><P
@@ -259,7 +259,7 @@ CLASS="COMMAND"
 >indexer</B
 > to scan all documents on <TT
 CLASS="LITERAL"
->www.mnogosearch.org</TT
+>www.dataparksearch.org</TT
 > site and
 collect all links. Brief info about every document found will be requested by HEAD method.
 After indexing done, <B
@@ -275,7 +275,7 @@ CLASS="COMMAND"
 >Skip</B
 >
 <A
-NAME="AEN930"
+NAME="AEN940"
 ></A
 >
 				</P
@@ -295,7 +295,7 @@ CLASS="COMMAND"
 >CheckMP3</B
 >
 <A
-NAME="AEN939"
+NAME="AEN949"
 ></A
 >
 				</P
@@ -332,7 +332,7 @@ CLASS="COMMAND"
 >CheckMP3Only</B
 >
 <A
-NAME="AEN953"
+NAME="AEN963"
 ></A
 >
 				</P
@@ -596,7 +596,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1033"
+NAME="AEN1043"
 ></A
 ><P
 >This is the main command of the
@@ -650,7 +650,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1047"
+NAME="AEN1057"
 ></A
 ><P
 >Realm command is a more powerful means of describing web area to be indexed.
@@ -677,7 +677,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1056"
+NAME="AEN1066"
 ></A
 ><P
 >Subnet command is another way to describe web area to be indexed.
@@ -842,7 +842,7 @@ CLASS="COMMAND"
 > command</A
 ></H2
 ><A
-NAME="AEN1097"
+NAME="AEN1107"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -867,16 +867,16 @@ CLASS="COMMAND"
 > commands</A
 ></H2
 ><A
-NAME="AEN1106"
+NAME="AEN1116"
 ></A
 ><A
-NAME="AEN1109"
+NAME="AEN1119"
 ></A
 ><A
-NAME="AEN1112"
+NAME="AEN1122"
 ></A
 ><A
-NAME="AEN1115"
+NAME="AEN1125"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -920,16 +920,16 @@ CLASS="COMMAND"
 > commands</A
 ></H2
 ><A
-NAME="AEN1130"
+NAME="AEN1140"
 ></A
 ><A
-NAME="AEN1133"
+NAME="AEN1143"
 ></A
 ><A
-NAME="AEN1136"
+NAME="AEN1146"
 ></A
 ><A
-NAME="AEN1139"
+NAME="AEN1149"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -967,10 +967,10 @@ NAME="ROBOTS_TXT"
 >3.6.10. Robots exclusion standard</A
 ></H2
 ><A
-NAME="AEN1152"
+NAME="AEN1162"
 ></A
 ><A
-NAME="AEN1154"
+NAME="AEN1164"
 ></A
 ><P
 ><SPAN
@@ -991,7 +991,7 @@ CLASS="FILENAME"
 > is a file that you place in your web server's root directory that tells search engines what pages you do not want to be indexed.</P
 ><P
 ><A
-NAME="AEN1162"
+NAME="AEN1172"
 ></A
 >
 <SPAN
@@ -1013,11 +1013,11 @@ TARGET="_top"
 >.</P
 ><P
 ><A
-NAME="AEN1171"
+NAME="AEN1181"
 ></A
 >
 <A
-NAME="AEN1174"
+NAME="AEN1184"
 ></A
 >
 <SPAN
@@ -1058,7 +1058,7 @@ CLASS="COMMAND"
 > command</A
 ></H3
 ><A
-NAME="AEN1188"
+NAME="AEN1198"
 ></A
 ><PRE
 CLASS="PROGRAMLISTING"
@@ -1099,7 +1099,7 @@ CLASS="COMMAND"
 ></H3
 ><P
 ><A
-NAME="AEN1202"
+NAME="AEN1212"
 ></A
 >
 By defaults, robots.txt data holds in SQL-database for one week. You may change this period using
@@ -1135,7 +1135,7 @@ CLASS="COMMAND"
 ></H3
 ><P
 ><A
-NAME="AEN1215"
+NAME="AEN1225"
 ></A
 >
 Use this command to specify default pause in seconds between consecutive fetches from same server. 
@@ -1173,7 +1173,7 @@ CLASS="COMMAND"
 ></H3
 ><P
 ><A
-NAME="AEN1227"
+NAME="AEN1237"
 ></A
 >
 When <SPAN

@@ -88,11 +88,96 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
+NAME="NEWS"
+>3.11.1. News extensions
+<A
+NAME="AEN2656"
+></A
+></A
+></H2
+><P
+>To enable News extensions do these steps:
+
+<P
+></P
+><UL
+><LI
+><P
+>Build <SPAN
+CLASS="APPLICATION"
+>DataparkSearch</SPAN
+> with <TT
+CLASS="LITERAL"
+>news://</TT
+> scheme support,
+i.e. do not disbale it when run configure (News extensions are enabled by default)</P
+></LI
+><LI
+><P
+><A
+NAME="AEN2666"
+></A
+>
+Add the command <B
+CLASS="COMMAND"
+>NewsExtensions yes</B
+> into your <TT
+CLASS="FILENAME"
+>indexer.conf</TT
+> configuration file.
+Also add these <B
+CLASS="COMMAND"
+>Section</B
+> commands into <TT
+CLASS="FILENAME"
+>sections.conf</TT
+> file:
+<PRE
+CLASS="PROGRAMLISTING"
+>Section Header.References 18 0
+Section Header.Message-ID 19 0
+Section Header.Parent-ID  20 0</PRE
+>
+You can also use <TT
+CLASS="LITERAL"
+>Header.Subject</TT
+> or <TT
+CLASS="LITERAL"
+>Header.From</TT
+>.
+Please remember, you need to specify non-zero maximal length for any of these sections if you need to store it into <TT
+CLASS="LITERAL"
+>urlinfo</TT
+> table and/or use it in your search template.</P
+></LI
+></UL
+></P
+><P
+>With News extensions enable, the <B
+CLASS="COMMAND"
+>indexer</B
+> try to detect Parent-ID for each article indexed and 
+also put the pairs (<TT
+CLASS="LITERAL"
+>Parent-ID</TT
+>, <TT
+CLASS="LITERAL"
+>ID</TT
+>) into <TT
+CLASS="LITERAL"
+>links</TT
+> table.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
 NAME="HTDB"
->3.11.1. Indexing SQL database tables (htdb: virtual URL scheme)</A
+>3.11.2. Indexing SQL database tables (htdb: virtual URL scheme)</A
 ></H2
 ><A
-NAME="AEN2646"
+NAME="AEN2684"
 ></A
 ><P
 ><SPAN
@@ -120,7 +205,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="HTDB-INDEXER"
->3.11.1.1. HTDB indexer.conf commands</A
+>3.11.2.1. HTDB indexer.conf commands</A
 ></H3
 ><P
 >Five <TT
@@ -146,7 +231,7 @@ CLASS="COMMAND"
 >. </P
 ><P
 ><A
-NAME="AEN2664"
+NAME="AEN2702"
 ></A
 >
 			<B
@@ -159,7 +244,7 @@ CLASS="COMMAND"
 > command.</P
 ><P
 ><A
-NAME="AEN2670"
+NAME="AEN2708"
 ></A
 >
 			<B
@@ -179,7 +264,7 @@ HTDBList "SELECT id FROM messages"</PRE
 ></P
 ><P
 ><A
-NAME="AEN2677"
+NAME="AEN2715"
 ></A
 >
 <B
@@ -193,7 +278,7 @@ CLASS="PROGRAMLISTING"
 ></P
 ><P
 ><A
-NAME="AEN2683"
+NAME="AEN2721"
 ></A
 >
 			<B
@@ -239,7 +324,7 @@ CLASS="FILENAME"
 commands.</P
 ><P
 ><A
-NAME="AEN2696"
+NAME="AEN2734"
 ></A
 >
 <B
@@ -299,10 +384,10 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="HTDB-VAR"
->3.11.1.2. HTDB variables</A
+>3.11.2.2. HTDB variables</A
 ></H3
 ><A
-NAME="AEN2713"
+NAME="AEN2751"
 ></A
 ><P
 >You may use PATH parts of URL as parameters of
@@ -387,7 +472,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="HTDB-FULLTEXT"
->3.11.1.3. Creating full text index</A
+>3.11.2.3. Creating full text index</A
 ></H3
 ><P
 >Using htdb:/ scheme you can create full text
@@ -500,7 +585,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="HTDB-WEB"
->3.11.1.4. Indexing SQL database driven web server</A
+>3.11.2.4. Indexing SQL database driven web server</A
 ></H3
 ><P
 >You can also use htdb:/ scheme to index your
@@ -520,7 +605,7 @@ CLASS="APPLICATION"
 >HTDBList command generates URLs in the form:
 		<PRE
 CLASS="PROGRAMLISTING"
->http://search.mnogo.ru/board/message.php?id=XXX</PRE
+>http://search.site.ext/board/message.php?id=XXX</PRE
 >
 		</P
 ><P
@@ -544,22 +629,22 @@ CLASS="FILENAME"
 		<PRE
 CLASS="PROGRAMLISTING"
 >Server htdb:/
-Realm  http://search.mnogo.ru/board/message.php?id=*
-Alias  http://search.mnogo.ru/board/message.php?id=  htdb:/</PRE
+Realm  http://search.site.ext/board/message.php?id=*
+Alias  http://search.site.ext/board/message.php?id=  htdb:/</PRE
 >
 		</P
 ><P
 >First command says indexer to execute HTDBList query which will generate a list of messages in the form:
 		<PRE
 CLASS="PROGRAMLISTING"
->http://search.mnogo.ru/board/message.php?id=XXX</PRE
+>http://search.site.ext/board/message.php?id=XXX</PRE
 >
 		</P
 ><P
 >Second command allow indexer to accept such message URLs using string match with '*' wildcard at the end.</P
 ><P
 >Third command replaces
-"http://search.mnogo.ru/board/message.php?id=" substring in URL with
+"http://search.site.ext/board/message.php?id=" substring in URL with
 "htdb:/" when indexer retrieve documents with messages. It means that
 "http://mysearch.udm.net/board/message.php?id=xxx" URLs will be shown
 in search result, but "htdb:/xxx" URL will be indexed instead, where
@@ -573,10 +658,10 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="EXEC"
->3.11.2. Indexing binaries output (exec: and cgi: virtual URL schemes)</A
+>3.11.3. Indexing binaries output (exec: and cgi: virtual URL schemes)</A
 ></H2
 ><A
-NAME="AEN2776"
+NAME="AEN2814"
 ></A
 ><P
 ><SPAN
@@ -606,7 +691,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="EXEC-CGI"
->3.11.2.1. Passing parameters to cgi: virtual scheme</A
+>3.11.3.1. Passing parameters to cgi: virtual scheme</A
 ></H3
 ><P
 >When executing a program given in cgi: virtual
@@ -648,7 +733,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="EXEC-EXEC"
->3.11.2.2. Passing parameters to exec: virtual scheme</A
+>3.11.3.2. Passing parameters to exec: virtual scheme</A
 ></H3
 ><P
 >indexer does not create QUERY_STRING variable
@@ -671,7 +756,7 @@ CLASS="SECT3"
 CLASS="SECT3"
 ><A
 NAME="EXEC-EXT"
->3.11.2.3. Using exec: virtual scheme as an external retrieval system</A
+>3.11.3.3. Using exec: virtual scheme as an external retrieval system</A
 ></H3
 ><P
 >exec: virtual scheme allow using it as an
@@ -747,14 +832,14 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="MIRROR"
->3.11.3. Mirroring</A
+>3.11.4. Mirroring</A
 ></H2
 ><A
-NAME="AEN2819"
+NAME="AEN2857"
 ></A
 ><P
 ><A
-NAME="AEN2822"
+NAME="AEN2860"
 ></A
 >
 You may specify a path to root dir to enable sites mirroring
@@ -765,7 +850,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2827"
+NAME="AEN2865"
 ></A
 >
 You may specify as well root directory of mirrored document's headers indexer will store HTTP headers to local disk too.
@@ -776,7 +861,7 @@ CLASS="PROGRAMLISTING"
 	</P
 ><P
 ><A
-NAME="AEN2832"
+NAME="AEN2870"
 ></A
 >
 You may specify period during which earlier mirrored files will be used while indexing instead of real downloading.
@@ -857,13 +942,13 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="DATA-ACQ"
->3.11.4. Data acquisition</A
+>3.11.5. Data acquisition</A
 ></H2
 ><A
-NAME="AEN2852"
+NAME="AEN2890"
 ></A
 ><A
-NAME="AEN2854"
+NAME="AEN2892"
 ></A
 ><P
 >With <B
