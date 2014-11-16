@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+/* Copyright (C) 2013-2014 Maxim Zakharov. All rights reserved.
    Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
@@ -335,7 +335,7 @@ static DPS_ROBOT *DpsRobotClone(DPS_AGENT *Indexer, DPS_SERVER *Server,
 	if (Doc != NULL) {
 	    DpsVarListReplaceLst(&rDoc->RequestHeaders, &Doc->RequestHeaders, NULL, "*"); 
 	} else {
-	    DpsDocAddDocExtraHeaders(Indexer, rDoc);
+	    DpsDocAddDocExtraHeaders(Indexer, rServer, rDoc);
 	    DpsDocAddConfExtraHeaders(Indexer->Conf, rDoc);
 	}
 
@@ -466,7 +466,7 @@ DPS_ROBOT_RULE* DpsRobotRuleFind(DPS_AGENT *Indexer, DPS_SERVER *Server, DPS_DOC
 
 	URL = (Doc == NULL) ? pURL : &Doc->CurURL;
 
-	if (strcasecmp(DPS_NULL2EMPTY(URL->schema), "http")) { /* robots.txt exist only for http scheme */
+	if (strncasecmp(DPS_NULL2EMPTY(URL->schema), "http", 4)) { /* robots.txt exists only for http and https */
 #ifdef WITH_PARANOIA
 	  DpsViolationExit(Indexer->handle, paran);
 #endif
@@ -789,7 +789,7 @@ static int DpsSitemapParse(DPS_AGENT *Indexer, int hops, const char *s) {
 
   mServer = DpsServerFind(Indexer, 0, s, mDoc->CurURL.charset_id, NULL);
 
-  DpsDocAddDocExtraHeaders(Indexer, mDoc);
+  DpsDocAddDocExtraHeaders(Indexer, mServer, mDoc);
   DpsDocAddConfExtraHeaders(Indexer->Conf, mDoc);
 
   if (mServer != NULL) {
