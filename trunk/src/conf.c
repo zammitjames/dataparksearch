@@ -147,6 +147,7 @@ const char *DpsMethodStr(int method){
 	        case DPS_METHOD_CATEGORY:       return "CategoryIf";
 	        case DPS_METHOD_STORE:          return "Store";
 	        case DPS_METHOD_NOSTORE:        return "NoStore";
+	        case DPS_METHOD_POST:           return "Post";
 	}
 	return "<Unknown method>";
 }
@@ -168,6 +169,7 @@ int DpsMethod(const char *s){
 	else if(!strcasecmp(s,"CategoryIf"))    return DPS_METHOD_CATEGORY;
 	else if(!strcasecmp(s,"Store"))         return DPS_METHOD_STORE;
 	else if(!strcasecmp(s,"NoStore"))       return DPS_METHOD_NOSTORE;
+	else if(!strcasecmp(s,"Post"))          return DPS_METHOD_POST;
 	return DPS_METHOD_UNKNOWN;
 }
 
@@ -408,6 +410,7 @@ static int add_srv(void *Cfg, size_t ac,char **av){
 	DpsMatchFree(&C->Srv->Match);
 	/*	DpsMatchListFree(&C->Srv->HTDBsec);*/
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
+	DpsVarListDel(&C->Srv->Vars,"AuthPing");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 	return DPS_OK;
 }
@@ -1224,6 +1227,7 @@ static int add_srv_db(void *Cfg, size_t ac, char **av) {
 	DpsMatchFree(&C->Srv->Match);
 	/*	DpsMatchListFree(&C->Srv->HTDBsec);*/
 	DpsVarListDel(&C->Srv->Vars,"AuthBasic");
+	DpsVarListDel(&C->Srv->Vars,"AuthPing");
 	DpsVarListDel(&C->Srv->Vars,"Alias");
 	return DPS_OK;
 }
@@ -1678,6 +1682,7 @@ static int env_rpl_env_var (void *Cfg, size_t ac, char **av) {
 static int env_rpl_var(void *Cfg, size_t ac,char **av){
 	DPS_CFG	*C=(DPS_CFG*)Cfg;
 	DPS_ENV	*Conf=C->Indexer->Conf;
+	DPS_AGENT *A = C->Indexer;
 	int res = 0;
 #ifdef WITH_PARANOIA
 	void * paran = DpsViolationEnter(paran);
@@ -1705,6 +1710,8 @@ static int env_rpl_var(void *Cfg, size_t ac,char **av){
 	  Conf->Flags.SkipHrefIn = DpsHrefFrom(av[1]);
 	}else if (!strcasecmp(av[0], "PopRankMethod")) {
 	  Conf->Flags.poprank_method = DpsPRMethod(av[1]);
+	}else if (!strcasecmp(av[0], "Cookie")) {
+	  DpsCookiesAddStr(A, NULL, av[1], 1);
 	}
 	DpsVarListReplaceStr(&Conf->Vars,av[0],av[1]);
 #ifdef WITH_PARANOIA
@@ -2354,7 +2361,7 @@ __C_LINK  int __DPSCALL DpsEnvLoad(DPS_AGENT *Indexer, const char *cname, dps_ui
 		  DpsRTrim(accept_str, "*");
 		  sprintf(DPS_STREND(accept_str), ";q=0.6");
 		}
-		sprintf(DPS_STREND(accept_str), ",*;q=0.1");
+		sprintf(DPS_STREND(accept_str), ",*/*;q=0.1");
 
 		DpsVarListInsStr(&Indexer->Conf->Vars, "Request.Accept", accept_str);
 		DPS_FREE(accept_str);

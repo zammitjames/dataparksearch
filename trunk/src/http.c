@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 Maxim Zakharov. All rights reserved.
+/* Copyright (C) 2013-2014 Maxim Zakharov. All rights reserved.
    Copyright (C) 2003-2012 Datapark corp. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
@@ -92,50 +92,10 @@ static void DpsParseHTTPHeader(DPS_AGENT *Indexer, DPS_DOCUMENT *Doc, DPS_DSTR *
 	}
       
     } else if (Doc->Spider.use_cookies && !strcasecmp(header_name, "Set-Cookie")) {
-      char *part, *lpart;
-      char *name = NULL;
-      char *value = NULL;
-      const char *domain = NULL;
-      const char *path = NULL;
-      dps_uint4 expire = 0;
-      char secure = 'n';
-      for (part = dps_strtok_r(val, ";" , &lpart, &savec) ; part;
-	   part = dps_strtok_r(NULL, ";", &lpart, &savec)) {
-	char *arg;
-	part = DpsTrim(part, " ");
-	if ((arg = strchr(part, '='))) {
-	  *arg++ = '\0';
-	  if (!name) {
-	    name = part;
-	    value = arg;
-	  } else 
-	    if (!strcasecmp(part, "path")) {
-	      path = arg;
-	    } else
-	      if (!strcasecmp(part, "domain")) {
-		domain = arg;
-	      } else
-		if (!strcasecmp(part, "secure")) {
-		  secure = 'y';
-		} else
-		  if (!strcasecmp(part, "expires")) {
-		    expire = (dps_uint4)DpsHttpDate2Time_t(arg);
-		  }
-	}
-      }
-      if (name && value) {
-	if (domain && domain[0] == '.') {
-	  domain++;
-	} else {
-	  domain = Doc->CurURL.hostname ? Doc->CurURL.hostname : "localhost";
-	}
-	if (!path) {
-	  path = Doc->CurURL.path ? Doc->CurURL.path : "/";
-	}
-	DpsCookiesAdd(Indexer, domain, path, name, value, secure, expire, 1);
-      }
-/*			  token = dps_strtok_r(NULL,"\r\n",&lt);
-			  continue;*/
+
+
+      DpsCookiesAddStr(Indexer, &Doc->CurURL, val, 1);
+
       return;
     }
   }
