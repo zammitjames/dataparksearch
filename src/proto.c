@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 Maxim Zakharov. All rights reserved.
+/* Copyright (C) 2013-2015 Maxim Zakharov. All rights reserved.
    Copyright (C) 2003-2012 DataPark Ltd. All rights reserved.
    Copyright (C) 2000-2002 Lavtech.com corp. All rights reserved.
 
@@ -1547,11 +1547,24 @@ static int DpsBuildHTTPRequest(DPS_DOCUMENT *Doc){
 	dps_strcat(url, DPS_NULL2EMPTY(Doc->CurURL.query_string));
 	DpsEscapeURI(eurl, url);
 
+	i += dps_strlen(eurl) + 5;
 	if (body != NULL) {
 	  i += dps_strlen(body);
 	}
+	if (proxy != NULL) {
+	  i += dps_strlen(proxy) + 16;
+	}
+	if (NULL != (Hdr_Host = DpsVarListFind(&Doc->RequestHeaders, "Host"))) i += dps_strlen(Hdr_Host->name) + dps_strlen(Hdr_Host->val) + 4;
+	if (NULL != (Hdr_UA = DpsVarListFind(&Doc->RequestHeaders, "User-Agent"))) i+= dps_strlen(Hdr_UA->name) + dps_strlen(Hdr_UA->val) + 4;
+	for (r = 0; r < 256; r++)
+	for(i = 0; i < Doc->RequestHeaders.Root[r].nvars; i++) {
+		DPS_VAR *Hdr = &Doc->RequestHeaders.Root[r].Var[i];
+		if (!strcasecmp(Hdr->name, "Host") || !strcasecmp(Hdr->name, "User-Agent")) continue;
+		i += dps_strlen(DPS_NULL2EMPTY(Hdr->name)) + dps_strlen(DPS_NULL2EMPTY(Hdr->val)) + 4;
+	}
+	
 
-	Doc->Buf.allocated_size = 3 * i + DPS_NET_BUF_SIZE;
+	Doc->Buf.allocated_size = i + 7 + DPS_NET_BUF_SIZE;
 	
 	Doc->Buf.buf = (char*)DpsRealloc(Doc->Buf.buf, Doc->Buf.allocated_size + 1);
 	if (Doc->Buf.buf == NULL) {
@@ -1560,9 +1573,6 @@ static int DpsBuildHTTPRequest(DPS_DOCUMENT *Doc){
 	  return DPS_ERROR;
 	}
 
-	Hdr_Host = DpsVarListFind(&Doc->RequestHeaders, "Host");
-	Hdr_UA = DpsVarListFind(&Doc->RequestHeaders, "User-Agent");
-	
 	if(proxy && strcasecmp(DPS_NULL2EMPTY(Doc->CurURL.schema), "file")) {
 /*		sprintf(Doc->Buf.buf,"%s%s://%s%s HTTP/1.0\r\n", method, DPS_NULL2EMPTY(Doc->CurURL.schema), 
 			DPS_NULL2EMPTY(Doc->CurURL.hostinfo), eurl);*/
@@ -1583,15 +1593,15 @@ static int DpsBuildHTTPRequest(DPS_DOCUMENT *Doc){
 
 	/* Add Host then User-Agent headers first */
 	if (Hdr_Host != NULL) {
-	  dps_strcpy(DPS_STREND(Doc->Buf.buf), Hdr_Host->name);
+	  dps_strcpy(DPS_STREND(Doc->Buf.buf), DPS_NULL2EMPTY(Hdr_Host->name));
 	  dps_strcpy(DPS_STREND(Doc->Buf.buf), ": ");
-	  dps_strcpy(DPS_STREND(Doc->Buf.buf), Hdr_Host->val);
+	  dps_strcpy(DPS_STREND(Doc->Buf.buf), DPS_NULL2EMPTY(Hdr_Host->val));
 	  dps_strcpy(DPS_STREND(Doc->Buf.buf), "\r\n");
 	}
 	if (Hdr_UA != NULL) {
-	  dps_strcpy(DPS_STREND(Doc->Buf.buf), Hdr_UA->name);
+	  dps_strcpy(DPS_STREND(Doc->Buf.buf), DPS_NULL2EMPTY(Hdr_UA->name));
 	  dps_strcpy(DPS_STREND(Doc->Buf.buf), ": ");
-	  dps_strcpy(DPS_STREND(Doc->Buf.buf), Hdr_UA->val);
+	  dps_strcpy(DPS_STREND(Doc->Buf.buf), DPS_NULL2EMPTY(Hdr_UA->val));
 	  dps_strcpy(DPS_STREND(Doc->Buf.buf), "\r\n");
 	}
 
@@ -1601,9 +1611,9 @@ static int DpsBuildHTTPRequest(DPS_DOCUMENT *Doc){
 		DPS_VAR *Hdr = &Doc->RequestHeaders.Root[r].Var[i];
 /*		sprintf(DPS_STREND(Doc->Buf.buf), "%s: %s\r\n", Hdr->name, Hdr->val);*/
 		if (!strcasecmp(Hdr->name, "Host") || !strcasecmp(Hdr->name, "User-Agent")) continue;
-		dps_strcpy(DPS_STREND(Doc->Buf.buf), Hdr->name);
+		dps_strcpy(DPS_STREND(Doc->Buf.buf), DPS_NULL2EMPTY(Hdr->name));
 		dps_strcpy(DPS_STREND(Doc->Buf.buf), ": ");
-		dps_strcpy(DPS_STREND(Doc->Buf.buf), Hdr->val);
+		dps_strcpy(DPS_STREND(Doc->Buf.buf), DPS_NULL2EMPTY(Hdr->val));
 		dps_strcpy(DPS_STREND(Doc->Buf.buf), "\r\n");
 	}
 	
